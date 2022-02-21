@@ -202,7 +202,7 @@ if (@red != 3 || @blue != 3) {
     
 
     print "<H3>Select ${pos}:</H3>\n";
-    my @teams = sort(keys %teamScore);
+    my @teams = sort {$a <=> $b} (keys %teamScore);
     print "<table cellpadding=5 cellspacing=5 border=1><tr>\n";
     my $count = 0;
     foreach my $t (@teams) {

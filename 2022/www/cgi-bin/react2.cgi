@@ -121,7 +121,7 @@ sub dumpdata {
     $str .= "$rung,";
     # defense and fouls
     $str .= "$defense,$defended,$fouls,$techfouls,$rank";
-    # add scouter and comments but replace all comments with underscores
+    # add scouter and comments but replace all commas with underscores
     $scouter =~ tr/,/_/;
     $comments =~ tr/,/_/;
     $str .= ",$scouter,$comments";

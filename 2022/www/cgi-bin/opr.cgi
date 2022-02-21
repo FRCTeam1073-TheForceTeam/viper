@@ -9,8 +9,8 @@ my $event = "";
 #
 # read in given game data
 #
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
+if ($ENV{'QUERY_STRING'}) {
+    my @args = split /\&/, $ENV{'QUERY_STRING'};
     my %params;
     foreach my $arg (@args) {
 	my @bits = split /=/, $arg;
@@ -22,10 +22,37 @@ if ($ENV{QUERY_STRING}) {
 
 # print web page beginning
 print "Content-type: text/html\n\n";
+print "<!DOCTYPE html>\n";
 print "<html lang=\"en\">\n";
 print "<head>\n";
-print "    <meta charset=\"utf-8\"/>\n";
-print "    <title>FRC Scouting App</title>\n";
+print "  <meta charset=\"utf-8\"/>\n";
+print "  <title>FRC Scouting App</title>\n";
+print "  <style>\n";
+print "    #overlay {\n";
+print "      position: fixed;\n";
+print "      display: none;\n";
+print "      width: 100%;\n";
+print "      height: 100%;\n";
+print "      top: 0;\n";
+print "      left: 0;\n";
+print "      right: 0;\n";
+print "      bottom: 0;\n";
+print "      background-color: rgba(0,0,0,0.9);\n";
+print "      z-index: 2;\n";
+print "      cursor: pointer;\n";
+print "    }\n";
+print "    #text {\n";
+print "      position: absolute;\n";
+print "      top: 50%;\n";
+print "      left: 50%;\n";
+print "      color: white;\n";
+print "      transform: translate(-50%,-50%);\n";
+print "     -ms-transform: translate(-50%,-50%);\n";
+print "    }\n";
+print "    #span {\n";
+print "      text-decoration: underline;\n";
+print "    }\n";
+print "  </style>\n";
 print "</head>\n";
 print "<body bgcolor=\"#eeeeee\"><center>\n";
 
@@ -59,6 +86,48 @@ my %teamThi;
 my %teamTmis;
 my %teamTbnc;
 my %teamRung;
+my %teamOverlayT1;
+my %teamOverlayT2;
+my %teamOverlayT3;
+
+
+sub parseStr($) {
+    my ($str) = (@_);
+    # substr parsing before per-character parsing
+    # %2C = ,
+    $str =~ s/%2C/_/g;
+    # %27 = '
+    $str =~ s/%27//g;
+    # %21 = !
+    $str =~ s/%21//g;
+    # %25 = %
+    $str =~ s/%25/%/g;
+    my @bits = split "", $str;
+    my $count = 0;
+    my @final;
+    my $space = 0;
+    foreach my $c (@bits) {
+	if ($c =~ /[a-zA-Z0-9-=\.%_]/) {
+	    push @final, $c;
+	    $space = 0;
+	} else {
+	    if ($space == 0) {
+		push @final, ' ';
+		$space = 1;
+	    }
+	}
+	$count++;
+	if ($count > 75 && $space == 1) {
+	    push @final, '<br>';
+	    $count = 0;
+	}
+    }
+    if (@final > 0) {
+	my $result = join "", @final;
+	return $result;
+    }
+    return "";
+}
 
 
 my $fh;
@@ -70,6 +139,7 @@ if ( ! open($fh, "<", $file) ) {
 while (my $line = <$fh>) {
     my @items = split /,/, $line;
     next if (@items < 6 || $items[0] eq "event");
+    my $match  = $items[1];
     my $team   = $items[2];
     my $taxi   = $items[3];
     my $human  = $items[4];
@@ -82,7 +152,69 @@ while (my $line = <$fh>) {
     my $Tmis   = $items[11];
     my $Tbnc   = $items[12];
     my $rung   = $items[17];
-	
+
+    if (! exists $teamOverlayT1{$team}) {
+	$teamOverlayT1{$team}  = "<H3>Click/Tap screen to go back</H3><br>";
+	$teamOverlayT1{$team} .= "<table cellspacing=0 cellpadding=5 border=1><tr>";
+	$teamOverlayT1{$team} .= "<th colspan=12 align=center><font size=+2>$team</font></th></tr><tr>";
+	$teamOverlayT1{$team} .= "<th>Match</th><th>Taxi</th><th>Human</th>";
+	$teamOverlayT1{$team} .= "<th>Auto<br>Lower</th><th>Auto<br>Upper</th>";
+	$teamOverlayT1{$team} .= "<th>TeleOp<br>Lower</th><th>TeleOp<br>Upper</th>";
+	$teamOverlayT1{$team} .= "<th>Shoot<br>From<br>Hub</th><th>Shoot<br>From<br>Field</th>";
+	$teamOverlayT1{$team} .= "<th>Shoot<br>Outer<br>LnchPad</th><th>Shoot<br>Wall<br>LnchPad</th>";
+	$teamOverlayT1{$team} .= "<th>EndGame<br>Rung</th></tr>";
+    }
+    $teamOverlayT1{$team} .= "<tr><td align=center>$match</td><td align=center>$taxi</td><td align=center>$human</td>";
+    $teamOverlayT1{$team} .= "<td align=center>$Alo</td><td align=center>$Ahi</td><td align=center>$Tlo</td>";
+    my $a1 = "No";
+    $a1 = 'Yes' if ("$items[13]" ne "0");
+    my $a2 = "No";
+    $a2 = 'Yes' if ("$items[14]" ne "0");
+    $teamOverlayT1{$team} .= "<td align=center>$Thi</td><td align=center>$a1</td><td align=center>$a2</td>";
+    $a1 = "No";
+    $a1 = 'Yes' if ("$items[15]" ne "0");
+    $a2 = "No";
+    $a2 = 'Yes' if ("$items[16]" ne "0");
+    my $a3 = "None";
+    $a3 = 'Low' if ("$rung" eq "1");
+    $a3 = 'Middle' if ("$rung" eq "2");
+    $a3 = 'high' if ("$rung" eq "3");
+    $a3 = 'Traversal' if ("$rung" eq "4");
+    $teamOverlayT1{$team} .= "<td align=center>$a1</td><td align=center>$a2</td><td align=center>$a3</td></tr>";
+
+    if (! exists $teamOverlayT2{$team}) {
+	$teamOverlayT2{$team}  = "<table cellspacing=0 cellpadding=5 border=1><tr>";
+	$teamOverlayT2{$team} .= "<th>Match</th><th>Auto<br>Miss</th><th>TeleOp<br>Miss</th>";
+	$teamOverlayT2{$team} .= "<th>Auto<br>Bounce</th><th>TeleOp<br>Bounce</th>";
+	$teamOverlayT2{$team} .= "<th align=center>Played<br>Defense</th><th align=center>Against<br>Defense</th>";
+	$teamOverlayT2{$team} .= "<th>Fouls</th><th>Tech<br>Fouls</th><th align=center>Rank</th></tr>";
+    }
+    $teamOverlayT2{$team} .= "<tr><td align=center>$match</td><td align=center>$Amis</td><td align=center>$Tmis</td>";
+    $teamOverlayT2{$team} .= "<td align=center>$Abnc</td><td align=center>$Tbnc</td>";
+    $a1 = 'None';
+    $a1 = 'Poor' if ("$items[18]" eq "1");
+    $a1 = 'Average' if ("$items[18]" eq "2");
+    $a1 = 'Good' if ("$items[18]" eq "3");
+    $a2 = 'None';
+    $a2 = 'Minimal' if ("$items[19]" eq "1");
+    $a2 = 'Average' if ("$items[19]" eq "2");
+    $a2 = 'Good' if ("$items[19]" eq "3");
+    $teamOverlayT2{$team} .= "<td align=center>$a1</td><td align=center>$a2</td>";
+    $teamOverlayT2{$team} .= "<td align=center>$items[20]</td><td align=center>$items[21]</td>";
+    $a1 = 'None';
+    $a1 = 'Struggled' if ("$items[22]" eq "1");
+    $a1 = 'Decent' if ("$items[22]" eq "2");
+    $a1 = 'Very Good' if ("$items[22]" eq "3");
+    $teamOverlayT2{$team} .= "<td align=center>$a1</td></tr>";
+
+    if (! exists $teamOverlayT3{$team}) {
+	$teamOverlayT3{$team}  = "<table cellspacing=0 cellpadding=5 border=1><tr>";
+	$teamOverlayT3{$team} .= "<th>Match</th><th align=center>Scouter</th><th>Comments</th></tr><tr>";
+    }
+    $a1 = parseStr("$items[23]");
+    $a2 = parseStr("$items[24]");
+    $teamOverlayT3{$team} .= "<td>$match</td><td>$a1</td><td>$a2</td></tr>";
+
     # missing initiation line and end game scoring
     $teamScore{$team}  = 0 unless (defined $teamScore{$team});
     $teamTaxi{$team}  = 0 unless (defined $teamTaxi{$team});
@@ -191,7 +323,7 @@ my @teams = keys %teamScore;
 # opr is in the %teamdata but not listed in the metrics
 # metric sort falls back on opr when metric values match
 # metrics here are in the order in which they will be listed
-my @metrics = ('taxi', 'human', 'alo', 'ahi', 'amis', 'abnc', 'tlo', 'thi', 'tmis', 'tbnc', 'rung');
+my @metrics = ('human', 'taxi', 'alo', 'ahi', 'tlo', 'thi', 'rung', 'amis', 'tmis', 'abnc', 'tbnc');
 my %humanStr = (taxi => 'Avg #<BR>Taxi<BR>Good', human => 'Avg #<BR>Human<BR>Score*',
 		alo => 'Avg #<BR>Auto<BR>Lower', ahi => 'Avg #<BR>Auto<BR>Upper',
 		amis => 'Avg #<BR>Auto<BR>Missed', abnc => 'Avg #<BR>Auto<BR>Bounced',
@@ -204,12 +336,12 @@ foreach my $t (@teams) {
     my $k = "${t}opr";
     $teamdata{$k} = sprintf "%.2f", $avgOpr{$t};
     $highOpr = $teamdata{$k} if ($avgOpr{$t} == $highOpr);
-    $k = "${t}taxi";
-    $teamdata{$k} = sprintf "%.2f", $avgTaxi{$t};
-    $high{'taxi'} = $teamdata{$k} if ($avgTaxi{$t} == $highTaxi);
     $k = "${t}human";
     $teamdata{$k} = sprintf "%.2f", $avgHuman{$t};
     $high{'human'} = $teamdata{$k} if ($avgHuman{$t} == $highHuman);
+    $k = "${t}taxi";
+    $teamdata{$k} = sprintf "%.2f", $avgTaxi{$t};
+    $high{'taxi'} = $teamdata{$k} if ($avgTaxi{$t} == $highTaxi);
     $k = "${t}alo";
     $teamdata{$k} = sprintf "%.2f", $avgAlo{$t};
     $high{'alo'} = $teamdata{$k} if ($avgAlo{$t} == $highAlo);
@@ -273,6 +405,7 @@ foreach my $t (@teams) {
 	$bline .= "<TD BGCOLOR=\"#888\">$teamdata{$k}</TD>";
     }
     print ", 'aline':'$aline', 'bline':'$bline'";
+    print ",'overlayt':'$teamOverlayT1{$t}</table><br>$teamOverlayT2{$t}</table><br>$teamOverlayT3{$t}</table>'";
     print "}";
 }
 
@@ -283,12 +416,10 @@ for (my $i = 0; $i < $size; $i++) {
     my $j = $i + 1;
     print "      if (list[$i].bg == 'a') {\n";
     print "        document.getElementById(\"row${j}\").innerHTML = list[$i].aline;\n";
-#    print "        document.getElementById(\"det${j}\").innerHTML = '<td><A href=\"team.cgi?event=$event&team=' + list[$i].team + '\">' + list[$i].team + '</A></td>';\n";
     print "      } else {\n";
     print "        document.getElementById(\"row${j}\").innerHTML = list[$i].bline;\n";
-#    print "        document.getElementById(\"det${j}\").innerHTML = '<td bgcolor=\"#AAA\">' + list[$i].team + '</td>';\n";
     print "      }\n";
-    print "        document.getElementById(\"det${j}\").innerHTML = '<td><A href=\"team.cgi?event=$event&team=' + list[$i].team + '\">' + list[$i].team + '</A></td>';\n";
+    print "        document.getElementById(\"det${j}\").innerHTML = '<td onclick=\"changeColor($i)\"><font color=\"blue\">' + list[$i].team + '</font></td>';\n";
 }
 print "    }\n";
 print "\n";
@@ -312,7 +443,7 @@ foreach my $m (@metrics) {
     print "      assign_table();\n";
     print "    }\n";
 }
-print "    function changeColor(thisRow, index) {\n";
+print "    function changeColor(index) {\n";
 print "      if (list[index].bg == \"a\") {\n";
 print "        list[index].bg = \"b\";\n";
 print "      } else {\n";
@@ -320,16 +451,30 @@ print "        list[index].bg = \"a\";\n";
 print "      }\n";
 print "      assign_table();\n";
 print "    }\n";
+print "    function on(index) {\n";
+print "      document.getElementById(\"overlay\").style.display = \"block\";\n";
+print "      document.getElementById(\"text\").innerHTML = list[index].overlayt;\n";
+print "    }\n";
+print "    function off() {\n";
+print "      document.getElementById(\"overlay\").style.display = \"none\";\n";
+print "    }\n";
 print "    window.onload = function () {\n";
 print "      sortopr();\n";
 print "    }\n";
 print "  </script>\n";
 print "\n";
 
+print "<div id=\"overlay\" onclick=\"off()\">\n";
+print "  <div id=\"text\">Team Data</div>\n";
+print "</div>\n";
+
 print "<H1 id=\"mytitle\">OPR-based pick list</H1>\n";
 #print "<p><a href=\"index.cgi\">Home</a></p>\n";
 
 print "<h3>Do not use browser buttons without network connection</h3>\n";
+print "<h3>Click/Tap on data to get detailed per-match information</h3>\n";
+print "<h3>Click/Tap on team number to mark team as 'picked'</h3>\n";
+
 print "<table cellpadding=0 cellspacing=0 border=0>\n";
 print "<tr><td>\n";
 
@@ -356,7 +501,7 @@ foreach my $m (@metrics) {
 print " </tr>\n";
 for (my $i = 0; $i < $size; $i++) {
   my $j = $i + 1;
-  print " <tr id=\"row$j\" onclick=\"changeColor(this, $i);\">\n";
+  print " <tr id=\"row$j\" onclick=\"on($i);\">\n";
   print "   <td><p>&nbsp;</p></td>\n";
   print "   <td><p>&nbsp;</p></td>\n";
   foreach my $m (@metrics) {
