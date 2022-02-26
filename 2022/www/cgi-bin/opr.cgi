@@ -85,7 +85,10 @@ my %teamTlo;
 my %teamThi;
 my %teamTmis;
 my %teamTbnc;
-my %teamRung;
+my %teamTRung;
+my %teamHRung;
+my %teamMRung;
+my %teamLRung;
 my %teamOverlayT1;
 my %teamOverlayT2;
 my %teamOverlayT3;
@@ -227,8 +230,11 @@ while (my $line = <$fh>) {
     $teamThi{$team} = 0 unless (defined $teamThi{$team});
     $teamTmis{$team} = 0 unless (defined $teamTmis{$team});
     $teamTbnc{$team} = 0 unless (defined $teamTbnc{$team});
-    $teamRung{$team} = 0 unless (defined $teamRung{$team});
-
+    $teamTRung{$team} = 0 unless (defined $teamTRung{$team});
+    $teamHRung{$team} = 0 unless (defined $teamHRung{$team});
+    $teamMRung{$team} = 0 unless (defined $teamMRung{$team});
+    $teamLRung{$team} = 0 unless (defined $teamLRung{$team});
+    
     $teamTaxi{$team}  += $taxi;
     $teamHuman{$team} += $human;
     $teamAlo{$team} += $Alo;
@@ -239,7 +245,10 @@ while (my $line = <$fh>) {
     $teamThi{$team} += $Thi;
     $teamTmis{$team} += $Tmis;
     $teamTbnc{$team} += $Tbnc;
-    $teamRung{$team} += $rung;
+    $teamTRung{$team} += 1 if ($rung == 4);
+    $teamHRung{$team} += 1 if ($rung == 3);
+    $teamMRung{$team} += 1 if ($rung == 2);
+    $teamLRung{$team} += 1 if ($rung == 1);
 
     # assuming that the human scores in upper hub during auto
     # UPDATE: T and E say don't add HP points to OPR: "unfair to robot!"
@@ -273,7 +282,7 @@ my %avgTlo;
 my %avgThi;
 my %avgTmis;
 my %avgTbnc;
-my %avgRung;
+my %avgMRung;
 
 my $highOpr = 0;
 my $highTaxi = 0;
@@ -286,7 +295,10 @@ my $highTlo = 0;
 my $highThi = 0;
 my $highTmis = 0;
 my $highTbnc = 0;
-my $highRung = 0;
+my $highTRung = 0;
+my $highHRung = 0;
+my $highMRung = 0;
+my $highLRung = 0;
 
 # average and add to list
 foreach my $k (keys %teamScore) {
@@ -302,8 +314,8 @@ foreach my $k (keys %teamScore) {
     $avgThi{$k}   = $teamThi{$k} / $teamCount{$k};
     $avgTmis{$k}  = $teamTmis{$k} / $teamCount{$k};
     $avgTbnc{$k}  = $teamTbnc{$k} / $teamCount{$k};
-    $avgRung{$k}  = $teamRung{$k} / $teamCount{$k};
-
+    $avgMRung{$k} = $teamMRung{$k} / $teamCount{$k};
+    
     $highOpr   = $avgOpr{$k} if ($avgOpr{$k} > $highOpr);
     $highTaxi  = $avgTaxi{$k} if ($avgTaxi{$k} > $highTaxi);
     $highHuman = $avgHuman{$k} if ($avgHuman{$k} > $highHuman);
@@ -315,7 +327,10 @@ foreach my $k (keys %teamScore) {
     $highThi   = $avgThi{$k} if ($avgThi{$k} > $highThi);
     $highTmis  = $avgTmis{$k} if ($avgTmis{$k} > $highTmis);
     $highTbnc  = $avgTbnc{$k} if ($avgTbnc{$k} > $highTbnc);
-    $highRung  = $avgRung{$k} if ($avgRung{$k} > $highRung);
+    $highTRung = $teamTRung{$k} if ($teamTRung{$k} > $highTRung);
+    $highHRung = $teamHRung{$k} if ($teamHRung{$k} > $highHRung);
+    $highMRung = $avgMRung{$k} if ($avgMRung{$k} > $highMRung);
+    $highLRung = $teamLRung{$k} if ($teamLRung{$k} > $highLRung);
 }
 
 # assign JS data variables @teams, @metrics, and %teamdata
@@ -323,13 +338,15 @@ my @teams = keys %teamScore;
 # opr is in the %teamdata but not listed in the metrics
 # metric sort falls back on opr when metric values match
 # metrics here are in the order in which they will be listed
-my @metrics = ('human', 'taxi', 'alo', 'ahi', 'tlo', 'thi', 'rung', 'amis', 'tmis', 'abnc', 'tbnc');
+my @metrics = ('human', 'taxi', 'alo', 'ahi', 'tlo', 'thi', 'trung', 'hrung', 'mrung', 'lrung',
+	       'amis', 'tmis', 'abnc', 'tbnc');
 my %humanStr = (taxi => 'Avg #<BR>Taxi<BR>Good', human => 'Avg #<BR>Human<BR>Score*',
 		alo => 'Avg #<BR>Auto<BR>Lower', ahi => 'Avg #<BR>Auto<BR>Upper',
 		amis => 'Avg #<BR>Auto<BR>Missed', abnc => 'Avg #<BR>Auto<BR>Bounced',
 		tlo => 'Avg #<BR>Lower<BR>Cargo', thi => 'Avg #<BR>Upper<BR>Cargo',
 		tmis => 'Avg #<BR>Missed<BR>Cargo', tbnc => 'Avg #<BR>Bounced<BR>Cargo',
-		rung => 'Avg #<BR>Rungs<BR>Reached');
+		trung => 'Traversal<BR>Rung<BR>Reached', hrung => 'High<BR>Rung<BR>Reached',
+		mrung => 'Middle<BR>Rung<BR>Reached', lrung => 'Low<BR>Rung<BR>Reached');
 my %teamdata;
 my %high;
 foreach my $t (@teams) {
@@ -366,9 +383,18 @@ foreach my $t (@teams) {
     $k = "${t}tbnc";
     $teamdata{$k} = sprintf "%.2f", $avgTbnc{$t};
     $high{'tbnc'} = $teamdata{$k} if ($avgTbnc{$t} == $highTbnc);
-    $k = "${t}rung";
-    $teamdata{$k} = sprintf "%.2f", $avgRung{$t};
-    $high{'rung'} = $teamdata{$k} if ($avgRung{$t} == $highRung);
+    $k = "${t}trung";
+    $teamdata{$k} = sprintf "%d/%d", $teamTRung{$t}, $teamCount{$t};
+    $k = "${t}hrung";
+    $teamdata{$k} = sprintf "%d/%d", $teamHRung{$t}, $teamCount{$t};
+    $k = "${t}mrung";
+    $teamdata{$k} = sprintf "%d/%d", $teamMRung{$t}, $teamCount{$t};
+    $k = "${t}lrung";
+    $teamdata{$k} = sprintf "%d/%d", $teamLRung{$t}, $teamCount{$t};
+    $high{'trung'} = $teamTRung{$t} if ($teamTRung{$t} == $highTRung);
+    $high{'hrung'} = $teamHRung{$t} if ($teamHRung{$t} == $highHRung);
+    $high{'mrung'} = $avgMRung{$t} if ($avgMRung{$t} == $highMRung);
+    $high{'lrung'} = $teamLRung{$t} if ($teamLRung{$t} == $highLRung);
 }
 
 #
@@ -400,7 +426,22 @@ foreach my $t (@teams) {
 	$k = "${t}$m";
 	print "$teamdata{$k}";
 	$aline .= "<TD";
-	$aline .= " BGCOLOR=\"#0F0\"" if ($teamdata{$k} == $high{$m});
+	# since rung counts are not averages, we calculate the 'high' differently
+	if ($m eq 'trung' || $m eq 'hrung' || $m eq 'mrung' || $m eq 'lrung') {
+	    my @parts = split /\//, $teamdata{$k};
+	    if ($parts[0] == $high{$m} || ($m eq 'mrung' && $high{$m} == $avgMRung{$t})) {
+		$aline .= " BGCOLOR=\"#0F0\"";
+	    } else {
+		# give the rungs a slight tint for contrast
+		$aline .= " BGCOLOR=\"#CCC\"";
+	    }
+	} else {
+	    if ($teamdata{$k} == $high{$m}) {
+		$aline .= " BGCOLOR=\"#0F0\"";
+	    } else {
+		$aline .= " BGCOLOR=\"#CCC\"" if ($m eq 'taxi' || $m eq 'human');
+	    }
+	}
 	$aline .= ">$teamdata{$k}</TD>";
 	$bline .= "<TD BGCOLOR=\"#888\">$teamdata{$k}</TD>";
     }
