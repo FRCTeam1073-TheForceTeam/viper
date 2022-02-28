@@ -126,6 +126,7 @@ if ("$event" eq "") {
 	print "<td $RED><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R3\">R3</a></h1></td>\n";
 	print "</tr></table>\n";
 	print "<img src=\"$picdir/hub.png\">\n";
+	print "<img src=\"$picdir/hangar.png\">\n";
     } else {
 	# list matches for this position
 	my $file = $event . ".dat";

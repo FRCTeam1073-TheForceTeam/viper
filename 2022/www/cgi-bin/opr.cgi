@@ -195,13 +195,13 @@ while (my $line = <$fh>) {
     $teamOverlayT2{$team} .= "<tr><td align=center>$match</td><td align=center>$Amis</td><td align=center>$Tmis</td>";
     $teamOverlayT2{$team} .= "<td align=center>$Abnc</td><td align=center>$Tbnc</td>";
     $a1 = 'None';
-    $a1 = 'Poor' if ("$items[18]" eq "1");
+    $a1 = 'Minimal' if ("$items[18]" eq "1");
     $a1 = 'Average' if ("$items[18]" eq "2");
     $a1 = 'Good' if ("$items[18]" eq "3");
     $a2 = 'None';
-    $a2 = 'Minimal' if ("$items[19]" eq "1");
+    $a2 = 'Affected' if ("$items[19]" eq "1");
     $a2 = 'Average' if ("$items[19]" eq "2");
-    $a2 = 'Good' if ("$items[19]" eq "3");
+    $a2 = 'Unaffected' if ("$items[19]" eq "3");
     $teamOverlayT2{$team} .= "<td align=center>$a1</td><td align=center>$a2</td>";
     $teamOverlayT2{$team} .= "<td align=center>$items[20]</td><td align=center>$items[21]</td>";
     $a1 = 'None';
@@ -282,7 +282,10 @@ my %avgTlo;
 my %avgThi;
 my %avgTmis;
 my %avgTbnc;
+my %avgTRung;
+my %avgHRung;
 my %avgMRung;
+my %avgLRung;
 
 my $highOpr = 0;
 my $highTaxi = 0;
@@ -314,7 +317,10 @@ foreach my $k (keys %teamScore) {
     $avgThi{$k}   = $teamThi{$k} / $teamCount{$k};
     $avgTmis{$k}  = $teamTmis{$k} / $teamCount{$k};
     $avgTbnc{$k}  = $teamTbnc{$k} / $teamCount{$k};
+    $avgTRung{$k} = $teamTRung{$k} / $teamCount{$k};
+    $avgHRung{$k} = $teamHRung{$k} / $teamCount{$k};
     $avgMRung{$k} = $teamMRung{$k} / $teamCount{$k};
+    $avgLRung{$k} = $teamLRung{$k} / $teamCount{$k};
     
     $highOpr   = $avgOpr{$k} if ($avgOpr{$k} > $highOpr);
     $highTaxi  = $avgTaxi{$k} if ($avgTaxi{$k} > $highTaxi);
@@ -327,10 +333,10 @@ foreach my $k (keys %teamScore) {
     $highThi   = $avgThi{$k} if ($avgThi{$k} > $highThi);
     $highTmis  = $avgTmis{$k} if ($avgTmis{$k} > $highTmis);
     $highTbnc  = $avgTbnc{$k} if ($avgTbnc{$k} > $highTbnc);
-    $highTRung = $teamTRung{$k} if ($teamTRung{$k} > $highTRung);
-    $highHRung = $teamHRung{$k} if ($teamHRung{$k} > $highHRung);
+    $highTRung = $avgTRung{$k} if ($avgTRung{$k} > $highTRung);
+    $highHRung = $avgHRung{$k} if ($avgHRung{$k} > $highHRung);
     $highMRung = $avgMRung{$k} if ($avgMRung{$k} > $highMRung);
-    $highLRung = $teamLRung{$k} if ($teamLRung{$k} > $highLRung);
+    $highLRung = $avgLRung{$k} if ($avgLRung{$k} > $highLRung);
 }
 
 # assign JS data variables @teams, @metrics, and %teamdata
@@ -340,7 +346,7 @@ my @teams = keys %teamScore;
 # metrics here are in the order in which they will be listed
 my @metrics = ('human', 'taxi', 'alo', 'ahi', 'tlo', 'thi', 'trung', 'hrung', 'mrung', 'lrung',
 	       'amis', 'tmis', 'abnc', 'tbnc');
-my %humanStr = (taxi => 'Avg #<BR>Taxi<BR>Good', human => 'Avg #<BR>Human<BR>Score*',
+my %humanStr = (taxi => '<br>Taxied<br>&nbsp;', human => 'Human<BR>Scored*<br>&nbsp;',
 		alo => 'Avg #<BR>Auto<BR>Lower', ahi => 'Avg #<BR>Auto<BR>Upper',
 		amis => 'Avg #<BR>Auto<BR>Missed', abnc => 'Avg #<BR>Auto<BR>Bounced',
 		tlo => 'Avg #<BR>Lower<BR>Cargo', thi => 'Avg #<BR>Upper<BR>Cargo',
@@ -349,15 +355,18 @@ my %humanStr = (taxi => 'Avg #<BR>Taxi<BR>Good', human => 'Avg #<BR>Human<BR>Sco
 		mrung => 'Middle<BR>Rung<BR>Reached', lrung => 'Low<BR>Rung<BR>Reached');
 my %teamdata;
 my %high;
+my %printdata;
 foreach my $t (@teams) {
     my $k = "${t}opr";
     $teamdata{$k} = sprintf "%.2f", $avgOpr{$t};
     $highOpr = $teamdata{$k} if ($avgOpr{$t} == $highOpr);
     $k = "${t}human";
     $teamdata{$k} = sprintf "%.2f", $avgHuman{$t};
+    $printdata{$k} = sprintf "%d/%d", $teamHuman{$t}, $teamCount{$t};
     $high{'human'} = $teamdata{$k} if ($avgHuman{$t} == $highHuman);
     $k = "${t}taxi";
     $teamdata{$k} = sprintf "%.2f", $avgTaxi{$t};
+    $printdata{$k} = sprintf "%d/%d", $teamTaxi{$t}, $teamCount{$t};
     $high{'taxi'} = $teamdata{$k} if ($avgTaxi{$t} == $highTaxi);
     $k = "${t}alo";
     $teamdata{$k} = sprintf "%.2f", $avgAlo{$t};
@@ -384,17 +393,21 @@ foreach my $t (@teams) {
     $teamdata{$k} = sprintf "%.2f", $avgTbnc{$t};
     $high{'tbnc'} = $teamdata{$k} if ($avgTbnc{$t} == $highTbnc);
     $k = "${t}trung";
-    $teamdata{$k} = sprintf "%d/%d", $teamTRung{$t}, $teamCount{$t};
+    $teamdata{$k} = sprintf "%.2f", $avgTRung{$t};
+    $high{'trung'} = $teamdata{$k} if ($avgTRung{$t} == $highTRung);
+    $printdata{$k} = sprintf "%d/%d", $teamTRung{$t}, $teamCount{$t};
     $k = "${t}hrung";
-    $teamdata{$k} = sprintf "%d/%d", $teamHRung{$t}, $teamCount{$t};
+    $teamdata{$k} = sprintf "%.2f", $avgHRung{$t};
+    $high{'hrung'} = $teamdata{$k} if ($avgHRung{$t} == $highHRung);
+    $printdata{$k} = sprintf "%d/%d", $teamHRung{$t}, $teamCount{$t};
     $k = "${t}mrung";
-    $teamdata{$k} = sprintf "%d/%d", $teamMRung{$t}, $teamCount{$t};
+    $teamdata{$k} = sprintf "%.2f", $avgMRung{$t};
+    $high{'mrung'} = $teamdata{$k} if ($avgMRung{$t} == $highMRung);
+    $printdata{$k} = sprintf "%d/%d", $teamMRung{$t}, $teamCount{$t};
     $k = "${t}lrung";
-    $teamdata{$k} = sprintf "%d/%d", $teamLRung{$t}, $teamCount{$t};
-    $high{'trung'} = $teamTRung{$t} if ($teamTRung{$t} == $highTRung);
-    $high{'hrung'} = $teamHRung{$t} if ($teamHRung{$t} == $highHRung);
-    $high{'mrung'} = $avgMRung{$t} if ($avgMRung{$t} == $highMRung);
-    $high{'lrung'} = $teamLRung{$t} if ($teamLRung{$t} == $highLRung);
+    $teamdata{$k} = sprintf "%.2f", $avgLRung{$t};
+    $high{'lrung'} = $teamdata{$k} if ($avgLRung{$t} == $highLRung);
+    $printdata{$k} = sprintf "%d/%d", $teamLRung{$t}, $teamCount{$t};
 }
 
 #
@@ -426,24 +439,25 @@ foreach my $t (@teams) {
 	$k = "${t}$m";
 	print "$teamdata{$k}";
 	$aline .= "<TD";
-	# since rung counts are not averages, we calculate the 'high' differently
-	if ($m eq 'trung' || $m eq 'hrung' || $m eq 'mrung' || $m eq 'lrung') {
-	    my @parts = split /\//, $teamdata{$k};
-	    if ($parts[0] == $high{$m} || ($m eq 'mrung' && $high{$m} == $avgMRung{$t})) {
-		$aline .= " BGCOLOR=\"#0F0\"";
-	    } else {
-		# give the rungs a slight tint for contrast
-		$aline .= " BGCOLOR=\"#CCC\"";
-	    }
+	if ($high{$m} != 0.00 && $teamdata{$k} == $high{$m}) {
+	    $aline .= " BGCOLOR=\"#0F0\"";
 	} else {
-	    if ($teamdata{$k} == $high{$m}) {
-		$aline .= " BGCOLOR=\"#0F0\"";
+	    # tint the printdata
+	    $aline .= " BGCOLOR=\"#CCC\"" if (exists $printdata{$k});
+	}
+	# if the value is 0.00 then don't print it 
+	if ("$teamdata{$k}" eq "0.00") {
+	    $aline .= ">&nbsp;</TD>";
+	    $bline .= "<TD BGCOLOR=\"#888\">&nbsp;</TD>";
+	} else {
+	    if (exists $printdata{$k}) {
+		$aline .= ">$printdata{$k}</TD>";
+		$bline .= "<TD BGCOLOR=\"#888\">$printdata{$k}</TD>";
 	    } else {
-		$aline .= " BGCOLOR=\"#CCC\"" if ($m eq 'taxi' || $m eq 'human');
+		$aline .= ">$teamdata{$k}</TD>";
+		$bline .= "<TD BGCOLOR=\"#888\">$teamdata{$k}</TD>";
 	    }
 	}
-	$aline .= ">$teamdata{$k}</TD>";
-	$bline .= "<TD BGCOLOR=\"#888\">$teamdata{$k}</TD>";
     }
     print ", 'aline':'$aline', 'bline':'$bline'";
     print ",'overlayt':'$teamOverlayT1{$t}</table><br>$teamOverlayT2{$t}</table><br>$teamOverlayT3{$t}</table>'";
