@@ -252,8 +252,8 @@ while (my $line = <$fh>) {
 
     # assuming that the human scores in upper hub during auto
     # UPDATE: T and E say don't add HP points to OPR: "unfair to robot!"
-    #my $score = ($taxi * 2) + ($human * 4) + ($Ahi * 2) + ($Ahi * 4);
-    my $score = ($taxi * 2) + ($Ahi * 2) + ($Ahi * 4);
+    #my $score = ($taxi * 2) + ($human * 4) + ($Alo * 2) + ($Ahi * 4);
+    my $score = ($taxi * 2) + ($Alo * 2) + ($Ahi * 4);
     $score += $Tlo + ($Thi * 2);
     $score += 4  if ($rung == 1);
     $score += 6  if ($rung == 2);

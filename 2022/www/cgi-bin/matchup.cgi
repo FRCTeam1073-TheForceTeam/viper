@@ -12,7 +12,7 @@ my $green = "#7ef542";
 #
 # read in given game data
 #
-if ($ENV{QUERY_STRING}) {
+if (exists $ENV{'QUERY_STRING'}) {
     my @args = split /\&/, $ENV{QUERY_STRING};
     my %params;
     foreach my $arg (@args) {
@@ -111,7 +111,7 @@ while (my $line = <$fh>) {
     $teamThi{$team}   += $Thi;
     $teamRung{$team}  += $rung;
 	
-    my $auto = ($taxi * 2) + ($human * 4) + ($Alo * 2) + ($Ahi * 4);
+    my $auto = ($taxi * 2) + ($Alo * 2) + ($Ahi * 4);
     my $tele = $Tlo + ($Thi * 2);
     my $endp = 0;
     $endp = 4 if ($rung == 1);
