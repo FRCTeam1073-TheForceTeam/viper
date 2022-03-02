@@ -15,6 +15,42 @@
 	  margin: 4px 2px;
 	  cursor: pointer;
       }
+      .numbutton {
+	  background-color: #555555;
+	  border: none;
+	  color: white;
+	  padding: 10px 25px;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 16px;
+	  margin: 4px 2px;
+	  cursor: pointer;
+      }
+      .backbutton {
+	  background-color: #555555;
+	  border: none;
+	  color: white;
+	  padding: 10px 12px;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 16px;
+	  margin: 4px 2px;
+	  cursor: pointer;
+      }
+      .addbutton {
+	  background-color: #555555;
+	  border: none;
+	  color: white;
+	  padding: 10px 5px;
+	  text-align: center;
+	  text-decoration: none;
+	  display: inline-block;
+	  font-size: 16px;
+	  margin: 4px 2px;
+	  cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -24,135 +60,152 @@
       const teams = [];
       
       function showRow(row) {
-	  r = document.getElementById(row);
-	  r.style.display = '';
-	  if (row == 'step2') {
-	      window.scrollTo(0,150);
-	  }
+        r = document.getElementById(row);
+        r.style.display = '';
+        if (row == 'step2') {
+          window.scrollTo(0,150);
+        }
       }
       function hideRow(row) {
-	  r = document.getElementById(row);
-	  r.style.display = 'none';
+        r = document.getElementById(row);
+        r.style.display = 'none';
       }
       function addTeam(teampos) {
-	  var team = document.getElementById(teampos).innerHTML;
-	  if (team.length == 0 || team == "&nbsp;") {
-	      return;
-	  }
-	  // if curpos != 1 then check this team against existing teams
-	  // in row and don't add if it matches (team cannot play itself)
-	  for (let i = 1; i < curpos; i++) {
-	      var tpos = 'qm' + currow + 'p' + i;
-	      var t = document.getElementById(tpos).innerHTML;
-	      if (t == team) {
-		  return;
-	      }
-	  }
-	  var myid = 'qm' + currow + 'p' + curpos;
-	  document.getElementById(myid).innerHTML = team;
-	  // store in form
-	  myid = myid + 'f';
-	  document.getElementById(myid).value = team;
-	  // calculate next position
-	  curpos = curpos + 1;
-	  if (curpos > 6) {
-	      currow = currow + 1;
-	      curpos = 1;
-	      rid = 'qm' + currow;
-	      showRow(rid);
-	  }
-	  updateLocator();
+        var team = document.getElementById(teampos).innerHTML;
+        if (team.length == 0 || team == "&nbsp;") {
+          return;
+        }
+        // if curpos != 1 then check this team against existing teams
+        // in row and don't add if it matches (team cannot play itself)
+        for (let i = 1; i < curpos; i++) {
+          var tpos = 'qm' + currow + 'p' + i;
+          var t = document.getElementById(tpos).innerHTML;
+          if (t == team) {
+            return;
+          }
+        }
+        var myid = 'qm' + currow + 'p' + curpos;
+        document.getElementById(myid).innerHTML = team;
+        // store in form
+        myid = myid + 'f';
+        document.getElementById(myid).value = team;
+        // calculate next position
+        curpos = curpos + 1;
+        if (curpos > 6) {
+          currow = currow + 1;
+          curpos = 1;
+          rid = 'qm' + currow;
+          showRow(rid);
+        }
+        updateLocator();
       }
       function clearRow(row) {
-	  currow = row;
-	  curpos = 1;
-	  for (let i = 1; i < 7; i++) {
-	      var tid = 'qm' + currow + 'p' + i;
-	      document.getElementById(tid).innerHTML = '&nbsp;';
-	  }
-	  updateLocator();
+        currow = row;
+        curpos = 1;
+        for (let i = 1; i < 7; i++) {
+          var tid = 'qm' + currow + 'p' + i;
+          document.getElementById(tid).innerHTML = '&nbsp;';
+        }
+        updateLocator();
       }
       function updateLocator() {
-	  color = 'Blue';
-	  num = curpos;
-	  if (curpos > 3) {
-	      color = 'Red';
-	      num = curpos - 3;
-	  }
-	  str = 'Select the team for QM ' + currow + ' ' + color + ' ' + num;
-	  document.getElementById('locator').innerHTML = str;
+        color = 'Blue';
+        num = curpos;
+        if (curpos > 3) {
+          color = 'Red';
+          num = curpos - 3;
+        }
+        str = 'Select the team for QM ' + currow + ' ' + color + ' ' + num;
+        document.getElementById('locator').innerHTML = str;
       }
       function saveEvent() {
-	  var year  = document.getElementById('event_year').value;
-	  var venue = document.getElementById('event_venue').value;
-	  var event = year + venue;
-	  document.getElementById('eventinfo').innerHTML = '<b>' + event + '</b>';
-	  // store in form
-	  document.getElementById('year').value = year;
-	  document.getElementById('venue').value = venue;
+        var year  = document.getElementById('event_year').value;
+        var venue = document.getElementById('event_venue').value;
+        var event = year + venue;
+        document.getElementById('eventinfo').innerHTML = '<b>' + event + '</b>';
+        // store in form
+        document.getElementById('year').value = year;
+        document.getElementById('venue').value = venue;
       }
       function addNewTeam() {
-	  var tbox = document.getElementById('newteam');
-	  team = tbox.value;
-	  if (team.length == 0) {
-	      return;
-	  }
-	  // confirm a number
-	  if (isNaN(team)) {
-	      return;
-	  }
-	  // check for duplicates
-	  if (teams.length > 0 && teams.indexOf(team) >= 0) {
-	      return;
-	  }
-	  teams.push(team);
-	  // sort and reload teams to display and selection tables
-	  teams.sort(function(a,b){return a-b});
-	  var size = teams.length;
-	  for (let i = 0; i < size; i++) {
-	      var id = 't' + i;
-	      document.getElementById(id).innerHTML = teams[i];
-	      id = 's' + i;
-	      document.getElementById(id).innerHTML = teams[i];
-	  }
-	  // clear team number entry from input text box
-	  tbox.value = '';
-	  // set the focus back on this element
-	  tbox.focus();
+        var tbox = document.getElementById('newteam');
+        team = tbox.innerHTML;
+        if (team.length == 0) {
+          return;
+        }
+        // confirm a number
+        if (isNaN(team)) {
+          return;
+        }
+        // check for duplicates
+        if (teams.length > 0 && teams.indexOf(team) >= 0) {
+          return;
+        }
+        teams.push(team);
+        // sort and reload teams to display and selection tables
+        teams.sort(function(a,b){return a-b});
+        var size = teams.length;
+        for (let i = 0; i < size; i++) {
+          var id = 't' + i;
+          document.getElementById(id).innerHTML = teams[i];
+          id = 's' + i;
+          document.getElementById(id).innerHTML = teams[i];
+        }
+        // clear team number entry from input text box
+        tbox.innerHTML = '';
+      }
+      function addNumber(num) {
+        var tbox = document.getElementById('newteam');
+        var tnum = tbox.innerHTML;
+        if (tnum == '') {
+          tnum = num;
+        } else {
+          tnum = tnum + num;
+        }
+        tbox.innerHTML = tnum;
+      }
+      function back() {
+        var tbox = document.getElementById("newteam");
+        var tnum = tbox.innerHTML;
+        var length = tnum.length;
+        if (length > 0) {
+          length = length - 1;
+          tbox.innerHTML = tnum.substr(0,length);
+        }
       }
       window.onload = function () {
-	  hideRow('step2');
-	  hideRow('step3');
-	  hideRow('step4');
-	  for (let i = 2; i < 151; i++) {
-	    var qm = 'qm' + i;
-	    hideRow(qm);
-	  }
+        hideRow('step2');
+        hideRow('step3');
+        hideRow('step4');
+        for (let i = 2; i < 151; i++) {
+          var qm = 'qm' + i;
+          hideRow(qm);
+        }
       }
     </script>
 
     <center>
-      <H1>FRC Configure Event Qualification Matches</h1>
+      <h1>FRC Configure Event Qualification Matches</h1>
 
-      <table cellpadding=0 cellspacing=0 border=1><tr>
-	  <th><H2>Step #1: Configure 'Year' and 'Venue'</H2></th>
+      <table cellspacing="0" cellpadding="0" border="1"><tr>
+	  <th><h2>Step #1: Configure 'Year' and 'Venue'</h2></th>
 	</tr><tr>
 	  <td>
-	    <table cellpadding=5 cellspacing=5 border=0><tr>
-		<TH ALIGN="right">Enter Year: <input type="text" id="event_year" size=5></TH>
-		<TD>&nbsp;</TD>
-		<TH ALIGN="left">Enter Venue: <input type="text" id="event_venue" size=10></TH>
-	      </TR><TR>
-		<TD COLSPAN=3 align="center"><p>(No spaces or special characters in either the 'Year' or 'Venue')</p><p>(To match a Blue Alliance event, make sure "YearVenue" matches the Blue Alliance 'keyword' for this event)</p></TD>
-	      <TR>
-		<TD align="right"><button onclick="saveEvent()">Save Event info</button></TD>
-		<TD align="center"><B>:</B></TD>
-		<TD align="left"><p id="eventinfo">&nbsp;</p></TD>
-            </TR></TABLE>
+	    <table cellspacing="5" cellpadding="5" border="0"><tr>
+		<th align="right">Enter Year: <input type="text" id="event_year" size="5" value=""></th>
+		<td>&nbsp;</td>
+		<th align="left">Enter Venue: <input type="text" id="event_venue" size="10" value=""></th>
+	      </tr><tr>
+		<td colspan="3" align="center"><p>(No spaces or special characters in either the 'Year' or 'Venue')</p><p>(To match a Blue Alliance event, make sure "YearVenue" matches the Blue Alliance 'keyword' for this event)</p></td>
+	      </tr><tr>
+		<td align="right"><button onclick="saveEvent()">Save Event info</button></td>
+		<td align="center"><b>:</b></td>
+		<td align="left"><p id="eventinfo">&nbsp;</p></td>
+            </tr></table>
 	  </td>
 	</tr><tr>
 	  <td align="center">
-	    <table cellpadding=0 cellspacing=0 width="100%" border=0><tr>
+	    <table width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
 		<td width="25%">&nbsp;</td>
 		<th width="50%"><h2>Step #2: Add teams to event</h2></th>
 		<th>&nbsp;<button class="button" onclick="showRow('step2')">Next</button></th>
@@ -160,98 +213,119 @@
 	  </td>
 	</tr><tr id="step2">
 	  <td align="center">
-	    <table cellpadding=5 cellspacing=5 width="100%" border=0><tr>
-		<th colspan=10 align="center">Enter Team number: <input type="text" id="newteam" size=5>&nbsp;&nbsp;<button onclick="addNewTeam()">Add Team</button></th>
-	      </tr><tr>
-		<td id='t0'>&nbsp;</td>
-		<td id='t1'>&nbsp;</td>
-		<td id='t2'>&nbsp;</td>
-		<td id='t3'>&nbsp;</td>
-		<td id='t4'>&nbsp;</td>
-		<td id='t5'>&nbsp;</td>
-		<td id='t6'>&nbsp;</td>
-		<td id='t7'>&nbsp;</td>
-		<td id='t8'>&nbsp;</td>
-		<td id='t9'>&nbsp;</td>
-	      </tr><tr>
-		<td id='t10'>&nbsp;</td>
-		<td id='t11'>&nbsp;</td>
-		<td id='t12'>&nbsp;</td>
-		<td id='t13'>&nbsp;</td>
-		<td id='t14'>&nbsp;</td>
-		<td id='t15'>&nbsp;</td>
-		<td id='t16'>&nbsp;</td>
-		<td id='t17'>&nbsp;</td>
-		<td id='t18'>&nbsp;</td>
-		<td id='t19'>&nbsp;</td>
-	      </tr><tr>
-		<td id='t20'>&nbsp;</td>
-		<td id='t21'>&nbsp;</td>
-		<td id='t22'>&nbsp;</td>
-		<td id='t23'>&nbsp;</td>
-		<td id='t24'>&nbsp;</td>
-		<td id='t25'>&nbsp;</td>
-		<td id='t26'>&nbsp;</td>
-		<td id='t27'>&nbsp;</td>
-		<td id='t28'>&nbsp;</td>
-		<td id='t29'>&nbsp;</td>
-	      </tr><tr>
-		<td id='t30'>&nbsp;</td>
-		<td id='t31'>&nbsp;</td>
-		<td id='t32'>&nbsp;</td>
-		<td id='t33'>&nbsp;</td>
-		<td id='t34'>&nbsp;</td>
-		<td id='t35'>&nbsp;</td>
-		<td id='t36'>&nbsp;</td>
-		<td id='t37'>&nbsp;</td>
-		<td id='t38'>&nbsp;</td>
-		<td id='t39'>&nbsp;</td>
-	      </tr><tr>
-		<td id='t40'>&nbsp;</td>
-		<td id='t41'>&nbsp;</td>
-		<td id='t42'>&nbsp;</td>
-		<td id='t43'>&nbsp;</td>
-		<td id='t44'>&nbsp;</td>
-		<td id='t45'>&nbsp;</td>
-		<td id='t46'>&nbsp;</td>
-		<td id='t47'>&nbsp;</td>
-		<td id='t48'>&nbsp;</td>
-		<td id='t49'>&nbsp;</td>
-	      </tr><tr>
-		<td id='t50'>&nbsp;</td>
-		<td id='t51'>&nbsp;</td>
-		<td id='t52'>&nbsp;</td>
-		<td id='t53'>&nbsp;</td>
-		<td id='t54'>&nbsp;</td>
-		<td id='t55'>&nbsp;</td>
-		<td id='t56'>&nbsp;</td>
-		<td id='t57'>&nbsp;</td>
-		<td id='t58'>&nbsp;</td>
-		<td id='t59'>&nbsp;</td>
-	      </tr><tr>
-		<td id='t60'>&nbsp;</td>
-		<td id='t61'>&nbsp;</td>
-		<td id='t62'>&nbsp;</td>
-		<td id='t63'>&nbsp;</td>
-		<td id='t64'>&nbsp;</td>
-		<td id='t65'>&nbsp;</td>
-		<td id='t66'>&nbsp;</td>
-		<td id='t67'>&nbsp;</td>
-		<td id='t68'>&nbsp;</td>
-		<td id='t69'>&nbsp;</td>
-	    </tr></table>
+            <table width="100%" cellspacing=0 cellpadding=0 border=1><tr><td width="70%">
+		  <table width="100%" cellspacing="3" cellpadding="3" border="0"><tr>
+		      <th colspan="5" align="right">Enter Team number:&nbsp;</th>
+		      <th colspan="5" align="left" id="newteam"></th>
+		    </tr><tr>
+		      <td id="t0">&nbsp;</td>
+		      <td id="t1">&nbsp;</td>
+		      <td id="t2">&nbsp;</td>
+		      <td id="t3">&nbsp;</td>
+		      <td id="t4">&nbsp;</td>
+		      <td id="t5">&nbsp;</td>
+		      <td id="t6">&nbsp;</td>
+		      <td id="t7">&nbsp;</td>
+		      <td id="t8">&nbsp;</td>
+		      <td id="t9">&nbsp;</td>
+		    </tr><tr>
+		      <td id="t10">&nbsp;</td>
+		      <td id="t11">&nbsp;</td>
+		      <td id="t12">&nbsp;</td>
+		      <td id="t13">&nbsp;</td>
+		      <td id="t14">&nbsp;</td>
+		      <td id="t15">&nbsp;</td>
+		      <td id="t16">&nbsp;</td>
+		      <td id="t17">&nbsp;</td>
+		      <td id="t18">&nbsp;</td>
+		      <td id="t19">&nbsp;</td>
+		    </tr><tr>
+		      <td id="t20">&nbsp;</td>
+		      <td id="t21">&nbsp;</td>
+		      <td id="t22">&nbsp;</td>
+		      <td id="t23">&nbsp;</td>
+		      <td id="t24">&nbsp;</td>
+		      <td id="t25">&nbsp;</td>
+		      <td id="t26">&nbsp;</td>
+		      <td id="t27">&nbsp;</td>
+		      <td id="t28">&nbsp;</td>
+		      <td id="t29">&nbsp;</td>
+		    </tr><tr>
+		      <td id="t30">&nbsp;</td>
+		      <td id="t31">&nbsp;</td>
+		      <td id="t32">&nbsp;</td>
+		      <td id="t33">&nbsp;</td>
+		      <td id="t34">&nbsp;</td>
+		      <td id="t35">&nbsp;</td>
+		      <td id="t36">&nbsp;</td>
+		      <td id="t37">&nbsp;</td>
+		      <td id="t38">&nbsp;</td>
+		      <td id="t39">&nbsp;</td>
+		    </tr><tr>
+		      <td id="t40">&nbsp;</td>
+		      <td id="t41">&nbsp;</td>
+		      <td id="t42">&nbsp;</td>
+		      <td id="t43">&nbsp;</td>
+		      <td id="t44">&nbsp;</td>
+		      <td id="t45">&nbsp;</td>
+		      <td id="t46">&nbsp;</td>
+		      <td id="t47">&nbsp;</td>
+		      <td id="t48">&nbsp;</td>
+		      <td id="t49">&nbsp;</td>
+		    </tr><tr>
+		      <td id="t50">&nbsp;</td>
+		      <td id="t51">&nbsp;</td>
+		      <td id="t52">&nbsp;</td>
+		      <td id="t53">&nbsp;</td>
+		      <td id="t54">&nbsp;</td>
+		      <td id="t55">&nbsp;</td>
+		      <td id="t56">&nbsp;</td>
+		      <td id="t57">&nbsp;</td>
+		      <td id="t58">&nbsp;</td>
+		      <td id="t59">&nbsp;</td>
+		    </tr><tr>
+		      <td id="t60">&nbsp;</td>
+		      <td id="t61">&nbsp;</td>
+		      <td id="t62">&nbsp;</td>
+		      <td id="t63">&nbsp;</td>
+		      <td id="t64">&nbsp;</td>
+		      <td id="t65">&nbsp;</td>
+		      <td id="t66">&nbsp;</td>
+		      <td id="t67">&nbsp;</td>
+		      <td id="t68">&nbsp;</td>
+		      <td id="t69">&nbsp;</td>
+		  </tr></table>
+		</td><td width="30%">
+		  <table width="100%" cellpadding=3 cellspacing=3 border=1><tr>
+		      <th width="33%"><button class="numbutton" onclick="addNumber(1)">1</button></th>
+		      <th width="33%"><button class="numbutton" onclick="addNumber(2)">2</button></th>
+		      <th> <button class="numbutton" onclick="addNumber(3)">3</button></th>
+		    </tr><tr>
+		      <th width="33%"><button class="numbutton" onclick="addNumber(4)">4</button></th>
+		      <th width="33%"><button class="numbutton" onclick="addNumber(5)">5</button></th>
+		      <th> <button class="numbutton" onclick="addNumber(6)">6</button></th>
+		    </tr><tr>
+		      <th width="33%"><button class="numbutton" onclick="addNumber(7)">7</button></th>
+		      <th width="33%"><button class="numbutton" onclick="addNumber(8)">8</button></th>
+		      <th> <button class="numbutton" onclick="addNumber(9)">9</button></th>
+		    </tr><tr>
+		      <th width="33%"><button class="backbutton" onclick="back()">Back</button></th>
+		      <th width="33%"><button class="numbutton" onclick="addNumber(0)">0</button></th>
+		      <th> <button class="addbutton" onclick="addNewTeam()">Add Team</button></th>
+		  </tr></table>
+            </td></tr></table>
 	  </td>
 	</tr><tr>
 	  <td align="center">
-	    <table cellpadding=0 cellspacing=0 width="100%" border=0><tr>
+	    <table width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
 		<td width="25%">&nbsp;</td>
 		<th width="50%"><h2>Step #3: Assign teams to matches</h2></th>
 		<th>&nbsp;<button class="button" onclick="showRow('step3')">Next</button></th>
 	    </tr></table>
 	  </td>
-      </tr><tr id='step3'>
+      </tr><tr id="step3" style="display: none;">
 	  <td align="center">
-	    <table cellpadding=5 cellspacing=5 border=1>
+	    <table cellspacing="5" cellpadding="5" border="1">
 	      <tr>
 		<td>&nbsp;</td>
 		<th bgcolor="#99ccff">Blue 1</th>
@@ -402,7 +476,7 @@
               <td id="qm14p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(14)">Reset Row</button></td>
               </tr>
-              <tr id="qm15">
+              <tr id="qm15" style="display: none;">
               <th>QM 15</th>
               <td id="qm15p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm15p2" bgcolor="#99ccff">&nbsp;</td>
@@ -412,7 +486,7 @@
               <td id="qm15p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(15)">Reset Row</button></td>
               </tr>
-              <tr id="qm16">
+              <tr id="qm16" style="display: none;">
               <th>QM 16</th>
               <td id="qm16p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm16p2" bgcolor="#99ccff">&nbsp;</td>
@@ -422,7 +496,7 @@
               <td id="qm16p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(16)">Reset Row</button></td>
               </tr>
-              <tr id="qm17">
+              <tr id="qm17" style="display: none;">
               <th>QM 17</th>
               <td id="qm17p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm17p2" bgcolor="#99ccff">&nbsp;</td>
@@ -432,7 +506,7 @@
               <td id="qm17p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(17)">Reset Row</button></td>
               </tr>
-              <tr id="qm18">
+              <tr id="qm18" style="display: none;">
               <th>QM 18</th>
               <td id="qm18p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm18p2" bgcolor="#99ccff">&nbsp;</td>
@@ -442,7 +516,7 @@
               <td id="qm18p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(18)">Reset Row</button></td>
               </tr>
-              <tr id="qm19">
+              <tr id="qm19" style="display: none;">
               <th>QM 19</th>
               <td id="qm19p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm19p2" bgcolor="#99ccff">&nbsp;</td>
@@ -452,7 +526,7 @@
               <td id="qm19p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(19)">Reset Row</button></td>
               </tr>
-              <tr id="qm20">
+              <tr id="qm20" style="display: none;">
               <th>QM 20</th>
               <td id="qm20p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm20p2" bgcolor="#99ccff">&nbsp;</td>
@@ -462,7 +536,7 @@
               <td id="qm20p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(20)">Reset Row</button></td>
               </tr>
-              <tr id="qm21">
+              <tr id="qm21" style="display: none;">
               <th>QM 21</th>
               <td id="qm21p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm21p2" bgcolor="#99ccff">&nbsp;</td>
@@ -472,7 +546,7 @@
               <td id="qm21p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(21)">Reset Row</button></td>
               </tr>
-              <tr id="qm22">
+              <tr id="qm22" style="display: none;">
               <th>QM 22</th>
               <td id="qm22p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm22p2" bgcolor="#99ccff">&nbsp;</td>
@@ -482,7 +556,7 @@
               <td id="qm22p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(22)">Reset Row</button></td>
               </tr>
-              <tr id="qm23">
+              <tr id="qm23" style="display: none;">
               <th>QM 23</th>
               <td id="qm23p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm23p2" bgcolor="#99ccff">&nbsp;</td>
@@ -492,7 +566,7 @@
               <td id="qm23p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(23)">Reset Row</button></td>
               </tr>
-              <tr id="qm24">
+              <tr id="qm24" style="display: none;">
               <th>QM 24</th>
               <td id="qm24p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm24p2" bgcolor="#99ccff">&nbsp;</td>
@@ -502,7 +576,7 @@
               <td id="qm24p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(24)">Reset Row</button></td>
               </tr>
-              <tr id="qm25">
+              <tr id="qm25" style="display: none;">
               <th>QM 25</th>
               <td id="qm25p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm25p2" bgcolor="#99ccff">&nbsp;</td>
@@ -512,7 +586,7 @@
               <td id="qm25p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(25)">Reset Row</button></td>
               </tr>
-              <tr id="qm26">
+              <tr id="qm26" style="display: none;">
               <th>QM 26</th>
               <td id="qm26p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm26p2" bgcolor="#99ccff">&nbsp;</td>
@@ -522,7 +596,7 @@
               <td id="qm26p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(26)">Reset Row</button></td>
               </tr>
-              <tr id="qm27">
+              <tr id="qm27" style="display: none;">
               <th>QM 27</th>
               <td id="qm27p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm27p2" bgcolor="#99ccff">&nbsp;</td>
@@ -532,7 +606,7 @@
               <td id="qm27p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(27)">Reset Row</button></td>
               </tr>
-              <tr id="qm28">
+              <tr id="qm28" style="display: none;">
               <th>QM 28</th>
               <td id="qm28p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm28p2" bgcolor="#99ccff">&nbsp;</td>
@@ -542,7 +616,7 @@
               <td id="qm28p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(28)">Reset Row</button></td>
               </tr>
-              <tr id="qm29">
+              <tr id="qm29" style="display: none;">
               <th>QM 29</th>
               <td id="qm29p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm29p2" bgcolor="#99ccff">&nbsp;</td>
@@ -552,7 +626,7 @@
               <td id="qm29p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(29)">Reset Row</button></td>
               </tr>
-              <tr id="qm30">
+              <tr id="qm30" style="display: none;">
               <th>QM 30</th>
               <td id="qm30p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm30p2" bgcolor="#99ccff">&nbsp;</td>
@@ -562,7 +636,7 @@
               <td id="qm30p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(30)">Reset Row</button></td>
               </tr>
-              <tr id="qm31">
+              <tr id="qm31" style="display: none;">
               <th>QM 31</th>
               <td id="qm31p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm31p2" bgcolor="#99ccff">&nbsp;</td>
@@ -572,7 +646,7 @@
               <td id="qm31p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(31)">Reset Row</button></td>
               </tr>
-              <tr id="qm32">
+              <tr id="qm32" style="display: none;">
               <th>QM 32</th>
               <td id="qm32p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm32p2" bgcolor="#99ccff">&nbsp;</td>
@@ -582,7 +656,7 @@
               <td id="qm32p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(32)">Reset Row</button></td>
               </tr>
-              <tr id="qm33">
+              <tr id="qm33" style="display: none;">
               <th>QM 33</th>
               <td id="qm33p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm33p2" bgcolor="#99ccff">&nbsp;</td>
@@ -592,7 +666,7 @@
               <td id="qm33p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(33)">Reset Row</button></td>
               </tr>
-              <tr id="qm34">
+              <tr id="qm34" style="display: none;">
               <th>QM 34</th>
               <td id="qm34p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm34p2" bgcolor="#99ccff">&nbsp;</td>
@@ -602,7 +676,7 @@
               <td id="qm34p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(34)">Reset Row</button></td>
               </tr>
-              <tr id="qm35">
+              <tr id="qm35" style="display: none;">
               <th>QM 35</th>
               <td id="qm35p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm35p2" bgcolor="#99ccff">&nbsp;</td>
@@ -612,7 +686,7 @@
               <td id="qm35p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(35)">Reset Row</button></td>
               </tr>
-              <tr id="qm36">
+              <tr id="qm36" style="display: none;">
               <th>QM 36</th>
               <td id="qm36p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm36p2" bgcolor="#99ccff">&nbsp;</td>
@@ -622,7 +696,7 @@
               <td id="qm36p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(36)">Reset Row</button></td>
               </tr>
-              <tr id="qm37">
+              <tr id="qm37" style="display: none;">
               <th>QM 37</th>
               <td id="qm37p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm37p2" bgcolor="#99ccff">&nbsp;</td>
@@ -632,7 +706,7 @@
               <td id="qm37p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(37)">Reset Row</button></td>
               </tr>
-              <tr id="qm38">
+              <tr id="qm38" style="display: none;">
               <th>QM 38</th>
               <td id="qm38p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm38p2" bgcolor="#99ccff">&nbsp;</td>
@@ -642,7 +716,7 @@
               <td id="qm38p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(38)">Reset Row</button></td>
               </tr>
-              <tr id="qm39">
+              <tr id="qm39" style="display: none;">
               <th>QM 39</th>
               <td id="qm39p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm39p2" bgcolor="#99ccff">&nbsp;</td>
@@ -652,7 +726,7 @@
               <td id="qm39p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(39)">Reset Row</button></td>
               </tr>
-              <tr id="qm40">
+              <tr id="qm40" style="display: none;">
               <th>QM 40</th>
               <td id="qm40p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm40p2" bgcolor="#99ccff">&nbsp;</td>
@@ -662,7 +736,7 @@
               <td id="qm40p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(40)">Reset Row</button></td>
               </tr>
-              <tr id="qm41">
+              <tr id="qm41" style="display: none;">
               <th>QM 41</th>
               <td id="qm41p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm41p2" bgcolor="#99ccff">&nbsp;</td>
@@ -672,7 +746,7 @@
               <td id="qm41p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(41)">Reset Row</button></td>
               </tr>
-              <tr id="qm42">
+              <tr id="qm42" style="display: none;">
               <th>QM 42</th>
               <td id="qm42p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm42p2" bgcolor="#99ccff">&nbsp;</td>
@@ -682,7 +756,7 @@
               <td id="qm42p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(42)">Reset Row</button></td>
               </tr>
-              <tr id="qm43">
+              <tr id="qm43" style="display: none;">
               <th>QM 43</th>
               <td id="qm43p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm43p2" bgcolor="#99ccff">&nbsp;</td>
@@ -692,7 +766,7 @@
               <td id="qm43p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(43)">Reset Row</button></td>
               </tr>
-              <tr id="qm44">
+              <tr id="qm44" style="display: none;">
               <th>QM 44</th>
               <td id="qm44p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm44p2" bgcolor="#99ccff">&nbsp;</td>
@@ -702,7 +776,7 @@
               <td id="qm44p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(44)">Reset Row</button></td>
               </tr>
-              <tr id="qm45">
+              <tr id="qm45" style="display: none;">
               <th>QM 45</th>
               <td id="qm45p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm45p2" bgcolor="#99ccff">&nbsp;</td>
@@ -712,7 +786,7 @@
               <td id="qm45p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(45)">Reset Row</button></td>
               </tr>
-              <tr id="qm46">
+              <tr id="qm46" style="display: none;">
               <th>QM 46</th>
               <td id="qm46p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm46p2" bgcolor="#99ccff">&nbsp;</td>
@@ -722,7 +796,7 @@
               <td id="qm46p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(46)">Reset Row</button></td>
               </tr>
-              <tr id="qm47">
+              <tr id="qm47" style="display: none;">
               <th>QM 47</th>
               <td id="qm47p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm47p2" bgcolor="#99ccff">&nbsp;</td>
@@ -732,7 +806,7 @@
               <td id="qm47p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(47)">Reset Row</button></td>
               </tr>
-              <tr id="qm48">
+              <tr id="qm48" style="display: none;">
               <th>QM 48</th>
               <td id="qm48p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm48p2" bgcolor="#99ccff">&nbsp;</td>
@@ -742,7 +816,7 @@
               <td id="qm48p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(48)">Reset Row</button></td>
               </tr>
-              <tr id="qm49">
+              <tr id="qm49" style="display: none;">
               <th>QM 49</th>
               <td id="qm49p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm49p2" bgcolor="#99ccff">&nbsp;</td>
@@ -752,7 +826,7 @@
               <td id="qm49p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(49)">Reset Row</button></td>
               </tr>
-              <tr id="qm50">
+              <tr id="qm50" style="display: none;">
               <th>QM 50</th>
               <td id="qm50p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm50p2" bgcolor="#99ccff">&nbsp;</td>
@@ -762,7 +836,7 @@
               <td id="qm50p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(50)">Reset Row</button></td>
               </tr>
-              <tr id="qm51">
+              <tr id="qm51" style="display: none;">
               <th>QM 51</th>
               <td id="qm51p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm51p2" bgcolor="#99ccff">&nbsp;</td>
@@ -772,7 +846,7 @@
               <td id="qm51p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(51)">Reset Row</button></td>
               </tr>
-              <tr id="qm52">
+              <tr id="qm52" style="display: none;">
               <th>QM 52</th>
               <td id="qm52p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm52p2" bgcolor="#99ccff">&nbsp;</td>
@@ -782,7 +856,7 @@
               <td id="qm52p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(52)">Reset Row</button></td>
               </tr>
-              <tr id="qm53">
+              <tr id="qm53" style="display: none;">
               <th>QM 53</th>
               <td id="qm53p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm53p2" bgcolor="#99ccff">&nbsp;</td>
@@ -792,7 +866,7 @@
               <td id="qm53p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(53)">Reset Row</button></td>
               </tr>
-              <tr id="qm54">
+              <tr id="qm54" style="display: none;">
               <th>QM 54</th>
               <td id="qm54p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm54p2" bgcolor="#99ccff">&nbsp;</td>
@@ -802,7 +876,7 @@
               <td id="qm54p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(54)">Reset Row</button></td>
               </tr>
-              <tr id="qm55">
+              <tr id="qm55" style="display: none;">
               <th>QM 55</th>
               <td id="qm55p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm55p2" bgcolor="#99ccff">&nbsp;</td>
@@ -812,7 +886,7 @@
               <td id="qm55p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(55)">Reset Row</button></td>
               </tr>
-              <tr id="qm56">
+              <tr id="qm56" style="display: none;">
               <th>QM 56</th>
               <td id="qm56p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm56p2" bgcolor="#99ccff">&nbsp;</td>
@@ -822,7 +896,7 @@
               <td id="qm56p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(56)">Reset Row</button></td>
               </tr>
-              <tr id="qm57">
+              <tr id="qm57" style="display: none;">
               <th>QM 57</th>
               <td id="qm57p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm57p2" bgcolor="#99ccff">&nbsp;</td>
@@ -832,7 +906,7 @@
               <td id="qm57p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(57)">Reset Row</button></td>
               </tr>
-              <tr id="qm58">
+              <tr id="qm58" style="display: none;">
               <th>QM 58</th>
               <td id="qm58p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm58p2" bgcolor="#99ccff">&nbsp;</td>
@@ -842,7 +916,7 @@
               <td id="qm58p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(58)">Reset Row</button></td>
               </tr>
-              <tr id="qm59">
+              <tr id="qm59" style="display: none;">
               <th>QM 59</th>
               <td id="qm59p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm59p2" bgcolor="#99ccff">&nbsp;</td>
@@ -852,7 +926,7 @@
               <td id="qm59p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(59)">Reset Row</button></td>
               </tr>
-              <tr id="qm60">
+              <tr id="qm60" style="display: none;">
               <th>QM 60</th>
               <td id="qm60p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm60p2" bgcolor="#99ccff">&nbsp;</td>
@@ -862,7 +936,7 @@
               <td id="qm60p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(60)">Reset Row</button></td>
               </tr>
-              <tr id="qm61">
+              <tr id="qm61" style="display: none;">
               <th>QM 61</th>
               <td id="qm61p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm61p2" bgcolor="#99ccff">&nbsp;</td>
@@ -872,7 +946,7 @@
               <td id="qm61p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(61)">Reset Row</button></td>
               </tr>
-              <tr id="qm62">
+              <tr id="qm62" style="display: none;">
               <th>QM 62</th>
               <td id="qm62p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm62p2" bgcolor="#99ccff">&nbsp;</td>
@@ -882,7 +956,7 @@
               <td id="qm62p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(62)">Reset Row</button></td>
               </tr>
-              <tr id="qm63">
+              <tr id="qm63" style="display: none;">
               <th>QM 63</th>
               <td id="qm63p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm63p2" bgcolor="#99ccff">&nbsp;</td>
@@ -892,7 +966,7 @@
               <td id="qm63p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(63)">Reset Row</button></td>
               </tr>
-              <tr id="qm64">
+              <tr id="qm64" style="display: none;">
               <th>QM 64</th>
               <td id="qm64p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm64p2" bgcolor="#99ccff">&nbsp;</td>
@@ -902,7 +976,7 @@
               <td id="qm64p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(64)">Reset Row</button></td>
               </tr>
-              <tr id="qm65">
+              <tr id="qm65" style="display: none;">
               <th>QM 65</th>
               <td id="qm65p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm65p2" bgcolor="#99ccff">&nbsp;</td>
@@ -912,7 +986,7 @@
               <td id="qm65p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(65)">Reset Row</button></td>
               </tr>
-              <tr id="qm66">
+              <tr id="qm66" style="display: none;">
               <th>QM 66</th>
               <td id="qm66p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm66p2" bgcolor="#99ccff">&nbsp;</td>
@@ -922,7 +996,7 @@
               <td id="qm66p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(66)">Reset Row</button></td>
               </tr>
-              <tr id="qm67">
+              <tr id="qm67" style="display: none;">
               <th>QM 67</th>
               <td id="qm67p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm67p2" bgcolor="#99ccff">&nbsp;</td>
@@ -932,7 +1006,7 @@
               <td id="qm67p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(67)">Reset Row</button></td>
               </tr>
-              <tr id="qm68">
+              <tr id="qm68" style="display: none;">
               <th>QM 68</th>
               <td id="qm68p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm68p2" bgcolor="#99ccff">&nbsp;</td>
@@ -942,7 +1016,7 @@
               <td id="qm68p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(68)">Reset Row</button></td>
               </tr>
-              <tr id="qm69">
+              <tr id="qm69" style="display: none;">
               <th>QM 69</th>
               <td id="qm69p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm69p2" bgcolor="#99ccff">&nbsp;</td>
@@ -952,7 +1026,7 @@
               <td id="qm69p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(69)">Reset Row</button></td>
               </tr>
-              <tr id="qm70">
+              <tr id="qm70" style="display: none;">
               <th>QM 70</th>
               <td id="qm70p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm70p2" bgcolor="#99ccff">&nbsp;</td>
@@ -962,7 +1036,7 @@
               <td id="qm70p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(70)">Reset Row</button></td>
               </tr>
-              <tr id="qm71">
+              <tr id="qm71" style="display: none;">
               <th>QM 71</th>
               <td id="qm71p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm71p2" bgcolor="#99ccff">&nbsp;</td>
@@ -972,7 +1046,7 @@
               <td id="qm71p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(71)">Reset Row</button></td>
               </tr>
-              <tr id="qm72">
+              <tr id="qm72" style="display: none;">
               <th>QM 72</th>
               <td id="qm72p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm72p2" bgcolor="#99ccff">&nbsp;</td>
@@ -982,7 +1056,7 @@
               <td id="qm72p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(72)">Reset Row</button></td>
               </tr>
-              <tr id="qm73">
+              <tr id="qm73" style="display: none;">
               <th>QM 73</th>
               <td id="qm73p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm73p2" bgcolor="#99ccff">&nbsp;</td>
@@ -992,7 +1066,7 @@
               <td id="qm73p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(73)">Reset Row</button></td>
               </tr>
-              <tr id="qm74">
+              <tr id="qm74" style="display: none;">
               <th>QM 74</th>
               <td id="qm74p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm74p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1002,7 +1076,7 @@
               <td id="qm74p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(74)">Reset Row</button></td>
               </tr>
-              <tr id="qm75">
+              <tr id="qm75" style="display: none;">
               <th>QM 75</th>
               <td id="qm75p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm75p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1012,7 +1086,7 @@
               <td id="qm75p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(75)">Reset Row</button></td>
               </tr>
-              <tr id="qm76">
+              <tr id="qm76" style="display: none;">
               <th>QM 76</th>
               <td id="qm76p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm76p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1022,7 +1096,7 @@
               <td id="qm76p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(76)">Reset Row</button></td>
               </tr>
-              <tr id="qm77">
+              <tr id="qm77" style="display: none;">
               <th>QM 77</th>
               <td id="qm77p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm77p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1032,7 +1106,7 @@
               <td id="qm77p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(77)">Reset Row</button></td>
               </tr>
-              <tr id="qm78">
+              <tr id="qm78" style="display: none;">
               <th>QM 78</th>
               <td id="qm78p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm78p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1042,7 +1116,7 @@
               <td id="qm78p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(78)">Reset Row</button></td>
               </tr>
-              <tr id="qm79">
+              <tr id="qm79" style="display: none;">
               <th>QM 79</th>
               <td id="qm79p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm79p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1052,7 +1126,7 @@
               <td id="qm79p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(79)">Reset Row</button></td>
               </tr>
-              <tr id="qm80">
+              <tr id="qm80" style="display: none;">
               <th>QM 80</th>
               <td id="qm80p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm80p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1062,7 +1136,7 @@
               <td id="qm80p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(80)">Reset Row</button></td>
               </tr>
-              <tr id="qm81">
+              <tr id="qm81" style="display: none;">
               <th>QM 81</th>
               <td id="qm81p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm81p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1072,7 +1146,7 @@
               <td id="qm81p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(81)">Reset Row</button></td>
               </tr>
-              <tr id="qm82">
+              <tr id="qm82" style="display: none;">
               <th>QM 82</th>
               <td id="qm82p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm82p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1082,7 +1156,7 @@
               <td id="qm82p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(82)">Reset Row</button></td>
               </tr>
-              <tr id="qm83">
+              <tr id="qm83" style="display: none;">
               <th>QM 83</th>
               <td id="qm83p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm83p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1092,7 +1166,7 @@
               <td id="qm83p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(83)">Reset Row</button></td>
               </tr>
-              <tr id="qm84">
+              <tr id="qm84" style="display: none;">
               <th>QM 84</th>
               <td id="qm84p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm84p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1102,7 +1176,7 @@
               <td id="qm84p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(84)">Reset Row</button></td>
               </tr>
-              <tr id="qm85">
+              <tr id="qm85" style="display: none;">
               <th>QM 85</th>
               <td id="qm85p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm85p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1112,7 +1186,7 @@
               <td id="qm85p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(85)">Reset Row</button></td>
               </tr>
-              <tr id="qm86">
+              <tr id="qm86" style="display: none;">
               <th>QM 86</th>
               <td id="qm86p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm86p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1122,7 +1196,7 @@
               <td id="qm86p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(86)">Reset Row</button></td>
               </tr>
-              <tr id="qm87">
+              <tr id="qm87" style="display: none;">
               <th>QM 87</th>
               <td id="qm87p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm87p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1132,7 +1206,7 @@
               <td id="qm87p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(87)">Reset Row</button></td>
               </tr>
-              <tr id="qm88">
+              <tr id="qm88" style="display: none;">
               <th>QM 88</th>
               <td id="qm88p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm88p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1142,7 +1216,7 @@
               <td id="qm88p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(88)">Reset Row</button></td>
               </tr>
-              <tr id="qm89">
+              <tr id="qm89" style="display: none;">
               <th>QM 89</th>
               <td id="qm89p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm89p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1152,7 +1226,7 @@
               <td id="qm89p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(89)">Reset Row</button></td>
               </tr>
-              <tr id="qm90">
+              <tr id="qm90" style="display: none;">
               <th>QM 90</th>
               <td id="qm90p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm90p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1162,7 +1236,7 @@
               <td id="qm90p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(90)">Reset Row</button></td>
               </tr>
-              <tr id="qm91">
+              <tr id="qm91" style="display: none;">
               <th>QM 91</th>
               <td id="qm91p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm91p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1172,7 +1246,7 @@
               <td id="qm91p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(91)">Reset Row</button></td>
               </tr>
-              <tr id="qm92">
+              <tr id="qm92" style="display: none;">
               <th>QM 92</th>
               <td id="qm92p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm92p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1182,7 +1256,7 @@
               <td id="qm92p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(92)">Reset Row</button></td>
               </tr>
-              <tr id="qm93">
+              <tr id="qm93" style="display: none;">
               <th>QM 93</th>
               <td id="qm93p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm93p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1192,7 +1266,7 @@
               <td id="qm93p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(93)">Reset Row</button></td>
               </tr>
-              <tr id="qm94">
+              <tr id="qm94" style="display: none;">
               <th>QM 94</th>
               <td id="qm94p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm94p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1202,7 +1276,7 @@
               <td id="qm94p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(94)">Reset Row</button></td>
               </tr>
-              <tr id="qm95">
+              <tr id="qm95" style="display: none;">
               <th>QM 95</th>
               <td id="qm95p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm95p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1212,7 +1286,7 @@
               <td id="qm95p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(95)">Reset Row</button></td>
               </tr>
-              <tr id="qm96">
+              <tr id="qm96" style="display: none;">
               <th>QM 96</th>
               <td id="qm96p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm96p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1222,7 +1296,7 @@
               <td id="qm96p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(96)">Reset Row</button></td>
               </tr>
-              <tr id="qm97">
+              <tr id="qm97" style="display: none;">
               <th>QM 97</th>
               <td id="qm97p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm97p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1232,7 +1306,7 @@
               <td id="qm97p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(97)">Reset Row</button></td>
               </tr>
-              <tr id="qm98">
+              <tr id="qm98" style="display: none;">
               <th>QM 98</th>
               <td id="qm98p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm98p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1242,7 +1316,7 @@
               <td id="qm98p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(98)">Reset Row</button></td>
               </tr>
-              <tr id="qm99">
+              <tr id="qm99" style="display: none;">
               <th>QM 99</th>
               <td id="qm99p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm99p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1252,7 +1326,7 @@
               <td id="qm99p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(99)">Reset Row</button></td>
               </tr>
-              <tr id="qm100">
+              <tr id="qm100" style="display: none;">
               <th>QM 100</th>
               <td id="qm100p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm100p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1262,7 +1336,7 @@
               <td id="qm100p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(100)">Reset Row</button></td>
               </tr>
-              <tr id="qm101">
+              <tr id="qm101" style="display: none;">
               <th>QM 101</th>
               <td id="qm101p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm101p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1272,7 +1346,7 @@
               <td id="qm101p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(101)">Reset Row</button></td>
               </tr>
-              <tr id="qm102">
+              <tr id="qm102" style="display: none;">
               <th>QM 102</th>
               <td id="qm102p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm102p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1282,7 +1356,7 @@
               <td id="qm102p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(102)">Reset Row</button></td>
               </tr>
-              <tr id="qm103">
+              <tr id="qm103" style="display: none;">
               <th>QM 103</th>
               <td id="qm103p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm103p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1292,7 +1366,7 @@
               <td id="qm103p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(103)">Reset Row</button></td>
               </tr>
-              <tr id="qm104">
+              <tr id="qm104" style="display: none;">
               <th>QM 104</th>
               <td id="qm104p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm104p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1302,7 +1376,7 @@
               <td id="qm104p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(104)">Reset Row</button></td>
               </tr>
-              <tr id="qm105">
+              <tr id="qm105" style="display: none;">
               <th>QM 105</th>
               <td id="qm105p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm105p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1312,7 +1386,7 @@
               <td id="qm105p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(105)">Reset Row</button></td>
               </tr>
-              <tr id="qm106">
+              <tr id="qm106" style="display: none;">
               <th>QM 106</th>
               <td id="qm106p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm106p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1322,7 +1396,7 @@
               <td id="qm106p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(106)">Reset Row</button></td>
               </tr>
-              <tr id="qm107">
+              <tr id="qm107" style="display: none;">
               <th>QM 107</th>
               <td id="qm107p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm107p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1332,7 +1406,7 @@
               <td id="qm107p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(107)">Reset Row</button></td>
               </tr>
-              <tr id="qm108">
+              <tr id="qm108" style="display: none;">
               <th>QM 108</th>
               <td id="qm108p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm108p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1342,7 +1416,7 @@
               <td id="qm108p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(108)">Reset Row</button></td>
               </tr>
-              <tr id="qm109">
+              <tr id="qm109" style="display: none;">
               <th>QM 109</th>
               <td id="qm109p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm109p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1352,7 +1426,7 @@
               <td id="qm109p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(109)">Reset Row</button></td>
               </tr>
-              <tr id="qm110">
+              <tr id="qm110" style="display: none;">
               <th>QM 110</th>
               <td id="qm110p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm110p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1362,7 +1436,7 @@
               <td id="qm110p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(110)">Reset Row</button></td>
               </tr>
-              <tr id="qm111">
+              <tr id="qm111" style="display: none;">
               <th>QM 111</th>
               <td id="qm111p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm111p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1372,7 +1446,7 @@
               <td id="qm111p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(111)">Reset Row</button></td>
               </tr>
-              <tr id="qm112">
+              <tr id="qm112" style="display: none;">
               <th>QM 112</th>
               <td id="qm112p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm112p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1382,7 +1456,7 @@
               <td id="qm112p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(112)">Reset Row</button></td>
               </tr>
-              <tr id="qm113">
+              <tr id="qm113" style="display: none;">
               <th>QM 113</th>
               <td id="qm113p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm113p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1392,7 +1466,7 @@
               <td id="qm113p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(113)">Reset Row</button></td>
               </tr>
-              <tr id="qm114">
+              <tr id="qm114" style="display: none;">
               <th>QM 114</th>
               <td id="qm114p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm114p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1402,7 +1476,7 @@
               <td id="qm114p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(114)">Reset Row</button></td>
               </tr>
-              <tr id="qm115">
+              <tr id="qm115" style="display: none;">
               <th>QM 115</th>
               <td id="qm115p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm115p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1412,7 +1486,7 @@
               <td id="qm115p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(115)">Reset Row</button></td>
               </tr>
-              <tr id="qm116">
+              <tr id="qm116" style="display: none;">
               <th>QM 116</th>
               <td id="qm116p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm116p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1422,7 +1496,7 @@
               <td id="qm116p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(116)">Reset Row</button></td>
               </tr>
-              <tr id="qm117">
+              <tr id="qm117" style="display: none;">
               <th>QM 117</th>
               <td id="qm117p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm117p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1432,7 +1506,7 @@
               <td id="qm117p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(117)">Reset Row</button></td>
               </tr>
-              <tr id="qm118">
+              <tr id="qm118" style="display: none;">
               <th>QM 118</th>
               <td id="qm118p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm118p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1442,7 +1516,7 @@
               <td id="qm118p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(118)">Reset Row</button></td>
               </tr>
-              <tr id="qm119">
+              <tr id="qm119" style="display: none;">
               <th>QM 119</th>
               <td id="qm119p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm119p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1452,7 +1526,7 @@
               <td id="qm119p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(119)">Reset Row</button></td>
               </tr>
-              <tr id="qm120">
+              <tr id="qm120" style="display: none;">
               <th>QM 120</th>
               <td id="qm120p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm120p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1462,7 +1536,7 @@
               <td id="qm120p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(120)">Reset Row</button></td>
               </tr>
-              <tr id="qm121">
+              <tr id="qm121" style="display: none;">
               <th>QM 121</th>
               <td id="qm121p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm121p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1472,7 +1546,7 @@
               <td id="qm121p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(121)">Reset Row</button></td>
               </tr>
-              <tr id="qm122">
+              <tr id="qm122" style="display: none;">
               <th>QM 122</th>
               <td id="qm122p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm122p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1482,7 +1556,7 @@
               <td id="qm122p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(122)">Reset Row</button></td>
               </tr>
-              <tr id="qm123">
+              <tr id="qm123" style="display: none;">
               <th>QM 123</th>
               <td id="qm123p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm123p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1492,7 +1566,7 @@
               <td id="qm123p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(123)">Reset Row</button></td>
               </tr>
-              <tr id="qm124">
+              <tr id="qm124" style="display: none;">
               <th>QM 124</th>
               <td id="qm124p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm124p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1502,7 +1576,7 @@
               <td id="qm124p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(124)">Reset Row</button></td>
               </tr>
-              <tr id="qm125">
+              <tr id="qm125" style="display: none;">
               <th>QM 125</th>
               <td id="qm125p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm125p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1512,7 +1586,7 @@
               <td id="qm125p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(125)">Reset Row</button></td>
               </tr>
-              <tr id="qm126">
+              <tr id="qm126" style="display: none;">
               <th>QM 126</th>
               <td id="qm126p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm126p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1522,7 +1596,7 @@
               <td id="qm126p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(126)">Reset Row</button></td>
               </tr>
-              <tr id="qm127">
+              <tr id="qm127" style="display: none;">
               <th>QM 127</th>
               <td id="qm127p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm127p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1532,7 +1606,7 @@
               <td id="qm127p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(127)">Reset Row</button></td>
               </tr>
-              <tr id="qm128">
+              <tr id="qm128" style="display: none;">
               <th>QM 128</th>
               <td id="qm128p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm128p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1542,7 +1616,7 @@
               <td id="qm128p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(128)">Reset Row</button></td>
               </tr>
-              <tr id="qm129">
+              <tr id="qm129" style="display: none;">
               <th>QM 129</th>
               <td id="qm129p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm129p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1552,7 +1626,7 @@
               <td id="qm129p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(129)">Reset Row</button></td>
               </tr>
-              <tr id="qm130">
+              <tr id="qm130" style="display: none;">
               <th>QM 130</th>
               <td id="qm130p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm130p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1562,7 +1636,7 @@
               <td id="qm130p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(130)">Reset Row</button></td>
               </tr>
-              <tr id="qm131">
+              <tr id="qm131" style="display: none;">
               <th>QM 131</th>
               <td id="qm131p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm131p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1572,7 +1646,7 @@
               <td id="qm131p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(131)">Reset Row</button></td>
               </tr>
-              <tr id="qm132">
+              <tr id="qm132" style="display: none;">
               <th>QM 132</th>
               <td id="qm132p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm132p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1582,7 +1656,7 @@
               <td id="qm132p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(132)">Reset Row</button></td>
               </tr>
-              <tr id="qm133">
+              <tr id="qm133" style="display: none;">
               <th>QM 133</th>
               <td id="qm133p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm133p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1592,7 +1666,7 @@
               <td id="qm133p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(133)">Reset Row</button></td>
               </tr>
-              <tr id="qm134">
+              <tr id="qm134" style="display: none;">
               <th>QM 134</th>
               <td id="qm134p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm134p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1602,7 +1676,7 @@
               <td id="qm134p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(134)">Reset Row</button></td>
               </tr>
-              <tr id="qm135">
+              <tr id="qm135" style="display: none;">
               <th>QM 135</th>
               <td id="qm135p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm135p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1612,7 +1686,7 @@
               <td id="qm135p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(135)">Reset Row</button></td>
               </tr>
-              <tr id="qm136">
+              <tr id="qm136" style="display: none;">
               <th>QM 136</th>
               <td id="qm136p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm136p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1622,7 +1696,7 @@
               <td id="qm136p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(136)">Reset Row</button></td>
               </tr>
-              <tr id="qm137">
+              <tr id="qm137" style="display: none;">
               <th>QM 137</th>
               <td id="qm137p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm137p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1632,7 +1706,7 @@
               <td id="qm137p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(137)">Reset Row</button></td>
               </tr>
-              <tr id="qm138">
+              <tr id="qm138" style="display: none;">
               <th>QM 138</th>
               <td id="qm138p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm138p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1642,7 +1716,7 @@
               <td id="qm138p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(138)">Reset Row</button></td>
               </tr>
-              <tr id="qm139">
+              <tr id="qm139" style="display: none;">
               <th>QM 139</th>
               <td id="qm139p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm139p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1652,7 +1726,7 @@
               <td id="qm139p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(139)">Reset Row</button></td>
               </tr>
-              <tr id="qm140">
+              <tr id="qm140" style="display: none;">
               <th>QM 140</th>
               <td id="qm140p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm140p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1662,7 +1736,7 @@
               <td id="qm140p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(140)">Reset Row</button></td>
               </tr>
-              <tr id="qm141">
+              <tr id="qm141" style="display: none;">
               <th>QM 141</th>
               <td id="qm141p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm141p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1672,7 +1746,7 @@
               <td id="qm141p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(141)">Reset Row</button></td>
               </tr>
-              <tr id="qm142">
+              <tr id="qm142" style="display: none;">
               <th>QM 142</th>
               <td id="qm142p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm142p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1682,7 +1756,7 @@
               <td id="qm142p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(142)">Reset Row</button></td>
               </tr>
-              <tr id="qm143">
+              <tr id="qm143" style="display: none;">
               <th>QM 143</th>
               <td id="qm143p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm143p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1692,7 +1766,7 @@
               <td id="qm143p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(143)">Reset Row</button></td>
               </tr>
-              <tr id="qm144">
+              <tr id="qm144" style="display: none;">
               <th>QM 144</th>
               <td id="qm144p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm144p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1702,7 +1776,7 @@
               <td id="qm144p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(144)">Reset Row</button></td>
               </tr>
-              <tr id="qm145">
+              <tr id="qm145" style="display: none;">
               <th>QM 145</th>
               <td id="qm145p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm145p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1712,7 +1786,7 @@
               <td id="qm145p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(145)">Reset Row</button></td>
               </tr>
-              <tr id="qm146">
+              <tr id="qm146" style="display: none;">
               <th>QM 146</th>
               <td id="qm146p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm146p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1722,7 +1796,7 @@
               <td id="qm146p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(146)">Reset Row</button></td>
               </tr>
-              <tr id="qm147">
+              <tr id="qm147" style="display: none;">
               <th>QM 147</th>
               <td id="qm147p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm147p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1732,7 +1806,7 @@
               <td id="qm147p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(147)">Reset Row</button></td>
               </tr>
-              <tr id="qm148">
+              <tr id="qm148" style="display: none;">
               <th>QM 148</th>
               <td id="qm148p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm148p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1742,7 +1816,7 @@
               <td id="qm148p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(148)">Reset Row</button></td>
               </tr>
-              <tr id="qm149">
+              <tr id="qm149" style="display: none;">
               <th>QM 149</th>
               <td id="qm149p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm149p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1752,7 +1826,7 @@
               <td id="qm149p6" bgcolor="#ff6666">&nbsp;</td>
               <td><button onclick="clearRow(149)">Reset Row</button></td>
               </tr>
-              <tr id="qm150">
+              <tr id="qm150" style="display: none;">
               <th>QM 150</th>
               <td id="qm150p1" bgcolor="#99ccff">&nbsp;</td>
               <td id="qm150p2" bgcolor="#99ccff">&nbsp;</td>
@@ -1764,98 +1838,98 @@
               </tr>
 	    </table>
 	    <h3>The 'Reset Row' button clears the selected row and sets "selection focus"
-	      <BR>to 'Blue 1' of that row. Use it wisely!</H3>
+	      <br>to 'Blue 1' of that row. Use it wisely!</h3>
 	    <h3 id="locator">Select the team for QM 1 Blue 1</h3>
-	    <table cellpadding=5 cellspacing=5 width="100%" border=1>
+	    <table width="100%" cellspacing="5" cellpadding="5" border="1">
 	      <tr>
-		<th onclick="addTeam('s0')" id='s0'>&nbsp;</th>
-		<th onclick="addTeam('s1')" id='s1'>&nbsp;</th>
-		<th onclick="addTeam('s2')" id='s2'>&nbsp;</th>
-		<th onclick="addTeam('s3')" id='s3'>&nbsp;</th>
-		<th onclick="addTeam('s4')" id='s4'>&nbsp;</th>
-		<th onclick="addTeam('s5')" id='s5'>&nbsp;</th>
-		<th onclick="addTeam('s6')" id='s6'>&nbsp;</th>
-		<th onclick="addTeam('s7')" id='s7'>&nbsp;</th>
-		<th onclick="addTeam('s8')" id='s8'>&nbsp;</th>
-		<th onclick="addTeam('s9')" id='s9'>&nbsp;</th>
+		<th onclick="addTeam('s0')" id="s0">&nbsp;</th>
+		<th onclick="addTeam('s1')" id="s1">&nbsp;</th>
+		<th onclick="addTeam('s2')" id="s2">&nbsp;</th>
+		<th onclick="addTeam('s3')" id="s3">&nbsp;</th>
+		<th onclick="addTeam('s4')" id="s4">&nbsp;</th>
+		<th onclick="addTeam('s5')" id="s5">&nbsp;</th>
+		<th onclick="addTeam('s6')" id="s6">&nbsp;</th>
+		<th onclick="addTeam('s7')" id="s7">&nbsp;</th>
+		<th onclick="addTeam('s8')" id="s8">&nbsp;</th>
+		<th onclick="addTeam('s9')" id="s9">&nbsp;</th>
 	      </tr><tr>
-		<th onclick="addTeam('s10')" id='s10'>&nbsp;</th>
-		<th onclick="addTeam('s11')" id='s11'>&nbsp;</th>
-		<th onclick="addTeam('s12')" id='s12'>&nbsp;</th>
-		<th onclick="addTeam('s13')" id='s13'>&nbsp;</th>
-		<th onclick="addTeam('s14')" id='s14'>&nbsp;</th>
-		<th onclick="addTeam('s15')" id='s15'>&nbsp;</th>
-		<th onclick="addTeam('s16')" id='s16'>&nbsp;</th>
-		<th onclick="addTeam('s17')" id='s17'>&nbsp;</th>
-		<th onclick="addTeam('s18')" id='s18'>&nbsp;</th>
-		<th onclick="addTeam('s19')" id='s19'>&nbsp;</th>
+		<th onclick="addTeam('s10')" id="s10">&nbsp;</th>
+		<th onclick="addTeam('s11')" id="s11">&nbsp;</th>
+		<th onclick="addTeam('s12')" id="s12">&nbsp;</th>
+		<th onclick="addTeam('s13')" id="s13">&nbsp;</th>
+		<th onclick="addTeam('s14')" id="s14">&nbsp;</th>
+		<th onclick="addTeam('s15')" id="s15">&nbsp;</th>
+		<th onclick="addTeam('s16')" id="s16">&nbsp;</th>
+		<th onclick="addTeam('s17')" id="s17">&nbsp;</th>
+		<th onclick="addTeam('s18')" id="s18">&nbsp;</th>
+		<th onclick="addTeam('s19')" id="s19">&nbsp;</th>
 	      </tr><tr>
-		<th onclick="addTeam('s20')" id='s20'>&nbsp;</th>
-		<th onclick="addTeam('s21')" id='s21'>&nbsp;</th>
-		<th onclick="addTeam('s22')" id='s22'>&nbsp;</th>
-		<th onclick="addTeam('s23')" id='s23'>&nbsp;</th>
-		<th onclick="addTeam('s24')" id='s24'>&nbsp;</th>
-		<th onclick="addTeam('s25')" id='s25'>&nbsp;</th>
-		<th onclick="addTeam('s26')" id='s26'>&nbsp;</th>
-		<th onclick="addTeam('s27')" id='s27'>&nbsp;</th>
-		<th onclick="addTeam('s28')" id='s28'>&nbsp;</th>
-		<th onclick="addTeam('s29')" id='s29'>&nbsp;</th>
+		<th onclick="addTeam('s20')" id="s20">&nbsp;</th>
+		<th onclick="addTeam('s21')" id="s21">&nbsp;</th>
+		<th onclick="addTeam('s22')" id="s22">&nbsp;</th>
+		<th onclick="addTeam('s23')" id="s23">&nbsp;</th>
+		<th onclick="addTeam('s24')" id="s24">&nbsp;</th>
+		<th onclick="addTeam('s25')" id="s25">&nbsp;</th>
+		<th onclick="addTeam('s26')" id="s26">&nbsp;</th>
+		<th onclick="addTeam('s27')" id="s27">&nbsp;</th>
+		<th onclick="addTeam('s28')" id="s28">&nbsp;</th>
+		<th onclick="addTeam('s29')" id="s29">&nbsp;</th>
 	      </tr><tr>
-		<th onclick="addTeam('s30')" id='s30'>&nbsp;</th>
-		<th onclick="addTeam('s31')" id='s31'>&nbsp;</th>
-		<th onclick="addTeam('s32')" id='s32'>&nbsp;</th>
-		<th onclick="addTeam('s33')" id='s33'>&nbsp;</th>
-		<th onclick="addTeam('s34')" id='s34'>&nbsp;</th>
-		<th onclick="addTeam('s35')" id='s35'>&nbsp;</th>
-		<th onclick="addTeam('s36')" id='s36'>&nbsp;</th>
-		<th onclick="addTeam('s37')" id='s37'>&nbsp;</th>
-		<th onclick="addTeam('s38')" id='s38'>&nbsp;</th>
-		<th onclick="addTeam('s39')" id='s39'>&nbsp;</th>
+		<th onclick="addTeam('s30')" id="s30">&nbsp;</th>
+		<th onclick="addTeam('s31')" id="s31">&nbsp;</th>
+		<th onclick="addTeam('s32')" id="s32">&nbsp;</th>
+		<th onclick="addTeam('s33')" id="s33">&nbsp;</th>
+		<th onclick="addTeam('s34')" id="s34">&nbsp;</th>
+		<th onclick="addTeam('s35')" id="s35">&nbsp;</th>
+		<th onclick="addTeam('s36')" id="s36">&nbsp;</th>
+		<th onclick="addTeam('s37')" id="s37">&nbsp;</th>
+		<th onclick="addTeam('s38')" id="s38">&nbsp;</th>
+		<th onclick="addTeam('s39')" id="s39">&nbsp;</th>
 	      </tr><tr>
-		<th onclick="addTeam('s40')" id='s40'>&nbsp;</th>
-		<th onclick="addTeam('s41')" id='s41'>&nbsp;</th>
-		<th onclick="addTeam('s42')" id='s42'>&nbsp;</th>
-		<th onclick="addTeam('s43')" id='s43'>&nbsp;</th>
-		<th onclick="addTeam('s44')" id='s44'>&nbsp;</th>
-		<th onclick="addTeam('s45')" id='s45'>&nbsp;</th>
-		<th onclick="addTeam('s46')" id='s46'>&nbsp;</th>
-		<th onclick="addTeam('s47')" id='s47'>&nbsp;</th>
-		<th onclick="addTeam('s48')" id='s48'>&nbsp;</th>
-		<th onclick="addTeam('s49')" id='s49'>&nbsp;</th>
+		<th onclick="addTeam('s40')" id="s40">&nbsp;</th>
+		<th onclick="addTeam('s41')" id="s41">&nbsp;</th>
+		<th onclick="addTeam('s42')" id="s42">&nbsp;</th>
+		<th onclick="addTeam('s43')" id="s43">&nbsp;</th>
+		<th onclick="addTeam('s44')" id="s44">&nbsp;</th>
+		<th onclick="addTeam('s45')" id="s45">&nbsp;</th>
+		<th onclick="addTeam('s46')" id="s46">&nbsp;</th>
+		<th onclick="addTeam('s47')" id="s47">&nbsp;</th>
+		<th onclick="addTeam('s48')" id="s48">&nbsp;</th>
+		<th onclick="addTeam('s49')" id="s49">&nbsp;</th>
 	      </tr><tr>
-		<th onclick="addTeam('s50')" id='s50'>&nbsp;</th>
-		<th onclick="addTeam('s51')" id='s51'>&nbsp;</th>
-		<th onclick="addTeam('s52')" id='s52'>&nbsp;</th>
-		<th onclick="addTeam('s53')" id='s53'>&nbsp;</th>
-		<th onclick="addTeam('s54')" id='s54'>&nbsp;</th>
-		<th onclick="addTeam('s55')" id='s55'>&nbsp;</th>
-		<th onclick="addTeam('s56')" id='s56'>&nbsp;</th>
-		<th onclick="addTeam('s57')" id='s57'>&nbsp;</th>
-		<th onclick="addTeam('s58')" id='s58'>&nbsp;</th>
-		<th onclick="addTeam('s59')" id='s59'>&nbsp;</th>
+		<th onclick="addTeam('s50')" id="s50">&nbsp;</th>
+		<th onclick="addTeam('s51')" id="s51">&nbsp;</th>
+		<th onclick="addTeam('s52')" id="s52">&nbsp;</th>
+		<th onclick="addTeam('s53')" id="s53">&nbsp;</th>
+		<th onclick="addTeam('s54')" id="s54">&nbsp;</th>
+		<th onclick="addTeam('s55')" id="s55">&nbsp;</th>
+		<th onclick="addTeam('s56')" id="s56">&nbsp;</th>
+		<th onclick="addTeam('s57')" id="s57">&nbsp;</th>
+		<th onclick="addTeam('s58')" id="s58">&nbsp;</th>
+		<th onclick="addTeam('s59')" id="s59">&nbsp;</th>
 	      </tr><tr>
-		<th onclick="addTeam('s60')" id='s60'>&nbsp;</th>
-		<th onclick="addTeam('s61')" id='s61'>&nbsp;</th>
-		<th onclick="addTeam('s62')" id='s62'>&nbsp;</th>
-		<th onclick="addTeam('s63')" id='s63'>&nbsp;</th>
-		<th onclick="addTeam('s64')" id='s64'>&nbsp;</th>
-		<th onclick="addTeam('s65')" id='s65'>&nbsp;</th>
-		<th onclick="addTeam('s66')" id='s66'>&nbsp;</th>
-		<th onclick="addTeam('s67')" id='s67'>&nbsp;</th>
-		<th onclick="addTeam('s68')" id='s68'>&nbsp;</th>
-		<th onclick="addTeam('s69')" id='s69'>&nbsp;</th>
+		<th onclick="addTeam('s60')" id="s60">&nbsp;</th>
+		<th onclick="addTeam('s61')" id="s61">&nbsp;</th>
+		<th onclick="addTeam('s62')" id="s62">&nbsp;</th>
+		<th onclick="addTeam('s63')" id="s63">&nbsp;</th>
+		<th onclick="addTeam('s64')" id="s64">&nbsp;</th>
+		<th onclick="addTeam('s65')" id="s65">&nbsp;</th>
+		<th onclick="addTeam('s66')" id="s66">&nbsp;</th>
+		<th onclick="addTeam('s67')" id="s67">&nbsp;</th>
+		<th onclick="addTeam('s68')" id="s68">&nbsp;</th>
+		<th onclick="addTeam('s69')" id="s69">&nbsp;</th>
 	      </tr>
 	    </table>
 	  </td>
 	</tr><tr>
 	  <td align="center">
-	    <table cellpadding=0 cellspacing=0 width="100%" border=0><tr>
+	    <table width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
 	      <td width="25%">&nbsp;</td>
-	      <th width="50%"><H2> Step #4: Save Event</H2></th>
+	      <th width="50%"><h2> Step #4: Save Event</h2></th>
 	      <th><button class="button" onclick="showRow('step4')">Next</button></th>
 	    </tr></table>
 	  </td>
-	</tr><tr id='step4'>
+	</tr><tr id="step4">
 	  <td align="center">
 	    <br>
 	    <form action="/cgi-bin/event.cgi">
@@ -2767,7 +2841,7 @@
 	  </td>
 	</tr>
       </table>
-      <!- Create some space to scroll -->
+      <!-- Create some space to scroll -->
       <br><br><br><br><br><br><br><br><br><br><br><br>
     </center>
   </body>
