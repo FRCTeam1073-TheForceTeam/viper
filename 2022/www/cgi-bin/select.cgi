@@ -521,7 +521,7 @@ print "Select for Alliance ${alliance}:" if ($end ne "");
 print "</H3>\n";
 
 if ($end ne "") {
-    my @teams = sort(keys %teamlist);
+    my @teams = sort {$a <=> $b} (keys %teamlist);
     print "<table cellpadding=5 cellspacing=5 border=1><tr>\n";
     my $count = 0;
     foreach my $t (@teams) {
