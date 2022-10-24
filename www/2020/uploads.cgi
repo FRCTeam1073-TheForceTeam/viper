@@ -6,7 +6,7 @@ use warnings;
 # File content data is 'posted' to this web page, meaning via STDIN
 
 # print web page
-print "Content-type: text/html\n\n";
+print "Content-type: text/html; charset=UTF-8\n\n";
 print "<html>\n";
 print "<head>\n";
 print "<title>FRC Scouting App</title>\n";

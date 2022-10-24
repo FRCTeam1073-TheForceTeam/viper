@@ -126,7 +126,7 @@ sub printCounter {
     print "</p></td></tr></table>\n";
 }
 
-print "Content-type: text/html\n\n";
+print "Content-type: text/html; charset=UTF-8\n\n";
 print "<html>\n";
 print "<head>\n";
 print "<title>FRC 1073 Scouting App</title>\n";

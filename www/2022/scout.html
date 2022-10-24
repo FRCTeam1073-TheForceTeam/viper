@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FRC Scouting App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=scout.js></script>
+<link rel=stylesheet href=/style.css>
+<link rel=stylesheet href=scout.css>
+<title>FRC Scouting App</title>
+</head>
+<body>
+<h1>FRC Scouting App</h1>
+<div id=select-bot style=display:none class=screen>
+    <H2>Select your robot</H2>
+    <table><tr>
+        <td class=blueTeamBG><button>B1</button></td>
+        <td rowspan=3><img class=bigimg src=field.png></td>
+        <td class=redTeamBG><button>R1</button></td>
+    </tr><tr>
+        <td class=blueTeamBG><button>B2</button></td>
+        <td class=redTeamBG><button>R2</button></td>
+    </tr><tr>
+        <td class=blueTeamBG><button>B3</button></td>
+        <td class=redTeamBG><button>R3</button></td>
+    </tr></table>
+    <img class=bigimg src=hub.png>
+    <img class=bigimg src=hangar.png>
+</div>
+<div id=select-match style=display:none class=screen>
+    <ul id=match-list></ul>
+</div>
+
+<form id=scouting style=display:none class=screen>
+  <input type=hidden name=event>
+  <input type=hidden name=match>
+  <input type=hidden name=team>
+  <fieldset class=full>
+    <legend>Autonomous</legend>
+    <table class=teamColorBG border=1>
+      <tr>
+        <td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Lower Hub<input type=text class=num value=0 name=auto_low_hub size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td><td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Bounced Out<input type=text class=num value=0 name=auto_bounce_out size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td><td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Missed Target<input type=text class=num value=0 name=auto_missed size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td><td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Upper Hub<input type=text class=num value=0 name=auto_high_hub size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td>
+      </tr>
+    </table>
+    <div class=full>
+      <label><input type=checkbox name=taxi value=1><span>Taxi Points</span></label>
+      <label><input type=checkbox name=human value=1><span>Human Score</span></label>
+    </div>
+  </fieldset>
+  <hr class=teamColorBG>
+  <fieldset class=full>
+    <legend>TeleOp</legend>
+    <table border=1>
+      <tr>
+        <td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Lower Hub<input type=text class=num value=0 name=teleop_low_hub size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td><td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Bounced Out<input type=text class=num value=0 name=teleop_bounce_out size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td><td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Missed Target<input type=text class=num value=0 name=teleop_missed size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td><td>
+          <div><img class=count src=/count_up.png></div>
+          <div>Upper Hub<input type=text class=num value=0 name=teleop_high_hub size=1 disabled></div>
+          <div><img class=count src=/count_down.png></div>
+        </td>
+      </tr>
+    </table>
+    <fieldset class=full>
+      <legend>Robot <span class=team></span> Shot From</legend>
+      <label><input type=checkbox name=shoot_from_hub value=1><span>Against<br>Hub</span></label>
+      <label><input type=checkbox name=shoot_from_field value=1><span>Spots<br>in Field</span></label>
+      <label><input type=checkbox name=shoot_from_outer_LP value=1><span>Outer<br>Launch Pad</span></label>
+      <label><input type=checkbox name=shoot_from_wallLP value=1><span>Launch Pad<br>by Wall</span></label>
+    </fieldset>
+  </fieldset>
+  <hr class=teamColorBG>
+  <fieldset class=full>
+    <legend>End Game — Robot <span class=team></span> Hung From</legend>
+      <label><input type=radio name=rung value=1><span>Low</span></label>
+      <label><input type=radio name=rung value=2><span>Middle</span></label>
+      <label><input type=radio name=rung value=3><span>High</span></label>
+      <label><input type=radio name=rung value=4><span>Traversal</span></label>
+  </fieldset>
+  <hr class=teamColorBG>
+  <fieldset class="left full">
+    <legend>Did <span class=team></span> play defense?</legend>
+    <p>
+      <label><input type=radio name=defense value=3><span>Good Defense</span></label>
+      <B>Not many</B> game pieces scored by opponent during defense
+    </p>
+    <p>
+      <label><input type=radio name=defense value=2><span>Average Defense</span></label>
+      Opponent was still able to score <B>some</B> game pieces
+    </p>
+    <p>
+      <label><input type=radio name=defense value=1><span>Below Average Defense</span></label>
+      Opponent was still able to score game pieces <B>without delay</B>
+    </p>
+  </fieldset>
+  <hr class=teamColorBG>
+  <fieldset class="left full">
+    <legend>Was <span class=team></span> defended?</legend>
+    <p>
+      <label><input type=radio name=defended value=3><span>Good Against Defense</span></label>
+      Defended but still scored game pieces with <B>little to no delay</B>
+    </p>
+    <p>
+      <label><input type=radio name=defended value=2><span>Average Against Defense</span></label>
+      Defended but still able to score <B>some</B> game pieces with delay
+    </p>
+    <p>
+      <label><input type=radio name=defended value=1><span>Affected by Defense</span></label>
+      Good defense <B>really affected</B> robot performance
+    </p>
+  </fieldset>
+  <hr class=teamColorBG>
+  <fieldset class="left full">
+    <legend>Did <span class=team></span> receive any fouls?</legend>
+    <p>
+      <label><input type=radio name=fouls value=1><span>1</span></label>
+      <label><input type=radio name=fouls value=2><span>2</span></label>
+      <label><input type=radio name=fouls value=3><span>3 or more</span></label>
+      Fouls
+    </p>
+    <p>
+      <label><input type=radio name=techfouls value=1><span>1</span></label> 
+      <label><input type=radio name=techfouls value=2><span>2</span></label>
+      <label><input type=radio name=techfouls value=3><span>3 or more</span></label>
+      Tech fouls
+    </p>
+  </fieldset>
+  <hr class=teamColorBG>
+  <fieldset class="left full">
+    <legend>Is <span class=team></span> a good robot?</legend>
+    <p>
+      <label><input type=radio name=rank value=3><span>Very good robot</span></label>
+      Could be an alliance captain
+    </p>
+    <p>
+      <label><input type=radio name=rank value=2><span>Decent robot</span></label>
+      A productive and useful robot
+    </p>
+    <p>
+      <label><input type=radio name=rank value=1><span>Struggled to be effective</span></label>
+      Maybe good at one thing, but bad at others
+    </p>
+  </fieldset>
+  <hr class=teamColorBG>
+  <fieldset class="left full">
+    <div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
+    <textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+  </fieldset>
+  <p>
+    Save data and: 
+    <button id=nextBtn>Next Match</button>
+    <button id=matchBtn>Choose Match</button>
+    <button id=robotBtn>Change Robot</button>
+    <button id=uploadBtn>Upload Data</button>
+  </p>
+  <p>
+    Discard data and: 
+    <button id=backMatchBtn>Back to match list</button>
+    <button id=backRobotBtn>Back to robot selection</button>
+  </p>
+</form>
+<form id=upload style="display:none" action=/scout/upload.cgi method=POST>
+<input id=csv type=hidden name=csv>
+</form>
+</body>
+</html>

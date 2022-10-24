@@ -1,0 +1,16 @@
+#select-bot table, #scouting table {margin: 0 auto}
+#select-bot td {width:20vw}
+#select-bot button {font-size:150%}
+#match-list {font-size:200%;font-weight:bold;max-width:16em;list-style-type:none;margin:0 auto;line-height:2em}
+img.bigimg{width:48vw}
+img.count{width:20vw;margin:0.25em 0}
+label > span{background:#D5D5D5;display:inline-block;padding:.5vw;border-radius:1vw;min-width:8vw;text-align:center;margin:.5vw 0;cursor:pointer;}
+label :checked+span{background:#AAFFAA;}
+label :disabled+span{text-decoration: #C66 wavy line-through}
+input[type='checkbox'],input[type='radio']{display:none;}
+label,fieldset{display:inline-block}
+input[type="text"]:disabled{background-color:inherit;border:none;color:inherit}
+input.num{text-align:right}
+fieldset{margin:0.5em}
+.full{width:calc(100% - 1em);margin:.5em}
+hr{height:0.5em;border:none}

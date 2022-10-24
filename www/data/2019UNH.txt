@@ -1,0 +1,2 @@
+event,match,team,taxi,human,auto_low_hub,auto_high_hub,auto_missed,auto_bounce_out,teleop_low_hub,teleop_high_hub,teleop_missed,teleop_bounce_out,shoot_from_hub,shoot_from_field,shoot_from_outer_LP,shoot_from_wallLP,rung,defense,defended,fouls,techfouls,rank,scouter,comments
+2019UNH,qm1,1234,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,unknown,none
