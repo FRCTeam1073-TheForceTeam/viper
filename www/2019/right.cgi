@@ -305,7 +305,7 @@ print "<table border=0 cellpadding=0 cellspacing=20><tr><td>\n";
 # print top rocket
 #
 print "<table border=0 cellpadding=0 cellspacing=0><tr>\n";
-print "<td colspan=4 align=center><p><B>Far Rocket Top</B></p></td></tr><tr>\n";
+print "<td colspan=4 align=center><p><b>Far Rocket Top</b></p></td></tr><tr>\n";
 printrockethatch(0);
 printrocketcargo(1);
 printrocketcargo(2);
@@ -320,7 +320,7 @@ printrockethatch(8);
 printrocketcargo(9);
 printrocketcargo(10);
 printrockethatch(11);
-print "</tr><tr><td colspan=4 align=center><p><B>Far Rocket Bottom</B></p></td>";
+print "</tr><tr><td colspan=4 align=center><p><b>Far Rocket Bottom</b></p></td>";
 print "</tr></table>";
 
 # close up container
@@ -345,22 +345,22 @@ printcargocargo(6);
 printcargohatch(7);
 print "<td><p>&nbsp;&nbsp;&nbsp;&nbsp;</p></td>\n";
 my $pos = getpos $robot;
-print "<td align=center BGCOLOR=\"#d6d4d3\"><p style=\"font-size:50px; font-weight:bold;\">";
+print "<td align=center bgcolor=\"#d6d4d3\"><p style=\"font-size:50px; font-weight:bold;\">";
 print "&nbsp;&nbsp;$team&nbsp;&nbsp;</p></td>\n";
 
 print "</tr><tr>\n";
 printcargocargo(11);
 printcargohatch(12);
 print "<td><p>&nbsp;</p></td>\n";
-print "<td align=center BGCOLOR=\"grey\">\n";
-#print "<FORM ACTION=\"wrapup.cgi\">\n";
-#print "<INPUT type=\"hidden\" name=\"game\" value=\"$game\">\n";
-#print "<INPUT type=\"hidden\" name=\"team\" value=\"$team\">\n";
-#print "<INPUT type=\"hidden\" name=\"cargo\" value=\"$cargo\">\n";
-#print "<INPUT type=\"hidden\" name=\"rocket\" value=\"$rocket\">\n";
-#print "<INPUT type=\"hidden\" name=\"hab\" value=\"$hab\">\n";
-#print "<INPUT type=\"submit\" value=\"&nbsp;<br>SAVE\"></td>\n";
-print "<B><A href=\"wrapup.cgi?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocket}\">";
+print "<td align=center bgcolor=\"grey\">\n";
+#print "<form action=\"wrapup.cgi\">\n";
+#print "<input type=\"hidden\" name=\"game\" value=\"$game\">\n";
+#print "<input type=\"hidden\" name=\"team\" value=\"$team\">\n";
+#print "<input type=\"hidden\" name=\"cargo\" value=\"$cargo\">\n";
+#print "<input type=\"hidden\" name=\"rocket\" value=\"$rocket\">\n";
+#print "<input type=\"hidden\" name=\"hab\" value=\"$hab\">\n";
+#print "<input type=\"submit\" value=\"&nbsp;<br>SAVE\"></td>\n";
+print "<b><a href=\"wrapup.cgi?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocket}\">";
 print "<img height=\"50\" width=\"100\" src=\"$picdir/next_button.png\"></a></td>\n";
 
 print "</tr></table>\n";
@@ -370,7 +370,7 @@ print "<table border=0 celpadding=0 cellspacing=20><tr><td>\n";
 
 # print bottom rocket
 print "<table border=0 cellpadding=0 cellspacing=0><tr>\n";
-print "<td colspan=4 align=center><p><B>Near Rocket Top</B></p></td></tr><tr>\n";
+print "<td colspan=4 align=center><p><b>Near Rocket Top</b></p></td></tr><tr>\n";
 printrockethatch(12);
 printrocketcargo(13);
 printrocketcargo(14);
@@ -385,7 +385,7 @@ printrockethatch(20);
 printrocketcargo(21);
 printrocketcargo(22);
 printrockethatch(23);
-print "</tr><tr><td colspan=4 align=center><p><B>Near Rocket Bottom</B></p></td>";
+print "</tr><tr><td colspan=4 align=center><p><b>Near Rocket Bottom</b></p></td>";
 print "</tr></table>\n";
 
 # close up container

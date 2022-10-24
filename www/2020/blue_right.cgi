@@ -97,7 +97,7 @@ sub printCounter {
     print "</p></th></tr>\n";
     my $params = getposparams($num, 1);
     my $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-    print "<tr><td align=center><A href=\"${me}?${append}\"><img src=$picdir/count_up2.png></a></td>\n";
+    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=$picdir/count_up2.png></a></td>\n";
 
     print "<td bgcolor=white align=center>";
     if ($num == 2 || $num == 4 || $num == 6) {
@@ -108,13 +108,13 @@ sub printCounter {
     if ($num == 1 || $num == 3 || $num == 5) {
 	$params = getposparams($num, 3);
 	$append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-	print "<A href=\"${me}?${append}\"><img src=$picdir/plus_three2.png></a>";
+	print "<a href=\"${me}?${append}\"><img src=$picdir/plus_three2.png></a>";
     }
 
     print "</td></tr>\n";
     $params = getnegparams($num);
     $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-    print "<tr><td align=center><A href=\"${me}?${append}\"><img src=$picdir/count_down2.png></a>";
+    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=$picdir/count_down2.png></a>";
     print "</td><td>";
     print "<p style=\"font-size:60px; font-weight:bold\">\n";
     print "$aarray[0]" if ($num == 1);

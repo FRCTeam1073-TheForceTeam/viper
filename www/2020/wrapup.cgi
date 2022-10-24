@@ -40,14 +40,14 @@ print "</head>\n";
 print "<body><center>\n";
 
 # declare the form
-print "<FORM ACTION=\"score.cgi\" id=\"wrapup\" enctype=\"text/plain\">\n";
-print "<INPUT type=\"hidden\" name=\"game\" value=\"$game\">\n";
-print "<INPUT type=\"hidden\" name=\"team\" value=\"$team\">\n";
-print "<INPUT type=\"hidden\" name=\"auto\" value=\"$auto\">\n";
-print "<INPUT type=\"hidden\" name=\"teleop\" value=\"$teleop\">\n";
-print "<INPUT type=\"hidden\" name=\"missed\" value=\"$missed\">\n";
-print "<INPUT type=\"hidden\" name=\"shotloc\" value=\"$shotloc\">\n";
-print "<INPUT type=\"hidden\" name=\"ctrl\" value=\"$ctrl\">\n";
+print "<form action=\"score.cgi\" id=\"wrapup\" enctype=\"text/plain\">\n";
+print "<input type=\"hidden\" name=\"game\" value=\"$game\">\n";
+print "<input type=\"hidden\" name=\"team\" value=\"$team\">\n";
+print "<input type=\"hidden\" name=\"auto\" value=\"$auto\">\n";
+print "<input type=\"hidden\" name=\"teleop\" value=\"$teleop\">\n";
+print "<input type=\"hidden\" name=\"missed\" value=\"$missed\">\n";
+print "<input type=\"hidden\" name=\"shotloc\" value=\"$shotloc\">\n";
+print "<input type=\"hidden\" name=\"ctrl\" value=\"$ctrl\">\n";
 
 print "<h2>End Game</h2>\n";
 
@@ -135,9 +135,9 @@ print "<td><p style=\"font-size:20px;\">Unknown</p></td>";
 print "<td>robot was disabled, did not participate, etc.</td></tr>\n";
 print "</table><hr>\n";
 
-print "<H2>Scouter Name: <input type=\"text\" name=\"scouter\"></H2>\n";
+print "<h2>Scouter Name: <input type=\"text\" name=\"scouter\"></h2>\n";
 
-print "<H2>Comments: <textarea name=\"comments\" form=\"wrapup\" cols=\"50\" rows=\"5\"></textarea></H2>\n";
+print "<h2>Comments: <textarea name=\"comments\" form=\"wrapup\" cols=\"50\" rows=\"5\"></textarea></h2>\n";
 
 print "<input type=\"submit\" value=\"Save answers\">";
 

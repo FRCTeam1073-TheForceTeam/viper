@@ -174,10 +174,10 @@ my $err = writeFile();
 
 if ($err ne "") {
     # print error, please try again
-    print "<H1>$err</H1>\n";
-    print "<H1>Please Click ";
+    print "<h1>$err</h1>\n";
+    print "<h1>Please Click ";
     print "<a href=\"react2.cgi?game=${game}&team=${team}\">";
-    print "here</a> to try again</H1>\n";
+    print "here</a> to try again</h1>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -196,6 +196,6 @@ sub getpos {
 my $pos = getpos $robot;
 
 print "<br><br><br>";
-print "<H1>Data for $team in Match $match saved successfully</H1>\n";
-print "<H1>Click <a href=\"index.cgi?event=${event}&pos=$pos\">here</a> to proceed to the next match</H1>\n";
+print "<h1>Data for $team in Match $match saved successfully</h1>\n";
+print "<h1>Click <a href=\"index.cgi?event=${event}&pos=$pos\">here</a> to proceed to the next match</h1>\n";
 print "</body></html>\n";

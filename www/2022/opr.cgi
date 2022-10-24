@@ -57,7 +57,7 @@ print "</head>\n";
 print "<body bgcolor=\"#eeeeee\"><center>\n";
 
 if ($event eq "") {
-    print "<H2>Error, need an event</H2>\n";
+    print "<h2>Error, need an event</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -67,7 +67,7 @@ if ($event eq "") {
 #
 my $file = "../data/${event}.txt";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -135,7 +135,7 @@ sub parseStr($) {
 
 my $fh;
 if ( ! open($fh, "<", $file) ) {
-    print "<H2>Error, could not open $file: $!</H2>\n";
+    print "<h2>Error, could not open $file: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -157,7 +157,7 @@ while (my $line = <$fh>) {
     my $rung   = $items[17];
 
     if (! exists $teamOverlayT1{$team}) {
-	$teamOverlayT1{$team}  = "<H3>Click/Tap screen to go back</H3><br>";
+	$teamOverlayT1{$team}  = "<h3>Click/Tap screen to go back</h3><br>";
 	$teamOverlayT1{$team} .= "<table cellspacing=0 cellpadding=5 border=1><tr>";
 	$teamOverlayT1{$team} .= "<th colspan=12 align=center><font size=+2>$team</font></th></tr><tr>";
 	$teamOverlayT1{$team} .= "<th>Match</th><th>Taxi</th><th>Human</th>";
@@ -346,13 +346,13 @@ my @teams = keys %teamScore;
 # metrics here are in the order in which they will be listed
 my @metrics = ('human', 'taxi', 'alo', 'ahi', 'tlo', 'thi', 'trung', 'hrung', 'mrung', 'lrung',
 	       'amis', 'tmis', 'abnc', 'tbnc');
-my %humanStr = (taxi => '<br>Taxied<br>&nbsp;', human => 'Human<BR>Scored*<br>&nbsp;',
-		alo => 'Avg #<BR>Auto<BR>Lower', ahi => 'Avg #<BR>Auto<BR>Upper',
-		amis => 'Avg #<BR>Auto<BR>Missed', abnc => 'Avg #<BR>Auto<BR>Bounced',
-		tlo => 'Avg #<BR>Lower<BR>Cargo', thi => 'Avg #<BR>Upper<BR>Cargo',
-		tmis => 'Avg #<BR>Missed<BR>Cargo', tbnc => 'Avg #<BR>Bounced<BR>Cargo',
-		trung => 'Traversal<BR>Rung<BR>Reached', hrung => 'High<BR>Rung<BR>Reached',
-		mrung => 'Middle<BR>Rung<BR>Reached', lrung => 'Low<BR>Rung<BR>Reached');
+my %humanStr = (taxi => '<br>Taxied<br>&nbsp;', human => 'Human<br>Scored*<br>&nbsp;',
+		alo => 'Avg #<br>Auto<br>Lower', ahi => 'Avg #<br>Auto<br>Upper',
+		amis => 'Avg #<br>Auto<br>Missed', abnc => 'Avg #<br>Auto<br>Bounced',
+		tlo => 'Avg #<br>Lower<br>Cargo', thi => 'Avg #<br>Upper<br>Cargo',
+		tmis => 'Avg #<br>Missed<br>Cargo', tbnc => 'Avg #<br>Bounced<br>Cargo',
+		trung => 'Traversal<br>Rung<br>Reached', hrung => 'High<br>Rung<br>Reached',
+		mrung => 'Middle<br>Rung<br>Reached', lrung => 'Low<br>Rung<br>Reached');
 my %teamdata;
 my %high;
 my %printdata;
@@ -430,32 +430,32 @@ foreach my $t (@teams) {
     print "      { 'team':$t,'bg':'a','opr':";
     my $k = "${t}opr";
     print "$teamdata{$k}";
-    my $aline = "<TD";
-    $aline .= " BGCOLOR=\"#0F0\"" if ($teamdata{$k} == $highOpr);
-    $aline .= ">$teamdata{$k}</TD>";
-    my $bline = "<TD BGCOLOR=\"#888\">$teamdata{$k}</TD>";
+    my $aline = "<td";
+    $aline .= " bgcolor=\"#0F0\"" if ($teamdata{$k} == $highOpr);
+    $aline .= ">$teamdata{$k}</td>";
+    my $bline = "<td bgcolor=\"#888\">$teamdata{$k}</td>";
     foreach my $m (@metrics) {
 	print ", '$m':";
 	$k = "${t}$m";
 	print "$teamdata{$k}";
-	$aline .= "<TD";
+	$aline .= "<td";
 	if ($high{$m} != 0.00 && $teamdata{$k} == $high{$m}) {
-	    $aline .= " BGCOLOR=\"#0F0\"";
+	    $aline .= " bgcolor=\"#0F0\"";
 	} else {
 	    # tint the printdata
-	    $aline .= " BGCOLOR=\"#CCC\"" if (exists $printdata{$k});
+	    $aline .= " bgcolor=\"#CCC\"" if (exists $printdata{$k});
 	}
 	# if the value is 0.00 then don't print it 
 	if ("$teamdata{$k}" eq "0.00") {
-	    $aline .= ">&nbsp;</TD>";
-	    $bline .= "<TD BGCOLOR=\"#888\">&nbsp;</TD>";
+	    $aline .= ">&nbsp;</td>";
+	    $bline .= "<td bgcolor=\"#888\">&nbsp;</td>";
 	} else {
 	    if (exists $printdata{$k}) {
-		$aline .= ">$printdata{$k}</TD>";
-		$bline .= "<TD BGCOLOR=\"#888\">$printdata{$k}</TD>";
+		$aline .= ">$printdata{$k}</td>";
+		$bline .= "<td bgcolor=\"#888\">$printdata{$k}</td>";
 	    } else {
-		$aline .= ">$teamdata{$k}</TD>";
-		$bline .= "<TD BGCOLOR=\"#888\">$teamdata{$k}</TD>";
+		$aline .= ">$teamdata{$k}</td>";
+		$bline .= "<td bgcolor=\"#888\">$teamdata{$k}</td>";
 	    }
 	}
     }
@@ -493,7 +493,7 @@ foreach my $m (@metrics) {
     print "    function sort${m}() {\n";
     print "      list.sort((a,b) => (b.$m > a.$m) ? 1 : (b.$m == a.$m) ? (b.opr - a.opr) : -1);\n";
     my $str = $humanStr{$m};
-    $str =~ s/<BR>/ /g;
+    $str =~ s/<br>/ /g;
     print "      document.getElementById(\"mytitle\").innerHTML = \"Pick list sorted by $str\";\n";
     print "      assign_table();\n";
     print "    }\n";
@@ -523,7 +523,7 @@ print "<div id=\"overlay\" onclick=\"off()\">\n";
 print "  <div id=\"text\">Team Data</div>\n";
 print "</div>\n";
 
-print "<H1 id=\"mytitle\">OPR-based pick list</H1>\n";
+print "<h1 id=\"mytitle\">OPR-based pick list</h1>\n";
 #print "<p><a href=\"index.cgi\">Home</a></p>\n";
 
 print "<h3>Do not use browser buttons without network connection</h3>\n";

@@ -54,7 +54,7 @@ print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 
 if ($event eq "") {
-    print "<H2>Error, need an event</H2>\n";
+    print "<h2>Error, need an event</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -64,7 +64,7 @@ if ($event eq "") {
 #
 my $file = "../data/${event}.txt";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -154,7 +154,7 @@ if ( open(my $fh, "<", $file) ) {
     }
     close $fh;
 } else {
-    print "<H2>Error, could not open $file: $!</H2>\n";
+    print "<h2>Error, could not open $file: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -270,129 +270,129 @@ my @plist = sort picksort @dlist;
 my $pstr = "";
 $pstr = join ',', @picked if (@picked > 0);
 
-print "<H1>OPR-based pick list</H1>\n";
+print "<h1>OPR-based pick list</h1>\n";
 print "<p><a href=\"index.cgi\">Home</a></p>\n";
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
-print "<th>Picked</th><th>Team</TH>";
+print "<th>Picked</th><th>Team</th>";
 #OPR
 if ($order eq "opr") {
-    print "<TH>OPR</TH>\n";
+    print "<th>OPR</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "\">OPR</a></TH>\n";
+    print "\">OPR</a></th>\n";
 }
 #ALine
 if ($order eq "autoline") {
-    print "<TH>Avg. #<br>Auto<br>Line</TH>\n";
+    print "<th>Avg. #<br>Auto<br>Line</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=autoline\">Avg. #<br>Auto<br>Line</a></TH>\n";
+    print "&order=autoline\">Avg. #<br>Auto<br>Line</a></th>\n";
 }
 #ABPort
 if ($order eq "autobot") {
-    print "<TH>Avg. #<br>Auto<br>Bottom</TH>\n";
+    print "<th>Avg. #<br>Auto<br>Bottom</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=autobot\">Avg. #<br>Auto<br>Bottom</a></TH>\n";
+    print "&order=autobot\">Avg. #<br>Auto<br>Bottom</a></th>\n";
 }
 #AOPort
 if ($order eq "autoout") {
-    print "<TH>Avg. #<br>Auto<br>Outer</TH>\n";
+    print "<th>Avg. #<br>Auto<br>Outer</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=autoout\">Avg. #<br>Auto<br>Outer</a></TH>\n";
+    print "&order=autoout\">Avg. #<br>Auto<br>Outer</a></th>\n";
 }
 #AIPort
 if ($order eq "autoin") {
-    print "<TH>Avg. #<br>Auto<br>Inner</TH>\n";
+    print "<th>Avg. #<br>Auto<br>Inner</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=autoin\">Avg. #<br>Auto<br>Inner</a></TH>\n";
+    print "&order=autoin\">Avg. #<br>Auto<br>Inner</a></th>\n";
 }
 # Telebot
 if ($order eq "telebot") {
-    print "<TH>Avg. #<br>TeleOp<br>Bottom</TH>\n";
+    print "<th>Avg. #<br>TeleOp<br>Bottom</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=telebot\">Avg. #<br>TeleOp<br>Bottom</a></TH>\n";
+    print "&order=telebot\">Avg. #<br>TeleOp<br>Bottom</a></th>\n";
 }
 # TeleOut
 if ($order eq "teleout") {
-    print "<TH>Avg. #<br>TeleOp<br>Outer</TH>\n";
+    print "<th>Avg. #<br>TeleOp<br>Outer</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=teleout\">Avg. #<br>TeleOp<br>Outer</a></TH>\n";
+    print "&order=teleout\">Avg. #<br>TeleOp<br>Outer</a></th>\n";
 }
 # TeleIn
 if ($order eq "telein") {
-    print "<TH>Avg. #<br>TeleOp<br>Inner</TH>\n";
+    print "<th>Avg. #<br>TeleOp<br>Inner</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=telein\">Avg. #<br>TeleOp<br>Inner</a></TH>\n";
+    print "&order=telein\">Avg. #<br>TeleOp<br>Inner</a></th>\n";
 }
 # AMissed
 if ($order eq "amissed") {
-    print "<TH>Avg. #<br>Auto<br>Missed</TH>\n";
+    print "<th>Avg. #<br>Auto<br>Missed</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=amissed\">Avg. #<br>Auto<br>Missed</a></TH>\n";
+    print "&order=amissed\">Avg. #<br>Auto<br>Missed</a></th>\n";
 }
 # TMissed
 if ($order eq "tmissed") {
-    print "<TH>Avg. #<br>TeleOp<br>Missed</TH>\n";
+    print "<th>Avg. #<br>TeleOp<br>Missed</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=tmissed\">Avg. #<br>TeleOp<br>Missed</a></TH>\n";
+    print "&order=tmissed\">Avg. #<br>TeleOp<br>Missed</a></th>\n";
 }
 # Rotation Control
 if ($order eq "rotate") {
-    print "<TH>Avg. #<br>Rotation<br>Control</TH>\n";
+    print "<th>Avg. #<br>Rotation<br>Control</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=rotate\">Avg. #<br>Rotation<br>Control</a></TH>\n";
+    print "&order=rotate\">Avg. #<br>Rotation<br>Control</a></th>\n";
 }
 # Position Control
 if ($order eq "position") {
-    print "<TH>Avg. #<br>Position<br>Control</TH>\n";
+    print "<th>Avg. #<br>Position<br>Control</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=position\">Avg. #<br>Position<br>Control</a></TH>\n";
+    print "&order=position\">Avg. #<br>Position<br>Control</a></th>\n";
 }
 # Climb
 if ($order eq "park") {
-    print "<TH>Avg. #<br>Parks</TH>\n";
+    print "<th>Avg. #<br>Parks</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=park\">Avg. #<br>Parks</a></TH>\n";
+    print "&order=park\">Avg. #<br>Parks</a></th>\n";
 }
 # Climb
 if ($order eq "climb") {
-    print "<TH>Avg. #<br>Climbs</TH>\n";
+    print "<th>Avg. #<br>Climbs</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=climb\">Avg. #<br>Climbs</a></TH>\n";
+    print "&order=climb\">Avg. #<br>Climbs</a></th>\n";
 }
 # Level
 if ($order eq "level") {
-    print "<TH>Avg. #<br>Leveled</TH>\n";
+    print "<th>Avg. #<br>Leveled</th>\n";
 } else {
-    print "<TH><a href=\"${me}?event=$event";
+    print "<th><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=level\">Avg. #<br>Leveled</a></TH>\n";
+    print "&order=level\">Avg. #<br>Leveled</a></th>\n";
 }
 print "</tr>\n";
 
@@ -435,7 +435,7 @@ foreach my $t (@plist) {
     my $clstr = sprintf "%.3f", $avgClimb{$items[1]};
     my $lvstr = sprintf "%.3f", $avgLevel{$items[1]};
 
-    $bgcolor = "BGCOLOR=\"GRAY\"" if (exists $pickhash{$items[1]});
+    $bgcolor = "bgcolor=\"GRAY\"" if (exists $pickhash{$items[1]});
     print "<td $bgcolor><h2><a href=\"team.cgi?team=$items[1]&event=$event\">$items[1]</a></h2></td>";
 
     my $bgc = $bgcolor;

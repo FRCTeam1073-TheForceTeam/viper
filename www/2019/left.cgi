@@ -323,7 +323,7 @@ print "<table border=0 cellpadding=0 cellspacing=20><tr><td>\n";
 # print top rocket
 #
 print "<table border=0 cellpadding=0 cellspacing=0><tr>\n";
-print "<td colspan=4 align=center><p><B>Far Rocket Top</B></p></td></tr><tr>\n";
+print "<td colspan=4 align=center><p><b>Far Rocket Top</b></p></td></tr><tr>\n";
 printrockethatch(0);
 printrocketcargo(1);
 printrocketcargo(2);
@@ -338,7 +338,7 @@ printrockethatch(8);
 printrocketcargo(9);
 printrocketcargo(10);
 printrockethatch(11);
-print "</tr><tr><td colspan=4 align=center><p><B>Far Rocket Bottom</B></p></td>";
+print "</tr><tr><td colspan=4 align=center><p><b>Far Rocket Bottom</b></p></td>";
 print "</tr></table>";
 
 # close up container
@@ -350,7 +350,7 @@ print "</td></tr></table>\n";
 print "<table border=0 cellpadding=0 cellspacing=0><tr>\n";
 
 my $pos = getpos $robot;
-print "<td align=center BGCOLOR=\"d6d4d3\"><p style=\"font-size:50px; font-weight:bold;\">";
+print "<td align=center bgcolor=\"d6d4d3\"><p style=\"font-size:50px; font-weight:bold;\">";
 print "&nbsp;&nbsp;$team&nbsp;&nbsp;</p></td>\n";
 print "<td><p>&nbsp;&nbsp;&nbsp;&nbsp;</p></td>\n";
 printcargohatch(7);
@@ -358,8 +358,8 @@ printcargocargo(6);
 
 print "</tr><tr>\n";
 
-print "<td align=center BGCOLOR=\"grey\">\n";
-print "<B><A href=\"wrapup.cgi?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocket}\">";
+print "<td align=center bgcolor=\"grey\">\n";
+print "<b><a href=\"wrapup.cgi?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocket}\">";
 print "<img height=\"50\" width=\"100\" src=\"$picdir/next_button.png\"></a></td>\n";
 print "<td><p>&nbsp;</p></td>\n";
 printcargohatch(12);
@@ -372,7 +372,7 @@ print "<table border=0 celpadding=0 cellspacing=20><tr><td>\n";
 
 # print bottom rocket
 print "<table border=0 cellpadding=0 cellspacing=0><tr>\n";
-print "<td colspan=4 align=center><p><B>Near Rocket Top</B></p></td></tr><tr>";
+print "<td colspan=4 align=center><p><b>Near Rocket Top</b></p></td></tr><tr>";
 printrockethatch(12);
 printrocketcargo(13);
 printrocketcargo(14);
@@ -387,7 +387,7 @@ printrockethatch(20);
 printrocketcargo(21);
 printrocketcargo(22);
 printrockethatch(23);
-print "</tr><tr><td colspan=4 align=center><p><B>Near Rocket Bottom</B></p></td>";
+print "</tr><tr><td colspan=4 align=center><p><b>Near Rocket Bottom</b></p></td>";
 print "</tr></table>\n";
 
 # close up container

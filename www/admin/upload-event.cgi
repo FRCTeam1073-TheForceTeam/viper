@@ -12,7 +12,7 @@ print "<head>\n";
 print "<title>FRC Scouting App</title>\n";
 print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
-print "<H1>Upload a Match Schedule</H1>\n";
+print "<h1>Upload a Match Schedule</h1>\n";
 print "<p><a href=\"/\">Home</a></p>\n";
 
 # STDIN 'CONTENT_LENGTH' is passed via ENV

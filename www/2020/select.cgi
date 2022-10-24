@@ -69,7 +69,7 @@ print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 print "<table cellpadding=2 border=0><tr><td>";
 print "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><th>";
-print "<H1>Alliance Selection</H1>\n";
+print "<h1>Alliance Selection</h1>\n";
 print "</th><td>";
 print "<p>&nbsp; &nbsp; &nbsp;<a href=\"/\">Home</a></p>\n";
 print "</td></tr></table>\n";
@@ -85,7 +85,7 @@ if ($event eq "") {
 	exit 0;
     }
 
-    print "<H2>Select an event:</H2>";
+    print "<h2>Select an event:</h2>";
     print "<table cellpadding=5 cellspacing=5 border=0>\n";
     foreach my $f (@files) {
 	my @fname = split /\//, $f;
@@ -122,7 +122,7 @@ if (-f $efile) {
 	}
 	close $fh;
     } else {
-	print "<H2>Error opening $efile: $!</H2>\n";
+	print "<h2>Error opening $efile: $!</h2>\n";
 	print "</body></html>\n";
 	exit 0;
     }
@@ -157,7 +157,7 @@ if (-f $efile) {
     }
     
     # configure semifinals
-    print "<h2><a href=\"${me}?event=$event&reset=1\">Reset</A> Alliances or Select Quarterfinal Winners</h2>\n";
+    print "<h2><a href=\"${me}?event=$event&reset=1\">Reset</a> Alliances or Select Quarterfinal Winners</h2>\n";
     print "<table cellpadding=5 cellspacing=5 border=0>";
     print "<tr><th>1</th><th>";
     if ("$s1" eq "1") {
@@ -265,7 +265,7 @@ if (-f $efile) {
     print "</table>\n";
     # can we save yet?
     if ("$s1" ne "" && "$s2" ne "" && "$s3" ne "" && "$s4" ne "") {
-	print "<br><H2><a href=\"${me}?event=${event}&s1=$s1&s2=$s2&s3=$s3&s4=$s4&save=yes\">Save</a> Semifinal Matches</H2>\n";
+	print "<br><h2><a href=\"${me}?event=${event}&s1=$s1&s2=$s2&s3=$s3&s4=$s4&save=yes\">Save</a> Semifinal Matches</h2>\n";
     }
     print "</body></html>\n";
     exit 0;
@@ -276,7 +276,7 @@ if (-f $efile) {
 #
 my $file = "../data/${event}.dat";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -291,7 +291,7 @@ if ( open(my $fh, "<", $file) ) {
     }
     close $fh;
 } else {
-    print "<H2>Error, could not open $file: $!</H2>\n";
+    print "<h2>Error, could not open $file: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -512,13 +512,13 @@ if ("$a8" ne "") {
     $alla .= "a8=$a8";
 }
 
-print "<H3>";
+print "<h3>";
 if (@aa1 > 2) {
     print "<a href=\"${me}?event=${event}&pos=${npos}&${alla}&save=yes\">Save Alliances</a>";
     print " or " if ($end ne "");
 }
 print "Select for Alliance ${alliance}:" if ($end ne "");
-print "</H3>\n";
+print "</h3>\n";
 
 if ($end ne "") {
     my @teams = sort(keys %teamlist);

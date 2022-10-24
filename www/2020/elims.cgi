@@ -29,7 +29,7 @@ print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 print "<table cellpadding=2 border=0><tr><td>";
 print "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><th>";
-print "<H1>Elimination Tournament</H1>\n";
+print "<h1>Elimination Tournament</h1>\n";
 print "</th><td>";
 print "<p>&nbsp; &nbsp; &nbsp;<a href=\"/index.cgi\">Home</a></p>\n";
 print "</td></tr></table>\n";
@@ -47,7 +47,7 @@ if ($event eq "") {
 #
 my $file = "../data/${event}.elims";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -80,7 +80,7 @@ if ( open(my $fh, "<", $file) ) {
     @a8 = split /-/, $line;
     close $fh;
 } else {
-    print "<H2>Error, could not open $file: $!</H2>\n";
+    print "<h2>Error, could not open $file: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -89,7 +89,7 @@ sub printAlliance {
     my (@all) = (@_);
     foreach my $a (@all) {
 	next if ("$a" eq "");
-	print "<td><A href=\"/team.cgi?event=$event&team=$a\">$a</a></td>";
+	print "<td><a href=\"/team.cgi?event=$event&team=$a\">$a</a></td>";
     }
 }
 
@@ -138,7 +138,7 @@ if ( -f "$sfile" ) {
 	@s4 = split /-/, $line;
 	close $fh;
     } else {
-	print "<H2>Error, could not open $sfile: $!</H2>\n";
+	print "<h2>Error, could not open $sfile: $!</h2>\n";
 	print "</body></html>\n";
 	exit 0;
     }

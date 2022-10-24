@@ -42,7 +42,7 @@ print "<head>\n";
 print "<title>FRC Scouting App</title>\n";
 print "</head>\n";
 print "<body><center>\n";
-print "<H1>FRC Scouting App</H1>\n";
+print "<h1>FRC Scouting App</h1>\n";
 
 # if event is given, make sure that 'event' does not contain any spaces
 if ("$event" ne "") {
@@ -110,19 +110,19 @@ if ("$event" eq "") {
     print "</table>\n";
 } else {
     if ("$pos" eq "") {
-	print "<H2>Select your robot</H2>\n";
+	print "<h2>Select your robot</h2>\n";
 	print "<table cellpadding=20 cellspacing=10><tr>\n";
 	my $RED  = "bgcolor=\"#ff6666\"";
 	my $BLUE = "bgcolor=\"#99ccff\"";
 	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B1\">B1</a>&nbsp;&nbsp;</h1></td>\n";
 	print "<td rowspan=3><img src=$picdir/field.png></td>\n";
-	print "<td $RED><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R1\">R1</a></h1></td>\n";
+	print "<td $RED><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R1\">R1</a></h1></td>\n";
 	print "</tr><tr>\n";
-	print "<td $BLUE><H1><a href=\"${me}?event=${event}&pos=B2\">B2</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td $RED><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R2\">R2</a></h1></td>\n";
+	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B2\">B2</a>&nbsp;&nbsp;</h1></td>\n";
+	print "<td $RED><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R2\">R2</a></h1></td>\n";
 	print "</tr><tr>\n";
-	print "<td $BLUE><H1><a href=\"${me}?event=${event}&pos=B3\">B3</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td $RED><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R3\">R3</a></h1></td>\n";
+	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B3\">B3</a>&nbsp;&nbsp;</h1></td>\n";
+	print "<td $RED><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R3\">R3</a></h1></td>\n";
 	print "</tr></table>\n";
 	print "<img src=\"$picdir/hub.png\">\n";
 	print "<img src=\"$picdir/hangar.png\">\n";
@@ -303,7 +303,7 @@ if ("$event" eq "") {
 		print "$pos : $a6[$num-4]</a></p></td>\n";
 	    }
 	    print "</table>\n";
-	    print "<BR><BR>\n";
+	    print "<br><br>\n";
 	    # are semifinals configured?
 	    my $semif = "data/${event}.semis";
 	    if (-f "$semif" ) {
@@ -315,7 +315,7 @@ if ("$event" eq "") {
 		    }
 		    close $fh;
 		} else {
-		    print "<H2>Error opening $semif: $!</H2>\n";
+		    print "<h2>Error opening $semif: $!</h2>\n";
 		    print "</td></tr></table>\n";
 		    print "</body></html>\n";
 		    exit 0;

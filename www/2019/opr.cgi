@@ -53,7 +53,7 @@ print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 
 if ($event eq "") {
-    print "<H2>Error, need an event</H2>\n";
+    print "<h2>Error, need an event</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -63,7 +63,7 @@ if ($event eq "") {
 #
 my $file = "../data/${event}.txt";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -106,7 +106,7 @@ if ( open(my $fh, "<", $file) ) {
 	}
     close $fh;
 } else {
-    print "<H2>Error, could not open $file: $!</H2>\n";
+    print "<h2>Error, could not open $file: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -143,30 +143,30 @@ my @plist = sort picksort @dlist;
 my $pstr = "";
 $pstr = join ',', @picked if (@picked > 0);
 
-print "<H1>OPR-based pick list</H1>\n";
+print "<h1>OPR-based pick list</h1>\n";
 print "<p><a href=\"index.cgi\">Home</a></p>\n";
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
-print "<th>Picked</th><th>Team</TH>";
+print "<th>Picked</th><th>Team</th>";
 #OPR
-print "<TH><a href=\"${me}?event=$event";
+print "<th><a href=\"${me}?event=$event";
 print "&picked=$pstr" if ($pstr ne "");
-print "\">OPR</a></TH>";
+print "\">OPR</a></th>";
 #Hatches
-print "<TH><a href=\"${me}?event=$event";
+print "<th><a href=\"${me}?event=$event";
 print "&picked=$pstr" if ($pstr ne "");
-print "&order=hatch\">Avg. #Hatches</a></TH>";
+print "&order=hatch\">Avg. #Hatches</a></th>";
 #Cargo
-print "<TH><a href=\"${me}?event=$event";
+print "<th><a href=\"${me}?event=$event";
 print "&picked=$pstr" if ($pstr ne "");
-print "&order=cargo\">Avg. #Cargo</a></TH>";
+print "&order=cargo\">Avg. #Cargo</a></th>";
 # LVL3
-print "<TH><a href=\"${me}?event=$event";
+print "<th><a href=\"${me}?event=$event";
 print "&picked=$pstr" if ($pstr ne "");
-print "&order=lvl3\">Avg. Lvl 3</a></TH>";
-#print "<TH>Avg. #Hatches</TH>";
-#print "<TH>Avg. #Cargo</TH>";
-#print "<TH>Avg Lvl 3</TH>";
-print "<TH>Avg Lvl 2</TH><TH>Avg Lvl 1</TH>\n";
+print "&order=lvl3\">Avg. Lvl 3</a></th>";
+#print "<th>Avg. #Hatches</th>";
+#print "<th>Avg. #Cargo</th>";
+#print "<th>Avg Lvl 3</th>";
+print "<th>Avg Lvl 2</th><th>Avg Lvl 1</th>\n";
 
 foreach my $t (@plist) {
     my @items = split /_/, $t;
@@ -197,7 +197,7 @@ foreach my $t (@plist) {
 	print "</a></td>\n";
 	my $bgcolor = "";
 	my $ostr = sprintf "%.3f", $opr;
-	$bgcolor = "BGCOLOR=\"GRAY\"" if (exists $pickhash{$items[1]});
+	$bgcolor = "bgcolor=\"GRAY\"" if (exists $pickhash{$items[1]});
 	print "<td $bgcolor><h2><a href=\"team.cgi?team=$items[1]&event=$event\">$items[1]</a></h2></td>";
 	print "<td $bgcolor><h2>$ostr</h2></td>";
 	my $hstr = sprintf "%.3f", $hatch;

@@ -39,14 +39,14 @@ print "</head>\n";
 print "<body bgcolor=\"orange\"><center>\n";
 
 if ($event eq "") {
-    print "<H2>Error, need an event</H2>\n";
+    print "<h2>Error, need an event</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
 
 my $file = "../data/${event}.csv";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -99,7 +99,7 @@ if ( open(my $fh, "<", $file) ) {
     }
     close $fh;
 } else {
-    print "<H2>Error, could not open $file: $!</H2>\n";
+    print "<h2>Error, could not open $file: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -140,7 +140,7 @@ my @cclist = sort picksort @dcclist;
 my @rhlist = sort picksort @drhlist;
 my @rclist = sort picksort @drclist;
 
-print "<H1>Scoring Results</H1>\n";
+print "<h1>Scoring Results</h1>\n";
 print "<table cellpadding=5 cellspacing=5 border=1><tr>\n";
 print "<td>\n";
 # print the team selector table

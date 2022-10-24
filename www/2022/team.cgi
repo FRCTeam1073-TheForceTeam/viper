@@ -33,13 +33,13 @@ print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 
 if ($event eq "") {
-    print "<H2>Error, need an event</H2>\n";
+    print "<h2>Error, need an event</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
 
 if ($team eq "") {
-    print "<H2>Error, need a team</H2>\n";
+    print "<h2>Error, need a team</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -47,7 +47,7 @@ if ($team eq "") {
 
 my $file = "data/${event}.txt";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -58,7 +58,7 @@ my %scout;
 my @match;
 my $fh;
 if (! open($fh, "<", $file) ) {
-    print "<H2>Error, cannot open $file for reading: $!</H2>\n";
+    print "<h2>Error, cannot open $file for reading: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -184,7 +184,7 @@ while (my $line = <$fh>) {
 	$str =~ s/%2C/,/g;
 	$str =~ s/%27/'/g;
 	$str =~ s/%3A/:/g;
-	$str =~ s/%0A/<BR>/g;
+	$str =~ s/%0A/<br>/g;
 	$str =~ s/%0D//g;
         $scout{$m} .= "<td align=center><h2>$str</h2></td>";
     } else {
@@ -196,9 +196,9 @@ while (my $line = <$fh>) {
 # review = 6
 # scouting = 3
 
-print "<H1>$team</H1>\n";
+print "<h1>$team</h1>\n";
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
-print "<tr><td colspan=16 align=center><H2>Game: Auto, TeleOp, and EndGame</h2></td></tr>\n";
+print "<tr><td colspan=16 align=center><h2>Game: Auto, TeleOp, and EndGame</h2></td></tr>\n";
 print "<tr><th>Match</th><th>Taxi</th><th>Human</th>\n";
 print "<th>Auto<br>Lower</th><th>Auto<br>Upper</th><th>TeleOp<br>Lower</th><th>TeleOp<br>Upper</th>\n";
 print "<th>Auto<br>Missed</th><th>TeleOp<br>Missed</th><th>Auto<br>Bounced</th><th>TeleOp<br>Bounced</th>\n";
@@ -211,7 +211,7 @@ foreach my $m (@match) {
 print "</table>\n";
 
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
-print "<tr><td colspan=6 align=center><H2>Game Review</h2></td></tr>\n";
+print "<tr><td colspan=6 align=center><h2>Game Review</h2></td></tr>\n";
 print "<tr><th>Match</th><th>Played<br>Defense</th><th>Against<br>Defense</th>";
 print "<th>Fouls</th><th>Tech<br>Fouls</th><th>Rank</th></tr>\n";
 
@@ -221,7 +221,7 @@ foreach my $m (@match) {
 print "</table>\n";
 
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
-print "<tr><td colspan=3 align=center><H2>Scouter and Comments</h2></td></tr>\n";
+print "<tr><td colspan=3 align=center><h2>Scouter and Comments</h2></td></tr>\n";
 print "<tr><th>Match</th><th>Name</th><th>Comments</th></tr>";
 foreach my $m (@match) {
     print "<tr><td><h2>$m</h2></td>$scout{$m}</tr>\n";

@@ -58,27 +58,27 @@ print "<head>\n";
 print "<title>FRC 1073 Configure Event</title>\n";
 print "</head>\n";
 print "<body><center>\n";
-print "<H1>FRC 1073 Configure Event Qual Matches</H1>\n";
+print "<h1>FRC 1073 Configure Event Qual Matches</h1>\n";
 
 if (@quals < 1) {
-	print "<FORM ACTION=\"event.cgi\">\n";
-	print "<TABLE CELLPADDNG=5 CELLSPACING=5 BORDER=0><tr>\n";
-	print "<TH COLSPAN=3 ALIGN=\"right\"><P>Enter Year: <input type=\"text\"  name=\"event_year\" size=5></P></TD>\n";
-	print "<TD>&nbsp;</TD>\n";
-	print "<TH COLSPAN=3 ALIGN=\"left\"><P>Enter Venue: <input type=\"text\" name=\"event_venue\" size=10></P></TD>\n";
-	print "</TR><TR><TD COLSPAN=7><p>(to match a Blue Alliance event, make sure \"YearVenue\" matches the Blue Alliance 'keyword' for this event)</p></TD>\n";
-	print "</TR><TR><TD COLSPAN=7 align=\"center\"><input type=\"submit\" value=\"Save Event\"></TD>\n";
-	print "</TR><TR><TD COLSPAN=7>&nbsp;</TD>\n";
+	print "<form action=\"event.cgi\">\n";
+	print "<table cellpadding=5 cellspacing=5 border=0><tr>\n";
+	print "<th colspan=3 align=\"right\"><p>Enter Year: <input type=\"text\"  name=\"event_year\" size=5></p></td>\n";
+	print "<td>&nbsp;</td>\n";
+	print "<th colspan=3 align=\"left\"><p>Enter Venue: <input type=\"text\" name=\"event_venue\" size=10></p></td>\n";
+	print "</tr><tr><td colspan=7><p>(to match a Blue Alliance event, make sure \"YearVenue\" matches the Blue Alliance 'keyword' for this event)</p></td>\n";
+	print "</tr><tr><td colspan=7 align=\"center\"><input type=\"submit\" value=\"Save Event\"></td>\n";
+	print "</tr><tr><td colspan=7>&nbsp;</td>\n";
 	
 	for (my $i = 1; $i <= $num_matches; $i++) {
-		print "</TR><TR>\n";
-		print "<TH><H2>Qual $i</H2></TH>\n";
-		print "<TD BGCOLOR=RED><P>R1: <input type=\"text\" name=\"Q${i}R1\" size=5></TD>\n";
-		print "<TD BGCOLOR=RED><P>R2: <input type=\"text\" name=\"Q${i}R2\" size=5></TD>\n";
-		print "<TD BGCOLOR=RED><P>R3: <input type=\"text\" name=\"Q${i}R3\"size=5></TD>\n";
-		print "<TD BGCOLOR=BLUE><P>B1: <input type=\"text\" name=\"Q${i}B1\" size=5></TD>\n";
-		print "<TD BGCOLOR=BLUE><P>B2: <input type=\"text\" name=\"Q${i}B2\" size=5></TD>\n";
-		print "<TD BGCOLOR=BLUE><P>B3: <input type=\"text\" name=\"Q${i}B3\" size=5></TD>\n";
+		print "</tr><tr>\n";
+		print "<th><h2>Qual $i</h2></th>\n";
+		print "<td bgcolor=RED><p>R1: <input type=\"text\" name=\"Q${i}R1\" size=5></td>\n";
+		print "<td bgcolor=RED><p>R2: <input type=\"text\" name=\"Q${i}R2\" size=5></td>\n";
+		print "<td bgcolor=RED><p>R3: <input type=\"text\" name=\"Q${i}R3\"size=5></td>\n";
+		print "<td bgcolor=BLUE><p>B1: <input type=\"text\" name=\"Q${i}B1\" size=5></td>\n";
+		print "<td bgcolor=BLUE><p>B2: <input type=\"text\" name=\"Q${i}B2\" size=5></td>\n";
+		print "<td bgcolor=BLUE><p>B3: <input type=\"text\" name=\"Q${i}B3\" size=5></td>\n";
 	}
 	print "</tr></table>\n";
 } else {
@@ -129,10 +129,10 @@ if (@quals < 1) {
 			}
 		}
 		close $fh;
-		print "<H1>Event ${event_year}${event_venue} successfully saved. Click <A href=\"/index.cgi\">here</A> to return to the home page</H1>\n";
+		print "<h1>Event ${event_year}${event_venue} successfully saved. Click <a href=\"/index.cgi\">here</a> to return to the home page</h1>\n";
 		exit 0;
 	} else {
-		print "<H1>Error opening $file for writing: $!</H1>\n";
+		print "<h1>Error opening $file for writing: $!</h1>\n";
 	}
 }
 

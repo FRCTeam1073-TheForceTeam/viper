@@ -29,7 +29,7 @@ print "<head>\n";
 print "<title>FRC 1073 Scouting App</title>\n";
 print "</head>\n";
 print "<body><center>\n";
-print "<H1>FRC 1073 Scouting App</H1>\n";
+print "<h1>FRC 1073 Scouting App</h1>\n";
 
 my @argCheck = split /\s+/, $event;
 if (@argCheck > 1) {
@@ -98,22 +98,22 @@ if ("$event" eq "") {
 	if ("$pos" eq "") {
 		print "<table cellpadding=20 cellspacing=10><tr>\n";
 		print "<td bgcolor=\"#ff6666\"><h1><a href=\"${me}?event=${event}&pos=R1&orient=left\">R1</a>&nbsp;&nbsp;</h1></td>\n";
-		print "<td bgcolor=\"#99ccff\"><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B1&orient=right\">B1</a></h1></td>\n";
+		print "<td bgcolor=\"#99ccff\"><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B1&orient=right\">B1</a></h1></td>\n";
 		print "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-		print "<td bgcolor=\"#99ccff\"><H1><a href=\"${me}?event=${event}&pos=B1&orient=left\">B1</a>&nbsp;&nbsp;</h1></td>\n";
-		print "<td bgcolor=\"#ff6666\"><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R1&orient=right\">R1</a></h1></td>\n";
+		print "<td bgcolor=\"#99ccff\"><h1><a href=\"${me}?event=${event}&pos=B1&orient=left\">B1</a>&nbsp;&nbsp;</h1></td>\n";
+		print "<td bgcolor=\"#ff6666\"><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R1&orient=right\">R1</a></h1></td>\n";
 		print "</tr><tr>\n";
-		print "<td bgcolor=\"#ff6666\"><H1><a href=\"${me}?event=${event}&pos=R2&orient=left\">R2</a>&nbsp;&nbsp;</h1></td>\n";
-		print "<td bgcolor=\"#99ccff\"><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B2&orient=right\">B2</a></h1></td>\n";
-		print "<td><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</H1></td>\n";
-		print "<td bgcolor=\"#99ccff\"><H1><a href=\"${me}?event=${event}&pos=B2&orient=left\">B2</a>&nbsp;&nbsp;</h1></td>\n";
-		print "<td bgcolor=\"#ff6666\"><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R2&orient=right\">R2</a></h1></td>\n";
+		print "<td bgcolor=\"#ff6666\"><h1><a href=\"${me}?event=${event}&pos=R2&orient=left\">R2</a>&nbsp;&nbsp;</h1></td>\n";
+		print "<td bgcolor=\"#99ccff\"><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B2&orient=right\">B2</a></h1></td>\n";
+		print "<td><h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h1></td>\n";
+		print "<td bgcolor=\"#99ccff\"><h1><a href=\"${me}?event=${event}&pos=B2&orient=left\">B2</a>&nbsp;&nbsp;</h1></td>\n";
+		print "<td bgcolor=\"#ff6666\"><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R2&orient=right\">R2</a></h1></td>\n";
 		print "</tr><tr>\n";
-		print "<td bgcolor=\"#ff6666\"><H1><a href=\"${me}?event=${event}&pos=R3&orient=left\">R3</a>&nbsp;&nbsp;</h1></td>\n";
-		print "<td bgcolor=\"#99ccff\"><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B3&orient=right\">B3</a></h1></td>\n";
+		print "<td bgcolor=\"#ff6666\"><h1><a href=\"${me}?event=${event}&pos=R3&orient=left\">R3</a>&nbsp;&nbsp;</h1></td>\n";
+		print "<td bgcolor=\"#99ccff\"><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B3&orient=right\">B3</a></h1></td>\n";
 		print "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
-		print "<td bgcolor=\"#99ccff\"><H1><a href=\"${me}?event=${event}&pos=B3&orient=left\">B3</a>&nbsp;&nbsp;</h1></td>\n";
-		print "<td bgcolor=\"#ff6666\"><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R3&orient=right\">R3</a></h1></td>\n";
+		print "<td bgcolor=\"#99ccff\"><h1><a href=\"${me}?event=${event}&pos=B3&orient=left\">B3</a>&nbsp;&nbsp;</h1></td>\n";
+		print "<td bgcolor=\"#ff6666\"><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R3&orient=right\">R3</a></h1></td>\n";
 		print "</tr></table>\n";
 		print "<br><h2>Pick your field orientation and robot position</<h2>\n";
 	} else {

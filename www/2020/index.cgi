@@ -30,7 +30,7 @@ print "<head>\n";
 print "<title>FRC 1073 Scouting App</title>\n";
 print "</head>\n";
 print "<body><center>\n";
-print "<H1>FRC 1073 Scouting App</H1>\n";
+print "<h1>FRC 1073 Scouting App</h1>\n";
 
 my @argCheck = split /\s+/, $event;
 if (@argCheck > 1) {
@@ -66,7 +66,7 @@ if ( "$event" ne "") {
 
 
 if ("$event" eq "") {
-    print "<H3><A href=\"/\">Back to 'Start'</a></H3>\n";
+    print "<h3><a href=\"/\">Back to 'Start'</a></h3>\n";
     print "<table cellspacing=5 cellpadding=5 border=0>\n";
 	foreach my $f (@files) {
 	    my @fname = split /\//, $f;
@@ -95,31 +95,31 @@ if ("$event" eq "") {
     print "</table>\n";
 } else {
     if ("$pos" eq "") {
-	print "<H2>Pick your Field View and Robot Position</H2>\n";
+	print "<h2>Pick your Field View and Robot Position</h2>\n";
 	print "<table cellpadding=20 cellspacing=10><tr>\n";
 	my $RED  = "bgcolor=\"#ff6666\"";
 	my $BLUE = "bgcolor=\"#99ccff\"";
 	print "<td $RED><h1><a href=\"${me}?event=${event}&pos=R1&orient=left\">R1</a>&nbsp;&nbsp;</h1></td>\n";
 	print "<td rowspan=3><img src=$picdir/full_field_blue_robots.png></td>\n";
-	print "<td $BLUE><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B1&orient=right\">B1</a></h1></td>\n";
+	print "<td $BLUE><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B1&orient=right\">B1</a></h1></td>\n";
 	print "</tr><tr>\n";
-	print "<td $RED><H1><a href=\"${me}?event=${event}&pos=R2&orient=left\">R2</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td $BLUE><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B2&orient=right\">B2</a></h1></td>\n";
+	print "<td $RED><h1><a href=\"${me}?event=${event}&pos=R2&orient=left\">R2</a>&nbsp;&nbsp;</h1></td>\n";
+	print "<td $BLUE><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B2&orient=right\">B2</a></h1></td>\n";
 	print "</tr><tr>\n";
-	print "<td $RED><H1><a href=\"${me}?event=${event}&pos=R3&orient=left\">R3</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td $BLUE><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B3&orient=right\">B3</a></h1></td>\n";
+	print "<td $RED><h1><a href=\"${me}?event=${event}&pos=R3&orient=left\">R3</a>&nbsp;&nbsp;</h1></td>\n";
+	print "<td $BLUE><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B3&orient=right\">B3</a></h1></td>\n";
 	print "</tr></table>\n";
-	print "<H1>OR</H1>\n";
+	print "<h1>OR</h1>\n";
 	print "<table cellpadding=20 cellspacing=10><tr>\n";
-	print "<td $BLUE><H1><a href=\"${me}?event=${event}&pos=B1&orient=left\">B1</a>&nbsp;&nbsp;</h1></td>\n";
+	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B1&orient=left\">B1</a>&nbsp;&nbsp;</h1></td>\n";
 	print "<td rowspan=3><img src=$picdir/full_field_red_robots.png></td>\n";
-	print "<td $RED><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R1&orient=right\">R1</a></h1></td>\n";
+	print "<td $RED><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R1&orient=right\">R1</a></h1></td>\n";
 	print "</tr><tr>\n";
-	print "<td $BLUE><H1><a href=\"${me}?event=${event}&pos=B2&orient=left\">B2</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td $RED><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R2&orient=right\">R2</a></h1></td>\n";
+	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B2&orient=left\">B2</a>&nbsp;&nbsp;</h1></td>\n";
+	print "<td $RED><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R2&orient=right\">R2</a></h1></td>\n";
 	print "</tr><tr>\n";
-	print "<td $BLUE><H1><a href=\"${me}?event=${event}&pos=B3&orient=left\">B3</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td $RED><H1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R3&orient=right\">R3</a></h1></td>\n";
+	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B3&orient=left\">B3</a>&nbsp;&nbsp;</h1></td>\n";
+	print "<td $RED><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R3&orient=right\">R3</a></h1></td>\n";
 	print "</tr></table>\n";
     } else {
 	# list matches for this position
@@ -162,7 +162,7 @@ if ("$event" eq "") {
 	
 	my @bits = split "", $pos;
 	my $num = int $bits[1];
-	$num += 3 if ($bits[0] eq "B");
+	$num += 3 if ($bits[0] eq "b");
 	print "<table border=1 cellspacing=5 cellpadding=5>\n";
 	print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">$event $pos</p></th></tr>\n";
 	for (my $m = 1; $m <= $count; $m++) {
@@ -304,7 +304,7 @@ if ("$event" eq "") {
 		print "$pos : $a6[$num-4]</a></p></td>\n";
 	    }
 	    print "</table>\n";
-	    print "<BR><BR>\n";
+	    print "<br><br>\n";
 	    # are semifinals configured?
 	    my $semif = "../data/${event}.semis";
 	    if (-f "$semif" ) {
@@ -316,7 +316,7 @@ if ("$event" eq "") {
 		    }
 		    close $fh;
 		} else {
-		    print "<H2>Error opening $semif: $!</H2>\n";
+		    print "<h2>Error opening $semif: $!</h2>\n";
 		    print "</td></tr></table>\n";
 		    print "</body></html>\n";
 		    exit 0;

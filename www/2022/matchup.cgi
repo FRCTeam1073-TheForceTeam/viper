@@ -38,12 +38,12 @@ print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 print "<table cellpadding=2 border=0><tr><td>";
 print "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</td><th>";
-print "<H1>Match Predictor</H1>\n";
+print "<h1>Match Predictor</h1>\n";
 print "</th><td>";
 print "<p>&nbsp; &nbsp; &nbsp;<a href=\"index.cgi\">Home</a></p>\n";
 print "</td></tr></table>\n";
 if ($event eq "") {
-    print "<H2>Error, need an event</H2>\n";
+    print "<h2>Error, need an event</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -53,7 +53,7 @@ if ($event eq "") {
 #
 my $file = "../data/${event}.txt";
 if (! -f $file) {
-    print "<H2>Error, file $file does not exist</H2>\n";
+    print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -74,7 +74,7 @@ my %teamRung;
 
 my $fh;
 if ( ! open($fh, "<", $file) ) {
-    print "<H2>Error, could not open $file: $!</H2>\n";
+    print "<h2>Error, could not open $file: $!</h2>\n";
     print "</body></html>\n";
     exit 0;
 }
@@ -146,13 +146,13 @@ sub printTeam {
 
 # provide team selection if teams not given
 if (@red != 3 || @blue != 3) {
-    print "<FORM ACTION=\"matchup.cgi\">\n";
-    print "<INPUT TYPE=\"hidden\" NAME=\"r1\" VALUE=\"$red[0]\">" if (@red > 0);
-    print "<INPUT TYPE=\"hidden\" NAME=\"r2\" VALUE=\"$red[1]\">" if (@red > 1);
-    print "<INPUT TYPE=\"hidden\" NAME=\"r3\" VALUE=\"$red[2]\">" if (@red > 2);
-    print "<INPUT TYPE=\"hidden\" NAME=\"b1\" VALUE=\"$blue[0]\">" if (@blue > 0);
-    print "<INPUT TYPE=\"hidden\" NAME=\"b2\" VALUE=\"$blue[1]\">" if (@blue > 1);
-    print "<INPUT TYPE=\"hidden\" NAME=\"b3\" VALUE=\"$blue[2]\">" if (@blue > 2);
+    print "<form action=\"matchup.cgi\">\n";
+    print "<input type=\"hidden\" name=\"r1\" value=\"$red[0]\">" if (@red > 0);
+    print "<input type=\"hidden\" name=\"r2\" value=\"$red[1]\">" if (@red > 1);
+    print "<input type=\"hidden\" name=\"r3\" value=\"$red[2]\">" if (@red > 2);
+    print "<input type=\"hidden\" name=\"b1\" value=\"$blue[0]\">" if (@blue > 0);
+    print "<input type=\"hidden\" name=\"b2\" value=\"$blue[1]\">" if (@blue > 1);
+    print "<input type=\"hidden\" name=\"b3\" value=\"$blue[2]\">" if (@blue > 2);
 
     print "<table cellpadding=5 cellspacing=5 border=1>\n";
     my $filler = "&nbsp;";
@@ -201,7 +201,7 @@ if (@red != 3 || @blue != 3) {
     }
     
 
-    print "<H3>Select ${pos}:</H3>\n";
+    print "<h3>Select ${pos}:</h3>\n";
     my @teams = sort {$a <=> $b} (keys %teamScore);
     print "<table cellpadding=5 cellspacing=5 border=1><tr>\n";
     my $count = 0;
@@ -230,8 +230,8 @@ if (@red != 3 || @blue != 3) {
 # RED
 print "<table cellpadding=2 cellspacing=2 border=1>\n";
 print "<tr><th colspan=7><p style=\"font-size:25px; font-weight:bold;\">Red Alliance</p></th></tr>\n";
-print "<tr><th>Team</TH><TH># Matches</TH><th>OPR</TH>";
-print "<TH>Avg. Auto Score</TH><TH>Avg. TeleOp Score</TH></TH><TH>Avg End Game</TH></tr>\n";
+print "<tr><th>Team</th><th># Matches</th><th>OPR</th>";
+print "<th>Avg. Auto Score</th><th>Avg. TeleOp Score</th></th><th>Avg End Game</th></tr>\n";
 
 # gather red high scores
 my $hopr  = 0;
@@ -285,8 +285,8 @@ print "</table>\n";
 # BLUE
 print "<table cellpadding=2 cellspacing=2 border=1>\n";
 print "<tr><th colspan=7><p style=\"font-size:25px; font-weight:bold;\">Blue Alliance</p></th></tr>\n";
-print "<tr><th>Team</TH><TH># Matches</TH><th>OPR</TH>";
-print "<TH>Avg. Auto Score</TH><TH>Avg. TeleOp Score</TH><TH>Avg End game</TH></tr>\n";
+print "<tr><th>Team</th><th># Matches</th><th>OPR</th>";
+print "<th>Avg. Auto Score</th><th>Avg. TeleOp Score</th><th>Avg End game</th></tr>\n";
 
 # gather blue high scores
 $hopr  = 0;

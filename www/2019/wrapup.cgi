@@ -36,12 +36,12 @@ print "</head>\n";
 print "<body><center>\n";
 
 # declare the form
-print "<FORM ACTION=\"score.cgi\" id=\"wrapup\" enctype=\"text/plain\">\n";
-print "<INPUT type=\"hidden\" name=\"game\" value=\"$game\">\n";
-print "<INPUT type=\"hidden\" name=\"team\" value=\"$team\">\n";
-print "<INPUT type=\"hidden\" name=\"cargo\" value=\"$cargo\">\n";
-print "<INPUT type=\"hidden\" name=\"rocket\" value=\"$rocket\">\n";
-print "<INPUT type=\"hidden\" name=\"hab\" value=\"$hab\">\n";
+print "<form action=\"score.cgi\" id=\"wrapup\" enctype=\"text/plain\">\n";
+print "<input type=\"hidden\" name=\"game\" value=\"$game\">\n";
+print "<input type=\"hidden\" name=\"team\" value=\"$team\">\n";
+print "<input type=\"hidden\" name=\"cargo\" value=\"$cargo\">\n";
+print "<input type=\"hidden\" name=\"rocket\" value=\"$rocket\">\n";
+print "<input type=\"hidden\" name=\"hab\" value=\"$hab\">\n";
 
 print "<h1>Match summary questions</h1>\n";
 
@@ -96,9 +96,9 @@ print "<tr><td><input type=\"radio\" name=\"rank\" value=\"1\"><b>Struggled to b
 print "<tr><td><input type=\"radio\" name=\"rank\" value=\"0\" CHECKED><b>Unknown</b>: robot was disabled, did not participate, etc.</td></tr>\n";
 print "</table><hr>\n";
 
-print "<H2>Scouter Name: <input type=\"text\" name=\"scouter\"></H2>\n";
+print "<h2>Scouter Name: <input type=\"text\" name=\"scouter\"></h2>\n";
 
-print "<H2>Comments: <textarea name=\"comments\" form=\"wrapup\" cols=\"50\" rows=\"5\"></textarea></H2>\n";
+print "<h2>Comments: <textarea name=\"comments\" form=\"wrapup\" cols=\"50\" rows=\"5\"></textarea></h2>\n";
 
 print "<input type=\"submit\" value=\"Save answers\">";
 
