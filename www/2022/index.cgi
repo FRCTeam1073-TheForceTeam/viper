@@ -55,7 +55,7 @@ if ("$event" ne "") {
 }
 
 # get all of the event files containing match schedules
-my $events = `ls -1 -r ../data/*.dat`;
+my $events = `ls -1 -r ../data/*.quals.csv`;
 my @files = split /\n/, $events;
 
 if (@files < 1) {
@@ -65,7 +65,7 @@ if (@files < 1) {
 }
 
 if ( "$event" ne "") {
-    my $eventCheck = "../data/${event}.dat";
+    my $eventCheck = "../data/${event}.quals.csv";
     my $found = 0;
     foreach my $f (@files) {
 	if ("$eventCheck" eq "$f") {
@@ -128,7 +128,7 @@ if ("$event" eq "") {
 	print "<img src=\"$picdir/hangar.png\">\n";
     } else {
 	# list matches for this position
-	my $file = $event . ".dat";
+	my $file = $event . ".quals.csv";
 	my $data = `cat ../data/${file}`;
 	my @lines = split /\n/, $data;
 	my %mhash;

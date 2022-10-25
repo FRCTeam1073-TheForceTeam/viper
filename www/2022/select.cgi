@@ -76,7 +76,7 @@ print "</td></tr></table>\n";
 
 
 if ($event eq "") {
-    my $events = `ls -1 ../data/*.dat`;
+    my $events = `ls -1 ../data/*.quals.csv`;
     my @files = split /\n/, $events;
 
     if (@files < 1 ) {
@@ -274,7 +274,7 @@ if (-f $efile) {
 #
 # Load match data to get team list
 #
-my $file = "../data/${event}.dat";
+my $file = "../data/${event}.quals.csv";
 if (! -f $file) {
     print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";

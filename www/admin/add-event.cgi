@@ -2,6 +2,8 @@
 
 use strict;
 use warnings;
+use CGI;
+use HTML::Escape qw/escape_html/;
 
 sub redirect {
     my ($url) = @_;
@@ -16,72 +18,30 @@ sub error {
     print "<!DOCTYPE html>\n";
     print "<html>\n";
     print "<head>\n";
-    print "<title>$title</title>\n";
+    print "<title>".escape_html($title)."</title>\n";
     print "</head>\n";
     print "<body>\n";
     print "<center>\n";
-    print "<h1 style=color:red>$title</h1>\n";
-    print "<h3>$help</h3>\n";
+    print "<h1 style=color:red>".escape_html($title)."</h1>\n";
+    print "<pre>".escape_html($help)."</pre>\n";
     print "</center>\n";
     print "</body>\n";
     print "</html>\n";
     exit 0;
 }
 
-#
-# parse input
-#
-my %params;
-if (exists $ENV{'QUERY_STRING'}) {
-    my @args = split /\&/, $ENV{'QUERY_STRING'};
-    foreach my $arg (@args) {
-        my @bits = split /=/, $arg;
-        next unless (@bits == 2);
-        $params{$bits[0]} = $bits[1];
-    }
-}
+my $cgi = CGI->new;
+my $csv = $cgi->param('csv');
+my $event = $cgi->param('event');
 
-if (exists $ENV{'CONTENT_LENGTH'}) {
-    my $content = $ENV{'CONTENT_LENGTH'};
-    if ($content > 0) {
-        my $data = <STDIN>;
-        my @args = split /\&/, $data;
-        foreach my $arg (@args) {
-            my @bits = split /=/, $arg;
-            next unless (@bits == 2);
-            $params{$bits[0]} = $bits[1];
-        }
-    }
-}
+&error("Missing event ID") if (!$event);
+&error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9_\-]+$/);
+&error("Missing CSV") if (!$csv);
+$csv =~ s/\r\n|\r/\n/g;
+&error("Malformed CSV", $csv) if (!$csv or $csv !~ /\Amatch,R1,R2,R3,B1,B2,B3\n(?:qm[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
 
-sub getMatchData {
-    my ($matchNum) = @_;
-    my $matchData = "qm$matchNum";
-    for my $robot ("R1","R2","R3","B1","B2","B3"){
-        my $key = "Q${matchNum}${robot}";
-        return 0 if (!defined($params{$key}) || $params{$key} !~ /[0-9]{1,6}/);
-        $matchData .= ",".$params{$key};
-    }
-    return $matchData
-}
-
-my $event_year =  defined $params{'event_year'} ? $params{'event_year'} : "";
-&error("Event year missing", "Click back and make sure to specify the event year") if (!$event_year);
-&error("Event year malformed", "Click back and type in the full four digit year") if ($event_year !~ /^20[0-9]{2}$/);
-my $event_venue =  defined $params{'event_venue'} ? $params{'event_venue'} : "";
-&error("Event venue missing", "Click back and make sure to specify the event venue") if (!$event_venue);
-&error("Event venue malformed", "Click back and remove the spaces and/or special characters") if ($event_venue !~ /^[a-zA-Z0-9_-]+$/);
-&error("No match data", "Click back and add match data")if (!&getMatchData(1));
-
-my $event = "${event_year}${event_venue}";
-
-my $file = "../data/${event}.dat";
-&error("Error opening $file for writing: $!", "") if (!open my $fh, ">", $file);
-
-my $matchData = "";
-print $fh "match,R1,R2,R3,B1,B2,B3\n";
-for (my $i = 1; $matchData = &getMatchData($i); $i++) {
-    print $fh "$matchData\n";
-}
+my $file = "../data/${event}.quals.csv";
+&error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
+print $fh $csv;
 close $fh;
 &redirect("/event.html#$event");

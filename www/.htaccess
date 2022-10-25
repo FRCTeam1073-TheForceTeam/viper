@@ -1,5 +1,5 @@
 Options +ExecCGI
 AddHandler cgi-script .cgi .pl
-AddType text/plain;charset=UTF-8 .dat .txt .elims
+AddType text/plain;charset=UTF-8 .dat .txt .elims .csv
 AddType text/html;charset=UTF-8 .html
 RedirectMatch /(20[0-9]{2})/?$ /#$1
