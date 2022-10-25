@@ -12,9 +12,9 @@ $(document).ready(function(){
     $('#links li').hide()
     loadEventFiles(function(fileList){
         for (var i=0; i<fileList.length; i++){
-            var extension = fileList[i].replace(/.*\./,"")
+            var extension = fileList[i].replace(/[^\.]+\./,"")
             switch (extension){
-                case "dat":
+                case "quals.csv":
                     $('.dependDat').show()
                     $('#links').show()
                     break;

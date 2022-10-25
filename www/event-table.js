@@ -101,4 +101,26 @@ $(document).ready(function(){
         lf().focus()
         return false
     })
+    $('#tableForm').submit(function(){
+        $('#eventInp').val($('#yearInp').val()+$('#venueInp').val())
+        var csv = "match,R1,R2,R3,B1,B2,B3\n"
+        var pos = ["R1","R2","R3","B1","B2","B3"]
+        console.log(csv)
+        var hasVal=true
+        for (var i=1; hasVal; i++){            
+            var line = `qm${i}`
+            for(var j=0; j<pos.length; j++){
+                val = $(`input[name="Q${i}${pos[j]}"]`).val()
+                if (val){
+                    line += ","+val
+                } else {
+                    hasVal = false
+                }
+            }
+            if (hasVal)csv += line + "\n"
+        }
+        $('#csvInp').val(csv)
+        $('#csvForm').submit()
+        return false
+    })
 })

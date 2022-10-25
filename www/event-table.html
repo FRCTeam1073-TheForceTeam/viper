@@ -12,12 +12,12 @@
 </head>
 <body>
 <h1>Enter Event Qualifier Matches</h1>
-<form action=/admin/add-event.cgi>
+<form id=tableForm action=/admin/add-event.cgi>
 <div class=side-by-side>
-Year: <input type=text placeholder=20xx required=1 pattern="^20[0-9]{2}$" name=event_year size=5>
+Year: <input id=yearInp type=text placeholder=20xx required=1 pattern="^20[0-9]{2}$" name=event_year size=5>
 </div>
 <div class=side-by-side>
-Venue: <input type=text placeholder="No spaces or symbols" required=1 pattern="^[0-9a-zA-Z_-]+$" name=event_venue size=15>
+Venue: <input id=venueInp type=text placeholder="No spaces or symbols" required=1 pattern="^[0-9a-zA-Z_-]+$" name=event_venue size=15>
 </div>
 <div class=side-by-side>
 Recommended: match the venue ID to the event URL from www.thebluealliance.com
@@ -60,6 +60,11 @@ Recommended: match the venue ID to the event URL from www.thebluealliance.com
     <p><button class=clearRow>Clear Row</button></p>
     <p><input type=submit value="Save Event"></p>
 </div>
+</form>
+
+<form id=csvForm method=POST action=/admin/add-event.cgi>
+  <input type=hidden id=eventInp name=event>
+  <input type=hidden id=csvInp name=csv>
 </form>
 
 </body>
