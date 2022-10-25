@@ -283,11 +283,12 @@ if (! -f $file) {
 
 my %teamlist;
 
-if ( open(my $fh, "<", $file) ) {
+if ( open(my $fh, "<", $file) ) { 
     while (my $line = <$fh>) {
-	my @items = split /\s+/, $line;
-	next if (@items != 3);
-	$teamlist{$items[2]} = 1;
+        my @items = split /[,]/, $line;
+        for my $i (1..$#items){
+            $teamlist{$items[$i]} = 1 if ($items[$i] =~ /^[0-9]+$/);
+        }
     }
     close $fh;
 } else {

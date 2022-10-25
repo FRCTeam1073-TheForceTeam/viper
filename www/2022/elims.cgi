@@ -89,7 +89,7 @@ sub printAlliance {
     my (@all) = (@_);
     foreach my $a (@all) {
 	next if ("$a" eq "");
-	print "<td><a href=\"/team.cgi?event=$event&team=$a\">$a</a></td>";
+	print "<td><a href=\"team.cgi?event=$event&team=$a\">$a</a></td>";
     }
 }
 
