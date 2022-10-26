@@ -2,27 +2,21 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use csv;
+use webutil;
 
-my $picdir = "/scoutpics";
-
-my $event = "";
-my $team = "";
-
-#
-# read in given game data
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $event = $params{'event'} if (defined $params{'event'});
-    $team  = $params{'team'}  if (defined $params{'team'});
-    
-}
+my $cgi = CGI->new;
+my $webutil = webutil->new;
+my $event = $cgi->param('event');
+$webutil->error("No event parameter") if (!$event);
+$webutil->error("Bad event parameter", $event) if ($event !~ /^20[0-9]{2}[0-9a-zA-Z_\-]+$/);
+my $team = $cgi->param('team');
+$webutil->error("No team parameter") if (!$team);
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
+my $file = "../data/${event}.txt";
+$webutil->error("File does not exist", $file) if (! -f $file);
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
@@ -32,169 +26,60 @@ print "<title>FRC Scouting App</title>\n";
 print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 
-if ($event eq "") {
-    print "<h2>Error, need an event</h2>\n";
-    print "</body></html>\n";
-    exit 0;
-}
-
-if ($team eq "") {
-    print "<h2>Error, need a team</h2>\n";
-    print "</body></html>\n";
-    exit 0;
-}
-
-
-my $file = "../data/${event}.txt";
-if (! -f $file) {
-    print "<h2>Error, file $file does not exist</h2>\n";
-    print "</body></html>\n";
-    exit 0;
-}
-
 my %game;
 my %review;
 my %scout;
 my @match;
-my $fh;
-if (! open($fh, "<", $file) ) {
-    print "<h2>Error, cannot open $file for reading: $!</h2>\n";
-    print "</body></html>\n";
-    exit 0;
-}
-    
-while (my $line = <$fh>) {
-    my @items = split /,/, $line;
-    next if (@items < 25 || $items[0] eq "event");
-    my $t = $items[2];
-    next unless ($team eq $t);
-    my $m = $items[1];
+my $data = `cat $file`;
+my $csv = new csv($data);
+for my $row (1..$csv->getRowCount()){
+    next if ($csv->getItemCount($row) < $csv->getHeaderCount());
+    next unless ($team eq $csv->getByName($row,'team'));
+    my $m = $csv->getByName($row,'match');
     # guard against duplicate match entries
-    if (defined $game{$m}) {
-	my $suffix = "a";
-	while (1) {
-	    my $index = $m . $suffix;
-	    if (defined $game{$index}) {
-		++$suffix;
-		next;
-	    } else {
-		$m = $index;
-		last;
-	    }
-	}
+    if (defined $game{$m}){
+        my $suffix = "a";
+        while (1) {
+            my $index = $m . $suffix;
+            if (defined $game{$index}) {
+                ++$suffix;
+                next;
+            } else {
+                $m = $index;
+                last;
+            }
+        }
     }
     push @match, $m;
-    #
-    # event=0, match=1, team=2
-    # taxi=3,human=4,alo=5,ahi=6,ami=7,abnc=8
-    # tlo=9,thi=10,tmi=11,tbnc=12
-    # hub=13,field=14,outer=15,wall=16,rung=17
-    # defense=18,defend=19,fouls=20,tech=21,scout=22
-    #
-    # GAME
-    # auto taxi
-    $game{$m}  = "<td align=center><h2>$items[3]</h2></td>";
-    # auto human
-    $game{$m} .= "<td align=center><h2>$items[4]</h2></td>";
-    # auto lower hub
-    $game{$m} .= "<td align=center><h2>$items[5]</h2></td>";
-    # auto upper hub
-    $game{$m} .= "<td align=center><h2>$items[6]</h2></td>";
-    # tele lower hub
-    $game{$m} .= "<td align=center><h2>$items[9]</h2></td>";
-    # tele upper hub
-    $game{$m} .= "<td align=center><h2>$items[10]</h2></td>";
-    # auto missed
-    $game{$m} .= "<td align=center><h2>$items[7]</h2></td>";
-    # tele missed
-    $game{$m} .= "<td align=center><h2>$items[11]</h2></td>";
-    # auto bounced
-    $game{$m} .= "<td align=center><h2>$items[8]</h2></td>";
-    # tele bounced
-    $game{$m} .= "<td align=center><h2>$items[12]</h2></td>";
-    # shot from hub
-    my $answer = "No";
-    $answer = "Yes" if ("$items[13]" ne "0");
-    $game{$m} .= "<td align=center><h2>$answer</h2></td>";
-    # shot from field
-    $answer = "No";
-    $answer = "Yes" if ("$items[14]" ne "0");
-    $game{$m} .= "<td align=center><h2>$answer</h2></td>";
-    # shot from outer launch pad
-    $answer = "No";
-    $answer = "Yes" if ("$items[15]" ne "0");
-    $game{$m} .= "<td align=center><h2>$answer</h2></td>";
-    # shot from wall launch pad
-    $answer = "No";
-    $answer = "Yes" if ("$items[16]" ne "0");
-    $game{$m}  .= "<td align=center><h2>$answer</h2></td>";
-    # rung
-    $answer = "None";
-    $answer = "Low"       if ("$items[17]" eq "1");
-    $answer = "Middle"    if ("$items[17]" eq "2");
-    $answer = "High"      if ("$items[17]" eq "3");
-    $answer = "Traversal" if ("$items[17]" eq "4");
-    $game{$m} .= "<td align=center><h2>$answer</h2></td>";
-    
-    # REVIEW
-    # defense
-    $answer = "None";
-    $answer = "Poor" if ("$items[18]" eq "1");
-    $answer = "Average" if ("$items[18]" eq "2");
-    $answer = "Good" if ("$items[18]" eq "3");
-    $review{$m}  = "<td align=center><h2>$answer</h2></td>";
-    # defended
-    $answer = "None";
-    $answer = "Poor" if ("$items[19]" eq "1");
-    $answer = "Average" if ("$items[19]" eq "2");
-    $answer = "Good" if ("$items[19]" eq "3");
-    $review{$m} .= "<td align=center><h2>$answer</h2></td>";
-    # fouls
-    $answer = "None";
-    $answer = "One" if ("$items[20]" eq "1");
-    $answer = "Two" if ("$items[20]" eq "2");
-    $answer = "Three+" if ("$items[20]" eq "3");
-    $review{$m} .= "<td align=center><h2>$answer</h2></td>";
-    # tech fouls
-    $answer = "None";
-    $answer = "One" if ("$items[21]" eq "1");
-    $answer = "Two" if ("$items[21]" eq "2");
-    $answer = "Three+" if ("$items[21]" eq "3");
-    $review{$m} .= "<td align=center><h2>$answer</h2></td>";
-    # rank
-    $answer = "unknown";
-    $answer = "struggled" if ("$items[22]" eq "1");
-    $answer = "decent" if ("$items[22]" eq "2");
-    $answer = "very good" if ("$items[22]" eq "3");
-    $review{$m} .= "<td align=center><h2>$answer</h2></td>";
 
-    # SCOUT
-    # name
-    if (@items > 22) {
-        my $str = $items[23];
-	$str =~ tr/+/ /;
-        $scout{$m} = "<td align=center><h2>$str</h2></td>";
-    } else {
-        $scout{$m} = "<td>&nbsp;</td>";
-    }
-    # comments
-    if (@items > 23) {
-        my $str = $items[24];
-	$str =~ tr/+/ /;
-	$str =~ s/%2C/,/g;
-	$str =~ s/%27/'/g;
-	$str =~ s/%3A/:/g;
-	$str =~ s/%0A/<br>/g;
-	$str =~ s/%0D//g;
-        $scout{$m} .= "<td align=center><h2>$str</h2></td>";
-    } else {
-        $scout{$m} .= "<td>&nbsp;</td>";
-    }
+    $game{$m}  = "<td align=center><h2>".$csv->getByName($row,'taxi')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'human')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'auto_low_hub')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'auto_high_hub')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'teleop_low_hub')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'teleop_high_hub')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'auto_missed')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'teleop_missed')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'auto_bounce_out')."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$csv->getByName($row,'teleop_bounce_out')."</h2></td>";
+    my $noYes = ["No","Yes"];
+    $game{$m} .= "<td align=center><h2>".$noYes->[$csv->getByName($row,'shoot_from_hub') || 0]."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$noYes->[$csv->getByName($row,'shoot_from_field') || 0]."</h2></td>";
+    $game{$m} .= "<td align=center><h2>".$noYes->[$csv->getByName($row,'shoot_from_outer_LP') || 0]."</h2></td>";
+    $game{$m}  .= "<td align=center><h2>".$noYes->[$csv->getByName($row,'shoot_from_wallLP') || 0]."</h2></td>";
+    my $rungs = ["None","Low","Middle","High","Traversal"];
+    $game{$m} .= "<td align=center><h2>".$rungs->[$csv->getByName($row,'rung') || 0]."</h2></td>";
+    my $fourGrades = ["None","Poor","Average","Good"];
+    $review{$m}  = "<td align=center><h2>".$fourGrades->[$csv->getByName($row,'defense') || 0]."</h2></td>";
+    $review{$m} .= "<td align=center><h2>".$fourGrades->[$csv->getByName($row,'defended') || 0]."</h2></td>";
+    my $noneToThreePlus = ["None","One","Two","Three+"];
+    $review{$m} .= "<td align=center><h2>".$noneToThreePlus->[$csv->getByName($row,'fouls') || 0]."</h2></td>";
+    $review{$m} .= "<td align=center><h2>".$noneToThreePlus->[$csv->getByName($row,'techfouls') || 0]."</h2></td>";
+    my $ranks = ["Unknown","Struggled","Decent","Very Good"];
+    $review{$m} .= "<td align=center><h2>".$ranks->[$csv->getByName($row,'rank') || 0]."</h2></td>";
+    $scout{$m} = "<td align=center><h2>".($csv->getByName($row,'scouter')||"&nbsp;")."</h2></td>";
+    $scout{$m} .= "<td align=center><h2>".($csv->getByName($row,'comments')||"&nbsp;")."</h2></td>";
 }
-
-# game = 16
-# review = 6
-# scouting = 3
 
 print "<h1>$team</h1>\n";
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
