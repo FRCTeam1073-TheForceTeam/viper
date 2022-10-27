@@ -1,6 +1,6 @@
 *{box-sizing:border-box;}
 html{font-size: 2vw;}
-table,tr,td,th,button,input{font-size:inherit;}
+table,tr,td,th,button,input,select,option{font-size:inherit;}
 body{text-align:center}
 table,ul{margin:0 auto;}
 ul{text-align:left}
