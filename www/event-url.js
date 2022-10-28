@@ -1,32 +1,33 @@
-var eventId = location.hash.replace(/^#/,'')
+var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9_\-]+)(?:\&.*)?$/)||["",""])[1]
 var eventYear = eventId.replace(/([0-9]{4}).*/,'$1')
 var eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1')
 var eventName = `${eventYear} ${eventVenue}`
-var eventData = []
-function loadEventData(callback){
+var eventMatches = []
+function loadEventSchedule(callback){
     $.ajax({
         async: true,  
         beforeSend: function(xhr){
             xhr.overrideMimeType("text/plain;charset=UTF-8");
         },
-        url: `/data/${eventId}.quals.csv`,
+        url: `/data/${eventId}.schedule.csv`,
         timeout: 5000,
         type: "GET",
         success: function(text) {
             var lines = text.split(/[\r\n]+/)
-            var bots = ['R1','R2','R3','B1','B2','B3']
-            for(var i=0; i<lines.length; i++){
-                if (/^([^,\t]*[,\t])?([0-9]+[,\t]){5}[0-9]+$/.test(lines[i])){
-                    var teams = lines[i].split(/[,\t]/)
-                    if (teams.length==7) teams.shift()
-                    var match = {}
-                    for (var j=0; j<teams.length; j++){
-                        match[bots[j]] = parseInt(teams[j])
+            if (lines.length>0 && lines[0] == "Match,R1,R2,R3,B1,B2,B3"){
+                var headers = lines.shift().split(/,/)
+                for(var i=0; i<lines.length; i++){
+                    if (/^(qm|qf|sf|f)([0-9]+,){6}[0-9]+$/.test(lines[i])){
+                        var data = lines[i].split(/[,\t]/)
+                        var match = {}
+                        for (var j=0; j<data.length; j++){
+                            match[headers[j]] = /^[0-9]+$/.test(data[j])?parseInt(data[j]):data[j]
+                        }
+                        eventMatches.push(match)
                     }
-                    eventData.push(match)
                 }
+                if (callback && eventMatches.length) callback(eventMatches)
             }
-            if (callback && eventData.length) callback(eventData)
         }
     })
 }
@@ -40,21 +41,7 @@ function loadEventStats(callback){
         timeout: 5000,
         type: "GET",
         success: function(text) {
-            if (callback) callback(eventData)
-        }
-    })
-}
-function loadEventElims(callback){
-    $.ajax({
-        async: true,  
-        beforeSend: function(xhr){
-            xhr.overrideMimeType("text/plain;charset=UTF-8");
-        },
-        url: `/data/${eventId}.elims`,
-        timeout: 5000,
-        type: "GET",
-        success: function(text) {
-            if (callback) callback(text.split(/[\n\r]+/))
+            if (callback) callback(text)
         }
     })
 }

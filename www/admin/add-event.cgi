@@ -17,7 +17,7 @@ $webutil->error("Missing CSV") if (!$csv);
 $csv =~ s/\r\n|\r/\n/g;
 $webutil->error("Malformed CSV", $csv) if (!$csv or $csv !~ /\Amatch,R1,R2,R3,B1,B2,B3\n(?:qm[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
 
-my $file = "../data/${event}.quals.csv";
+my $file = "../data/${event}.schedule.csv";
 $webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
 print $fh $csv;
 close $fh;

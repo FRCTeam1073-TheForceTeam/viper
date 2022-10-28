@@ -5,7 +5,6 @@ $(document).ready(function(){
         dataType:"text",
         success:function(data){
             events = data.split(/[\r\n]/)
-            showEvents()
             var years = {}
             for (var i=0; i<events.length; i++){
                 var m = events[i].match(/^[0-9]{4}/)
@@ -18,6 +17,7 @@ $(document).ready(function(){
                 $('#years').append($(`<option value=${year}>${year}</option>`))
             }
             if (!years.length) $('#years').hide()
+            showEvents()
         }
     })
     function showEvents(){
@@ -33,7 +33,6 @@ $(document).ready(function(){
                 list.append($(`<li><a href=/event.html#${event}>${year} ${venue}</a></li>`))
             }
         }
-        $('#years').val('-')
     }
     $(window).on('hashchange', showEvents)
     $('#years').change(function(){
@@ -41,5 +40,6 @@ $(document).ready(function(){
         if (/^[0-9]{4}$/.test(year)){
             location.hash = `#${year}`
         }
+        $('#years').val('-')
     })
 })

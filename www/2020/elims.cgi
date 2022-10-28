@@ -45,7 +45,7 @@ if ($event eq "") {
 #
 # Load alliances
 #
-my $file = "../data/${event}.elims";
+my $file = "../data/${event}.alliances.csv";
 if (! -f $file) {
     print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";

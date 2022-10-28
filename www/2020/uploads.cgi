@@ -82,7 +82,7 @@ my @mlist = sort (keys %mhash);
 my @dbits = split /_/, $mlist[0];
 my $venue = $dbits[0];
 
-my $file = "../data/${venue}.quals.csv";
+my $file = "../data/${venue}.schedule.csv";
 if ( -f "$file" ) {
     # save previous file for debugging
     my $i = 1;

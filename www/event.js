@@ -14,19 +14,25 @@ $(document).ready(function(){
         for (var i=0; i<fileList.length; i++){
             var extension = fileList[i].replace(/[^\.]+\./,"")
             switch (extension){
-                case "quals.csv":
-                    $('.dependDat').show()
-                    $('#links').show()
+                case "schedule.csv":
+                    $('.dependSchedule').show()
                     break;
                 case "txt":
-                    $('.dependTxt').show()
-                    $('#links').show()
+                    $('.dependScouting').show()
                     break;
-                case "elims":
-                    $('.dependElims').show()
-                    $('#links').show()
+                case "alliances.csv":
+                    $('.dependAlliances').show()
                     break;
             }
         }
+        for (var i=0; i<fileList.length; i++){
+            var extension = fileList[i].replace(/[^\.]+\./,"")
+            switch (extension){
+                case "alliances.csv":
+                    $('.notAlliances').hide()
+                    break;
+            }
+        }
+        $('#links').show()
     })
 })

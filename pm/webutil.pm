@@ -17,13 +17,12 @@ sub error {
     print "<!DOCTYPE html>\n";
     print "<html>\n";
     print "<head>\n";
+    print "<meta charset=UTF-8>\n";
     print "<title>".encode_entities($title)."</title>\n";
     print "</head>\n";
     print "<body>\n";
-    print "<center>\n";
     print "<h1 style=color:red>".encode_entities($title)."</h1>\n";
-    print "<pre>".encode_entities($help)."</pre>\n";
-    print "</center>\n";
+    print "<pre>".encode_entities($help||"")."</pre>\n";
     print "</body>\n";
     print "</html>\n";
     exit 0;
@@ -31,7 +30,7 @@ sub error {
 
 sub redirect {
     my ($self, $url) = @_;
-    $url = "http".($ENV{'PORT'}==443?"s":"")."://".$ENV{'SERVER_NAME'}.$url if ($url =~ /^\//);
+    $url = "http".($ENV{'PORT'}eq"443"?"s":"")."://".$ENV{'SERVER_NAME'}.$url if ($url =~ /^\//);
     print "Location: $url\n\n";
     exit 0;
 }

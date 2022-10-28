@@ -99,7 +99,7 @@ if (@quals < 1) {
 #		}
 #	}
 	my $estr = "${event_year}${event_venue}";
-	my $file = "../data/${estr}.quals.csv";
+	my $file = "../data/${estr}.schedule.csv";
 	if (open my $fh, ">", $file) {
 		$estr .= "_qm";
 		for (my $i = 1; $i <= $num_matches; $i++) {

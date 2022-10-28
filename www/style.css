@@ -6,8 +6,8 @@ table,ul{margin:0 auto;}
 ul{text-align:left}
 .right{text-align:right}
 .left{text-align:left}
-.redTeamBG{background-color:#ff6666}
-.blueTeamBG{background-color:#99ccff}
+.redTeamBG{background-color:#ff6666;border-color:#ff6666}
+.blueTeamBG{background-color:#99ccff;border-color:#99ccff}
 .side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box;}
 @media only screen and (max-width: 600px){
     html{font-size:12px;}

@@ -2,20 +2,12 @@
 
 use strict;
 use warnings;
+use CGI;
 
 my $me = "/admin/halt.cgi";
-my $state = "";
 
-my %params;
-if (exists $ENV{'QUERY_STRING'}) {
-    my @args = split /\&/, $ENV{'QUERY_STRING'};
-    foreach my $arg (@args) {
-        my @bits = split /=/, $arg;
-        next unless (@bits == 2);
-        $params{$bits[0]} = $bits[1];
-    }
-}
-$state = $params{'halt'} if (defined $params{'halt'});
+my $cgi = CGI->new;
+my $state = $cgi->param('halt');
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";

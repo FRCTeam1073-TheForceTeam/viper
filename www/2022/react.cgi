@@ -2,50 +2,19 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use csv;
+use webutil;
 
-#
-# read in game state
-#
-my %params;
-if (exists $ENV{'QUERY_STRING'}) {
-    my @args = split /\&/, $ENV{'QUERY_STRING'};
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-}
-
-if (exists $ENV{'CONTENT_LENGTH'}) {
-    my $content = $ENV{'CONTENT_LENGTH'};
-    if ($content > 0) {
-	my $data = <STDIN>;
-	my @args = split /\&/, $data;
-	foreach my $arg (@args) {
-	    my @bits = split /=/, $arg;
-	    next unless (@bits == 2);
-	    $params{$bits[0]} = $bits[1];
-	}
-    }
-}
-
-my $game = "";
-my $team = "";
-
-$game = $params{'game'} if (defined $params{'game'});
-$team = $params{'team'} if (defined $params{'team'});
-
-if ("$game" eq "" || "$team" eq "") {
-    print "Content-type: text/html; charset=UTF-8\n\n";
-    print "<html lang=\"en\"><head>\n";
-    print "    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
-    print "    <meta charset=\"utf-8\">\n";
-    print "  </head>\n";
-    print "  <body>\n";
-    print "  <h2>Error, missing venue, match, robot position, and/or team</h2>\n";
-    print "  </body></html>\n";
-    exit(0);
-}
+my $cgi = CGI->new;
+my $webutil = webutil->new;
+my $game = $cgi->param('game');
+$webutil->error("No game parameter") if (!$game);
+$webutil->error("Bad event parameter", $game) if ($game !~ /^20[0-9]{2}[0-9a-zA-Z\-]+_[a-z]{2}[0-9]+_[1-6]$/);
+my $team = $cgi->param('team');
+$webutil->error("No team parameter") if (!$team);
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
 
 my @gbits  = split /_/, $game;
 my $event  = $gbits[0];

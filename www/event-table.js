@@ -103,7 +103,7 @@ $(document).ready(function(){
     })
     $('#tableForm').submit(function(){
         $('#eventInp').val($('#yearInp').val()+$('#venueInp').val())
-        var csv = "match,R1,R2,R3,B1,B2,B3\n"
+        var csv = "Match,R1,R2,R3,B1,B2,B3\n"
         var pos = ["R1","R2","R3","B1","B2","B3"]
         console.log(csv)
         var hasVal=true

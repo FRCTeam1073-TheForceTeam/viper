@@ -2,23 +2,17 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
 
-my $event = "";
+my $cgi = CGI->new;
+my $webutil = webutil->new;
+my $event = $cgi->param('event');
+$webutil->error("No event specified") if (!$event);
+$webutil->error("Bad event format") if ($event !~ /^20[0-9]{2}[a-zA-Z0-9_\-]+$/);
+
 my $me = "elims.cgi";
-
-#
-# read in given game data
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $event = $params{'event'}  if (defined $params{'event'});
-}
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
@@ -34,18 +28,10 @@ print "</th><td>";
 print "<p>&nbsp; &nbsp; &nbsp;<a href=\"/index.cgi\">Home</a></p>\n";
 print "</td></tr></table>\n";
 
-
-if ($event eq "") {
-    print "<p>Error, no event given</p>\n";
-    print "</body></html>\n";
-    exit 0;
-}
-
-
 #
 # Load alliances
 #
-my $file = "../data/${event}.elims";
+my $file = "../data/${event}.alliances.csv";
 if (! -f $file) {
     print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
@@ -88,11 +74,10 @@ if ( open(my $fh, "<", $file) ) {
 sub printAlliance {
     my (@all) = (@_);
     foreach my $a (@all) {
-	next if ("$a" eq "");
-	print "<td><a href=\"team.cgi?event=$event&team=$a\">$a</a></td>";
+        next if ("$a" eq "");
+        print "<td><a href=\"team.cgi?event=$event&team=$a\">$a</a></td>";
     }
 }
-
 
 print "<table cellpadding=5 cellspacing=5 border=0>\n";
 print "<tr><th>Alliance 1</th>";
@@ -128,19 +113,19 @@ if ( -f "$sfile" ) {
     my @s3;
     my @s4;
     if ( open(my $fh, "<", $sfile) ) {
-	my $line = <$fh>;
-	@s1 = split /-/, $line;
-	$line = <$fh>;
-	@s2 = split /-/, $line;
-	$line = <$fh>;
-	@s3 = split /-/, $line;
-	$line = <$fh>;
-	@s4 = split /-/, $line;
-	close $fh;
+        my $line = <$fh>;
+        @s1 = split /-/, $line;
+        $line = <$fh>;
+        @s2 = split /-/, $line;
+        $line = <$fh>;
+        @s3 = split /-/, $line;
+        $line = <$fh>;
+        @s4 = split /-/, $line;
+        close $fh;
     } else {
-	print "<h2>Error, could not open $sfile: $!</h2>\n";
-	print "</body></html>\n";
-	exit 0;
+        print "<h2>Error, could not open $sfile: $!</h2>\n";
+        print "</body></html>\n";
+        exit 0;
     }
 
     print "<br><br><br><br>\n";

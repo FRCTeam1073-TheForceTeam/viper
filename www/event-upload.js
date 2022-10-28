@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $('#blueAllianceSource').submit(function(){
         var re= /(?:\/match\/(20[0-9]{2}[a-zA-Z0-9]+)_qm([0-9]+))|(?:\/team\/([0-9]+)\/20)/g,
-        m, event, qualifier, schedule = [["match","R1","R2","R3","B1","B2","B3"]]
+        m, event, qualifier, schedule = [["Match","R1","R2","R3","B1","B2","B3"]]
         do {
             m = re.exec($('textarea').val());            
             if (m) {

@@ -76,7 +76,7 @@ print "</td></tr></table>\n";
 
 
 if ($event eq "") {
-    my $events = `ls -1 ../data/*.quals.csv`;
+    my $events = `ls -1 ../data/*.schedule.csv`;
     my @files = split /\n/, $events;
 
     if (@files < 1 ) {
@@ -98,7 +98,7 @@ if ($event eq "") {
 }
 
 # we have an event: check if alliances already configured
-my $efile = "../data/${event}.elims";
+my $efile = "../data/${event}.alliances.csv";
 if (-f $efile) {
     # has a reset been requested?
     if ($reset ne "") {
@@ -274,7 +274,7 @@ if (-f $efile) {
 #
 # Load match data to get team list
 #
-my $file = "../data/${event}.quals.csv";
+my $file = "../data/${event}.schedule.csv";
 if (! -f $file) {
     print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";
@@ -299,7 +299,7 @@ if ( open(my $fh, "<", $file) ) {
 
 if ("$save" ne "") {
     # Here we are saving to a file
-    my $file = "../data/${event}.elims";
+    my $file = "../data/${event}.alliances.csv";
     if (open my $fh, ">", $file) {
 	print $fh "$a1\n";
 	print $fh "$a2\n";

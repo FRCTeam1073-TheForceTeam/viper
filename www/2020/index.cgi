@@ -2,26 +2,20 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
 
+my $cgi = CGI->new;
+my $webutil = webutil->new;
 my $me = "index.cgi";
-my $picdir = "/scoutpics";
+my $picdir = "scoutpics";
 
-my $event = "";
-my $pos = "";
-my $orient = "right";
+my $event = $cgi->param('event');
+my $pos = $cgi->param('pos');
+my $orient = $cgi->param('orient') || "right";
 
-if (exists $ENV{QUERY_STRING}) {
-	my @args = split /\&/, $ENV{QUERY_STRING};
-	my %params;
-	foreach my $arg (@args) {
-		my @bits = split /=/, $arg;
-		next unless (@bits == 2);
-		$params{$bits[0]} = $bits[1];
-	}
-	$event  = $params{'event'} if (defined $params{'event'});
-	$pos    = $params{'pos'} if (defined $params{'pos'});
-	$orient = $params{'orient'} if (defined $params{'orient'});
-}
+$webutil->error("Malformed event ID", $event) if ($event && $event !~ /^20[0-9]{2}[a-zA-Z0-9_\-]+$/);
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
@@ -32,14 +26,7 @@ print "</head>\n";
 print "<body><center>\n";
 print "<h1>FRC 1073 Scouting App</h1>\n";
 
-my @argCheck = split /\s+/, $event;
-if (@argCheck > 1) {
-    print "<p>ARG ERROR</p>\n";
-    print "</body></html>\n";
-    exit 0;
-}
-
-my $events = `ls -1 ../data/*.quals.csv`;
+my $events = `ls -1 ../data/*.schedule.csv`;
 my @files = split /\n/, $events;
 
 if (@files < 1) {
@@ -49,18 +36,18 @@ if (@files < 1) {
 }
 
 if ( "$event" ne "") {
-    my $eventCheck = "../data/${event}.quals.csv";
+    my $eventCheck = "../data/${event}.schedule.csv";
     my $found = 0;
     foreach my $f (@files) {
-	if ("$eventCheck" eq "$f") {
-	    $found = 1;
-	    last;
-	}
+		if ("$eventCheck" eq "$f") {
+			$found = 1;
+			last;
+		}
     }
     if ($found == 0) {
-	print "<p>Error, invalid event</p>\n";
-	print "</body></html>\n";
-	exit 0;
+		print "<p>Error, invalid event</p>\n";
+		print "</body></html>\n";
+		exit 0;
     }
 }
 
@@ -73,7 +60,7 @@ if ("$event" eq "") {
 	    my @name = split /\./, $fname[-1];
 	    print "<tr><td><h2><a href=\"${me}?event=$name[0]\">$name[0]</a></h2></td>";
 	    print "<td>";
-	    if ( -f "../data/$name[0].elims" ) {
+	    if ( -f "../data/$name[0].alliances.csv" ) {
 		print "<h2><a href=\"elims.cgi?event=$name[0]\">Alliances</a></h2>\n";
 	    } else {
 		print "&nbsp;";
@@ -123,7 +110,7 @@ if ("$event" eq "") {
 	print "</tr></table>\n";
     } else {
 	# list matches for this position
-	my $file = $event . ".quals.csv";
+	my $file = $event . ".schedule.csv";
 	my $data = `cat ../data/${file}`;
 	my @lines = split /\n/, $data;
 	my %mhash;
@@ -142,8 +129,8 @@ if ("$event" eq "") {
 	}
 	# any elims?
 	my %alliances;
-	if ( -f "../data/$event.elims" ) {
-	    $data = `cat ../data/$event.elims`;
+	if ( -f "../data/$event.alliances.csv" ) {
+	    $data = `cat ../data/$event.alliances.csv`;
 	    @lines = split /\n/, $data;
 	    my $i = 1;
 	    foreach my $line (@lines) {
@@ -162,7 +149,7 @@ if ("$event" eq "") {
 	
 	my @bits = split "", $pos;
 	my $num = int $bits[1];
-	$num += 3 if ($bits[0] eq "b");
+	$num += 3 if ($bits[0] eq "B");
 	print "<table border=1 cellspacing=5 cellpadding=5>\n";
 	print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">$event $pos</p></th></tr>\n";
 	for (my $m = 1; $m <= $count; $m++) {

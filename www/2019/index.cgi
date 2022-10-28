@@ -38,7 +38,7 @@ if (@argCheck > 1) {
     exit 0;
 }
 
-my $events = `ls -1 ../data/*.quals.csv`;
+my $events = `ls -1 ../data/*.schedule.csv`;
 my @files = split /\n/, $events;
 
 if (@files < 1) {
@@ -48,7 +48,7 @@ if (@files < 1) {
 }
 
 if ( "$event" ne "") {
-    my $eventCheck = "../data/${event}.quals.csv";
+    my $eventCheck = "../data/${event}.schedule.csv";
     my $found = 0;
     foreach my $f (@files) {
 	if ("$eventCheck" eq "$f") {
@@ -117,7 +117,7 @@ if ("$event" eq "") {
 		print "</tr></table>\n";
 		print "<br><h2>Pick your field orientation and robot position</<h2>\n";
 	} else {
-		my $file = $event . ".quals.csv";
+		my $file = $event . ".schedule.csv";
 		my $data = `cat ../data/${file}`;
 		my @lines = split /\n/, $data;
 		my %mhash;

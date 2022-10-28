@@ -2,90 +2,39 @@
 
 use strict;
 use warnings;
-
 use Fcntl qw(:flock SEEK_END);
+use CGI;
+use lib '../../pm';
+use webutil;
 
+my $cgi = CGI->new;
 
-my $game = '2019UNH_qm1_1';
-my $team = "1234";
+my $game = $cgi->param('game') || '2019UNH_qm1_1';
+my $team =  $cgi->param('team') || "1234";
 
 # game elements scouted
-my $taxi = 0;
-my $human = 0;
-my $alow = 0;
-my $ahi = 0;
-my $amis = 0;
-my $abnc = 0;
-my $tlow = 0;
-my $thi = 0;
-my $tmis = 0;
-my $tbnc = 0;
-my $shub = 0;
-my $sfld = 0;
-my $solp = 0;
-my $swlp = 0;
-my $rung = 0;
-my $defense = 0;
-my $defended = 0;
-my $fouls = 0;
-my $techfouls = 0;
-my $rank = 0;
-my $scouter = "unknown";
-my $comments = "none";
-
-#
-# read in previous game state
-#
-my %params;
-if (exists $ENV{'QUERY_STRING'}) {
-    my @args = split /\&/, $ENV{'QUERY_STRING'};
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-}
-
-if (exists $ENV{'CONTENT_LENGTH'}) {
-    my $content = $ENV{'CONTENT_LENGTH'};
-    if ($content > 0) {
-	my $data = <STDIN>;
-	my @args = split /\&/, $data;
-	foreach my $arg (@args) {
-	    my @bits = split /=/, $arg;
-	    next unless (@bits == 2);
-	    $params{$bits[0]} = $bits[1];
-	}
-    }
-}
-
-$game    = $params{'game'}    if (defined $params{'game'});
-$team    = $params{'team'}    if (defined $params{'team'});
-
-# game elements
-$taxi  = $params{'taxi'}  if (defined $params{'taxi'});
-$human = $params{'human'} if (defined $params{'human'});
-$alow  = $params{'autoLoCount'}  if (defined $params{'autoLoCount'});
-$ahi   = $params{'autoHiCount'}   if (defined $params{'autoHiCount'});
-$amis  = $params{'autoMissed'}  if (defined $params{'autoMissed'});
-$abnc  = $params{'autoBounce'}  if (defined $params{'autoBounce'});
-$tlow  = $params{'teleLoCount'}  if (defined $params{'teleLoCount'});
-$thi   = $params{'teleHiCount'}   if (defined $params{'teleHiCount'});
-$tmis  = $params{'teleMissed'}  if (defined $params{'teleMissed'});
-$tbnc  = $params{'teleBounce'}  if (defined $params{'teleBounce'});
-$shub  = $params{'shootHub'}  if (defined $params{'shootHub'});
-$sfld  = $params{'shootField'}  if (defined $params{'shootField'});
-$solp  = $params{'shootOLP'}  if (defined $params{'shootOLP'});
-$swlp  = $params{'shootWLP'}  if (defined $params{'shootWLP'});
-$rung  = $params{'rung'}  if (defined $params{'rung'});
-
-$defense   = $params{'defense'}   if (defined $params{'defense'});
-$defended  = $params{'defended'}  if (defined $params{'defended'});
-$fouls     = $params{'fouls'}     if (defined $params{'fouls'});
-$techfouls = $params{'techfouls'} if (defined $params{'techfouls'});
-$rank      = $params{'robot'}     if (defined $params{'robot'});
-$scouter   = $params{'scouter'}   if (defined $params{'scouter'});
-$comments  = $params{'comments'}  if (defined $params{'comments'});
+my $taxi = $cgi->param('taxi') || 0;
+my $human = $cgi->param('human') || 0;
+my $alow = $cgi->param('autoLoCount') || 0;
+my $ahi = $cgi->param('autoHiCount') || 0;
+my $amis = $cgi->param('autoMissed') || 0;
+my $abnc = $cgi->param('autoBounce') || 0;
+my $tlow = $cgi->param('teleLoCount') || 0;
+my $thi = $cgi->param('teleHiCount') || 0;
+my $tmis = $cgi->param('teleMissed') || 0;
+my $tbnc = $cgi->param('teleBounce') || 0;
+my $shub = $cgi->param('shootHub') || 0;
+my $sfld = $cgi->param('shootField') || 0;
+my $solp = $cgi->param('shootOLP') || 0;
+my $swlp = $cgi->param('shootWLP') || 0;
+my $rung = $cgi->param('rung') || 0;
+my $defense = $cgi->param('defense') || 0;
+my $defended = $cgi->param('defended') || 0;
+my $fouls = $cgi->param('fouls') || 0;
+my $techfouls = $cgi->param('techfouls') || 0;
+my $rank = $cgi->param('robot') || 0;
+my $scouter = $cgi->param('scouter') || "unknown";  
+my $comments = $cgi->param('comments') || "none";
 
 #
 # process/store the scouting data
@@ -139,19 +88,19 @@ sub writeFile {
 	`touch $file`;
     }
     if (open my $fh, '+<', $file) {
-	if (flock ($fh, LOCK_EX)) {
-	    my $first = <$fh>;
-	    if (!defined $first) {
-		print $fh "$header\n";
-	    }
-	    seek $fh, 0, SEEK_END;
-	    print $fh "$dline\n";
-	} else {
-	    $errstr = "failed to lock $file: $!\n";
-	}
-	close $fh;
+        if (flock ($fh, LOCK_EX)) {
+            my $first = <$fh>;
+            if (!defined $first) {
+            print $fh "$header\n";
+            }
+            seek $fh, 0, SEEK_END;
+            print $fh "$dline\n";
+        } else {
+            $errstr = "failed to lock $file: $!\n";
+        }
+        close $fh;
     } else {
-	$errstr = "failed to open $file: $!\n";
+        $errstr = "failed to open $file: $!\n";
     }
     return $errstr;
 }

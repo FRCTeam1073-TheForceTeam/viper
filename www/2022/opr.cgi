@@ -2,23 +2,16 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
 
 my $green = "#7ef542";
-my $event = "";
-
-#
-# read in given game data
-#
-if ($ENV{'QUERY_STRING'}) {
-    my @args = split /\&/, $ENV{'QUERY_STRING'};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $event = $params{'event'}  if (defined $params{'event'});
-}
+my $cgi = CGI->new;
+my $webutil = webutil->new;
+my $event = $cgi->param('event');
+$webutil->error("No event parameter") if (!$event);
+$webutil->error("Bad event parameter", $event) if ($event !~ /^20[0-9]{2}[0-9a-zA-Z_\-]+$/);
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
