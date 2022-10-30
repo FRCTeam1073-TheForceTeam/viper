@@ -86,7 +86,7 @@ if ("$event" eq "") {
             print "&nbsp;";
         }
         print "</td>\n";
-        my $csvfile = "../data/" . $name[0] . ".txt";
+        my $csvfile = "../data/" . $name[0] . ".scouting.csv";
         if ( -f "$csvfile" ) {
             print "<td><h2><a href=\"opr.cgi?event=$name[0]\">Analysis</a></h2>\n";
             print "</td><td>&nbsp;&nbsp;</td>";

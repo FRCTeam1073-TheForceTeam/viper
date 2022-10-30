@@ -3,8 +3,6 @@
 use strict;
 use Data::Dumper;
 
-my $datFiles = [ split(/\n/, `find . -name '*.dat'`) ];
-
 sub pairsToCsv(){
     my ($content, $file) = @_;
     my $csv = [["Match","R1","R2","R3","B1","B2","B3"]];
@@ -24,6 +22,7 @@ sub pairsToCsv(){
     return $content;
 }
 
+my $datFiles = [ split(/\n/, `find . -name '20*.dat'`) ];
 for my $file (@$datFiles){
     my $content = `cat $file`;
     $content = &pairsToCsv($content, $file) if ($content =~ /\=/);
@@ -33,11 +32,23 @@ for my $file (@$datFiles){
     die("Error opening $file for writing: $!") if (!open my $fh, ">", $newfile);
     print $fh $content;
     close $fh;
-
     `rm $file`;
 }
 
-my $elimsFiles = [ split(/\n/, `find . -name '*.elims'`) ];
+my $datFiles = [ split(/\n/, `find . -name '20*.txt'`) ];
+for my $file (@$datFiles){
+    my $content = `cat $file`;
+    my $newfile = $file;
+    $newfile =~ s/.*\//www\/data\//g;
+    $newfile =~ s/\.txt$/.scouting.csv/g;
+    die("Error opening $file for writing: $!") if (!open my $fh, ">", $newfile);
+    print $fh $content;
+    close $fh;
+    `rm $file`;
+}
+
+
+my $elimsFiles = [ split(/\n/, `find . -name '20*.elims'`) ];
 for my $file (@$elimsFiles){
     my $content = `cat $file`;
     $content =~ s/-/,/g;

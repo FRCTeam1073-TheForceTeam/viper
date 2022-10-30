@@ -51,7 +51,7 @@ my @carray = split "", $cargo;
 my @rarray = split "", $rocket;
 my @harray = split "", $hab;
 
-my $file   = "../data/" . $event . ".txt";
+my $file   = "../data/" . $event . ".scouting.csv";
 
 sub getheader {
     my $header0 = "event,match,team,startlevel";

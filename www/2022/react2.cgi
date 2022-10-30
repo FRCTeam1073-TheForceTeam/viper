@@ -44,7 +44,7 @@ my $event  = $gdata[0];
 my $match  = $gdata[1];
 my $robot  = $gdata[2];
 
-my $file   = "../data/" . $event . ".txt";
+my $file   = "../data/" . $event . ".scouting.csv";
 
 sub getheader {
     my $header0 = "event,match,team";

@@ -68,7 +68,7 @@ my @tarray = split "-", $teleop;
 my @sarray = split "", $shotloc;
 my @carray = split "", $ctrl;
 
-my $file   = "../data/" . $event . ".txt";
+my $file   = "../data/" . $event . ".scouting.csv";
 
 sub getheader {
     my $header0 = "event,match,team";

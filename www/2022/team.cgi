@@ -15,7 +15,7 @@ $webutil->error("Bad event parameter", $event) if ($event !~ /^20[0-9]{2}[0-9a-z
 my $team = $cgi->param('team');
 $webutil->error("No team parameter") if (!$team);
 $webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
-my $file = "../data/${event}.txt";
+my $file = "../data/${event}.scouting.csv";
 $webutil->error("File does not exist", $file) if (! -f $file);
 
 # print web page beginning

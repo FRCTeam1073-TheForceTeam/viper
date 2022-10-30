@@ -81,7 +81,7 @@ if ("$event" eq "") {
 	    my @name = split /\./, $fname[-1];
 	    print "<tr><td><h2><a href=\"${me}?event=$name[0]\">$name[0]</a></h2></td>";
 	    print "<td>&nbsp;&nbsp;</td>";
-	    my $csvfile = "/../data/" . $name[0] . ".txt";
+	    my $csvfile = "/../data/" . $name[0] . ".scouting.csv";
 	    if ( -f "$csvfile" ) {
 		print "<td><h2><a href=\"opr.cgi?event=$name[0]\">Match Data</a></h2>\n";
 		print "</td><td>&nbsp;&nbsp;</td>";

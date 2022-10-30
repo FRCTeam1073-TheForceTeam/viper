@@ -45,7 +45,7 @@ if ($team eq "") {
 }
 
 
-my $file = "../data/${event}.txt";
+my $file = "../data/${event}.scouting.csv";
 if (! -f $file) {
     print "<h2>Error, file $file does not exist</h2>\n";
     print "</body></html>\n";

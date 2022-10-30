@@ -37,7 +37,7 @@ foreach my $row (@{$uCsv}){
 
 my $savedKeys = "";
 foreach my $event (keys %{$events}){
-    my $fileName = "../data/" . $event . ".txt";
+    my $fileName = "../data/" . $event . ".scouting.csv";
     if (! -f $fileName){
 	    `touch $fileName`;
     }

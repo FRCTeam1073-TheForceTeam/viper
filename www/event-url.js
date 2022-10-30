@@ -54,7 +54,7 @@ function loadAlliances(callback){
     })
 }
 function loadEventStats(callback){
-    eventAjax(`/data/${eventId}.txt`,function(text){
+    eventAjax(`/data/${eventId}.scouting.csv`,function(text){
         eventStats=csvToArrayOfMaps(text)
         if (callback) callback(eventStats)
     })
