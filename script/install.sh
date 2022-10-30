@@ -13,3 +13,11 @@ sudo chmod -R g+rw www/data/
 # use the same group user and permissions
 # as the directory itself
 sudo chmod g+s www/data/
+
+sudo apt-get install -y \
+    apache2 \
+    libcgi-pm-perl \
+    libfile-flock-perl \
+    libhtml-escape-perl \
+    perl \
+    ;
