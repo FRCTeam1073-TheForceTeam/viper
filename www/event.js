@@ -29,7 +29,7 @@ $(document).ready(function(){
                 case "schedule.csv":
                     $('.dependSchedule').show()
                     break;
-                case "txt":
+                case "scouting.csv":
                     $('.dependScouting').show()
                     break;
                 case "alliances.csv":
