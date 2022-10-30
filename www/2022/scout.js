@@ -1,6 +1,7 @@
 var pos = ""
 var team = ""
 var match = ""
+var upload = false
 var matchName = ""
 var scouting
 parseHash()
@@ -9,10 +10,12 @@ function parseHash(){
     pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
     team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
     match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:qm|qf|sf|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
+    upload = /^\#(?:.*\&)?upload(?:\&.*)?$/.test(location.hash)
 }
 
 function showScreen(){
-    if (!pos) showPosList()
+    if (upload) showUpload()
+    else if (!pos) showPosList()
     else if (!team || !match) showMatchList()
     else showScouting()
 }
@@ -24,6 +27,23 @@ $(window).on('hashchange', function(){
     parseHash()
     showScreen()
 })
+
+function showUpload(){
+    $('.screen').hide()
+    location.hash = `#event=${eventId}&upload`
+    window.scrollTo(0,0)
+    $('h1').text("Data Upload")
+    var csv = ""
+    var uploads = getUploads()
+    for (var i=0; i<uploads.length; i++){
+        csv += uploads[i]
+    }
+    if (csv){
+        csv = toCSV()[0] + csv
+        $('#csv').val(csv)
+    }
+    $('#upload-screen').show()
+}
 
 function showPosList(){
     $('.screen').hide()
@@ -70,7 +90,7 @@ function getMatchName(matchId){
         .replace(/^qm/, "Qualifier ")
         .replace(/^qf/, "Quarter-final ")
         .replace(/^sf/, "Semi-final ")
-        .replace(/^sf/, "Final ")
+        .replace(/^f/, "Final ")
 }
 
 function getScoutKey(t,m,e){
@@ -189,42 +209,29 @@ $(document).ready(function(){
             match = "qm" + (i+1)
             showScouting()
         }
-        return false;
+        return false
 	})
     $("#matchBtn").click(function(e){
         store()
         showMatchList()
-        return false;
+        return false
 	})
     $("#robotBtn").click(function(e){
         store()
         showPosList()
-        return false;
+        return false
 	})
-    $("#uploadBtn").click(function(e){
+    $("#showUploadsBtn").click(function(e){
         store()
-        var csv = ""
-        var year = eventId.substring(0,4)
-        for (i in localStorage){
-            if (new RegExp(`${year}.*_.*_`).test(i)) {
-                csv += localStorage.getItem(i)
-            }
-        }
-        if (!csv){
-            alert ("No data to upload")
-        } else {
-            csv = toCSV()[0] + csv
-            $('#csv').val(csv)
-            $('#upload').submit()
-        }
-        return false;
+        showUpload()
+        return false
 	})
     $("#backMatchBtn").click(function(e){
         if (!formHasChanges(scouting) || confirm("Discard data and go back?")) showMatchList()
-        return false;
+        return false
 	})
     $("#backRobotBtn").click(function(e){        
         if (!formHasChanges(scouting) || confirm("Discard data and go back?")) showPosList()
-        return false;
+        return false
 	})
 })

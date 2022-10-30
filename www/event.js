@@ -4,10 +4,22 @@ $(document).ready(function(){
         return
     }
     var title = $('title')
+    var uploadCount = getUploads().length
     title.text(eventName + " " + title.text())
     $('h1').text(eventName)
     $('a').each(function(){
-        $(this).attr('href',$(this).attr('href').replace('YEAR', eventYear).replace('EVENT', eventId))
+        $(this).attr(
+            'href',$(this).attr('href')
+            .replace('YEAR', eventYear)
+            .replace('EVENT', eventId)
+            .replace('UPLOAD_COUNT', uploadCount)
+        )
+        $(this).text(
+            $(this).text()
+            .replace('YEAR', eventYear)
+            .replace('EVENT', eventId)
+            .replace('UPLOAD_COUNT', uploadCount)
+        )
     })
     $('#links li').hide()
     loadEventFiles(function(fileList){
@@ -25,14 +37,7 @@ $(document).ready(function(){
                     break;
             }
         }
-        for (var i=0; i<fileList.length; i++){
-            var extension = fileList[i].replace(/[^\.]+\./,"")
-            switch (extension){
-                case "alliances.csv":
-                    $('.notAlliances').hide()
-                    break;
-            }
-        }
+        if (uploadCount) $('.dependUploads').show()
         $('#links').show()
     })
 })

@@ -37,33 +37,15 @@ if (! -f $file) {
     print "</body></html>\n";
     exit 0;
 }
-
-my @a1;
-my @a2;
-my @a3;
-my @a4;
-my @a5;
-my @a6;
-my @a7;
-my @a8;
+my $alliances = [];
 
 if ( open(my $fh, "<", $file) ) {
-    my $line = <$fh>;
-    @a1 = split /-/, $line;
-    $line = <$fh>;
-    @a2 = split /-/, $line;
-    $line = <$fh>;
-    @a3 = split /-/, $line;
-    $line = <$fh>;
-    @a4 = split /-/, $line;
-    $line = <$fh>;
-    @a5 = split /-/, $line;
-    $line = <$fh>;
-    @a6 = split /-/, $line;
-    $line = <$fh>;
-    @a7 = split /-/, $line;
-    $line = <$fh>;
-    @a8 = split /-/, $line;
+    <$fh>;
+    for my $i (1..8){
+        my @alliance = split(/,/, <$fh>);
+        shift(@alliance);
+        push(@$alliances, [@alliance])
+    }
     close $fh;
 } else {
     print "<h2>Error, could not open $file: $!</h2>\n";
@@ -80,30 +62,12 @@ sub printAlliance {
 }
 
 print "<table cellpadding=5 cellspacing=5 border=0>\n";
-print "<tr><th>Alliance 1</th>";
-printAlliance @a1;
-print "\n</tr><tr>\n";
-print "<tr><th>Alliance 2</th>";
-printAlliance @a2;
-print "\n</tr><tr>\n";
-print "<tr><th>Alliance 3</th>";
-printAlliance @a3;
-print "\n</tr><tr>\n";
-print "<tr><th>Alliance 4</th>";
-printAlliance @a4;
-print "\n</tr><tr>\n";
-print "<tr><th>Alliance 5</th>";
-printAlliance @a5;
-print "\n</tr><tr>\n";
-print "<tr><th>Alliance 6</th>";
-printAlliance @a6;
-print "\n</tr><tr>\n";
-print "<tr><th>Alliance 7</th>";
-printAlliance @a7;
-print "\n</tr><tr>\n";
-print "<tr><th>Alliance 8</th>";
-printAlliance @a8;
-print "\n</tr></table>\n";
+
+for my $i (1..8){
+    print "<tr><th>Alliance $i</th>";
+    &printAlliance(@{$alliances->[$i-1]});
+    print "\n</tr><tr>\n";
+}
 
 my $sfile = "../data/${event}.semis";
 if ( -f "$sfile" ) {

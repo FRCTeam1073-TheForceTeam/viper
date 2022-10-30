@@ -3,59 +3,75 @@ var eventYear = eventId.replace(/([0-9]{4}).*/,'$1')
 var eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1')
 var eventName = `${eventYear} ${eventVenue}`
 var eventMatches = []
-function loadEventSchedule(callback){
+var eventAlliances = []
+var eventStats = []
+var eventFiles = []
+function eventAjax(file,callback){
     $.ajax({
         async: true,  
         beforeSend: function(xhr){
             xhr.overrideMimeType("text/plain;charset=UTF-8");
         },
-        url: `/data/${eventId}.schedule.csv`,
+        url: file,
         timeout: 5000,
+        cache: false,
         type: "GET",
-        success: function(text) {
-            var lines = text.split(/[\r\n]+/)
-            if (lines.length>0 && lines[0] == "Match,R1,R2,R3,B1,B2,B3"){
-                var headers = lines.shift().split(/,/)
-                for(var i=0; i<lines.length; i++){
-                    if (/^(qm|qf|sf|f)([0-9]+,){6}[0-9]+$/.test(lines[i])){
-                        var data = lines[i].split(/[,\t]/)
-                        var match = {}
-                        for (var j=0; j<data.length; j++){
-                            match[headers[j]] = /^[0-9]+$/.test(data[j])?parseInt(data[j]):data[j]
-                        }
-                        eventMatches.push(match)
-                    }
+        success: callback,
+        error: function(xhr,status,err){
+            console.log(err)
+            callback("")
+        }
+    })
+}
+function csvToArrayOfMaps(csv){
+    var arr = []
+    var lines = csv.split(/[\r\n]+/)
+    if (lines.length>0){
+        var headers = lines.shift().split(/,/)
+        for(var i=0; i<lines.length; i++){
+            if (lines[i]){
+                var data = lines[i].split(/[,]/)
+                var map = {}
+                for (var j=0; j<data.length; j++){
+                    map[headers[j]] = /^[0-9]+$/.test(data[j])?parseInt(data[j]):data[j]
                 }
-                if (callback && eventMatches.length) callback(eventMatches)
+                arr.push(map)
             }
         }
+    }
+    return arr
+}
+function loadEventSchedule(callback){
+    eventAjax(`/data/${eventId}.schedule.csv`,function(text){
+        eventMatches=csvToArrayOfMaps(text)
+        if (callback) callback(eventMatches)
+    })
+}
+function loadAlliances(callback){
+    eventAjax(`/data/${eventId}.alliances.csv`,function(text){
+        eventAlliances=csvToArrayOfMaps(text)
+        if (callback) callback(eventAlliances)
     })
 }
 function loadEventStats(callback){
-    $.ajax({
-        async: true,  
-        beforeSend: function(xhr){
-            xhr.overrideMimeType("text/plain;charset=UTF-8");
-        },
-        url: `/data/${eventId}.txt`,
-        timeout: 5000,
-        type: "GET",
-        success: function(text) {
-            if (callback) callback(text)
-        }
+    eventAjax(`/data/${eventId}.txt`,function(text){
+        eventStats=csvToArrayOfMaps(text)
+        if (callback) callback(eventStats)
     })
 }
 function loadEventFiles(callback){
-    $.ajax({
-        async: true,  
-        beforeSend: function(xhr){
-            xhr.overrideMimeType("text/plain;charset=UTF-8");
-        },
-        url: `/event-files.cgi?event=${eventId}`,
-        timeout: 5000,
-        type: "GET",
-        success: function(text) {
-            if (callback) callback(text.split(/[\n\r]+/))
-        }
+    eventAjax(`/event-files.cgi?event=${eventId}`,function(text){
+        eventFiles=text.split(/[\n\r]+/)
+        if (callback) callback(eventFiles)
     })
+}
+function getUploads(){
+    var uploads = []
+    var year = eventId.substring(0,4)
+    for (i in localStorage){
+        if (new RegExp(`^${year}.*_.*_`).test(i)) {
+            uploads.push(localStorage.getItem(i))
+        }
+    }
+    return uploads
 }

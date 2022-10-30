@@ -3,3 +3,8 @@ AddHandler cgi-script .cgi .pl
 AddType text/plain;charset=UTF-8 .dat .txt .elims .csv
 AddType text/html;charset=UTF-8 .html
 RedirectMatch /(20[0-9]{2})/?$ /#$1
+
+Header set Cache-Control "max-age=28800, public, must-revalidate"
+<FilesMatch "\.(csv)$">
+    Header set Cache-Control "max-age=10, public, must-revalidate"
+</FilesMatch>

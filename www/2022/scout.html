@@ -32,6 +32,12 @@
 <div id=select-match style=display:none class=screen>
     <ul id=match-list></ul>
 </div>
+<div id=upload-screen style=display:none class=screen>
+  <form id=upload action=/scout/upload.cgi method=POST>
+    <textarea class=full rows=15 id=csv name=csv></textarea>
+    <button id=uploadBtn>Upload</button>
+  </form>
+</div>
 
 <form id=scouting style=display:none class=screen>
   <input type=hidden name=event>
@@ -179,16 +185,13 @@
     <button id=nextBtn>Next Match</button>
     <button id=matchBtn>Choose Match</button>
     <button id=robotBtn>Change Robot</button>
-    <button id=uploadBtn>Upload Data</button>
+    <button id=showUploadsBtn>Upload Data</button>
   </p>
   <p>
     Discard data and: 
     <button id=backMatchBtn>Back to match list</button>
     <button id=backRobotBtn>Back to robot selection</button>
   </p>
-</form>
-<form id=upload style="display:none" action=/scout/upload.cgi method=POST>
-<input id=csv type=hidden name=csv>
 </form>
 </body>
 </html>

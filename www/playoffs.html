@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Alliances, Playoffs, Finals - FRC Scouting App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/playoffs.js></script>
+<link rel=stylesheet href=/style.css>
+<link rel=stylesheet href=/playoffs.css>
+<title>FRC Scouting App</title>
+</head>
+<body>
+<h1>Alliances, Playoffs, Finals</h1>
+<div class=screen id=alliance-selection style=display:none>
+    <h2>Alliance Selection</h2>
+    <table border=1>
+        <thead id=alliancesHead><tr><th>Alliance</th><th>Captain</th><th>First <br>Pick</th><th>Second <br>Pick</th><th style=display:none>Won Quarter-Finals</th><th style=display:none>Won Semi-Finals</th><th style=display:none>Won Finals</th></tr></thead>
+        <tbody id=alliances></tbody>
+    </table>
+
+    <template id=allianceRow>
+        <tr>
+            <th>$#</th>
+            <td><input type=text data-alliance="$#" class=captain id="A$#_captain" placeholder="team #" pattern="^[0-9]+$" size=5></td>
+            <td><input type=text data-alliance="$#" class=pick_1 id="A$#_pick_1" placeholder="team #" pattern="^[0-9]+$" size=5></td>
+            <td><input type=text data-alliance="$#" class=pick_2 id="A$#_pick_2" placeholder="team #" pattern="^[0-9]+$" size=5></td>
+            <td style=display:none></td><td style=display:none></td><td style=display:none></td>
+        </tr>
+    </template>
+    <div id=teams></div>
+
+    <div id=quarterFinalSection style=display:none>
+        <h2>Quarter Final Schedule</h2>
+        <table border=1>
+            <thead><tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
+            <tbody id=quarterFinals></tbody>
+        </table>
+        
+        <button id=saveQF>Save alliances and quarter-finals schedule</button>
+    </div>
+</div>
+<div class=screen id=brackets style=display:none>
+    <table border=1>
+        <thead><tr><th>Quarter-Finals</th><th>Semi-Finals</th><th>Finals</th><th>Winner</th></tr></head>
+        <tbody id=bracketTable></tbody>
+    </table>
+    <div id=semiFinalsSection style=display:none>
+        <h2>Semi Final Schedule</h2>
+        <table border=1>
+            <thead><tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
+            <tbody id=semiFinals></tbody>
+        </table>        
+        <button id=saveSF>Save quarter-finals winners and semi-finals schedule</button>
+    </div>
+    <div id=finalsSection style=display:none>
+        <h2>Finals Schedule</h2>
+        <table border=1>
+            <thead><tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
+            <tbody id=finals></tbody>
+        </table>        
+        <button id=saveF>Save semi-finals winners and finals schedule</button>
+    </div>
+    <div id=winnerSection style=display:none>
+        <button id=saveW>Save winner</button>
+    </div>
+</div>
+
+<form id=addAlliances method=POST action=/admin/playoffs.cgi style=display:none>
+    <input id=eventInput type=hidden name=event>
+    <input id=alliancesCsvInput type=hidden name=alliancesCsv>
+    <input id=quarterFinalsCsvInput type=hidden name=quarterFinalsCsv>
+    <input id=semiFinalsCsvInput type=hidden name=semiFinalsCsv>
+    <input id=finalsCsvInput type=hidden name=finalsCsv>
+</form>
+            
+<template id=matchRow>
+    <tr>
+        <th><span style=display:none>$matchRound</span>$#</th>
+        <td class=redTeamBG>$team1</td>
+        <td class=redTeamBG>$team2</td>
+        <td class=redTeamBG>$team3</td>
+        <td class=blueTeamBG>$team4</td>
+        <td class=blueTeamBG>$team5</td>
+        <td class=blueTeamBG>$team6</td>
+    </tr>
+</template>
+
+</body>
+</html>

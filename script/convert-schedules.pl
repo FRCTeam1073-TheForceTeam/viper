@@ -46,9 +46,9 @@ for my $file (@$elimsFiles){
     $allianceFile =~ s/.*\//www\/data\//g;
     $allianceFile =~ s/\.elims$/.alliances.csv/g;
     die("Error opening $file for writing: $!") if (!open my $fh, ">", $allianceFile);
-    print $fh "Alliance,Captain,First Pick,Second Pick\n";
+    print $fh "Alliance,Captain,First Pick,Second Pick,Won Quarter-Finals,Won Semi-Finals,Won Finals\n";
     for my $i (1..8){
-        print $fh "$i,".$alliances->[$i-1]."\n"
+        print $fh "$i,".$alliances->[$i-1].",,,\n"
     }
     close $fh;
 
