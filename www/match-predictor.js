@@ -1,20 +1,19 @@
-var eventStatsByTeam = {}
-
-loadEventStats(function(){
-    var teamList = Object.keys(eventStatsByTeam)
-    teamList.sort((a,b) => a-b)
-    for (var i=0; i<teamList.length; i++){
-        var team = teamList[i]
-        $('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
-    }
-})
 
 function lf(){
     return $('#matchTable .lastFocus')
 }
 
 $(document).ready(function(){
-    focusNext()
+    loadEventStats(function(){
+        var teamList = Object.keys(eventStatsByTeam)
+        teamList.sort((a,b) => a-b)
+        for (var i=0; i<teamList.length; i++){
+            var team = teamList[i]
+            $('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
+        }
+        loadFromLocationHash()
+        $(window).on('hashchange', loadFromLocationHash)
+    })
     $('#matchTable input').focus(focusInput).change(setPickedTeams)
 })
 
@@ -58,7 +57,32 @@ function setPickedTeams(){
         blueScore = getAllianceValue('score', blue)
         setStats('redTeamBG',red,'Red', redScore, blueScore)
         setStats('blueTeamBG',blue,'Blue', blueScore, redScore)
+    } else {
+        $('#prediction').hide()
     }
+    setLocationHash()
+}
+
+function setLocationHash(){
+    var hash = `event=${eventId}`
+    $('#matchTable input').each(function(){
+        var val = $(this).val()
+        if (/^[0-9]+$/.test(val)){
+            var name = $(this).attr('id')
+            hash += `&${name}=${val}`
+        }
+    })
+    location.hash = hash
+}
+
+function loadFromLocationHash(){
+    $('#matchTable input').each(function(){
+        var name = $(this).attr('id')        
+        var val = team = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${name}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
+        $(this).val(val)
+    })
+    setPickedTeams()
+    focusNext()
 }
 
 function setStats(colorClass, alliance, colorName, myScore, theirScore){
@@ -83,7 +107,6 @@ function setStats(colorClass, alliance, colorName, myScore, theirScore){
             el.append($(`<tr><th>${statName}</th><td>${team1Val}</td><td>${team2Val}</td><td>${team3Val}</td><td>${allianceVal}</td></tr>`))
         }
     }
-
 }
 
 function getTeamValue(field, team){
