@@ -1,6 +1,6 @@
-*{box-sizing:border-box;}
-html{font-size: 2vw;}
-table,tr,td,th,button,input,select,option{font-size:inherit;}
+*{box-sizing:border-box}
+html{font-size: 2vw}
+table,tr,td,th,button,input,select,option{font-size:inherit}
 body{text-align:center}
 table,ul{margin:0 auto;}
 ul{text-align:left}
@@ -8,7 +8,9 @@ ul{text-align:left}
 .left{text-align:left}
 .redTeamBG{background-color:#ff6666;border-color:#ff6666}
 .blueTeamBG{background-color:#99ccff;border-color:#99ccff}
-.side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box;}
+.lastFocus{background-color:lemonchiffon}
+.side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box}
+.winner{background-color:#EE6}
 @media only screen and (max-width: 600px){
     html{font-size:12px;}
 }

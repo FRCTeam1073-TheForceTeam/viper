@@ -18,10 +18,10 @@ function showAllianceSelection(){
     $('.screen').hide()
     loadEventSchedule(function(data){
         var t = {}
+        positions = ["R1","R2","R3","B1","B2","B3"]
         for (var i=1; i<data.length; i++){
-            positions = Object.keys(data[i])
-            for (var j=1; j<positions.length; j++){
-                t[parseInt(data[i][positions[j]])] = 1
+            for (var j=0; j<positions.length; j++){
+                t[data[i][positions[j]]] = 1
             }
         }
         teams = Object.keys(t);

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>FRC Scouting App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/match-predictor.js></script>
+<script src=/offline.js></script>
+<link rel=stylesheet href=/style.css>
+<link rel=stylesheet href=/match-predictor.css>
+</head>
+<body>
+<h1>Match Predictor</h1>
+<table id=matchTable>
+    <tr><th class=redTeamBG>Red</th><th class=blueTeamBG>Blue</th></tr>
+    <tr>
+        <td class=redTeamBG><input type=text id=R1 size=4 placeholder="Team #" class=lastFocus></td>
+        <td class=blueTeamBG><input type=text id=B1 size=4 placeholder="Team #" value=888></td>
+    </tr><tr>
+        <td class=redTeamBG><input type=text id=R2 size=4 placeholder="Team #" value=66></td>
+        <td class=blueTeamBG><input type=text id=B2 size=4 placeholder="Team #" value=999></td>
+    </tr><tr>
+        <td class=redTeamBG><input type=text id=R3 size=4 placeholder="Team #" value=777></td>
+        <td class=blueTeamBG><input type=text id=B3 size=4 placeholder="Team #" value=1234></td>
+    </tr>
+</table>
+<div id=teamButtons></div>
+<table id=prediction style=display:none><tr>
+    <td class=redTeamBG>
+        <h2 class=score>0</h2>
+        <table border=1 class=statTables></table>
+    </td>
+    <td class=blueTeamBG>
+        <h2 class=score>0</h2>
+        <table border=1 class=statTables></table>
+    </td>
+</tr></table>
+</body></html>

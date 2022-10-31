@@ -1,27 +1,7 @@
-#alliances input.lastFocus{
-    background-color:lemonchiffon;
-}
-button.picked{
-    background-color: darkslategray;
-}
-
-button.team{
-    width:3em;
-    height:1.5em;
-    font-size:140%;
-    margin:0.25em;
-}
-table{
-    margin:1em auto;
-    border-spacing: .1em;
-    border-collapse: separate;
-}
-table td, table th{
-    padding:0.25em;
-}
+button.picked{background-color:darkslategray}
+button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
+table{margin:1em auto;border-spacing:.1em;border-collapse:separate}
+table td,table th{padding:0.25em}
 .matchup{padding:0.5em}
 h4{padding:0;margin:0}
-.winner{
-    background-color:#EE6;
-    padding:0.5em;
-}
+.winner{padding:0.5em}

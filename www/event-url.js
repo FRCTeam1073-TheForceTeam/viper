@@ -1,3 +1,7 @@
+$.ajaxSetup({
+    cache: false
+});
+
 var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9_\-]+)(?:\&.*)?$/)||["",""])[1]
 var eventYear = eventId.replace(/([0-9]{4}).*/,'$1')
 var eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1')
@@ -5,7 +9,10 @@ var eventName = `${eventYear} ${eventVenue}`
 var eventMatches = []
 var eventAlliances = []
 var eventStats = []
+var eventStatsByTeam = {}
 var eventFiles = []
+var eventTeams = []
+
 function eventAjax(file,callback){
     $.ajax({
         async: true,  
@@ -14,7 +21,6 @@ function eventAjax(file,callback){
         },
         url: file,
         timeout: 5000,
-        cache: false,
         type: "GET",
         success: callback,
         error: function(xhr,status,err){
@@ -23,6 +29,7 @@ function eventAjax(file,callback){
         }
     })
 }
+
 function csvToArrayOfMaps(csv){
     var arr = []
     var lines = csv.split(/[\r\n]+/)
@@ -41,30 +48,45 @@ function csvToArrayOfMaps(csv){
     }
     return arr
 }
+
 function loadEventSchedule(callback){
     eventAjax(`/data/${eventId}.schedule.csv`,function(text){
         eventMatches=csvToArrayOfMaps(text)
         if (callback) callback(eventMatches)
     })
 }
+
 function loadAlliances(callback){
     eventAjax(`/data/${eventId}.alliances.csv`,function(text){
         eventAlliances=csvToArrayOfMaps(text)
         if (callback) callback(eventAlliances)
     })
 }
+
 function loadEventStats(callback){
-    eventAjax(`/data/${eventId}.scouting.csv`,function(text){
-        eventStats=csvToArrayOfMaps(text)
-        if (callback) callback(eventStats)
+
+    $.getScript(`/${eventYear}/aggregate-stats.js`, function(){
+        eventAjax(`/data/${eventId}.scouting.csv`,function(text){
+            eventStats=csvToArrayOfMaps(text)
+            for (var i=0; i<eventStats.length; i++){
+                var scout = eventStats[i]
+                var team = scout['team']
+                var aggregate = eventStatsByTeam[team] || {}
+                aggregateStats(scout, aggregate)
+                eventStatsByTeam[team] = aggregate
+            }
+            if (callback) callback(eventStats, eventStatsByTeam)
+        })
     })
 }
+
 function loadEventFiles(callback){
     eventAjax(`/event-files.cgi?event=${eventId}`,function(text){
         eventFiles=text.split(/[\n\r]+/)
         if (callback) callback(eventFiles)
     })
 }
+
 function getUploads(){
     var uploads = []
     var year = eventId.substring(0,4)
