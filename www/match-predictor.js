@@ -96,15 +96,15 @@ function setStats(colorClass, alliance, colorName, myScore, theirScore){
         team3=alliance[2]
         el.append($(`<tr><th colspan=5><h4>${section}</h4></th></tr>`))
         el.append($(`<tr><th></th><th>${team1}</th><th>${team2}</th><th>${team3}</th><th>${colorName}</th></tr>`))
-        var stats = Object.keys(statSections[section])
-        for (var j=0; j<stats.length; j++){
-            var statName = stats[j]
-            var field = statSections[section][statName]
-            var team1Val = getTeamValue(field,alliance[0]),
+        for (var j=0; j<statSections[section].length; j++){
+            var field = statSections[section][j],
+            statName = statInfo[field]['name'],
+            statType = statInfo[field]['type'],
+            team1Val = getTeamValue(field,alliance[0]),
             team2Val = getTeamValue(field,alliance[1]),
             team3Val = getTeamValue(field,alliance[2]),
             allianceVal = getAllianceValue(field,alliance)
-            el.append($(`<tr><th>${statName}</th><td>${team1Val}</td><td>${team2Val}</td><td>${team3Val}</td><td>${allianceVal}</td></tr>`))
+            if (statType=='avg') el.append($(`<tr><th>${statName}</th><td>${team1Val}</td><td>${team2Val}</td><td>${team3Val}</td><td>${allianceVal}</td></tr>`))
         }
     }
 }

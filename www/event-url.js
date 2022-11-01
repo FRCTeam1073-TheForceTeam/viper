@@ -1,5 +1,5 @@
 $.ajaxSetup({
-    cache: false
+    cache: true
 });
 
 var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9_\-]+)(?:\&.*)?$/)||["",""])[1]

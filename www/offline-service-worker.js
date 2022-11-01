@@ -1,26 +1,62 @@
-const cacheName = 'cache-v1'
-
 self.addEventListener('install', (event) => {
-    console.log('Service worker install')
-    event.waitUntil(caches.open(cacheName))
+    //console.log('Service worker install')
 })
 
 self.addEventListener('activate', (event) => {
-    console.log('Service worker activate')
-    event.waitUntil(caches.open(cacheName))
+    // delete old caches
+    caches.keys().then(function(names) {
+        for (let name of names)
+            if (names != CACHE_NAME) caches.delete(name)
+    });
 })
 
-// When there's an incoming fetch request, try and respond with a precached resource, otherwise fall back to the network
 self.addEventListener('fetch', (event) => {
-    console.log('Service worker fetch: ' + event.request.url)
+    //console.log(event.request.url)
     if (/\/(scout|admin)\//.test(event.request.url)){
         // Uploading data, these request 
         // have to go through to the server
         // Network only policy
+        //console.log('From network (scout, admin): ' + event.request.url)
         event.respondWith(fetch(event.request))
-    }
-    if (/\/20.*\.cgi/.test(event.request.url)){
+    } else if (/\/20.*\.cgi/.test(event.request.url)){
         // Legacy CGI
+        //console.log('From network (legacy cgi): ' + event.request.url)
         event.respondWith(fetch(event.request))
+    } else if (/\.(cgi|csv)/.test(event.request.url)){
+        event.respondWith(
+            // network first 
+            fetch(event.request).then((networkResponse) => {
+                return caches.open(CACHE_NAME).then((cache) => {
+                    // to cache after fetching from network
+                    //console.log('From network to cache (data): ' + event.request.url)
+                    cache.put(event.request, networkResponse.clone())
+                    return networkResponse
+                })
+            }).catch(() => {
+                //console.log('From cache (data): ' + event.request.url)
+                // from cache if network failed
+                return caches.match(event.request)
+            })
+        )
+    } else {
+        // Everything else is static files
+        // Cache first, but network if it isn't available
+        event.respondWith(
+            caches.match(event.request).then((cacheResponse) => {
+                // If it is available in cache
+                if (cacheResponse){
+                    //console.log('From cache (static): ' + event.request.url)
+                    return cacheResponse
+                }
+                // If it needs to be fetched and cached
+                return fetch(event.request).then((networkResponse) => {
+                    //console.log('From network to cache (static): ' + event.request.url)
+                    return caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, networkResponse.clone())
+                        return networkResponse
+                    })
+                })
+            })
+        )
     }
 })
