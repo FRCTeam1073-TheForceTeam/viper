@@ -6,7 +6,7 @@ use warnings;
 my $me = "left.cgi";
 my $height = 125;
 my $width = 125;
-my $picdir = "/scoutpics";
+my $picdir = "scoutpics";
 
 my $game = '2019UNH_qm1_1';
 my $team = '1234';
