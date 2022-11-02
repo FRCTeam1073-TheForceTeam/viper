@@ -1,6 +1,10 @@
 $(document).ready(function(){
     loadEventStats(buildTable)
     $('h1').text(eventName + " " + $('h1').text())
+    $('#lightBoxBG').click(function(){
+        $('#lightBoxBG').hide()
+        $('#lightBoxContent').hide()
+    })
 })
 
 var teamList = []
@@ -48,7 +52,7 @@ function buildTable(){
                 var team = teamList[k]
                 picked = teamsPicked[team],
                 value = getTeamValue(field, team)
-                tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).text(statInfo[field]['type']=='%'?Math.round(value*100)+"%":Math.round(value)))
+                tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',team).click(showTeamStats).text(statInfo[field]['type']=='%'?Math.round(value*100)+"%":Math.round(value)))
             }
             table.append(tr)
         }
@@ -84,6 +88,29 @@ function buildTable(){
             }
         })
     }
+}
+
+function showTeamStats(){
+    var ignore={'event':1,'team':1}
+    var team = parseInt($(this).attr('data-team')),
+    fields = Object.keys(eventStats[0]),
+    table = $('<table border=1>')
+    $('#lightBoxContent').html('').append($('<h2>').text("Team " + team)).append(table)
+    for (var i=0; i<fields.length; i++){
+        var tr = $('<tr>'),
+        field = fields[i]
+        if (!ignore[field]){
+            table.append(tr)
+            tr.append($('<th>').text(statInfo[field]?statInfo[field]['name']:field))
+            for (var j=0; j<eventStats.length; j++){
+                if (eventStats[j]['team'] == team){
+                    tr.append($('<td>').text(eventStats[j][field]))
+                }
+            }
+        }
+    }
+    $('#lightBoxBG').show()
+    $('#lightBoxContent').show()
 }
 
 function bgArr(color){
