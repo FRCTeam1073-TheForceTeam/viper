@@ -4,6 +4,7 @@ h4{margin:.5em 0 0 0;padding:0}
 .picked{background-color:darkgray}
 .best{background-color:greenyellow}
 td,th{padding:0.2em}
-.chart{max-width:6in;margin:0 auto}
+.chart{width:fit-content;margin:0 auto}
+canvas{max-height:20em;width:90vw;}
 #lightBoxBG{z-index:98;width:100vw;height:100vh;position:fixed;background-color:#333D;left:0;top:0}
 #lightBoxContent{z-index:99;max-width:90vw;position:absolute;background-color:#fff;top:10vh;left:50%;transform:translate(-50%, 0);padding:1em}
