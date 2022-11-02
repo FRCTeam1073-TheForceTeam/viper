@@ -92,9 +92,9 @@ function buildTable(){
 
 function showTeamStats(){
     var ignore={'event':1,'team':1}
-    var team = parseInt($(this).attr('data-team')),
-    fields = Object.keys(eventStats[0]),
-    table = $('<table border=1>')
+    var team = parseInt($(this).attr('data-team'))
+    table = $('<table border=1>'),
+    fields = Object.keys(statInfo)
     $('#lightBoxContent').html('').append($('<h2>').text("Team " + team)).append(table)
     for (var i=0; i<fields.length; i++){
         var tr = $('<tr>'),
@@ -104,7 +104,21 @@ function showTeamStats(){
             tr.append($('<th>').text(statInfo[field]?statInfo[field]['name']:field))
             for (var j=0; j<eventStats.length; j++){
                 if (eventStats[j]['team'] == team){
-                    tr.append($('<td>').text(eventStats[j][field]))
+                    var stat = eventStats[j][field]
+                    switch(statInfo[field]['type']){
+                        case "%":
+                            stat=stat?"Y":"N"
+                            break;
+                        case "text":
+                            stat=stat||""
+                            break;
+                        case "enum":
+                            stat=statInfo[field]['values'][stat]
+                            break;
+                        default:
+                            stat=stat||0
+                    }
+                    tr.append($('<td>').text(stat))
                 }
             }
         }

@@ -1,6 +1,3 @@
-var rungScoreMap = {0:0, 1:4, 2:6, 3:10, 4:15}
-var rungNameMap = {0:'no_rung', 1:'low_rung', 2:'mid_rung', 3:'high_rung', 4:'traversal_rung'}
-
 function addStat(map,field,value){
     map[field] = (map[field]||0)+(value||0)
 }
@@ -8,8 +5,8 @@ function addStat(map,field,value){
 function aggregateStats(scout, aggregate){
     scout['auto'] = (scout['taxi']||0)*2 + (scout['auto_low_hub']||0)*2 + (scout['auto_high_hub']||0)*4
     scout['teleop'] = (scout['teleop_low_hub']||0) + (scout['teleop_high_hub']||0)*2
-    scout[rungNameMap[scout['rung']||0]] = 1
-    scout['end_game'] = rungScoreMap[scout['rung']||0]
+    scout[statInfo['rung']['breakout'][scout['rung']||0]] = 1
+    scout['end_game'] = statInfo['rung']['points'][scout['rung']||0]
     scout['score'] = scout['auto'] + scout['teleop'] + scout['end_game']
 
 
@@ -23,6 +20,10 @@ function aggregateStats(scout, aggregate){
 }
 
 var statInfo = {
+    "match": {
+        name: "Match",
+        type: "text"
+    },
     "score": {
         name: "Score",
         type: "avg"
@@ -32,64 +33,87 @@ var statInfo = {
         type: "count"
     },
     "auto": {
-        name: "Auto",
+        name: "Auto Score",
         type: "avg"
     },
     "teleop": {
-        name: "Remote Control",
+        name: "Remote Control Score",
         type: "avg"
     },
     "end_game": {
-        name: "End Game",
-        type: "avg"
-    },
-    "taxi": {
-        name: "Taxi (2 points)",
+        name: "End Game Score",
         type: "avg"
     },
     "auto_low_hub": {
-        name: "Balls in Low Hub (2 points)",
+        name: "Auto Balls in Low Hub (2 points)",
         type: "avg"
     },
     "auto_high_hub": {
-        name: "Balls in High Hub (4 points)",
+        name: "Auto Balls in High Hub (4 points)",
         type: "avg"
     },
     "auto_missed": {
-        name: "Missed shots",
+        name: "Auto Missed shots",
         type: "avg",
         good: "low"
     },
     "auto_bounce_out": {
-        name: "Shots bounced out",
+        name: "Auto Shots bounced out",
         type: "avg",
         good: "low"
     },
+    "taxi": {
+        name: "Auto Taxi (2 points)",
+        type: "avg"
+    },
+    "human": {
+        name: "Auto Human player goal (not included in score)",
+        type: "%"
+    },
     "teleop_low_hub": {
-        name: "Balls in Low Hub (1 point)",
+        name: "Remote Control Balls in Low Hub (1 point)",
         type: "avg"
     },
     "teleop_high_hub": {
-        name: "Balls in High Hub (2 points)",
+        name: "Remote Control Balls in High Hub (2 points)",
         type: "avg"
     },
     "teleop_missed": {
-        name: "Missed shots",
+        name: "Remote Control Missed shots",
         type: "avg",
         good: "low"
     },
     "teleop_bounce_out": {
-        name: "Shots bounced out",
+        name: "Remote Control Shots bounced out",
         type: "avg",
         good: "low"
     },
+    "shoot_from_hub": {
+        name: "Took shots from next to hub",
+        type: "%"
+    },
+    "shoot_from_field": {
+        name: "Took shots from the field",
+        type: "%"
+    },
+    "shoot_from_outer_LP": {
+        name: "Took shots from outer landing pad",
+        type: "%"
+    },
+    "shoot_from_wallLP": {
+        name: "Took shots from landing pad by wall",
+        type: "%"
+    },
     "end_game": {
-        name: "Hanging points",
+        name: "Hanging score",
         type: "avg"
     },
-    "human": {
-        name: "Human player goal (not included in score)",
-        type: "%"
+    "rung": {
+        name: "Hung on rung",
+        type: "enum",
+        values: ['None','Low rung','Mid rung','High rung','Traversal rung'],
+        breakout: ['no_rung','low_rung','mid_rung','high_rung','traversal_rung'],
+        points: [0,4,6,10,15]
     },
     'no_rung': {
         name: "Didn't hang",
@@ -111,6 +135,37 @@ var statInfo = {
     'traversal_rung': {
         name: "Hung on traversal rung",
         type: "%"
+    },
+    'defense':{
+        name: "Played defense",
+        type: "enum",
+        values: ["","Bad","OK","Great"]
+    },
+    'defended':{
+        name: "Good against defense",
+        type: "enum",
+        values: ["","Affected","OK","Great"]
+    },
+    'fouls':{
+        name: "Fouls",
+        type: "avg"
+    },
+    'techfouls':{
+        name: "Tech Fouls",
+        type: "avg"
+    },
+    'rank':{
+        name: "Rank",
+        type: "enum",
+        values: ["","Struggled","Productive","Captain"]
+    },
+    "scouter": {
+        name: "Scouter",
+        type: "text"
+    },
+    "comments": {
+        name: "Comments",
+        type: "text"
     }
 }
 
