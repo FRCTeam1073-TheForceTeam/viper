@@ -2,7 +2,7 @@
 
 print "Content-type: text/javascript;charset=UTF-8\n\n";
 
-if ($ENV{REMOTE_ADDR} == '127.0.0.1'){
+if ($ENV{REMOTE_ADDR} eq '127.0.0.1'){
     # For local development, don't use a service worker cache
     print "const CACHE_NAME = ''\n\n";
 } else {
