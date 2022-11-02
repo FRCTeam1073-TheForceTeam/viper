@@ -22,10 +22,12 @@ sudo apt-get install -y \
     perl \
     ;
 
+sudo chgrp www-data /var/www
+sudo chmod g+w /var/www
 # Allow git commands to run from the webserver
 # Used for generating service worker hash
-if [ ! -e /var/www/.gitconfig ]
+if [ ! -e /var/www/.gitconfig ] || ! grep -q `pwd` /var/www/.gitconfig
 then
-    if [ ! grep -q `pwd` $HOME/ ]
-    sudo -u www-data git config --global --add safe.directory `pwd`
+    echo Setting up www-data access to this git repository
+    sudo -u www-data HOME=/var/www git config --global --add safe.directory `pwd`
 fi
