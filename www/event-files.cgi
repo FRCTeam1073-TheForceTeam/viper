@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use CGI;
 use HTML::Escape qw/escape_html/;
-use lib '../../pm';
+use lib '../pm';
 use webutil;
 
 my $cgi = CGI->new;

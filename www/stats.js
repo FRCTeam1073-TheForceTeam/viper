@@ -52,7 +52,50 @@ function buildTable(){
             }
             table.append(tr)
         }
-    }    
+        var chart = $('<canvas>'),
+        bgColors=['#9767EB','#5C73F2','#5EB2DB','#62F5D7','#6CEB8C'],
+        data=[]
+        table.append($('<tr>').append($(`<td colspan=${tableWidth}>`).append($('<div class=chart>').append(chart))))
+        for (var j=0; j<statSections[section].length; j++){
+            var field = statSections[section][j]
+            if (statInfo[field]['type'] == 'avg'){
+                var values = []
+                for (var k=0; k<teamList.length; k++){
+                    values.push(getTeamValue(field, teamList[k]))
+                }
+                data.push({
+                    label: statInfo[field]['name'],
+                    data: values,
+                    backgroundColor: bgArr(bgColors[j])
+                })
+            }
+        }
+        new Chart(chart,{
+            type: 'bar',
+            data: {
+                labels: teamList,
+                datasets: data
+            },
+            options: {
+                scales: {
+                    y: {beginAtZero: true,stacked: true},
+                    x: {stacked: true}
+                }
+            }
+        })
+    }
+}
+
+function bgArr(color){
+    var arr = [],
+    picked = 0
+    for (var i=0; i<teamList.length; i++){
+        if (teamsPicked[teamList[i]]) picked++
+    }
+    for (var i=0; i<teamList.length; i++){
+        arr.push(i<teamList.length-picked?color:"darkgray")
+    }
+    return arr
 }
 function setTeamPicked(){
     var team = parseInt($(this).text())
