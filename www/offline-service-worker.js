@@ -12,7 +12,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
     //console.log(event.request.url)
-    if (/\/(scout|admin)\//.test(event.request.url)){
+    if (!CACHE_NAME){
+        // Not configured with a cache
+        event.respondWith(fetch(event.request))
+    } else if (/\/(scout|admin)\//.test(event.request.url)){
         // Uploading data, these request 
         // have to go through to the server
         // Network only policy
