@@ -3,12 +3,14 @@ function addStat(map,field,value){
 }
 
 function aggregateStats(scout, aggregate){
-    scout['auto'] = (scout['taxi']||0)*2 + (scout['auto_low_hub']||0)*2 + (scout['auto_high_hub']||0)*4
+    scout['auto'] = (scout['taxi']||0)*2 + (scout['auto_low_hub']||0)*2 + (scout['auto_high_hub']||0)*4 + scout['fouls']||0*-4 + scout['techfouls']||0*-8
     scout['teleop'] = (scout['teleop_low_hub']||0) + (scout['teleop_high_hub']||0)*2
     scout[statInfo['rung']['breakout'][scout['rung']||0]] = 1
     scout['end_game'] = statInfo['rung']['points'][scout['rung']||0]
     scout['score'] = scout['auto'] + scout['teleop'] + scout['end_game']
-
+    if (scout['comments'] && /\%[0-9a-fA-F]{2}/.test(scout['comments'])) scout['comments'] = decodeURIComponent(scout['comments'])
+    if (scout['comments'] && "none" == scout['comments']) scout['comments'] = ""
+    if (scout['scouter'] && "unknown" == scout['scouter']) scout['scouter'] = ""
 
     aggregate['count'] = (aggregate['count']||0)+1
 
@@ -25,7 +27,7 @@ var statInfo = {
         type: "text"
     },
     "score": {
-        name: "Score",
+        name: "Score Contribution",
         type: "avg"
     },
     "count": {
@@ -147,12 +149,14 @@ var statInfo = {
         values: ["","Affected","OK","Great"]
     },
     'fouls':{
-        name: "Fouls",
-        type: "avg"
+        name: "Fouls (-4 points)",
+        type: "avg",
+        good: "low"
     },
     'techfouls':{
-        name: "Tech Fouls",
-        type: "avg"
+        name: "Tech Fouls (-8 points)",
+        type: "avg",
+        good: "low"
     },
     'rank':{
         name: "Rank",
@@ -178,6 +182,10 @@ var statSections = {
         "auto",
         "teleop",
         "end_game"
+    ],
+    "Fouls": [
+        "fouls",
+        "techfouls"
     ],
     "Auto": [
         "taxi",
