@@ -2,25 +2,20 @@
 
 use strict;
 use warnings;
+use CGI;
 
+my $cgi = CGI->new;
+my $webutil = webutil->new;
 my $me = "index.cgi";
+use lib '../../pm';
+use webutil;
 
-my $event = "";
-my $pos = "";
-my $orient = "right";
-
-if (exists $ENV{QUERY_STRING}) {
-	my @args = split /\&/, $ENV{QUERY_STRING};
-	my %params;
-	foreach my $arg (@args) {
-		my @bits = split /=/, $arg;
-		next unless (@bits == 2);
-		$params{$bits[0]} = $bits[1];
-	}
-	$event  = $params{'event'} if (defined $params{'event'});
-	$pos    = $params{'pos'} if (defined $params{'pos'});
-	$orient = $params{'orient'} if (defined $params{'orient'});
-}
+my $event = $cgi->param('event')||"";
+my $pos = $cgi->param('pos')||"";
+my $orient = $cgi->param('orient')||"right";
+$webutil->error("Bad event parameter", $event) if ($event && $event !~ /^2019[0-9a-zA-Z_\-]+$/);
+$webutil->error("Bad pos parameter", $pos) if ($pos && $pos !~ /^[RB][1-3]$/);
+$webutil->error("Bad orient parameter", $orient) if ($orient && $orient !~ /^left|right$/);
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
@@ -38,7 +33,7 @@ if (@argCheck > 1) {
     exit 0;
 }
 
-my $events = `ls -1 ../data/*.schedule.csv`;
+my $events = `ls -1 ../data/2019*.schedule.csv`;
 my @files = split /\n/, $events;
 
 if (@files < 1) {
@@ -117,36 +112,31 @@ if ("$event" eq "") {
 		print "</tr></table>\n";
 		print "<br><h2>Pick your field orientation and robot position</<h2>\n";
 	} else {
-		my $file = $event . ".schedule.csv";
-		my $data = `cat ../data/${file}`;
-		my @lines = split /\n/, $data;
-		my %mhash;
-		foreach my $line (@lines) {
-			my @items = split /=/, $line;
-			next unless (@items > 1);
-			my $k = $items[0];
-			my $v = $items[1];
-			$k =~ s/^\s+|\s+$//g;
-			$v =~ s/^\s+|\s+$//g;
-			$mhash{$k} = $v;
-		}
-		my $count = keys %mhash;
+        my $file = $event . ".schedule.csv";
+        my $data = `cat ../data/${file}`;
+        my $matches = [ split /\n/, $data ];
+        foreach my $i (0..(scalar(@$matches)-1)) {
+            $matches->[$i] = [ split(/,/, $matches->[$i]) ];
+        }
+
+		my $posMap = {
+			"R1"=>1,
+			"R2"=>2,
+			"R3"=>3,
+			"B1"=>4,
+			"B2"=>5,
+			"B3"=>6,
+		};
 
 		print "<p style=\"font-size:25px; font-weight:bold;\"><a href=\"index.cgi\">Home</a></p>\n";
 
-		my @bits = split "", $pos;
-		my $num = $bits[1];
-		$num += 3 if ($bits[0] eq "B");
 		print "<table border=1 cellspacing=5 cellpadding=5>\n";
 		print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">$event $pos</p></th></tr>\n";
-		for (my $m = 1; $m < $count; $m++) {
-			print "<tr><td><p style=\"font-size:20px; font-weight:bold;\">Qual $m</p></td>\n";
-			my $key = $event . "_qm" . $m . "_" . $num;
-			if (defined $mhash{$key}) {
-				print "<td><p style=\"font-size:20px; font-weight:bold;\"><a href=\"${orient}.cgi?game=${key}&team=$mhash{$key}\">$pos : $mhash{$key}</a></p></td>\n";
-			} else {
-				print "<td><p style=\"font-size:20px; font-weight:bold;\">&nbsp;$key</p></td>\n";
-			}
+		foreach my $i (0..(scalar(@$matches)-1)) {
+			print "<tr><td><p style=\"font-size:20px; font-weight:bold;\">".$matches->[$i]->[$0]."</p></td>\n";
+			my $key = $event . ".$matches->[$i]->[$0]." . "_" . ($i+1);
+			my $team = $matches->[$i]->[$posMap->{$pos}];
+			print "<td><p style=\"font-size:20px; font-weight:bold;\"><a href=\"${orient}.cgi?game=${key}&team=${team}\">$pos : ${team}</a></p></td>\n";
 			print "</tr>\n";
 		}
 	}
