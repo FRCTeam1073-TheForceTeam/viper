@@ -11,7 +11,6 @@ my $webutil = webutil->new;
 my $me = "right.cgi";
 my $height = 125;
 my $width = 125;
-my $picdir = "scoutpics";
 
 my $game = $cgi->param('game')||'';
 $webutil->error("Bad game parameter", $game) if ($game !~ /^2019[0-9a-zA-Z\-]+_(qm|qf|sm|f)[0-9]+_[RB][1-3]$/);
@@ -43,26 +42,26 @@ sub printcargohatch($) {
         $cargostr = join "", @cargoarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/open_hatch_image2.png\"></a></td>\n";
+        print "src=\"open_hatch_image2.png\"></a></td>\n";
     } elsif ("$val" eq "1") {
         $cargoarr[$index] = "2";
         $cargostr = join "", @cargoarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/hatch_image2.png\"></a></td>\n";
+        print "src=\"hatch_image2.png\"></a></td>\n";
     } elsif ("$val" eq "2") {
         $cargoarr[$index] = "3";
         $cargoarr[$index] = "0" if ($index == 7 || $index == 12);
         $cargostr = join "", @cargoarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/auto_hatch_image2.png\"></a></td>\n";
+        print "src=\"auto_hatch_image2.png\"></a></td>\n";
     } else {
         $cargoarr[$index] = "0";
         $cargostr = join "", @cargoarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/null_hatch_image2.png\"></a></td>\n";
+        print "src=\"null_hatch_image2.png\"></a></td>\n";
     }
 }
 
@@ -77,19 +76,19 @@ sub printcargocargo($) {
         $cargostr = join "", @cargoarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/open_cargo_image.png\"></a></td>\n";
+        print "src=\"open_cargo_image.png\"></a></td>\n";
     } elsif ("$val" eq "1") {
         $cargoarr[$index] = "2";
         $cargostr = join "", @cargoarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/cargo_image.png\"></a></td>\n";
+        print "src=\"cargo_image.png\"></a></td>\n";
     } else {
         $cargoarr[$index] = "0";
         $cargostr = join "", @cargoarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/auto_cargo_image.png\"></a></td>\n";
+        print "src=\"auto_cargo_image.png\"></a></td>\n";
     }
 }
 
@@ -104,19 +103,19 @@ sub printrockethatch($) {
         $rocketstr = join "", @rocketarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/open_hatch_image2.png\"></a></td>\n";
+        print "src=\"open_hatch_image2.png\"></a></td>\n";
     } elsif ("$val" eq "1") {
         $rocketarr[$index] = "2";
         $rocketstr = join "", @rocketarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/hatch_image2.png\"></a></td>\n";
+        print "src=\"hatch_image2.png\"></a></td>\n";
     } else {
         $rocketarr[$index] = "0";
         $rocketstr = join "", @rocketarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/auto_hatch_image2.png\"></a></td>\n";
+        print "src=\"auto_hatch_image2.png\"></a></td>\n";
     }
 }
 
@@ -131,19 +130,19 @@ sub printrocketcargo($) {
         $rocketstr = join "", @rocketarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/open_cargo_image.png\"></a></td>\n";
+        print "src=\"open_cargo_image.png\"></a></td>\n";
     } elsif ("$val" eq "1") {
         $rocketarr[$index] = "2";
         $rocketstr = join "", @rocketarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/cargo_image.png\"></a></td>\n";
+        print "src=\"cargo_image.png\"></a></td>\n";
     } else {
         $rocketarr[$index] = "0";
         $rocketstr = join "", @rocketarr;
         print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
         print "<img height=\"$height\" width=\"$width\" "; 
-        print "src=\"$picdir/auto_cargo_image.png\"></a></td>\n";
+        print "src=\"auto_cargo_image.png\"></a></td>\n";
     }
 }
 
@@ -169,40 +168,40 @@ print "<th colspan=3 align=center>Starting Position</th></tr><tr>\n";
 
 if ($harray[0] == 1) {
     my $myhab = "0" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/left_${habcolor}6_habx.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"left_${habcolor}6_habx.png\"></a></td>\n";
 } else {
     my $myhab = "1" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/left_${habcolor}6_hab.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"left_${habcolor}6_hab.png\"></a></td>\n";
 }
-print "<td><img src=\"$picdir/top_${habcolor}_hab.png\"></td>\n";
+print "<td><img src=\"top_${habcolor}_hab.png\"></td>\n";
 if ($harray[0] == 2) {
     my $myhab = "0" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/left_${habcolor}6_habx.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"left_${habcolor}6_habx.png\"></a></td>\n";
 } else {
     my $myhab = "2" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/left_${habcolor}6_hab.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"left_${habcolor}6_hab.png\"></a></td>\n";
 }
 print "</tr><tr>\n";
 if ($harray[0] == 3) {
     my $myhab = "0" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/bot_left_${habcolor}_habx.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"bot_left_${habcolor}_habx.png\"></a></td>\n";
 } else {
     my $myhab = "3" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/bot_left_${habcolor}_hab.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"bot_left_${habcolor}_hab.png\"></a></td>\n";
 }
 if ($harray[0] == 4) {
     my $myhab = "0" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/bot_${habcolor}_habx.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"bot_${habcolor}_habx.png\"></a></td>\n";
 } else {
     my $myhab = "4" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/bot_${habcolor}_hab.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"bot_${habcolor}_hab.png\"></a></td>\n";
 }
 if ($harray[0] == 5) {
     my $myhab = "0" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/bot_right_${habcolor}_habx.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"bot_right_${habcolor}_habx.png\"></a></td>\n";
 } else {
     my $myhab = "5" . $harray[1];
-    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"$picdir/bot_right_${habcolor}_hab.png\"></a></td>\n";
+    print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\"><img src=\"bot_right_${habcolor}_hab.png\"></a></td>\n";
 }
 print "</tr></table><br>\n";
 #
@@ -231,29 +230,29 @@ print "<th colspan=3 align=center>EndGame</th></tr><tr>\n";
 if ($harray[1] == 1) {
     my $myhab = $harray[0] . "0";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/left_${habcolor}6_habx.png\"></a></td>\n";
+    print "<img src=\"left_${habcolor}6_habx.png\"></a></td>\n";
 } else {
     my $myhab = $harray[0] . "1";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/left_${habcolor}6_hab.png\"></a></td>\n";
+    print "<img src=\"left_${habcolor}6_hab.png\"></a></td>\n";
 }
 if ($harray[1] == 2) {
     my $myhab = $harray[0] . "0";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/top_${habcolor}_habx.png\"></a></td>\n";
+    print "<img src=\"top_${habcolor}_habx.png\"></a></td>\n";
 } else {
     my $myhab = $harray[0] . "2";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/top_${habcolor}_hab.png\"></a></td>\n";
+    print "<img src=\"top_${habcolor}_hab.png\"></a></td>\n";
 }
 if ($harray[1] == 3) {
     my $myhab = $harray[0] . "0";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/left_${habcolor}6_habx.png\"></a></td>\n";
+    print "<img src=\"left_${habcolor}6_habx.png\"></a></td>\n";
 } else {
     my $myhab = $harray[0] . "3";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/left_${habcolor}6_hab.png\"></a></td>\n";
+    print "<img src=\"left_${habcolor}6_hab.png\"></a></td>\n";
 }
 
 print "</tr><tr>\n";
@@ -261,29 +260,29 @@ print "</tr><tr>\n";
 if ($harray[1] == 4) {
     my $myhab = $harray[0] . "0";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/bot_left_${habcolor}_habx.png\"></a></td>\n";
+    print "<img src=\"bot_left_${habcolor}_habx.png\"></a></td>\n";
 } else {
     my $myhab = $harray[0] . "4";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/bot_left_${habcolor}_hab.png\"></a></td>\n";
+    print "<img src=\"bot_left_${habcolor}_hab.png\"></a></td>\n";
 }
 if ($harray[1] == 5) {
     my $myhab = $harray[0] . "0";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/bot_${habcolor}_habx.png\"></a></td>\n";
+    print "<img src=\"bot_${habcolor}_habx.png\"></a></td>\n";
 } else {
     my $myhab = $harray[0] . "5";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/bot_${habcolor}_hab.png\"></a></td>\n";
+    print "<img src=\"bot_${habcolor}_hab.png\"></a></td>\n";
 }
 if ($harray[1] == 6) {
     my $myhab = $harray[0] . "0";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/bot_right_${habcolor}_habx.png\"></a></td>\n";
+    print "<img src=\"bot_right_${habcolor}_habx.png\"></a></td>\n";
 } else {
     my $myhab = $harray[0] . "6";
     print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${myhab}&cargo=${cargo}&rocket=${rocket}\">";
-    print "<img src=\"$picdir/bot_right_${habcolor}_hab.png\"></a></td>\n";
+    print "<img src=\"bot_right_${habcolor}_hab.png\"></a></td>\n";
 }
 print "</tr></table>\n";
 
@@ -352,7 +351,7 @@ print "<td align=center bgcolor=\"grey\">\n";
 #print "<input type=\"hidden\" name=\"hab\" value=\"$hab\">\n";
 #print "<input type=\"submit\" value=\"&nbsp;<br>SAVE\"></td>\n";
 print "<b><a href=\"wrapup.cgi?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocket}\">";
-print "<img height=\"50\" width=\"100\" src=\"$picdir/next_button.png\"></a></td>\n";
+print "<img height=\"50\" width=\"100\" src=\"next_button.png\"></a></td>\n";
 
 print "</tr></table>\n";
 

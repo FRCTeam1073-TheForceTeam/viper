@@ -207,20 +207,7 @@ if ($err ne "") {
     exit 0;
 }
 
-sub getpos {
-        my ($pos) = (@_);
-        return "R1" if ($pos == 1);
-        return "R2" if ($pos == 2);
-        return "R3" if ($pos == 3);
-        return "B1" if ($pos == 4);
-        return "B2" if ($pos == 5);
-        return "B3" if ($pos == 6);
-        return "X";
-}
-
-my $pos = getpos $robot;
-
 print "<br><br><br>";
 print "<h1>Data for $team in Match $match saved successfully</h1>\n";
-print "<h1>Click <a href=\"index.cgi?event=${event}&pos=$pos\">here</a> to proceed to the next match</h1>\n";
+print "<h1>Click <a href=\"index.cgi?event=${event}&pos=$robot\">here</a> to proceed to the next match</h1>\n";
 print "</body></html>\n";
