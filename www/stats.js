@@ -57,7 +57,7 @@ function buildTable(){
             table.append(tr)
         }
         var chart = $('<canvas>'),
-        bgColors=['#9767EB','#5C73F2','#5EB2DB','#62F5D7','#6CEB8C'],
+        bgColors="#9E4BCC,#FFC154,#FAFE54,#774692,#DBAF62,#D7DA61,#492C59,#856B3E,#83843E,#52067C,#BA7600,#B4B900,#630199,#E59200,#DEE400".split(/,/),
         data=[]
         table.append($('<tr>').append($(`<td colspan=${tableWidth}>`).append($('<div class=chart>').append(chart))))
         for (var j=0; j<statSections[section].length; j++){
@@ -123,6 +123,7 @@ function showTeamStats(){
             }
         }
     }
+    window.scrollTo(0,0)
     $('#lightBoxBG').show()
     $('#lightBoxContent').show()
 }
