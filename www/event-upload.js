@@ -8,7 +8,7 @@ $(document).ready(function(){
                 if (m[1]){
                     event = m[1]
                     qualifier = parseInt(m[2])
-                    schedule[qualifier] = ["qm"+qualifier]
+                    if (!schedule[qualifier]) schedule[qualifier] = ["qm"+qualifier]
                 } else if (qualifier && schedule[qualifier].length < 7){
                     schedule[qualifier].push(m[3])
                 }
@@ -21,6 +21,7 @@ $(document).ready(function(){
         for (var i=0; i<schedule.length; i++){
             row = schedule[i]
             if (row.length != 7){
+                console.log(row)
                 alert("Could not find six teams for match: " + row[0])
                 return false
             }
