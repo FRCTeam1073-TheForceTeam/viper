@@ -24,7 +24,7 @@ my $scout = "react.cgi";
 my $cgi = CGI->new;
 my $webutil = webutil->new;
 my $event = $cgi->param('event');
-$webutil->error("Bad event parameter", $event) if ($event && $event !~ /^20[0-9]{2}[0-9a-zA-Z_\-]+$/);
+$webutil->error("Bad event parameter", $event) if ($event && $event !~ /^2022[0-9a-zA-Z_\-]+$/);
 my $pos = $cgi->param('pos');
 $webutil->error("Bad pos parameter", $pos) if ($pos && $pos !~ /^[RB][1-3]$/);
 
@@ -37,18 +37,8 @@ print "</head>\n";
 print "<body><center>\n";
 print "<h1>FRC Scouting App</h1>\n";
 
-# if event is given, make sure that 'event' does not contain any spaces
-if ("$event" ne "") {
-    my @argCheck = split /\s+/, $event;
-    if (@argCheck > 1) {
-        print "<p>ARG ERROR</p>\n";
-        print "</body></html>\n";
-        exit 0;
-    }
-}
-
 # get all of the event files containing match schedules
-my $events = `ls -1 -r ../data/*.schedule.csv`;
+my $events = `ls -1 -r ../data/2022*.schedule.csv`;
 my @files = split /\n/, $events;
 
 if (@files < 1) {
