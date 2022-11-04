@@ -1,10 +1,29 @@
 # webscout
 
-This is a web-based scouting app designed and used by FRC Team 1073, the Force Team. It is documented on the team website: https://www.frc1073.org/scouting-app
+This is a scouting app designed and used by FRC 1073, The Force Team from Hollis and Brookline, New Hampshire.
+It is designed to collect data about each of the robots as they compete in the tournament. 
+The data, such as the number of each type of point scored by each bot, is then used to inform alliance selection decisions.
+It runs on as a web app on a server that can be taken to events and powered by a battery for use in the stands.
 
-This scouting app uses a Raspberry Pi as the web-server, connected via ethernet to 6 scouting tablets. The tablets can be ordinary laptops, and even the Raspberry Pi web-server could be a laptop. We chose to use the Raspberry Pi and the tablets because they are more energy efficient and can last all day with one charge.
+## Usage
 
-The scouting hardware layout consists of:
+The workflow at a tournament is:
+
+1. The lead scouter enters the match schedule for the qualifiers.
+2. Six team members connect wired devices (tablets or laptops) and load the scouting page.
+3. Once the app is loaded, devices can be disconnected for watching and scouting matches. Data is stored in persistent storage on the client devices as it is collected.
+4. After the qualifier matches have been completed, all devices that scouted matches reconnect to the server and upload their data.
+5. A device can connect and view the stats page with alliance selection functionality.
+6. Once again, that device can be disconnected and used on the field during alliance selection. 
+7. Once alliances are selected, the data about that can be entered for further scouting during playoffs and finals.
+
+## Data export
+
+This software stores data in CSV files, which can be imported into Excel or Tableau for post-analysis. 
+
+## Hardware
+
+The scouting server runs on any device with a Linux, Apache, and Perl stack. Any device running a web browser can serve as a scouting device. 1073 chose energy efficient hardware that can last all day on a single charge:
 
 - 1 Raspberry Pi Model 3
 - 1 8-port switch
@@ -16,17 +35,30 @@ The scouting hardware layout consists of:
 
 The scouting tablets are connected to the ethernet adapters, which allows them to be connected to the 8-port switch. The Raspberry Pi is also connected to the switch. The Raspberry Pi is powered on, and then the tablets are powered up.
 
-This software is installed on the Raspberry Pi running Ubuntu with apache2. Apache2 is configured with CGI support, and the default DocumentRoot of /var/www/html is used. /var/www/cgi-bin is configured as the 'cgi-bin' directory in apache2. The source tree for each scouting system starts at 'www', which matches /var/www. Thus, you can tar up a copy of the 'www' directory and unpack it in /var/ on the Pi (and vice versa when developing on the Pi). 
+## Installation on Linux (Raspberry Pi)
+
+1. Use git to clone the code
+1. Install (see `scripts/install.sh`)
+   - Apache
+   - Perl
+   - Perl modules
+1. Configure Apache (`/etc/apache2/conf/`)
+   - Set `DocumentRoot` to the `www/` directory of the code
+   - Enable `AllowOverride All`
+1. Give the web server permission (user/group `www-data`) to write to `www/data/`
+1. Restart Apache (`sudo service apache2 restart`)
+
 
 A DHCP server is also configured on the Raspberry Pi to serve IP addresses to the tablets on the private LAN. The Raspberry Pi is configured with its own static IP address (in our case, 10.73.10.73). A web browser is launched on each scouting tablet, and this IP address is entered as the URL.
 
-This software provides the ability to scout individual robots in an FRC match and gather the data into CSV files, which can be imported into Excel or Tableau for post-analysis. The software also provides an 'Analysis' page where it calculates an Offensive Performance Rating (OPR) for each robot and sorts the teams into a very simple "pick list". Finally, the software provides a 'Match Prediction' page where teams with existing scouting data can be selected into 'red' and 'blue' alliances to compete against each other, and the software will add up the current 'OPR' of each team on each alliance and "predict" the final score of the match. 
+## Development environment
 
+The scouting server can be run for development on pretty much any Windows, Mac, or Linux computer.
 
-# Software Design
-
-This software design is based on executable "CGI" scripts that can parse URL input and produce or "print" simple HTML output. The initial design of the HTML scouting pages were created and evaluated with a browser, and then Perl scripts were written to "print" the same HTML output. Then the URL links and argument parsing code was added to make the pages interactive.
-
-The images used in the scouting web pages are either screenshots taken from the FRC Game Manual, or simple images created with Microsoft Paint. This design can support any type of scripting language, such as javascript or python scripts, so anyone can contribute new webpages using whatever programming language that they are comfortable using.
-
-In fact, starting with the 2022 'Rapid React' scouting app, the 'Analysis' webpage is written in javascript so that it can be loaded onto a tablet, unplugged from the network, and used by the field representative during the Alliance selection process.
+1. Use git to clone the code
+1. Install `docker-compose` from [docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
+1. Run `docker-compose up` (in the webscout directory)
+1. Visit http://localhost:1073/
+1. Make code changes.
+1. Save code files.
+1. Refresh web browser.

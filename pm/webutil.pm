@@ -30,7 +30,7 @@ sub error {
 
 sub redirect {
     my ($self, $url) = @_;
-    $url = "http".($ENV{'HTTPS'}?"s":"")."://".$ENV{'SERVER_NAME'}.$url if ($url =~ /^\//);
+    $url = "http".($ENV{'HTTPS'}?"s":"")."://".$ENV{'SERVER_NAME'}.($ENV{'SERVER_PORT'}=~/^80|443$/?"":":".$ENV{'SERVER_PORT'}).$url if ($url =~ /^\//);
     print "Location: $url\n\n";
     exit 0;
 }

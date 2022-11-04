@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  webscout:
+    build: .
+    image: webscout-image
+    container_name: webscout-container
+    network_mode: host
+    volumes:
+      - .:/usr/local/apache2/htdocs
+
+# docker-compose up
+# Visit: http://localhost:1073/
+# ctrl-c to stop it
