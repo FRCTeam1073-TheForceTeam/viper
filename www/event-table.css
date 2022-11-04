@@ -4,4 +4,4 @@
 #keypad button.num{background-color:lightgray}
 button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
 #team-list{min-width:320px;text-align:left}
-#qualTable{overflow-x:scroll;max-width:100%}
+#qualTable{overflow-x:auto;max-width:100%}
