@@ -2,30 +2,21 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
 
-my $game = '2019UNH_qm1_1';
-my $team = "1234";
-my $cargo = "0000000000000000";
-my $rocket = "000000000000000000000000";
-my $hab = "00";
-
-#
-# read in previous game state
-#
-if ($ENV{QUERY_STRING}) {
-	my @args = split /\&/, $ENV{QUERY_STRING};
-	my %params;
-	foreach my $arg (@args) {
-		my @bits = split /=/, $arg;
-		next unless (@bits == 2);
-		$params{$bits[0]} = $bits[1];
-	}
-	$game   = $params{'game'}   if (defined $params{'game'});
-	$team   = $params{'team'}   if (defined $params{'team'});
-    $cargo  = $params{'cargo'}  if (defined $params{'cargo'});
-	$rocket = $params{'rocket'} if (defined $params{'rocket'});
-	$hab    = $params{'hab'}    if (defined $params{'hab'});
-}
+my $cgi = CGI->new;
+my $webutil = webutil->new;
+my $game = $cgi->param('game')||'';
+$webutil->error("Bad game parameter", $game) if ($game !~ /^2019[0-9a-zA-Z\-]+_(qm|qf|sm|f)[0-9]+_[RB][1-3]$/);
+my $team = $cgi->param('team')||"";
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
+my $cargo = $cgi->param('cargo')||"0000000000000000";
+$webutil->error("Bad cargo parameter", $cargo) if ($cargo !~ /^[0-2]{16}$/);
+my $rocket = $cgi->param('rocket')||"000000000000000000000000";
+$webutil->error("Bad rocket parameter", $rocket) if ($rocket !~ /^[0-2]{24}$/);
+my $hab = $cgi->param('hab')||"00";
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";

@@ -3,45 +3,36 @@
 use strict;
 use warnings;
 use Fcntl qw(:flock SEEK_END);
+use CGI;
+use lib '../../pm';
+use webutil;
 
-
-my $game = '2019UNH_qm1_1';
-my $team = "1234";
-my $cargo = "0000000000000000";
-my $rocket = "000000000000000000000000";
-my $hab = "00";
-my $defense = "0";
-my $defended = "0";
-my $fouls = "0";
-my $techfouls = "0";
-my $rank = "0";
-my $scouter = "";
-my $comments = "";
-
-#
-# read in previous game state
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $game      = $params{'game'}      if (defined $params{'game'});
-    $team      = $params{'team'}      if (defined $params{'team'});
-    $cargo     = $params{'cargo'}     if (defined $params{'cargo'});
-    $rocket    = $params{'rocket'}    if (defined $params{'rocket'});
-    $hab       = $params{'hab'}       if (defined $params{'hab'});
-    $defense   = $params{'defense'}   if (defined $params{'defense'});
-    $defended  = $params{'defended'}  if (defined $params{'defended'});
-    $fouls     = $params{'fouls'}     if (defined $params{'fouls'});
-    $techfouls = $params{'techfouls'} if (defined $params{'techfouls'});
-    $rank      = $params{'rank'}      if (defined $params{'rank'});
-    $scouter   = $params{'scouter'}   if (defined $params{'scouter'});
-    $comments  = $params{'comments'}  if (defined $params{'comments'});
-}
+my $cgi = CGI->new;
+my $webutil = webutil->new;
+my $game = $cgi->param('game')||'';
+$webutil->error("Bad game parameter", $game) if ($game !~ /^2019[0-9a-zA-Z\-]+_(qm|qf|sm|f)[0-9]+_[RB][1-3]$/);
+my $team = $cgi->param('team')||"";
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
+my $cargo = $cgi->param('cargo')||"0000000000000000";
+$webutil->error("Bad cargo parameter", $cargo) if ($cargo !~ /^[0-2]{16}$/);
+my $rocket = $cgi->param('rocket')||"000000000000000000000000";
+$webutil->error("Bad rocket parameter", $rocket) if ($rocket !~ /^[0-2]{24}$/);
+my $hab = $cgi->param('hab')||"00";
+$webutil->error("Bad hab parameter", $hab) if ($hab !~ /^[0-6]{2}$/);
+my $defense = $cgi->param('defense')||"0";
+$webutil->error("Bad defense parameter", $defense) if ($defense !~ /^[0-3]$/);
+my $defended = $cgi->param('defended')||"0";
+$webutil->error("Bad defended parameter", $defended) if ($defended !~ /^[0-3]$/);
+my $fouls = $cgi->param('fouls')||"0";
+$webutil->error("Bad fouls parameter", $fouls) if ($fouls !~ /^[0-3]$/);
+my $techfouls = $cgi->param('techfouls')||"0";
+$webutil->error("Bad techfouls parameter", $techfouls) if ($techfouls !~ /^[0-3]$/);
+my $rank = $cgi->param('rank')||"0";
+$webutil->error("Bad rank parameter", $rank) if ($rank !~ /^[0-3]$/);
+my $scouter = $cgi->param('scouter')||"";
+$scouter =~ s/[\t\n\r, ]+/ /g;
+my $comments = $cgi->param('comments')||"";
+$comments =~ s/[\t\n\r, ]+/ /g;
 
 my @gdata  = split '_', $game;
 my $event  = $gdata[0];
@@ -69,11 +60,11 @@ sub getheader {
 
 sub dumpdata {
     my $str = "$event,$match,$team,";
-	# starting position:harray[0]: 1|2 = 2, else = 1
+        # starting position:harray[0]: 1|2 = 2, else = 1
     if ($harray[0] eq "1" || $harray[0] eq "2") {
-	$str .= "2,";
+        $str .= "2,";
     } else {
-	$str .= "1,";
+        $str .= "1,";
     }
     #compute values
     my $ahcs = 0;
@@ -94,75 +85,71 @@ sub dumpdata {
     my $cr3 = 0;
     #cargo hatches
     foreach my $i (0,1,2,7,12,13,14,15) {
-	$hcs++  if ($carray[$i] == 1);
-	$ahcs++ if ($carray[$i] == 2);
+        $hcs++  if ($carray[$i] == 1);
+        $ahcs++ if ($carray[$i] == 2);
     }
     #cargo cargo
     foreach my $i (3,4,5,6,8,9,10,11) {
-	$ccs++  if ($carray[$i] == 1);
-	$accs++ if ($carray[$i] == 2);
+        $ccs++  if ($carray[$i] == 1);
+        $accs++ if ($carray[$i] == 2);
     }
     #rocket 1 hatches
     foreach my $i (0,3,12,15) {
-	$hr1++  if ($rarray[$i] == 1);
-	$ahr1++ if ($rarray[$i] == 2);
+        $hr1++  if ($rarray[$i] == 1);
+        $ahr1++ if ($rarray[$i] == 2);
     }
     #rocket 2 hatches
     foreach my $i (4,7,16,19) {
-	$hr2++  if ($rarray[$i] == 1);
-	$ahr2++ if ($rarray[$i] == 2);
+        $hr2++  if ($rarray[$i] == 1);
+        $ahr2++ if ($rarray[$i] == 2);
     }
     #rocket 3 hatches
     foreach my $i (8,11,20,23) {
-	$hr3++  if ($rarray[$i] == 1);
-	$ahr3++ if ($rarray[$i] == 2);
+        $hr3++  if ($rarray[$i] == 1);
+        $ahr3++ if ($rarray[$i] == 2);
     }
     #rocket 1 cargo
     foreach my $i (1,2,13,14) {
-	$cr1++  if ($rarray[$i] == 1);
-	$acr1++ if ($rarray[$i] == 2);
+        $cr1++  if ($rarray[$i] == 1);
+        $acr1++ if ($rarray[$i] == 2);
     }
     #rocket 2 cargo
     foreach my $i (5,6,17,18) {
-	$cr2++  if ($rarray[$i] == 1);
-	$acr2++ if ($rarray[$i] == 2);
+        $cr2++  if ($rarray[$i] == 1);
+        $acr2++ if ($rarray[$i] == 2);
     }
     #rocket 3 cargo
     foreach my $i (9,10,21,22) {
-	$cr3++  if ($rarray[$i] == 1);
-	$acr3++ if ($rarray[$i] == 2);
+        $cr3++  if ($rarray[$i] == 1);
+        $acr3++ if ($rarray[$i] == 2);
     }
     # total hatches, total cargo
     my $th = $hcs + $ahcs + $hr1 + $ahr1 + $hr2 + $ahr2 + $hr3 + $ahr3;
     my $tc = $ccs + $accs + $cr1 + $acr1 + $cr2 + $acr2 + $cr3 + $acr3;
     $str .= "$th,$tc,";
-	# ending position:harray[1]: 2=3, 1|3=2, 4|5|6=1, else 0
-	my $endpos = "0";
+        # ending position:harray[1]: 2=3, 1|3=2, 4|5|6=1, else 0
+        my $endpos = "0";
     if ($harray[1] eq "2") {
-	$endpos = "3";
+        $endpos = "3";
     }
     if ($harray[1] eq "1" || $harray[1] eq "3") {
-	$endpos = "2";
+        $endpos = "2";
     }
     if ($harray[1] eq "4" || $harray[1] eq "5" || $harray[1] eq "6") {
-	$endpos = "1";
+        $endpos = "1";
     }
-	$str .= "$endpos,";
-	# autonomous
+        $str .= "$endpos,";
+        # autonomous
     $str .= "$ahcs,$accs,";
     $str .= "$ahr1,$ahr2,$ahr3,";
     $str .= "$acr1,$acr2,$acr3,";
-	# teleop hatches
+        # teleop hatches
     $str .= "$hcs,$hr1,$hr2,$hr3,";
     # teleop cargo
-	$str .= "$ccs,$cr1,$cr2,$cr3,";
+        $str .= "$ccs,$cr1,$cr2,$cr3,";
     # extras
-	$str .= "$defense,$defended,$fouls,$techfouls,$rank";
-	
-	# add scouter and comments but replace all comments with underscores
-	$scouter =~ tr/,/_/;
-	$comments =~ tr/,/_/;
-	$str .= ",$scouter,$comments";
+        $str .= "$defense,$defended,$fouls,$techfouls,$rank";
+        $str .= ",$scouter,$comments";
 
     return $str;
 }
@@ -172,24 +159,24 @@ my $dline = dumpdata();
 
 sub writeFile {
     my $errstr = "";
-	
+        
     if (! -f $file) {
-	`touch $file`;
+        `touch $file`;
     }
     if (open my $fh, '+<', $file) {
-	if (flock ($fh, LOCK_EX)) {
-	    my $first = <$fh>;
-	    if (!defined $first) {
-		print $fh "$header\n";
-	    }
-	    seek $fh, 0, SEEK_END;
-	    print $fh "$dline\n";
-	} else {
-	    $errstr = "failed to lock $file: $!\n";
-	}
-	close $fh;
+        if (flock ($fh, LOCK_EX)) {
+            my $first = <$fh>;
+            if (!defined $first) {
+                print $fh "$header\n";
+            }
+            seek $fh, 0, SEEK_END;
+            print $fh "$dline\n";
+        } else {
+            $errstr = "failed to lock $file: $!\n";
+        }
+        close $fh;
     } else {
-	$errstr = "failed to open $file: $!\n";
+        $errstr = "failed to open $file: $!\n";
     }
     return $errstr;
 }
@@ -221,14 +208,14 @@ if ($err ne "") {
 }
 
 sub getpos {
-	my ($pos) = (@_);
-	return "R1" if ($pos == 1);
-	return "R2" if ($pos == 2);
-	return "R3" if ($pos == 3);
-	return "B1" if ($pos == 4);
-	return "B2" if ($pos == 5);
-	return "B3" if ($pos == 6);
-	return "X";
+        my ($pos) = (@_);
+        return "R1" if ($pos == 1);
+        return "R2" if ($pos == 2);
+        return "R3" if ($pos == 3);
+        return "B1" if ($pos == 4);
+        return "B2" if ($pos == 5);
+        return "B3" if ($pos == 6);
+        return "X";
 }
 
 my $pos = getpos $robot;

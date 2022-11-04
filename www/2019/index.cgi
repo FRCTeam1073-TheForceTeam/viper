@@ -3,13 +3,12 @@
 use strict;
 use warnings;
 use CGI;
+use lib '../../pm';
+use webutil;
 
 my $cgi = CGI->new;
 my $webutil = webutil->new;
 my $me = "index.cgi";
-use lib '../../pm';
-use webutil;
-
 my $event = $cgi->param('event')||"";
 my $pos = $cgi->param('pos')||"";
 my $orient = $cgi->param('orient')||"right";
@@ -56,17 +55,6 @@ if ( "$event" ne "") {
 	print "</body></html>\n";
 	exit 0;
     }
-}
-
-sub getpos {
-	my ($pos) = (@_);
-	return "R1" if ($pos == 1);
-	return "R2" if ($pos == 2);
-	return "R3" if ($pos == 3);
-	return "B1" if ($pos == 4);
-	return "B2" if ($pos == 5);
-	return "B3" if ($pos == 6);
-	return "X";
 }
 
 if ("$event" eq "") {
@@ -134,7 +122,7 @@ if ("$event" eq "") {
 		print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">$event $pos</p></th></tr>\n";
 		foreach my $i (0..(scalar(@$matches)-1)) {
 			print "<tr><td><p style=\"font-size:20px; font-weight:bold;\">".$matches->[$i]->[$0]."</p></td>\n";
-			my $key = $event . ".$matches->[$i]->[$0]." . "_" . ($i+1);
+			my $key = $event . "_" . $matches->[$i]->[$0] . "_" . $pos;
 			my $team = $matches->[$i]->[$posMap->{$pos}];
 			print "<td><p style=\"font-size:20px; font-weight:bold;\"><a href=\"${orient}.cgi?game=${key}&team=${team}\">$pos : ${team}</a></p></td>\n";
 			print "</tr>\n";
