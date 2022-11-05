@@ -3,8 +3,9 @@ services:
   webscout:
     build: .
     image: webscout-image
+    ports:
+      - "1073:80"
     container_name: webscout-container
-    network_mode: host
     volumes:
       - .:/usr/local/apache2/htdocs
 

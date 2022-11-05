@@ -17,16 +17,15 @@ RUN apt-get update \
 
 # Adjust Apache configuration
 RUN sed -E -i '\
-        s/Listen 80/Listen 1073/g; \
         s/\#\s*(LoadModule .*mod_cgi)/\1/g; \
-        s/^(\s*AllowOverride) None/\1 All/g; \
+        s/^(\s*AllowOverride) None/\1 All\nSetEnv DEBUG 1/g; \
         s|/htdocs|/htdocs/www|g \
         ' conf/httpd.conf \
     && mkdir -p /usr/local/apache2/htdocs/www \
     ;
 
 # docker build -t webscout-image .
-# docker run -d --network host --name webscout-container -v `pwd`:/usr/local/apache2/htdocs webscout-image
+# docker run -d -p 1073:80 --name webscout-container -v `pwd`:/usr/local/apache2/htdocs webscout-image
 # Visit: http://localhost:1073/
 # docker exec -it webscout-container bash
 # docker logs webscout-container --follow
