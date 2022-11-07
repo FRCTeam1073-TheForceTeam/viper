@@ -37,8 +37,9 @@ function buildTable(){
         table.append(hr)
         for (var j=0; j<statSections[section].length; j++){
             var field = statSections[section][j],
-            highGood = (statInfo[field]['good']||"high")=='high',
-            statName = (statInfo[field]['type']=='avg'?"Average ":"") + statInfo[field]['name'],
+            info = statInfo[field]||{}
+            highGood = (info['good']||"high")=='high',
+            statName = (info['type']=='avg'?"Average ":"") + info['name']||field,
             doSort = $('<span class=dosort>').text("▶").toggleClass('active',field==sortStat),
             tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").append(doSort).attr('data-stat',field).click(reSortTable)),
             best = (highGood?-1:1)*99999999   
@@ -52,7 +53,7 @@ function buildTable(){
                 var team = teamList[k]
                 picked = teamsPicked[team],
                 value = getTeamValue(field, team)
-                tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',team).click(showTeamStats).text(statInfo[field]['type']=='%'?Math.round(value*100)+"%":Math.round(value)))
+                tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',team).click(showTeamStats).text(info['type']=='%'?Math.round(value*100)+"%":Math.round(value)))
             }
             table.append(tr)
         }
@@ -62,13 +63,13 @@ function buildTable(){
         table.append($('<tr>').append($(`<td colspan=${tableWidth}>`).append($('<div class=chart>').append(chart))))
         for (var j=0; j<statSections[section].length; j++){
             var field = statSections[section][j]
-            if (statInfo[field]['type'] == 'avg'){
+            if (info['type'] == 'avg'){
                 var values = []
                 for (var k=0; k<teamList.length; k++){
                     values.push(getTeamValue(field, teamList[k]))
                 }
                 data.push({
-                    label: statInfo[field]['name'],
+                    label: info['name']||field,
                     data: values,
                     backgroundColor: bgArr(bgColors[j])
                 })
@@ -98,14 +99,15 @@ function showTeamStats(){
     $('#lightBoxContent').html('').append($('<h2>').text("Team " + team)).append(table)
     for (var i=0; i<fields.length; i++){
         var tr = $('<tr>'),
-        field = fields[i]
+        field = fields[i],
+        info = statInfo[field]||{}
         if (!ignore[field]){
             table.append(tr)
             tr.append($('<th>').text(statInfo[field]?statInfo[field]['name']:field))
             for (var j=0; j<eventStats.length; j++){
                 if (eventStats[j]['team'] == team){
                     var stat = eventStats[j][field]
-                    switch(statInfo[field]['type']){
+                    switch(info['type']){
                         case "%":
                             stat=stat?"Y":"N"
                             break;
@@ -113,7 +115,7 @@ function showTeamStats(){
                             stat=stat||""
                             break;
                         case "enum":
-                            stat=statInfo[field]['values'][stat]
+                            stat=info['values'][stat]
                             break;
                         default:
                             stat=stat||0
@@ -152,8 +154,9 @@ function reSortTable(){
 
 function getTeamValue(field, team){
     if (! team in eventStatsByTeam) return 0
-    var stats = eventStatsByTeam[team]
+    var stats = eventStatsByTeam[team],
+    info = statInfo[field]||{}
     if (! field in stats ||! 'count' in stats || !stats['count']) return 0
-    var divisor = (statInfo[field]['type']=='count')?1:stats['count']
+    var divisor = (info['type']=='count')?1:stats['count']
     return (stats[field]||0) / divisor
 }

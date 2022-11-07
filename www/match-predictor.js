@@ -97,9 +97,10 @@ function setStats(colorClass, alliance, colorName, myScore, theirScore){
         el.append($(`<tr><th colspan=5><h4>${section}</h4></th></tr>`))
         el.append($(`<tr><th></th><th>${team1}</th><th>${team2}</th><th>${team3}</th><th>${colorName}</th></tr>`))
         for (var j=0; j<statSections[section].length; j++){
-            var field = statSections[section][j],
-            statName = statInfo[field]['name'],
-            statType = statInfo[field]['type'],
+            var field = statSections[section][j]
+            statInfo[field] = statInfo[field]||{}
+            var statName = statInfo[field]['name']||field,
+            statType = statInfo[field]['type']||"",
             team1Val = getTeamValue(field,alliance[0]),
             team2Val = getTeamValue(field,alliance[1]),
             team3Val = getTeamValue(field,alliance[2]),
@@ -112,7 +113,7 @@ function setStats(colorClass, alliance, colorName, myScore, theirScore){
 function getTeamValue(field, team){
     if (! team in eventStatsByTeam) return 0
     var stats = eventStatsByTeam[team]
-    if (! field in stats ||! 'count' in stats || !stats['count']) return 0
+    if (! stats || ! field in stats ||! 'count' in stats || !stats['count']) return 0
     return (stats[field]||0) / stats['count']
 }
 
