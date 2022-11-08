@@ -9,7 +9,6 @@ use webutil;
 my $cgi = CGI->new;
 my $webutil = webutil->new;
 my $me = "index.cgi";
-my $picdir = "scoutpics";
 
 my $event = $cgi->param('event');
 my $pos = $cgi->param('pos');
@@ -87,7 +86,7 @@ if ("$event" eq "") {
 	my $RED  = "bgcolor=\"#ff6666\"";
 	my $BLUE = "bgcolor=\"#99ccff\"";
 	print "<td $RED><h1><a href=\"${me}?event=${event}&pos=R1&orient=left\">R1</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td rowspan=3><img src=$picdir/full_field_blue_robots.png></td>\n";
+	print "<td rowspan=3><img src=full_field_blue_robots.png></td>\n";
 	print "<td $BLUE><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=B1&orient=right\">B1</a></h1></td>\n";
 	print "</tr><tr>\n";
 	print "<td $RED><h1><a href=\"${me}?event=${event}&pos=R2&orient=left\">R2</a>&nbsp;&nbsp;</h1></td>\n";
@@ -99,7 +98,7 @@ if ("$event" eq "") {
 	print "<h1>OR</h1>\n";
 	print "<table cellpadding=20 cellspacing=10><tr>\n";
 	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B1&orient=left\">B1</a>&nbsp;&nbsp;</h1></td>\n";
-	print "<td rowspan=3><img src=$picdir/full_field_red_robots.png></td>\n";
+	print "<td rowspan=3><img src=full_field_red_robots.png></td>\n";
 	print "<td $RED><h1>&nbsp;&nbsp;<a href=\"${me}?event=${event}&pos=R1&orient=right\">R1</a></h1></td>\n";
 	print "</tr><tr>\n";
 	print "<td $BLUE><h1><a href=\"${me}?event=${event}&pos=B2&orient=left\">B2</a>&nbsp;&nbsp;</h1></td>\n";

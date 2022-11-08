@@ -3,8 +3,6 @@
 use strict;
 use warnings;
 
-my $picdir = "/scoutpics";
-
 my $event = "";
 my $team = "";
 
@@ -257,7 +255,7 @@ for (my $j = 1; $j < 6; $j++) {
     for (my $i = 1; $i < 6; $i++) {
 	my $mark = "";
 	$mark = "_X" if ("$shotlocs[$index]" ne "0");
-	print "<td><img src=$picdir/left_red_${j}_${i}${mark}.png></td>\n";
+	print "<td><img src=left_red_${j}_${i}${mark}.png></td>\n";
 	$index++;
     }
     print "</tr>\n";

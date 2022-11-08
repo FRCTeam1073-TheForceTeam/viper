@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 my $me = "blue_right.cgi";
-my $picdir = "/scoutpics";
 
 my $game = '2019UNH_qm1_1';
 my $team = '1234';

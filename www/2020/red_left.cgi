@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 my $me = "red_left.cgi";
-my $picdir = "/scoutpics";
 
 my $game = '2019UNH_qm1_1';
 my $team = '1234';
@@ -97,24 +96,24 @@ sub printCounter {
     print "</p></th></tr>\n";
     my $params = getposparams($num, 1);
     my $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=$picdir/count_up2.png></a></td>\n";
+    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=count_up2.png></a></td>\n";
 
     print "<td bgcolor=white align=center>";
     if ($num == 2 || $num == 4 || $num == 6) {
 	$params = getposparams($num, 5);
 	$append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-	print "<a href=\"${me}?${append}\"><img src=$picdir/plus_five2.png></a>";
+	print "<a href=\"${me}?${append}\"><img src=plus_five2.png></a>";
     }
     if ($num == 1 || $num == 3 || $num == 5) {
 	$params = getposparams($num, 3);
 	$append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-	print "<a href=\"${me}?${append}\"><img src=$picdir/plus_three2.png></a>";
+	print "<a href=\"${me}?${append}\"><img src=plus_three2.png></a>";
     }
 
     print "</td></tr>\n";
     $params = getnegparams($num);
     $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=$picdir/count_down2.png></a>";
+    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=count_down2.png></a>";
     print "</td><td>";
     print "<p style=\"font-size:60px; font-weight:bold\">\n";
     print "$aarray[0]" if ($num == 1);
@@ -150,7 +149,7 @@ if ($aarray[3] == 1) {
     $imark = "_X";
 }
 my $aargs = "$aarray[0]-$aarray[1]-$aarray[2]-$init";
-print "<a href=\"${me}?${pargs}&auto=${aargs}\"><img src=$picdir/box${imark}.png></a>\n";
+print "<a href=\"${me}?${pargs}&auto=${aargs}\"><img src=box${imark}.png></a>\n";
 
 print "</td></tr></table>";
 print "</td></tr><tr><td>\n";
@@ -175,11 +174,11 @@ print "     </tr></table></td>\n";
 print "   </tr><tr>\n";
 my $prefix = "game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&shotloc=${shotloc}&ctrl=${ctrl}";
 my $miss = $marray[0] + 1;
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"75\" width=\"131\" src=$picdir/count_up2.png><a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"75\" width=\"131\" src=count_up2.png><a></td>\n";
 print "   </tr><tr>\n";
 $miss = $marray[0] - 1;
 $miss = 0 if ($miss < 0);
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"63\" width=\"121\" src=$picdir/count_down2.png></a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"63\" width=\"121\" src=count_down2.png></a></td>\n";
 print "   </tr>\n";
 print "  </table>\n";
 
@@ -194,16 +193,16 @@ print "     </tr></table></td>\n";
 print "   </tr><tr>\n";
 $prefix = "game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&shotloc=${shotloc}&ctrl=${ctrl}";
 $miss = $marray[1] + 1;
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"75\" width=\"131\" src=$picdir/count_up2.png><a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"75\" width=\"131\" src=count_up2.png><a></td>\n";
 print "   </tr><tr>\n";
 $miss = $marray[1] - 1;
 $miss = 0 if ($miss < 0);
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"63\" width=\"121\" src=$picdir/count_down2.png></a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"63\" width=\"121\" src=count_down2.png></a></td>\n";
 print "   </tr>\n";
 print "  </table>\n";
 
 print "</td></tr><tr>\n";
-print "<th colspan=2><img src=$picdir/red_power_port2.png></th>\n";
+print "<th colspan=2><img src=red_power_port2.png></th>\n";
 
 print "</tr></table>\n";
 
@@ -238,7 +237,7 @@ for (my $j = 1; $j < 6; $j++) {
 	    $mark = "_X";
 	}
 	my $sstr = join "", @tmparr;
-	print "<td><a href=\"${me}?game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&missed=${missed}&ctrl=${ctrl}&shotloc=${sstr}\"><img src=$picdir/right_red_${j}_${i}${mark}.png></td>\n";
+	print "<td><a href=\"${me}?game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&missed=${missed}&ctrl=${ctrl}&shotloc=${sstr}\"><img src=right_red_${j}_${i}${mark}.png></td>\n";
 	$index--;
     }
     print "</tr>\n";
@@ -254,7 +253,7 @@ if ($carray[0] == 1) {
     $mark = "_X";
     $append = "ctrl=0$carray[1]";
 }
-print "<td><a href=\"${me}?${params}&${append}\"><img src=$picdir/box${mark}.png></a></td></tr></table></td>\n";
+print "<td><a href=\"${me}?${params}&${append}\"><img src=box${mark}.png></a></td></tr></table></td>\n";
 print "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
 print "<td><table cellspacing=0 cellpadding=0 border=0><tr><th><p style=\"font-size:30px;\">Positional<br>Control</p></th>\n";
 $mark = "";
@@ -263,11 +262,11 @@ if ($carray[1] == 1) {
     $mark = "_X";
     $append = "ctrl=$carray[0]0";
 }
-print "<td><a href=\"${me}?${params}&${append}\"><img src=$picdir/box${mark}.png></a></td></tr></table></td>\n";
+print "<td><a href=\"${me}?${params}&${append}\"><img src=box${mark}.png></a></td></tr></table></td>\n";
 print "<td><p style=\"font-size:20px\"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
 print "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p></td>\n";
 $append = "ctrl=$ctrl";
-print "<th><a href=\"wrapup.cgi?${params}&${append}\"><img height=\"75\" width=\"150\" src=$picdir/next_button.png></a></th>\n";
+print "<th><a href=\"wrapup.cgi?${params}&${append}\"><img height=\"75\" width=\"150\" src=next_button.png></a></th>\n";
 print "</tr></table>\n";
 
 print "</body>\n";

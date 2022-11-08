@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 my $me = "opr.cgi";
-my $pics = "/scoutpics";
 my $width = 60;
 my $height = 60;
 my $green = "#7ef542";
@@ -406,7 +405,7 @@ foreach my $t (@plist) {
     if (exists $pickhash{$items[1]}) {
 	# team has been picked, so display 'X' with link to "unpick"
 	print "&clear=$items[1]";
-	print "\"><img height=$height width=$width src=\"$pics/top_red_habx.png\">";
+	print "\"><img height=$height width=$width src=\"top_red_habx.png\">";
     } else {
 	# add this team to pick list
 	if ($pstr ne "") {
@@ -415,7 +414,7 @@ foreach my $t (@plist) {
 	    print "&picked=";
 	}
 	print "$items[1]";
-	print "\"><img height=$height width=$width src=\"$pics/top_red_hab.png\">";
+	print "\"><img height=$height width=$width src=\"top_red_hab.png\">";
     }
     print "</a></td>\n";
     my $bgcolor = "";
