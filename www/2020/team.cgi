@@ -2,25 +2,17 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
 
-my $event = "";
-my $team = "";
+my $cgi = CGI->new;
+my $webutil = webutil->new;
 
-#
-# read in given game data
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $event = $params{'event'} if (defined $params{'event'});
-    $team  = $params{'team'}  if (defined $params{'team'});
-    
-}
+my $event = $cgi->param('event')||"";
+$webutil->error("Bad event parameter", $event) if ($event && $event !~ /^2020[0-9a-zA-Z_\-]+$/);
+my $team = $cgi->param('team')||"";
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
@@ -75,20 +67,20 @@ while (my $line = <$fh>) {
     my $t = $items[2];
     next unless ($team eq $t);
     my $m = $items[1];
-	# guard against duplicate match entries
-	if (defined $auto{$m}) {
-		my $suffix = "a";
-		while (1) {
-			my $index = $m . $suffix;
-			if (defined $auto{$index}) {
-				++$suffix;
-				next;
-			} else {
-				$m = $index;
-				last;
-			}
-		}
-	}
+        # guard against duplicate match entries
+        if (defined $auto{$m}) {
+                my $suffix = "a";
+                while (1) {
+                        my $index = $m . $suffix;
+                        if (defined $auto{$index}) {
+                                ++$suffix;
+                                next;
+                        } else {
+                                $m = $index;
+                                last;
+                        }
+                }
+        }
     push @match, $m;
     
     # AUTO
@@ -115,7 +107,7 @@ while (my $line = <$fh>) {
     
     # shotlocs
     for (my $i = 0; $i < 25; $i++) {
-		$shotlocs[$i]++ if ("$items[$i+12]" eq "1");
+                $shotlocs[$i]++ if ("$items[$i+12]" eq "1");
     }
 
     # Control Panel
@@ -188,7 +180,7 @@ while (my $line = <$fh>) {
     # name
     if (@items > 48) {
         my $str = $items[49];
-	$str =~ tr/+/ /;
+        $str =~ tr/+/ /;
         $scout{$m} .= "<td align=center><h2>$str</h2></td>";
     } else {
         $scout{$m} .= "<td>&nbsp;</td>";
@@ -196,12 +188,12 @@ while (my $line = <$fh>) {
     # comments
     if (@items > 49) {
         my $str = $items[50];
-	$str =~ tr/+/ /;
-	$str =~ s/%2C/,/g;
-	$str =~ s/%27/'/g;
-	$str =~ s/%3A/:/g;
-	$str =~ s/%0A/<br>/g;
-	$str =~ s/%0D//g;
+        $str =~ tr/+/ /;
+        $str =~ s/%2C/,/g;
+        $str =~ s/%27/'/g;
+        $str =~ s/%3A/:/g;
+        $str =~ s/%0A/<br>/g;
+        $str =~ s/%0D//g;
         $scout{$m} .= "<td align=center><h2>$str</h2></td>";
     } else {
         $scout{$m} .= "<td>&nbsp;</td>";
@@ -253,10 +245,10 @@ my $index = 0;
 for (my $j = 1; $j < 6; $j++) {
     print "<tr>\n";
     for (my $i = 1; $i < 6; $i++) {
-	my $mark = "";
-	$mark = "_X" if ("$shotlocs[$index]" ne "0");
-	print "<td><img src=left_red_${j}_${i}${mark}.png></td>\n";
-	$index++;
+        my $mark = "";
+        $mark = "_X" if ("$shotlocs[$index]" ne "0");
+        print "<td><img src=left_red_${j}_${i}${mark}.png></td>\n";
+        $index++;
     }
     print "</tr>\n";
 }
@@ -269,8 +261,8 @@ $index = 0;
 for (my $j = 1; $j < 6; $j++) {
     print "<tr>\n";
     for (my $i = 1; $i < 6; $i++) {
-	print "<td><p style=\"font-size:30px; font-weight:bold;\">$shotlocs[$index]</p></td>\n";
-	$index++;
+        print "<td><p style=\"font-size:30px; font-weight:bold;\">$shotlocs[$index]</p></td>\n";
+        $index++;
     }
     print "</tr>\n";
 }

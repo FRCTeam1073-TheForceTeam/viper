@@ -2,32 +2,38 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
 
-my $event = "";
+my $cgi = CGI->new;
+my $webutil = webutil->new;
+
+my $event = $cgi->param('event')||"";
+$webutil->error("Bad event parameter", $event) if ($event && $event !~ /^2020[0-9a-zA-Z_\-]+$/);
+
 my @red;
 my @blue;
+my $r1 =  $cgi->param('r1')||"";
+$webutil->error("Bad r1 parameter", $r1) if ($r1 !~ /^[0-9]*$/);
+push @red, $r1 if ($r1);
+my $r2 =  $cgi->param('r2')||"";
+$webutil->error("Bad r2 parameter", $r2) if ($r2 !~ /^[0-9]*$/);
+push @red, $r2 if ($r2);
+my $r3 =  $cgi->param('r3')||"";
+$webutil->error("Bad r3 parameter", $r3) if ($r3 !~ /^[0-9]*$/);
+push @red, $r3 if ($r3);
+my $b1 =  $cgi->param('b1')||"";
+$webutil->error("Bad b1 parameter", $b1) if ($b1 !~ /^[0-9]*$/);
+push @blue, $b1 if ($b1);
+my $b2 =  $cgi->param('b2')||"";
+$webutil->error("Bad b2 parameter", $b2) if ($b2 !~ /^[0-9]*$/);
+push @blue, $b2 if ($b2);
+my $b3 =  $cgi->param('b3')||"";
+$webutil->error("Bad b3 parameter", $b3) if ($b3 !~ /^[0-9]*$/);
+push @blue, $b3 if ($b3);
 
 my $green = "#7ef542";
-
-#
-# read in given game data
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $event = $params{'event'}  if (defined $params{'event'});
-    push @red, $params{'r1'} if (defined $params{'r1'});
-    push @red, $params{'r2'} if (defined $params{'r2'});
-    push @red, $params{'r3'} if (defined $params{'r3'});
-    push @blue, $params{'b1'} if (defined $params{'b1'});
-    push @blue, $params{'b2'} if (defined $params{'b2'});
-    push @blue, $params{'b3'} if (defined $params{'b3'});
-}
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
@@ -83,76 +89,76 @@ my %teamLevel;
 
 if ( open(my $fh, "<", $file) ) {
     while (my $line = <$fh>) {
-	my @items = split /,/, $line;
-	next if (@items < 6 || $items[0] eq "event");
-	my $team = $items[2];
-	my $ALin = int $items[3];
-	my $ABot = int $items[4];
-	my $AOut = int $items[5];
-	my $AInn = int $items[6];
-	my $TBot = int $items[7];
-	my $TOut = int $items[8];
-	my $TInn = int $items[9];
-	my $amis = int $items[10];
-	my $tmis = int $items[11];
-	my $RotC = int $items[37];
-	my $PosC = int $items[38];
-	my $park = int $items[39];
-	my $clim = int $items[40];
-	my $levl = int $items[43];
-	
-	$teamScore{$team}  = 0 unless (defined $teamScore{$team});
-	$teamAuto{$team}   = 0 unless (defined $teamAuto{$team});
-	$teamTeleop{$team} = 0 unless (defined $teamTeleop{$team});
-	$teamCtrl{$team}   = 0 unless (defined $teamCtrl{$team});
-	$teamEnd{$team}    = 0 unless (defined $teamEnd{$team});
+        my @items = split /,/, $line;
+        next if (@items < 6 || $items[0] eq "event");
+        my $team = $items[2];
+        my $ALin = int $items[3];
+        my $ABot = int $items[4];
+        my $AOut = int $items[5];
+        my $AInn = int $items[6];
+        my $TBot = int $items[7];
+        my $TOut = int $items[8];
+        my $TInn = int $items[9];
+        my $amis = int $items[10];
+        my $tmis = int $items[11];
+        my $RotC = int $items[37];
+        my $PosC = int $items[38];
+        my $park = int $items[39];
+        my $clim = int $items[40];
+        my $levl = int $items[43];
+        
+        $teamScore{$team}  = 0 unless (defined $teamScore{$team});
+        $teamAuto{$team}   = 0 unless (defined $teamAuto{$team});
+        $teamTeleop{$team} = 0 unless (defined $teamTeleop{$team});
+        $teamCtrl{$team}   = 0 unless (defined $teamCtrl{$team});
+        $teamEnd{$team}    = 0 unless (defined $teamEnd{$team});
 
-	$teamALine{$team}  = 0 unless (defined $teamALine{$team});
-	$teamABPort{$team} = 0 unless (defined $teamABPort{$team});
-	$teamAOPort{$team} = 0 unless (defined $teamAOPort{$team});
-	$teamAIPort{$team} = 0 unless (defined $teamAIPort{$team});
-	$teamTBPort{$team} = 0 unless (defined $teamTBPort{$team});
-	$teamTOPort{$team} = 0 unless (defined $teamTOPort{$team});
-	$teamTIPort{$team} = 0 unless (defined $teamTIPort{$team});
-	$teamAMissd{$team} = 0 unless (defined $teamAMissd{$team});
-	$teamTMissd{$team} = 0 unless (defined $teamTMissd{$team});
-	$teamRotate{$team} = 0 unless (defined $teamRotate{$team});
-	$teamPosition{$team} = 0 unless (defined $teamPosition{$team});
-	$teamPark{$team}   = 0 unless (defined $teamPark{$team});
-	$teamClimb{$team}  = 0 unless (defined $teamClimb{$team});
-	$teamLevel{$team}  = 0 unless (defined $teamLevel{$team});
+        $teamALine{$team}  = 0 unless (defined $teamALine{$team});
+        $teamABPort{$team} = 0 unless (defined $teamABPort{$team});
+        $teamAOPort{$team} = 0 unless (defined $teamAOPort{$team});
+        $teamAIPort{$team} = 0 unless (defined $teamAIPort{$team});
+        $teamTBPort{$team} = 0 unless (defined $teamTBPort{$team});
+        $teamTOPort{$team} = 0 unless (defined $teamTOPort{$team});
+        $teamTIPort{$team} = 0 unless (defined $teamTIPort{$team});
+        $teamAMissd{$team} = 0 unless (defined $teamAMissd{$team});
+        $teamTMissd{$team} = 0 unless (defined $teamTMissd{$team});
+        $teamRotate{$team} = 0 unless (defined $teamRotate{$team});
+        $teamPosition{$team} = 0 unless (defined $teamPosition{$team});
+        $teamPark{$team}   = 0 unless (defined $teamPark{$team});
+        $teamClimb{$team}  = 0 unless (defined $teamClimb{$team});
+        $teamLevel{$team}  = 0 unless (defined $teamLevel{$team});
 
         $teamALine{$team}  += $ALin;
-	$teamABPort{$team} += $ABot;
-	$teamAOPort{$team} += $AOut;
-	$teamAIPort{$team} += $AInn;
-	$teamTBPort{$team} += $TBot;
-	$teamTOPort{$team} += $TOut;
-	$teamTIPort{$team} += $TInn;
-	$teamAMissd{$team} += $amis;
-	$teamTMissd{$team} += $tmis;
-	$teamRotate{$team} += $RotC;
-	$teamPosition{$team} += $PosC;
-	$teamPark{$team}   += $park;
-	$teamClimb{$team}  += $clim;
-	$teamLevel{$team}  += $levl;
-	
-	my $auto = ($ALin * 5) + ($ABot * 2) + ($AOut * 4) + ($AInn * 6);
-	my $tele = $TBot + ($TOut * 2) + ($TInn * 3);
-	my $ctrl = ($RotC * 10) + ($PosC * 20);
-	my $endp = ($park * 5) + ($clim * 25) + ($levl * 15);
-	$teamAuto{$team} += $auto;
-	$teamTeleop{$team} += $tele;
-	$teamCtrl{$team} += $ctrl;
-	$teamEnd{$team} += $endp;
+        $teamABPort{$team} += $ABot;
+        $teamAOPort{$team} += $AOut;
+        $teamAIPort{$team} += $AInn;
+        $teamTBPort{$team} += $TBot;
+        $teamTOPort{$team} += $TOut;
+        $teamTIPort{$team} += $TInn;
+        $teamAMissd{$team} += $amis;
+        $teamTMissd{$team} += $tmis;
+        $teamRotate{$team} += $RotC;
+        $teamPosition{$team} += $PosC;
+        $teamPark{$team}   += $park;
+        $teamClimb{$team}  += $clim;
+        $teamLevel{$team}  += $levl;
+        
+        my $auto = ($ALin * 5) + ($ABot * 2) + ($AOut * 4) + ($AInn * 6);
+        my $tele = $TBot + ($TOut * 2) + ($TInn * 3);
+        my $ctrl = ($RotC * 10) + ($PosC * 20);
+        my $endp = ($park * 5) + ($clim * 25) + ($levl * 15);
+        $teamAuto{$team} += $auto;
+        $teamTeleop{$team} += $tele;
+        $teamCtrl{$team} += $ctrl;
+        $teamEnd{$team} += $endp;
 
-	$teamScore{$team} += $auto + $tele + $ctrl + $endp;
-	
-	if (defined $teamCount{$team}) {
-	    $teamCount{$team} += 1;
-	} else {
-	    $teamCount{$team} = 1;
-	}
+        $teamScore{$team} += $auto + $tele + $ctrl + $endp;
+        
+        if (defined $teamCount{$team}) {
+            $teamCount{$team} += 1;
+        } else {
+            $teamCount{$team} = 1;
+        }
     }
     close $fh;
 } else {
@@ -209,23 +215,23 @@ if (@red != 3 || @blue != 3) {
     my $link = "matchup.cgi?event=${event}&r1=";
     if (@red == 1) {
         $pos = "Red 2";
-	$link = "matchup.cgi?event=${event}&r1=$red[0]&r2=";
+        $link = "matchup.cgi?event=${event}&r1=$red[0]&r2=";
     }
     if (@red == 2) {
         $pos = "Red 3";
-	$link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=";
+        $link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=";
     }
     if (@red == 3) {
         $pos = "Blue 1";
-	$link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=$red[2]&b1=";
+        $link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=$red[2]&b1=";
     }
     if (@blue == 1) {
         $pos = "Blue 2";
-	$link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=$red[2]&b1=$blue[0]&b2=";
+        $link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=$red[2]&b1=$blue[0]&b2=";
     }
     if (@blue == 2) {
         $pos = "Blue 3";
-	$link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=$red[2]&b1=$blue[0]&b2=$blue[1]&b3=";
+        $link = "matchup.cgi?event=${event}&r1=$red[0]&r2=$red[1]&r3=$red[2]&b1=$blue[0]&b2=$blue[1]&b3=";
     }
     
 
@@ -234,21 +240,21 @@ if (@red != 3 || @blue != 3) {
     print "<table cellpadding=5 cellspacing=5 border=1><tr>\n";
     my $count = 0;
     foreach my $t (@teams) {
-    	my $found = 0;
-	foreach my $c (@red, @blue) {
-	    if ($c eq $t) {
-		$found = 1;
-		last;
-	    }
-	}
-	next if ($found != 0);
+            my $found = 0;
+        foreach my $c (@red, @blue) {
+            if ($c eq $t) {
+                $found = 1;
+                last;
+            }
+        }
+        next if ($found != 0);
         print "<td><a href=\"${link}$t\">$t</a></td>\n";
-	$count++;
-	print "</tr><tr>\n" if ($count % 7 == 0);
+        $count++;
+        print "</tr><tr>\n" if ($count % 7 == 0);
     }
     while ($count % 7 != 0) {
-    	$count++;
-	print "<td>&nbsp;</td>\n";
+            $count++;
+        print "<td>&nbsp;</td>\n";
     }
     print "</tr></table>\n";
     print "</body></html>\n";

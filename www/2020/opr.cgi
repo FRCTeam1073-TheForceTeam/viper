@@ -3,44 +3,39 @@
 use strict;
 use warnings;
 
+use CGI;
+use lib '../../pm';
+use webutil;
+
+my $cgi = CGI->new;
+my $webutil = webutil->new;
 my $me = "opr.cgi";
 my $width = 60;
 my $height = 60;
 my $green = "#7ef542";
 
-my $event = "";
+my $event = $cgi->param('event')||"";
+$webutil->error("Bad event parameter", $event) if ($event !~ /^2020[0-9a-zA-Z_\-]+$/);
+# use 'clear' option to pass selected team to remove rather than
+# rebuild pick list for every link
+my $clear = $cgi->param('clear')||"";
+$webutil->error("Bad clear parameter", $clear) if ($clear && $clear !~ /^[0-9]+$/);
+# 'sort by' setting
+# can be 'opr', 'power', 'rotate', 'ctrl'
+my $order =  $cgi->param('order')||"opr";
+$webutil->error("Bad order parameter", $order) if ($order !~ /^(opr|power|rotate|ctrl)$/);
 # keep picked list in selected order with array
 my @picked;
 # use hash for quick 'existence' test
 my %pickhash;
-# use 'clear' option to pass selected team to remove rather than
-# rebuild pick list for every link
-my $clear = "";
-# 'sort by' setting
-# can be 'opr', 'power', 'rotate', 'ctrl'
-my $order = "opr";
-
-#
-# read in given game data
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $event = $params{'event'}  if (defined $params{'event'});
-    $clear = $params{'clear'}  if (defined $params{'clear'});
-    $order = $params{'order'}  if (defined $params{'order'});
-    if (defined $params{'picked'}) {
-	my @plist = split /,/, $params{'picked'};
-	foreach my $p (@plist) {
-	    next if ($clear eq $p);
-	    push @picked, $p;
-	    $pickhash{$p} = 1;
-	}
+my $pickedParam =  $cgi->param('picked')||"";
+$webutil->error("Bad picked parameter", $pickedParam) if ($pickedParam && $pickedParam !~ /^([0-9]+,)*[0-9]+$/);
+if ($pickedParam) {
+    my @plist = split /,/, $pickedParam;
+    foreach my $p (@plist) {
+        next if ($clear eq $p);
+        push @picked, $p;
+        $pickhash{$p} = 1;
     }
 }
 
@@ -51,12 +46,6 @@ print "<head>\n";
 print "<title>FRC 1073 Scouting App</title>\n";
 print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
-
-if ($event eq "") {
-    print "<h2>Error, need an event</h2>\n";
-    print "</body></html>\n";
-    exit 0;
-}
 
 #
 # Load event data
@@ -88,68 +77,68 @@ my %teamLevel;
 
 if ( open(my $fh, "<", $file) ) {
     while (my $line = <$fh>) {
-	my @items = split /,/, $line;
-	next if (@items < 6 || $items[0] eq "event");
-	my $team  = $items[2];
-	my $ALine = $items[3];
-	my $ABot  = $items[4];
-	my $AOut  = $items[5];
-	my $AInn  = $items[6];
-	my $TBot  = $items[7];
-	my $TOut  = $items[8];
-	my $TInn  = $items[9];
-	my $amiss  = $items[10];
-	my $tmiss  = $items[11];
-	my $rotate = $items[37];
-	my $position = $items[38];
-	my $park  = $items[39];
-	my $climb = $items[40];
-	my $level = $items[43];
-	
-	# missing initiation line and end game scoring
-	$teamScore{$team}  = 0 unless (defined $teamScore{$team});
-	$teamALine{$team}  = 0 unless (defined $teamALine{$team});
-	$teamABPort{$team} = 0 unless (defined $teamABPort{$team});
-	$teamAOPort{$team} = 0 unless (defined $teamAOPort{$team});
-	$teamAIPort{$team} = 0 unless (defined $teamAIPort{$team});
-	$teamTBPort{$team} = 0 unless (defined $teamTBPort{$team});
-	$teamTOPort{$team} = 0 unless (defined $teamTOPort{$team});
-	$teamTIPort{$team} = 0 unless (defined $teamTIPort{$team});
-	$teamAMissd{$team} = 0 unless (defined $teamAMissd{$team});
-	$teamTMissd{$team} = 0 unless (defined $teamTMissd{$team});
-	$teamRotate{$team} = 0 unless (defined $teamRotate{$team});
-	$teamPosition{$team} = 0 unless (defined $teamPosition{$team});
-	$teamPark{$team}   = 0 unless (defined $teamPark{$team});
-	$teamClimb{$team}  = 0 unless (defined $teamClimb{$team});
-	$teamLevel{$team}  = 0 unless (defined $teamLevel{$team});
-	$teamALine{$team}  += $ALine;
-	$teamABPort{$team} += $ABot;
-	$teamAOPort{$team} += $AOut;
-	$teamAIPort{$team} += $AInn;
-	$teamTBPort{$team} += $TBot;
-	$teamTOPort{$team} += $TOut;
-	$teamTIPort{$team} += $TInn;
-	$teamAMissd{$team} += $amiss;
-	$teamTMissd{$team} += $tmiss;
-	$teamRotate{$team} += $rotate;
-	$teamPosition{$team} += $position;
-	$teamPark{$team}   += $park;
-	$teamClimb{$team}  += $climb;
-	$teamLevel{$team}  += $level;
+        my @items = split /,/, $line;
+        next if (@items < 6 || $items[0] eq "event");
+        my $team  = $items[2];
+        my $ALine = $items[3];
+        my $ABot  = $items[4];
+        my $AOut  = $items[5];
+        my $AInn  = $items[6];
+        my $TBot  = $items[7];
+        my $TOut  = $items[8];
+        my $TInn  = $items[9];
+        my $amiss  = $items[10];
+        my $tmiss  = $items[11];
+        my $rotate = $items[37];
+        my $position = $items[38];
+        my $park  = $items[39];
+        my $climb = $items[40];
+        my $level = $items[43];
+        
+        # missing initiation line and end game scoring
+        $teamScore{$team}  = 0 unless (defined $teamScore{$team});
+        $teamALine{$team}  = 0 unless (defined $teamALine{$team});
+        $teamABPort{$team} = 0 unless (defined $teamABPort{$team});
+        $teamAOPort{$team} = 0 unless (defined $teamAOPort{$team});
+        $teamAIPort{$team} = 0 unless (defined $teamAIPort{$team});
+        $teamTBPort{$team} = 0 unless (defined $teamTBPort{$team});
+        $teamTOPort{$team} = 0 unless (defined $teamTOPort{$team});
+        $teamTIPort{$team} = 0 unless (defined $teamTIPort{$team});
+        $teamAMissd{$team} = 0 unless (defined $teamAMissd{$team});
+        $teamTMissd{$team} = 0 unless (defined $teamTMissd{$team});
+        $teamRotate{$team} = 0 unless (defined $teamRotate{$team});
+        $teamPosition{$team} = 0 unless (defined $teamPosition{$team});
+        $teamPark{$team}   = 0 unless (defined $teamPark{$team});
+        $teamClimb{$team}  = 0 unless (defined $teamClimb{$team});
+        $teamLevel{$team}  = 0 unless (defined $teamLevel{$team});
+        $teamALine{$team}  += $ALine;
+        $teamABPort{$team} += $ABot;
+        $teamAOPort{$team} += $AOut;
+        $teamAIPort{$team} += $AInn;
+        $teamTBPort{$team} += $TBot;
+        $teamTOPort{$team} += $TOut;
+        $teamTIPort{$team} += $TInn;
+        $teamAMissd{$team} += $amiss;
+        $teamTMissd{$team} += $tmiss;
+        $teamRotate{$team} += $rotate;
+        $teamPosition{$team} += $position;
+        $teamPark{$team}   += $park;
+        $teamClimb{$team}  += $climb;
+        $teamLevel{$team}  += $level;
 
-	my $score = ($ALine * 5) + ($ABot * 2) + ($AOut * 4);
-	$score += ($AInn * 6) + $TBot + ($TOut * 2) + ($TInn * 3);
-	$score += 10 if ($rotate != 0);
-	$score += 20 if ($position != 0);
-	$score += 5  if ($park != 0);
-	$score += 25 if ($climb != 0);
-	$score += 15 if ($level != 0);
-	$teamScore{$team} += $score;
-	if (defined $teamCount{$team}) {
-	    $teamCount{$team} += 1;
-	} else {
-	    $teamCount{$team} = 1;
-	}
+        my $score = ($ALine * 5) + ($ABot * 2) + ($AOut * 4);
+        $score += ($AInn * 6) + $TBot + ($TOut * 2) + ($TInn * 3);
+        $score += 10 if ($rotate != 0);
+        $score += 20 if ($position != 0);
+        $score += 5  if ($park != 0);
+        $score += 25 if ($climb != 0);
+        $score += 15 if ($level != 0);
+        $teamScore{$team} += $score;
+        if (defined $teamCount{$team}) {
+            $teamCount{$team} += 1;
+        } else {
+            $teamCount{$team} = 1;
+        }
     }
     close $fh;
 } else {
@@ -164,7 +153,7 @@ sub picksort {
     my @abits = split /_/, $a;
     my @bbits = split /_/, $b;
     if ("$bbits[0]" eq "$abits[0]") {
-	return $bbits[1] <=> $abits[1];
+        return $bbits[1] <=> $abits[1];
     }
     return $bbits[0] <=> $abits[0];
 }
@@ -257,7 +246,7 @@ foreach my $k (keys %teamScore) {
     $score = $avgPark{$k}   if ("$order" eq "park");
     $score = $avgClimb{$k}  if ("$order" eq "climb");
     $score = $avgLevel{$k}  if ("$order" eq "level");
-	
+        
     my $str = sprintf "%.3f_%s", $score, $k;
     push @dlist, $str;
 }
@@ -403,18 +392,18 @@ foreach my $t (@plist) {
     print "&order=$order" if ($order ne "");
     print "&picked=$pstr" if ($pstr ne "");
     if (exists $pickhash{$items[1]}) {
-	# team has been picked, so display 'X' with link to "unpick"
-	print "&clear=$items[1]";
-	print "\"><img height=$height width=$width src=\"top_red_habx.png\">";
+        # team has been picked, so display 'X' with link to "unpick"
+        print "&clear=$items[1]";
+        print "\"><img height=$height width=$width src=\"top_red_habx.png\">";
     } else {
-	# add this team to pick list
-	if ($pstr ne "") {
-	    print ",";
-	} else {
-	    print "&picked=";
-	}
-	print "$items[1]";
-	print "\"><img height=$height width=$width src=\"top_red_hab.png\">";
+        # add this team to pick list
+        if ($pstr ne "") {
+            print ",";
+        } else {
+            print "&picked=";
+        }
+        print "$items[1]";
+        print "\"><img height=$height width=$width src=\"top_red_hab.png\">";
     }
     print "</a></td>\n";
     my $bgcolor = "";

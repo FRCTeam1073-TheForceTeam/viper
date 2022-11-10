@@ -2,36 +2,29 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
+
+my $cgi = CGI->new;
+my $webutil = webutil->new;
 
 my $me = "blue_left.cgi";
 
-my $game = '2019UNH_qm1_1';
-my $team = '1234';
-my $auto = "0-0-0-0";
-my $teleop = "0-0-0";
-my $missed = "0-0";
-my $shotloc = "000000000000000000000000000000";
-my $ctrl = "00";
-
-#
-# read in previous game state
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $game     = $params{'game'}    if (defined $params{'game'});
-    $team     = $params{'team'}    if (defined $params{'team'});
-    $auto     = $params{'auto'}    if (defined $params{'auto'});
-    $teleop   = $params{'teleop'}  if (defined $params{'teleop'});
-    $missed   = $params{'missed'}  if (defined $params{'missed'});
-    $shotloc  = $params{'shotloc'} if (defined $params{'shotloc'});
-    $ctrl     = $params{'ctrl'}    if (defined $params{'ctrl'});
-}
+my $game = $cgi->param('game')||'';
+$webutil->error("Bad game parameter", $game) if ($game !~ /^2020[0-9a-zA-Z\-]+_(qm|qf|sm|f)[0-9]+_[RB][1-3]$/);
+my $team = $cgi->param('team')||"";
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
+my $auto = $cgi->param('auto')||"0-0-0-0";
+$webutil->error("Bad auto parameter", $auto) if ($auto !~ /^([0-9]+-){3}[0-9]+$/);
+my $teleop = $cgi->param('teleop')||"0-0-0";
+$webutil->error("Bad teleop parameter", $teleop) if ($teleop !~ /^([0-9]+-){2}[0-9]+$/);
+my $missed = $cgi->param('missed')||"0-0";
+$webutil->error("Bad missed parameter", $missed) if ($missed !~ /^[0-9]+-[0-9]+$/);
+my $shotloc = $cgi->param('shotloc')||"000000000000000000000000000000";
+$webutil->error("Bad shotloc parameter", $shotloc) if ($shotloc !~ /^[01]{30}$/);
+my $ctrl = $cgi->param('ctrl')||"00";
+$webutil->error("Bad ctrl parameter", $ctrl) if ($ctrl !~ /^[01]{2}$/);
 
 my @gdata  = split '_', $game;
 my $event  = $gdata[0];
@@ -92,28 +85,28 @@ sub printCounter {
     print "Inner Port" if ($num == 1 || $num == 2);
     print "Outer Port" if ($num == 3 || $num == 4);
     print "Bottom Port" if ($num == 5 || $num == 6);
-	print " Counter" if ($num == 2 || $num == 4);
+        print " Counter" if ($num == 2 || $num == 4);
     print "</p></th></tr>\n";
     my $params = getposparams($num, 1);
     my $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=count_up2.png></a></td>\n";
+    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=/count_up.png></a></td>\n";
 
     print "<td bgcolor=white align=center>";
     if ($num == 2 || $num == 4 || $num == 6) {
-	$params = getposparams($num, 5);
-	$append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-	print "<a href=\"${me}?${append}\"><img src=plus_five2.png></a>";
+        $params = getposparams($num, 5);
+        $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
+        print "<a href=\"${me}?${append}\"><img src=plus_five2.png></a>";
     }
     if ($num == 1 || $num == 3 || $num == 5) {
-	$params = getposparams($num, 3);
-	$append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-	print "<a href=\"${me}?${append}\"><img src=plus_three2.png></a>";
+        $params = getposparams($num, 3);
+        $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
+        print "<a href=\"${me}?${append}\"><img src=plus_three2.png></a>";
     }
 
     print "</td></tr>\n";
     $params = getnegparams($num);
     $append = "game=${game}&team=${team}&${params}&shotloc=${shotloc}&ctrl=${ctrl}&missed=${missed}";
-    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=count_down2.png></a>";
+    print "<tr><td align=center><a href=\"${me}?${append}\"><img src=/count_down.png></a>";
     print "</td><td>";
     print "<p style=\"font-size:60px; font-weight:bold\">\n";
     print "$aarray[0]" if ($num == 1);
@@ -145,7 +138,7 @@ my $pargs = "game=${game}&team=${team}&teleop=${teleop}&missed=${missed}&shotloc
 my $init  = "1";
 my $imark = "";
 if ($aarray[3] == 1) {
-	$init = "0";
+        $init = "0";
     $imark = "_X";
 }
 my $aargs = "$aarray[0]-$aarray[1]-$aarray[2]-$init";
@@ -174,11 +167,11 @@ print "     </tr></table></td>\n";
 print "   </tr><tr>\n";
 my $prefix = "game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&shotloc=${shotloc}&ctrl=${ctrl}";
 my $miss = $marray[0] + 1;
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"75\" width=\"131\" src=count_up2.png><a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"75\" width=\"131\" src=/count_up.png><a></td>\n";
 print "   </tr><tr>\n";
 $miss = $marray[0] - 1;
 $miss = 0 if ($miss < 0);
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"63\" width=\"121\" src=count_down2.png></a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"63\" width=\"121\" src=/count_down.png></a></td>\n";
 print "   </tr>\n";
 print "  </table>\n";
 
@@ -193,11 +186,11 @@ print "     </tr></table></td>\n";
 print "   </tr><tr>\n";
 $prefix = "game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&shotloc=${shotloc}&ctrl=${ctrl}";
 $miss = $marray[1] + 1;
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"75\" width=\"131\" src=count_up2.png><a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"75\" width=\"131\" src=/count_up.png><a></td>\n";
 print "   </tr><tr>\n";
 $miss = $marray[1] - 1;
 $miss = 0 if ($miss < 0);
-print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"63\" width=\"121\" src=count_down2.png></a></td>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"63\" width=\"121\" src=/count_down.png></a></td>\n";
 print "   </tr>\n";
 print "  </table>\n";
 
@@ -228,17 +221,17 @@ my $index = 24;
 for (my $j = 1; $j < 6; $j++) {
     print "<tr>\n";
     for (my $i = 1; $i < 6; $i++) {
-	my @tmparr = @sarray;
-	my $mark = "";
-	if ($tmparr[$index] == 0) {
-	    $tmparr[$index] = 1;
-	} else {
-	    $tmparr[$index] = 0;
-	    $mark = "_X";
-	}
-	my $sstr = join "", @tmparr;
-	print "<td><a href=\"${me}?game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&missed=${missed}&ctrl=${ctrl}&shotloc=${sstr}\"><img src=right_blue_${j}_${i}${mark}.png></td>\n";
-	$index--;
+        my @tmparr = @sarray;
+        my $mark = "";
+        if ($tmparr[$index] == 0) {
+            $tmparr[$index] = 1;
+        } else {
+            $tmparr[$index] = 0;
+            $mark = "_X";
+        }
+        my $sstr = join "", @tmparr;
+        print "<td><a href=\"${me}?game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&missed=${missed}&ctrl=${ctrl}&shotloc=${sstr}\"><img src=right_blue_${j}_${i}${mark}.png></td>\n";
+        $index--;
     }
     print "</tr>\n";
 }

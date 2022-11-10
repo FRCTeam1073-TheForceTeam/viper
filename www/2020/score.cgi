@@ -3,60 +3,51 @@
 use strict;
 use warnings;
 use Fcntl qw(:flock SEEK_END);
+use CGI;
+use lib '../../pm';
+use webutil;
 
+my $cgi = CGI->new;
+my $webutil = webutil->new;
 
-my $game = '2019UNH_qm1_1';
-my $team = "1234";
-my $auto = "0-0-0";
-my $teleop = "0-0-0";
-my $missed = "0-0";
-my $shotloc = "0000000000000000000000000";
-my $ctrl = "00";
-
-my $park = "0";
-my $climb = "0";
-my $bar = "0";
-my $buddy = "0";
-my $level = "0";
-my $defense = "0";
-my $defended = "0";
-my $fouls = "0";
-my $techfouls = "0";
-my $rank = "0";
-my $scouter = "";
-my $comments = "";
-
-#
-# read in previous game state
-#
-if ($ENV{QUERY_STRING}) {
-    my @args = split /\&/, $ENV{QUERY_STRING};
-    my %params;
-    foreach my $arg (@args) {
-	my @bits = split /=/, $arg;
-	next unless (@bits == 2);
-	$params{$bits[0]} = $bits[1];
-    }
-    $game      = $params{'game'}      if (defined $params{'game'});
-    $team      = $params{'team'}      if (defined $params{'team'});
-    $auto      = $params{'auto'}      if (defined $params{'auto'});
-    $teleop    = $params{'teleop'}    if (defined $params{'teleop'});
-    $missed    = $params{'missed'}    if (defined $params{'missed'});
-    $shotloc   = $params{'shotloc'}   if (defined $params{'shotloc'});
-    $ctrl      = $params{'ctrl'}      if (defined $params{'ctrl'});
-    $park      = $params{'park'}      if (defined $params{'park'});
-    $climb     = $params{'climb'}     if (defined $params{'climb'});
-    $bar       = $params{'bar'}       if (defined $params{'bar'});
-    $buddy     = $params{'buddy'}     if (defined $params{'buddy'});
-    $level     = $params{'level'}     if (defined $params{'level'});
-    $defense   = $params{'defense'}   if (defined $params{'defense'});
-    $defended  = $params{'defended'}  if (defined $params{'defended'});
-    $fouls     = $params{'fouls'}     if (defined $params{'fouls'});
-    $techfouls = $params{'techfouls'} if (defined $params{'techfouls'});
-    $rank      = $params{'rank'}      if (defined $params{'rank'});
-    $scouter   = $params{'scouter'}   if (defined $params{'scouter'});
-    $comments  = $params{'comments'}  if (defined $params{'comments'});
-}
+my $game = $cgi->param('game')||'';
+$webutil->error("Bad game parameter", $game) if ($game !~ /^2020[0-9a-zA-Z\-]+_(qm|qf|sm|f)[0-9]+_[RB][1-3]$/);
+my $team = $cgi->param('team')||"";
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
+my $auto = $cgi->param('auto')||"0-0-0-0";
+$webutil->error("Bad auto parameter", $auto) if ($auto !~ /^([0-9]+-){3}[0-9]+$/);
+my $teleop = $cgi->param('teleop')||"0-0-0";
+$webutil->error("Bad teleop parameter", $teleop) if ($teleop !~ /^([0-9]+-){2}[0-9]+$/);
+my $missed = $cgi->param('missed')||"0-0";
+$webutil->error("Bad missed parameter", $missed) if ($missed !~ /^[0-9]+-[0-9]+$/);
+my $shotloc = $cgi->param('shotloc')||"000000000000000000000000000000";
+$webutil->error("Bad shotloc parameter", $shotloc) if ($shotloc !~ /^[01]{30}$/);
+my $ctrl = $cgi->param('ctrl')||"00";
+$webutil->error("Bad ctrl parameter", $ctrl) if ($ctrl !~ /^[01]{2}$/);
+my $park = $cgi->param('park')||"0";
+$webutil->error("Bad park parameter", $park) if ($park !~ /^[0-9]+$/);
+my $climb = $cgi->param('climb')||"0";
+$webutil->error("Bad climb parameter", $climb) if ($climb !~ /^[0-9]+$/);
+my $bar = $cgi->param('bar')||"0";
+$webutil->error("Bad bar parameter", $bar) if ($bar !~ /^[0-9]+$/);
+my $buddy = $cgi->param('buddy')||"0";
+$webutil->error("Bad buddy parameter", $buddy) if ($buddy !~ /^[0-9]+$/);
+my $level = $cgi->param('level')||"0";
+$webutil->error("Bad level parameter", $level) if ($level !~ /^[0-9]+$/);
+my $defense = $cgi->param('defense')||"0";
+$webutil->error("Bad defense parameter", $defense) if ($defense !~ /^[0-9]+$/);
+my $defended = $cgi->param('defended')||"0";
+$webutil->error("Bad defended parameter", $defended) if ($defended !~ /^[0-9]+$/);
+my $fouls = $cgi->param('fouls')||"0";
+$webutil->error("Bad fouls parameter", $fouls) if ($fouls !~ /^[0-9]+$/);
+my $techfouls = $cgi->param('techfouls')||"0";
+$webutil->error("Bad techfouls parameter", $techfouls) if ($techfouls !~ /^[0-9]+$/);
+my $rank = $cgi->param('rank')||"0";
+$webutil->error("Bad rank parameter", $rank) if ($rank !~ /^[0-9]+$/);
+my $scouter = "";$cgi->param('scouter = ')||
+$webutil->error("Bad scouter =  parameter", $scouter = ) if ($scouter =  !~ /^[^,\r\n\t]*$/);
+my $comments = "";$cgi->param('comments = ')||
+$webutil->error("Bad comments =  parameter", $comments = ) if ($comments =  !~ /^[^,\r\n\t]*$/);
 
 my @gdata  = split '_', $game;
 my $event  = $gdata[0];
@@ -117,24 +108,24 @@ my $dline = dumpdata();
 
 sub writeFile {
     my $errstr = "";
-	
+        
     if (! -f $file) {
-	`touch $file`;
+        `touch $file`;
     }
     if (open my $fh, '+<', $file) {
-	if (flock ($fh, LOCK_EX)) {
-	    my $first = <$fh>;
-	    if (!defined $first) {
-		print $fh "$header\n";
-	    }
-	    seek $fh, 0, SEEK_END;
-	    print $fh "$dline\n";
-	} else {
-	    $errstr = "failed to lock $file: $!\n";
-	}
-	close $fh;
+        if (flock ($fh, LOCK_EX)) {
+            my $first = <$fh>;
+            if (!defined $first) {
+                print $fh "$header\n";
+            }
+            seek $fh, 0, SEEK_END;
+            print $fh "$dline\n";
+        } else {
+            $errstr = "failed to lock $file: $!\n";
+        }
+        close $fh;
     } else {
-	$errstr = "failed to open $file: $!\n";
+        $errstr = "failed to open $file: $!\n";
     }
     return $errstr;
 }
@@ -166,14 +157,14 @@ if ($err ne "") {
 }
 
 sub getpos {
-	my ($pos) = (@_);
-	return "R1" if ($pos == 1);
-	return "R2" if ($pos == 2);
-	return "R3" if ($pos == 3);
-	return "B1" if ($pos == 4);
-	return "B2" if ($pos == 5);
-	return "B3" if ($pos == 6);
-	return "X";
+        my ($pos) = (@_);
+        return "R1" if ($pos == 1);
+        return "R2" if ($pos == 2);
+        return "R3" if ($pos == 3);
+        return "B1" if ($pos == 4);
+        return "B2" if ($pos == 5);
+        return "B3" if ($pos == 6);
+        return "X";
 }
 
 my $pos = getpos $robot;

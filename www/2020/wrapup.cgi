@@ -2,34 +2,27 @@
 
 use strict;
 use warnings;
+use CGI;
+use lib '../../pm';
+use webutil;
 
-my $game = '2019UNH_qm1_1';
-my $team = "1234";
-my $auto = "0-0-0";
-my $teleop = "0-0-0";
-my $missed = "0-0";
-my $shotloc = "000000000000000000000000000000000000";
-my $ctrl = "00";
+my $cgi = CGI->new;
+my $webutil = webutil->new;
 
-#
-# read in previous game state
-#
-if ($ENV{QUERY_STRING}) {
-	my @args = split /\&/, $ENV{QUERY_STRING};
-	my %params;
-	foreach my $arg (@args) {
-		my @bits = split /=/, $arg;
-		next unless (@bits == 2);
-		$params{$bits[0]} = $bits[1];
-	}
-	$game    = $params{'game'}    if (defined $params{'game'});
-	$team    = $params{'team'}    if (defined $params{'team'});
-	$auto    = $params{'auto'}    if (defined $params{'auto'});
-	$teleop  = $params{'teleop'}  if (defined $params{'teleop'});
-	$missed  = $params{'missed'}  if (defined $params{'missed'});
-	$shotloc = $params{'shotloc'} if (defined $params{'shotloc'}); 
-	$ctrl    = $params{'ctrl'}    if (defined $params{'ctrl'});
-}
+my $game = $cgi->param('game')||'';
+$webutil->error("Bad game parameter", $game) if ($game !~ /^2020[0-9a-zA-Z\-]+_(qm|qf|sm|f)[0-9]+_[RB][1-3]$/);
+my $team = $cgi->param('team')||"";
+$webutil->error("Bad team parameter", $team) if ($team !~ /^[0-9]+$/);
+my $auto = $cgi->param('auto')||"0-0-0-0";
+$webutil->error("Bad auto parameter", $auto) if ($auto !~ /^([0-9]+-){3}[0-9]+$/);
+my $teleop = $cgi->param('teleop')||"0-0-0";
+$webutil->error("Bad teleop parameter", $teleop) if ($teleop !~ /^([0-9]+-){2}[0-9]+$/);
+my $missed = $cgi->param('missed')||"0-0";
+$webutil->error("Bad missed parameter", $missed) if ($missed !~ /^[0-9]+-[0-9]+$/);
+my $shotloc = $cgi->param('shotloc')||"000000000000000000000000000000";
+$webutil->error("Bad shotloc parameter", $shotloc) if ($shotloc !~ /^[01]{30}$/);
+my $ctrl = $cgi->param('ctrl')||"00";
+$webutil->error("Bad ctrl parameter", $ctrl) if ($ctrl !~ /^[01]{2}$/);
 
 # print web page beginning
 print "Content-type: text/html; charset=UTF-8\n\n";
