@@ -16,6 +16,10 @@ Header set Cache-Control "max-age=28800, public, must-revalidate"
     # Uploads should not be cached
     Header set Cache-Control no-store
 </FilesMatch>
+<FilesMatch "^heartbeat\.html$">
+    # Connected test
+    Header set Cache-Control no-store
+</FilesMatch>
 <FilesMatch "^20.*\.cgi$>
     # Legacy CGI
     Header set Cache-Control no-store

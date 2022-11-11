@@ -25,6 +25,10 @@ self.addEventListener('fetch', (event) => {
         // Legacy CGI
         //console.log('From network (legacy cgi): ' + event.request.url)
         event.respondWith(fetch(event.request))
+    } else if (/\/heartbeat\.html/.test(event.request.url)){
+        // Heartbeat connection test
+        //console.log('From network (legacy cgi): ' + event.request.url)
+        event.respondWith(fetch(event.request))
     } else if (/\.(cgi|csv)/.test(event.request.url)){
         event.respondWith(
             // network first 

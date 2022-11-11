@@ -28,8 +28,6 @@ function aggregateStats(scout, aggregate){
     }
 }
 
-
-
 var statInfo = {
     "match": {
         name: "Match",
