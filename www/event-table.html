@@ -15,14 +15,13 @@
 <h1>Enter Event Qualifier Matches</h1>
 <form id=tableForm action=/admin/add-event.cgi>
 <div class=side-by-side>
-Year: <input id=yearInp type=text placeholder=20xx required=1 pattern="^20[0-9]{2}$" name=event_year size=5>
+Year: <input inputmode=numeric id=yearInp type=text placeholder=20xx required=1 pattern="^20[0-9]{2}$" name=event_year size=5>
 </div>
 <div class=side-by-side>
 Venue: <input id=venueInp type=text placeholder="No spaces or symbols" required=1 pattern="^[0-9a-zA-Z_-]+$" name=event_venue size=15>
+<div><small>Recommended: match the venue ID to the event URL from www.thebluealliance.com</small></div>
 </div>
-<div class=side-by-side>
-Recommended: match the venue ID to the event URL from www.thebluealliance.com
-</div>
+
 <div id=qualTable>
     <table>
         <thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
@@ -33,35 +32,18 @@ Recommended: match the venue ID to the event URL from www.thebluealliance.com
 <template id=qualrow>
     <tr>
         <th>$#</th>
-        <td class=blueTeamBG><input inputmode=none type=text name="Q$#B1" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=blueTeamBG><input inputmode=none type=text name="Q$#B2" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=blueTeamBG><input inputmode=none type=text name="Q$#B3" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=redTeamBG><input inputmode=none type=text name="Q$#R1" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=redTeamBG><input inputmode=none type=text name="Q$#R2" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=redTeamBG><input inputmode=none type=text name="Q$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
+        <td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B1" placeholder="team#" pattern="^[0-9]+$"></td>
+        <td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B2" placeholder="team#" pattern="^[0-9]+$"></td>
+        <td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B3" placeholder="team#" pattern="^[0-9]+$"></td>
+        <td class=redTeamBG><input inputmode=numeric type=text name="Q$#R1" placeholder="team#" pattern="^[0-9]+$"></td>
+        <td class=redTeamBG><input inputmode=numeric type=text name="Q$#R2" placeholder="team#" pattern="^[0-9]+$"></td>
+        <td class=redTeamBG><input inputmode=numeric type=text name="Q$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
     </tr>
 </template>
-<div id=team-list class=side-by-side></div>
-<div class=side-by-side>
-    <table id=keypad><tr>
-        <th><button class=num>1</button></th>
-        <th><button class=num>2</button></th>
-        <th> <button class=num>3</button></th>
-    </tr><tr>
-        <th><button class=num>4</button></th>
-        <th><button class=num>5</button></th>
-        <th> <button class=num>6</button></th>
-    </tr><tr>
-        <th><button class=num>7</button></th>
-        <th><button class=num>8</button></th>
-        <th> <button class=num>9</button></th>
-    </tr><tr>
-        <th><button class=back>⌫</button></th>
-        <th><button class=num>0</button></th>
-        <th> <button class=next>⏎</button></th>
-    </tr></table>
-    <p><button class=clearRow>Clear Row</button></p>
-    <p><input type=submit value="Save Event"></p>
+<div>
+    <span id=team-list></span>
+    <button class=clearRow>Clear Row</button>
+    <input type=submit value="Save Event">
 </div>
 </form>
 

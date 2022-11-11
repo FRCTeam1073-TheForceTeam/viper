@@ -80,20 +80,6 @@ function lf(){
 $(document).ready(function(){
     addRow()
     focusFirst()
-    $('button.num').click(function(){
-        lf().val(lf().val()+$(this).text())
-        lf().focus()
-        return false
-    })
-    $('button.back').click(function(){
-        lf().val(lf().val().slice(0,-1))
-        lf().focus()
-        return false
-    })
-    $('button.next').click(function(){
-        focusFirst()
-        return false
-    })
     $('button.clearRow').click(function(){
         if (confirm("Clear entire row?")){
             lf().closest('tr').find('input').val("")

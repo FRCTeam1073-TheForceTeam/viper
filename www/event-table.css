@@ -1,7 +1,7 @@
 #qualifiers td,#qualifiers th{padding:1vw;font-size:120%}
 #qualifiers input{width:3em}
-#keypad button{width:2.5em;height:2em;background-color:darkgray;border-radius:.5em;font-size:140%}
-#keypad button.num{background-color:lightgray}
 button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
 #team-list{min-width:320px;text-align:left}
 #qualTable{overflow-x:auto;max-width:100%}
+table{margin:1em auto}
+.side-by-side{max-width:500px}
