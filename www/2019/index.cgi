@@ -27,9 +27,9 @@ print "<h1>FRC 1073 Scouting App</h1>\n";
 
 my @argCheck = split /\s+/, $event;
 if (@argCheck > 1) {
-    print "<p>ARG ERROR</p>\n";
-    print "</body></html>\n";
-    exit 0;
+	print "<p>ARG ERROR</p>\n";
+	print "</body></html>\n";
+	exit 0;
 }
 
 my $events = `ls -1 ../data/2019*.schedule.csv`;
@@ -42,41 +42,41 @@ if (@files < 1) {
 }
 
 if ( "$event" ne "") {
-    my $eventCheck = "../data/${event}.schedule.csv";
-    my $found = 0;
-    foreach my $f (@files) {
-	if ("$eventCheck" eq "$f") {
-	    $found = 1;
-	    last;
+	my $eventCheck = "../data/${event}.schedule.csv";
+	my $found = 0;
+	foreach my $f (@files) {
+		if ("$eventCheck" eq "$f") {
+			$found = 1;
+			last;
+		}
 	}
-    }
-    if ($found == 0) {
-	print "<p>Error, invalid event</p>\n";
-	print "</body></html>\n";
-	exit 0;
-    }
+	if ($found == 0) {
+		print "<p>Error, invalid event</p>\n";
+		print "</body></html>\n";
+		exit 0;
+	}
 }
 
 if ("$event" eq "") {
-    print "<table cellspacing=5 cellpadding=5 border=0>\n";
+	print "<table cellspacing=5 cellpadding=5 border=0>\n";
 	foreach my $f (@files) {
-	    my @fname = split /\//, $f;
-	    my @name = split /\./, $fname[-1];
-	    print "<tr><td><h2><a href=\"${me}?event=$name[0]\">$name[0]</a></h2></td>";
-	    print "<td>&nbsp;&nbsp;</td>";
-	    my $csvfile = "/../data/" . $name[0] . ".scouting.csv";
-	    if ( -f "$csvfile" ) {
-		print "<td><h2><a href=\"opr.cgi?event=$name[0]\">Match Data</a></h2>\n";
-		print "</td><td>&nbsp;&nbsp;</td>";
-		print "<td><h2><a href=\"matchup.cgi?event=$name[0]\">Match Predictor</a></h2>\n";
-		print "</td><td>&nbsp;&nbsp;</td><td><h2>(";
-		print "<a href=\"$csvfile\">CSV file</a>)</h2></td>";
-	    } else {
-		print "<td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td>";
-	    }
-	    print "</tr>\n";
+		my @fname = split /\//, $f;
+		my @name = split /\./, $fname[-1];
+		print "<tr><td><h2><a href=\"${me}?event=$name[0]\">$name[0]</a></h2></td>";
+		print "<td>&nbsp;&nbsp;</td>";
+		my $csvfile = "/../data/" . $name[0] . ".scouting.csv";
+		if ( -f "$csvfile" ) {
+			print "<td><h2><a href=\"opr.cgi?event=$name[0]\">Match Data</a></h2>\n";
+			print "</td><td>&nbsp;&nbsp;</td>";
+			print "<td><h2><a href=\"matchup.cgi?event=$name[0]\">Match Predictor</a></h2>\n";
+			print "</td><td>&nbsp;&nbsp;</td><td><h2>(";
+			print "<a href=\"$csvfile\">CSV file</a>)</h2></td>";
+		} else {
+			print "<td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td>";
+		}
+		print "</tr>\n";
 	}
-    print "</table>\n";
+	print "</table>\n";
 } else {
 	if ("$pos" eq "") {
 		print "<table cellpadding=20 cellspacing=10><tr>\n";
@@ -100,12 +100,12 @@ if ("$event" eq "") {
 		print "</tr></table>\n";
 		print "<br><h2>Pick your field orientation and robot position</<h2>\n";
 	} else {
-        my $file = $event . ".schedule.csv";
-        my $data = `cat ../data/${file}`;
-        my $matches = [ split /\n/, $data ];
-        foreach my $i (0..(scalar(@$matches)-1)) {
-            $matches->[$i] = [ split(/,/, $matches->[$i]) ];
-        }
+		my $file = $event . ".schedule.csv";
+		my $data = `cat ../data/${file}`;
+		my $matches = [ split /\n/, $data ];
+		foreach my $i (0..(scalar(@$matches)-1)) {
+			$matches->[$i] = [ split(/,/, $matches->[$i]) ];
+		}
 
 		my $posMap = {
 			"R1"=>1,

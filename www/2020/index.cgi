@@ -112,254 +112,36 @@ if ("$event" eq "") {
         # list matches for this position
         my $file = $event . ".schedule.csv";
         my $data = `cat ../data/${file}`;
-        my @lines = split /\n/, $data;
-        my %mhash;
-        my $count = 0;
-        foreach my $line (@lines) {
-            my @items = split /=/, $line;
-            next unless (@items > 1);
-            my $k = $items[0];
-            my $v = $items[1];
-            $k =~ s/^\s+|\s+$//g;
-            $v =~ s/^\s+|\s+$//g;
-            $mhash{$k} = $v;
-            my @bits = split '_', $k;
-            next unless (@bits > 1);
-            $count = substr $bits[1], 2;
-        }
-        # any elims?
-        my %alliances;
-        if ( -f "../data/$event.alliances.csv" ) {
-            $data = `cat ../data/$event.alliances.csv`;
-            @lines = split /\n/, $data;
-            my $i = 1;
-            foreach my $line (@lines) {
-                $alliances{$i} = $line;
-                $i++;
-            }
-        }
-        my @all = keys %alliances;
+		my $matches = [ split /\n/, $data ];
+		foreach my $i (0..(scalar(@$matches)-1)) {
+			$matches->[$i] = [ split(/,/, $matches->[$i]) ];
+		}
 
         print "<p style=\"font-size:25px; font-weight:bold;\"><a href=\"index.cgi\">Home</a></p>\n";
+     
+		my $posMap = {
+			"R1"=>1,
+			"R2"=>2,
+			"R3"=>3,
+			"B1"=>4,
+			"B2"=>5,
+			"B3"=>6,
+		};
 
-        if (@all > 0) {
-            # include elims
-            print "<table cellpadding=0 cellspacing=0 border=0><tr><td>\n";
-        }
-        
         my @bits = split "", $pos;
         my $num = int $bits[1];
         $num += 3 if ($bits[0] eq "B");
         print "<table border=1 cellspacing=5 cellpadding=5>\n";
         print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">$event $pos</p></th></tr>\n";
-        for (my $m = 1; $m <= $count; $m++) {
-            print "<tr><td><p style=\"font-size:20px; font-weight:bold;\">Qual $m</p></td>\n";
-            my $key = $event . "_qm" . $m . "_" . $num;
-            if (defined $mhash{$key}) {
-                my $sfile = "blue_${orient}.cgi";
-                if ($num < 4) {
-                    $sfile = "red_${orient}.cgi";
-                }
-                print "<td><p style=\"font-size:20px; font-weight:bold;\">";
-                print "<a href=\"${sfile}?game=${key}&team=$mhash{$key}\">";
-                print "$pos : $mhash{$key}</a></p></td>\n";
-            } else {
-                print "<td><p style=\"font-size:20px; font-weight:bold;\">&nbsp;$key</p></td>\n";
-            }
-            print "</tr>\n";
-        }
+		foreach my $i (0..(scalar(@$matches)-1)) {
+			print "<tr><td><p style=\"font-size:20px; font-weight:bold;\">".$matches->[$i]->[$0]."</p></td>\n";
+			my $key = $event . "_" . $matches->[$i]->[$0] . "_" . $pos;
+			my $team = $matches->[$i]->[$posMap->{$pos}];
+            my $color = ($pos=~/^R/)?"red":"blue";
+			print "<td><p style=\"font-size:20px; font-weight:bold;\"><a href=\"${color}_${orient}.cgi?game=${key}&team=${team}\">$pos : ${team}</a></p></td>\n";
+			print "</tr>\n";
+		}
         print "</table>\n";
-
-        if (@all > 0) {
-            # include elims
-            print "</td><td>&nbsp; &nbsp; &nbsp;</td><td>&nbsp; &nbsp; &nbsp;</td><td valign=top>\n";
-            print "<table cellpadding=5 cellspacing=5 border=1>";
-            print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">QF $pos</p></th></tr>\n";
-            # set text size for table
-            my $pstyle = "<p style=\"font-size:20px; font-weight:bold;\">";
-            if ($num < 4) {
-                # RED takes alliances 1-4
-                my $sfile = "red_${orient}.cgi";
-                my @a1 = split /-/, $alliances{"1"};
-                my @a2 = split /-/, $alliances{"2"};
-                my @a3 = split /-/, $alliances{"3"};
-                my @a4 = split /-/, $alliances{"4"};
-                print "<tr><th>${pstyle}QF 1</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf1_$num&team=$a1[$num-1]\">";
-                print "$pos : $a1[$num-1]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 2</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf2_$num&team=$a4[$num-1]\">";
-                print "$pos : $a4[$num-1]</a></p></td>\n";
-                
-                print "<tr><th>${pstyle}QF 3</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf3_$num&team=$a2[$num-1]\">";
-                print "$pos : $a2[$num-1]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 4</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf4_$num&team=$a3[$num-1]\">";
-                print "$pos : $a3[$num-1]</a></p></td>\n";
-
-                print "<tr><td colspan=2>&nbsp;</td></tr>\n";
-                print "<tr><th>${pstyle}QF 5</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf5_$num&team=$a1[$num-1]\">";
-                print "$pos : $a1[$num-1]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 6</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf6_$num&team=$a4[$num-1]\">";
-                print "$pos : $a4[$num-1]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 7</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf7_$num&team=$a2[$num-1]\">";
-                print "$pos : $a2[$num-1]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 8</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf8_$num&team=$a3[$num-1]\">";
-                print "$pos : $a3[$num-1]</a></p></td>\n";
-
-                print "<tr><td colspan=2 align=center>(tiebreakers)</td></tr>\n";
-                print "<tr><th>${pstyle}QF 9</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf9_$num&team=$a1[$num-1]\">";
-                print "$pos : $a1[$num-1]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 10</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf10_$num&team=$a4[$num-1]\">";
-                print "$pos : $a4[$num-1]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 11</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf11_$num&team=$a2[$num-1]\">";
-                print "$pos : $a2[$num-1]</a></p></td>\n";
-
-                print "<tr><td>${pstyle}QF 12</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf12_$num&team=$a3[$num-1]\">";
-                print "$pos : $a3[$num-1]</a></p></td>\n";
-            } else {
-                # BLUE takes alliances 5-8
-                my $sfile = "blue_${orient}.cgi";
-                my @a5 = split /-/, $alliances{"5"};
-                my @a6 = split /-/, $alliances{"6"};
-                my @a7 = split /-/, $alliances{"7"};
-                my @a8 = split /-/, $alliances{"8"};
-                print "<tr><th>${pstyle}QF 1</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf1_$num&team=$a8[$num-4]\">";
-                print "$pos : $a8[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 2</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf2_$num&team=$a5[$num-4]\">";
-                print "$pos : $a5[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 3</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf3_$num&team=$a7[$num-4]\">";
-                print "$pos : $a7[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 4</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf4_$num&team=$a6[$num-4]\">";
-                print "$pos : $a6[$num-4]</a></p></td>\n";
-
-                print "<tr><td colspan=2>&nbsp;</td></tr>\n";
-                print "<tr><th>${pstyle}QF 5</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf5_$num&team=$a8[$num-4]\">";
-                print "$pos : $a8[$num-4]</a></p></td>\n";
-                
-                print "<tr><th>${pstyle}QF 6</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf6_$num&team=$a5[$num-4]\">";
-                print "$pos : $a5[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 7</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf7_$num&team=$a7[$num-4]\">";
-                print "$pos : $a7[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 8</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf8_$num&team=$a6[$num-4]\">";
-                print "$pos : $a6[$num-4]</a></p></td>\n";
-
-                print "<tr><td colspan=2 align=center>(tiebreakers)</td></tr>\n";
-                print "<tr><th>${pstyle}QF 9</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf9_$num&team=$a8[$num-4]\">";
-                print "$pos : $a8[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 10</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf10_$num&team=$a5[$num-4]\">";
-                print "$pos : $a5[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 11</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf11_$num&team=$a7[$num-4]\">";
-                print "$pos : $a7[$num-4]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}QF 12</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_qf12_$num&team=$a6[$num-4]\">";
-                print "$pos : $a6[$num-4]</a></p></td>\n";
-            }
-            print "</table>\n";
-            print "<br><br>\n";
-            # are semifinals configured?
-            my $semif = "../data/${event}.semis";
-            if (-f "$semif" ) {
-                my @semit;
-                if (open my $fh, "<", $semif) {
-                    while (my $line = <$fh>) {
-                        chomp $line;
-                        push @semit, $line;
-                    }
-                    close $fh;
-                } else {
-                    print "<h2>Error opening $semif: $!</h2>\n";
-                    print "</td></tr></table>\n";
-                    print "</body></html>\n";
-                    exit 0;
-                }
-                print "<table cellpadding=5 cellspacing=5 border=1>\n";
-                print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">SF $pos</p></th></tr>\n";
-                # set text size for table
-                my $pstyle = "<p style=\"font-size:20px; font-weight:bold;\">";
-                # set defaults to red alliance
-                my $sfile = "red_${orient}.cgi";
-                my $index = $num - 1;
-                my @s1;
-                my @s2;
-                if ($num < 4) {
-                    # RED takes alliances 1(0),2(2)
-                    @s1 = split /-/, $semit[0];
-                    @s2 = split /-/, $semit[2];
-                } else {
-                    # BLUE takes alliances 3(1),4(3)
-                    $sfile = "blue_${orient}.cgi";
-                    @s1 = split /-/, $semit[1];
-                    @s2 = split /-/, $semit[3];
-                    $index = $num - 4;
-                }
-                print "<tr><th>${pstyle}SF 1</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf1_$num&team=$s1[$index]\">";
-                print "$pos : $s1[$index]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}SF 2</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf2_$num&team=$s2[$index]\">";
-                print "$pos : $s2[$index]</a></p></td>\n";
-
-                print "<tr><td colspan=2>&nbsp;</td></tr>\n";
-
-                print "<tr><th>${pstyle}SF 3</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf3_$num&team=$s1[$index]\">";
-                print "$pos : $s1[$index]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}SF 4</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf4_$num&team=$s2[$index]\">";
-                print "$pos : $s2[$index]</a></p></td>\n";
-
-                print "<tr><td colspan=2 align=center><p>(tiebreakers)</p></td></tr>\n";
-                
-                print "<tr><th>${pstyle}SF 5</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf5_$num&team=$s1[$index]\">";
-                print "$pos : $s1[$index]</a></p></td>\n";
-
-                print "<tr><th>${pstyle}SF 6</p></th>";
-                print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf6_$num&team=$s2[$index]\">";
-                print "$pos : $s2[$index]</a></p></td>\n";
-
-                print "</table>\n";
-            }
-            print "</td></tr></table>\n";
-        }
     }
 }
 print "</body></html>\n";
