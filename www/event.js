@@ -21,23 +21,22 @@ $(document).ready(function(){
             .replace('UPLOAD_COUNT', uploadCount)
         )
     })
-    $('#links li').hide()
+    $('.initHid').hide()
     loadEventFiles(function(fileList){
         for (var i=0; i<fileList.length; i++){
             var extension = fileList[i].replace(/[^\.]+\./,"")
             switch (extension){
                 case "schedule.csv":
-                    $('.dependSchedule').show()
+                    $('.dependSchedule').show().parents().show()
                     break;
                 case "scouting.csv":
-                    $('.dependScouting').show()
+                    $('.dependScouting').show().parents().show()
                     break;
                 case "alliances.csv":
-                    $('.dependAlliances').show()
+                    $('.dependAlliances').show().parents().show()
                     break;
             }
         }
-        if (uploadCount) $('.dependUploads').show()
-        $('#links').show()
+        if (uploadCount) $('.dependUploads').show().parents().show()
     })
 })

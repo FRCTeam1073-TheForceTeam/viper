@@ -53,8 +53,8 @@ function setPickedTeams(){
         $('#prediction').show()
         var red = [parseInt($('#R1').val()),parseInt($('#R2').val()),parseInt($('#R3').val())],
         blue = [parseInt($('#B1').val()),parseInt($('#B2').val()),parseInt($('#B3').val())]
-        var redScore = getAllianceValue('score', red),
-        blueScore = getAllianceValue('score', blue)
+        var redScore = Math.round(getAllianceValue('score', red)),
+        blueScore = Math.round(getAllianceValue('score', blue))
         setStats('redTeamBG',red,'Red', redScore, blueScore)
         setStats('blueTeamBG',blue,'Blue', blueScore, redScore)
     } else {
@@ -101,10 +101,10 @@ function setStats(colorClass, alliance, colorName, myScore, theirScore){
             statInfo[field] = statInfo[field]||{}
             var statName = statInfo[field]['name']||field,
             statType = statInfo[field]['type']||"",
-            team1Val = getTeamValue(field,alliance[0]),
-            team2Val = getTeamValue(field,alliance[1]),
-            team3Val = getTeamValue(field,alliance[2]),
-            allianceVal = getAllianceValue(field,alliance)
+            team1Val = Math.round(getTeamValue(field,alliance[0])),
+            team2Val = Math.round(getTeamValue(field,alliance[1])),
+            team3Val = Math.round(getTeamValue(field,alliance[2])),
+            allianceVal = Math.round(getAllianceValue(field,alliance))
             if (statType=='avg') el.append($(`<tr><th>${statName}</th><td>${team1Val}</td><td>${team2Val}</td><td>${team3Val}</td><td>${allianceVal}</td></tr>`))
         }
     }

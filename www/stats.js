@@ -4,18 +4,44 @@ $(document).ready(function(){
     $('#lightBoxBG').click(function(){
         $('#lightBoxBG').hide()
         $('#lightBoxContent').hide()
+        team=""
+        setHash()
     })
 })
 
+var team = ""
 var teamList = []
 var sortStat = 'score'
 var teamsPicked = {}
+parseHash()
+
+function parseHash(){
+    team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
+    sortStat = (location.hash.match(/^\#(?:.*\&)?(?:sort\=)([a-zA-Z_\-0-9]+)(?:\&.*)?$/)||["","score"])[1]
+    teamsPicked={}
+    ;(location.hash.match(/^\#(?:.*\&)?(?:picked\=)(([0-9]+,)*[0-9]+)(?:\&.*)?$/)||["",""])[1].split(/,/).forEach((t)=>{if(t)teamsPicked[parseInt(t)]=1})
+}
+
+function setHash(){
+    hash=`#event=${eventId}`
+    if(team)hash+=`&team=${team}`
+    if(sortStat!='score')hash+=`&sort=${sortStat}`
+    var l = Object.keys(teamsPicked).filter(t=>teamsPicked[t])
+    l.sort((a,b)=>{parseInt(a)<parseInt(b)})
+    if (l.length)hash+='&picked='+l.join(',')
+    location.hash = hash
+}
+
+$(window).on('hashchange', function(){
+    parseHash()
+    buildTable()
+})
 
 function buildTable(){
     teamList = Object.keys(eventStatsByTeam)
     for (var i=0; i<teamList.length; i++){
-        var team = teamList[i]
-        teamsPicked[team] = teamsPicked[team]||false
+        var t = teamList[i]
+        teamsPicked[t] = teamsPicked[t]||false
     }
     teamList.sort((a,b)=>{
         if (teamsPicked[a] != teamsPicked[b]) return teamsPicked[b]?-1:1
@@ -30,9 +56,9 @@ function buildTable(){
         var hr = $('<tr>')
         hr.append($('<th>'))
         for (var j=0; j<teamList.length; j++){
-            var team = teamList[j],
-            picked = teamsPicked[team]
-            hr.append($('<th>').text(team).click(setTeamPicked).toggleClass('picked',picked))
+            var t = teamList[j],
+            picked = teamsPicked[t]
+            hr.append($('<th>').text(t).click(setTeamPicked).toggleClass('picked',picked))
         }
         table.append(hr)
         for (var j=0; j<statSections[section].length; j++){
@@ -44,16 +70,16 @@ function buildTable(){
             tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").append(doSort).attr('data-stat',field).click(reSortTable)),
             best = (highGood?-1:1)*99999999   
             for (var k=0; k<teamList.length; k++){
-                var team = teamList[k],
-                picked = teamsPicked[team],
-                value = getTeamValue(field, team)
+                var t = teamList[k],
+                picked = teamsPicked[t],
+                value = getTeamValue(field, t)
                 if (!picked && ((highGood && value > best) || (!highGood && value < best))) best = value
             }
             for (var k=0; k<teamList.length; k++){
-                var team = teamList[k]
-                picked = teamsPicked[team],
-                value = getTeamValue(field, team)
-                tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',team).click(showTeamStats).text(info['type']=='%'?Math.round(value*100)+"%":Math.round(value)))
+                var t = teamList[k]
+                picked = teamsPicked[t],
+                value = getTeamValue(field, t)
+                tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).click(showTeamStats).text(info['type']=='%'?Math.round(value*100)+"%":Math.round(value)))
             }
             table.append(tr)
         }
@@ -89,11 +115,14 @@ function buildTable(){
             }
         })
     }
+    if(team) showTeamStats()
 }
 
 function showTeamStats(){
-    var ignore={'event':1,'team':1}
-    var team = parseInt($(this).attr('data-team'))
+    var ignore={'event':1,'team':1},
+    t = $(this).attr('data-team')
+    if (t) team = parseInt(t)
+    if (!team) return
     table = $('<table border=1>'),
     fields = Object.keys(statInfo)
     $('#lightBoxContent').html('').append($('<h2>').text("Team " + team)).append(table)
@@ -142,13 +171,15 @@ function bgArr(color){
     return arr
 }
 function setTeamPicked(){
-    var team = parseInt($(this).text())
-    teamsPicked[team] = !teamsPicked[team]
+    var t = parseInt($(this).text())
+    teamsPicked[t] = !teamsPicked[t]
+    setHash()
     buildTable()
 }
 
 function reSortTable(){
     sortStat = $(this).attr('data-stat')
+    setHash()
     buildTable()
 }
 

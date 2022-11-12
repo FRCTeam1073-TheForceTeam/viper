@@ -1,9 +1,10 @@
-#links {
-    font-size: 200%;
-    font-weight: bold;
-    max-width:16em;
+ul{
+    max-width:25em;
     list-style-type: none;
 }
 li {
     margin: .5em 0;
+}
+.initHid {
+    display:none;
 }

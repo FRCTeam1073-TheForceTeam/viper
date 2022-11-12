@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Match Schedule - FRC Scouting App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/schedule.js></script>
+<script src=/offline.js></script>
+<link rel=stylesheet href=/style.css>
+<link rel=stylesheet href=/schedule.css>
+</head>
+<body>
+<h1>Match Schedule</h1>
+
+<p>Click on a team for match prediction, scouting, or stats.</p>
+
+<table id=matchTable>
+    <thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+    <tbody id=matches></tbody>
+</table>
+
+<template id=matchRow>
+    <tr>
+        <th class=match-id></th>
+        <td class="R1 redTeamBG"></td>
+        <td class="R2 redTeamBG"></td>
+        <td class="R3 redTeamBG"></td>
+        <td class="B1 blueTeamBG"></td>
+        <td class="B2 blueTeamBG"></td>
+        <td class="B3 blueTeamBG"></td>
+    </tr>
+</template>
+<template id=lightBoxTemplate>
+    <p><a href="/match-predictor.html#event=$EVENT&R1=$R1&B1=$B1&R2=$R2&B2=$B2&R3=$R3&B3=$B3">Predict $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3</a></p>
+    <p class=dependTeam><a href="/$YEAR/scout.html#event=$EVENT&match=$MATCH_ID&pos=$POS&team=$TEAM">Scout $MATCH_NAME: $POS $TEAM</a></p>
+    <p class=dependTeam><a href="/stats.html#event=$EVENT&team=$TEAM">Team stats: $TEAM</a></p>
+</template>
+<div id=lightBoxBG class=lightBox style=display:none></div>
+<div id=lightBoxContent class=lightBox style=display:none></div>
+</body></html>
