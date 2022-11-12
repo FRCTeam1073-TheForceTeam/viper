@@ -16,6 +16,8 @@ $(document).ready(function(){
     $('#lightBoxBG').click(function(){
         $('.lightBox').hide()
     })
+    $('h1').text(eventName + " " + $('h1').text())
+    $('title').text(eventName + " " + $('title').text())
 })
 
 function showLinks(e){
