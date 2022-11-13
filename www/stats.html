@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Stats: FRC Scouting App</title>
+<title>EVENT Stats: FRC Scouting App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <script src=/jquery.js></script>
@@ -9,18 +9,17 @@
 <script src=/stats.js></script>
 <script src=/offline.js></script>
 <script src="/chart.js"></script>
+<script src="/graph-colors.js"></script>
 <script src="/heartbeat.js"></script>
 <link rel=stylesheet href=/style.css>
 <link rel=stylesheet href=/stats.css>
 </head>
 <body>
-<h1>Match Stats</h1>
-<ul>
-<li>Click data to get detailed per-match information</li> 
-<li>Click a team number to mark team as 'picked'</li>
-<li>Click ▶ to sort the data</li>
-</ul>
-<table border=1 id=statsTable></table>
+<h1>EVENT Match Stats</h1>
+<select id=markPicked><option value="">Mark team as picked</option></select>
+<select id=viewTeam><option value="">View team info</option></select>
+Sort: <select id=sortBy></select>
+<div id=statGraphs></div>
 <div id=lightBoxBG style=display:none></div>
-<div id=lightBoxContent style=display:none></div>
+<div id=lightBoxContent style=display:none><iframe></iframe></div>
 </body></html>

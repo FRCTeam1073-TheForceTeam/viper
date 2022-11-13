@@ -88,7 +88,7 @@ function loadFromLocationHash(){
 function setStats(colorClass, alliance, colorName, myScore, theirScore){
     $(`#prediction .${colorClass} .score`).text(myScore).toggleClass('winner',myScore>theirScore)
     var el = $(`#prediction .${colorClass} .statTables`).html('')
-    var sections = Object.keys(statSections)
+    var sections = Object.keys(matchPredictorSections)
     for (var i=0; i<sections.length; i++){
         var section = sections[i],
         team1=alliance[0],
@@ -96,8 +96,8 @@ function setStats(colorClass, alliance, colorName, myScore, theirScore){
         team3=alliance[2]
         el.append($(`<tr><th colspan=5><h4>${section}</h4></th></tr>`))
         el.append($(`<tr><th></th><th>${team1}</th><th>${team2}</th><th>${team3}</th><th>${colorName}</th></tr>`))
-        for (var j=0; j<statSections[section].length; j++){
-            var field = statSections[section][j]
+        for (var j=0; j<matchPredictorSections[section].length; j++){
+            var field = matchPredictorSections[section][j]
             statInfo[field] = statInfo[field]||{}
             var statName = statInfo[field]['name']||field,
             statType = statInfo[field]['type']||"",

@@ -64,20 +64,21 @@ function loadAlliances(callback){
 }
 
 function loadEventStats(callback){
-
-    $.getScript(`/${eventYear}/aggregate-stats.js`, function(){
-        eventAjax(`/data/${eventId}.scouting.csv`,function(text){
-            eventStats=csvToArrayOfMaps(text)
-            for (var i=0; i<eventStats.length; i++){
-                var scout = eventStats[i]
-                var team = scout['team']
-                var aggregate = eventStatsByTeam[team] || {}
-                aggregateStats(scout, aggregate)
-                eventStatsByTeam[team] = aggregate
-            }
-            if (callback) callback(eventStats, eventStatsByTeam)
+    if (eventYear && eventId){
+        $.getScript(`/${eventYear}/aggregate-stats.js`, function(){
+            eventAjax(`/data/${eventId}.scouting.csv`,function(text){
+                eventStats=csvToArrayOfMaps(text)
+                for (var i=0; i<eventStats.length; i++){
+                    var scout = eventStats[i]
+                    var team = scout['team']
+                    var aggregate = eventStatsByTeam[team] || {}
+                    aggregateStats(scout, aggregate)
+                    eventStatsByTeam[team] = aggregate
+                }
+                if (callback) callback(eventStats, eventStatsByTeam)
+            })
         })
-    })
+    }
 }
 
 function loadEventFiles(callback){

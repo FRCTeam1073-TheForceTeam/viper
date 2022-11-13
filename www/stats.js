@@ -1,13 +1,49 @@
 $(document).ready(function(){
-    loadEventStats(buildTable)
-    $('h1').text(eventName + " " + $('h1').text())
+    loadEventStats(function(){
+        var markPicked = $('#markPicked'),
+        viewTeam = $('#viewTeam'),
+        sortBy = $('#sortBy'),
+        allStats = Object.keys(statInfo)
+        markPicked.change(setTeamPicked).children().not(':first').remove()
+        viewTeam.change(function(){
+            team = $(this).val()
+            $(this).val("")
+            setHash()
+            showTeamStats()
+        }).children().not(':first').remove()
+        sortBy.html('').change(reSort)
+        teamList = Object.keys(eventStatsByTeam)
+        for (var i=0; i<teamList.length; i++){
+            var t = teamList[i]
+            markPicked.append($('<option>').attr('value',t).text(t))
+            viewTeam.append($('<option>').attr('value',t).text(t))
+        }
+        allStats.sort((a,b)=>{return getStatInfoName(a).localeCompare(getStatInfoName(b))})
+        for (var i=0; i<allStats.length; i++){
+            var field = allStats[i],
+            info = statInfo[field]||{},
+            name = getStatInfoName(field)
+            if(info['type']!='text') sortBy.append($('<option>').attr('value',field).text(name))
+        }
+        $('#sortBy').val(sortStat)
+        showStats()
+    })
+    $('h1').text($('h1').text().replace("EVENT", eventName))
+    $('title').text($('title').text().replace("EVENT", eventName))
+    $('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}`)
     $('#lightBoxBG').click(function(){
         $('#lightBoxBG').hide()
         $('#lightBoxContent').hide()
         team=""
+        $('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}`)
         setHash()
     })
 })
+
+function getStatInfoName(field){
+    var info = statInfo[field]||{}
+    return info['name']||field
+}
 
 var team = ""
 var teamList = []
@@ -34,11 +70,10 @@ function setHash(){
 
 $(window).on('hashchange', function(){
     parseHash()
-    buildTable()
+    showStats()
 })
 
-function buildTable(){
-    teamList = Object.keys(eventStatsByTeam)
+function showStats(){
     for (var i=0; i<teamList.length; i++){
         var t = teamList[i]
         teamsPicked[t] = teamsPicked[t]||false
@@ -47,60 +82,33 @@ function buildTable(){
         if (teamsPicked[a] != teamsPicked[b]) return teamsPicked[b]?-1:1
         return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
     })
-    var table = $('#statsTable').html('')
-    var tableWidth = teamList.length + 1
-    var sections = Object.keys(statSections)
+    var graphs = $('#statGraphs').html('')
+    var sections = Object.keys(aggregateGraphs)
+    
     for (var i=0; i<sections.length; i++){
-        var section = sections[i]
-        table.append($(`<tr><th colspan=${tableWidth}><h4>${section}</h4></th></tr>`))
-        var hr = $('<tr>')
-        hr.append($('<th>'))
-        for (var j=0; j<teamList.length; j++){
-            var t = teamList[j],
-            picked = teamsPicked[t]
-            hr.append($('<th>').text(t).click(setTeamPicked).toggleClass('picked',picked))
-        }
-        table.append(hr)
-        for (var j=0; j<statSections[section].length; j++){
-            var field = statSections[section][j],
+        var section = sections[i],
+        chart = $('<canvas>'),
+        data=[],
+        percent=false
+        graphs.append($('<h2>').text(section))
+        graphs.append($('<div class=chart>').append(chart))
+        for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
+            var field = aggregateGraphs[section]['data'][j],
             info = statInfo[field]||{}
-            highGood = (info['good']||"high")=='high',
-            statName = (info['type']=='avg'?"Average ":"") + info['name']||field,
-            doSort = $('<span class=dosort>').text("▶").toggleClass('active',field==sortStat),
-            tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").append(doSort).attr('data-stat',field).click(reSortTable)),
-            best = (highGood?-1:1)*99999999   
+            var values = []
             for (var k=0; k<teamList.length; k++){
-                var t = teamList[k],
-                picked = teamsPicked[t],
-                value = getTeamValue(field, t)
-                if (!picked && ((highGood && value > best) || (!highGood && value < best))) best = value
+                values.push(getTeamValue(field, teamList[k]))
             }
-            for (var k=0; k<teamList.length; k++){
-                var t = teamList[k]
-                picked = teamsPicked[t],
-                value = getTeamValue(field, t)
-                tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).click(showTeamStats).text(info['type']=='%'?Math.round(value*100)+"%":Math.round(value)))
-            }
-            table.append(tr)
+            data.push({
+                label: (info['type']=='avg'?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
+                data: values,
+                backgroundColor: bgArr(graphColors[j])
+            })
+            if (info['type']=='%') percent=true
         }
-        var chart = $('<canvas>'),
-        bgColors="#9E4BCC,#FFC154,#FAFE54,#774692,#DBAF62,#D7DA61,#492C59,#856B3E,#83843E,#52067C,#BA7600,#B4B900,#630199,#E59200,#DEE400".split(/,/),
-        data=[]
-        table.append($('<tr>').append($(`<td colspan=${tableWidth}>`).append($('<div class=chart>').append(chart))))
-        for (var j=0; j<statSections[section].length; j++){
-            var field = statSections[section][j]
-            if (info['type'] == 'avg'){
-                var values = []
-                for (var k=0; k<teamList.length; k++){
-                    values.push(getTeamValue(field, teamList[k]))
-                }
-                data.push({
-                    label: info['name']||field,
-                    data: values,
-                    backgroundColor: bgArr(bgColors[j])
-                })
-            }
-        }
+        var stacked = aggregateGraphs[section]['graph']=="stacked"
+        var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
+        if (percent)yScale['suggestedMax'] = 100
         new Chart(chart,{
             type: 'bar',
             data: {
@@ -109,8 +117,8 @@ function buildTable(){
             },
             options: {
                 scales: {
-                    y: {beginAtZero: true,stacked: true},
-                    x: {stacked: true}
+                    y: yScale,
+                    x: {stacked: stacked}
                 }
             }
         })
@@ -123,37 +131,7 @@ function showTeamStats(){
     t = $(this).attr('data-team')
     if (t) team = parseInt(t)
     if (!team) return
-    table = $('<table border=1>'),
-    fields = Object.keys(statInfo)
-    $('#lightBoxContent').html('').append($('<h2>').text("Team " + team)).append(table)
-    for (var i=0; i<fields.length; i++){
-        var tr = $('<tr>'),
-        field = fields[i],
-        info = statInfo[field]||{}
-        if (!ignore[field]){
-            table.append(tr)
-            tr.append($('<th>').text(statInfo[field]?statInfo[field]['name']:field))
-            for (var j=0; j<eventStats.length; j++){
-                if (eventStats[j]['team'] == team){
-                    var stat = eventStats[j][field]
-                    switch(info['type']){
-                        case "%":
-                            stat=stat?"Y":"N"
-                            break;
-                        case "text":
-                            stat=stat||""
-                            break;
-                        case "enum":
-                            stat=info['values'][stat]
-                            break;
-                        default:
-                            stat=stat||0
-                    }
-                    tr.append($('<td>').text(stat))
-                }
-            }
-        }
-    }
+    $('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
     window.scrollTo(0,0)
     $('#lightBoxBG').show()
     $('#lightBoxContent').show()
@@ -166,21 +144,36 @@ function bgArr(color){
         if (teamsPicked[teamList[i]]) picked++
     }
     for (var i=0; i<teamList.length; i++){
-        arr.push(i<teamList.length-picked?color:"darkgray")
+        arr.push(i<teamList.length-picked?color:darkenColor(color))
     }
     return arr
 }
 function setTeamPicked(){
-    var t = parseInt($(this).text())
+    var markPicked = $('#markPicked'),
+    t = parseInt(markPicked.val())
+    markPicked.val("")
+    if (!t) return
     teamsPicked[t] = !teamsPicked[t]
     setHash()
-    buildTable()
+    showStats()
 }
 
-function reSortTable(){
-    sortStat = $(this).attr('data-stat')
+function reSort(){
+    sortStat=$('#sortBy').val()
     setHash()
-    buildTable()
+    showStats()
+}
+
+function darkenColor(color){
+    var m = color.match(/^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/)
+    if(m){
+        return "#" + 
+        (Math.round(parseInt(m[1],16)/2)).toString(16).padStart(2,'0') +
+        (Math.round(parseInt(m[2],16)/2)).toString(16).padStart(2,'0') +
+        (Math.round(parseInt(m[3],16)/2)).toString(16).padStart(2,'0')
+    }
+    return "darkGray"
+
 }
 
 function getTeamValue(field, team){
@@ -188,6 +181,6 @@ function getTeamValue(field, team){
     var stats = eventStatsByTeam[team],
     info = statInfo[field]||{}
     if (! field in stats ||! 'count' in stats || !stats['count']) return 0
-    var divisor = (info['type']=='count')?1:stats['count']
-    return (stats[field]||0) / divisor
+    var divisor = /count|minmax/.test(info['type'])?1:stats['count']
+    return (stats[field]||0) / divisor * (info['type']=='%'?100:1)
 }

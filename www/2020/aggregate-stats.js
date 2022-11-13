@@ -1,44 +1,49 @@
-
 function addStat(map,field,value){
-	map[field] = (map[field]||0)+(value||0)
+	if(/^(\%|avg)$/.test(statInfo[field]['type'])) map[field] = (map[field]||0)+(value||0)
 }
 
 var endGamePoints=[0,3,6,12]
 function aggregateStats(scout, aggregate){
 
-	scout['auto_line_score'] = (scout['auto_line']||0)*5
-	scout['auto_bottom_score'] = (scout['auto_bottom']||0)*2
-	scout['auto_outer_score'] = (scout['auto_outer']||0)*4
-	scout['auto_inner_score'] = (scout['auto_inner']||0)*6
-	scout['auto_score'] = scout['auto_line_score'] + scout['auto_bottom_score'] + scout['auto_outer_score'] + scout['auto_inner_score']
+	scout["auto_line_score"] = (scout["auto_line"]||0)*5
+	scout["auto_bottom_score"] = (scout["auto_bottom"]||0)*2
+	scout["auto_outer_score"] = (scout["auto_outer"]||0)*4
+	scout["auto_inner_score"] = (scout["auto_inner"]||0)*6
+	scout["auto_score"] = scout["auto_line_score"] + scout["auto_bottom_score"] + scout["auto_outer_score"] + scout["auto_inner_score"]
 
-	scout['teleop_bottom_score'] = scout['teleop_bottom']||0
-	scout['teleop_outer_score'] = (scout['auto_line']||0)*2
-	scout['teleop_inner_score'] = (scout['teleop_inner']||0)*3
-	scout['teleop_score'] = scout['teleop_bottom_score'] + scout['teleop_outer_score'] + scout['teleop_inner_score']
+	scout["teleop_bottom_score"] = scout["teleop_bottom"]||0
+	scout["teleop_outer_score"] = (scout["auto_line"]||0)*2
+	scout["teleop_inner_score"] = (scout["teleop_inner"]||0)*3
+	scout["teleop_score"] = scout["teleop_bottom_score"] + scout["teleop_outer_score"] + scout["teleop_inner_score"]
 
-	scout['rotation_control_score'] = (scout['rotation_control']||0)*10
-	scout['position_control_score'] = (scout['position_control']||0)*20
-	scout['control_score'] = scout['rotation_control_score'] + scout['position_control_score']
+	scout["rotation_control_score"] = (scout["rotation_control"]||0)*10
+	scout["position_control_score"] = (scout["position_control"]||0)*20
+	scout["control_score"] = scout["rotation_control_score"] + scout["position_control_score"]
 
-	scout['parked_score'] = (scout['parked']||0)*5
-	scout['climbed_score'] = (scout['climbed']||0)*25
-	scout['leveled_score'] = (scout['leveled']||0)*15
-	scout['endgame_score'] = scout['parked_score'] + scout['climbed_score'] + scout['leveled_score']
+	scout["parked_score"] = (scout["parked"]||0)*5
+	scout["climbed_score"] = (scout["climbed"]||0)*25
+	scout["leveled_score"] = (scout["leveled"]||0)*15
+	scout["endgame_score"] = scout["parked_score"] + scout["climbed_score"] + scout["leveled_score"]
 
-	scout['score'] = scout['auto_score'] + scout['teleop_score'] + scout['control_score'] + scout['endgame_score']
+	scout["score"] = scout["auto_score"] + scout["teleop_score"] + scout["control_score"] + scout["endgame_score"]
 
-	if (scout['comments'] && /\%[0-9a-fA-F]{2}/.test(scout['comments'])) scout['comments'] = decodeURIComponent(scout['comments'])
-	if (scout['comments'] && "none" == scout['comments']) scout['comments'] = ""
-	if (scout['scouter'] && "unknown" == scout['scouter']) scout['scouter'] = ""
+	scout[statInfo["defense"]["breakout"][scout["defense"]||0]] = 1
+	scout[statInfo["defended"]["breakout"][scout["defended"]||0]] = 1
+	scout[statInfo["rank"]["breakout"][scout["rank"]||0]] = 1
 
-	aggregate['count'] = (aggregate['count']||0)+1
+	if (scout["comments"] && /\%[0-9a-fA-F]{2}/.test(scout["comments"])) scout["comments"] = decodeURIComponent(scout["comments"])
+	if (scout["comments"] && /^(none|(n\/a))$/i.test(scout["comments"])) scout["comments"] = ""
+	if (scout["scouter"] && "unknown" == scout["scouter"]) scout["scouter"] = ""
+
+	aggregate["count"] = (aggregate["count"]||0)+1
 
 	var sumFields = Object.keys(statInfo)
 	for (var i=0; i<sumFields.length; i++){
 		var field = sumFields[i]
 		addStat(aggregate,field,scout[field])
 	}
+	aggregate["max_score"] = (aggregate["max_score"]||0)<scout["score"]?scout["score"]:(aggregate["max_score"]||0)
+	aggregate["min_score"] = (aggregate["min_score"]||999)>scout["score"]?scout["score"]:(aggregate["min_score"]||999)
 }
 
 var statInfo = {
@@ -49,6 +54,14 @@ var statInfo = {
 	"score": {
 		name: "Score Contribution",
 		type: "avg"
+	},
+	"max_score": {
+		name: "Maximum Score Contribution",
+		type: "minmax"
+	},
+	"min_score": {
+		name: "Minimum Score Contribution",
+		type: "minmax"
 	},
 	"count": {
 		name: "Number of Matches",
@@ -281,30 +294,81 @@ var statInfo = {
 		name: "Points for end game",
 		type: "avg"
 	},
-	'defense':{
+	"defense":{
 		name: "Played defense",
 		type: "enum",
-		values: ["","Bad","OK","Great"]
+		values:["","Bad","OK","Great"],
+		breakout:["defense_none","defense_bad","defense_ok","defense_great"]
 	},
-	'defended':{
+	"defense_none": {
+		name: "Didn't defend",
+		type: "%"
+	},
+	"defense_bad": {
+		name: "Below Average Defense",
+		type: "%"
+	},
+	"defense_ok": {
+		name: "Average Defense",
+		type: "%"
+	},
+	"defense_great": {
+		name: "Good Defense",
+		type: "%"
+	},
+	"defended":{
 		name: "Good against defense",
 		type: "enum",
-		values: ["","Affected","OK","Great"]
+		values:["","Affected","OK","Great"],
+		breakout:["defended_none","defended_affected","defended_ok","defended_great"]
 	},
-	'fouls':{
+	"defended_none": {
+		name: "Wasn't defended",
+		type: "%"
+	},
+	"defended_affected": {
+		name: "Affected by Defense",
+		type: "%"
+	},
+	"defended_ok": {
+		name: "Average Against Defense",
+		type: "%"
+	},
+	"defended_great": {
+		name: "Good Against Defense",
+		type: "%"
+	},
+	"fouls":{
 		name: "Fouls (-4 points)",
 		type: "avg",
 		good: "low"
 	},
-	'techfouls':{
+	"techfouls":{
 		name: "Tech Fouls (-8 points)",
 		type: "avg",
 		good: "low"
 	},
-	'rank':{
+	"rank":{
 		name: "Rank",
 		type: "enum",
-		values: ["","Struggled","Productive","Captain"]
+		values:["","Struggled","Productive","Captain"],
+		breakout:["rank_none","rank_struggled","rank_productive","rank_captain"]
+	},
+	"rank_none": {
+		name: "Not Ranked",
+		type: "%"
+	},
+	"rank_struggled": {
+		name: "Struggled to be Effective",
+		type: "%"
+	},
+	"rank_productive": {
+		name: "Decent Robot",
+		type: "%"
+	},
+	"rank_captain": {
+		name: "Very Good Robot",
+		type: "%"
 	},
 	"scouter": {
 		name: "Scouter",
@@ -316,40 +380,103 @@ var statInfo = {
 	}
 }
 
-var statSections = {
-	"Total": [
-		"score",
-		"count"
-	],
-	"Game Stages": [
-		"auto_score",
-		"teleop_score",
-		"control_score",
-		"endgame_score"
-	],
-	"Fouls": [
-		"fouls",
-		"techfouls"
-	],
-	"Auto": [
-		'auto_line_score',
-		'auto_bottom_score',
-		'auto_outer_score',
-		'auto_inner_score',
-		'auto_score'
-	],
-	"Remote Control":  [
-		'teleop_bottom_score',
-		'teleop_outer_score',
-		'teleop_inner_score'
-	],
-	"Control":  [
-		'rotation_control_score',
-		'position_control_score',
-	],
-	"End Game": [
-		"parked_score",
-		"climbed_score",
-		"leveled_score"
-	]
+var teamGraphs = {
+	"Overall":{
+		graph:"stacked",
+		data:["score"]
+	},
+	"Game Stages":{
+		graph:"stacked",
+		data:["auto_score","teleop_score","control_score","endgame_score"]
+	},
+	"Penalties":{
+		graph:"stacked",
+		data:["fouls_score","techfouls_score"]
+	},
+	"Auto":{
+		graph:"stacked",
+		data:["auto_line_score","auto_bottom_score","auto_outer_score","auto_inner_score","auto_score"]
+	},
+	"Remote Control":{
+		graph:"stacked",
+		data:["teleop_bottom_score","teleop_outer_score","teleop_inner_score"]
+	},
+	"End Game":{
+		graph:"stacked",
+		data:["parked_score","climbed_score","leveled_score"]
+	},
+	"Misses":{
+		graph:"stacked",
+		data:["auto_missed","teleop_missed"]
+	},
+	"Played Defense":{
+		graph:"stacked",
+		data:["defense_none","defense_bad","defense_ok","defense_great"]
+	},
+	"Good Against Defense":{
+		graph:"stacked",
+		data:["defended_none","defended_affected","defended_ok","defended_great"]
+	},
+	"Rank":{
+		graph:"stacked",
+		data:["rank_none","rank_struggled","rank_productive","rank_captain"]
+	}
+}
+
+var aggregateGraphs = {
+	"Overall":{
+		graph:"bar",
+		data:["max_score","score","min_score"]
+	},
+	"Game Stages":{
+		graph:"stacked",
+		data:["auto_score","teleop_score","control_score","endgame_score"]
+	},
+	"Penalties":{
+		graph:"stacked",
+		data:["fouls_score","techfouls_score"]
+	},
+	"Auto":{
+		graph:"stacked",
+		data:["auto_line_score","auto_bottom_score","auto_outer_score","auto_inner_score","auto_score"]
+	},
+	"Remote Control":{
+		graph:"stacked",
+		data:["teleop_bottom_score","teleop_outer_score","teleop_inner_score"]
+	},
+	"End Game":{
+		graph:"stacked",
+		data:["parked_score","climbed_score","leveled_score"]
+	},
+	"Scouting Coverage":{
+		graph:"stacked",
+		data:["count"]
+	},
+	"Misses":{
+		graph:"stacked",
+		data:["auto_missed","teleop_missed"]
+	},
+	"Played Defense":{
+		graph:"stacked",
+		data:["defense_none","defense_bad","defense_ok","defense_great"]
+	},
+	"Good Against Defense":{
+		graph:"stacked",
+		data:["defended_none","defended_affected","defended_ok","defended_great"]
+	},
+	"Rank":{
+		graph:"stacked",
+		data:["rank_none","rank_struggled","rank_productive","rank_captain"]
+	}
+}
+
+
+var matchPredictorSections = {
+	"Total":["score","count"],
+	"Game Stages":["auto_score","teleop_score","control_score","endgame_score"],
+	"Penalties":["fouls","techfouls"],
+	"Auto":["auto_line_score","auto_bottom_score","auto_outer_score","auto_inner_score","auto_score"],
+	"Remote Control":["teleop_bottom_score","teleop_outer_score","teleop_inner_score"],
+	"Control":["rotation_control_score","position_control_score"],
+	"End Game":["parked_score","climbed_score","leveled_score"]
 }
