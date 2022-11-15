@@ -23,27 +23,27 @@ Venue: <input id=venueInp type=text placeholder="No spaces or symbols" required=
 </div>
 
 <div id=qualTable>
-    <table>
-        <thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
-        <tbody id=qualifiers></tbody>
-    </table>
+	<table>
+		<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+		<tbody id=qualifiers></tbody>
+	</table>
 </div>
 
 <template id=qualrow>
-    <tr>
-        <th>$#</th>
-        <td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B1" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B2" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B3" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=redTeamBG><input inputmode=numeric type=text name="Q$#R1" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=redTeamBG><input inputmode=numeric type=text name="Q$#R2" placeholder="team#" pattern="^[0-9]+$"></td>
-        <td class=redTeamBG><input inputmode=numeric type=text name="Q$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
-    </tr>
+	<tr>
+		<th>$#</th>
+		<td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B1" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B2" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B3" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=redTeamBG><input inputmode=numeric type=text name="Q$#R1" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=redTeamBG><input inputmode=numeric type=text name="Q$#R2" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=redTeamBG><input inputmode=numeric type=text name="Q$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
+	</tr>
 </template>
 <div>
-    <span id=team-list></span>
-    <button class=clearRow>Clear Row</button>
-    <input type=submit value="Save Event">
+	<span id=team-list></span>
+	<button class=clearRow>Clear Row</button>
+	<input type=submit value="Save Event">
 </div>
 </form>
 

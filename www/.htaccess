@@ -7,32 +7,32 @@ RedirectMatch /(20[0-9]{2})/?$ /#$1
 # Allow most files to be cached for 12 hours
 Header set Cache-Control "max-age=28800, public, must-revalidate"
 <FilesMatch "\.(cgi|csv)$">
-    # Data files should be fetched fresh every 10 seconds
-    # Unless disconnected from the internet in which case they
-    # Can be used from cache stale
-    Header set Cache-Control "max-age=10, stale-if-error=28800, public, must-revalidate"
+	# Data files should be fetched fresh every 10 seconds
+	# Unless disconnected from the internet in which case they
+	# Can be used from cache stale
+	Header set Cache-Control "max-age=10, stale-if-error=28800, public, must-revalidate"
 </FilesMatch>
 <FilesMatch "^(admin|scout)/">
-    # Uploads should not be cached
-    Header set Cache-Control no-store
+	# Uploads should not be cached
+	Header set Cache-Control no-store
 </FilesMatch>
 <FilesMatch "^heartbeat\.html$">
-    # Connected test
-    Header set Cache-Control no-store
+	# Connected test
+	Header set Cache-Control no-store
 </FilesMatch>
 <FilesMatch "^20.*\.cgi$>
-    # Legacy CGI
-    Header set Cache-Control no-store
+	# Legacy CGI
+	Header set Cache-Control no-store
 </FilesMatch>
 <If "%{REMOTE_ADDR} == '127.0.0.1'">
-    # For development from local machine
-    Header set Cache-Control no-store
+	# For development from local machine
+	Header set Cache-Control no-store
 </If>
 <If "%{REMOTE_ADDR} == '127.0.0.1'">
-    # For development from local machine
-    Header set Cache-Control no-store
+	# For development from local machine
+	Header set Cache-Control no-store
 </If>
 <IfDefine DEBUG>
-    # No cache in debug mode
-    Header set Cache-Control no-store
+	# No cache in debug mode
+	Header set Cache-Control no-store
 </IfDefine>

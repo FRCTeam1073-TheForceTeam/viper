@@ -24,31 +24,31 @@ print $fh $alliancesCsv;
 close $fh;
 
 sub addPlayoffs(){
-    my ($csv, $round) = @_;
-    $csv =~ s/\r\n|\r/\n/g;
-    $webutil->error("Malformed $round playoffs CSV", $csv) if (!$csv or $csv !~ /\AMatch,R1,R2,R3,B1,B2,B3\n(?:$round[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
-    $fileName = "../data/${event}.schedule.csv";
-    if (! -f $fileName){
-        `touch $fileName`;
-    }
-    open $fh, '+<', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
-    flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
-    $/ = undef;
-    my $schedule = <$fh>;
-    if (!$schedule){
-        $schedule = $csv;
-    } else {
-        $csv =~ s/^Match.*\n//g;
-        if ($schedule =~ /^$round/gm){
-            $schedule =~ s/(^$round.*\n)+/$csv/gm;
-        } else {
-            $schedule .= $csv;
-        }
-    }
-    seek $fh, 0, 0;
-    truncate $fh, 0;
-    print $fh $schedule;
-    close $fh;
+	my ($csv, $round) = @_;
+	$csv =~ s/\r\n|\r/\n/g;
+	$webutil->error("Malformed $round playoffs CSV", $csv) if (!$csv or $csv !~ /\AMatch,R1,R2,R3,B1,B2,B3\n(?:$round[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
+	$fileName = "../data/${event}.schedule.csv";
+	if (! -f $fileName){
+		`touch $fileName`;
+	}
+	open $fh, '+<', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
+	flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
+	$/ = undef;
+	my $schedule = <$fh>;
+	if (!$schedule){
+		$schedule = $csv;
+	} else {
+		$csv =~ s/^Match.*\n//g;
+		if ($schedule =~ /^$round/gm){
+			$schedule =~ s/(^$round.*\n)+/$csv/gm;
+		} else {
+			$schedule .= $csv;
+		}
+	}
+	seek $fh, 0, 0;
+	truncate $fh, 0;
+	print $fh $schedule;
+	close $fh;
 }
 
 my $quarterFinalsCsv = $cgi->param('quarterFinalsCsv');

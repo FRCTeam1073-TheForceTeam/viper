@@ -11,24 +11,24 @@
 <script src=/main.js></script>
 </head>
 <body>
-    <h1>Upload a Match schedule</h1>
-    <h3>Instructions:</h3>
-    <ol>
-    <li>Go to The Blue Alliance website (www.thebluealliance.com) and select the event.</li>
-    <li>Right-click on the match schedule webpage and select 'View Page Source'.</li>
-    <li>On the 'page source' view, select all of the content (Ctrl-a) and copy it (Ctrl-c)</li>
-    <li>Connect to the scouting app and come to this page.</li>
-    <li>Paste the content (Ctrl-v) in the text area below and click on 'Upload Event' </li>
-    </ol>
+		<h1>Upload a Match schedule</h1>
+		<h3>Instructions:</h3>
+		<ol>
+		<li>Go to The Blue Alliance website (www.thebluealliance.com) and select the event.</li>
+		<li>Right-click on the match schedule webpage and select 'View Page Source'.</li>
+		<li>On the 'page source' view, select all of the content (Ctrl-a) and copy it (Ctrl-c)</li>
+		<li>Connect to the scouting app and come to this page.</li>
+		<li>Paste the content (Ctrl-v) in the text area below and click on 'Upload Event' </li>
+		</ol>
 
-    <form id=blueAllianceSource>
-      <textarea required rows=20 pattern="\<.*\>" placeholder="&lt;!DOCTYPE html&gt;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&lt;/html&gt;"></textarea>
-      <input type="submit" value="Upload Event">
-    </form>
+		<form id=blueAllianceSource>
+			<textarea required rows=20 pattern="\<.*\>" placeholder="&lt;!DOCTYPE html&gt;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&#10;&lt;/html&gt;"></textarea>
+			<input type="submit" value="Upload Event">
+		</form>
 
-    <form id=csvForm method=POST action=/admin/add-event.cgi>
-      <input type=hidden id=eventInp name=event>
-      <input type=hidden id=csvInp name=csv>
-    </form>
-  </body>
+		<form id=csvForm method=POST action=/admin/add-event.cgi>
+			<input type=hidden id=eventInp name=event>
+			<input type=hidden id=csvInp name=csv>
+		</form>
+	</body>
 </html>

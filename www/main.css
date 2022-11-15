@@ -18,5 +18,5 @@ ul{text-align:left}
 #mainMenu .dependUpload{font-weight:bold;color:green}
 #mainMenu h4 {margin:.75em 0 0 0}
 @media only screen and (max-width: 600px){
-    html{font-size:12px;}
+	html{font-size:12px;}
 }

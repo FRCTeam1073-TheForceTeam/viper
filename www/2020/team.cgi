@@ -60,29 +60,29 @@ if (! open($fh, "<", $file) ) {
     print "</body></html>\n";
     exit 0;
 }
-    
+
 while (my $line = <$fh>) {
     my @items = split /,/, $line;
     next if (@items < 27 || $items[0] eq "event");
     my $t = $items[2];
     next unless ($team eq $t);
     my $m = $items[1];
-        # guard against duplicate match entries
-        if (defined $auto{$m}) {
-                my $suffix = "a";
-                while (1) {
-                        my $index = $m . $suffix;
-                        if (defined $auto{$index}) {
-                                ++$suffix;
-                                next;
-                        } else {
-                                $m = $index;
-                                last;
-                        }
-                }
-        }
+	# guard against duplicate match entries
+	if (defined $auto{$m}) {
+		my $suffix = "a";
+		while (1) {
+			my $index = $m . $suffix;
+			if (defined $auto{$index}) {
+				++$suffix;
+				next;
+			} else {
+				$m = $index;
+				last;
+			}
+		}
+	}
     push @match, $m;
-    
+
     # AUTO
     # auto line
     $auto{$m}  = "<td align=center><h2>$items[3]</h2></td>";
@@ -92,7 +92,7 @@ while (my $line = <$fh>) {
     $auto{$m} .= "<td align=center><h2>$items[5]</h2></td>";
     # auto inner
     $auto{$m} .= "<td align=center><h2>$items[6]</h2></td>";
-    
+
     # TELEOP
     # teleop bottom
     $teleop{$m}  = "<td align=center><h2>$items[7]</h2></td>";
@@ -104,10 +104,10 @@ while (my $line = <$fh>) {
     $teleop{$m} .= "<td align=center><h2>$items[10]</h2></td>";
     # teleop missed
     $teleop{$m} .= "<td align=center><h2>$items[11]</h2></td>";
-    
+
     # shotlocs
     for (my $i = 0; $i < 25; $i++) {
-                $shotlocs[$i]++ if ("$items[$i+12]" eq "1");
+		$shotlocs[$i]++ if ("$items[$i+12]" eq "1");
     }
 
     # Control Panel
@@ -143,7 +143,7 @@ while (my $line = <$fh>) {
     $answer = "No";
     $answer = "Yes" if ("$items[43]" eq "1");
     $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>";
-    
+
     # DEFENSE & FOULS
     # defense
     $answer = "None";
@@ -169,7 +169,7 @@ while (my $line = <$fh>) {
     $answer = "A Few" if ("$items[47]" eq "2");
     $answer = "Many" if ("$items[47]" eq "3");
     $defoul{$m} .= "<td align=center><h2>$answer</h2></td>";
-    
+
     # SCOUT INPUT
     # rank
     $answer = "unknown";
@@ -179,24 +179,24 @@ while (my $line = <$fh>) {
     $scout{$m} .= "<td align=center><h2>$answer</h2></td>";
     # name
     if (@items > 48) {
-        my $str = $items[49];
-        $str =~ tr/+/ /;
-        $scout{$m} .= "<td align=center><h2>$str</h2></td>";
+	my $str = $items[49];
+	$str =~ tr/+/ /;
+	$scout{$m} .= "<td align=center><h2>$str</h2></td>";
     } else {
-        $scout{$m} .= "<td>&nbsp;</td>";
+	$scout{$m} .= "<td>&nbsp;</td>";
     }
     # comments
     if (@items > 49) {
-        my $str = $items[50];
-        $str =~ tr/+/ /;
-        $str =~ s/%2C/,/g;
-        $str =~ s/%27/'/g;
-        $str =~ s/%3A/:/g;
-        $str =~ s/%0A/<br>/g;
-        $str =~ s/%0D//g;
-        $scout{$m} .= "<td align=center><h2>$str</h2></td>";
+	my $str = $items[50];
+	$str =~ tr/+/ /;
+	$str =~ s/%2C/,/g;
+	$str =~ s/%27/'/g;
+	$str =~ s/%3A/:/g;
+	$str =~ s/%0A/<br>/g;
+	$str =~ s/%0D//g;
+	$scout{$m} .= "<td align=center><h2>$str</h2></td>";
     } else {
-        $scout{$m} .= "<td>&nbsp;</td>";
+	$scout{$m} .= "<td>&nbsp;</td>";
     }
 }
 
@@ -245,10 +245,10 @@ my $index = 0;
 for (my $j = 1; $j < 6; $j++) {
     print "<tr>\n";
     for (my $i = 1; $i < 6; $i++) {
-        my $mark = "";
-        $mark = "_X" if ("$shotlocs[$index]" ne "0");
-        print "<td><img src=left_red_${j}_${i}${mark}.png></td>\n";
-        $index++;
+	my $mark = "";
+	$mark = "_X" if ("$shotlocs[$index]" ne "0");
+	print "<td><img src=left_red_${j}_${i}${mark}.png></td>\n";
+	$index++;
     }
     print "</tr>\n";
 }
@@ -261,8 +261,8 @@ $index = 0;
 for (my $j = 1; $j < 6; $j++) {
     print "<tr>\n";
     for (my $i = 1; $i < 6; $i++) {
-        print "<td><p style=\"font-size:30px; font-weight:bold;\">$shotlocs[$index]</p></td>\n";
-        $index++;
+	print "<td><p style=\"font-size:30px; font-weight:bold;\">$shotlocs[$index]</p></td>\n";
+	$index++;
     }
     print "</tr>\n";
 }

@@ -1,9 +1,9 @@
 ul {
-    font-size: 150%;
-    font-weight: bold;
-    max-width:16em;
-    list-style-type: none;
+	font-size: 150%;
+	font-weight: bold;
+	max-width:16em;
+	list-style-type: none;
 }
 li {
-    margin: .5em 0;
+	margin: .5em 0;
 }

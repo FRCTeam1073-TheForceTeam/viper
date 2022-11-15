@@ -19,18 +19,18 @@ print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 
 if ($state eq "active") {
-    my $fh;
-    if (!open($fh, ">", "../data/halt.txt")){
-        print "<h3>Error opening halt signal file: $!</h3>\n";
-        print "<body></html>\n";
-        exit 0;
-    }
-    print $fh "halt\n";
-    close($fh);
-    
-    print "<h3>Halt signal sent, shutting down</h3>\n";
-    print "</body></html>\n";
-    exit 0;
+	my $fh;
+	if (!open($fh, ">", "../data/halt.txt")){
+		print "<h3>Error opening halt signal file: $!</h3>\n";
+		print "<body></html>\n";
+		exit 0;
+	}
+	print $fh "halt\n";
+	close($fh);
+
+	print "<h3>Halt signal sent, shutting down</h3>\n";
+	print "</body></html>\n";
+	exit 0;
 }
 
 print "<h2>Are you sure you want to Halt this server?</h2>\n";

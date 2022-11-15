@@ -15,13 +15,13 @@ sudo chmod -R g+rw www/data/ .git
 find  www/data/ .git -type d -exec sudo chmod ug+s {} \;
 
 sudo apt-get install -y \
-    apache2 \
-    git \
-    libcgi-pm-perl \
-    libfile-flock-perl \
-    libhtml-escape-perl \
-    perl \
-    ;
+	apache2 \
+	git \
+	libcgi-pm-perl \
+	libfile-flock-perl \
+	libhtml-escape-perl \
+	perl \
+	;
 
 sudo chgrp www-data /var/www
 sudo chmod g+w /var/www
@@ -29,6 +29,6 @@ sudo chmod g+w /var/www
 # Used for generating service worker hash
 if [ ! -e /var/www/.gitconfig ] || ! grep -q `pwd` /var/www/.gitconfig
 then
-    echo Setting up www-data access to this git repository
-    sudo -u www-data HOME=/var/www git config --global --add safe.directory `pwd`
+	echo Setting up www-data access to this git repository
+	sudo -u www-data HOME=/var/www git config --global --add safe.directory `pwd`
 fi

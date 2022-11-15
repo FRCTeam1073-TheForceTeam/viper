@@ -22,5 +22,5 @@ print "Content-type: text/csv; charset=UTF-8\n\n";
 
 # get all of the event files containing match schedules
 foreach my $name (split /\n/, `ls -1 -r data/$event.*`){
-    print "/$name\n"
+	print "/$name\n"
 }
