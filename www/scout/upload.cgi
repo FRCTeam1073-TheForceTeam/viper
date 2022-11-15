@@ -17,31 +17,42 @@ my $uCsv = $cgi->param('csv');
 $webutil->error("No data uploaded", "Scouting CSV data not found.") if (!$uCsv);
 $uCsv = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $uCsv) ];
 $webutil->error("Not enough CSV lines", "expected at least two lines in uploaded CSV") if(scalar(@{$uCsv})<2);
-my $csvHeaders =  shift @{$uCsv};
-my $uHead = { map { $csvHeaders->[$_] => $_ } 0..(scalar(@{$csvHeaders})-1) };
-foreach my $key (qw(event match team)){
-    $webutil->error("Missing column", "Expected $key CSV heading") if (! exists $uHead->{$key});
-}
-my $events = {};
-foreach my $name (@{$csvHeaders}){
-    $webutil->error("Unexpected CSV heading",$name) if($name !~ /^[a-zA-Z0-9_\-]+$/);
-}
+my $csvHeaders;
+my $uHead;
+my $eventCsv = {};
+my $eventHeaders = {};
 foreach my $row (@{$uCsv}){
-    $webutil->error("Bad row size", "CSV row size (".(scalar @{$row}).") doesn't match heading row size(".(scalar keys %{$uHead}).")\n".join(",",keys %{$uHead})."\n".join(",", @{$row})) if (scalar keys %{$uHead} != scalar @{$row});
-    $webutil->error("Unexpected event name",$row->[$uHead->{'event'}]) if($row->[$uHead->{'event'}] !~ /^20\d\d[a-zA-Z0-9_\-]+$/);
-    $webutil->error("Unexpected event name",$row->[$uHead->{'match'}]) if($row->[$uHead->{'match'}] !~ /^[a-z]+[0-9]+$/);
-    $webutil->error("Unexpected event name",$row->[$uHead->{'team'}]) if($row->[$uHead->{'team'}] !~ /^[0-9]+$/);
-    $events->{$row->[$uHead->{'event'}]} = [] if (! exists  $events->{$row->[$uHead->{'event'}]});
-    push(@{$events->{$row->[$uHead->{'event'}]}}, $row)
+    if ($row->[0] eq 'event'){
+        $csvHeaders = $row;
+        $uHead = { map { $csvHeaders->[$_] => $_ } 0..(scalar(@{$csvHeaders})-1) };
+        foreach my $key (qw(event match team)){
+            $webutil->error("Missing column", "Expected $key CSV heading") if (! exists $uHead->{$key});
+        }
+        foreach my $name (@{$csvHeaders}){
+            $webutil->error("Unexpected CSV heading",$name) if($name !~ /^[a-zA-Z0-9_\-]+$/);
+        }
+    } else {
+        $webutil->error("Didn't find a header row starting with 'event' before other data") if (!$csvHeaders);
+        $webutil->error("Bad row size", "CSV row size (".(scalar @{$row}).") doesn't match heading row size(".(scalar keys %{$uHead}).")\n".join(",",keys %{$uHead})."\n".join(",", @{$row})) if (scalar keys %{$uHead} != scalar @{$row});
+        $webutil->error("Unexpected event name",$row->[$uHead->{'event'}]) if($row->[$uHead->{'event'}] !~ /^20\d\d[a-zA-Z0-9_\-]+$/);
+        $webutil->error("Unexpected event name",$row->[$uHead->{'match'}]) if($row->[$uHead->{'match'}] !~ /^[a-z]+[0-9]+$/);
+        $webutil->error("Unexpected event name",$row->[$uHead->{'team'}]) if($row->[$uHead->{'team'}] !~ /^[0-9]+$/);
+        $eventCsv->{$row->[$uHead->{'event'}]} = [] if (! exists  $eventCsv->{$row->[$uHead->{'event'}]});
+        $eventHeaders->{$row->[$uHead->{'event'}]} = $csvHeaders;
+        push(@{$eventCsv->{$row->[$uHead->{'event'}]}}, $row)
+    }
 }
 
 my $savedKeys = "";
-foreach my $event (keys %{$events}){
+foreach my $event (keys %{$eventCsv}){
+    print STDERR "$event\n";
     my $fileName = "../data/" . $event . ".scouting.csv";
     if (! -f $fileName){
 	    `touch $fileName`;
     }
-     
+    $csvHeaders = $eventHeaders->{$event};
+
+    print STDERR Dumper($csvHeaders);
     open my $fh, '+<', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
     flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
     $/ = undef;
@@ -54,19 +65,19 @@ foreach my $event (keys %{$events}){
     $fHead = { map { $fHead->[$_] => $_ } 0..(scalar(@{$fHead})-1) };
     seek $fh, 0, 0;
     truncate $fh, 0;
-    print $fh join(",", @$csvHeaders)."\n";
+    print $fh join(",", @{$csvHeaders})."\n";
     foreach my $row (@$fCsv){
         my $first = 1;
-        foreach my $name (@$csvHeaders){
+        foreach my $name (@{$csvHeaders}){
             print $fh "," if (!$first);
             print $fh $row->[$fHead->{$name}] if (defined $fHead->{$name});
             $first = 0;
         }
         print $fh "\n";
     }
-    foreach my $row (@$uCsv){
+    foreach my $row (@{$eventCsv->{$event}}){
         my $first = 1;
-        foreach my $name (@$csvHeaders){
+        foreach my $name (@{$csvHeaders}){
             print $fh "," if (!$first);
             print $fh $row->[$uHead->{$name}] if (defined $uHead->{$name});
             $first = 0;
