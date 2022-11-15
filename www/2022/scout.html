@@ -4,13 +4,13 @@
 <title>FRC Scouting App</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=scout.css>
 <script src=/jquery.js></script>
 <script src=/event-url.js></script>
 <script src=scout.js></script>
-<script src=/offline.js></script>
 <script src=/heartbeat.js></script>
-<link rel=stylesheet href=/style.css>
-<link rel=stylesheet href=scout.css>
+<script src=/main.js></script>
 <title>FRC Scouting App</title>
 </head>
 <body>
@@ -33,12 +33,6 @@
 </div>
 <div id=select-match style=display:none class=screen>
     <ul id=match-list></ul>
-</div>
-<div id=upload-screen style=display:none class=screen>
-  <form id=upload action=/scout/upload.cgi method=POST>
-    <textarea class=full rows=15 id=csv name=csv></textarea>
-    <button id=uploadBtn>Upload</button>
-  </form>
 </div>
 
 <form id=scouting style=display:none class=screen>
@@ -183,16 +177,11 @@
     <textarea class=full name=comments rows=5 placeholder=Comments></textarea>
   </fieldset>
   <p>
-    Save data and: 
+    Save data: 
     <button id=nextBtn>Next Match</button>
     <button id=matchBtn>Choose Match</button>
     <button id=robotBtn>Change Robot</button>
     <button id=showUploadsBtn>Upload Data</button>
-  </p>
-  <p>
-    Discard data and: 
-    <button id=backMatchBtn>Back to match list</button>
-    <button id=backRobotBtn>Back to robot selection</button>
   </p>
 </form>
 </body>

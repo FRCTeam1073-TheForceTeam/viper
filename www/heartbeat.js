@@ -11,15 +11,18 @@ setInterval(function(){
         type: "GET",
         success: function(){
             hasHeartbeat = true
+            $('#hamburger').show()
         },
         error: function(){
             hasHeartbeat = false
+            $('#hamburger').hide()
         }
     })
-}, 10000) // 10 seconds (*1000 ms)
+}, 6*1000) // 6 seconds 
 
-window.onbeforeunload = function() {
+window.addEventListener('beforeunload',(event) =>{
     if (!hasHeartbeat){
+        event.preventDefault()
         return "You are not connected to the hub. Are you sure?"
     }
-}
+})

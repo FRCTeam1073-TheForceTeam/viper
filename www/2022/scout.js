@@ -1,7 +1,6 @@
 var pos = ""
 var team = ""
 var match = ""
-var upload = false
 var matchName = ""
 var scouting
 parseHash()
@@ -10,12 +9,10 @@ function parseHash(){
     pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
     team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
     match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:qm|qf|sf|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
-    upload = /^\#(?:.*\&)?upload(?:\&.*)?$/.test(location.hash)
 }
 
 function showScreen(){
-    if (upload) showUpload()
-    else if (!pos) showPosList()
+    if (!pos) showPosList()
     else if (!team || !match) showMatchList()
     else showScouting()
 }
@@ -27,23 +24,6 @@ $(window).on('hashchange', function(){
     parseHash()
     showScreen()
 })
-
-function showUpload(){
-    $('.screen').hide()
-    location.hash = `#event=${eventId}&upload`
-    window.scrollTo(0,0)
-    $('h1').text("Data Upload")
-    var csv = ""
-    var uploads = getUploads()
-    for (var i=0; i<uploads.length; i++){
-        csv += uploads[i]
-    }
-    if (csv){
-        csv = toCSV()[0] + csv
-        $('#csv').val(csv)
-    }
-    $('#upload-screen').show()
-}
 
 function showPosList(){
     $('.screen').hide()
@@ -144,6 +124,13 @@ function toCSV(){
     ] 
 }
 
+window.addEventListener('beforeunload',(event) =>{
+    if (formHasChanges(scouting)){
+        event.preventDefault()
+        return "Leave page without saving?"
+    }
+})
+
 function formHasChanges(f){
     var changes = false
     f.find('input,textarea').each(function(){
@@ -161,7 +148,9 @@ function formHasChanges(f){
 function store(){
     if (formHasChanges(scouting)){
         localStorage.setItem("last_match_"+eventId, match)
-        localStorage.setItem(getScoutKey(), toCSV()[1])
+        var csv = toCSV()
+        localStorage.setItem(`${eventYear}_headers`, csv[0])
+        localStorage.setItem(getScoutKey(), csv[1])
     }
 }
 
@@ -223,7 +212,7 @@ $(document).ready(function(){
 	})
     $("#showUploadsBtn").click(function(e){
         store()
-        showUpload()
+        location.href="/upload.html"
         return false
 	})
     $("#backMatchBtn").click(function(e){
