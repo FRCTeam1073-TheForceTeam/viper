@@ -28,10 +28,6 @@ Header set Cache-Control "max-age=28800, public, must-revalidate"
 	# For development from local machine
 	Header set Cache-Control no-store
 </If>
-<If "%{REMOTE_ADDR} == '127.0.0.1'">
-	# For development from local machine
-	Header set Cache-Control no-store
-</If>
 <IfDefine DEBUG>
 	# No cache in debug mode
 	Header set Cache-Control no-store
