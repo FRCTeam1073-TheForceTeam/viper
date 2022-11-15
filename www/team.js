@@ -25,7 +25,7 @@ function fillPage(){
 	var comments = $('#comments').html("")
 	if (!matchList.length) return;
 
-	var sections = Object.keys(teamGraphs)    
+	var sections = Object.keys(teamGraphs)
 	for (var i=0; i<sections.length; i++){
 		var section = sections[i],
 		chart = $('<canvas>'),

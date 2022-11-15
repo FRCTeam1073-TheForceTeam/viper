@@ -93,7 +93,7 @@ $(document).ready(function(){
 		var pos = ["R1","R2","R3","B1","B2","B3"]
 		console.log(csv)
 		var hasVal=true
-		for (var i=1; hasVal; i++){            
+		for (var i=1; hasVal; i++){
 			var line = `qm${i}`
 			for(var j=0; j<pos.length; j++){
 				val = $(`input[name="Q${i}${pos[j]}"]`).val()

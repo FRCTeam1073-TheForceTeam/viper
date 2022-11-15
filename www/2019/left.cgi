@@ -44,26 +44,26 @@ sub printcargohatch($) {
 		$cargoarr[$index] = "1";
 		$cargostr = join "", @cargoarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"open_hatch_image2.png\"></a></td>\n";
 	} elsif ("$val" eq "1") {
 		$cargoarr[$index] = "2";
 		$cargostr = join "", @cargoarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"hatch_image2.png\"></a></td>\n";
 	} elsif ("$val" eq "2") {
 		$cargoarr[$index] = "3";
 		$cargoarr[$index] = "0" if ($index == 7 || $index == 12);
 		$cargostr = join "", @cargoarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"auto_hatch_image2.png\"></a></td>\n";
 	} else {
 		$cargoarr[$index] = "0";
 		$cargostr = join "", @cargoarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"null_hatch_image2.png\"></a></td>\n";
 	}
 }
@@ -78,19 +78,19 @@ sub printcargocargo($) {
 		$cargoarr[$index] = "1";
 		$cargostr = join "", @cargoarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"open_cargo_image.png\"></a></td>\n";
 	} elsif ("$val" eq "1") {
 		$cargoarr[$index] = "2";
 		$cargostr = join "", @cargoarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"cargo_image.png\"></a></td>\n";
 	} else {
 		$cargoarr[$index] = "0";
 		$cargostr = join "", @cargoarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargostr}&rocket=${rocket}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"auto_cargo_image.png\"></a></td>\n";
 	}
 }
@@ -105,19 +105,19 @@ sub printrockethatch($) {
 		$rocketarr[$index] = "1";
 		$rocketstr = join "", @rocketarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"open_hatch_image2.png\"></a></td>\n";
 	} elsif ("$val" eq "1") {
 		$rocketarr[$index] = "2";
 		$rocketstr = join "", @rocketarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"hatch_image2.png\"></a></td>\n";
 	} else {
 		$rocketarr[$index] = "0";
 		$rocketstr = join "", @rocketarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"auto_hatch_image2.png\"></a></td>\n";
 	}
 }
@@ -132,19 +132,19 @@ sub printrocketcargo($) {
 		$rocketarr[$index] = "1";
 		$rocketstr = join "", @rocketarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"open_cargo_image.png\"></a></td>\n";
 	} elsif ("$val" eq "1") {
 		$rocketarr[$index] = "2";
 		$rocketstr = join "", @rocketarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"cargo_image.png\"></a></td>\n";
 	} else {
 		$rocketarr[$index] = "0";
 		$rocketstr = join "", @rocketarr;
 		print "<td><a href=\"${me}?game=${game}&team=${team}&hab=${hab}&cargo=${cargo}&rocket=${rocketstr}\">";
-		print "<img height=\"$height\" width=\"$width\" "; 
+		print "<img height=\"$height\" width=\"$width\" ";
 		print "src=\"auto_cargo_image.png\"></a></td>\n";
 	}
 }

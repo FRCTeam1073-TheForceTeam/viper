@@ -15,7 +15,7 @@ var eventTeams = []
 
 function eventAjax(file,callback){
 	$.ajax({
-		async: true,  
+		async: true,
 		beforeSend: function(xhr){
 			xhr.overrideMimeType("text/plain;charset=UTF-8");
 		},

@@ -9,7 +9,7 @@ RUN apt-get update \
 		libcgi-pm-perl \
 		libfile-flock-perl \
 		libhtml-escape-perl \
-		perl \ 
+		perl \
 	&& apt-get clean autoclean \
 	&& apt-get autoremove -y \
 	&& rm -rf /var/lib/{apt,dpkg,cache,log}/ \

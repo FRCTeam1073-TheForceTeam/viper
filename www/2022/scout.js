@@ -121,7 +121,7 @@ function toCSV(){
 	return [
 		keys.map(safeCSV).join(",") + "\n",
 		keys.map(function(v){return values[v]}).map(safeCSV).join(",") + "\n"
-	] 
+	]
 }
 
 window.addEventListener('beforeunload',(event) =>{
@@ -140,7 +140,7 @@ function formHasChanges(f){
 			val=el.prop('checked')
 			init=el.attr('checked')!==undefined
 		}
-		if (val!==init)changes=true            
+		if (val!==init)changes=true
 	})
 	return changes
 }
@@ -219,7 +219,7 @@ $(document).ready(function(){
 		if (!formHasChanges(scouting) || confirm("Discard data and go back?")) showMatchList()
 		return false
 	})
-	$("#backRobotBtn").click(function(e){        
+	$("#backRobotBtn").click(function(e){
 		if (!formHasChanges(scouting) || confirm("Discard data and go back?")) showPosList()
 		return false
 	})

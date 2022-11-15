@@ -16,7 +16,7 @@ self.addEventListener('fetch', (event) => {
 		// Not configured with a cache
 		event.respondWith(fetch(event.request))
 	} else if (/\/(scout|admin)\//.test(event.request.url)){
-		// Uploading data, these request 
+		// Uploading data, these request
 		// have to go through to the server
 		// Network only policy
 		//console.log('From network (scout, admin): ' + event.request.url)
@@ -31,7 +31,7 @@ self.addEventListener('fetch', (event) => {
 		event.respondWith(fetch(event.request))
 	} else if (/\.(cgi|csv)/.test(event.request.url)){
 		event.respondWith(
-			// network first 
+			// network first
 			fetch(event.request).then((networkResponse) => {
 				return caches.open(CACHE_NAME).then((cache) => {
 					// to cache after fetching from network

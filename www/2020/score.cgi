@@ -73,7 +73,7 @@ sub getheader {
 	my $header8 = "rotation_control,position_control";
 	my $header9 = "parked,climbed,bar_position,buddylift,leveled";
 	my $headerA = "defense,defended,fouls,techfouls,rank,scouter,comments";
-	
+
 	return "$header0,$header1,$header2,$header3,$header4,$header5,$header6,$header7,$header8,$header9,$headerA";
 }
 
@@ -108,7 +108,7 @@ my $dline = dumpdata();
 
 sub writeFile {
 	my $errstr = "";
-		
+
 	if (! -f $file) {
 		`touch $file`;
 	}

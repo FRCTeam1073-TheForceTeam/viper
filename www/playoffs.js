@@ -45,7 +45,7 @@ function allianceDisplay(num, oppNum, column){
 	var p1 = a['First Pick']
 	var p2 = a['Second Pick']
 	var button = column==dataLevel?`<br><button class=winnerBtn data-alliance=${num} data-opponent=${oppNum} data-column="${column}">Advance →</button>`:""
-	return `<h4>Alliance ${num}</h4>${c}, ${p1}, ${p2}${button}`    
+	return `<h4>Alliance ${num}</h4>${c}, ${p1}, ${p2}${button}`
 }
 
 function matchupDisplay(nums, column){
@@ -85,7 +85,7 @@ function showBrackets(){
 	var w = 0
 	for(var i=0; i<sf.length; i++){
 		sf[i][0] = getWinner(qf,i*2,WQF)
-		sf[i][1] = getWinner(qf,i*2+1,WQF)        
+		sf[i][1] = getWinner(qf,i*2+1,WQF)
 	}
 	f[0][0] = getWinner(sf,0,WSF)
 	f[0][1] = getWinner(sf,1,WSF)

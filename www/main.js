@@ -16,7 +16,7 @@ $(document).ready(function(){
 	mainMenuBg.click(toggleMainMenu)
 	function toggleMainMenu(){
 		mainMenu.toggle()
-		mainMenuBg.toggle()    
+		mainMenuBg.toggle()
 	}
 	$.get("/main-menu.html",function(data){
 		mainMenu.html(

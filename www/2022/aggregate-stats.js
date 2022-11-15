@@ -11,11 +11,11 @@ function aggregateStats(scout, aggregate){
 
 	scout["teleop_low_hub_score"] = scout["teleop_low_hub"]||0
 	scout["teleop_high_hub_score"] = (scout["teleop_high_hub"]||0)*2
-	scout["teleop_score"] = scout["teleop_low_hub_score"] + scout["teleop_high_hub_score"] 
+	scout["teleop_score"] = scout["teleop_low_hub_score"] + scout["teleop_high_hub_score"]
 
 	scout["end_game_score"] = statInfo["rung"]["points"][scout["rung"]||0]
 
-	scout["fouls_score"] = (scout["fouls"]||0)*-4 
+	scout["fouls_score"] = (scout["fouls"]||0)*-4
 	scout["techfouls_score"] = (scout["techfouls"]||0)*-8
 	scout["penalty_score"] = scout["fouls_score"] + scout["techfouls_score"]
 

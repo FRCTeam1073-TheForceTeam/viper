@@ -10,7 +10,7 @@ function aggregateStats(scout, aggregate){
 	scout["cargo_score"] = (scout["total_cargo"]||0)*3
 	scout["end_score"] = endGamePoints[scout["end_level"]||0]
 	scout["score"] = scout["start_score"] + scout["hatch_score"] + scout["cargo_score"] + scout["end_score"]
- 
+
 	scout["end_level_1"] = scout["end_level"]==1?1:0
 	scout["end_level_2"] = scout["end_level"]==2?1:0
 	scout["end_level_3"] = scout["end_level"]==3?1:0
@@ -27,7 +27,7 @@ function aggregateStats(scout, aggregate){
 
 	var sumFields = Object.keys(statInfo)
 	for (var i=0; i<sumFields.length; i++){
-		var field = sumFields[i]        
+		var field = sumFields[i]
 		addStat(aggregate,field,scout[field])
 	}
 	aggregate["max_score"] = (aggregate["max_score"]||0)<scout["score"]?scout["score"]:(aggregate["max_score"]||0)

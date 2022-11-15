@@ -59,7 +59,7 @@ print "<td><input type=\"radio\" name=\"bar\" value=\"1\">Low</td>\n";
 print "<td><input type=\"radio\" name=\"bar\" value=\"0\" CHECKED>N/A</td>\n";
 print "<tr><td align=left><p style=\"font-size:20px;\">$team lifted others?</p></td>\n";
 print "<td><input type=\"radio\" name=\"buddy\" value=\"1\">Yes</td>\n";
-print "<td><input type=\"radio\" name=\"buddy\" value=\"0\" CHECKED>No</td>\n"; 
+print "<td><input type=\"radio\" name=\"buddy\" value=\"0\" CHECKED>No</td>\n";
 print "<td colspan=2>&nbsp;</td></tr>\n";
 print "<tr><td align=left><p style=\"font-size:20px;\">$team controlled leveling?</p></td>\n";
 print "<td><input type=\"radio\" name=\"level\" value=\"1\">Yes</td>\n";

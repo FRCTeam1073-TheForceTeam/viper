@@ -1,7 +1,7 @@
 # webscout
 
 This is a scouting app designed and used by FRC 1073, The Force Team from Hollis and Brookline, New Hampshire.
-It is designed to collect data about each of the robots as they compete in the tournament. 
+It is designed to collect data about each of the robots as they compete in the tournament.
 The data, such as the number of each type of point scored by each bot, is then used to inform alliance selection decisions.
 It runs on as a web app on a server that can be taken to events and powered by a battery for use in the stands.
 
@@ -14,12 +14,12 @@ The workflow at a tournament is:
 3. Once the app is loaded, devices can be disconnected for watching and scouting matches. Data is stored in persistent storage on the client devices as it is collected.
 4. After the qualifier matches have been completed, all devices that scouted matches reconnect to the server and upload their data.
 5. A device can connect and view the stats page with alliance selection functionality.
-6. Once again, that device can be disconnected and used on the field during alliance selection. 
+6. Once again, that device can be disconnected and used on the field during alliance selection.
 7. Once alliances are selected, the data about that can be entered for further scouting during playoffs and finals.
 
 ## Data export
 
-This software stores data in CSV files, which can be imported into Excel or Tableau for post-analysis. 
+This software stores data in CSV files, which can be imported into Excel or Tableau for post-analysis.
 
 ## Hardware
 

@@ -167,7 +167,7 @@ function reSort(){
 function darkenColor(color){
 	var m = color.match(/^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/)
 	if(m){
-		return "#" + 
+		return "#" +
 		(Math.round(parseInt(m[1],16)/2)).toString(16).padStart(2,'0') +
 		(Math.round(parseInt(m[2],16)/2)).toString(16).padStart(2,'0') +
 		(Math.round(parseInt(m[3],16)/2)).toString(16).padStart(2,'0')

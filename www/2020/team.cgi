@@ -118,7 +118,7 @@ while (my $line = <$fh>) {
     # position
     $answer = "No";
     $answer = "Yes" if ("$items[38]" eq "1");
-    $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>"; 
+    $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>";
 
     # park
     $answer = "No";

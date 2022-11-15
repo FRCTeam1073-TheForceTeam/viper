@@ -2,7 +2,7 @@ var hasHeartbeat = true
 
 setInterval(function(){
 	$.ajax({
-		async: true,  
+		async: true,
 		beforeSend: function(xhr){
 			xhr.overrideMimeType("text/html;charset=UTF-8");
 		},
@@ -18,7 +18,7 @@ setInterval(function(){
 			$('#hamburger').hide()
 		}
 	})
-}, 6*1000) // 6 seconds 
+}, 6*1000) // 6 seconds
 
 window.addEventListener('beforeunload',(event) =>{
 	if (!hasHeartbeat){

@@ -77,7 +77,7 @@ function setLocationHash(){
 
 function loadFromLocationHash(){
 	$('#matchTable input').each(function(){
-		var name = $(this).attr('id')        
+		var name = $(this).attr('id')
 		var val = team = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${name}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
 		$(this).val(val)
 	})
