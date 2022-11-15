@@ -1,5 +1,6 @@
 $(document).ready(function(){
     loadEventSchedule(function(data){
+        if (!data.length) return $('body').html("Match not found")
         for (var i=0; i<data.length; i++){
             var row = $($('template#matchRow').html())
             row.find('.R1').text(data[i]['R1'])
@@ -12,6 +13,21 @@ $(document).ready(function(){
             row.click(showLinks)
             $('#matches').append(row)
         }
+        var last = data[data.length-1]['Match'].replace(/[0-9]+/,""),
+        addMatches = $('#addMatches')
+        if (last == "f"){
+            addMatches.hide()
+        } else if (last == 'qm'){
+            addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT','quarter-finals'))
+            addMatches.show()
+        } else if (last == 'qf'){
+            addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT','semi-finals'))
+            addMatches.show()
+        } else if (last == 'sf'){
+            addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT','finals'))
+            addMatches.show()
+        }
+
     })
     $('#lightBoxBG').click(function(){
         $('.lightBox').hide()
