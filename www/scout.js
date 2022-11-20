@@ -1,6 +1,7 @@
 var pos = ""
 var team = ""
 var match = ""
+var orient = ""
 var matchName = ""
 var scouting
 parseHash()
@@ -8,6 +9,7 @@ parseHash()
 function parseHash(){
 	pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
+	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",""])[1]
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:qm|qf|sf|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
 }
 
@@ -27,11 +29,14 @@ $(window).on('hashchange', function(){
 
 function showPosList(){
 	$('.screen').hide()
-	location.hash = `#event=${eventId}`
+	setHash()
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
+	$('.orientLeft,.orientRight').show()
 	$('#select-bot button').click(function(){
 		pos = $(this).text()
+		if ($(this).closest('.orientLeft').length) orient='left'
+		if ($(this).closest('.orientRight').length) orient='right'
 		showMatchList()
 	})
 	$('#select-bot').show()
@@ -39,7 +44,7 @@ function showPosList(){
 
 function showMatchList(){
 	$('.screen').hide()
-	location.hash = `#event=${eventId}&pos=${pos}`
+	setHash(pos,orient)
 	window.scrollTo(0,0)
 	$('#match-list').html('')
 	$('h1').text(`${eventName} ${pos}`)
@@ -80,12 +85,24 @@ function getScoutKey(t,m,e){
 	return `${e}_${m}_${t}`
 }
 
+function setHash(pos,orient,team,match){
+	location.hash = `#event=${eventId}`+
+		(pos?`&pos=${pos}`:"")+
+		(orient?`&orient=${orient}`:"")+
+		(team?`&team=${team}`:"")+
+		(match?`&match=${match}`:"")
+}
+
 function showScouting(){
 	$('.screen').hide()
-	location.hash = `#event=${eventId}&pos=${pos}&team=${team}&match=${match}`
+	setHash(pos,orient,team,match)
 	window.scrollTo(0,0)
 	scouting[0].reset()
+	$('.toggle > *').hide()
+	$('.toggle > *:first-child').show()
 	matchName = getMatchName(match)
+	$('.orientLeft').toggle(orient && orient=='left')
+	$('.orientRight').toggle(orient && orient=='right')
 	$('h1').text(`${eventName}, ${matchName}, Team ${team}`)
 	$('.team').text(team)
 	$('input[name="event"]').val(eventId)
@@ -176,6 +193,24 @@ $(document).ready(function(){
 		check=$(this).find(':checkbox,:radio')
 		if (check.attr('disabled') && !check.prop('checked')) return
 		toggleChecked(check)
+	})
+
+	$(".toggle").click(function(e){
+		e.preventDefault()
+		var field = $(this).attr('data-field')
+		var index = parseInt($(this).attr('data-index'))
+		var children = $(this).children()
+		var visible = 0
+		for (var i=0; i<children.length; i++){
+			if ($(children[i]).is(":visible"))	visible = i
+			$(children[i]).hide()
+		}
+		visible++
+		if (visible>=children.length) visible=0
+		var value = $(children[visible]).show().attr('data-value')
+		var input = $(`input[name="${field}"]`)
+		input.val(input.val().replace(/./g, (c, i) => i == index? value: c))
+		console.log(field + ": " + input.val())		
 	})
 
 	$("img.count").click(function(e){
