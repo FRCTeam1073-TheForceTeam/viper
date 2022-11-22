@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
   var field = $('#field')
-  field.css("background-image","url('/2022/field.png')")
+  if (typeof eventYear !== 'undefined') field.css("background-image",`url('/${eventYear}/field.png')`)
 
   var sketcher = field.sketchable({
     events: {
@@ -24,9 +24,15 @@ $(document).ready(function() {
     }
   })
   
-  sketcher.sketchable('handler', function(node, data){
-    data.sketch.size(Math.floor(node.innerWidth()), Math.floor(node.innerHeight()))
+  sketcher.sketchable('handler', sizeHandler)
+
+  $(window).resize(function(ev) {
+    sketcher.sketchable('handler', sizeHandler)
   })
+
+  function sizeHandler(node, data){
+    data.sketch.size(Math.floor(node.innerWidth()), Math.floor(node.innerHeight()))
+  }
 
   $('button.pen').click(function(){
     $('button.pen').removeClass('selected')
@@ -35,12 +41,12 @@ $(document).ready(function() {
   })
 
   $('.clear').click(function(evt) {
-    evt.preventDefault();
+    evt.preventDefault()
     sketcher.sketchable('clear')
   })
 
   $('.undo').click(function(evt) {
-    evt.preventDefault();
+    evt.preventDefault()
     sketcher.sketchable('memento.undo')
   })
 

@@ -11,11 +11,18 @@
 <script src=/event-url.js></script>
 <script src=/jquery.sketchable.full.min.js></script>
 <script src=/planner.js></script>
+<script src=/heartbeat.js></script>
 </head>
 <body>
 <div class=f>
   <canvas id=field></canvas>
   <div>
+    <div id=drawingControls>
+      <button class="pen selected" data-type=pencil style=color:black>⬤</button>
+      <button class=pen data-type=eraser>◍</button>
+      <button class=undo>↶</button>
+      <button class=clear>✘</button>
+    </div>
     <table id=statsTable>
       <thead>
         <tr>
@@ -50,12 +57,6 @@
       </thead>
       <tbody></tbody>
     </table>
-    <div id=drawingControls>
-      <button class="pen selected" data-type=pencil style=color:black>⬤</button>
-      <button class=pen data-type=eraser>◍</button>
-      <button class=undo>↶</button>
-      <button class=clear>✘</button>
-    </div>
   </div>
 </div> 
 <div id=lightBoxBG style=display:none></div>
