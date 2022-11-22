@@ -14,7 +14,8 @@ $(document).ready(function(){
 			$('#matches').append(row)
 		}
 		var last = data[data.length-1]['Match'].replace(/[0-9]+/,""),
-		addMatches = $('#addMatches')
+		addMatches = $('#addMatches'),
+		edit = $('#edit')
 		if (last == "f"){
 			addMatches.hide()
 		} else if (last == 'qm'){
@@ -27,7 +28,7 @@ $(document).ready(function(){
 			addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT','finals'))
 			addMatches.show()
 		}
-
+		edit.html(edit.html().replace('EVENT', eventId))
 	})
 	$('#lightBoxBG').click(function(){
 		$('.lightBox').hide()
