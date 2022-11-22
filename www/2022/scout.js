@@ -13,7 +13,8 @@ function parseHash(){
 
 function showScreen(){
 	if (!pos) showPosList()
-	else if (!team || !match) showMatchList()
+	else if (!match) showMatchList()
+	else if (!team) showTeamChange()
 	else showScouting()
 }
 
@@ -24,6 +25,23 @@ $(window).on('hashchange', function(){
 	parseHash()
 	showScreen()
 })
+
+function showTeamChange(){
+	$('.screen').hide()
+	location.hash = `#event=${eventId}&pos=${pos}&match=${match}`
+	window.scrollTo(0,0)
+	$('h1').text(eventName)
+	$('#teamChangeBtn').click(function(){
+		team = $('#teamChange').val()
+		showScouting()
+		return false
+	})
+	$('#teamCancelBtn').click(function(){
+		showPosList()
+		return false
+	})
+	$('#change-team').show()
+}
 
 function showPosList(){
 	$('.screen').hide()
@@ -208,6 +226,11 @@ $(document).ready(function(){
 	$("#robotBtn").click(function(e){
 		store()
 		showPosList()
+		return false
+	})
+	$("#teamBtn").click(function(e){
+		store()
+		showTeamChange()
 		return false
 	})
 	$("#showUploadsBtn").click(function(e){
