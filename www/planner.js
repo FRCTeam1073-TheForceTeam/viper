@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
   var field = $('#field')
-  if (typeof eventYear !== 'undefined') field.css("background-image",`url('/${eventYear}/field.png')`)
+  if (typeof eventYear !== 'undefined') field.css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
   var sketcher = field.sketchable({
     events: {
