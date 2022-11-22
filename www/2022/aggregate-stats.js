@@ -69,7 +69,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"teleop_score": {
-		name: "Remote Control Score",
+		name: "Teleop Score",
 		type: "avg"
 	},
 	"end_game_score": {
@@ -81,7 +81,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"auto_low_hub_score": {
-		name: "Auto Score Low Hub",
+		name: "Auto Low Hub Score",
 		type: "avg"
 	},
 	"auto_high_hub": {
@@ -89,7 +89,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"auto_high_hub_score": {
-		name: "Auto Score High Hub",
+		name: "Auto High Hub Score",
 		type: "avg"
 	},
 	"auto_missed": {
@@ -119,28 +119,28 @@ var statInfo = {
 		type: "avg"
 	},
 	"teleop_low_hub": {
-		name: "Remote Control Balls in Low Hub",
+		name: "Teleop Balls in Low Hub",
 		type: "avg"
 	},
 	"teleop_low_hub_score": {
-		name: "Remote Control Low Hub Score",
+		name: "Teleop Low Hub Score",
 		type: "avg"
 	},
 	"teleop_high_hub": {
-		name: "Remote Control Balls in High Hub",
+		name: "Teleop Balls in High Hub",
 		type: "avg"
 	},
 	"teleop_high_hub_score": {
-		name: "Remote Control High Hub Score",
+		name: "Teleop High Hub Score",
 		type: "avg"
 	},
 	"teleop_missed": {
-		name: "Remote Control Missed shots",
+		name: "Teleop Missed shots",
 		type: "avg",
 		good: "low"
 	},
 	"teleop_bounce_out": {
-		name: "Remote Control Shots bounced out",
+		name: "Teleop Shots bounced out",
 		type: "avg",
 		good: "low"
 	},
@@ -307,7 +307,7 @@ var teamGraphs = {
 		graph:"stacked",
 		data:["taxi_score","auto_low_hub_score","auto_high_hub_score","human_score"]
 	},
-	"Remote Control":{
+	"Teleop":{
 		graph:"stacked",
 		data:["teleop_low_hub_score","teleop_high_hub_score"]
 	},
@@ -354,7 +354,7 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["taxi_score","auto_low_hub_score","auto_high_hub_score","human_score"]
 	},
-	"Remote Control":{
+	"Teleop":{
 		graph:"stacked",
 		data:["teleop_low_hub_score","teleop_high_hub_score"]
 	},
@@ -389,9 +389,9 @@ var aggregateGraphs = {
 }
 
 var matchPredictorSections = {
-	"Total":["score","count"],
+	"Total":["score"],
 	"Game Stages":["auto_score","teleop_score","end_game_score"],
 	"Penalties":["fouls_score","techfouls_score"],
 	"Auto":["taxi_score","auto_low_hub_score","auto_high_hub_score"],
-	"Remote Control":["teleop_low_hub_score","teleop_high_hub_score"]
+	"Teleop":["teleop_low_hub_score","teleop_high_hub_score"]
 }

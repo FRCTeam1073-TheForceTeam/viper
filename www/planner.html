@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Match Planner EVENT - FRC Scouting App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/planner.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/main.js></script>
+<script src=/event-url.js></script>
+<script src=/jquery.sketchable.full.min.js></script>
+<script src=/planner.js></script>
+</head>
+<body>
+<div class=f>
+  <canvas id=field></canvas>
+  <div>
+    <table id=statsTable>
+      <thead>
+        <tr>
+        <th class=redTeamBG>
+          <input type=text size=4 maxlength=5 id=R1 placeholder="Red 1">
+        </th>
+        <th class=redTeamBG>
+          <input type=text size=4 maxlength=5 id=R2 placeholder="Red 2">
+        </th>
+        <th class=redTeamBG>
+          <input type=text size=4 maxlength=5 id=R3 placeholder="Red 3">
+        </th>
+        <th class=blueTeamBG>
+          <input type=text size=4 maxlength=5 id=B1 placeholder="Blue 1">
+        </th>
+        <th class=blueTeamBG>
+          <input type=text size=4 maxlength=5 id=B2 placeholder="Blue 2">
+        </th>
+        <th class=blueTeamBG>
+          <input type=text size=4 maxlength=5 id=B3 placeholder="Blue 3">
+        </th>
+        <th></th>
+        </tr>
+        <tr>
+          <td class=redTeamBG><button class=pen data-type=pencil style=color:red>⬤</button></td>
+          <td class=redTeamBG><button class=pen data-type=pencil style=color:orange>⬤</button></td>
+          <td class=redTeamBG><button class=pen data-type=pencil style=color:yellow>⬤</button></td>
+          <td class=blueTeamBG><button class=pen data-type=pencil style=color:green>⬤</button></td>
+          <td class=blueTeamBG><button class=pen data-type=pencil style=color:blue>⬤</button></td>
+          <td class=blueTeamBG><button class=pen data-type=pencil style=color:indigo>⬤</button></td>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id=drawingControls>
+      <button class="pen selected" data-type=pencil style=color:black>⬤</button>
+      <button class=pen data-type=eraser>◍</button>
+      <button class=undo>↶</button>
+      <button class=clear>✘</button>
+    </div>
+  </div>
+</div> 
+<div id=lightBoxBG style=display:none></div>
+<div id=lightBoxContent style=display:none><iframe></iframe></div>
+</body>
+</html>

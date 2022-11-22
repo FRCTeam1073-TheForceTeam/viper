@@ -127,14 +127,13 @@ function showStats(){
 }
 
 function showTeamStats(){
-	var ignore={'event':1,'team':1},
-	t = $(this).attr('data-team')
-	if (t) team = parseInt(t)
-	if (!team) return
-	$('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
-	window.scrollTo(0,0)
-	$('#lightBoxBG').show()
-	$('#lightBoxContent').show()
+	var t = $(this).attr('data-team')
+    if (t) t = parseInt(t)
+    if (!t) return
+    $('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}&team=${t}`)
+    window.scrollTo(0,0)
+    $('#lightBoxBG').show()
+    $('#lightBoxContent').show()
 }
 
 function bgArr(color){
