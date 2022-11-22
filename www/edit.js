@@ -2,6 +2,7 @@ var file=(location.hash.match(/^\#(?:(?:.*\&)?(?:file\=))?(20[0-9]{2}[a-zA-Z0-9_
 
 $(document).ready(function(){
 	var editor
+	$('#file').val(file)
 	function loadFile(){
 		$.ajax({
 			async: true,
@@ -14,17 +15,11 @@ $(document).ready(function(){
 			success: function(text){
 				var data = text.split(/[\r\n]+/).map(l=>l.split(/,/))
 				editor = new Handsontable($('#editor')[0],{
-					data,
-					startRows: 1,
-					startCols: 1,
-					height: 'auto',
-					width: 'auto',
-					contextMenu: true,
+					data: data,
+					rowHeaders: true,
 					colHeaders: true,
-					minSpareRows: 1,
-					licenseKey: 'non-commercial-and-evaluation'
+					contextMenu: true
 				})
-
 			},
 			error: function(xhr,status,err){
 				console.log(err)
@@ -33,11 +28,9 @@ $(document).ready(function(){
 	}
 	loadFile()
 	$('#saver').submit(function(e){
-		$('#file').val(file)
-		$('#csv').val(editor.getData().map(l=>l.join(",")).join('\n'))
+		$('#csv').val((editor.getData().map(l=>l.join(",")).join('\n')+"\n").replace(/^,+[\r\n]+/gm,""))
 	})
-	$('#deleter').submit(function(e){
-		$('#deleteFile').val(file)
+	$('#delete').click(function(e){
 		if (!confirm(`Are you sure you want to delete ${file}?`)){
 			e.preventDefault()
 			return false

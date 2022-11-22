@@ -14,13 +14,10 @@
 </head>
 <body>
 <form id=saver method=POST action=/admin/edit.cgi>
-    <input id=file type=hidden name=file>
+    <input id=file type=text readonly name=file>
     <input id=csv type=hidden name=csv>
     <input type=submit value=Save>
-</form>
-<form id=deleter method=GET action=/admin/edit.cgi>
-    <input id=deleteFile type=hidden name=file>
-    <input type=submit name=delete value=Delete>
+    <input id=delete type=submit name=delete value=Delete>
 </form>
 <div id=editor></div>
 </body></html>
