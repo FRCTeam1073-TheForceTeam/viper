@@ -1,8 +1,9 @@
-var pos = ""
-var team = ""
-var match = ""
-var matchName = ""
-var scouting
+var pos = "",
+team = "",
+match = "",
+matchName = "",
+scouting,
+storeTime=0
 parseHash()
 
 function parseHash(){
@@ -143,7 +144,7 @@ function toCSV(){
 }
 
 window.addEventListener('beforeunload',(event) =>{
-	if (formHasChanges(scouting)){
+	if (formHasChanges(scouting) && new Date().getTime() - storeTime > 1000){
 		event.preventDefault()
 		return "Leave page without saving?"
 	}
@@ -169,6 +170,7 @@ function store(){
 		var csv = toCSV()
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getScoutKey(), csv[1])
+		storeTime = new Date().getTime()
 	}
 }
 
