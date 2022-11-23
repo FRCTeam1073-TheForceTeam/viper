@@ -105,6 +105,7 @@ function showScouting(){
 	window.scrollTo(0,0)
 	scouting[0].reset()
 	matchName = getMatchName(match)
+	setupButtons()
 	$('h1').text(`${eventName}, ${matchName}, Team ${team}`)
 	$('.team').text(team)
 	$('input[name="event"]').val(eventId)
@@ -178,6 +179,57 @@ function safeCSV(s){
 	return s.replace(/[\r\n\t,]+ */g, " ")
 }
 
+function getTeamsWithData(){
+	var teams = {}
+	teams[team]=1
+
+	for (i in localStorage){
+		if (/^20[0-9]{2}.*_.*_[0-9]+$/.test(i)){
+			var t = parseInt(i.replace(/.*_/,""))
+			teams[t]=1
+		}
+	}
+	return teams	
+}
+
+function haveDataForMatch(m){
+	if (!m) return 0
+	var have = getTeamsWithData();
+	if (have[m['R1']]) return 1
+	if (have[m['R2']]) return 1
+	if (have[m['R3']]) return 1
+	if (have[m['B1']]) return 1
+	if (have[m['B2']]) return 1
+	if (have[m['B3']]) return 1
+	return 0
+}
+
+function setupButtons(){
+	var next = getNextMatch()
+	if (!next || haveDataForMatch(next)){
+		setFeaturedButton($('#uploadBtn'))
+		return
+	}
+	setFeaturedButton($('#nextBtn'))
+}
+
+function setFeaturedButton(btn){
+	var featured = $('#featuredButton')
+	var other = $('#otherButtons')
+	other.append(featured.find('button').detach())
+	featured.append(btn.detach())
+}
+
+function getNextMatch(){
+	for (var i=0; i<eventMatches.length; i++){
+		if (match == eventMatches[i]['Match']){
+			if (i+1 >= eventMatches.length) return 0
+			return eventMatches[i+1]
+		}
+	}
+	return 0
+}
+
 var originalTitle
 
 $(document).ready(function(){
@@ -212,12 +264,12 @@ $(document).ready(function(){
 
 	$("#nextBtn").click(function(e){
 		store()
-		var i = parseInt(match.replace(/[^0-9]/g,""))
-		if (i >= eventMatches.length){
+		var next = getNextMatch()
+		if (!next){
 			alert("Data saved and done. That was the last match!")
 		} else {
-			team = eventMatches[i][pos]
-			match = "qm" + (i+1)
+			team = next[pos]
+			match = next['Match']
 			showScouting()
 		}
 		return false
