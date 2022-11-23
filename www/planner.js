@@ -79,49 +79,97 @@ $(document).ready(function() {
 
   loadFromLocationHash()
   $(window).on('hashchange', loadFromLocationHash)
-  $('#statsTable input').change(function(){
-    setLocationHash()
+
+  loadEventStats(function(){
+		var teamList = Object.keys(eventStatsByTeam)
+		teamList.sort((a,b) => a-b)
+		for (var i=0; i<teamList.length; i++){
+			var team = teamList[i]
+			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
+		}
     fillStats()
   })
 
-  loadEventStats(fillStats)
+  $('#statsTable input').change(fillStats)
   
   function fillStats(){
-    if (typeof matchPredictorSections === 'undefined') return
-    var r1 = parseInt($('#R1').val())
-    var r2 = parseInt($('#R2').val())
-    var r3 = parseInt($('#R3').val())
-    var b1 = parseInt($('#B1').val())
-    var b2 = parseInt($('#B2').val())
-    var b3 = parseInt($('#B3').val())
-    var sections = Object.keys(matchPredictorSections),
+    setLocationHash()
+    $('#teamButtons button').removeClass("picked")
+    var teamCount = 0,
     tbody = $('#statsTable tbody').html("")
-    var row = $("<tr>")
-    row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r1).click(showTeamStats).text(r1?'👁':''))
-    row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r2).click(showTeamStats).text(r2?'👁':''))
-    row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r3).click(showTeamStats).text(r3?'👁':''))
-    row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b1).click(showTeamStats).text(b1?'👁':''))
-    row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b2).click(showTeamStats).text(b2?'👁':''))
-    row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b3).click(showTeamStats).text(b3?'👁':''))
-    row.append($('<th>').text(statName))
-    tbody.append(row)
-    for (var i=0; i<sections.length; i++){
-      var section = sections[i]
-      for (var j=0; j<matchPredictorSections[section].length; j++){
-        var field = matchPredictorSections[section][j]
-        statInfo[field] = statInfo[field]||{}
-        var statName = statInfo[field]['name']||field
-        var row = $("<tr>")
-        row.append($('<td class=redTeamBG>').text(getTeamValue(field,r1)))
-        row.append($('<td class=redTeamBG>').text(getTeamValue(field,r2)))
-        row.append($('<td class=redTeamBG>').text(getTeamValue(field,r3)))
-        row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b1)))
-        row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b2)))
-        row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b3)))
-        row.append($('<th>').text(statName))
-        tbody.append(row)
+    $('#statsTable input').each(function(){
+      val = $(this).val()
+      if (val){
+        $(`#team-${val}`).addClass("picked")
+        teamCount++
+      }
+    })
+    $('#teamButtons').toggle(teamCount!=6)
+    if(teamCount==6){
+      if (typeof matchPredictorSections === 'undefined') return
+      var r1 = parseInt($('#R1').val())
+      var r2 = parseInt($('#R2').val())
+      var r3 = parseInt($('#R3').val())
+      var b1 = parseInt($('#B1').val())
+      var b2 = parseInt($('#B2').val())
+      var b3 = parseInt($('#B3').val())
+      var sections = Object.keys(matchPredictorSections),
+      row = $("<tr>")
+      row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r1).click(showTeamStats).text(r1?'👁':''))
+      row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r2).click(showTeamStats).text(r2?'👁':''))
+      row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r3).click(showTeamStats).text(r3?'👁':''))
+      row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b1).click(showTeamStats).text(b1?'👁':''))
+      row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b2).click(showTeamStats).text(b2?'👁':''))
+      row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b3).click(showTeamStats).text(b3?'👁':''))
+      row.append($('<th>').text(statName))
+      tbody.append(row)
+      for (var i=0; i<sections.length; i++){
+        var section = sections[i]
+        for (var j=0; j<matchPredictorSections[section].length; j++){
+          var field = matchPredictorSections[section][j]
+          statInfo[field] = statInfo[field]||{}
+          var statName = statInfo[field]['name']||field
+          var row = $("<tr>")
+          row.append($('<td class=redTeamBG>').text(getTeamValue(field,r1)))
+          row.append($('<td class=redTeamBG>').text(getTeamValue(field,r2)))
+          row.append($('<td class=redTeamBG>').text(getTeamValue(field,r3)))
+          row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b1)))
+          row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b2)))
+          row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b3)))
+          row.append($('<th>').text(statName))
+          tbody.append(row)
+        }
       }
     }
+  }
+
+  focusNext()
+
+  function lf(){
+    return $('#statsTable .lastFocus')
+  }
+
+  function teamButtonClicked(){
+    lf().val($(this).text())
+    focusNext()
+    fillStats()
+  }
+
+  function focusNext(){
+    var next = $('#statsTable input').filter(withoutValues).first()
+    if (next.length) focusInput(next)
+    return next.length > 0
+  }
+
+  function withoutValues(i,el){
+    return $(el).val() == ''
+  }
+
+  function focusInput(input){
+    if ('target' in input) input = $(input.target)
+    if (input[0]==lf()[0]) return
+    $('#statsTable input').removeClass('lastFocus')
+    input.addClass('lastFocus')
   }
 
   function getTeamValue(field, team){

@@ -10,3 +10,6 @@ html,body{margin:0;padding:0;text-align:left}
 #lightBoxContent{z-index:99;position:fixed;background-color:#fff;top:2em;left:2em;bottom:2em;right:2em;padding:0}
 iframe{width:100%;height:100%}
 .viewTeam{text-align:center}
+.rightColumn{max-width:24em}
+button.team.picked{background-color:darkslategray;}
+button.team{width:3em;height:1.5em;margin:0.25em}
