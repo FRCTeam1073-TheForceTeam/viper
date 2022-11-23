@@ -33,10 +33,22 @@
 	</tr>
 </template>
 <template id=lightBoxTemplate>
-	<p><a href="/predictor.html#event=$EVENT&R1=$R1&B1=$B1&R2=$R2&B2=$B2&R3=$R3&B3=$B3">Predict $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3</a></p>
-	<p><a href="/planner.html#event=$EVENT&R1=$R1&B1=$B1&R2=$R2&B2=$B2&R3=$R3&B3=$B3">Plan $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3</a></p>
-	<p class=dependTeam><a href="/$YEAR/scout.html#event=$EVENT&match=$MATCH_ID&pos=$POS&team=$TEAM">Scout $MATCH_NAME: $POS $TEAM</a></p>
-	<p class=dependTeam><a href="/team.html#event=$EVENT&team=$TEAM">Team stats: $TEAM</a></p>
+	<div class=link>
+		<h3><a href="/predictor.html#event=$EVENT&R1=$R1&B1=$B1&R2=$R2&B2=$B2&R3=$R3&B3=$B3">Predictor</a></h3>
+		Predict $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3
+	</div>
+	<div class=link>
+		<h3><a href="/planner.html#event=$EVENT&R1=$R1&B1=$B1&R2=$R2&B2=$B2&R3=$R3&B3=$B3">Planner</a></h3>
+		Plan $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3
+	</div>
+	<div class="link dependTeam">
+		<h3><a href="/$YEAR/scout.html#event=$EVENT&match=$MATCH_ID&pos=$POS&team=$TEAM">Scouting</a></h3>
+		Scout $MATCH_NAME: $POS $TEAM
+	</div>
+	<div class="link dependTeam">
+		<h3><a href="/team.html#event=$EVENT&team=$TEAM">Stats</a></h3>
+		Team stats: $TEAM
+	</div>
 </template>
 <div id=lightBoxBG class=lightBox style=display:none></div>
 <div id=lightBoxContent class=lightBox style=display:none></div>
