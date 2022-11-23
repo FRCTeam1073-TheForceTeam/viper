@@ -32,3 +32,6 @@ Header set Cache-Control "max-age=28800, public, must-revalidate"
 	# No cache in debug mode
 	Header set Cache-Control no-store
 </IfDefine>
+
+RewriteEngine On
+RewriteRule ^\/?data\/(20[0-9]+)combined\.scouting\.csv$ /season-scouting.cgi?year=$1
