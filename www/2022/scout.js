@@ -178,14 +178,16 @@ function safeCSV(s){
 	return s.replace(/[\r\n\t,]+ */g, " ")
 }
 
+var originalTitle
+
 $(document).ready(function(){
 	if (!eventYear || !eventVenue){
 		$('h1').text("Event Not Found")
 		return
 	}
 
-	var title = $('title')
-	title.text(eventName + " " + title.text())
+	if(!originalTitle) originalTitle = $('title').text()
+	$('title').text(originalTitle.replace(/EVENT/g, eventName))
 
 	scouting = $('#scouting')
 
@@ -235,17 +237,9 @@ $(document).ready(function(){
 		showTeamChange()
 		return false
 	})
-	$("#showUploadsBtn").click(function(e){
+	$("#uploadBtn").click(function(e){
 		store()
 		location.href="/upload.html"
-		return false
-	})
-	$("#backMatchBtn").click(function(e){
-		if (!formHasChanges(scouting) || confirm("Discard data and go back?")) showMatchList()
-		return false
-	})
-	$("#backRobotBtn").click(function(e){
-		if (!formHasChanges(scouting) || confirm("Discard data and go back?")) showPosList()
 		return false
 	})
 })

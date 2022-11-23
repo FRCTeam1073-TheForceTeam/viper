@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>FRC Scouting App</title>
+<title>Scout EVENT - FRC Scouting App</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
@@ -183,14 +183,18 @@
 		<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
 		<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
 	</fieldset>
-	<p>
+	<div>
 		Save data:
-		<button id=nextBtn>Next Match</button>
-		<button id=matchBtn>Choose Match</button>
-		<button id=robotBtn>Change Robot</button>
-		<button id=teamBtn>Change Team</button>
-		<button id=showUploadsBtn>Upload Data</button>
-	</p>
+		<div class=featuredButton>
+			<button id=nextBtn>Next Match</button>
+		</div>
+		<div id=otherButtons>
+			<button id=matchBtn>Choose Match</button>
+			<button id=robotBtn>Change Robot</button>
+			<button id=teamBtn>Change Team</button>
+			<button id=uploadBtn>Upload Data</button>
+		</div>
+	</div>
 </form>
 </body>
 </html>
