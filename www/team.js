@@ -29,9 +29,11 @@ function fillPage(){
 	for (var i=0; i<sections.length; i++){
 		var section = sections[i],
 		chart = $('<canvas>'),
-		data=[]
-		graphs.append($('<h2>').text(section))
-		graphs.append($('<div class=chart>').append(chart))
+		data=[],
+		graph=$('<div class=graph>')
+		graphs.append(graph)
+		graph.append($('<h2>').text(section))
+		graph.append($('<div class=chart>').append(chart))
 		for (var j=0; j<teamGraphs[section]['data'].length; j++){
 			var field = teamGraphs[section]['data'][j],
 			info = statInfo[field]||{}

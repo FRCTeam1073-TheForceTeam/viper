@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg1"
+   sodipodi:version="0.32"
+   inkscape:version="0.92.1 r15371"
+   width="32"
+   height="32"
+   sodipodi:docname="broom.svg"
+   version="1.1"
+   viewBox="0 0 29.999998 29.999998">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1591">
+      <stop
+         style="stop-color:#d5cb4f;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stop1592" />
+      <stop
+         style="stop-color:#cda81f;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop1593" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient1586">
+      <stop
+         style="stop-color:#c57e4f;stop-opacity:1.0000000;"
+         offset="0.0000000"
+         id="stop1587" />
+      <stop
+         style="stop-color:#91371a;stop-opacity:1.0000000;"
+         offset="1.0000000"
+         id="stop1588" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="16"
+     inkscape:cx="12.624785"
+     inkscape:cy="11.191935"
+     inkscape:window-width="1553"
+     inkscape:window-height="876"
+     inkscape:window-x="47"
+     inkscape:window-y="24"
+     inkscape:current-layer="svg1"
+     showgrid="false"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata16">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>broom</dc:title>
+        <dc:description />
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>tools</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title />
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Nicu Buculei</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Nicu Buculei</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date />
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <path
+     sodipodi:nodetypes="cccccsscccccccc"
+     style="stroke-width:0.05859361;fill:#ffffff"
+     d="m 23.975817,21.322639 c 0.670193,-0.03111 1.333004,-0.296659 1.842066,-0.805662 1.09863,-1.09863 1.083981,-2.865579 -0.01102,-3.96421 L 10.559697,1.3064763 c 0,0 -0.205078,-0.233437 -0.316757,-0.34517505 -1.2817354,-1.281735 -3.3599928,-1.281735 -4.6417278,0 L 0.96130125,5.6012123 c -1.281735,1.2817348 -1.281735,3.3608698 0,4.6407887 0.11167905,0.113555 0.22341705,0.221543 0.34605405,0.314941 L 16.556343,25.803175 c 1.094997,1.096814 2.86382,1.111462 3.958759,0.01828 0.512694,-0.512694 0.776366,-1.171872 0.809295,-1.847456 0.673827,-0.03299 1.333005,-0.29666 1.842066,-0.803905 0.512753,-0.514451 0.776424,-1.171813 0.809354,-1.847456 z"
+     id="path5052"
+     inkscape:connector-curvature="0" />
+  <path
+     inkscape:connector-curvature="0"
+     id="path2"
+     d="m 23.975817,21.322639 c 0.670193,-0.03111 1.333004,-0.296659 1.842066,-0.805662 1.09863,-1.09863 1.083981,-2.865579 -0.01102,-3.96421 L 10.559697,1.3064763 c 0,0 -0.205078,-0.233437 -0.316757,-0.34517505 -1.2817354,-1.281735 -3.3599928,-1.281735 -4.6417278,0 L 0.96130125,5.6012123 c -1.281735,1.2817348 -1.281735,3.3608698 0,4.6407887 0.11167905,0.113555 0.22341705,0.221543 0.34605405,0.314941 L 16.556343,25.803175 c 1.094997,1.096814 2.86382,1.111462 3.958759,0.01828 0.512694,-0.512694 0.776366,-1.171872 0.809295,-1.847456 0.673827,-0.03299 1.333005,-0.29666 1.842066,-0.803905 0.512753,-0.514451 0.776424,-1.171813 0.809354,-1.847456 z M 17.8638,24.495835 5.2698062,11.900025 6.5954872,10.573407 19.18948,23.168279 c 0.36621,0.36621 0.36621,0.959471 0,1.327497 -0.366209,0.366269 -0.959469,0.364452 -1.32568,5.9e-5 z M 20.515161,21.842657 7.9211677,9.2477851 9.2468477,7.9211671 21.840841,20.516977 c 0.36621,0.362577 0.36621,0.95947 0,1.327497 -0.36621,0.364393 -0.95947,0.360702 -1.32568,-0.0018 z m 2.651361,-2.651361 -12.593993,-12.5958677 1.32568,-1.32568 12.593993,12.5976257 c 0.369902,0.362577 0.36621,0.957654 0,1.323864 -0.36621,0.36621 -0.955837,0.364393 -1.32568,5.8e-5 z"
+     style="stroke-width:0.05859361"
+     sodipodi:nodetypes="cccccssccccccccccccccccccccccccsc" />
+</svg>

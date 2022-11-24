@@ -1,5 +1,6 @@
 $(document).ready(function(){
-	var events = []
+	var yearStatsLinkHtml,
+	events = []
 	$.ajax({
 		url:"/event-list.cgi",
 		dataType:"text",
@@ -33,6 +34,8 @@ $(document).ready(function(){
 				list.append($(`<li><a href=/event.html#${event}>${year} ${venue}</a></li>`))
 			}
 		}
+		if (!yearStatsLinkHtml) yearStatsLinkHtml = $('#yearStatsLink').html()
+		$('#yearStatsLink').html(yearStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}/.test(filter))
 	}
 	$(window).on('hashchange', showEvents)
 	$('#years').change(function(){

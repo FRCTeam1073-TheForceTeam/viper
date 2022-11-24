@@ -1,10 +1,4 @@
-ul{
-	max-width:25em;
-	list-style-type: none;
-}
-li {
-	margin: .5em 0;
-}
-.initHid {
-	display:none;
-}
+ul{max-width:25em;list-style-type:none}
+li{margin:.5em 0;}
+.initHid{display:none}
+#dataTable td,#dataTable th{padding:0.5em}

@@ -16,4 +16,4 @@ fieldset{margin:0.5em}
 hr{height:0.5em;border:none}
 button.stored{color:darkgreen}
 button.complete{text-decoration:line-through}
-#nextBtn{font-size:200%;display:block;margin:1em auto;padding:1em}
+#featuredButton button{font-size:200%;display:block;margin:1em auto;padding:1em}

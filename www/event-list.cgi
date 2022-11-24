@@ -9,7 +9,7 @@ use warnings;
 print "Content-type: text/csv; charset=UTF-8\n\n";
 
 # get all of the event files containing match schedules
-foreach my $name (split /\n/, `ls -1 -r data/*.schedule.csv`){
+foreach my $name (split /\n/, `ls -1 -t data/*.schedule.csv`){
 	$name =~ s/\..*//g; # Remove file extension
 	$name =~ s/.*\///g; # Remove directory
 	print "$name\n"

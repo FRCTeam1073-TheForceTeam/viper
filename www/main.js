@@ -7,27 +7,29 @@ window.addEventListener("load", () => {
 })
 
 $(document).ready(function(){
-	var hamburger = $('<div id=hamburger>☰</div>'),
-	mainMenu = $('<div id=mainMenu>'),
-	mainMenuBg = $('<div id=mainMenuBg>')
-	hamburger.toggleClass("hasUploads", hasUploads())
-	$('body').append(hamburger).append(mainMenu).append(mainMenuBg)
-	hamburger.click(toggleMainMenu)
-	mainMenuBg.click(toggleMainMenu)
-	function toggleMainMenu(){
-		mainMenu.toggle()
-		mainMenuBg.toggle()
+	if (!inIframe()){
+		var hamburger = $('<div id=hamburger>☰</div>'),
+		mainMenu = $('<div id=mainMenu>'),
+		mainMenuBg = $('<div id=mainMenuBg>')
+		hamburger.toggleClass("hasUploads", hasUploads())
+		$('body').append(hamburger).append(mainMenu).append(mainMenuBg)
+		hamburger.click(toggleMainMenu)
+		mainMenuBg.click(toggleMainMenu)
+		function toggleMainMenu(){
+			mainMenu.toggle()
+			mainMenuBg.toggle()
+		}
+		$.get("/main-menu.html",function(data){
+			mainMenu.html(
+				data
+					.replace(/EVENT_NAME/g, typeof eventName!=='undefined'?eventName:"")
+					.replace(/EVENT_ID/g, typeof eventId!=='undefined'?eventId:"")
+					.replace(/YEAR/g, typeof eventYear!=='undefined'?eventYear:"")
+			)
+			mainMenu.find('.dependEvent').toggle(typeof eventName!=='undefined')
+			mainMenu.find('.dependUpload').toggle(hasUploads())
+		})
 	}
-	$.get("/main-menu.html",function(data){
-		mainMenu.html(
-			data
-				.replace(/EVENT_NAME/g, typeof eventName!=='undefined'?eventName:"")
-				.replace(/EVENT_ID/g, typeof eventId!=='undefined'?eventId:"")
-				.replace(/YEAR/g, typeof eventYear!=='undefined'?eventYear:"")
-		)
-		mainMenu.find('.dependEvent').toggle(typeof eventName!=='undefined')
-		mainMenu.find('.dependUpload').toggle(hasUploads())
-	})
 })
 
 function hasUploads(){
@@ -35,4 +37,12 @@ function hasUploads(){
 		if (/^20.*_.*_/.test(i)) return true
 	}
 	return false
+}
+
+function inIframe(){
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>FRC Scouting App</title>
+<title>Scout EVENT - FRC Scouting App</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
@@ -16,23 +16,30 @@
 <body>
 <h1>FRC Scouting App</h1>
 <div id=select-bot style=display:none class=screen>
-		<H2>Select your robot</H2>
-		<table><tr>
-			<td class=blueTeamBG><button>B1</button></td>
-			<td rowspan=3><img class=bigimg src=field.png></td>
-			<td class=redTeamBG><button>R1</button></td>
-		</tr><tr>
-			<td class=blueTeamBG><button>B2</button></td>
-			<td class=redTeamBG><button>R2</button></td>
-		</tr><tr>
-			<td class=blueTeamBG><button>B3</button></td>
-			<td class=redTeamBG><button>R3</button></td>
-		</tr></table>
-		<img class=bigimg src=hub.png>
-		<img class=bigimg src=hangar.png>
+	<H2>Select your robot</H2>
+	<table><tr>
+		<td class=blueTeamBG><button>B1</button></td>
+		<td rowspan=3><img class=bigimg src=field.png></td>
+		<td class=redTeamBG><button>R1</button></td>
+	</tr><tr>
+		<td class=blueTeamBG><button>B2</button></td>
+		<td class=redTeamBG><button>R2</button></td>
+	</tr><tr>
+		<td class=blueTeamBG><button>B3</button></td>
+		<td class=redTeamBG><button>R3</button></td>
+	</tr></table>
+	<img class=bigimg src=hub.png>
+	<img class=bigimg src=hangar.png>
 </div>
+
 <div id=select-match style=display:none class=screen>
-		<ul id=match-list></ul>
+	<ul id=match-list></ul>
+</div>
+
+<div id=change-team style=display:none class=screen>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn>Cancel</button>
 </div>
 
 <form id=scouting style=display:none class=screen>
@@ -176,13 +183,18 @@
 		<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
 		<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
 	</fieldset>
-	<p>
+	<div>
 		Save data:
-		<button id=nextBtn>Next Match</button>
-		<button id=matchBtn>Choose Match</button>
-		<button id=robotBtn>Change Robot</button>
-		<button id=showUploadsBtn>Upload Data</button>
-	</p>
+		<div id=featuredButton>
+			<button id=nextBtn>Next Match</button>
+		</div>
+		<div id=otherButtons>
+			<button id=matchBtn>Choose Match</button>
+			<button id=robotBtn>Change Robot</button>
+			<button id=teamBtn>Change Team</button>
+			<button id=uploadBtn>Upload Data</button>
+		</div>
+	</div>
 </form>
 </body>
 </html>

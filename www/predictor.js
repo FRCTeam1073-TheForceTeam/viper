@@ -50,6 +50,7 @@ function setPickedTeams(){
 		}
 	})
 	if (teamCount == 6){
+		$('#teamButtons').hide()
 		$('#prediction').show()
 		var red = [parseInt($('#R1').val()),parseInt($('#R2').val()),parseInt($('#R3').val())],
 		blue = [parseInt($('#B1').val()),parseInt($('#B2').val()),parseInt($('#B3').val())]
@@ -59,6 +60,7 @@ function setPickedTeams(){
 		setStats('blueTeamBG',blue,'Blue', blueScore, redScore)
 	} else {
 		$('#prediction').hide()
+		$('#teamButtons').show()
 	}
 	setLocationHash()
 }
@@ -78,7 +80,7 @@ function setLocationHash(){
 function loadFromLocationHash(){
 	$('#matchTable input').each(function(){
 		var name = $(this).attr('id')
-		var val = team = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${name}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
+		var val = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${name}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
 		$(this).val(val)
 	})
 	setPickedTeams()
