@@ -54,39 +54,50 @@
 	<input type=text name=event>
 	<input type=text name=match>
 	<input type=text name=team>
-	<input type=text name=startlevel>
-	<input type=text name=total_hatches>
-	<input type=text name=total_cargo>
-	<input type=text name=end_level>
-	<input type=text name=auto_hatch_cs>
-	<input type=text name=auto_cargo_cs>
-	<input type=text name=auto_hatch_topr>
-	<input type=text name=auto_hatch_midr>
-	<input type=text name=auto_hatch_botr>
-	<input type=text name=auto_cargo_topr>
-	<input type=text name=auto_cargo_midr>
-	<input type=text name=auto_cargo_botr>
-	<input type=text name=hatch_cs>
-	<input type=text name=hatch_topr>
-	<input type=text name=hatch_midr>
-	<input type=text name=hatch_botr>
-	<input type=text name=cargo_cs>
-	<input type=text name=cargo_topr>
-	<input type=text name=cargo_midr>
-	<input type=text name=cargo_botr>
+	<input type=text name=startlevel placeholder=startlevel>
+	<input type=text name=total_hatches placeholder=total_hatches>
+	<input type=text name=total_cargo placeholder=total_cargo>
+	<input type=text name=end_level placeholder=end_level>
+	<input type=text name=auto_hatch_cs placeholder=auto_hatch_cs>
+	<input type=text name=auto_cargo_cs placeholder=auto_cargo_cs>
+	<input type=text name=auto_hatch_topr placeholder=auto_hatch_topr>
+	<input type=text name=auto_hatch_midr placeholder=auto_hatch_midr>
+	<input type=text name=auto_hatch_botr placeholder=auto_hatch_botr>
+	<input type=text name=auto_cargo_topr placeholder=auto_cargo_topr>
+	<input type=text name=auto_cargo_midr placeholder=auto_cargo_midr>
+	<input type=text name=auto_cargo_botr placeholder=auto_cargo_botr>
+	<input type=text name=hatch_cs placeholder=hatch_cs>
+	<input type=text name=hatch_topr placeholder=hatch_topr>
+	<input type=text name=hatch_midr placeholder=hatch_midr>
+	<input type=text name=hatch_botr placeholder=hatch_botr>
+	<input type=text name=cargo_cs placeholder=cargo_cs>
+	<input type=text name=cargo_topr placeholder=cargo_topr>
+	<input type=text name=cargo_midr placeholder=cargo_midr>
+	<input type=text name=cargo_botr placeholder=cargo_botr>
 
 
 	<table class=orientRight><tr><td>
-		<table border=1 class=teamColorBG><tr>
-		<th colspan=3>Starting Position</th></tr><tr>
-		<td data-startlevel=2 class=clickSet><img src="left_red6_hab.png"></td>
-		<td><img src="top_red_hab.png"></td>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=20&cargo=0000000000000000&rocket=000000000000000000000000"><img src="left_red6_hab.png"></a></td>
-		</tr><tr>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=30&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_left_red_hab.png"></a></td>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=40&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_red_hab.png"></a></td>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=50&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_right_red_hab.png"></a></td>
-		</tr></table><br>
+		<table border=1 class="teamColorBG hab"><tr><th colspan=3>
+			Starting Position A
+		</th></tr><tr><td data-startlevel=2 class=clickSet>
+			<img src=hab_top_sides.png>
+			<label><input type=radio name=startlevel value=2><span>X</span></label>
+		</td><td>
+			<img src=hab_top_middle.png>
+		</td><td>
+			<img src=hab_top_sides.png>
+			<label><input type=radio name=startlevel value=2><span>X</span></label>
+		</td></tr><tr><td>
+			<img src=hab_bottom_left.png>
+			<label><input type=radio name=startlevel value=1><span>X</span></label>
+		</td><td>
+			<img src=hab_bottom_middle.png>
+			<label><input type=radio name=startlevel value=1><span>X</span></label>
+		</td><td>
+			<img src=hab_bottom_right.png>
+			<label><input type=radio name=startlevel value=1><span>X</span></label>
+		</td></tr></table>
+		<br>
 		<table><tr>
 		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=00&cargo=1000000000000000&rocket=000000000000000000000000"><img height=125 width=125 src=open_hatch_image2.png></a></td>
 		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=00&cargo=0100000000000000&rocket=000000000000000000000000"><img height=125 width=125 src=open_hatch_image2.png></a></td>
@@ -104,16 +115,21 @@
 		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=00&cargo=0000000000000010&rocket=000000000000000000000000"><img height=125 width=125 src=open_hatch_image2.png></a></td>
 		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=00&cargo=0000000000000001&rocket=000000000000000000000000"><img height=125 width=125 src=open_hatch_image2.png></a></td>
 		</tr></table><br>
-		<table border=1 class=teamColorBG><tr>
-		<th colspan=3>EndGame</th></tr><tr>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=01&cargo=0000000000000000&rocket=000000000000000000000000"><img src="left_red6_hab.png"></a></td>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=02&cargo=0000000000000000&rocket=000000000000000000000000"><img src="top_red_hab.png"></a></td>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=03&cargo=0000000000000000&rocket=000000000000000000000000"><img src="left_red6_hab.png"></a></td>
-		</tr><tr>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=04&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_left_red_hab.png"></a></td>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=05&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_red_hab.png"></a></td>
-		<td><a href="right.cgi?game=2019necmp_qm2_B1&team=95&hab=06&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_right_red_hab.png"></a></td>
-		</tr></table>
+		<table><tr><th colspan=3>
+			End Game
+		</th></tr><tr><td data-startlevel=2 class=teamColorBG>
+			<img src=hab_top_sides.png>
+		</td><td class=teamColorBG>
+			<img src=hab_top_middle.png>
+		</td><td class=teamColorBG>
+			<img src=hab_top_sides.png>
+		</td></tr><tr><td class=teamColorBG>
+			<img src=hab_bottom_left.png>
+		</td><td class=teamColorBG>
+			<img src=hab_bottom_middle.png>
+		</td><td class=teamColorBG>
+			<img src=hab_bottom_right.png>
+		</td></tr></table>
 		</td><td>
 		<table><tr><td>
 		<table><tr>
@@ -167,7 +183,6 @@
 		</td></tr></table>
 
 		<table class=orientLeft><tr><td align=right valign=center>
-			<table><tr><td>
 			<table><tr>
 			<td colspan=4><p><b>Far Rocket Top</b></p></td></tr><tr>
 				<td data-field=rocket data-index=0 class=toggle><img data-value=0 height=125 width=125 src=hatch_open.png><img data-value=1 height=125 width=125 src=hatch_closed.png><img data-value=2 height=125 width=125 src=hatch_closed_auto.png></td>
@@ -184,7 +199,7 @@
 				<td data-field=rocket data-index=9 class=toggle><img data-value=0 height=125 width=125 src=cargo_open.png><img data-value=1 height=125 width=125 src=cargo_closed.png><img data-value=2 height=125 width=125 src=cargo_closed_auto.png></td>
 				<td data-field=rocket data-index=10 class=toggle><img data-value=0 height=125 width=125 src=cargo_open.png><img data-value=1 height=125 width=125 src=cargo_closed.png><img data-value=2 height=125 width=125 src=cargo_closed_auto.png></td>
 				<td data-field=rocket data-index=11 class=toggle><img data-value=0 height=125 width=125 src=hatch_open.png><img data-value=1 height=125 width=125 src=hatch_closed.png><img data-value=2 height=125 width=125 src=hatch_closed_auto.png></td>
-			</tr><tr><td colspan=4><p><b>Far Rocket Bottom</b></p></td></tr></table></td></tr></table>			</tr><tr><td colspan=4><p><b>Far Rocket Bottom</b></p></td></tr></table></td></tr></table>
+			</tr><tr><td colspan=4><p><b>Far Rocket Bottom</b></p></td></tr></table>
 			<table><tr>
 			<td class=teamColorBG><p>195</p></td>
 			<td><p></p></td>
@@ -216,16 +231,21 @@
 			</tr><tr><td colspan=4><p><b>Near Rocket Bottom</b></p></td></tr></table>
 			</td></tr></table>
 			</td><td>
-			<table border=1 class=teamColorBG><tr>
-			<th colspan=3>Starting Position</th></tr><tr>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=10&cargo=0000000000000000&rocket=000000000000000000000000"><img src="left_red6_hab.png"></a></td>
-			<td><img src="top_red_hab.png"></td>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=20&cargo=0000000000000000&rocket=000000000000000000000000"><img src="left_red6_hab.png"></a></td>
-			</tr><tr>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=30&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_left_red_hab.png"></a></td>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=40&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_red_hab.png"></a></td>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=50&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_right_red_hab.png"></a></td>
-			</tr></table>
+				<table><tr><th colspan=3>
+					End Game
+				</th></tr><tr><td data-startlevel=2 class=teamColorBG>
+					<img src=hab_top_sides.png>
+				</td><td class=teamColorBG>
+					<img src=hab_top_middle.png>
+				</td><td class=teamColorBG>
+					<img src=hab_top_sides.png>
+				</td></tr><tr><td class=teamColorBG>
+					<img src=hab_bottom_left.png>
+				</td><td class=teamColorBG>
+					<img src=hab_bottom_middle.png>
+				</td><td class=teamColorBG>
+					<img src=hab_bottom_right.png>
+				</td></tr></table>
 			<br>
 			<table><tr>
 			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=00&cargo=1000000000000000&rocket=000000000000000000000000"><img height=125 width=125 src=open_hatch_image2.png></a></td>
@@ -244,16 +264,21 @@
 			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=00&cargo=0000000000000010&rocket=000000000000000000000000"><img height=125 width=125 src=open_hatch_image2.png></a></td>
 			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=00&cargo=0000000000000001&rocket=000000000000000000000000"><img height=125 width=125 src=open_hatch_image2.png></a></td>
 			</tr></table><br>
-			<table border=1 class=teamColorBG><tr>
-			<th colspan=3>EndGame</th></tr><tr>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=01&cargo=0000000000000000&rocket=000000000000000000000000"><img src="left_red6_hab.png"></a></td>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=02&cargo=0000000000000000&rocket=000000000000000000000000"><img src="top_red_hab.png"></a></td>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=03&cargo=0000000000000000&rocket=000000000000000000000000"><img src="left_red6_hab.png"></a></td>
-			</tr><tr>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=04&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_left_red_hab.png"></a></td>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=05&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_red_hab.png"></a></td>
-			<td><a href="left.cgi?game=2019necmp_qm8_R1&team=195&hab=06&cargo=0000000000000000&rocket=000000000000000000000000"><img src="bot_right_red_hab.png"></a></td>
-			</tr></table>
+			<table border=1 class=teamColorBG><tr><th colspan=3>
+				End Game
+			</th></tr><tr><td data-startlevel=2 class=clickSet>
+				<img src=hab_top_sides.png>
+			</td><td>
+				<img src=hab_top_middle.png>
+			</td><td>
+				<img src=hab_top_sides.png>
+			</td></tr><tr><td>
+				<img src=hab_bottom_left.png>
+			</td><td>
+				<img src=hab_bottom_middle.png>
+			</td><td>
+				<img src=hab_bottom_right.png>
+			</td></tr></table>
 			</td></tr></table>
 
 	<hr class=teamColorBG>
