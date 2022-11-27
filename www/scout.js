@@ -288,7 +288,12 @@ $(document).ready(function(){
 	})
 
 	$("img.count").click(function(e){
-		var toAdd = /up/.test($(this).attr('src'))?1:-1
+		var src = $(this).attr('src')
+		var toAdd = 0
+		if(/up/.test(src))toAdd = 1
+		else if(/down/.test(src))toAdd = -1
+		else if(/three/.test(src))toAdd = 3
+		else if(/five/.test(src))toAdd = 5
 		var input = $(this).closest('td').find('input')
 		var val = input.val()
 		val = /^[0-9]+$/.test(val)?parseInt(val):0
