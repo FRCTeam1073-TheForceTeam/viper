@@ -16,10 +16,14 @@
 </head>
 <body>
 <h1>EVENT Match Stats</h1>
-<select id=markPicked><option value="">Mark team as picked</option></select>
-<select id=viewTeam><option value="">View team info</option></select>
-Sort: <select id=sortBy></select>
+<button id=markPicked>Mark team as picked</button>
+<button id=viewTeam>View team info</button>
+<button id=sortBy>Sort: <span class=name>Score Contribution</span></button>
+<select id=displayType><option value=graph selected>Graphs</option><option value=table>Table</option></select>
+<table id=statsTable></table>
 <div id=statGraphs></div>
 <div id=lightBoxBG style=display:none></div>
-<div id=lightBoxContent style=display:none><iframe></iframe></div>
+<div id=teamStats class=lightBoxContent style=display:none><iframe></iframe></div>
+<div id=teamPicker class=lightBoxContent style=display:none></div>
+<div id=sortChooser class=lightBoxContent style=display:none></div>
 </body></html>

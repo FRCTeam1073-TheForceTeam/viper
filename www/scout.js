@@ -117,17 +117,16 @@ function showScouting(){
 	setHash(pos,orient,team,match)
 	window.scrollTo(0,0)
 	scouting[0].reset()
-	$('.toggle > *').hide()
-	$('.toggle > *:first-child').show()
+	if (typeof beforeShowScouting == 'function') beforeShowScouting()
 	matchName = getMatchName(match)
 	setupButtons()
 	$('.orientLeft').toggle(orient && orient=='left')
 	$('.orientRight').toggle(orient && orient=='right')
 	$('h1').text(`${eventName}, ${matchName}, Team ${team}`)
 	$('.team').text(team)
-	$('input[name="event"]').val(eventId)
-	$('input[name="match"]').val(match)
-	$('input[name="team"]').val(team)
+	$('input[name="event"]').val(eventId).attr('value',eventId)
+	$('input[name="match"]').val(match).attr('value',match)
+	$('input[name="team"]').val(team).attr('value',team)
 	$('.match').text(matchName)
 	setTeamBG()
 	scouting.show()
@@ -172,7 +171,6 @@ function formHasChanges(f){
 	var changes = false
 	f.find('input,textarea').each(function(){
 		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type'),init=el.attr('value')||''
-		if (type=='hidden') return
 		if (type=='checkbox'||type=='radio'){
 			val=el.prop('checked')
 			init=el.attr('checked')!==undefined
@@ -267,24 +265,6 @@ $(document).ready(function(){
 		check=$(this).find(':checkbox,:radio')
 		if (check.attr('disabled') && !check.prop('checked')) return
 		toggleChecked(check)
-	})
-
-	$(".toggle").click(function(e){
-		e.preventDefault()
-		var field = $(this).attr('data-field')
-		var index = parseInt($(this).attr('data-index'))
-		var children = $(this).children()
-		var visible = 0
-		for (var i=0; i<children.length; i++){
-			if ($(children[i]).is(":visible"))	visible = i
-			$(children[i]).hide()
-		}
-		visible++
-		if (visible>=children.length) visible=0
-		var value = $(children[visible]).show().attr('data-value')
-		var input = $(`input[name="${field}"]`)
-		input.val(input.val().replace(/./g, (c, i) => i == index? value: c))
-		console.log(field + ": " + input.val())		
 	})
 
 	$("img.count").click(function(e){
