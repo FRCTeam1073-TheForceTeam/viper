@@ -215,7 +215,7 @@ var statInfo = {
 		type: "%"
 	},
 	"defended":{
-		name: "Good against defense",
+		name: "Against Defense",
 		type: "enum",
 		values:["","Affected","OK","Great"],
 		breakout:["defended_none","defended_affected","defended_ok","defended_great"]
