@@ -1,0 +1,17 @@
+.hab .top-left,.hab .top-right{background-image:url('hab_top_sides.png')}
+.hab .top-middle{background-image:url('hab_top_middle.png')}
+.hab .bottom-left{background-image:url('hab_bottom_left.png')}
+.hab .bottom-middle{background-image:url('hab_bottom_middle.png')}
+.hab .bottom-right{background-image:url('hab_bottom_right.png')}
+.hab td {background-size:100% 100%;background-repeat:no-repeat;width:2em;height:2em;margin:0;padding:0;font-size:250%}
+.rocket img,.cargo-ship img{width:6em;height:6em}
+.rocket th,.cargo-ship th{font-size:125%;font-weight:bold}
+#scouting table.cargo-ship, #scouting table.rocket{margin:2em 0}
+td table{width:100%}
+td.team{width:12em;font-size:200%;font-weight:bold;text-align:center}
+.rocket .toggle,.cargo-ship .toggle{background-color:antiquewhite}
+
+#scouting table{border-collapse:collapse;border:none;margin:0;padding:0}
+#scouting td{border:none;margin:0;padding:0}
+.pad-left{padding-left:1em}
+.pad-right{padding-right:1em}
