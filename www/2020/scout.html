@@ -14,7 +14,7 @@
 <script src=/main.js></script>
 <title>FRC Scouting App</title>
 </head>
-<body bgcolor="#dddddd">
+<body>
 <h1>FRC Scouting App</h1>
 <div id=select-bot style=display:none class=screen>
 	<H2>Select your robot</H2>
@@ -42,134 +42,196 @@
 </div>
 
 <form id=scouting style=display:none class=screen>
-event,match,team,auto_line,auto_bottom,auto_outer,auto_inner,teleop_bottom,teleop_outer,teleop_inner,auto_missed,teleop_missed,shotlocA1,shotlocA2,shotlocA3,shotlocA4,shotlocA5,shotlocB1,shotlocB2,shotlocB3,shotlocB4,shotlocB5,shotlocC1,shotlocC2,shotlocC3,shotlocC4,shotlocC5,shotlocD1,shotlocD2,shotlocD3,shotlocD4,shotlocD5,shotlocE1,shotlocE2,shotlocE3,shotlocE4,shotlocE5,rotation_control,position_control,parked,climbed,bar_position,buddylift,leveled,defense,defended,fouls,techfouls,rank,scouter,comments
-	<table border=0 cellpadding=0 cellspacing=0><tr>
-	<td valign=top>
-	<table border=1 cellpadding=0 cellspacing=0><tr>
-	<th><p style="font-size:40px;">Auto</p></th>
-	</tr><tr><td>
-	<table width="100%" border=0 cellpadding=0 cellspacing=0><tr><td><p style="font-size:30px;">Move from<br>Initiation</p></td><td>
-	<a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&teleop=1-4-2&missed=4-0&shotloc=000000000000000000000000000000&ctrl=00&auto=2-2-0-1"><img src=box.png></a>
-	</td></tr></table></td></tr><tr><td>
-		<p style="font-size:25px;">Inner Port</p>
-		<div class=button-container>
-			<div class="side-by-side left-buttons"><img class=count src=/count_up.png>
-				<img class=count src=/count_down.png></div>
-			<div class="side-by-side right-buttons"><img class="count plus" src=plus_three2.png>
-				<input type=text class=num value=0 name=auto_inner size=1 disabled></div>
-		</div>
-	</td></tr><tr><td>
-		<p style="font-size:25px;">Outer Port</p>
-		<div class="side-by-side left-buttons"><img class=count src=/count_up.png>
-				<img class=count src=/count_down.png></div>
-			<div class="side-by-side right-buttons"><img class="count plus" src=plus_three2.png>
-			<input type=text class=num value=0 name=auto_outer size=1 disabled></div>
-	</td></tr><tr><td>
-		<p style="font-size:25px;">Bottom Port</p>
-		<div class="side-by-side left-buttons"><img class=count src=/count_up.png>
-				<img class=count src=/count_down.png></div>
-			<div class="side-by-side right-buttons"><img class="count plus" src=plus_three2.png>
-			<input type=text class=num value=0 name=auto_bottom size=1 disabled></div>
-	</td></tr></table>
+	<input type=hidden name=event>
+	<input type=hidden name=match>
+	<input type=hidden name=team>
+	<table>
+		<tr><th colspan=2>
+			Auto
+		</th><th colspan=2 rowspan=2>
+			Teleop
+		</th></tr><tr><td colspan=2>
+			<label><input type=checkbox name=auto_line value=1><span>Move from Initiation</span></label>
+		</td></tr><tr><td>
+			Inner Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.png>
+				<img class=count src=/count_down.png>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_three2.png>
+				<input type=text class=num value=0 name=auto_inner size=1 disabled>
+			</div></div>
+		</td><td>
+			Missed Shots
+			<div>
+				<input type=text class=num value=0 name=auto_missed size=1 disabled>
+				<div>
+					<img class=count src=/count_up.png>
+					<img class=count src=/count_down.png>
+				</div>
+			</div>
+		</td><td>
+			Missed Shots
+			<div>
+				<input type=text class=num value=0 name=teleop_missed size=1 disabled>
+				<div>
+					<img class=count src=/count_up.png>
+					<img class=count src=/count_down.png>
+				</div>
+			</div>
+		</td><td>
+			Inner Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.png>
+				<img class=count src=/count_down.png>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_five2.png>
+				<input type=text class=num value=0 name=teleop_inner size=1 disabled>
+			</div></div>
+		</td></tr><tr><td>
+			Outer Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.png>
+				<img class=count src=/count_down.png>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_three2.png>
+				<input type=text class=num value=0 name=auto_outer size=1 disabled>
+			</div></div>
+		</td><td rowspan=2 colspan=2>
+			<img src=blue_power_port.jpg>
+		</td><td>
+			Outer Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.png>
+				<img class=count src=/count_down.png>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_five2.png>
+				<input type=text class=num value=0 name=teleop_outer size=1 disabled>
+			</div></div>
+		</td></tr><tr><td>
+			Bottom Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.png>
+				<img class=count src=/count_down.png>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_three2.png>
+				<input type=text class=num value=0 name=auto_bottom size=1 disabled>
+			</div></div>
+		</td><td>
+			Bottom Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.png>
+				<img class=count src=/count_down.png>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_five2.png>
+				<input type=text class=num value=0 name=teleop_bottom size=1 disabled>
+			</div></div>
+		</td></tr>
+	</table>
+	<label><input type=checkbox name=rotation_control value=1><span>Rotational Control</span></label>
+	<label><input type=checkbox name=position_control value=1><span>Positional Control</span></label>
 
-	</td><td>
-	<table border=1 cellspacing=0 cellpadding=0><tr>
-	<td>
-	<table cellpadding=5 cellspacing=0 border=0><tr>
-		<th align=center><p style="font-size:25px;">Auto<br>Missed<br>Shots</p></th>    <td><table cellpadding=5 border=3><tr>
-		<th bgcolor=white><p style="font-size:50px;">4</p></th>
-		</tr></table></td>
-	</tr><tr>
-		<td colspan=2 align=center><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&shotloc=000000000000000000000000000000&ctrl=00&missed=5-0"><img height="75" width="131" src=/count_up.png><a></td>
-	</tr><tr>
-		<td colspan=2 align=center><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&shotloc=000000000000000000000000000000&ctrl=00&missed=3-0"><img height="63" width="121" src=/count_down.png></a></td>
-	</tr>
-	</table>
-	</td><td>
-	<table cellpadding=5 cellspacing=0 border=0><tr>
-		<th align=center><p style="font-size:25px;">TeleOp<br>Missed<br>Shots</p></th>    <td><table cellpadding=5 border=3><tr>
-		<th bgcolor=white><p style="font-size:50px;">0</p></th>
-		</tr></table></td>
-	</tr><tr>
-		<td colspan=2 align=center><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&shotloc=000000000000000000000000000000&ctrl=00&missed=4-1"><img height="75" width="131" src=/count_up.png><a></td>
-	</tr><tr>
-		<td colspan=2 align=center><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&shotloc=000000000000000000000000000000&ctrl=00&missed=4-0"><img height="63" width="121" src=/count_down.png></a></td>
-	</tr>
-	</table>
-	</td></tr><tr>
-	<th colspan=2><img src=blue_power_port.jpg></th>
-	</tr></table>
-	</td><td>
-	<table border=1 cellpadding=0 cellspacing=0><tr>
-	<th><p style="font-size:60px;">TeleOp</p></th>
-	</tr><tr><td>
-		<p style="font-size:25px;">Inner Port</p>
-		<div class="side-by-side left-buttons"><img class=count src=/count_up.png>
-				<img class=count src=/count_down.png></div>
-			<div class="side-by-side right-buttons"><img class="count plus" src=plus_five2.png>
-			<input type=text class=num value=0 name=teleop_inner size=1 disabled></div>
-	</td></tr><tr><td>
-		<p style="font-size:25px;">Outer Port</p>
-		<div class="side-by-side left-buttons"><img class=count src=/count_up.png>
-				<img class=count src=/count_down.png></div>
-			<div class="side-by-side right-buttons"><img class="count plus" src=plus_five2.png>
-			<input type=text class=num value=0 name=teleop_outer size=1 disabled></div>
-	</td></tr><tr><td>
-		<p style="font-size:25px;">Bottom Port</p>
-		<div class="side-by-side left-buttons"><img class=count src=/count_up.png>
-				<img class=count src=/count_down.png></div>
-			<div class="side-by-side right-buttons"><img class="count plus" src=plus_five2.png>
-			<input type=text class=num value=0 name=teleop_bottom size=1 disabled></div>
-	</td></tr></table>
-	</td></tr></table>
-	<hr>
-	<table cellspacing=0 cellpadding=0 border=1 bordercolor=blue>
-	<tr>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=100000000000000000000000000000"><img src=left_blue_1_1.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000000000001"><img src=left_blue_1_2.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000000000010"><img src=left_blue_1_3.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000000000100"><img src=left_blue_1_4.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000000001000"><img src=left_blue_1_5.png></td>
-	</tr>
-	<tr>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000000010000"><img src=left_blue_2_1.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000000100000"><img src=left_blue_2_2.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000001000000"><img src=left_blue_2_3.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000010000000"><img src=left_blue_2_4.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000000100000000"><img src=left_blue_2_5.png></td>
-	</tr>
-	<tr>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000001000000000"><img src=left_blue_3_1.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000010000000000"><img src=left_blue_3_2.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000000100000000000"><img src=left_blue_3_3.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000001000000000000"><img src=left_blue_3_4.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000010000000000000"><img src=left_blue_3_5.png></td>
-	</tr>
-	<tr>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000000100000000000000"><img src=left_blue_4_1.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000001000000000000000"><img src=left_blue_4_2.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000010000000000000000"><img src=left_blue_4_3.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000000100000000000000000"><img src=left_blue_4_4.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000001000000000000000000"><img src=left_blue_4_5.png></td>
-	</tr>
-	<tr>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000010000000000000000000"><img src=left_blue_5_1.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000000100000000000000000000"><img src=left_blue_5_2.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000001000000000000000000000"><img src=left_blue_5_3.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000010000000000000000000000"><img src=left_blue_5_4.png></td>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&ctrl=00&shotloc=000000100000000000000000000000"><img src=left_blue_5_5.png></td>
-	</tr>
-	</table>
-	<hr>
-	<table cellpadding=3 cellspacing=1 border=1><tr>
-	<td><table cellpadding=1 cellspacing=0 border=0><tr><th><p style="font-size:30px;">Rotational<br>Control</p></th>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&shotloc=000000000000000000000000000000&ctrl=10"><img src=box.png></a></td></tr></table></td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-	<td><table cellspacing=0 cellpadding=0 border=0><tr><th><p style="font-size:30px;">Positional<br>Control</p></th>
-	<td><a href="blue_right.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&shotloc=000000000000000000000000000000&ctrl=01"><img src=box.png></a></td></tr></table></td>
-	<td><p style="font-size:20px"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p></td>
-	<th><a href="wrapup.cgi?game=2020test_qm1_B1&team=1435&auto=2-2-0-0&teleop=1-4-2&missed=4-0&shotloc=000000000000000000000000000000&ctrl=00"><img height="75" width="150" src=next_button.png></a></th>
-	</tr></table>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>During end game, <span class=team></span>:</legend>
+		<p>
+				<label><input type=checkbox name=parked value=1><span>Parked Under Shield</span></label>
+				<label><input type=checkbox name=climbed value=1><span>Climbed Without Help</span></label>
+				<label><input type=checkbox name=buddylift value=1><span>Lifted Others</span></label>
+				<label><input type=checkbox name=leveled value=1><span>Controlled Leveling</span></label>
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend><span class=team></span> climbed when the bar was:</legend>
+		<p>
+				<label><input type=radio name=bar_position value=3><span>High</span></label>
+				<label><input type=radio name=bar_position value=2><span>Level</span></label>
+				<label><input type=radio name=bar_position value=1><span>Low</span></label>
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Did <span class=team></span> play defense?</legend>
+		<p>
+			<label><input type=radio name=defense value=3><span>Good Defense</span></label>
+			<B>Not many</B> game pieces scored by opponent during defense
+		</p>
+		<p>
+			<label><input type=radio name=defense value=2><span>Average Defense</span></label>
+			Opponent was still able to score <B>some</B> game pieces
+		</p>
+		<p>
+			<label><input type=radio name=defense value=1><span>Below Average Defense</span></label>
+			Opponent was still able to score game pieces <B>without delay</B>
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Was <span class=team></span> defended?</legend>
+		<p>
+			<label><input type=radio name=defended value=3><span>Good Against Defense</span></label>
+			Defended but still scored game pieces with <B>little to no delay</B>
+		</p>
+		<p>
+			<label><input type=radio name=defended value=2><span>Average Against Defense</span></label>
+			Defended but still able to score <B>some</B> game pieces with delay
+		</p>
+		<p>
+			<label><input type=radio name=defended value=1><span>Affected by Defense</span></label>
+			Good defense <B>really affected</B> robot performance
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Did <span class=team></span> receive any fouls?</legend>
+		<p>
+			<label><input type=radio name=fouls value=1><span>1</span></label>
+			<label><input type=radio name=fouls value=2><span>2</span></label>
+			<label><input type=radio name=fouls value=3><span>3 or more</span></label>
+			Fouls
+		</p>
+		<p>
+			<label><input type=radio name=techfouls value=1><span>1</span></label>
+			<label><input type=radio name=techfouls value=2><span>2</span></label>
+			<label><input type=radio name=techfouls value=3><span>3 or more</span></label>
+			Tech fouls
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Is <span class=team></span> a good robot?</legend>
+		<p>
+			<label><input type=radio name=rank value=3><span>Very good robot</span></label>
+			Could be an alliance captain
+		</p>
+		<p>
+			<label><input type=radio name=rank value=2><span>Decent robot</span></label>
+			A productive and useful robot
+		</p>
+		<p>
+			<label><input type=radio name=rank value=1><span>Struggled to be effective</span></label>
+			Maybe good at one thing, but bad at others
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
+		<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+	</fieldset>
+	<div>
+		Save data:
+		<div id=featuredButton>
+			<button id=nextBtn>Next Match</button>
+		</div>
+		<div id=otherButtons>
+			<button id=matchBtn>Choose Match</button>
+			<button id=robotBtn>Change Robot</button>
+			<button id=teamBtn>Change Team</button>
+			<button id=uploadBtn>Upload Data</button>
+		</div>
+	</div>
+
 </form>
 </body>
 </html>

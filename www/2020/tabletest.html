@@ -1,0 +1,104 @@
+<head>
+    <link rel=stylesheet href=/main.css>
+    <link rel=stylesheet href=/scout.css>
+    <style>
+        img.count{width:142px; display:block; margin:.5em auto}
+        img.plus{width:57px}
+        input.num{text-align:center;font-size: 60px;font-weight: bold;font-family:serif}
+        .right-buttons{margin-left:0px; margin-right:0px}
+        .left-buttons{margin-right:0px}
+        table{border-collapse:collapse;border:1px solid black}
+        th{border:1px solid black;font-size:40px}
+        td{border:1px solid black;text-align:center;vertical-align:top;padding:5px;font-weight:bold; margin-bottom:0;font-size:25px}
+        td label{margin-left:10px;margin-right:10px}
+    </style>
+</head>
+
+<body>
+<table>
+<tr><th colspan=2>
+    Auto
+</th><th colspan=2 rowspan=2>
+    Teleop
+</th></tr><tr><td colspan=2>
+	<label><input type=checkbox name=auto_line value=1><span>Move from Initiation</span></label>
+</td></tr><tr><td>
+    Inner Port
+    <div><div class="side-by-side left-buttons">
+        <img class=count src=/count_up.png>
+        <img class=count src=/count_down.png>
+    </div><div class="side-by-side right-buttons">
+        <img class="count plus" src=plus_three2.png>
+        <input type=text class=num value=0 name=auto_inner size=1 disabled>
+    </div></div>
+</td><td>
+    Missed Shots
+    <div>
+        <input type=text class=num value=0 name=auto_missed size=1 disabled>
+		<div>
+			<img class=count src=/count_up.png>
+			<img class=count src=/count_down.png>
+		</div>
+    </div>
+</td><td>
+    Missed Shots
+    <div>
+        <input type=text class=num value=0 name=teleop_missed size=1 disabled>
+		<div>
+			<img class=count src=/count_up.png>
+			<img class=count src=/count_down.png>
+		</div>
+    </div>
+</td><td>
+    Inner Port
+    <div><div class="side-by-side left-buttons">
+        <img class=count src=/count_up.png>
+        <img class=count src=/count_down.png>
+    </div><div class="side-by-side right-buttons">
+        <img class="count plus" src=plus_five2.png>
+        <input type=text class=num value=0 name=teleop_inner size=1 disabled>
+    </div></div>
+</td></tr><tr><td>
+    Outer Port
+    <div><div class="side-by-side left-buttons">
+        <img class=count src=/count_up.png>
+        <img class=count src=/count_down.png>
+    </div><div class="side-by-side right-buttons">
+        <img class="count plus" src=plus_three2.png>
+        <input type=text class=num value=0 name=auto_outer size=1 disabled>
+    </div></div>
+</td><td rowspan=2 colspan=2>
+    <img src=blue_power_port.jpg>
+</td><td>
+    Outer Port
+    <div><div class="side-by-side left-buttons">
+        <img class=count src=/count_up.png>
+        <img class=count src=/count_down.png>
+    </div><div class="side-by-side right-buttons">
+        <img class="count plus" src=plus_five2.png>
+        <input type=text class=num value=0 name=teleop_outer size=1 disabled>
+    </div></div>
+</td></tr><tr><td>
+    Bottom Port
+    <div><div class="side-by-side left-buttons">
+        <img class=count src=/count_up.png>
+        <img class=count src=/count_down.png>
+    </div><div class="side-by-side right-buttons">
+        <img class="count plus" src=plus_three2.png>
+        <input type=text class=num value=0 name=auto_bottom size=1 disabled>
+    </div></div>
+</td><td>
+    Bottom Port
+    <div><div class="side-by-side left-buttons">
+        <img class=count src=/count_up.png>
+        <img class=count src=/count_down.png>
+    </div><div class="side-by-side right-buttons">
+        <img class="count plus" src=plus_five2.png>
+        <input type=text class=num value=0 name=teleop_bottom size=1 disabled>
+    </div></div>
+</td></tr>
+</table>
+<label><input type=checkbox name=rotation_control value=1><span>Rotational Control</span></label>
+<label><input type=checkbox name=position_control value=1><span>Positional Control</span></label>
+
+</body>

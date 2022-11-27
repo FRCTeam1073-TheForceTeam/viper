@@ -3,4 +3,6 @@ img.plus{width:57px}
 input.num{text-align:center;font-size: 60px;font-weight: bold;font-family:serif}
 .right-buttons{margin-left:0px; margin-right:0px}
 .left-buttons{margin-right:0px}
-td p{font-weight:bold; margin-bottom:0}
+table{border-collapse:collapse;border:1px solid black}
+th{border:1px solid black;font-size:40px}
+td{border:1px solid black;text-align:center;vertical-align:top;padding:5px;font-weight:bold; margin-bottom:0;font-size:25px}
