@@ -18,6 +18,7 @@ RUN apt-get update \
 # Adjust Apache configuration
 RUN sed -E -i '\
 		s/\#\s*(LoadModule .*mod_cgi)/\1/g; \
+		s/\#\s*(LoadModule .*mod_rewrite)/\1/g; \
 		s/^(\s*AllowOverride) None/\1 All\nSetEnv DEBUG 1/g; \
 		s|/htdocs|/htdocs/www|g \
 		' conf/httpd.conf \
