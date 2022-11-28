@@ -1,5 +1,5 @@
 *{box-sizing:border-box}
-html{font-size: 2vw}
+html{font-size: 2vmin}
 table,tr,td,th,button,input,select,option{font-size:inherit}
 body{text-align:center}
 table,ul{margin:0 auto;}

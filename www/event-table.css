@@ -1,4 +1,4 @@
-#qualifiers td,#qualifiers th{padding:1vw;font-size:120%}
+#qualifiers td,#qualifiers th{padding:1vmin;font-size:120%}
 #qualifiers input{width:3em}
 button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
 #team-list{min-width:320px;text-align:left}

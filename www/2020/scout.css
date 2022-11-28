@@ -1,8 +1,8 @@
-img.count{width:12vw;display:block;margin:1vw auto}
-img.plus{width:6vw}
+img.count{width:12vmin;display:block;margin:1vmin auto}
+img.plus{width:6vmin}
 #scouting .side-by-side{display:table-cell;margin:0;padding:0}
 #scouting .side-by-side input {width:1.5em}
-input.num{text-align:center;font-size:6vw;font-weight: bold;font-family:serif}
+input.num{text-align:center;font-size:6vmin;font-weight: bold;font-family:serif}
 table{border-collapse:collapse;border:1px solid black}
 th{border:1px solid black;font-size:200%}
 td{border:1px solid black;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%}
