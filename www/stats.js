@@ -63,7 +63,7 @@ function showStats(){
 			data=[],
 			percent=false
 			graphs.append($('<h2>').text(section))
-			graphs.append($('<div class=chart>').append(chart))
+			graphs.append($('<div class=chart>').append(chart).css('min-width', (teamList.length*25) + 'px'))
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
 				var field = aggregateGraphs[section]['data'][j],
 				info = statInfo[field]||{}
