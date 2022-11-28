@@ -33,7 +33,8 @@ function fillPage(){
 		graph=$('<div class=graph>')
 		graphs.append(graph)
 		graph.append($('<h2>').text(section))
-		graph.append($('<div class=chart>').append(chart))
+		console.log(teamGraphs[section]['data'])
+		graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
 		for (var j=0; j<teamGraphs[section]['data'].length; j++){
 			var field = teamGraphs[section]['data'][j],
 			info = statInfo[field]||{}

@@ -3,8 +3,9 @@
 .picked{background-color:darkgray}
 .best{background-color:greenyellow}
 td,th{padding:0.2em}
-.chart{width:100%;padding:0 1em}
-canvas{max-height:20em;width:90vw;}
+.graph{display:inline-block;max-width:100%}
+.chart{padding:0 1em;display:inline-block}
+canvas{max-height:20em}
 #lightBoxBG{z-index:9998;width:100vw;height:100vh;position:fixed;background-color:#333D;left:0;top:0}
 .lightBoxContent{z-index:9999;position:fixed;background-color:#fff;top:2em;left:2em;width:calc(100vw - 4em);height:calc(100vh - 4em);padding:0}
 #teamPicker{padding:2em}

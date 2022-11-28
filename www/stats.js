@@ -61,9 +61,11 @@ function showStats(){
 			var section = sections[i],
 			chart = $('<canvas>'),
 			data=[],
-			percent=false
-			graphs.append($('<h2>').text(section))
-			graphs.append($('<div class=chart>').append(chart).css('min-width', (teamList.length*25) + 'px'))
+			percent=false,
+			graph=$('<div class=graph>')
+			graphs.append(div)
+			graph.append($('<h2>').text(section))
+			graph.append($('<div class=chart>').append(chart).css('min-width', (teamList.length*23+100) + 'px'))
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
 				var field = aggregateGraphs[section]['data'][j],
 				info = statInfo[field]||{}

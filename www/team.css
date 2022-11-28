@@ -1,5 +1,6 @@
 #comments{max-width:30em;margin:0 auto;text-align:left}
 .scouter{text-align:right}
 .scouter::before{content:"-- "}
-#statGraphs{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-around;align-items:center}
-.graph{width:100%;max-width:520px;display:inline-block}
+canvas{max-height:20em}
+.graph{display:inline-block;max-width:100%}
+.chart{padding:0 1em;display:inline-block}
