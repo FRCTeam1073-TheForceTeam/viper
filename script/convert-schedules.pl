@@ -29,7 +29,11 @@ for my $file (@$datFiles){
 	my $newfile = $file;
 	$newfile =~ s/.*\//www\/data\//g;
 	$newfile =~ s/\.dat$/.schedule.csv/g;
-	die("Error opening $file for writing: $!") if (!open my $fh, ">", $newfile);
+	if (-e $newfile){
+		print "Skipping $file because $newfile already exists\n";
+		next;
+	}
+	die("Error opening $newfile for writing: $!") if (!open my $fh, ">", $newfile);
 	print $fh $content;
 	close $fh;
 	`rm $file`;
@@ -41,7 +45,11 @@ for my $file (@$datFiles){
 	my $newfile = $file;
 	$newfile =~ s/.*\//www\/data\//g;
 	$newfile =~ s/\.txt$/.scouting.csv/g;
-	die("Error opening $file for writing: $!") if (!open my $fh, ">", $newfile);
+	if (-e $newfile){
+		print "Skipping $file because $newfile already exists\n";
+		next;
+	}
+	die("Error opening $newfile for writing: $!") if (!open my $fh, ">", $newfile);
 	print $fh $content;
 	close $fh;
 	`rm $file`;
@@ -56,7 +64,11 @@ for my $file (@$elimsFiles){
 	my $allianceFile = $file;
 	$allianceFile =~ s/.*\//www\/data\//g;
 	$allianceFile =~ s/\.elims$/.alliances.csv/g;
-	die("Error opening $file for writing: $!") if (!open my $fh, ">", $allianceFile);
+	if (-e $allianceFile){
+		print "Skipping $file because $allianceFile already exists\n";
+		next;
+	}
+	die("Error opening $allianceFile for writing: $!") if (!open my $fh, ">", $allianceFile);
 	print $fh "Alliance,Captain,First Pick,Second Pick,Won Quarter-Finals,Won Semi-Finals,Won Finals\n";
 	for my $i (1..8){
 		print $fh "$i,".$alliances->[$i-1].",,,\n"
@@ -66,7 +78,7 @@ for my $file (@$elimsFiles){
 	my $scheduleFile = $file;
 	$scheduleFile =~ s/.*\//www\/data\//g;
 	$scheduleFile =~ s/\.elims$/.schedule.csv/g;
-	die("Error opening $file for writing: $!") if (!open my $fh, ">>", $scheduleFile);
+	die("Error opening $scheduleFile for writing: $!") if (!open my $fh, ">>", $scheduleFile);
 	my $matches = [[1,8],[4,5],[2,7],[3,6],[1,8],[4,5],[2,7],[3,6],[1,8],[4,5],[2,7],[3,6]];
 	for my $i (1..scalar(@$matches)){
 		my $r = $alliances->[$matches->[$i-1]->[0]-1];
@@ -78,8 +90,8 @@ for my $file (@$elimsFiles){
 	`rm $file`;
 }
 
-my $elimsFiles = [ split(/\n/, `find . -name '20*.semis'`) ];
-for my $file (@$elimsFiles){
+my $semisFiles = [ split(/\n/, `find . -name '20*.semis'`) ];
+for my $file (@$semisFiles){
 	my $semis = `cat $file`;
 	$semis =~ s/-/,/g;
 	$semis = {map { $_ => 1 } split(/\n/, $semis)};
@@ -87,7 +99,7 @@ for my $file (@$elimsFiles){
 	$allianceFile =~ s/.*\//www\/data\//g;
 	$allianceFile =~ s/\.semis$/.alliances.csv/g;
 	my $alliances = [ split(/\n/, `cat $allianceFile`) ];
-	die("Error opening $file for writing: $!") if (!open my $fh, ">", $allianceFile);
+	die("Error opening $allianceFile for writing: $!") if (!open my $fh, ">", $allianceFile);
 	for my $alliance (@$alliances){
 		if ($alliance =~ /^[^0-9]/){
 			print $fh "$alliance\n";
@@ -103,7 +115,7 @@ for my $file (@$elimsFiles){
 	my $scheduleFile = $file;
 	$scheduleFile =~ s/.*\//www\/data\//g;
 	$scheduleFile =~ s/\.semis$/.schedule.csv/g;
-	die("Error opening $file for writing: $!") if (!open my $fh, ">>", $scheduleFile);
+	die("Error opening $scheduleFile for writing: $!") if (!open my $fh, ">>", $scheduleFile);
 	my $matchNum = 1;
 	for my $n (1..3){
 		my $matches = [[[1,8],[4,5]],[[2,7],[3,6]]];
