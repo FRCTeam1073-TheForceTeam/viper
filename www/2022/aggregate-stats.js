@@ -26,9 +26,8 @@ function aggregateStats(scout, aggregate){
 	scout[statInfo["defended"]["breakout"][scout["defended"]||0]] = 1
 	scout[statInfo["rank"]["breakout"][scout["rank"]||0]] = 1
 
-	if (scout["comments"] && /\%[0-9a-fA-F]{2}/.test(scout["comments"])) scout["comments"] = decodeURIComponent(scout["comments"])
-	if (scout["comments"] && /^(none|(n\/a))$/i.test(scout["comments"])) scout["comments"] = ""
-	if (scout["scouter"] && "unknown" == scout["scouter"]) scout["scouter"] = ""
+	scout["scouter"] = decodeIfNeeded(scout["scouter"])
+	scout["comments"] = decodeIfNeeded(scout["comments"])
 
 	aggregate["count"] = (aggregate["count"]||0)+1
 
@@ -41,6 +40,15 @@ function aggregateStats(scout, aggregate){
 	}
 	aggregate["max_score"] = (aggregate["max_score"]||0)<scout["score"]?scout["score"]:(aggregate["max_score"]||0)
 	aggregate["min_score"] = (aggregate["min_score"]||999)>scout["score"]?scout["score"]:(aggregate["min_score"]||999)
+}
+
+function decodeIfNeeded(s){
+	if (!s) s = ""
+	if (/[a-zA-Z]\+([a-zA-Z]|$)/.test(s)) s = s.replace(/\+/g," ")
+	if (/\%[0-9a-fA-F]{2}/.test(s)) s = decodeURIComponent(s)
+	if (/\%[0-9a-fA-F]{2}/.test(s)) s = decodeURIComponent(s)
+	if (/^(none|(n\/a)|unknown)$/i.test(s)) s = ""
+	return s
 }
 
 var statInfo = {
