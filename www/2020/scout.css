@@ -6,6 +6,6 @@ input.num{text-align:center;font-size:6vmin;font-weight: bold;font-family:serif}
 table{border-collapse:collapse;border:1px solid black}
 th{border:1px solid black;font-size:200%}
 td{border:1px solid black;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%}
-#powerPort{background-size:contain;background-repeat:no-repeat;background-color:inherit;background-position:center}
+#powerPort{background-size:contain;background-repeat:no-repeat;background-color:inherit;background-position:center;border-color:black}
 #powerPort.blueTeamBG{background-image:url('blue_power_port.jpg')}
 #powerPort.redTeamBG{background-image:url('red_power_port2.png')}
