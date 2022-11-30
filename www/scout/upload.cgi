@@ -17,6 +17,9 @@ my $uCsv = $cgi->param('csv');
 $webutil->error("No data uploaded", "Scouting CSV data not found.") if (!$uCsv);
 $uCsv = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $uCsv) ];
 $webutil->error("Not enough CSV lines", "expected at least two lines in uploaded CSV") if(scalar(@{$uCsv})<2);
+my $next = $cgi->param('next')|"";
+webutil->error("Bad next", $next) if ($next and $next !~ /^\/20[0-9]{2}\/scout\.html\#[a-zA-Z0-9\=\&]+$/);
+$next = "#$next" if ($next);
 my $csvHeaders;
 my $uHead;
 my $eventCsv = {};
@@ -45,14 +48,12 @@ foreach my $row (@{$uCsv}){
 
 my $savedKeys = "";
 foreach my $event (keys %{$eventCsv}){
-	print STDERR "$event\n";
 	my $fileName = "../data/" . $event . ".scouting.csv";
 	if (! -f $fileName){
 		`touch $fileName`;
 	}
 	$csvHeaders = $eventHeaders->{$event};
 
-	print STDERR Dumper($csvHeaders);
 	open my $fh, '+<', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
 	flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
 	$/ = undef;
@@ -88,4 +89,5 @@ foreach my $event (keys %{$eventCsv}){
 	}
 	close $fh;
 }
-$webutil->redirect("/upload-done.html#$savedKeys");
+
+$webutil->redirect("/upload-done.html#$savedKeys$next");

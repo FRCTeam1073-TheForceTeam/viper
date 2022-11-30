@@ -30,6 +30,7 @@ function showUploads(){
 		text += csv[years[i]]
 	}
 	$('#csv').val(text)
+	$('#next').val(location.hash.replace(/^\#/,''))
 }
 
 function deleteMatch(){

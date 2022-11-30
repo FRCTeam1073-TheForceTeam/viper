@@ -105,7 +105,11 @@ function getScoutKey(t,m,e){
 }
 
 function setHash(pos,orient,team,match){
-	location.hash = `#event=${eventId}`+
+	location.hash = buildHash(pos,orient,team,match)
+}
+
+function buildHash(pos,orient,team,match){
+	return `#event=${eventId}`+
 		(pos?`&pos=${pos}`:"")+
 		(orient?`&orient=${orient}`:"")+
 		(team?`&team=${team}`:"")+
@@ -311,7 +315,19 @@ $(document).ready(function(){
 	})
 	$("#uploadBtn").click(function(e){
 		store()
-		location.href="/upload.html"
+		var returnTo = "",
+		nextTeam = team,
+		nextMatch = match,
+		next = getNextMatch()
+		if (next){
+			returnTo = "#" + location.pathname
+			if (formHasChanges(scouting)){
+				nextTeam = next[pos]
+				nextMatch = next['Match']
+			}
+			returnTo += buildHash(pos,orient,nextTeam,nextMatch)
+		}
+		location.href="/upload.html" + returnTo
 		return false
 	})
 })
