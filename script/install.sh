@@ -14,6 +14,7 @@ sudo chmod -R g+rw www/data/ .git
 # as the directory itself
 find  www/data/ .git -type d -exec sudo chmod ug+s {} \;
 
+# Install software
 sudo apt-get install -y \
 	apache2 \
 	git \
@@ -23,12 +24,9 @@ sudo apt-get install -y \
 	perl \
 	;
 
-sudo chgrp www-data /var/www
-sudo chmod g+w /var/www
-# Allow git commands to run from the webserver
-# Used for generating service worker hash
-if [ ! -e /var/www/.gitconfig ] || ! grep -q `pwd` /var/www/.gitconfig
-then
-	echo Setting up www-data access to this git repository
-	sudo -u www-data HOME=/var/www git config --global --add safe.directory `pwd`
-fi
+# Enable Apache modules
+sudo a2enmod \
+	cgid \
+	headers \
+	rewrite \
+	;
