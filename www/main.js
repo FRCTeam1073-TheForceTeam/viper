@@ -6,12 +6,12 @@ window.addEventListener("load", () => {
 	}
 })
 
+
 $(document).ready(function(){
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger>☰</div>'),
 		mainMenu = $('<div id=mainMenu>'),
 		mainMenuBg = $('<div id=mainMenuBg>')
-		hamburger.toggleClass("hasUploads", hasUploads())
 		$('body').append(hamburger).append(mainMenu).append(mainMenuBg)
 		hamburger.click(toggleMainMenu)
 		mainMenuBg.click(toggleMainMenu)
@@ -27,8 +27,14 @@ $(document).ready(function(){
 					.replace(/YEAR/g, typeof eventYear!=='undefined'?eventYear:"")
 			)
 			mainMenu.find('.dependEvent').toggle(typeof eventName!=='undefined')
-			mainMenu.find('.dependUpload').toggle(hasUploads())
+			showMainMenuUploads()
 		})
+
+		function showMainMenuUploads(){
+			hamburger.toggleClass("hasUploads", hasUploads())
+			mainMenu.find('.dependUpload').toggle(hasUploads())
+		}
+		$(window).on('hashchange',showMainMenuUploads)
 	}
 })
 
