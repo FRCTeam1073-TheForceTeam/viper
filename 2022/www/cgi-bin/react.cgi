@@ -36,14 +36,15 @@ $game = $params{'game'} if (defined $params{'game'});
 $team = $params{'team'} if (defined $params{'team'});
 
 if ("$game" eq "" || "$team" eq "") {
-    print "Content-type: text/html\n\n";
-    print "<html lang=\"en\"><head>\n";
-    print "    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
-    print "    <meta charset=\"utf-8\">\n";
-    print "  </head>\n";
-    print "  <body>\n";
-    print "  <H2>Error, missing venue, match, robot position, and/or team</H2>\n";
-    print "  </body></html>\n";
+    print "Content-type: text/html
+
+<html lang=\"en\"><head>
+    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">
+    <meta charset=\"utf-8\">
+  </head>
+  <body>
+  <H2>Error, missing venue, match, robot position, and/or team</H2>
+  </body></html>\n";
     exit(0);
 }
 
@@ -59,913 +60,869 @@ my $color = $RED;
 $color = $BLUE if ($posnum > 3);
 
 #print "<!DOCTYPE html>\n";
-print "Content-type: text/html\n\n";
-print "<html lang=\"en\"><head>\n";
-print "    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
-print "    <meta charset=\"utf-8\">\n";
-print "  </head>\n";
-print "  <body>\n";
-print "\n";
-print "    <script>\n";
-print "      var autoLoCount;\n";
-print "      var autoHiCount;\n";
-print "      var autoBounce;\n";
-print "      var autoMissed;\n";
-print "      var taxi;\n";
-print "      var human;\n";
-print "      var teleLoCount;\n";
-print "      var teleHiCount;\n";
-print "      var teleBounce;\n";
-print "      var teleMissed;\n";
-print "      var shootWLP;\n";
-print "      var shootOLP;\n";
-print "      var shootHub;\n";
-print "      var shootField;\n";
-print "      var rung;\n";
-print "      var defense;\n";
-print "      var defended;\n";
-print "      var fouls;\n";
-print "      var techfouls;\n";
-print "      var robot;\n";
-print "\n";
-print "      autoLoCount = 0;\n";
-print "      autoHiCount = 0;\n";
-print "      autoBounce = 0;\n";
-print "      autoMissed = 0;\n";
-print "      taxi = 0;\n";
-print "      human = 0;\n";
-print "      teleLoCount = 0;\n";
-print "      teleHiCount = 0;\n";
-print "      teleBounce = 0;\n";
-print "      teleMissed = 0;\n";
-print "      shootWLP = 0;\n";
-print "      shootOLP = 0;\n";
-print "      shootHub = 0;\n";
-print "      shootField = 0;\n";
-print "      rung = 0;\n";
-print "      defense = 0;\n";
-print "      defended = 0;\n";
-print "      fouls = 0;\n";
-print "      techfouls = 0;\n";
-print "      robot = 0;\n";
-print "\n";
-print "      function toggle (id) {\n";
-print "          var str;\n";
-print "          str = \"&nbsp;No\";\n";
-print "          if (id == \"taxi\") {\n";
-print "              if (taxi == 0) {\n";
-print "                  taxi = 1;\n";
-print "                  str = \"Yes\";\n";
-print "              } else {\n";
-print "                  taxi = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";\n";
-print "              document.forms[0].taxi.value = taxi;\n";
-print "          }\n";
-print "          if (id == \"human\") {\n";
-print "              if (human == 0) {\n";
-print "                  human = 1;\n";
-print "                  str = \"Yes\";\n";
-print "              } else {\n";
-print "                  human = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";\n";
-print "              document.forms[0].human.value = human;\n";
-print "          }\n";
-print "          if (id == \"wlp\") {\n";
-print "              if (shootWLP == 0) {\n";
-print "                  shootWLP = 1;\n";
-print "                  str = \"Yes\";\n";
-print "              } else {\n";
-print "                  shootWLP = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";\n";
-print "              document.forms[0].shootWLP.value = shootWLP;\n";
-print "          }\n";
-print "          if (id == \"olp\") {\n";
-print "              if (shootOLP == 0) {\n";
-print "                  shootOLP = 1;\n";
-print "                  str = \"Yes\";\n";
-print "              } else {\n";
-print "                  shootOLP = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";\n";
-print "              document.forms[0].shootOLP.value = shootOLP;\n";
-print "          }\n";
-print "          if (id == \"hub\") {\n";
-print "              if (shootHub == 0) {\n";
-print "                  shootHub = 1;\n";
-print "                  str = \"Yes\";\n";
-print "              } else {\n";
-print "                  shootHub = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";\n";
-print "              document.forms[0].shootHub.value = shootHub;\n";
-print "          }\n";
-print "          if (id == \"field\") {\n";
-print "              if (shootField == 0) {\n";
-print "                  shootField = 1;\n";
-print "                  str = \"Yes\";\n";
-print "              } else {\n";
-print "                  shootField = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";\n";
-print "              document.forms[0].shootField.value = shootField;\n";
-print "          }\n";
-print "          if (id == \"lorung\" || id == \"midrung\" || id == \"hirung\" || id == \"trav\") {\n";
-print "              loStr   = \"&nbsp;No\";\n";
-print "              midStr  = \"&nbsp;No\";\n";
-print "              hiStr   = \"&nbsp;No\";\n";
-print "              travStr = \"&nbsp;No\";\n";
-print "\n";
-print "              if (id == \"lorung\") {\n";
-print "                  if (rung != 1) {\n";
-print "                      rung = 1;\n";
-print "                      loStr   = \"Yes\";\n";
-print "                      midStr  = \"&nbsp;No\";\n";
-print "                      hiStr   = \"&nbsp;No\";\n";
-print "                      travStr = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      rung = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == \"midrung\") {\n";
-print "                  if (rung != 2) {\n";
-print "                      rung = 2;\n";
-print "                      loStr   = \"&nbsp;No\";\n";
-print "                      midStr  = \"Yes\";\n";
-print "                      hiStr   = \"&nbsp;No\";\n";
-print "                      travStr = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      rung = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == \"hirung\") {\n";
-print "                  if (rung != 3) {\n";
-print "                      rung = 3;\n";
-print "                      loStr   = \"&nbsp;No\";\n";
-print "                      midStr  = \"&nbsp;No\";\n";
-print "                      hiStr   = \"Yes\";\n";
-print "                      travStr = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      rung = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == \"trav\") {\n";
-print "                  if (rung != 4) {\n";
-print "                      rung = 4;\n";
-print "                      loStr   = \"&nbsp;No\";\n";
-print "                      midStr  = \"&nbsp;No\";\n";
-print "                      hiStr   = \"&nbsp;No\";\n";
-print "                      travStr = \"Yes\";\n";
-print "                  } else {\n";
-print "                      rung = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              document.getElementById('lorung').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";\n";
-print "              document.getElementById('midrung').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";\n";
-print "              document.getElementById('hirung').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";\n";
-print "              document.getElementById('trav').innerHTML = \"<FONT SIZE=+2>\" + travStr + \"</FONT>\";\n";
-print "              document.forms[0].rung.value = rung;\n";
-print "          }\n";
-print "      }\n";
-print "\n";
-print "      function qtoggle (id) {\n";
-print "          loStr  = \"&nbsp;No\";\n";
-print "          midStr = \"&nbsp;No\";\n";
-print "          hiStr  = \"&nbsp;No\";\n";
-print "          if (id == 'dlo' || id == 'dmid' || id == 'dhi') {\n";
-print "              if (id == 'dlo') {\n";
-print "                  if (defense != 1) {\n";
-print "                      defense = 1;\n";
-print "                      loStr  = \"Yes\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      defense = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'dmid') {\n";
-print "                  if (defense != 2) {\n";
-print "                      defense = 2;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"Yes\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      defense = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'dhi') {\n";
-print "                  if (defense != 3) {\n";
-print "                      defense = 3;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"Yes\";\n";
-print "                  } else {\n";
-print "                      defense = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              document.getElementById('dlo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";\n";
-print "              document.getElementById('dmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";\n";
-print "              document.getElementById('dhi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";\n";
-print "              document.forms[0].defense.value = defense;\n";
-print "              return;\n";
-print "          }\n";
-print "          \n";
-print "          if (id == 'olo' || id == 'omid' || id == 'ohi') {\n";
-print "              if (id == 'olo') {\n";
-print "                  if (defended != 1) {\n";
-print "                      defended = 1;\n";
-print "                      loStr  = \"Yes\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      defended = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'omid') {\n";
-print "                  if (defended != 2) {\n";
-print "                      defended = 2;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"Yes\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      defended = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'ohi') {\n";
-print "                  if (defended != 3) {\n";
-print "                      defended = 3;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"Yes\";\n";
-print "                  } else {\n";
-print "                      defended = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              document.getElementById('olo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";\n";
-print "              document.getElementById('omid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";\n";
-print "              document.getElementById('ohi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";\n";
-print "              document.forms[0].defended.value = defended;\n";
-print "              return;\n";
-print "          }\n";
-print "\n";
-print "          if (id == 'flo' || id == 'fmid' || id == 'fhi') {\n";
-print "              if (id == 'flo') {\n";
-print "                  if (fouls != 1) {\n";
-print "                      fouls = 1;\n";
-print "                      loStr  = \"Yes\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      fouls = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'fmid') {\n";
-print "                  if (fouls != 2) {\n";
-print "                      fouls = 2;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"Yes\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      fouls = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'fhi') {\n";
-print "                  if (fouls != 3) {\n";
-print "                      fouls = 3;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"Yes\";\n";
-print "                  } else {\n";
-print "                      fouls = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              document.getElementById('flo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";\n";
-print "              document.getElementById('fmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";\n";
-print "              document.getElementById('fhi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";\n";
-print "              document.forms[0].fouls.value = fouls;\n";
-print "              return;\n";
-print "          }\n";
-print "          \n";
-print "          if (id == 'tlo' || id == 'tmid' || id == 'thi') {\n";
-print "              if (id == 'tlo') {\n";
-print "                  if (techfouls != 1) {\n";
-print "                      techfouls = 1;\n";
-print "                      loStr  = \"Yes\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      techfouls = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'tmid') {\n";
-print "                  if (techfouls != 2) {\n";
-print "                      techfouls = 2;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"Yes\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      techfouls = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'thi') {\n";
-print "                  if (techfouls != 3) {\n";
-print "                      techfouls = 3;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"Yes\";\n";
-print "                  } else {\n";
-print "                      techfouls = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              document.getElementById('tlo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";\n";
-print "              document.getElementById('tmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";\n";
-print "              document.getElementById('thi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";\n";
-print "              document.forms[0].techfouls.value = techfouls;\n";
-print "              return;\n";
-print "          }\n";
-print "\n";
-print "          if (id == 'rlo' || id == 'rmid' || id == 'rhi') {\n";
-print "              if (id == 'rlo') {\n";
-print "                  if (robot != 1) {\n";
-print "                      robot = 1;\n";
-print "                      loStr  = \"Yes\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      robot = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'rmid') {\n";
-print "                  if (robot != 2) {\n";
-print "                      robot = 2;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"Yes\";\n";
-print "                      hiStr  = \"&nbsp;No\";\n";
-print "                  } else {\n";
-print "                      robot = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              if (id == 'rhi') {\n";
-print "                  if (robot != 3) {\n";
-print "                      robot = 3;\n";
-print "                      loStr  = \"&nbsp;No\";\n";
-print "                      midStr = \"&nbsp;No\";\n";
-print "                      hiStr  = \"Yes\";\n";
-print "                  } else {\n";
-print "                      robot = 0;\n";
-print "                  }\n";
-print "              }\n";
-print "              document.getElementById('rlo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";\n";
-print "              document.getElementById('rmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";\n";
-print "              document.getElementById('rhi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";\n";
-print "              document.forms[0].robot.value = robot;\n";
-print "              return;\n";
-print "          }\n";
-print "      }\n";
-print "      \n";
-print "      function countUp (id) {\n";
-print "          if (id == \"alo\") {\n";
-print "              autoLoCount++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoLoCount + \"</FONT>\";\n";
-print "              document.forms[0].autoLoCount.value = autoLoCount;\n";
-print "          }\n";
-print "          if (id == \"ahi\") {\n";
-print "              autoHiCount++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoHiCount + \"</FONT>\";\n";
-print "              document.forms[0].autoHiCount.value = autoHiCount;\n";
-print "          }\n";
-print "          if (id == \"abo\") {\n";
-print "              autoBounce++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoBounce + \"</FONT>\";\n";
-print "              document.forms[0].autoBounce.value = autoBounce;\n";
-print "          }\n";
-print "          if (id == \"ami\") {\n";
-print "              autoMissed++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoMissed + \"</FONT>\";\n";
-print "              document.forms[0].autoMissed.value = autoMissed;\n";
-print "          }\n";
-print "          if (id == \"lo\") {\n";
-print "              teleLoCount++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleLoCount + \"</FONT>\";\n";
-print "              document.forms[0].teleLoCount.value = teleLoCount;\n";
-print "          }\n";
-print "          if (id == \"hi\") {\n";
-print "              teleHiCount++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleHiCount + \"</FONT>\";\n";
-print "              document.forms[0].teleHiCount.value = teleHiCount;\n";
-print "          }\n";
-print "          if (id == \"bo\") {\n";
-print "              teleBounce++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleBounce + \"</FONT>\";\n";
-print "              document.forms[0].teleBounce.value = teleBounce;\n";
-print "          }\n";
-print "          if (id == \"mi\") {\n";
-print "              teleMissed++;\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleMissed + \"</FONT>\";\n";
-print "              document.forms[0].teleMissed.value = teleMissed;\n";
-print "          }\n";
-print "      }\n";
-print "\n";
-print "      function countDown (id) {\n";
-print "          if (id == \"alo\") {\n";
-print "              autoLoCount--;\n";
-print "              if (autoLoCount < 0) {\n";
-print "                  autoLoCount = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoLoCount + \"</FONT>\";\n";
-print "              document.forms[0].autoLoCount.value = autoLoCount;\n";
-print "          }\n";
-print "          if (id == \"ahi\") {\n";
-print "              autoHiCount--;\n";
-print "              if (autoHiCount < 0) {\n";
-print "                  autoHiCount = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoHiCount + \"</FONT>\";\n";
-print "              document.forms[0].autoHiCount.value = autoHiCount;\n";
-print "          }\n";
-print "          if (id == \"abo\") {\n";
-print "              autoBounce--;\n";
-print "              if (autoBounce < 0) {\n";
-print "                  autoBounce = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoBounce + \"</FONT>\";\n";
-print "              document.forms[0].autoBounce.value = autoBounce;\n";
-print "          }\n";
-print "          if (id == \"ami\") {\n";
-print "              autoMissed--;\n";
-print "              if (autoMissed < 0) {\n";
-print "                  autoMissed = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoMissed + \"</FONT>\";\n";
-print "              document.forms[0].autoMissed.value = autoMissed;\n";
-print "          }\n";
-print "          if (id == \"lo\") {\n";
-print "              teleLoCount--;\n";
-print "              if (teleLoCount < 0) {\n";
-print "                  teleLoCount = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleLoCount + \"</FONT>\";\n";
-print "              document.forms[0].teleLoCount.value = teleLoCount;\n";
-print "          }\n";
-print "          if (id == \"hi\") {\n";
-print "              teleHiCount--;\n";
-print "              if (teleHiCount < 0) {\n";
-print "                  teleHiCount = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleHiCount + \"</FONT>\";\n";
-print "              document.forms[0].teleHiCount.value = teleHiCount;\n";
-print "          }\n";
-print "          if (id == \"bo\") {\n";
-print "              teleBounce--;\n";
-print "              if (teleBounce < 0) {\n";
-print "                  teleBounce = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleBounce + \"</FONT>\";\n";
-print "              document.forms[0].teleBounce.value = teleBounce;\n";
-print "          }\n";
-print "          if (id == \"mi\") {\n";
-print "              teleMissed--;\n";
-print "              if (teleMissed < 0) {\n";
-print "                  teleMissed = 0;\n";
-print "              }\n";
-print "              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleMissed + \"</FONT>\";\n";
-print "              document.forms[0].teleMissed.value = teleMissed;\n";
-print "          }\n";
-print "      }\n";
-print "      </script>\n";
-print "    <center>    \n";
-print "      <table cellpadding=0 cellspacing=0 $color border=1>\n";
-print "        <tr>\n";
-print "          <td colspan=4>\n";
-print "            <table cellpadding=0 cellspacing=0 $color width=\"100%\" border=1>\n";
-print "              <tr>\n";
-print "                <th align=\"center\"><FONT SIZE=+2>Venue: $event</FONT></th>\n";
-print "                <th align=\"center\"><FONT SIZE=+2>Team : $team</FONT></th>\n";
-print "                <th align=\"center\"><FONT SIZE=+2>Match : $match</FONT></th>\n";
-print "              </tr>\n";
-print "           </table>\n";
-print "         </td>\n";
-print "       </tr><tr>\n";
-print "          <td colspan=4>\n";
-print "            <table cellspacing=0 cellpadding=0 width=\"100%\" border=1>\n";
-print "              <tr>\n";
-print "                <td align=\"center\">\n";
-print "                  <table cellpadding=0 cellspacing=0 border=0>\n";
-print "                    <tr>\n";
-print "                      <td><FONT SIZE=+2>Taxi Points?&nbsp;</FONT></td>\n";
-print "                      <td>\n";
-print "                        <button onclick=\"toggle('taxi')\"><p id=\"taxi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                      </td>\n";
-print "                    </tr>\n";
-print "                  </table>\n";
-print "                </td>\n";
-print "                <th align=\"center\"><FONT SIZE=+2>Autonomous</FONT></th>\n";
-print "                <td align=\"center\">\n";
-print "                  <table cellpadding=0 cellspacing=0 border=0>\n";
-print "                    <tr>\n";
-print "                      <td><FONT SIZE=+2>Human Score?&nbsp;</FONT></td>\n";
-print "                      <td>\n";
-print "                        <button onclick=\"toggle('human')\"><p id=\"human\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                      </td>\n";
-print "                    </tr>\n";
-print "                  </table>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('alo')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Lower Hub</FONT></td>\n";
-print "                <td><p id=\"alo\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('alo')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('abo')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Bounced Out</FONT></td>\n";
-print "                <td><p id=\"abo\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('abo')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('ami')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Missed Target</FONT></td>\n";
-print "                <td><p id=\"ami\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('ami')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('ahi')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Upper Hub</FONT></td>\n";
-print "                <td><p id=\"ahi\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('ahi')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "        </tr>\n";
-print "      </table>\n";
-print "      <p>&nbsp;</p>\n";
-print "      <table cellpadding=0 cellspacing=0 border=1>\n";
-print "        <tr>\n";
-print "          <th colspan=4 align=\"center\"><FONT SIZE=+4>$team TeleOp</FONT></th>\n";
-print "        </tr><tr>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('lo')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Lower Hub</FONT></td>\n";
-print "                <td><p id=\"lo\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('lo')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
+print "Content-type: text/html
+
+<html lang=\"en\"><head>
+    <meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">
+    <meta charset=\"utf-8\">
+  </head>
+  <body>
+
+    <script>
+      var autoLoCount;
+      var autoHiCount;
+      var autoBounce;
+      var autoMissed;
+      var taxi;
+      var human;
+      var teleLoCount;
+      var teleHiCount;
+      var teleBounce;
+      var teleMissed;
+      var shootWLP;
+      var shootOLP;
+      var shootHub;
+      var shootField;
+      var rung;
+      var defense;
+      var defended;
+      var fouls;
+      var techfouls;
+      var robot;
+
+      autoLoCount = 0;
+      autoHiCount = 0;
+      autoBounce = 0;
+      autoMissed = 0;
+      taxi = 0;
+      start = 0;
+      human = 0;
+      teleLoCount = 0;
+      teleHiCount = 0;
+      teleBounce = 0;
+      teleMissed = 0;
+      shootWLP = 0;
+      shootOLP = 0;
+      shootHub = 0;
+      shootField = 0;
+      rung = 0;
+      defense = 0;
+      defended = 0;
+      fouls = 0;
+      techfouls = 0;
+      robot = 0;\n";
+
+print "
+      function getTime(event) {
+          if (event.target.id != \"\") {
+              let store = document.getElementById(\"timing\");
+              store.value = store.value + ',' + event.timeStamp + ':' + event.target.id;
+          }
+       }
+       document.body.addEventListener(\"click\", getTime);\n";
+
+print "
+       function toggle (id) {
+          var str;
+          str = \"&nbsp;No\";
+          if (id == \"start\") {
+              if (start == 0) {
+                  document.getElementById(id).innerHTML = \"Match Started\";
+                  document.getElementById('startButton').style = \"background-color:#eeeeee\";
+                  start = 1;
+              }
+          }
+          if (id == \"taxi\") {
+              if (taxi == 0) {
+                  taxi = 1;
+                  str = \"Yes\";
+              } else {
+                  taxi = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT id='taxiClick' SIZE=+2>\" + str + \"</FONT>\";
+              document.forms[0].taxi.value = taxi;
+          }
+          if (id == \"human\") {
+              if (human == 0) {
+                  human = 1;
+                  str = \"Yes\";
+              } else {
+                  human = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT id='humanClick' SIZE=+2>\" + str + \"</FONT>\";
+              document.forms[0].human.value = human;
+          }
+          if (id == \"wlp\") {
+              if (shootWLP == 0) {
+                  shootWLP = 1;
+                  str = \"Yes\";
+              } else {
+                  shootWLP = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";
+              document.forms[0].shootWLP.value = shootWLP;
+          }
+          if (id == \"olp\") {
+              if (shootOLP == 0) {
+                  shootOLP = 1;
+                  str = \"Yes\";
+              } else {
+                  shootOLP = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";
+              document.forms[0].shootOLP.value = shootOLP;
+          }
+          if (id == \"hub\") {
+              if (shootHub == 0) {
+                  shootHub = 1;
+                  str = \"Yes\";
+              } else {
+                  shootHub = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";
+              document.forms[0].shootHub.value = shootHub;
+          }
+          if (id == \"field\") {
+              if (shootField == 0) {
+                  shootField = 1;
+                  str = \"Yes\";
+              } else {
+                  shootField = 0;
+              }
+
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + str + \"</FONT>\";
+              document.forms[0].shootField.value = shootField;
+          }
+          if (id == \"lorung\" || id == \"midrung\" || id == \"hirung\" || id == \"trav\") {
+              loStr   = \"&nbsp;No\";
+              midStr  = \"&nbsp;No\";
+              hiStr   = \"&nbsp;No\";
+              travStr = \"&nbsp;No\";\n";
+print "
+              if (id == \"lorung\") {
+                  if (rung != 1) {
+                      rung = 1;
+                      loStr   = \"Yes\";
+                      midStr  = \"&nbsp;No\";
+                      hiStr   = \"&nbsp;No\";
+                      travStr = \"&nbsp;No\";
+                  } else {
+                      rung = 0;
+                  }
+              }
+              if (id == \"midrung\") {
+                  if (rung != 2) {
+                      rung = 2;
+                      loStr   = \"&nbsp;No\";
+                      midStr  = \"Yes\";
+                      hiStr   = \"&nbsp;No\";
+                      travStr = \"&nbsp;No\";
+                  } else {
+                      rung = 0;
+                  }
+              }
+              if (id == \"hirung\") {
+                  if (rung != 3) {
+                      rung = 3;
+                      loStr   = \"&nbsp;No\";
+                      midStr  = \"&nbsp;No\";
+                      hiStr   = \"Yes\";
+                      travStr = \"&nbsp;No\";
+                  } else {
+                      rung = 0;
+                  }
+              }
+              if (id == \"trav\") {
+                  if (rung != 4) {
+                      rung = 4;
+                      loStr   = \"&nbsp;No\"
+                      midStr  = \"&nbsp;No\";
+                      hiStr   = \"&nbsp;No\";
+                      travStr = \"Yes\";
+                  } else {
+                      rung = 0;
+                  }
+              }
+              document.getElementById('lorung').innerHTML = \"<FONT id='lorungClick' SIZE=+2>\" + loStr + \"</FONT>\";
+              document.getElementById('midrung').innerHTML = \"<FONT id='midrungClick' SIZE=+2>\" + midStr + \"</FONT>\";
+              document.getElementById('hirung').innerHTML = \"<FONT id='hirungClick' SIZE=+2>\" + hiStr + \"</FONT>\";
+              document.getElementById('trav').innerHTML = \"<FONT id='travClick' SIZE=+2>\" + travStr + \"</FONT>\";
+              document.forms[0].rung.value = rung;
+          }
+      }\n";
+
+print "
+      function qtoggle (id) {
+          loStr  = \"&nbsp;No\";
+          midStr = \"&nbsp;No\";
+          hiStr  = \"&nbsp;No\";
+          if (id == 'dlo' || id == 'dmid' || id == 'dhi') {
+              if (id == 'dlo') {
+                  if (defense != 1) {
+                      defense = 1;
+                      loStr  = \"Yes\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      defense = 0;
+                  }
+              }
+              if (id == 'dmid') {
+                  if (defense != 2) {
+                      defense = 2;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"Yes\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      defense = 0;
+                  }
+              }
+              if (id == 'dhi') {
+                  if (defense != 3) {
+                      defense = 3;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"Yes\";
+                  } else {
+                      defense = 0;
+                  }
+              }
+              document.getElementById('dlo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";
+              document.getElementById('dmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";
+              document.getElementById('dhi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";
+              document.forms[0].defense.value = defense;
+              return;
+          }\n";
+print "
+          if (id == 'olo' || id == 'omid' || id == 'ohi') {
+              if (id == 'olo') {
+                  if (defended != 1) {
+                      defended = 1;
+                      loStr  = \"Yes\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      defended = 0;
+                  }
+              }
+              if (id == 'omid') {
+                  if (defended != 2) {
+                      defended = 2;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"Yes\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      defended = 0;
+                  }
+              }
+              if (id == 'ohi') {
+                  if (defended != 3) {
+                      defended = 3;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"Yes\";
+                  } else {
+                      defended = 0;
+                  }
+              }
+              document.getElementById('olo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";
+              document.getElementById('omid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";
+              document.getElementById('ohi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";
+              document.forms[0].defended.value = defended;
+              return;
+          }\n";
+print "
+          if (id == 'flo' || id == 'fmid' || id == 'fhi') {
+              if (id == 'flo') {
+                  if (fouls != 1) {
+                      fouls = 1;
+                      loStr  = \"Yes\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      fouls = 0;
+                  }
+              }
+              if (id == 'fmid') {
+                  if (fouls != 2) {
+                      fouls = 2;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"Yes\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      fouls = 0;
+                  }
+              }
+              if (id == 'fhi') {
+                  if (fouls != 3) {
+                      fouls = 3;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"Yes\";
+                  } else {
+                      fouls = 0;
+                  }
+              }
+              document.getElementById('flo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";
+              document.getElementById('fmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";
+              document.getElementById('fhi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";
+              document.forms[0].fouls.value = fouls;
+              return;
+          }\n";
+print "
+          if (id == 'tlo' || id == 'tmid' || id == 'thi') {
+              if (id == 'tlo') {
+                  if (techfouls != 1) {
+                      techfouls = 1;
+                      loStr  = \"Yes\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      techfouls = 0;
+                  }
+              }
+              if (id == 'tmid') {
+                  if (techfouls != 2) {
+                      techfouls = 2;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"Yes\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      techfouls = 0;
+                  }
+              }
+              if (id == 'thi') {
+                  if (techfouls != 3) {
+                      techfouls = 3;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"Yes\";
+                  } else {
+                      techfouls = 0;
+                  }
+              }
+              document.getElementById('tlo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";
+              document.getElementById('tmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";
+              document.getElementById('thi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";
+              document.forms[0].techfouls.value = techfouls;
+              return;
+          }\n";
+print "
+          if (id == 'rlo' || id == 'rmid' || id == 'rhi') {
+              if (id == 'rlo') {
+                  if (robot != 1) {
+                      robot = 1;
+                      loStr  = \"Yes\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      robot = 0;
+                  }
+              }
+              if (id == 'rmid') {
+                  if (robot != 2) {
+                      robot = 2;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"Yes\";
+                      hiStr  = \"&nbsp;No\";
+                  } else {
+                      robot = 0;
+                  }
+              }
+              if (id == 'rhi') {
+                  if (robot != 3) {
+                      robot = 3;
+                      loStr  = \"&nbsp;No\";
+                      midStr = \"&nbsp;No\";
+                      hiStr  = \"Yes\";
+                  } else {
+                      robot = 0;
+                  }
+              }
+              document.getElementById('rlo').innerHTML = \"<FONT SIZE=+2>\" + loStr + \"</FONT>\";
+              document.getElementById('rmid').innerHTML = \"<FONT SIZE=+2>\" + midStr + \"</FONT>\";
+              document.getElementById('rhi').innerHTML = \"<FONT SIZE=+2>\" + hiStr + \"</FONT>\";
+              document.forms[0].robot.value = robot;
+              return;
+          }
+      }\n";
+print "
+      function countUp (id) {
+          if (id == \"alo\") {
+              autoLoCount++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoLoCount + \"</FONT>\";
+              document.forms[0].autoLoCount.value = autoLoCount;
+          }
+          if (id == \"ahi\") {
+              autoHiCount++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoHiCount + \"</FONT>\";
+              document.forms[0].autoHiCount.value = autoHiCount;
+          }
+          if (id == \"abo\") {
+              autoBounce++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoBounce + \"</FONT>\";
+              document.forms[0].autoBounce.value = autoBounce;
+          }
+          if (id == \"ami\") {
+              autoMissed++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoMissed + \"</FONT>\";
+              document.forms[0].autoMissed.value = autoMissed;
+          }
+          if (id == \"lo\") {
+              teleLoCount++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleLoCount + \"</FONT>\";
+              document.forms[0].teleLoCount.value = teleLoCount;
+          }
+          if (id == \"hi\") {
+              teleHiCount++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleHiCount + \"</FONT>\";
+              document.forms[0].teleHiCount.value = teleHiCount;
+          }
+          if (id == \"bo\") {
+              teleBounce++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleBounce + \"</FONT>\";
+              document.forms[0].teleBounce.value = teleBounce;
+          }
+          if (id == \"mi\") {
+              teleMissed++;
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleMissed + \"</FONT>\";
+              document.forms[0].teleMissed.value = teleMissed;
+          }
+      }\n";
+print "
+      function countDown (id) {
+          if (id == \"alo\") {
+              autoLoCount--;
+              if (autoLoCount < 0) {
+                  autoLoCount = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoLoCount + \"</FONT>\";
+              document.forms[0].autoLoCount.value = autoLoCount;
+          }
+          if (id == \"ahi\") {
+              autoHiCount--;
+              if (autoHiCount < 0) {
+                  autoHiCount = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoHiCount + \"</FONT>\";
+              document.forms[0].autoHiCount.value = autoHiCount;
+          }
+          if (id == \"abo\") {
+              autoBounce--;
+              if (autoBounce < 0) {
+                  autoBounce = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoBounce + \"</FONT>\";
+              document.forms[0].autoBounce.value = autoBounce;
+          }
+          if (id == \"ami\") {
+              autoMissed--;
+              if (autoMissed < 0) {
+                  autoMissed = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + autoMissed + \"</FONT>\";
+              document.forms[0].autoMissed.value = autoMissed;
+          }
+          if (id == \"lo\") {
+              teleLoCount--;
+              if (teleLoCount < 0) {
+                  teleLoCount = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleLoCount + \"</FONT>\";
+              document.forms[0].teleLoCount.value = teleLoCount;
+          }
+          if (id == \"hi\") {
+              teleHiCount--;
+              if (teleHiCount < 0) {
+                  teleHiCount = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleHiCount + \"</FONT>\";
+              document.forms[0].teleHiCount.value = teleHiCount;
+          }
+          if (id == \"bo\") {
+              teleBounce--;
+              if (teleBounce < 0) {
+                  teleBounce = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleBounce + \"</FONT>\";
+              document.forms[0].teleBounce.value = teleBounce;
+          }
+          if (id == \"mi\") {
+              teleMissed--;
+              if (teleMissed < 0) {
+                  teleMissed = 0;
+              }
+              document.getElementById(id).innerHTML = \"<FONT SIZE=+2>\" + teleMissed + \"</FONT>\";
+              document.forms[0].teleMissed.value = teleMissed;
+          }
+      }
+    </script>\n";
+
+sub printCounter {
+    my ($key, $desc) = (@_);
+print "
+            <table cellpadding=0 cellspacing=0 border=0>
+              <tr>
+                <td colspan=2>
+                  <button onclick=\"countUp('${key}')\">
+                    <img id='${key}Up' src=\"/scoutpics/count_up2.png\">
+                  </button>
+                </td>
+              </tr><tr>
+                <td align=\"center\"><FONT SIZE=+2>${desc}</FONT></td>
+                <td><p id=\"${key}\"><FONT SIZE=+2>0</FONT></p></td>
+              </tr><tr>
+                <td colspan=2 align=\"center\">
+                  <button onclick=\"countDown('${key}')\">
+                    <img id='${key}Down' src=\"/scoutpics/count_down2.png\">
+                  </button>
+                </td>
+              </tr>
+            </table>\n";
+}
+
+
+print "
+    <center>    
+      <table cellpadding=0 cellspacing=0 $color border=1>
+        <tr>
+          <td colspan=4>
+            <table cellpadding=0 cellspacing=0 $color width=\"100%\" border=1>
+              <tr>
+                <th align=\"center\"><FONT SIZE=+2>Venue: $event</FONT></th>
+                <th align=\"center\"><FONT SIZE=+2>Team : $team</FONT></th>
+                <th align=\"center\"><FONT SIZE=+2>Match : $match</FONT></th>
+              </tr>
+           </table>
+          </td>";
+print "
+      </tr><tr>
+        <th colspan=4 align=\"center\"><FONT SIZE=+4>$team Autonomous</FONT></th>
+";
+print "
+      </tr><tr>
+          <td colspan=4>
+            <table cellspacing=0 cellpadding=0 width=\"100%\" border=1>
+              <tr>
+                <td align=\"center\" bgcolor=\"#ffffff\">
+                  <table cellpadding=0 cellspacing=0 border=0>
+                    <tr>
+                      <td><FONT SIZE=+2>Did the robot&nbsp;<br>earn Taxi Points?&nbsp;</FONT></td>
+                      <td>
+                        <button onclick=\"toggle('taxi')\"><p id=\"taxi\"><FONT id='taxiClick' SIZE=+2>&nbsp;No</FONT></p></button>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td align=\"center\" bgcolor=\"#ffffff\">
+                  <button onclick=\"toggle('start')\" id=\"startButton\" style=\"background-color:red\">
+                    <FONT id=\"start\" SIZE=+2>Click Here when<br>Match Starts</FONT>
+                  </button></td>
+                <td align=\"center\" bgcolor=\"#ffffff\">
+                  <table cellpadding=0 cellspacing=0 border=0>
+                    <tr>
+                      <td><FONT SIZE=+2>Did the $team Human&nbsp;<br>Player Score?&nbsp;</FONT></td>
+                      <td>
+                        <button onclick=\"toggle('human')\"><p id=\"human\"><FONT id='humanClick' SIZE=+2>&nbsp;No</FONT></p></button>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>";
+print "
+        </tr><tr>
+          <td>\n";
+printCounter('alo', "Lower Hub");
+print "          </td><td>\n";
+printCounter('abo', "Bounced Out");
+print "          </td><td>\n";
+printCounter('ami', "Missed Hub");
+print "          </td><td>\n";
+printCounter('ahi', "Upper Hub");
+print "          </td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+      <table cellpadding=0 cellspacing=0 border=1>
+        <tr>
+          <th colspan=4 align=\"center\"><FONT SIZE=+4>$team TeleOp</FONT></th>
+        </tr><tr>
+          <td>\n";
+printCounter('lo', "Lower Hub");
 print "          </td>\n";
 print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('bo')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Bounced Out</FONT></td>\n";
-print "                <td><p id=\"bo\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('bo')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
+printCounter('bo', "Bounced Out");
 print "          </td>\n";
 print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('mi')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Missed Target</FONT></td>\n";
-print "                <td><p id=\"mi\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('mi')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
+printCounter('mi', "Missed Hub");
 print "          </td>\n";
 print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=0>\n";
-print "              <tr>\n";
-print "                <td colspan=2>\n";
-print "                  <button onclick=\"countUp('hi')\"><img src=\"/scoutpics/count_up2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td align=\"center\"><FONT SIZE=+2>Upper Hub</FONT></td>\n";
-print "                <td><p id=\"hi\"><FONT SIZE=+2>0</FONT></p></td>\n";
-print "              </tr><tr>\n";
-print "                <td colspan=2 align=\"center\">\n";
-print "                  <button onclick=\"countDown('hi')\"><img src=\"/scoutpics/count_down2.png\"></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "        </tr>\n";
-print "      </table>\n";
-print "      <table cellpadding=0 cellspacing=0 border=1>\n";
-print "        <tr>\n";
-print "          <td>\n";
-print "            <p><FONT SIZE=+2>&nbsp;Robot Shot From:&nbsp;&nbsp;</FONT></p>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=1>\n";
-print "              <tr><td align=center>\n";
-print "                  <FONT SIZE=+2>&nbsp;Against&nbsp;<br>&nbsp;Hub:&nbsp;</FONT>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('hub')\"><p id=\"hub\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "              </td></tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=1>\n";
-print "              <tr><td align=center>\n";
-print "                  <FONT SIZE=+2>&nbsp;Spots&nbsp;<BR>&nbsp;in Field:&nbsp;</FONT>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('field')\"><p id=\"field\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "              </td></tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=1>\n";
-print "              <tr>\n";
-print "                <td colspan=4 align=\"center\">\n";
-print "                  <FONT SIZE=+2>Against Launch Pad</FONT>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td>\n";
-print "                  <p><FONT SIZE=+2>&nbsp;&nbsp;&nbsp;Outer:&nbsp;&nbsp;</FONT></p>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('olp')\"><p id=\"olp\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td>\n";
-print "                <td>\n";
-print "                  <p><FONT SIZE=+2>&nbsp;&nbsp;&nbsp;Wall:&nbsp;&nbsp;</FONT></p>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('wlp')\"><p id=\"wlp\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "        </tr>\n";
-print "      </table>\n";
-print "      <p>&nbsp;</p>\n";
-print "      <table cellpadding=0 cellspacing=0 $color border=1>\n";
-print "        <tr>\n";
-print "          <th colspan=5 align=\"center\"><FONT SIZE=+4>End Game</FONT></th>\n";
-print "        </tr><tr>\n";
-print "          <td>\n";
-print "            <p><FONT SIZE=+2>&nbsp;Robot Hung From:&nbsp;&nbsp;</FONT></p>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=1>\n";
-print "              <tr><td>\n";
-print "                  <p><FONT SIZE=+2>&nbsp;Low:&nbsp;</FONT></p>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('lorung')\"><p id=\"lorung\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "              </td></tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=1>\n";
-print "              <tr><td>\n";
-print "                  <p><FONT SIZE=+2>&nbsp;Middle:&nbsp;</FONT></p>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('midrung')\"><p id=\"midrung\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "              </td></tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=1>\n";
-print "              <tr><td>\n";
-print "                  <p><FONT SIZE=+2>&nbsp;High:&nbsp;</FONT></p>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('hirung')\"><p id=\"hirung\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "              </td></tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "          <td>\n";
-print "            <table cellpadding=0 cellspacing=0 border=1>\n";
-print "              <tr><td>\n";
-print "                  <p><FONT SIZE=+2>&nbsp;Traversal:&nbsp;</FONT></p>\n";
-print "                </td><td>\n";
-print "                  <button onclick=\"toggle('trav')\"><p id=\"trav\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "              </td></tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "        </tr>\n";
-print "      </table>\n";
-print "      <p>&nbsp;</p>\n";
-print "      <table cellpadding=0 cellspacing=0 border=1>\n";
-print "        <tr>\n";
-print "          <th colspan=3 align=\"center\"><FONT SIZE=+4>Post-Match Robot Review</FONT></th>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 $color><hr></th>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 align=\"center\"><FONT SIZE=+2>Did $team play defense?</FONT></th>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Good Defense</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('dhi')\"><p id=\"dhi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2><B>Not many</B> game pieces scored<br> by opponent during defense</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Average Defense</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('dmid')\"><p id=\"dmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>Opponent was still able<BR> to score <B>some</B> game pieces</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Below Average Defense</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('dlo')\"><p id=\"dlo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>Opponent was still able to<BR>&nbsp;&nbsp;score game pieces <B>without delay</B>&nbsp;&nbsp;</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 $color><hr></th>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 align=\"center\"><FONT SIZE=+2>Was $team defended?</FONT></th>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Good Against Defense</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('ohi')\"><p id=\"ohi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>Defended but still scored game<BR>&nbsp;pieces with <B>little to no delay</B>&nbsp;</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Average Against Defense</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('omid')\"><p id=\"omid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>Defended but still able to score<BR> <B>some</B> game pieces with delay</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Affected by Defense</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('olo')\"><p id=\"olo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>Good defense <B>really affected</B><BR> robot performance</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 $color><hr></th>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 align=\"center\"><FONT SIZE=+2>Did $team receive any fouls?</FONT></th>\n";
-print "        </tr><tr>\n";
-print "          <td colspan=3>\n";
-print "            <table cellpadding=0 cellspacing=0 width=\"100%\" border=1>\n";
-print "              <tr>\n";
-print "                <td>\n";
-print "                  <button onclick=\"qtoggle('flo')\"><p id=\"flo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td><th>\n";
-print "                  <FONT SIZE=+2>1 foul</FONT>\n";
-print "                </th><th>\n";
-print "                  <FONT SIZE=+2>1 tech foul</FONT>\n";
-print "                </th><td>\n";
-print "                  <button onclick=\"qtoggle('tlo')\"><p id=\"tlo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td>\n";
-print "                  <button onclick=\"qtoggle('fmid')\"><p id=\"fmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td><th>\n";
-print "                  <FONT SIZE=+2>2 fouls</FONT>\n";
-print "                </th><th>\n";
-print "                  <FONT SIZE=+2>2 tech fouls</FONT>\n";
-print "                </th><td>\n";
-print "                  <button onclick=\"qtoggle('tmid')\"><p id=\"tmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td>\n";
-print "              </tr><tr>\n";
-print "                <td>\n";
-print "                  <button onclick=\"qtoggle('fhi')\"><p id=\"fhi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td><th>\n";
-print "                  <FONT SIZE=+2>3 or more fouls</FONT>\n";
-print "                </th><th>\n";
-print "                  <FONT SIZE=+2>3 or more tech fouls</FONT>\n";
-print "                </th><td>\n";
-print "                  <button onclick=\"qtoggle('thi')\"><p id=\"thi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "                </td>\n";
-print "              </tr>\n";
-print "            </table>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 $color><hr></th>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 align=\"center\"><FONT SIZE=+2>Is this a good robot?</FONT></th>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Very good robot</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('rhi')\"><p id=\"rhi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>Could be an alliance captain</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Decent robot</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('rmid')\"><p id=\"rmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>A productive and useful robot</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th>\n";
-print "            <FONT SIZE=+2>Struggled to be effective</FONT>\n";
-print "          </th><td>\n";
-print "            <button onclick=\"qtoggle('rlo')\"><p id=\"rlo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>\n";
-print "          </td><td align=center>\n";
-print "            <FONT SIZE=+2>Maybe good at one thing,<BR> but bad at others</FONT>\n";
-print "          </td>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 $color><hr></th>\n";
-print "        </tr><tr>\n";
-print "          <th colspan=3 align=\"center\">\n";
-print "            <p><FONT SIZE=+2>Scouter Name:</FONT><input type=\"text\" name=\"scouter\" form=\"wrapup\"></p>\n";
-print "            <p><FONT SIZE=+2>Comments:</FONT><textarea name=\"comments\" form=\"wrapup\" cols=\"60\" rows=\"5\"></textarea></p>\n";
-print "          </th>\n";
-print "        </tr>\n";
-print "      </table>\n";
-print "\n";
-print "      <form action=\"/cgi-bin/react2.cgi\" id=\"wrapup\" enctype=\"text/plain\">\n";
-print "        <input type=\"hidden\" name=\"game\" value=\"$game\">\n";
-print "        <input type=\"hidden\" name=\"team\" value=\"$team\">\n";
-print "        <input type=\"hidden\" name=\"autoLoCount\" id=\"alo\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"autoHiCount\" id=\"ahi\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"autoBounce\" id=\"abo\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"autoMissed\" id=\"ami\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"teleLoCount\" id=\"lo\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"teleHiCount\" id=\"hi\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"teleMissed\" id=\"mi\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"teleBounce\" id=\"bo\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"taxi\" id=\"taxi\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"human\" id=\"human\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"shootHub\" id=\"hub\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"shootField\" id=\"field\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"shootOLP\" id=\"olp\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"shootWLP\" id=\"wlp\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"rung\" id=\"rung\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"defense\" id=\"defense\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"defended\" id=\"defended\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"fouls\" id=\"fouls\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"techfouls\" id=\"techfouls\" value=\"0\">\n";
-print "        <input type=\"hidden\" name=\"robot\" id=\"robot\" value=\"0\">\n";
-print "        <input type=\"image\" src=\"/scoutpics/save_button.png\" width=\"100\" height=\"50\">\n";
-print "      </form>\n";
-print "    </center>\n";
-print "</body></html>\n";
+printCounter('hi', "Upper Hub");
+print "          </td>
+        </tr>
+      </table>";
+print "
+      <table cellpadding=0 cellspacing=0 border=1>
+        <tr>
+          <td>
+            <p><FONT SIZE=+2>&nbsp;Where did the<br>Robot Shoot From?&nbsp;</FONT></p>
+          </td>
+          <td>
+            <table cellpadding=0 cellspacing=0 border=1>
+              <tr><td align=center>
+                  <FONT SIZE=+2>&nbsp;Against&nbsp;<br>&nbsp;Hub:&nbsp;</FONT>
+                </td><td>
+                  <button onclick=\"toggle('hub')\"><p id=\"hub\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+              </td></tr>
+            </table>
+          </td>
+          <td>
+            <table cellpadding=0 cellspacing=0 border=1>
+              <tr><td align=center>
+                  <FONT SIZE=+2>&nbsp;Spots&nbsp;<BR>&nbsp;in Field:&nbsp;</FONT>
+                </td><td>
+                  <button onclick=\"toggle('field')\"><p id=\"field\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+              </td></tr>
+            </table>
+          </td>
+          <td>
+            <table cellpadding=0 cellspacing=0 border=1>
+              <tr>
+                <td colspan=4 align=\"center\">
+                  <FONT SIZE=+2>Against Launch Pad</FONT>
+                </td>
+              </tr><tr>
+                <td>
+                  <p><FONT SIZE=+2>&nbsp;&nbsp;&nbsp;Outer:&nbsp;&nbsp;</FONT></p>
+                </td><td>
+                  <button onclick=\"toggle('olp')\"><p id=\"olp\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+                </td>
+                <td>
+                  <p><FONT SIZE=+2>&nbsp;&nbsp;&nbsp;Wall:&nbsp;&nbsp;</FONT></p>
+                </td><td>
+                  <button onclick=\"toggle('wlp')\"><p id=\"wlp\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>";
+print "
+      <p>&nbsp;</p>
+      <table cellpadding=0 cellspacing=0 $color border=1>
+        <tr>
+          <th colspan=5 align=\"center\"><FONT SIZE=+4>End Game</FONT></th>
+        </tr><tr>
+          <td>
+            <p><FONT SIZE=+2>&nbsp;Where did the<BR>Robot Hang From?&nbsp;&nbsp;</FONT></p>
+          </td>
+          <td>
+            <table cellpadding=0 cellspacing=0 border=1>
+              <tr><td>
+                  <p><FONT SIZE=+2>&nbsp;Low:&nbsp;</FONT></p>
+                </td><td>
+                  <button onclick=\"toggle('lorung')\"><p id=\"lorung\">
+                    <FONT id='lorungClick' SIZE=+2>&nbsp;No</FONT>
+                  <p></button>
+              </td></tr>
+            </table>
+          </td>
+          <td>
+            <table cellpadding=0 cellspacing=0 border=1>
+              <tr><td>
+                  <p><FONT SIZE=+2>&nbsp;Middle:&nbsp;</FONT></p>
+                </td><td>
+                  <button onclick=\"toggle('midrung')\"><p id=\"midrung\"><FONT id='midrungClick' SIZE=+2>&nbsp;No</FONT></p></button>
+              </td></tr>
+            </table>
+          </td>
+          <td>
+            <table cellpadding=0 cellspacing=0 border=1>
+              <tr><td>
+                  <p><FONT SIZE=+2>&nbsp;High:&nbsp;</FONT></p>
+                </td><td>
+                  <button onclick=\"toggle('hirung')\"><p id=\"hirung\"><FONT id='hirungClick' SIZE=+2>&nbsp;No</FONT></p></button>
+              </td></tr>
+            </table>
+          </td>
+          <td>
+            <table cellpadding=0 cellspacing=0 border=1>
+              <tr><td>
+                  <p><FONT SIZE=+2>&nbsp;Traversal:&nbsp;</FONT></p>
+                </td><td>
+                  <button onclick=\"toggle('trav')\"><p id=\"trav\"><FONT id='travClick' SIZE=+2>&nbsp;No</FONT></p></button>
+              </td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>";
+print "
+      <p>&nbsp;</p>
+      <table cellpadding=0 cellspacing=0 border=1>
+        <tr>
+          <th colspan=3 align=\"center\"><FONT SIZE=+4>Post-Match Robot Review</FONT></th>
+        </tr><tr>
+          <th colspan=3 $color><hr></th>
+        </tr><tr>
+          <th colspan=3 align=\"center\"><FONT SIZE=+2>Did $team play defense?</FONT></th>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Good Defense</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('dhi')\"><p id=\"dhi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2><B>Not many</B> game pieces scored<br> by opponent during defense</FONT>
+          </td>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Average Defense</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('dmid')\"><p id=\"dmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>Opponent was still able<BR> to score <B>some</B> game pieces</FONT>
+          </td>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Below Average Defense</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('dlo')\"><p id=\"dlo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>Opponent was still able to<BR>&nbsp;&nbsp;score game pieces <B>without delay</B>&nbsp;&nbsp;</FONT>
+          </td>
+        </tr><tr>
+          <th colspan=3 $color><hr></th>
+        </tr><tr>
+          <th colspan=3 align=\"center\"><FONT SIZE=+2>Was $team defended?</FONT></th>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Good Against Defense</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('ohi')\"><p id=\"ohi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>Defended but still scored game<BR>&nbsp;pieces with <B>little to no delay</B>&nbsp;</FONT>
+          </td>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Average Against Defense</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('omid')\"><p id=\"omid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>Defended but still able to score<BR> <B>some</B> game pieces with delay</FONT>
+          </td>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Affected by Defense</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('olo')\"><p id=\"olo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>Good defense <B>really affected</B><BR> robot performance</FONT>
+          </td>
+        </tr><tr>
+          <th colspan=3 $color><hr></th>
+        </tr><tr>
+          <th colspan=3 align=\"center\"><FONT SIZE=+2>Did $team receive any fouls?</FONT></th>
+        </tr><tr>
+          <td colspan=3>
+            <table cellpadding=0 cellspacing=0 width=\"100%\" border=1>
+              <tr>
+                <td>
+                  <button onclick=\"qtoggle('flo')\"><p id=\"flo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+                </td><th>
+                  <FONT SIZE=+2>1 foul</FONT>
+                </th><th>
+                  <FONT SIZE=+2>1 tech foul</FONT>
+                </th><td>
+                  <button onclick=\"qtoggle('tlo')\"><p id=\"tlo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+               </td>
+              </tr><tr>
+                <td>
+                  <button onclick=\"qtoggle('fmid')\"><p id=\"fmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+                </td><th>
+                  <FONT SIZE=+2>2 fouls</FONT>
+                </th><th>
+                  <FONT SIZE=+2>2 tech fouls</FONT>
+                </th><td>
+                  <button onclick=\"qtoggle('tmid')\"><p id=\"tmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+                </td>
+              </tr><tr>
+                <td>
+                  <button onclick=\"qtoggle('fhi')\"><p id=\"fhi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+                </td><th>
+                  <FONT SIZE=+2>3 or more fouls</FONT>
+                </th><th>
+                  <FONT SIZE=+2>3 or more tech fouls</FONT>
+                </th><td>
+                  <button onclick=\"qtoggle('thi')\"><p id=\"thi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+                </td>
+              </tr>
+            </table>";
+print "
+          </td>
+        </tr><tr>
+          <th colspan=3 $color><hr></th>
+        </tr><tr>
+          <th colspan=3 align=\"center\"><FONT SIZE=+2>Is this a good robot?</FONT></th>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Very good robot</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('rhi')\"><p id=\"rhi\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>Could be an alliance captain</FONT>
+          </td>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Decent robot</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('rmid')\"><p id=\"rmid\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>A productive and useful robot</FONT>
+          </td>
+        </tr><tr>
+          <th>
+            <FONT SIZE=+2>Struggled to be effective</FONT>
+          </th><td>
+            <button onclick=\"qtoggle('rlo')\"><p id=\"rlo\"><FONT SIZE=+2>&nbsp;No</FONT></p></button>
+          </td><td align=center>
+            <FONT SIZE=+2>Maybe good at one thing,<BR> but bad at others</FONT>
+          </td>
+        </tr><tr>
+          <th colspan=3 $color><hr></th>
+        </tr><tr>
+          <th colspan=3 align=\"center\">
+            <p><FONT SIZE=+2>Scouter Name:</FONT><input type=\"text\" name=\"scouter\" form=\"wrapup\"></p>
+            <p><FONT SIZE=+2>Comments:</FONT><textarea name=\"comments\" form=\"wrapup\" cols=\"60\" rows=\"5\"></textarea></p>
+          </th>
+        </tr>
+      </table>\n";
+print "
+      <form action=\"/cgi-bin/react2.cgi\" id=\"wrapup\" enctype=\"text/plain\">
+        <input type=\"hidden\" name=\"game\" value=\"$game\">
+        <input type=\"hidden\" name=\"team\" value=\"$team\">
+        <input type=\"hidden\" name=\"autoLoCount\" id=\"alo\" value=\"0\">
+        <input type=\"hidden\" name=\"autoHiCount\" id=\"ahi\" value=\"0\">
+        <input type=\"hidden\" name=\"autoBounce\" id=\"abo\" value=\"0\">
+        <input type=\"hidden\" name=\"autoMissed\" id=\"ami\" value=\"0\">
+        <input type=\"hidden\" name=\"teleLoCount\" id=\"lo\" value=\"0\">
+        <input type=\"hidden\" name=\"teleHiCount\" id=\"hi\" value=\"0\">
+        <input type=\"hidden\" name=\"teleMissed\" id=\"mi\" value=\"0\">
+        <input type=\"hidden\" name=\"teleBounce\" id=\"bo\" value=\"0\">
+        <input type=\"hidden\" name=\"taxi\" id=\"taxi\" value=\"0\">
+        <input type=\"hidden\" name=\"human\" id=\"human\" value=\"0\">
+        <input type=\"hidden\" name=\"shootHub\" id=\"hub\" value=\"0\">
+        <input type=\"hidden\" name=\"shootField\" id=\"field\" value=\"0\">
+        <input type=\"hidden\" name=\"shootOLP\" id=\"olp\" value=\"0\">
+        <input type=\"hidden\" name=\"shootWLP\" id=\"wlp\" value=\"0\">
+        <input type=\"hidden\" name=\"rung\" id=\"rung\" value=\"0\">
+        <input type=\"hidden\" name=\"defense\" id=\"defense\" value=\"0\">
+        <input type=\"hidden\" name=\"defended\" id=\"defended\" value=\"0\">
+        <input type=\"hidden\" name=\"fouls\" id=\"fouls\" value=\"0\">
+        <input type=\"hidden\" name=\"techfouls\" id=\"techfouls\" value=\"0\">
+        <input type=\"hidden\" name=\"robot\" id=\"robot\" value=\"0\">
+        <input type=\"hidden\" name=\"timing\" id=\"timing\" value=\"$game,$team\">
+        <input type=\"image\" src=\"/scoutpics/save_button.png\" width=\"100\" height=\"50\">
+      </form>
+    </center>
+</body></html>\n";

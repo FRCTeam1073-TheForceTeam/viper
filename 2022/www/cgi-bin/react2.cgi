@@ -32,7 +32,7 @@ my $techfouls = 0;
 my $rank = 0;
 my $scouter = "unknown";
 my $comments = "none";
-
+my $timelog = "";
 #
 # read in previous game state
 #
@@ -86,7 +86,13 @@ $techfouls = $params{'techfouls'} if (defined $params{'techfouls'});
 $rank      = $params{'robot'}     if (defined $params{'robot'});
 $scouter   = $params{'scouter'}   if (defined $params{'scouter'});
 $comments  = $params{'comments'}  if (defined $params{'comments'});
+$timelog   = $params{'timing'}    if (defined $params{'timing'});
 
+if ("$timelog" ne "") {
+    # commas and colons get converted, change them back
+    $timelog =~ s/%2C/,/g;
+    $timelog =~ s/%3A/:/g;
+}
 #
 # process/store the scouting data
 #
@@ -96,6 +102,7 @@ my $match  = $gdata[1];
 my $robot  = $gdata[2];
 
 my $file   = "/var/www/html/csv/" . $event . ".txt";
+my $tfile  = "/var/www/html/csv/" . $event . ".tm";
 
 sub getheader {
     my $header0 = "event,match,team";
@@ -124,6 +131,7 @@ sub dumpdata {
     # add scouter and comments but replace all commas with underscores
     $scouter =~ tr/,/_/;
     $comments =~ tr/,/_/;
+    $comments =~ s/\+/ /g;
     $str .= ",$scouter,$comments";
 
     return $str;
@@ -137,6 +145,9 @@ sub writeFile {
 	
     if (! -f $file) {
 	`touch $file`;
+    }
+    if (! -f $tfile) {
+	`touch $tfile`;
     }
     if (open my $fh, '+<', $file) {
 	if (flock ($fh, LOCK_EX)) {
@@ -152,6 +163,17 @@ sub writeFile {
 	close $fh;
     } else {
 	$errstr = "failed to open $file: $!\n";
+    }
+    if (open my $fh, '+<', $tfile) {
+	if (flock ($fh, LOCK_EX)) {
+	    seek $fh, 0, SEEK_END;
+	    print $fh "$timelog\n";
+	} else {
+	    $errstr .= "failed to lock $tfile: $!\n";
+	}
+	close $fh;
+    } else {
+	$errstr .= "failed to open $tfile: $!\n";
     }
     return $errstr;
 }

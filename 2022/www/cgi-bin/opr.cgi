@@ -6,6 +6,7 @@ use warnings;
 my $green = "#7ef542";
 my $event = "";
 
+my $TEAMS = "/var/www/cgi-bin/teams.txt";
 #
 # read in given game data
 #
@@ -134,6 +135,22 @@ sub parseStr($) {
 
 
 my $fh;
+
+# first load team Name info
+my %teamName;
+if ( -f "$TEAMS" ) {
+    if (open($fh, "<", $TEAMS)) {
+	while (my $line = <$fh>) {
+	    my @items = split/:/, $line;
+	    next unless (@items == 3);
+	    my $num = $items[0];
+	    $teamName{$num} = $items[1];
+	}
+	close $fh;
+    }
+}
+
+# now process scouting data
 if ( ! open($fh, "<", $file) ) {
     print "<H2>Error, could not open $file: $!</H2>\n";
     print "</body></html>\n";
@@ -159,7 +176,9 @@ while (my $line = <$fh>) {
     if (! exists $teamOverlayT1{$team}) {
 	$teamOverlayT1{$team}  = "<H3>Click/Tap screen to go back</H3><br>";
 	$teamOverlayT1{$team} .= "<table cellspacing=0 cellpadding=5 border=1><tr>";
-	$teamOverlayT1{$team} .= "<th colspan=12 align=center><font size=+2>$team</font></th></tr><tr>";
+	$teamOverlayT1{$team} .= "<th colspan=12 align=center><font size=+2>$team";
+	$teamOverlayT1{$team} .= "&nbsp;$teamName{$team}" if (exists $teamName{$team});
+	$teamOverlayT1{$team} .= "</font></th></tr><tr>";
 	$teamOverlayT1{$team} .= "<th>Match</th><th>Taxi</th><th>Human</th>";
 	$teamOverlayT1{$team} .= "<th>Auto<br>Lower</th><th>Auto<br>Upper</th>";
 	$teamOverlayT1{$team} .= "<th>TeleOp<br>Lower</th><th>TeleOp<br>Upper</th>";
@@ -419,6 +438,7 @@ foreach my $t (@teams) {
 #
 
 my $size = @teams;
+
 
 # print the JS first
 print "  <script>\n";

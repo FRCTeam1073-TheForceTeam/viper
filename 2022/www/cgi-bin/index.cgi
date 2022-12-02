@@ -88,6 +88,7 @@ if ("$event" eq "") {
 	    my @fname = split /\//, $f;
 	    my @name = split /\./, $fname[-1];
 	    print "<tr><td><h2><a href=\"${me}?event=$name[0]\">$name[0]</a></h2></td>";
+	    print "<td><h2><a href=\"/cgi-bin/teams.cgi?event=$name[0]\">Teams</a></h2></td>\n";
 	    print "<td>";
 	    if ( -f "/var/www/cgi-bin/matchdata/$name[0].elims" ) {
 		print "<h2><a href=\"elims.cgi?event=$name[0]\">Alliances</a></h2>\n";
@@ -98,13 +99,12 @@ if ("$event" eq "") {
 	    my $csvfile = "/csv/" . $name[0] . ".txt";
 	    if ( -f "/var/www/html/$csvfile" ) {
 		print "<td><h2><a href=\"opr.cgi?event=$name[0]\">Analysis</a></h2>\n";
-		print "</td><td>&nbsp;&nbsp;</td>";
+		print "</td><td>&nbsp;</td>";
 		print "<td><h2><a href=\"matchup.cgi?event=$name[0]\">Prediction</a></h2>\n";
-		print "</td><td>&nbsp;&nbsp;</td>";
+		print "</td><td>&nbsp;</td>";
 		print "<td><h2>(<a href=\"$csvfile\">CSV file</a>)</h2></td>";
 	    } else {
-		print "<td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td>";
-		print "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
+		print "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
 	    }
 	    print "</tr>\n";
 	}

@@ -71,6 +71,7 @@ my %teamAhi;
 my %teamTlo;
 my %teamThi;
 my %teamRung;
+my %teamBestRung;
 
 my $fh;
 if ( ! open($fh, "<", $file) ) {
@@ -102,6 +103,7 @@ while (my $line = <$fh>) {
     $teamTlo{$team} = 0 unless (defined $teamTlo{$team});
     $teamThi{$team} = 0 unless (defined $teamThi{$team});
     $teamRung{$team} = 0 unless (defined $teamRung{$team});
+    $teamBestRung{$team} = 0 unless (defined $teamRung{$team});
     
     $teamTaxi{$team}  += $taxi;
     $teamHuman{$team} += $human;
@@ -110,6 +112,7 @@ while (my $line = <$fh>) {
     $teamTlo{$team}   += $Tlo;
     $teamThi{$team}   += $Thi;
     $teamRung{$team}  += $rung;
+    $teamBestRung{$team} = $rung if ($rung > $teamBestRung{$team});
 	
     my $auto = ($taxi * 2) + ($Alo * 2) + ($Ahi * 4);
     my $tele = $Tlo + ($Thi * 2);
@@ -231,7 +234,7 @@ if (@red != 3 || @blue != 3) {
 print "<table cellpadding=2 cellspacing=2 border=1>\n";
 print "<tr><th colspan=7><p style=\"font-size:25px; font-weight:bold;\">Red Alliance</p></th></tr>\n";
 print "<tr><th>Team</TH><TH># Matches</TH><th>OPR</TH>";
-print "<TH>Avg. Auto Score</TH><TH>Avg. TeleOp Score</TH></TH><TH>Avg End Game</TH></tr>\n";
+print "<TH>Avg. Auto Score</TH><TH>Avg. TeleOp Score</TH></TH><TH>Best End Game</TH></tr>\n";
 
 # gather red high scores
 my $hopr  = 0;
@@ -255,7 +258,12 @@ for (my $i = 0; $i < 3; $i++) {
     my $auto = $teamAuto{$red[$i]} / $teamCount{$red[$i]};
     my $tele = $teamTeleop{$red[$i]} / $teamCount{$red[$i]};
     my $endp = $teamEnd{$red[$i]} / $teamCount{$red[$i]};
-
+    my $bend = 0;
+    $bend = 4 if ($teamBestRung{$red[$i]} == 1);
+    $bend = 6 if ($teamBestRung{$red[$i]} == 2);
+    $bend = 10 if ($teamBestRung{$red[$i]} == 3);
+    $bend = 15 if ($teamBestRung{$red[$i]} == 4);
+    
     $redtotal += $opr;
 
     my $ostr = sprintf "%.3f", $opr;
@@ -278,7 +286,7 @@ for (my $i = 0; $i < 3; $i++) {
     print "<td $bgcolor><p style=\"font-size:20px; font-weight:bold;\">$tstr</p></td>";
     $bgcolor="";
     $bgcolor="bgcolor=\"$green\"" if ($hend == $endp);
-    print "<td $bgcolor><p style=\"font-size:20px; font-weight:bold;\">$estr</p></td></tr>";
+    print "<td $bgcolor><p style=\"font-size:20px; font-weight:bold;\">$bend</p></td></tr>";
 }
 print "</table>\n";
 
@@ -286,7 +294,7 @@ print "</table>\n";
 print "<table cellpadding=2 cellspacing=2 border=1>\n";
 print "<tr><th colspan=7><p style=\"font-size:25px; font-weight:bold;\">Blue Alliance</p></th></tr>\n";
 print "<tr><th>Team</TH><TH># Matches</TH><th>OPR</TH>";
-print "<TH>Avg. Auto Score</TH><TH>Avg. TeleOp Score</TH><TH>Avg End game</TH></tr>\n";
+print "<TH>Avg. Auto Score</TH><TH>Avg. TeleOp Score</TH><TH>Best End game</TH></tr>\n";
 
 # gather blue high scores
 $hopr  = 0;
@@ -310,6 +318,11 @@ for (my $i = 0; $i < 3; $i++) {
     my $auto = $teamAuto{$blue[$i]} / $teamCount{$blue[$i]};
     my $tele = $teamTeleop{$blue[$i]} / $teamCount{$blue[$i]};
     my $endp = $teamEnd{$blue[$i]} / $teamCount{$blue[$i]};
+    my $bend = 0;
+    $bend = 4 if ($teamBestRung{$blue[$i]} == 1);
+    $bend = 6 if ($teamBestRung{$blue[$i]} == 2);
+    $bend = 10 if ($teamBestRung{$blue[$i]} == 3);
+    $bend = 15 if ($teamBestRung{$blue[$i]} == 4);
 
     $bluetotal += $opr;
     my $ostr = sprintf "%.3f", $opr;
@@ -332,7 +345,7 @@ for (my $i = 0; $i < 3; $i++) {
     print "<td $bgcolor><p style=\"font-size:20px; font-weight:bold;\">$tstr</p></td>";
     $bgcolor="";
     $bgcolor="bgcolor=\"$green\"" if ($hend == $endp);
-    print "<td $bgcolor><p style=\"font-size:20px; font-weight:bold;\">$estr</p></td></tr>\n";
+    print "<td $bgcolor><p style=\"font-size:20px; font-weight:bold;\">$bend</p></td></tr>\n";
 }
 print "</table>\n";
 
