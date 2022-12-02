@@ -4,3 +4,4 @@
 canvas{max-height:20em}
 .graph{display:inline-block;max-width:100%}
 .chart{padding:0 1em;display:inline-block}
+.comments{white-space:pre-wrap}

@@ -40,13 +40,20 @@ function csvToArrayOfMaps(csv){
 				var data = lines[i].split(/[,]/)
 				var map = {}
 				for (var j=0; j<data.length; j++){
-					map[headers[j]] = /^[0-9]+$/.test(data[j])?parseInt(data[j]):data[j]
+					map[headers[j]] = /^[0-9]+$/.test(data[j])?parseInt(data[j]):unescapeField(data[j])
 				}
 				arr.push(map)
 			}
 		}
 	}
 	return arr
+}
+
+function unescapeField(s){
+	return s
+		.replace(/⏎/g, "\n")
+		.replace(/״/g, "\"")
+		.replace(/،/g, ",")
 }
 
 function loadEventSchedule(callback){

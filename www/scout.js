@@ -195,7 +195,11 @@ function store(){
 }
 
 function safeCSV(s){
-	return s.replace(/[\r\n\t,]+ */g, " ")
+	return s
+		.replace(/\t/g, " ")
+		.replace(/\r|\n|\r\n/g, "⏎")
+		.replace(/\"/g, "״")
+		.replace(/,/g, "،")
 }
 
 function getTeamsWithData(){

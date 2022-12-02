@@ -67,7 +67,7 @@ function fillPage(){
 	for (var i=0; i<matchList.length; i++){
 		comments
 			.append($('<h3>').text(matchNames[i]))
-			.append($('<p>').text(matchList[i]['comments']||""))
+			.append($('<p class=comments>').text(matchList[i]['comments']||""))
 			.append($('<p class=scouter>').text(matchList[i]['scouter']||""))
 	}
 
