@@ -21,7 +21,6 @@ $(document).ready(function(){
 		for (var i=0; i<schedule.length; i++){
 			row = schedule[i]
 			if (row.length != 7){
-				console.log(row)
 				alert("Could not find six teams for match: " + row[0])
 				return false
 			}
