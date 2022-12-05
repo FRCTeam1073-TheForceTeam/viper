@@ -21,6 +21,7 @@ function fillPage(){
 		}
 	}
 
+	$('#photo').html(`<img src="/data/${eventYear}/${team}.jpg">`)
 	var graphs = $('#statGraphs').html('')
 	var comments = $('#comments').html("")
 	if (!matchList.length) return;
