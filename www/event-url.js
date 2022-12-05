@@ -12,6 +12,7 @@ var eventStats = []
 var eventStatsByTeam = {}
 var eventFiles = []
 var eventTeams = []
+const BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
 
 function eventAjax(file,callback){
 	$.ajax({
@@ -59,6 +60,14 @@ function unescapeField(s){
 function loadEventSchedule(callback){
 	eventAjax(`/data/${eventId}.schedule.csv`,function(text){
 		eventMatches=csvToArrayOfMaps(text)
+		var teams = {}
+		for (var i=0; i<eventMatches.length; i++){
+			for (j=0; j<BOT_POSITIONS.length; j++){
+				teams[eventMatches[i][BOT_POSITIONS[j]]] = 1
+			}
+		}
+		eventTeams = Object.keys(teams)
+		eventTeams.sort((a,b)=>{parseInt(a)-parseInt(b)})
 		if (callback) callback(eventMatches)
 	})
 }

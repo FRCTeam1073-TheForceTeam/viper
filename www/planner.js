@@ -121,7 +121,16 @@ $(document).ready(function() {
       row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b1).click(showTeamStats).text(b1?'👁':''))
       row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b2).click(showTeamStats).text(b2?'👁':''))
       row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b3).click(showTeamStats).text(b3?'👁':''))
-      row.append($('<th>').text(statName))
+      row.append($('<th>'))
+      tbody.append(row)
+      row = $("<tr>")
+      row.append($('<td class="redTeamBG">').attr('data-team',r1).click(showImg).html(`<img src=/data/${eventYear}/${r1}.jpg>`))
+      row.append($('<td class="redTeamBG">').attr('data-team',r2).click(showImg).html(`<img src=/data/${eventYear}/${r2}.jpg>`))
+      row.append($('<td class="redTeamBG">').attr('data-team',r3).click(showImg).html(`<img src=/data/${eventYear}/${r3}.jpg>`))
+      row.append($('<td class="blueTeamBG">').attr('data-team',b1).click(showImg).html(`<img src=/data/${eventYear}/${b1}.jpg>`))
+      row.append($('<td class="blueTeamBG">').attr('data-team',b2).click(showImg).html(`<img src=/data/${eventYear}/${b2}.jpg>`))
+      row.append($('<td class="blueTeamBG">').attr('data-team',b3).click(showImg).html(`<img src=/data/${eventYear}/${b3}.jpg>`))
+      row.append($('<th>'))
       tbody.append(row)
       for (var i=0; i<sections.length; i++){
         var section = sections[i]
@@ -186,17 +195,23 @@ $(document).ready(function() {
     var t = $(this).attr('data-team')
     if (t) t = parseInt(t)
     if (!t) return
-    $('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}&team=${t}`)
+    $('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}&team=${t}`)
     window.scrollTo(0,0)
     $('#lightBoxBG').show()
-    $('#lightBoxContent').show()
+    $('#statsLightBox').show()
+  }
+
+  function showImg(){
+    $('#imageLightBox img').attr('src', $(this).find('img').attr('src'))
+    $('#lightBoxBG').show()
+    $('#imageLightBox').show()
   }
 
 	$('title').text($('title').text().replace("EVENT", eventName))
-	$('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}`)
+	$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
 		$('#lightBoxBG').hide()
-		$('#lightBoxContent').hide()
-		$('#lightBoxContent iframe').attr('src',`/team.html#event=${eventId}`)
+		$('.lightBoxContent').hide()
+		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	})
 })

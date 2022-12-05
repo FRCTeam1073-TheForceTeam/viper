@@ -18,6 +18,7 @@ find  www/data/ .git -type d -exec sudo chmod ug+s {} \;
 sudo apt-get install -y \
 	apache2 \
 	git \
+	imagemagick \
 	libcgi-pm-perl \
 	libfile-flock-perl \
 	libhtml-escape-perl \
