@@ -21,11 +21,11 @@ my $teams = ();
 
 for my $team ($cgi->param){
     if ($team =~ /^[0-9]+$/){
-        my $teamPicFile = "../data/$year/$team.jpg";
         my $upload_fh = $cgi->upload($team);
         my $info = $cgi->uploadInfo($upload_fh);
         if ($info){
             $webutil->error("Expected image photo upload", $info->{'Content-Type'}) if ($info->{'Content-Type'} !~ /^image\//);
+            my $teamPicFile = "../data/$year/$team.jpg";
             my $upload_file = $cgi->tmpFileName(scalar $cgi->param($team));
             `convert "$upload_file" -resize 1000x1000 "$teamPicFile"`;
             push(@$teams, $team)
