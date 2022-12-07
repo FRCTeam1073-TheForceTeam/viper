@@ -13,6 +13,6 @@ find  www/data/ -type d -exec sudo chmod ug+s {} \;
 dir=`pwd`
 while [ "z$dir" != "z" ]
 do
-    sudo chmod a+x .
-    dir=${dir%/*}
+    echo sudo chmod a+x "$dir"
+    dir="${dir%/*}"
 done
