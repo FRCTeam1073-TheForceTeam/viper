@@ -10,3 +10,9 @@ sudo chmod -R g+rw www/data/
 # as the directory itself
 find  www/data/ -type d -exec sudo chmod ug+s {} \;
 
+dir=`pwd`
+while [ "z$dir" != "z" ]
+do
+    sudo chmod a+x .
+    dir=${dir%/*}
+done
