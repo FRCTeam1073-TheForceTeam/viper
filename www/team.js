@@ -72,11 +72,3 @@ function fillPage(){
 	}
 
 }
-
-function getMatchName(matchId){
-	return matchId
-		.replace(/^qm/, "Qualifier ")
-		.replace(/^qf/, "Quarter-final ")
-		.replace(/^sf/, "Semi-final ")
-		.replace(/^f/, "Final ")
-}

@@ -72,12 +72,3 @@ function showLinks(e){
 	$('#lightBoxContent').find('.dependTeam').toggle(!!team)
 	$('.lightBox').show()
 }
-
-
-function getMatchName(matchId){
-	return matchId
-		.replace(/^qm/, "Qualifier ")
-		.replace(/^qf/, "Quarter-final ")
-		.replace(/^sf/, "Semi-final ")
-		.replace(/^f/, "Final ")
-}

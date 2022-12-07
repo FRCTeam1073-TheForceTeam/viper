@@ -1,5 +1,5 @@
 *{box-sizing:border-box}
-html{font-size: 2vmin;background:white url('/background.png') no-repeat center center fixed;background-size:contain;}
+html{font-size: 2vmin;background:white url('/background.png') fixed;}
 table,tr,td,th,button,input,select,option{font-size:inherit}
 body{text-align:center}
 table,ul{margin:0 auto;}

@@ -11,7 +11,7 @@ function parseHash(){
 	pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
 	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",""])[1]
-	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:qm|qf|sf|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
+	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
 }
 
 function showScreen(){
@@ -87,14 +87,6 @@ function showMatchList(){
 	}
 	setTeamBG()
 	$('#select-match').show()
-}
-
-function getMatchName(matchId){
-	return matchId
-		.replace(/^qm/, "Qualifier ")
-		.replace(/^qf/, "Quarter-final ")
-		.replace(/^sf/, "Semi-final ")
-		.replace(/^f/, "Final ")
 }
 
 function getScoutKey(t,m,e){

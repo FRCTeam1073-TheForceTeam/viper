@@ -9,6 +9,7 @@
 <script src=/jquery.js></script>
 <script src=/auto-year.js></script>
 <script src=/event-table.js></script>
+<script src=/event-url.js></script>
 <script src=/main.js></script>
 </head>
 <body>
@@ -22,25 +23,31 @@ Venue: <input id=venueInp type=text placeholder="No spaces or symbols" required=
 <div><small>Recommended: match the venue ID to the event URL from www.thebluealliance.com</small></div>
 </div>
 
-<div id=qualTable>
+<div id=schedule>
+	<h2>Practice Matches</h2>
 	<table>
 		<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
-		<tbody id=qualifiers></tbody>
+		<tbody id=pm></tbody>
+	</table>
+	<h2>Qualifier Matches</h2>
+	<table>
+		<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+		<tbody id=qm></tbody>
 	</table>
 </div>
 
-<template id=qualrow>
+<template id=scheduleRow>
 	<tr>
 		<th>$#</th>
-		<td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B1" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B2" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=blueTeamBG><input inputmode=numeric type=text name="Q$#B3" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=redTeamBG><input inputmode=numeric type=text name="Q$#R1" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=redTeamBG><input inputmode=numeric type=text name="Q$#R2" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=redTeamBG><input inputmode=numeric type=text name="Q$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=blueTeamBG><input inputmode=numeric type=text name="$TYPE$#B1" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=blueTeamBG><input inputmode=numeric type=text name="$TYPE$#B2" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=blueTeamBG><input inputmode=numeric type=text name="$TYPE$#B3" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R1" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R2" placeholder="team#" pattern="^[0-9]+$"></td>
+		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
 	</tr>
 </template>
-<div>
+<div id=buttons>
 	<span id=team-list></span>
 	<button class=clearRow>Clear Row</button>
 	<input type=submit value="Save Event">

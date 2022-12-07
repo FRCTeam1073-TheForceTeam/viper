@@ -1,7 +1,9 @@
-#qualifiers td,#qualifiers th{padding:1vmin;font-size:120%}
-#qualifiers input{width:3em}
+#schedule td,#schedule th{padding:1vmin;font-size:120%}
+#schedule input{width:3em}
 button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
 #team-list{min-width:320px;text-align:left}
-#qualTable{overflow-x:auto;max-width:100%}
+#schedule{overflow-x:auto;max-width:100%}
 table{margin:1em auto}
 .side-by-side{max-width:500px}
+#buttons {position:fixed;left:0;right:0;bottom:0;background:white}
+body{padding-bottom:100vh}

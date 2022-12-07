@@ -114,3 +114,12 @@ function getUploads(){
 	}
 	return uploads
 }
+
+function getMatchName(matchId){
+	return matchId
+		.replace(/^pm/, "Practice ")
+		.replace(/^qm/, "Qualifier ")
+		.replace(/^qf/, "Quarter-final ")
+		.replace(/^sf/, "Semi-final ")
+		.replace(/^f/, "Final ")
+}
