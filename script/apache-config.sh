@@ -108,6 +108,8 @@ fi
 echo '  </VirtualHost>' >> $TMPCONF
 
 RELOAD_NEEDED=0
+sudo touch /etc/apache2/sites-available/webscout.conf 
+sudo chmod a+r /etc/apache2/sites-available/webscout.conf 
 if ! cmp $TMPCONF /etc/apache2/sites-available/webscout.conf >/dev/null 2>&1
 then
     sudo cp -v $TMPCONF /etc/apache2/sites-available/webscout.conf
