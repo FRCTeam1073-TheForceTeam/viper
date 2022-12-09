@@ -1,0 +1,4 @@
+# Data should be fetched fresh every 10 seconds
+# Unless disconnected from the internet in which case they
+# Can be used from cache stale
+Header set Cache-Control "max-age=10, stale-if-error=28800, public, must-revalidate"
