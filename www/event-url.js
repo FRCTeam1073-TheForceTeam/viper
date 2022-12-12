@@ -121,5 +121,10 @@ function getMatchName(matchId){
 		.replace(/^qm/, "Qualifier ")
 		.replace(/^qf/, "Quarter-final ")
 		.replace(/^sf/, "Semi-final ")
+		.replace(/^1p/, "Playoffs first round ")
+		.replace(/^2p/, "Playoffs second round ")
+		.replace(/^3p/, "Playoffs third round ")
+		.replace(/^4p/, "Playoffs fourth round ")
+		.replace(/^5p/, "Playoffs fifth round ")
 		.replace(/^f/, "Final ")
 }

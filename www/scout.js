@@ -11,11 +11,13 @@ function parseHash(){
 	pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
 	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",""])[1]
-	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
+	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
 }
 
 function showScreen(){
-	if (!pos) showPosList()
+	if (!team && $('#select-team').length) showSelectTeam()
+	else if (team && $('#pit-scouting').length) showPitScouting()
+	else if (!pos) showPosList()
 	else if (!match) showMatchList()
 	else if (!team) showTeamChange()
 	else showScouting()
@@ -28,6 +30,17 @@ $(window).on('hashchange', function(){
 	parseHash()
 	showScreen()
 })
+
+function showSelectTeam(){
+	$('.screen').hide()
+	location.hash = `#event=${eventId}`
+	window.scrollTo(0,0)
+	var el = $('#teamList').html("")
+	for (var i=0; i<eventTeams.length;i++){
+		el.append($('<button>').text(eventTeams[i]).click(showPitScouting))
+	}
+	$('#select-team').show()
+}
 
 function showTeamChange(){
 	$('.screen').hide()
@@ -106,6 +119,22 @@ function buildHash(pos,orient,team,match){
 		(orient?`&orient=${orient}`:"")+
 		(team?`&team=${team}`:"")+
 		(match?`&match=${match}`:"")
+}
+
+function showPitScouting(t){
+	if (t && typeof t != 'number') t = parseInt($(this).text())
+	if (t) team = t
+	$('.screen').hide()
+	window.scrollTo(0,0)
+	setHash(null,null,team,null)
+	var pit = $('#pit-scouting')
+	pit[0].reset()
+	$('.team').text(team)
+	$('input[name="event"]').val(eventId).attr('value',eventId)
+	$('input[name="team"]').val(team).attr('value',team)
+	
+
+	pit.show()
 }
 
 function showScouting(){

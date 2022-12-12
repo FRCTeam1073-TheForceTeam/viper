@@ -1,3 +1,4 @@
+"use strict";
 var teams = []
 var allianceCount = 8;
 
@@ -18,10 +19,9 @@ function showAllianceSelection(){
 	$('.screen').hide()
 	loadEventSchedule(function(data){
 		var t = {}
-		positions = ["R1","R2","R3","B1","B2","B3"]
 		for (var i=1; i<data.length; i++){
-			for (var j=0; j<positions.length; j++){
-				t[data[i][positions[j]]] = 1
+			for (var j=0; j<BOT_POSITIONS.length; j++){
+				t[data[i][BOT_POSITIONS[j]]] = 1
 			}
 		}
 		teams = Object.keys(t);
@@ -31,32 +31,31 @@ function showAllianceSelection(){
 			$('#teams').append($(`<button class=team id=t${team}>${team}</button>`).click(function(){
 				$(this).addClass('picked')
 				lf().val($(this).text())
-				if (!focusNext()) computeSchedule()
+				if (!focusNext()) computeStartingSchedule()
 			}))
 		}
 	})
 	$('#alliance-selection').show()
 }
 
-function allianceDisplay(num, oppNum, column){
-	if (num == 0) return '?'
-	var a = eventAlliances[num-1]
-	var c = a['Captain']
-	var p1 = a['First Pick']
-	var p2 = a['Second Pick']
-	var button = column==dataLevel?`<br><button class=winnerBtn data-alliance=${num} data-opponent=${oppNum} data-column="${column}">Advance →</button>`:""
-	return `<h4>Alliance ${num}</h4>${c}, ${p1}, ${p2}${button}`
+function allianceDisplay(num, oppNum, showButton, column, teamColor){
+	if (num == 0) return `<div class="${teamColor}TeamBG matchup">?</div>`
+	var a = eventAlliances[num-1],
+	winClass = a[column]?"winner":"",
+	c = a['Captain'],
+	p1 = a['First Pick'],
+	p2 = a['Second Pick'],
+	button = showButton?`<br><button class=winnerBtn data-alliance=${num} data-opponent=${oppNum} data-column="${column}">Set Winner</button>`:""
+	return `<div class="${teamColor}TeamBG matchup ${winClass}"><h4>Alliance ${num}</h4>${c}, ${p1}, ${p2}${button}</div>`
 }
 
-function matchupDisplay(nums, column){
-	var a1=allianceDisplay(nums[0],nums[1],column)
-	var a2=allianceDisplay(nums[1],nums[0],column)
-	return `<div class="redTeamBG matchup">${a1}</div><div class="blueTeamBG matchup">${a2}</div>`
+function matchupDisplay(nums, showButton, column){
+	if (!nums || !nums.length) return ""
+	return (
+		allianceDisplay(nums[0],nums[1],showButton,column,"red") +
+		allianceDisplay(nums[1],nums[0],showButton,column,"blue")
+	)
 }
-
-const WQF = 'Won Quarter-Finals'
-const WSF = 'Won Semi-Finals'
-const WF = 'Won Finals'
 
 function getWinner(schedule, match, winField){
 	var a1=schedule[match][0],a2=schedule[match][1]
@@ -76,53 +75,216 @@ function filled(arr2d){
 	return true
 }
 
-function showBrackets(){
+function showBracket(rounds){
 	$('.screen').hide()
-	$('#bracketTable').html("")
-	var qf = [[1,8],[4,5],[2,7],[3,6]]
-	var sf = [[0,0],[0,0]]
-	var f = [[0,0]]
-	var w = 0
-	for(var i=0; i<sf.length; i++){
-		sf[i][0] = getWinner(qf,i*2,WQF)
-		sf[i][1] = getWinner(qf,i*2+1,WQF)
-	}
-	f[0][0] = getWinner(sf,0,WSF)
-	f[0][1] = getWinner(sf,1,WSF)
-	w = getWinner(f,0,'Won Finals')
-	if (!dataLevel && !filled(sf)) dataLevel = WQF
-	if (!dataLevel && !filled(f)) dataLevel = WSF
-	if (!dataLevel && !w) dataLevel = WF
-	if (!dataLevel) dataLevel = "done"
-	for(var i=0; i<qf.length; i++){
-		var tr = $('<tr>').html('<td>' + matchupDisplay(qf[i],WQF) + "</td>")
-		if (i%2==0) tr.append($("<td rowspan=2>"+matchupDisplay(sf[Math.floor(i/2)],WSF)+"</td>"))
-		if (i==0){
-			tr.append($("<td rowspan=4>"+matchupDisplay(f[Math.floor(i/4)],WF)+"</td>"))
-			tr.append($("<td rowspan=4><div class=winner>"+allianceDisplay(w)+"</div></td>"))
+	var table = $('#playoff-bracket').html(""),
+	tr,
+	maxUpper=0,
+	maxLower=0,
+	maxMatches=0
+	for (var i=0; i<rounds.length; i++){
+		rounds[i].filled = roundFilled(rounds[i])
+		rounds[i].played = roundPlayed(rounds[i])
+		if (rounds[i].upper && rounds[i].upper.length > maxUpper) maxUpper = rounds[i].upper.length
+		if (rounds[i].lower && rounds[i].lower.length > maxLower) maxLower = rounds[i].lower.length
+		if (rounds[i].matches && rounds[i].matches.length > maxMatches) maxMatches = rounds[i].matches.length
+		if (dataLevel===""){
+			if (!rounds[i].filled) dataLevel = i-1
+			if (rounds[i].filled && !rounds[i].played && i==rounds.length-1) dataLevel = i
+		} else if (i>dataLevel && rounds[i].filled){
+			showRoundSchedule(rounds[i])
 		}
-		$('#bracketTable').append(tr)
 	}
-	if (dataLevel == WQF && filled(sf)) buildAndShowSchedule(sf, "sf", "semiFinals")
-	if (dataLevel == WSF && filled(f)) buildAndShowSchedule(f, "f", "finals")
-	if (dataLevel == WF && w) $('#winnerSection').show()
-	$('#brackets').show()
+	if (maxUpper+maxLower>maxMatches)maxMatches=maxUpper+maxLower
+	tr = $('<tr>')
+	for (var i=0; i<rounds.length; i++){
+		tr.append($('<th>').text(rounds[i]['title']))
+	}
+	table.append(tr)
+	tr = $('<tr>')
+	for (var i=0; i<rounds.length; i++){
+		var round = rounds[i],
+		rs = maxMatches,
+		matchup = []
+		if (round.hasOwnProperty('upper')){
+			rs = maxUpper/Math.max(1,round['upper'].length)
+			if (round['upper'].length) matchup=round['upper'][0]
+		} else {
+			matchup = round['matches'][0]
+		}
+		tr.append($('<td>').attr('rowspan',rs).html(matchupDisplay(matchup, dataLevel===i, 'Won ' + round['title'])))
+	}
+	table.append(tr)
+	for (var j=1; j<maxUpper; j++){
+		tr = $('<tr>')
+		for (var i=0; i<rounds.length; i++){
+			var round = rounds[i]
+			if (round.hasOwnProperty('upper') && round['upper'].length && j % (maxUpper/round['upper'].length) == 0){
+				var rs = maxUpper/round['upper'].length,
+				matchup = round['upper'][j/rs]
+				tr.append($('<td>').attr('rowspan',rs).html(matchupDisplay(matchup, dataLevel===i, 'Won ' + round['title'])))
+			}
+		}
+		table.append(tr)
+	}
+	for (var j=0; j<maxLower; j++){
+		tr = $('<tr>')
+		for (var i=0; i<rounds.length; i++){
+			var round = rounds[i]
+			if (round.hasOwnProperty('lower') && j % (maxLower/Math.max(1,round['lower'].length)) == 0){
+				var rs = maxLower/Math.max(1,round['lower'].length),
+				matchup = round['lower'].length?round['lower'][j/rs]:[]
+				tr.append($('<td>').attr('rowspan',rs).html(matchupDisplay(matchup, dataLevel===i, 'Won ' + round['title'])))
+			}
+		}
+		table.append(tr)
+	}
+	table.show()
+
+}
+
+function showRoundSchedule(round){
+	$('#schedule').html("")
+	var num = 0
+	$('#scheduleSection h2').text(round.title + ' Schedule')
+	var numRounds = (round.rounds)||1
+	for (var j=0; j<numRounds; j++){
+		var brackets = (round.orderBrackets)||['upper','lower','matches']
+		for (var k=0; k<brackets.length; k++){
+			var matches = (round[brackets[k]])||[]
+			for (var n=0; n<matches.length; n++){
+				num++
+				$('#schedule').append(scheduleRowHtml(matches[n][0],matches[n][1],round.abbreviation,num))
+			}
+		}
+	}
+	$('#scheduleSection').show()
+}
+
+function getDoubleEliminationBrackets(){
+	var rounds = [{
+		title: "Playoffs Round 1",
+		upper: [[1,8],[4,5],[2,7],[3,6]],
+		lower: [],
+		abbreviation: '1p'
+	}]
+	rounds.push({
+		title: "Playoffs Round 2",
+		upper: [
+			[winnerOf(rounds,0,'upper',0),winnerOf(rounds,0,'upper',1)],
+			[winnerOf(rounds,0,'upper',2),winnerOf(rounds,0,'upper',3)]
+		],
+		lower: [
+			[loserOf(rounds,0,'upper',0),loserOf(rounds,0,'upper',1)],
+			[loserOf(rounds,0,'upper',2),loserOf(rounds,0,'upper',3)]
+		],
+		orderBrackets:["lower","upper"],
+		abbreviation: '2p'
+	})
+	rounds.push({
+		title: "Playoffs Round 3",
+		upper: [],
+		lower: [
+			[loserOf(rounds,1,'upper',0),winnerOf(rounds,1,'lower',0)],
+			[loserOf(rounds,1,'upper',1),winnerOf(rounds,1,'lower',1)]
+		],
+		orderMatches: -1,
+		abbreviation: '3p'
+	})
+	rounds.push({
+		title: "Playoffs Round 4",
+		upper: [[winnerOf(rounds,1,'upper',0),winnerOf(rounds,1,'upper',1)]],
+		lower: [[winnerOf(rounds,2,'lower',0),winnerOf(rounds,2,'lower',1)]],
+		abbreviation: '4p'
+	})	
+	rounds.push({
+		title: "Playoffs Round 5",
+		upper: [],
+		lower: [[loserOf(rounds,3,'upper',0),winnerOf(rounds,3,'lower',0)]],
+		abbreviation: '5p'
+	})	
+	rounds.push({
+		title: "Finals",
+		matches: [[winnerOf(rounds,3,'upper',0),winnerOf(rounds,4,'lower',0)]],
+		rounds: 3,
+		abbreviation: 'f'
+	})
+	return rounds
+}
+
+function roundFilled(round){
+	var arr = (round['upper']||[]).concat(round['lower']||[]).concat(round['matches']||[])
+	for (var i=0; i<arr.length; i++){
+		if (arr[i][0] == 0) return false
+		if (arr[i][1] == 0) return false
+	}
+	return true
+}
+
+
+function roundPlayed(round){
+	var arr = (round['upper']||[]).concat(round['lower']||[]).concat(round['matches']||[])
+	for (var i=0; i<arr.length; i++){
+		var a1 = arr[i][0], a2 = arr[i][1]
+		if (a1 == 0) return false
+		if (a2 == 0) return false
+		if (!eventAlliances[a1-1]['Won ' + round.title] && !eventAlliances[a2-1]['Won ' + round.title]) return false
+	}
+	return true
+}
+
+function winnerOf(rounds,roundNum,bracket,matchNum){
+	var round = rounds[roundNum],
+	title = round['title']
+	for (var i=0; i<=1; i++){
+		var alliance = round[bracket][matchNum][i]
+		if (eventAlliances && alliance>0 && eventAlliances.length > alliance-1 && eventAlliances[alliance-1]['Won ' + title]) return alliance
+	}
+	return 0
+}
+
+function loserOf(rounds,roundNum,bracket,matchNum){
+	var winner = winnerOf(rounds, roundNum,bracket,matchNum)
+	if (winner==0) return 0
+	var round = rounds[roundNum],
+	title = round['title']
+	for (var i=0; i<=1; i++){
+		var alliance = round[bracket][matchNum][i]
+		if (alliance != winner) return alliance
+	}
+	return 0
+}
+
+function getSingleEliminationBrackets(){
+	var rounds = [{
+		title: "Quarter-Finals",
+		upper: [[1,8],[4,5],[2,7],[3,6]],
+		rounds: 3,
+		abbreviation: 'qf'
+	}]
+	rounds.push({
+		title: "Semi-Finals",
+		upper: [
+			[winnerOf(rounds,0,'upper',0),winnerOf(rounds,0,'upper',1)],
+			[winnerOf(rounds,0,'upper',2),winnerOf(rounds,0,'upper',3)]
+		],
+		rounds: 3,
+		abbreviation: 'sf'
+	})
+	rounds.push({
+		title: "Finals",
+		upper: [[winnerOf(rounds,1,'upper',0),winnerOf(rounds,1,'upper',1)]],
+		rounds: 3,
+		abbreviation: '3p'
+	})
+	return rounds
 }
 
 function buildAndShowSchedule(schedule, typeAbbr, typeFull){
 	$(`#${typeFull}`).html('')
 	for (var i=0; i<3; i++){
 		for (var j=0; j<schedule.length; j++){
-			var a1=schedule[j][0]-1, a2 = schedule[j][1]-1,
-			html = $('template#matchRow').html().replace(/\$\#/g, i*schedule.length+j+1)
-				.replace(/\$matchRound/, typeAbbr)
-				.replace(/\$team1/, eventAlliances[a1]['Captain'])
-				.replace(/\$team2/, eventAlliances[a1]['First Pick'])
-				.replace(/\$team3/, eventAlliances[a1]['Second Pick'])
-				.replace(/\$team4/, eventAlliances[a2]['Captain'])
-				.replace(/\$team5/, eventAlliances[a2]['First Pick'])
-				.replace(/\$team6/, eventAlliances[a2]['Second Pick'])
-			$(`#${typeFull}`).append(html)
+			$(`#${typeFull}`).append(scheduleRowHtml(schedule[j][0],schedule[j][1]),typeAbbr,i*schedule.length+j+1)
 		}
 	}
 	$(`#${typeFull}Section`).show()
@@ -145,75 +307,98 @@ function eventAlliancesToCsv(){
 
 $(document).ready(function(){
 	$('h1').text(eventName)
+	$('#scheduleSection').hide()
 	for (var i=1; i<=allianceCount; i++){
 		$('#alliances').append($('template#allianceRow').html().replace(/\$\#/g, i))
 	}
 	$('#alliances input').change(function(){
 		$("#t" + $(this).val()).addClass('picked')
-		if (!focusNext()) computeSchedule()
+		if (!focusNext()) computeStartingSchedule()
 	}).focus(function(){
 		focusInput($(this))
 	})
-	if (!focusNext()) computeSchedule()
 
-	$('#saveQF').click(function(){
+	$('#save').click(function(){
 		$('#eventInput').val(eventId)
-		$('#alliancesCsvInput').val(tableToCsv($('#alliances').closest('table')))
-		$('#quarterFinalsCsvInput').val(tableToCsv($('#quarterFinals').closest('table')))
+		addAlliancesHiddenFields()
+		$('#alliancesCsvInput').val($('#alliances').is(':visible')?tableToCsv($('#alliances').closest('table')):eventAlliancesToCsv())
+		if ($('#scheduleTable').is(':visible')){
+			$('#scheduleCsvInput').val(tableToCsv($('#scheduleTable')))
+		}
 		$('#addAlliances').submit()
+		return false
 	})
-	$('#saveSF').click(function(){
-		$('#eventInput').val(eventId)
-		$('#alliancesCsvInput').val(eventAlliancesToCsv())
-		$('#semiFinalsCsvInput').val(tableToCsv($('#semiFinals').closest('table')))
-		$('#addAlliances').submit()
-	})
-	$('#saveF').click(function(){
-		$('#eventInput').val(eventId)
-		$('#alliancesCsvInput').val(eventAlliancesToCsv())
-		$('#finalsCsvInput').val(tableToCsv($('#finals').closest('table')))
-		$('#addAlliances').submit()
-	})
-	$('#saveW').click(function(){
-		$('#eventInput').val(eventId)
-		$('#alliancesCsvInput').val(eventAlliancesToCsv())
-		$('#addAlliances').submit()
-	})
-
-	loadAlliances(function(data){
-		if (!data.length) showAllianceSelection()
-		else showBrackets()
-	})
-	$('#brackets').click(function(e){
+	loadAlliances(showContent)
+	$('#playoff-bracket').click(function(e){
 		var t = $(e.target)
 		if (t.is(".winnerBtn")){
 			var aInd=parseInt(t.attr('data-alliance'))-1
 			var oppInd=parseInt(t.attr('data-opponent'))-1
 			var column = t.attr('data-column')
+			if (column == 'Won Finals'){
+				$('#scheduleTable').hide()
+				$('#scheduleSection').show()
+			}
 			eventAlliances[aInd][column] = 1
 			eventAlliances[oppInd][column] = 0
-			showBrackets()
+			showContent()
 			return false
 		}
 	})
 })
 
-function computeSchedule(){
-	$('#quarterFinalSection').show()
-	$('#quarterFinals').html('')
-	var schedule = [[1,8],[4,5],[2,7],[3,6],[1,8],[4,5],[2,7],[3,6],[1,8],[4,5],[2,7],[3,6]]
-	for (var i=1; i<=schedule.length; i++){
-		var a1=schedule[i-1][0], a2 = schedule[i-1][1],
-		html = $('template#matchRow').html().replace(/\$\#/g, i)
-			.replace(/\$matchRound/, 'qf')
-			.replace(/\$team1/, $(`#A${a1}_captain`).val())
-			.replace(/\$team2/, $(`#A${a1}_pick_1`).val())
-			.replace(/\$team3/, $(`#A${a1}_pick_2`).val())
-			.replace(/\$team4/, $(`#A${a2}_captain`).val())
-			.replace(/\$team5/, $(`#A${a2}_pick_1`).val())
-			.replace(/\$team6/, $(`#A${a2}_pick_2`).val())
-		$('#quarterFinals').append(html)
+function showContent(){
+	if (!eventAlliances.length) showAllianceSelection()
+	else showBracket(getBrackets())
+}
+
+function getBrackets(){
+	if (eventAlliances && eventAlliances.length > 0){
+		if (eventAlliances[0].hasOwnProperty('Won Playoffs Round 1')) return getDoubleEliminationBrackets()
+		if (eventAlliances[0].hasOwnProperty('Won Quarter-Finals'))return getSingleEliminationBrackets()
 	}
+	if ($('#bracket-type').val()=='double') return getDoubleEliminationBrackets()
+	return getSingleEliminationBrackets()
+}
+
+function getBracketTitles(){
+	var rounds = getBrackets(),
+	headings = []
+	for (var i=0; i<rounds.length; i++){
+		headings.push(rounds[i].title)
+	}
+	return headings
+}
+
+function addAlliancesHiddenFields(){
+	var trh = $('#alliancesHead tr'),
+	tr = $('.allianceTr'),
+	rounds = getBracketTitles()
+	trh.find('.hidden').remove()
+	tr.find('.hidden').remove()
+	for (var i=0; i<rounds.length; i++){
+		trh.append($('<th class=hidden>').text('Won ' + rounds[i]))
+		tr.append($('<td class=hidden>'))
+	}
+}
+
+function computeStartingSchedule(){
+	$('#schedule').html('')
+	eventAlliances = csvToArrayOfMaps(tableToCsv($('#alliances').closest('table')))
+	showRoundSchedule(getBrackets()[0])
+}
+
+function scheduleRowHtml(a1, a2, round, num){
+	a1 = eventAlliances[a1-1]
+	a2 = eventAlliances[a2-1]
+	return $('template#matchRow').html().replace(/\$\#/g, num)
+	.replace(/\$matchRound/, round)
+	.replace(/\$team1/, a1['Captain'])
+	.replace(/\$team2/, a1['First Pick'])
+	.replace(/\$team3/, a1['Second Pick'])
+	.replace(/\$team4/, a2['Captain'])
+	.replace(/\$team5/, a2['First Pick'])
+	.replace(/\$team6/, a2['Second Pick'])
 }
 
 function focusInput(input){

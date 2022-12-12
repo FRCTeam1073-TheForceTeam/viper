@@ -1,5 +1,5 @@
 *{box-sizing:border-box}
-html{font-size: 2vmin;background:white url('/background.png') fixed;}
+html{font-size: 2vmin;background:white url('/background.png') fixed;background-size:33vw auto;}
 table,tr,td,th,button,input,select,option{font-size:inherit}
 body{text-align:center}
 table,ul{margin:0 auto;}
@@ -10,7 +10,7 @@ ul{text-align:left}
 .blueTeamBG{background-color:#99ccff;border-color:#99ccff}
 .lastFocus{background-color:lemonchiffon}
 .side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box}
-.winner{background-color:#EE6}
+.winner{border-left-color:#EE6;border-right-color:#EE6}
 #hamburger{position:absolute;top:0;right:0.4em;font-size:300%}
 #hamburger.hasUploads{background-color:lightgreen}
 #mainMenuBg{display:none;z-index:9998;width:100vw;height:100vh;position:fixed;background-color:#333D;left:0;top:0}
