@@ -18,7 +18,9 @@ $(document).ready(function(){
 					data: data,
 					rowHeaders: true,
 					colHeaders: true,
-					contextMenu: true
+					contextMenu: true,
+					manualColumnFreeze: true,
+					manualRowFreeze: true
 				})
 			},
 			error: function(xhr,status,err){
