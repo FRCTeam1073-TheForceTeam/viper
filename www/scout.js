@@ -35,9 +35,13 @@ function showSelectTeam(){
 	$('.screen').hide()
 	location.hash = `#event=${eventId}`
 	window.scrollTo(0,0)
-	var el = $('#teamList').html("")
+	var el = $('#teamList').html(""),
+	withData = getTeamsWithPitData()
+	console.log(withData)
 	for (var i=0; i<eventTeams.length;i++){
-		el.append($('<button>').text(eventTeams[i]).click(showPitScouting))
+		var button = $('<button>').text(eventTeams[i]).click(showPitScouting)
+		if (withData.hasOwnProperty(eventTeams[i])) button.addClass('stored')
+		el.append(button)
 	}
 	$('#select-team').show()
 }
@@ -109,6 +113,12 @@ function getScoutKey(t,m,e){
 	return `${e}_${m}_${t}`
 }
 
+function getPitScoutKey(t,m,e){
+	if (!t) t = team
+	if (!e) e = eventId
+	return `${e}_${t}`
+}
+
 function setHash(pos,orient,team,match){
 	location.hash = buildHash(pos,orient,team,match)
 }
@@ -167,10 +177,10 @@ function toggleChecked(o){
 	})
 }
 
-function toCSV(){
+function toCSV(formId){
 	keys = []
 	values = {}
-	$('#scouting input,#scouting textarea').each(function(){
+	$(`${formId} input,${formId} textarea`).each(function(){
 		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type')
 		off=(type=='checkbox'||type=='radio')&&!el.prop('checked')
 		if (!values.hasOwnProperty(name)){
@@ -208,9 +218,21 @@ function formHasChanges(f){
 function store(){
 	if (formHasChanges(scouting)){
 		localStorage.setItem("last_match_"+eventId, match)
-		var csv = toCSV()
+		var csv = toCSV('#scouting')
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getScoutKey(), csv[1])
+		storeTime = new Date().getTime()
+	}
+}
+
+
+function storePitScouting(){
+	if (formHasChanges($('#pit-scouting'))){
+		var csv = toCSV('#pit-scouting')
+		console.log(csv)
+		console.log(getPitScoutKey())
+		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
+		localStorage.setItem(getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
 	}
 }
@@ -229,6 +251,20 @@ function getTeamsWithData(){
 
 	for (i in localStorage){
 		if (/^20[0-9]{2}.*_.*_[0-9]+$/.test(i)){
+			var t = parseInt(i.replace(/.*_/,""))
+			teams[t]=1
+		}
+	}
+	return teams	
+}
+
+
+function getTeamsWithPitData(){
+	var teams = {}
+
+	for (i in localStorage){
+		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_[0-9]+$/.test(i)){
+			console.log(i)
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
 		}
@@ -321,6 +357,11 @@ $(document).ready(function(){
 			match = next['Match']
 			showScouting()
 		}
+		return false
+	})
+	$("#pitScoutNext").click(function(e){
+		storePitScouting()
+		showSelectTeam()
 		return false
 	})
 	$("#matchBtn").click(function(e){

@@ -13,7 +13,7 @@ my $webutil = webutil->new;
 
 my $file = $cgi->param('file');
 $webutil->error("No file specified") if (!$file);
-$webutil->error("Bad file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9_\-]+\.[a-z]+\.csv$/);
+$webutil->error("Bad file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.[a-z]+\.csv$/);
 $file = "data/$file";
 $webutil->error("File does not exist", $file) if (! -e $file);
 

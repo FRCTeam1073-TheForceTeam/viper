@@ -13,7 +13,7 @@ my $file = $cgi->param('file');
 my $delete = $cgi->param('delete');
 
 $webutil->error("Missing file name") if (!$file);
-$webutil->error("Malformed file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9_\-]+\.[a-z]+\.csv$/);
+$webutil->error("Malformed file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.[a-z]+\.csv$/);
 my $event = $file;
 $event =~ s/\.[a-z]+\.csv$//g;
 $file = "../data/${file}";

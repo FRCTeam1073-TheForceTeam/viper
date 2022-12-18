@@ -14,7 +14,7 @@
 </head>
 <body>
 <form id=saver method=POST action=/admin/edit.cgi>
-    <input id=file type=text readonly name=file>
+    <input id=file type=text readonly name=file pattern="^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|schedule|event|alliances)\.csv$" required placeholder=20xxEvent.type.csv>
     <input id=csv type=hidden name=csv>
     <input type=submit value=Save>
     <input id=delete type=submit name=delete value=Delete>

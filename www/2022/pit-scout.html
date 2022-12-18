@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pit Scouting EVENT - FRC Scouting App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/scout.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<title>FRC Scouting App</title>
+</head>
+<body>
+<h1><span class=team></span> Pit Scouting</h1>
+<div id=select-team style=display:none class=screen>
+	<H2>Select a team</H2>
+	<div id=teamList></div>
+</div>
+
+<form id=pit-scouting style=display:none class=screen>
+	<input type=hidden name=event>
+	<input type=hidden name=team>
+
+	<fieldset class=full>
+		<legend>Auto</legend>
+        <p><label><input type=checkbox name=auto_have value=1><span>Has Auto</span></label></p>
+        <p>Starting location on Map</p>
+        <p> Preloaded cargo scored in:
+            <label><input type=radio name=auto_preload value="Upper hub"><span>Upper hub</span></label>
+            or
+            <label><input type=radio name=auto_preload value="Lower hub"><span>Lower hub</span></label>
+        </p>
+        <p><label><input type=checkbox name=auto_collect value=1><span>Picks up any more CARGO</span></label></p>
+        <p>Where do you end?</p>
+        <p><label><input type=checkbox name=auto_collision_avoidance value=1><span>Has collision-avoidance software</span></label></p>
+        <p>
+            <label><input type=radio name=auto_navigation value="Dead reckoning"><span>Dead reckoning</span></label>
+            or
+            <label><input type=radio name=auto_navigation value="vision"><span>Vision</span></label>
+        </p>
+    </fieldset>
+    
+	<fieldset class=full>
+		<legend>Teleop</legend>
+        <p>Score mostly in:
+            <label><input type=radio name=teleop_target value="Upper hub"><span>Upper hub</span></label>
+            or
+            <label><input type=radio name=teleop_target value="Lower hub"><span>Lower hub</span></label>
+        </p>
+        <p>If you see that it collects, where does it collect from?</p>
+        <p>
+            Preferred shooting location:
+            <label><input type=radio name=teleop_shooting_location value="Against hub"><span>Against hub</span></label>
+            <label><input type=radio name=teleop_shooting_location value="Against wall"><span>Against wall</span></label>
+            <label><input type=radio name=teleop_shooting_location value="Against launch pad"><span>Against launch pad</span></label>
+            <label><input type=radio name=teleop_shooting_location value="Middle of the field"><span>Middle of the field</span></label>
+            <label><input type=radio name=teleop_shooting_location value="Anywhere"><span>Anywhere</span></label>
+        </p>
+    </fieldset>
+    
+	<fieldset class=full>
+		<legend>End Game</legend>
+        <p>If you can see that it climbs, which rung does it climb to?</p>
+        <p>Can you enter the Hangar from the side?</p>
+        <p>How long does your climb take?</p>
+    </fieldset>
+    
+	<fieldset class=full>
+		<legend>Other</legend>
+        <p>Is your drive team rookies, veterans, or a mix?</p>
+        <p>Do you use vision software?</p>
+        <p>If so, where?</p>
+        <p>What’s your practice schedule?</p>
+        <p><textarea name=notes placeholder="Notes (Please explain auto routines and insert other comments here)"></textarea></p>
+        <p>If you are also bot photo scouting, don't forget to take a picture!</p>
+    </fieldset>
+
+	<div>
+        <button id=pitScoutNext>Save</button>
+	</div>
+</form>
+</body>
+</html>

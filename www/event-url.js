@@ -2,7 +2,7 @@ $.ajaxSetup({
 	cache: true
 });
 
-var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9_\-]+)(?:\&.*)?$/)||["",""])[1]
+var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9\-]+)(?:\&.*)?$/)||["",""])[1]
 var eventYear = eventId.replace(/([0-9]{4}).*/,'$1')
 var eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1')
 var eventName = `${eventYear} ${eventVenue}`
