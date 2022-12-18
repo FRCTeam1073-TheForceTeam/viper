@@ -18,12 +18,12 @@ $(document).ready(function() {
           var color = $('button.pen.selected').css('color')
           data.options.graphics.fillStyle = color
           data.options.graphics.strokeStyle = color
-          data.sketch.pencil()            
+          data.sketch.pencil()
         }
       }
     }
   })
-  
+
   sketcher.sketchable('handler', sizeHandler)
 
   $(window).resize(function(ev) {
@@ -67,7 +67,7 @@ $(document).ready(function() {
     })
     location.hash = hash
   }
-  
+
   function loadFromLocationHash(){
     $('#statsTable input').each(function(){
       var name = $(this).attr('id')
@@ -91,7 +91,7 @@ $(document).ready(function() {
   })
 
   $('#statsTable input').change(fillStats)
-  
+
   function fillStats(){
     setLocationHash()
     $('#teamButtons button').removeClass("picked")

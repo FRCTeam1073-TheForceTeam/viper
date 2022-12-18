@@ -5,8 +5,6 @@ $(document).ready(function(){
 	}
 	var title = $('title')
 	var uploadCount = getUploads().length
-	title.text(eventName + " " + title.text())
-	$('h1').text(eventName)
 	$('a').each(function(){
 		$(this).attr(
 			'href',$(this).attr('href')
@@ -26,6 +24,9 @@ $(document).ready(function(){
 		for (var i=0; i<fileList.length; i++){
 			var extension = fileList[i].replace(/[^\.]+\./,"")
 			switch (extension){
+				case "event.csv":
+					$('.dependInfo').show().parents().show()
+					break;
 				case "schedule.csv":
 					$('.dependSchedule').show().parents().show()
 					break;
@@ -39,4 +40,35 @@ $(document).ready(function(){
 		}
 		if (uploadCount) $('.dependUploads').show().parents().show()
 	})
+	function setName(){
+		title.text(eventName + " " + title.text())
+		$('h1').text(eventName)
+	}
+	setName()
+	loadEventInfo(function(){
+		setName()
+		var info = $('#eventInfo').html('')
+		if (eventInfo.location) info.append($('<div>').text(eventInfo.location))
+		if (eventInfo.start || eventInfo.end){
+			var start = eventInfo.start || eventInfo.end,
+			end = eventInfo.end || eventInfo.start
+			if (start != end){
+				start = toDisplayDate(start)
+				end = toDisplayDate(end)
+				info.append($('<div>').text(`${start} to ${end}`))
+			} else {
+				start = toDisplayDate(start)
+				info.append($('<div>').text(`${start}`))
+			}
+		}
+	})
+	function toDisplayDate(d){
+		if (!d) return ""
+		try {
+			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(Date.parse(d))
+		} catch (x){
+			console.log("Could not parse " + d)
+			return ""
+		}
+	}
 })

@@ -196,13 +196,13 @@ function getDoubleEliminationBrackets(){
 		upper: [[winnerOf(rounds,1,'upper',0),winnerOf(rounds,1,'upper',1)]],
 		lower: [[winnerOf(rounds,2,'lower',0),winnerOf(rounds,2,'lower',1)]],
 		abbreviation: '4p'
-	})	
+	})
 	rounds.push({
 		title: "Playoffs Round 5",
 		upper: [],
 		lower: [[loserOf(rounds,3,'upper',0),winnerOf(rounds,3,'lower',0)]],
 		abbreviation: '5p'
-	})	
+	})
 	rounds.push({
 		title: "Finals",
 		matches: [[winnerOf(rounds,3,'upper',0),winnerOf(rounds,4,'lower',0)]],

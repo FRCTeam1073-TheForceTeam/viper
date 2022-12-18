@@ -14,27 +14,45 @@
 </head>
 <body>
 <h1>Enter Event Qualifier Matches</h1>
-<form id=tableForm action=/admin/add-event.cgi>
-<div class=side-by-side>
-Year: <input inputmode=numeric id=yearInp type=text placeholder=20xx required=1 pattern="^20[0-9]{2}$" name=event_year size=5>
-</div>
-<div class=side-by-side>
-Venue: <input id=venueInp type=text placeholder="No spaces or symbols" required=1 pattern="^[0-9a-zA-Z-]+$" name=event_venue size=15>
-<div><small>Recommended: match the venue ID to the event URL from www.thebluealliance.com</small></div>
-</div>
+<form id=tableForm method=POST action=/admin/add-event.cgi>
+	<div class=side-by-side>
+		Event name: <input id=nameInp name=name type=text placeholder="FTC Arena" required=1 size=20>
+	</div>
+	<div class=side-by-side>
+		Start date: <input name=start type=date id=startInp>
+	</div>
+	<div class=side-by-side>
+		End date: <input name=end type=date id=endInp>
+	</div>
+	<div class=side-by-side>
+		Location: <input name=location type=text id=locationInp placeholder="City, ST, USA">
+	</div>
+	<div class=side-by-side>
+		Event ID: <input id=idInp type=text placeholder="No spaces or symbols" required=1 pattern="^20[0-9]{2}[0-9a-zA-Z-]+$" name=event size=15>
+		<div><small>Recommended: match the venue ID to the event URL from www.thebluealliance.com</small></div>
+	</div>
 
-<div id=schedule>
-	<h2>Practice Matches</h2>
-	<table>
-		<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
-		<tbody id=pm></tbody>
-	</table>
-	<h2>Qualifier Matches</h2>
-	<table>
-		<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
-		<tbody id=qm></tbody>
-	</table>
-</div>
+	<input type=hidden id=csvInp name=csv>
+
+	<div id=schedule>
+		<h2>Practice Matches</h2>
+		<table>
+			<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+			<tbody id=pm></tbody>
+		</table>
+		<h2>Qualifier Matches</h2>
+		<table>
+			<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+			<tbody id=qm></tbody>
+		</table>
+	</div>
+
+	<div id=buttons>
+		<span id=team-list></span>
+		<button class=clearRow>Clear Row</button>
+		<input type=submit value="Save Event">
+	</div>
+</form>
 
 <template id=scheduleRow>
 	<tr>
@@ -47,17 +65,5 @@ Venue: <input id=venueInp type=text placeholder="No spaces or symbols" required=
 		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
 	</tr>
 </template>
-<div id=buttons>
-	<span id=team-list></span>
-	<button class=clearRow>Clear Row</button>
-	<input type=submit value="Save Event">
-</div>
-</form>
-
-<form id=csvForm method=POST action=/admin/add-event.cgi>
-  <input type=hidden id=eventInp name=event>
-  <input type=hidden id=csvInp name=csv>
-</form>
-
 </body>
 </html>

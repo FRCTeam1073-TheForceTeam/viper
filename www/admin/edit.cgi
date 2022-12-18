@@ -19,10 +19,11 @@ $event =~ s/\.[a-z]+\.csv$//g;
 $file = "../data/${file}";
 
 if ($delete){
-    `rm ${file}`;    
+    `rm ${file}`;
     $webutil->redirect("/") if ($file =~ /\.schedule\./);
     $webutil->redirect("/event.html#$event");
 } else {
+    $csv =~ s/(\r|\n|\r\n)+/\n/g;
     $webutil->error("Missing CSV") if (!$csv);
     $webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
     print $fh $csv;

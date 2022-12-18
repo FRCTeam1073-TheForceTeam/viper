@@ -1,7 +1,7 @@
 var file=(location.hash.match(/^\#(?:(?:.*\&)?(?:file\=))?(20[0-9]{2}[a-zA-Z0-9\-]+\.[a-z]+\.csv)(?:\&.*)?$/)||["",""])[1]
 
+var editor
 $(document).ready(function(){
-	var editor
 	$('#file').val(file)
 	function loadFile(){
 		if (!file) return blankTable()
@@ -24,7 +24,7 @@ $(document).ready(function(){
 	}
 	loadFile()
 	$('#saver').submit(function(e){
-		$('#csv').val((editor.getData().map(safeCSV).map(l=>l.join(",")).join('\n')+"\n").replace(/^,+[\r\n]+/gm,""))
+		$('#csv').val((editor.getData().map(safeCSV).map(l=>l.join(",")).join('\n')+"\n").replace(/,(\r|\n|(\r\n))/gm,"\n").replace(/^,+\n/gm,""))
 	})
 	$('#delete').click(function(e){
 		if (!confirm(`Are you sure you want to delete ${file}?`)){
@@ -47,8 +47,8 @@ function tableEditor(data){
 		colHeaders: true,
 		contextMenu: true,
 		manualColumnFreeze: true,
-		minSpareRows: 1, 
-		minSpareCols: 1, 
+		minSpareRows: 1,
+		minSpareCols: 1,
 	})
 }
 
@@ -60,6 +60,7 @@ function unescapeField(s){
 }
 
 function safeCSV(s){
+	if (!s) return ""
 	if (typeof s === 'object'){
 		return s.map(safeCSV)
 	}

@@ -142,7 +142,7 @@ function showPitScouting(t){
 	$('.team').text(team)
 	$('input[name="event"]').val(eventId).attr('value',eventId)
 	$('input[name="team"]').val(team).attr('value',team)
-	
+
 
 	pit.show()
 }
@@ -255,7 +255,7 @@ function getTeamsWithData(){
 			teams[t]=1
 		}
 	}
-	return teams	
+	return teams
 }
 
 
@@ -269,7 +269,7 @@ function getTeamsWithPitData(){
 			teams[t]=1
 		}
 	}
-	return teams	
+	return teams
 }
 
 function haveDataForMatch(m){

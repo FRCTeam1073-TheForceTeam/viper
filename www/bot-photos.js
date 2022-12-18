@@ -13,7 +13,7 @@ $(document).ready(function(){
     if (eventId){
         loadEventSchedule(function(){
             for(var i=0; i<eventTeams.length; i++){
-               addTeam(eventTeams[i]) 
+               addTeam(eventTeams[i])
             }
         })
     }
