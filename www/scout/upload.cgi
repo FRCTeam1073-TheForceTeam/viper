@@ -96,7 +96,7 @@ sub writeData(){
 			}
 			print $fh "\n";
 			$savedKeys .= "," if($savedKeys);
-			$savedKeys .= $row->[$uHead->{"event"}]."_".$row->[$uHead->{"match"}]."_".$row->[$uHead->{"team"}];
+			$savedKeys .= $row->[$uHead->{"event"}].(($type eq 'scouting')?("_".$row->[$uHead->{"match"}]):"")."_".$row->[$uHead->{"team"}];
 		}
 		close $fh;
 	}

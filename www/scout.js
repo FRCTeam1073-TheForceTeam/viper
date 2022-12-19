@@ -37,7 +37,7 @@ function showSelectTeam(){
 	window.scrollTo(0,0)
 	var el = $('#teamList').html(""),
 	withData = getTeamsWithPitData()
-	console.log(withData)
+	$('.location-pointer').remove()
 	for (var i=0; i<eventTeams.length;i++){
 		var button = $('<button>').text(eventTeams[i]).click(showPitScouting)
 		if (withData.hasOwnProperty(eventTeams[i])) button.addClass('stored')
@@ -139,11 +139,10 @@ function showPitScouting(t){
 	setHash(null,null,team,null)
 	var pit = $('#pit-scouting')
 	pit[0].reset()
+	$('.location-pointer').remove()
 	$('.team').text(team)
 	$('input[name="event"]').val(eventId).attr('value',eventId)
 	$('input[name="team"]').val(team).attr('value',team)
-
-
 	pit.show()
 }
 
@@ -229,8 +228,6 @@ function store(){
 function storePitScouting(){
 	if (formHasChanges($('#pit-scouting'))){
 		var csv = toCSV('#pit-scouting')
-		console.log(csv)
-		console.log(getPitScoutKey())
 		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
 		localStorage.setItem(getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
@@ -261,10 +258,8 @@ function getTeamsWithData(){
 
 function getTeamsWithPitData(){
 	var teams = {}
-
 	for (i in localStorage){
 		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_[0-9]+$/.test(i)){
-			console.log(i)
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
 		}
@@ -345,6 +340,16 @@ $(document).ready(function(){
 		val = val+toAdd
 		val = val<0?0:val
 		input.val(val)
+	})
+
+	$("img.robot-location").click(function(e){
+        var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
+        y = Math.round(1000 * (e.pageY - this.offsetTop) / this.height)/10,
+		inp = $(this).parent().find('input'),
+		name = inp.attr('name')
+		$(`.${name}`).remove()
+		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
+        inp.val(`${x}%x${y}%`)
 	})
 
 	$("#nextBtn").click(function(e){

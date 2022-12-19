@@ -19,3 +19,4 @@ button.complete{text-decoration:line-through}
 #featuredButton button{font-size:200%;display:block;margin:1em auto;padding:1em}
 #select-team button{margin:0.5em}
 textarea{width:100%;height:8em;max-width:40em}
+img.robot-location{max-width:20em;border:1px solid black}

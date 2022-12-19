@@ -36,6 +36,9 @@ $(document).ready(function(){
 				case "alliances.csv":
 					$('.dependAlliances').show().parents().show()
 					break;
+				case "pit.csv":
+					$('.dependPit').show().parents().show()
+					break;
 			}
 		}
 		if (uploadCount) $('.dependUploads').show().parents().show()

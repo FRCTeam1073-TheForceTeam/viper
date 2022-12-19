@@ -27,14 +27,14 @@
 	<fieldset class=full>
 		<legend>Auto</legend>
         <p><label><input type=checkbox name=auto_have value=1><span>Has Auto</span></label></p>
-        <p>Starting location on Map</p>
+        <p>Start location:<br><img src=field-whiteboard.png class=robot-location> <input type=hidden name=auto_start_location></p>
         <p> Preloaded cargo scored in:
             <label><input type=radio name=auto_preload value="Upper hub"><span>Upper hub</span></label>
             or
             <label><input type=radio name=auto_preload value="Lower hub"><span>Lower hub</span></label>
         </p>
         <p><label><input type=checkbox name=auto_collect value=1><span>Picks up any more CARGO</span></label></p>
-        <p>Where do you end?</p>
+        <p>End location:<br><img src=field-whiteboard.png class=robot-location> <input type=hidden name=auto_end_location></p>
         <p><label><input type=checkbox name=auto_collision_avoidance value=1><span>Has collision-avoidance software</span></label></p>
         <p>
             <label><input type=radio name=auto_navigation value="Dead reckoning"><span>Dead reckoning</span></label>
@@ -50,9 +50,8 @@
             or
             <label><input type=radio name=teleop_target value="Lower hub"><span>Lower hub</span></label>
         </p>
-        <p>If you see that it collects, where does it collect from?</p>
         <p>
-            Preferred shooting location:
+            Preferred shooting location:<br>
             <label><input type=radio name=teleop_shooting_location value="Against hub"><span>Against hub</span></label>
             <label><input type=radio name=teleop_shooting_location value="Against wall"><span>Against wall</span></label>
             <label><input type=radio name=teleop_shooting_location value="Against launch pad"><span>Against launch pad</span></label>
@@ -63,17 +62,42 @@
 
 	<fieldset class=full>
 		<legend>End Game</legend>
-        <p>If you can see that it climbs, which rung does it climb to?</p>
-        <p>Can you enter the Hangar from the side?</p>
-        <p>How long does your climb take?</p>
+        <p>
+            If you can see that it climbs, which rung does it climb to?<br>
+			<label><input type=radio name=rung value=low><span>Low</span></label>
+			<label><input type=radio name=rung value=middle><span>Middle</span></label>
+			<label><input type=radio name=rung value=high><span>High</span></label>
+			<label><input type=radio name=rung value=traversal><span>Traversal</span></label>
+        </p>
+        <p><label><input type=checkbox name=hanger_from_side value=yes><span>Can enter the Hangar from the side</span></label></p>
+        <p>How many seconds does the climb take?  <input type=number min=1 max=200 name=climb_seconds size=4></p>
     </fieldset>
 
 	<fieldset class=full>
 		<legend>Other</legend>
-        <p>Is your drive team rookies, veterans, or a mix?</p>
-        <p>Do you use vision software?</p>
-        <p>If so, where?</p>
-        <p>What’s your practice schedule?</p>
+        <p>
+            Drive team:<br>            
+			<label><input type=radio name=drive_team value=rookies><span>Rookies</span></label>
+			<label><input type=radio name=drive_team value=veterans><span>Veterans</span></label>
+			<label><input type=radio name=drive_team value=mix><span>Mix</span></label>
+        </p>
+        <p>
+            Vision software used:<br>            
+			<label><input type=checkbox name=vision_driving value=yes><span>Driving</span></label>
+			<label><input type=checkbox name=vision_aiming value=yes><span>Aiming</span></label>
+			<label><input type=checkbox name=vision_climbing value=yes><span>Climbing</span></label>
+        </p>
+        <p>
+            What's your practice schedule?<br>
+			<label><input type=checkbox name=practice_sun value=yes><span>Sun</span></label>
+			<label><input type=checkbox name=practice_mon value=yes><span>Mon</span></label>
+			<label><input type=checkbox name=practice_tue value=yes><span>Tue</span></label>
+			<label><input type=checkbox name=practice_wed value=yes><span>Wed</span></label>
+			<label><input type=checkbox name=practice_thu value=yes><span>Thu</span></label>
+			<label><input type=checkbox name=practice_fri value=yes><span>Fri</span></label>
+			<label><input type=checkbox name=practice_sat value=yes><span>Sat</span></label>
+
+        </p>
         <p><textarea name=notes placeholder="Notes (Please explain auto routines and insert other comments here)"></textarea></p>
         <p>If you are also bot photo scouting, don't forget to take a picture!</p>
     </fieldset>
@@ -81,6 +105,8 @@
 	<div>
         <button id=pitScoutNext>Save</button>
 	</div>
+
+    <img src=/pointer.png style=display:none>
 </form>
 </body>
 </html>

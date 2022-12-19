@@ -40,7 +40,7 @@ $(document).ready(function(){
 
 function hasUploads(){
 	for (i in localStorage){
-		if (/^20.*_.*_/.test(i)) return true
+		if (/^20[0-9]{2}[A-Za-z0-9\-]+_(([0-9]+)|(.*_.*))$/.test(i)) return true
 	}
 	return false
 }
