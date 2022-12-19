@@ -11,7 +11,7 @@ ul{text-align:left}
 .lastFocus{background-color:lemonchiffon}
 .side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box}
 .winner{border-left-color:#EE6;border-right-color:#EE6}
-#hamburger{position:absolute;top:0;right:0.4em;font-size:300%}
+#hamburger{position:fixed;top:0;right:0.4em;font-size:300%}
 #hamburger.hasUploads{background-color:lightgreen}
 #mainMenuBg{display:none;z-index:9998;width:100vw;height:100vh;position:fixed;background-color:#333D;left:0;top:0}
 #mainMenu{display:none;z-index:9999;position:fixed;background-color:#fff;top:50%;left:50%;transform:translate(-50%,-50%);padding:1em;text-align:left}
