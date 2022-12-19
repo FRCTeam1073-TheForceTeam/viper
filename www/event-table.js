@@ -63,7 +63,7 @@ function checkTeams(table){
 		var allEmpty = empties.length == inputs.length;
 		if (allEmpty) full = false;
 		if (!allEmpty) seenValue = true;
-		if (seenValue || (table=='qm' && i == rows.length-1)){
+		if (seenValue){
 			inputs.attr('required','1')
 		} else {
 			inputs.removeAttr('required')
