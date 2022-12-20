@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
 	loadEventSchedule(function(data){
 		if (!data.length) return $('body').html("Match not found")
@@ -16,17 +18,24 @@ $(document).ready(function(){
 		var last = data[data.length-1]['Match'].replace(/[0-9]+/,""),
 		addMatches = $('#addMatches'),
 		edit = $('#edit')
-		if (last == "f"){
+		var next = {
+			"qm": "playoffs",
+			"qf": "semi-finals",
+			"sf": "finals",
+			"1p": "playoffs round 2",
+			"2p": "playoffs round 3",
+			"3p": "playoffs round 4",
+			"4p": "playoffs round 5",
+			"5p": "finals"
+		}
+		if (last == 'pm'){
+			addMatches.html(addMatches.html().replace('playoffs', "event-table").replace('EVENT', eventId).replace('NEXT','qualifiers'))
+			addMatches.show()
+		} else if (next.hasOwnProperty(last)){
+			addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT',next[last]))
+			addMatches.show()
+		} else {
 			addMatches.hide()
-		} else if (last == 'qm'){
-			addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT','quarter-finals'))
-			addMatches.show()
-		} else if (last == 'qf'){
-			addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT','semi-finals'))
-			addMatches.show()
-		} else if (last == 'sf'){
-			addMatches.html(addMatches.html().replace('EVENT', eventId).replace('NEXT','finals'))
-			addMatches.show()
 		}
 		edit.html(edit.html().replace('EVENT', eventId))
 	})
