@@ -20,9 +20,16 @@ $(document).ready(function(){
 				$('#years').append($(`<option value=${year}>${year}</option>`))
 			}
 			$('#years').toggle(years.length > 1)
+			events = events.sort((a,b)=>{return getDate(b).localeCompare(getDate(a))})
 			showEvents()
 		}
 	})
+	function getDate(s){
+		if (!s) return ""
+		var m = /[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(s)
+		if (m) return m[0]
+		return ""
+	}
 	function showEvents(){
 		var list = $('#events-list')
 		list.html('');

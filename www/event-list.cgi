@@ -19,6 +19,10 @@ foreach my $name (split /\n/, `ls -1 -t data/*.schedule.csv`){
 		my $data = `tail -n 1 $eventFile`;
 		chomp $data;
 		print $data;
+	} else {
+		my $mod = `date -r "data/$name.schedule.csv" "+%Y-%d-%m"`;
+		chomp $mod;
+		print ",,,,$mod,$mod"
 	}
 	print "\n";
 }
