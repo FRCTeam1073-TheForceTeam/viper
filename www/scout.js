@@ -401,4 +401,14 @@ $(document).ready(function(){
 		location.href="/upload.html" + returnTo
 		return false
 	})
+
+	$('img.expandable-image').click(function(){
+		$('.lightBoxContent').append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')).show()
+		$('#lightBoxBG').show()
+	})
+	
+	$('#lightBoxBG').click(function(){
+		$('#lightBoxBG').hide()
+		$('.lightBoxContent').hide()
+	})
 })

@@ -28,8 +28,6 @@
 		<td class=blueTeamBG><button>B3</button></td>
 		<td class=redTeamBG><button>R3</button></td>
 	</tr></table>
-	<img class=bigimg src=hub.png>
-	<img class=bigimg src=hangar.png>
 </div>
 
 <div id=select-match style=display:none class=screen>
@@ -70,6 +68,7 @@
 			</tr>
 		</table>
 		<div class=full>
+			<img class=expandable-image src=hub.png>
 			<label><input type=checkbox name=taxi value=1><span>Taxi Points</span></label>
 			<label><input type=checkbox name=human value=1><span>Human Score</span></label>
 		</div>
@@ -104,6 +103,7 @@
 			<label><input type=checkbox name=shoot_from_field value=1><span>Spots<br>in Field</span></label>
 			<label><input type=checkbox name=shoot_from_outer_LP value=1><span>Outer<br>Launch Pad</span></label>
 			<label><input type=checkbox name=shoot_from_wallLP value=1><span>Launch Pad<br>by Wall</span></label>
+			<img class=expandable-image src=hangar.png>
 		</fieldset>
 	</fieldset>
 	<hr class=teamColorBG>
@@ -196,5 +196,7 @@
 		</div>
 	</div>
 </form>
+<div id=lightBoxBG style=display:none></div>
+<div class=lightBoxContent style=display:none></div>
 </body>
 </html>
