@@ -1,4 +1,5 @@
-"use strict";
+"use strict"
+
 var teams = []
 var allianceCount = 8;
 
