@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 function addRow(table){
 	if (!table) table = "qm"
