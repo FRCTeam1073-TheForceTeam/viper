@@ -7,6 +7,7 @@
 1. Run the installation script: `./scripts/install.sh`
    - It will start by installing software dependencies (like Apache).
    - Then it will create a configuration file: `local.conf`.
+   - See the [example configuration file](../script/example.conf) for a preview.
 1. Edit the configuration: `nano local.conf`
    - Most of the defaults are probably fine to start with.
    - Use the documentation comments for guidance about any setting you want to change.
