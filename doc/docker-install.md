@@ -12,6 +12,8 @@ The scouting server can be run for development on pretty much any Windows, Mac, 
 1. Save code files.
 1. Refresh web browser.
 
+When you are done, run `docker-compose down` to stop the server.
+
 ## Other documentation
 
  - [README](../README.md)
