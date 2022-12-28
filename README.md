@@ -27,3 +27,6 @@ It runs on as a web app on a server that can be taken to events and powered by a
  - [Recommended hardware](doc/hardware.md)
  - [Installing on Linux (Like a Raspberry Pi)](doc/linux-install.md)
  - [Windows, Mac, or Linux development environment with Docker](doc/docker-install.md)
+ - For users:
+   - [About](www/about.md)
+   - [Printable instructions](www/printable-instructions.md)
