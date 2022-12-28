@@ -3,7 +3,8 @@ html{font-size: 2vmin;background:white url('/background.png') fixed;background-s
 table,tr,td,th,button,input,select,option{font-size:inherit}
 body{text-align:center}
 table,ul{margin:0 auto;}
-ul,ol,p{text-align:left;max-width:40em;margin:1em auto}
+ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
+ol+ul,ul+ol,ul+ul,ol+ol,p+p{margin:1em auto}
 .right{text-align:right}
 .left{text-align:left}
 .redTeamBG{background-color:#ff6666;border-color:#ff6666}
