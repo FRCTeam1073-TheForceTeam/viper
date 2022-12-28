@@ -39,9 +39,6 @@ $(document).ready(function(){
 		}
 		edit.html(edit.html().replace('EVENT', eventId))
 	})
-	$('#lightBoxBG').click(function(){
-		$('.lightBox').hide()
-	})
 	$('h1').text(eventName + " " + $('h1').text())
 	$('title').text(eventName + " " + $('title').text())
 })
@@ -64,7 +61,7 @@ function showLinks(e){
 		pos=el.attr('class').match(/\b[RB][1-3]\b/)[0]
 	}
 
-	var html = $('#lightBoxTemplate').html()
+	var html = $('#matchActionsTemplate').html()
 		.replace(/\$TEAM/g, team)
 		.replace(/\$POS/g, pos)
 		.replace(/\$MATCH_ID/g, matchId)
@@ -76,8 +73,8 @@ function showLinks(e){
 		.replace(/\$B2/g, b2)
 		.replace(/\$B3/g, b3)
 		.replace(/\$EVENT/g, eventId)
-		.replace(/\$YEAR/g, eventYear)
-	$('#lightBoxContent').html(html)
-	$('#lightBoxContent').find('.dependTeam').toggle(!!team)
-	$('.lightBox').show()
+		.replace(/\$YEAR/g, eventYear),
+	ma = $('#matchActions')
+	ma.html(html).find('.dependTeam').toggle(!!team)
+	showLightBox(ma)
 }

@@ -26,15 +26,9 @@ function dateCompare(a,b){
 $(document).ready(function(){
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger>☰</div>'),
-		mainMenu = $('<div id=mainMenu>'),
-		mainMenuBg = $('<div id=mainMenuBg>')
-		$('body').append(hamburger).append(mainMenu).append(mainMenuBg)
-		hamburger.click(toggleMainMenu)
-		mainMenuBg.click(toggleMainMenu)
-		function toggleMainMenu(){
-			mainMenu.toggle()
-			mainMenuBg.toggle()
-		}
+		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')
+		$('body').append(hamburger).append(mainMenu)
+		hamburger.click(function(){showLightBox(mainMenu)})
 
 		if (!window.eventId){
 			$.get("/event-list.cgi",function(data){
@@ -72,8 +66,16 @@ $(document).ready(function(){
 			mainMenu.find('.dependUpload').toggle(hasUploads())
 		}
 		$(window).on('hashchange',showMainMenuUploads)
+		$('body').append($('<div id=lightBoxBG>').click(closeLightBox))
 	}
 })
+function closeLightBox(){	
+	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
+}
+function showLightBox(content){
+	$('#lightBoxBG').show()
+	content.show()
+}
 
 function hasUploads(){
 	for (var i in localStorage){

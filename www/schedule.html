@@ -32,7 +32,7 @@
 		<td class="B3 blueTeamBG"></td>
 	</tr>
 </template>
-<template id=lightBoxTemplate>
+<template id=matchActionsTemplate>
 	<div class=link>
 		<h3><a href="/predictor.html#event=$EVENT&R1=$R1&B1=$B1&R2=$R2&B2=$B2&R3=$R3&B3=$B3">Predictor</a></h3>
 		Predict $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3
@@ -50,8 +50,7 @@
 		Team stats: $TEAM
 	</div>
 </template>
-<div id=lightBoxBG class=lightBox style=display:none></div>
-<div id=lightBoxContent class=lightBox style=display:none></div>
+<div id=matchActions class=lightBoxCenterContent style=display:none></div>
 <p id=addMatches><a href="/playoffs.html#event=EVENT">+ Add NEXT</a></p>
 <p id=edit><a href="/edit.html#file=EVENT.schedule.csv">Edit Schedule</a></p>
 </body></html>

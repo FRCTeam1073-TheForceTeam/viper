@@ -197,21 +197,17 @@ $(document).ready(function() {
     if (!t) return
     $('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}&team=${t}`)
     window.scrollTo(0,0)
-    $('#lightBoxBG').show()
-    $('#statsLightBox').show()
+    showLightBox($('#statsLightBox'))
   }
 
   function showImg(){
     $('#imageLightBox img').attr('src', $(this).find('img').attr('src'))
-    $('#lightBoxBG').show()
-    $('#imageLightBox').show()
+    showLightBox($('#imageLightBox'))
   }
 
 	$('title').text($('title').text().replace("EVENT", eventName))
 	$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
-		$('#lightBoxBG').hide()
-		$('.lightBoxContent').hide()
 		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	})
 })

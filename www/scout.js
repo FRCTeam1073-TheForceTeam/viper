@@ -403,12 +403,6 @@ $(document).ready(function(){
 	})
 
 	$('img.expandable-image').click(function(){
-		$('.lightBoxContent').append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')).show()
-		$('#lightBoxBG').show()
-	})
-	
-	$('#lightBoxBG').click(function(){
-		$('#lightBoxBG').hide()
-		$('.lightBoxContent').hide()
+		showLightBox($('#lightBoxImage').append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')))
 	})
 })
