@@ -13,3 +13,4 @@ button.team.picked{background-color:darkslategray;}
 button.team{width:3em;height:1.5em;margin:0.25em}
 #statsTable img{max-width:2em;max-height:2em}
 #imageLightBox img{object-fit:contain;width:100%;height:100%;}
+#fullPhoto{object-fit:contain;background:#0000;border:none}

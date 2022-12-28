@@ -201,10 +201,9 @@ $(document).ready(function() {
   }
 
   function showImg(){
-    $('#imageLightBox img').attr('src', $(this).find('img').attr('src'))
-    showLightBox($('#imageLightBox'))
+    showLightBox($('#fullPhoto').attr('src', $(this).find('img').attr('src')))
   }
-
+  $('#fullPhoto').click(closeLightBox)
 	$('title').text($('title').text().replace("EVENT", eventName))
 	$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){

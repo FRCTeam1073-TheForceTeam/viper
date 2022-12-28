@@ -20,8 +20,12 @@ function fillPage(){
 			matchNames.push(getMatchName(eventStats[i]['match']))
 		}
 	}
-
-	$('#photo').html(`<img src="/data/${eventYear}/${team}.jpg">`)
+	$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
+	$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
+	$('.imagePreview img').click(function(){
+		showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
+	})
+	$('#fullPhoto').click(closeLightBox)
 	var graphs = $('#statGraphs').html('')
 	var comments = $('#comments').html("")
 	if (!matchList.length) return;
