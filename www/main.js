@@ -1,3 +1,5 @@
+"use strict"
+
 window.addEventListener("load", () => {
 	if ("serviceWorker" in navigator){
 		navigator.serviceWorker.register("/offline-service-worker.cgi").then(function(reg) {
@@ -6,6 +8,20 @@ window.addEventListener("load", () => {
 	}
 })
 
+var recentEventName = ""
+var recentEventId = ""
+var recentEventYear = ""
+
+function getDate(s){
+	if (!s) return ""
+	var m = /[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(s)
+	if (m) return m[0]
+	return ""
+}
+
+function dateCompare(a,b){
+	return getDate(b).localeCompare(getDate(a))
+}
 
 $(document).ready(function(){
 	if (!inIframe()){
@@ -19,16 +35,37 @@ $(document).ready(function(){
 			mainMenu.toggle()
 			mainMenuBg.toggle()
 		}
-		$.get("/main-menu.html",function(data){
-			mainMenu.html(
-				data
-					.replace(/EVENT_NAME/g, typeof eventName!=='undefined'?eventName:"")
-					.replace(/EVENT_ID/g, typeof eventId!=='undefined'?eventId:"")
-					.replace(/YEAR/g, typeof eventYear!=='undefined'?eventYear:"")
-			)
-			mainMenu.find('.dependEvent').toggle(typeof eventName!=='undefined')
-			showMainMenuUploads()
-		})
+
+		if (!window.eventId){
+			$.get("/event-list.cgi",function(data){
+				var events = data.split(/[\r\n]/)
+				if (events.length){
+					events = events.sort(dateCompare)
+					var recent = events[0].split(",")
+					if (recent.length>=4){
+						recentEventId = recent[0]
+						recentEventYear = recentEventId.replace(/([0-9]{4}).*/,'$1')
+						var venue = recentEventId.replace(/[0-9]{4}(.*)/,'$1')
+						recentEventName = recent[1]||`${recentEventYear} ${venue}`
+					}
+				}
+			}).always(populateMainMenu)
+		} else {
+			populateMainMenu()
+		}
+
+		function populateMainMenu(){
+			$.get("/main-menu.html",function(data){	
+				mainMenu.html(
+					data
+						.replace(/EVENT_NAME/g, (window.eventName)||recentEventName)
+						.replace(/EVENT_ID/g, (window.eventId)||recentEventId)
+						.replace(/YEAR/g, (window.eventYear)||recentEventYear)
+				)
+				mainMenu.find('.dependEvent').toggle(!!(window.eventName||recentEventName))
+				showMainMenuUploads()
+			})
+		}
 
 		function showMainMenuUploads(){
 			hamburger.toggleClass("hasUploads", hasUploads())
@@ -39,7 +76,7 @@ $(document).ready(function(){
 })
 
 function hasUploads(){
-	for (i in localStorage){
+	for (var i in localStorage){
 		if (/^20[0-9]{2}[A-Za-z0-9\-]+_(([0-9]+)|(.*_.*))$/.test(i)) return true
 	}
 	return false

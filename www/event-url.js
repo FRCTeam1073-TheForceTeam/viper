@@ -5,7 +5,7 @@ $.ajaxSetup({
 var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9\-]+)(?:\&.*)?$/)||["",""])[1]
 var eventYear = eventId.replace(/([0-9]{4}).*/,'$1')
 var eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1')
-var eventName = `${eventYear} ${eventVenue}`
+var eventName = eventYear+(eventYear?" ":"")+eventVenue
 var eventMatches = []
 var eventAlliances = []
 var eventStats = []
