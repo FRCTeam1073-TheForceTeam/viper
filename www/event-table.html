@@ -48,7 +48,7 @@
 
 	<div id=buttons>
 		<span id=team-list></span>
-		<a target=_blank href=/event-table-instructions.html>Instructions</a>
+		<button class=showInstructions>Instructions</button>
 		<button class=clearRow>Clear Row</button>
 		<input type=submit value="Save Event">
 	</div>
@@ -65,5 +65,6 @@
 		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
 	</tr>
 </template>
+<iframe id=instructions class=lightBoxFullContent src=/event-table-instructions.html></iframe>
 </body>
 </html>

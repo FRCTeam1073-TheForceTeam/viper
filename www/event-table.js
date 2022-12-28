@@ -96,6 +96,10 @@ $(document).ready(function(){
 		lf().focus()
 		return false
 	})
+	$('button.showInstructions').click(function(){
+		showLightBox($('#instructions'))
+		return false
+	})
 	$('#tableForm').submit(function(){
 		var csv = "Match,R1,R2,R3,B1,B2,B3\n",
 		tables = ['pm','qm']
