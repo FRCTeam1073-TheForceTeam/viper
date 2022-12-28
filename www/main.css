@@ -4,7 +4,7 @@ table,tr,td,th,button,input,select,option{font-size:inherit}
 body{text-align:center}
 table,ul{margin:0 auto;}
 ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
-*+ul,*+ol,*+ul{margin:1em auto}
+*+ul,*+ol,*+p{margin:1em auto}
 .right{text-align:right}
 .left{text-align:left}
 .redTeamBG{background-color:#ff6666;border-color:#ff6666}

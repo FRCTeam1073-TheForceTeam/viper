@@ -17,14 +17,23 @@ $(document).ready(function(){
             }
         })
     }
+    $('#showInstructions').click(function(){
+        showLightBox($('#instructions'))
+        return false
+    })
+    $('#fullPhoto').click(closeLightBox)
 })
+
+function showFullPhoto(){
+    showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
+}
 
 function addTeam(team){
     if (!/^[0-9]+$/.test(team)) return
     var year = ($('#yearInp').val())
     $('#teams')
         .append(`<h2>Team ${team}</h2>`)
-        .append(`<img src=/data/${year}/${team}.jpg>`)
+        .append($(`<img class=photoPreview src=/data/${year}/${team}.jpg>`).click(showFullPhoto))
         .append(`<input type=file name=${team} accept="image/*">`)
         .append(`<hr>`)
 }
