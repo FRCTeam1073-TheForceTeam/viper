@@ -50,6 +50,11 @@ $(document).ready(function() {
     sketcher.sketchable('memento.undo')
   })
 
+	$('button.showInstructions').click(function(){
+		showLightBox($('#instructions'))
+		return false
+	})
+
   function setIcon() {
     var cursor = $('button.pen.selected').attr('data-type')
     sketcher.css('cursor', `url(${cursor}.svg), auto`);
