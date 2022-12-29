@@ -17,5 +17,5 @@ When you are done, run `docker-compose down` to stop the server.
 ## Other documentation
 
  - [README](../README.md)
- - [Recommended hardware](doc/hardware.md)
- - [Installing on Linux (Like a Raspberry Pi)](doc/linux-install.md)
+ - [Recommended hardware](hardware.md)
+ - [Installing on Linux (Like a Raspberry Pi)](linux-install.md)

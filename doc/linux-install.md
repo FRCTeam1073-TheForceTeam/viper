@@ -37,5 +37,5 @@ The installation will touch a number of files.
 ## Other documentation
 
  - [README](../README.md)
- - [Recommended hardware](doc/hardware.md)
- - [Development Environment with Docker](doc/docker-install.md)
+ - [Recommended hardware](hardware.md)
+ - [Development Environment with Docker](docker-install.md)

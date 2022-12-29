@@ -18,5 +18,5 @@ The scouting tablets are connected to the ethernet adapters, which allows them t
 ## Other documentation
 
  - [README](../README.md)
- - [Installing on Linux (Like a Raspberry Pi)](doc/linux-install.md)
- - [Development Environment with Docker](doc/docker-install.md)
+ - [Installing on Linux (Like a Raspberry Pi)](linux-install.md)
+ - [Development Environment with Docker](docker-install.md)
