@@ -4,7 +4,7 @@
 
  The team numbers are editable.  
 
-  - Erase a team number and click off elsewhere to remove it.
+  - Erase a team number and click elsewhere to remove it.
   - Focus on an empty team slot and press a team button or type a team number to add a team.
 
 Stats will show up when all six team numbers have been entered.
