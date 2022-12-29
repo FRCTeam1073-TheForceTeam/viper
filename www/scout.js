@@ -384,6 +384,10 @@ $(document).ready(function(){
 		showTeamChange()
 		return false
 	})
+	$('.showInstructions').click(function(){
+		showLightBox($(this).parent().find('.instructions'))
+		return false
+	})
 	$("#uploadBtn").click(function(e){
 		store()
 		var returnTo = "",
@@ -403,6 +407,6 @@ $(document).ready(function(){
 	})
 
 	$('img.expandable-image').click(function(){
-		showLightBox($('#lightBoxImage').append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')))
+		showLightBox($('#lightBoxImage').html("").append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')))
 	})
 })

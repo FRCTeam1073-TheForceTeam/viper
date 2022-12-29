@@ -16,7 +16,7 @@ $(document).ready(function(){
                 $('title').text(m[1])
                 text = m[2]
             }
-            $('#md').html(window.markdownit().render(text).replace(/\$URL\$/,url))
+            $('#md').html(window.markdownit({html:true}).render(text).replace(/\$URL\$/,url))
         }
 	})
 })
