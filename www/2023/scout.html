@@ -32,17 +32,17 @@
 	</tr></table>
 </div>
 
-<div id=select-match class=notscreen>
+<div id=select-match class=screen>
 	<ul id=match-list></ul>
 </div>
 
-<div id=change-team class=notscreen>
+<div id=change-team class=screen>
 	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
 	<button id=teamChangeBtn>Change</button>
 	<button id=teamCancelBtn>Cancel</button>
 </div>
 
-<form id=scouting class=notscreen>
+<form id=scouting class=screen>
 	<input type=hidden name=event>
 	<input type=hidden name=match>
 	<input type=hidden name=team>
@@ -50,8 +50,6 @@
 		<tr><th colspan=4>
 			Auto
 		</th></tr><tr><td colspan=4>
-			<label><input type=checkbox name=NEEDSNAME value=1><span>Robot Left Community</span></label>
-		</td></tr><tr><td colspan=4>
 			Top
         </td></tr><tr><td>
             <div><div class=side-by-side>
@@ -59,7 +57,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_top_cone size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -67,7 +65,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_top_cone_failed size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -75,7 +73,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_top_cube size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -83,7 +81,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_top_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td colspan=4>
             Middle
@@ -93,7 +91,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_middle_cone size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -101,7 +99,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_middle_cone_failed size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -109,7 +107,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_middle_cube size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -117,7 +115,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_middle_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td colspan=4>
             Bottom
@@ -127,7 +125,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_bottom_cone size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -135,7 +133,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_bottom_cone_failed size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -143,7 +141,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_bottom_cube size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -151,12 +149,14 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=auto_bottom_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td colspan=4>
-            <label><input type=radio name=NEEDSNAME value=1><span>Docked</span></label>
-            <label><input type=radio name=NEEDSNAME value=2><span>Engaged</span></label>
-            <label><input type=radio name=NEEDSNAME value=3><span>Docking Failed</span></label>
+            <label><input type=checkbox name=auto_leave value=1><span>Robot Left Community</span></label>
+        </td></tr><tr><td colspan=4>
+            <label><input type=radio name=auto_docked value=1><span>Docked</span></label>
+            <label><input type=radio name=auto_engaged value=2><span>Engaged</span></label>
+            <label><input type=radio name=auto_docking_failed value=3><span>Docking Failed</span></label>
         </td></tr>
 	</table>
 
@@ -171,7 +171,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_top_cone size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -179,7 +179,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_top_cone_failed size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -187,7 +187,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_top_cube size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -195,7 +195,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_top_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td colspan=4>
             Middle
@@ -205,7 +205,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_middle_cone size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -213,7 +213,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_middle_cone_failed size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -221,7 +221,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_middle_cube size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -229,7 +229,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_middle_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td colspan=4>
             Bottom
@@ -239,7 +239,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_bottom_cone size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -247,7 +247,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_bottom_cone_failed size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -255,7 +255,7 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_bottom_cube size=1 disabled>
             </div></div>
         </td><td>
            <div><div class=side-by-side>
@@ -263,69 +263,34 @@
                 <img class=count src=/count_down.svg>
             </div><div class=side-by-side>
                 <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
+                <input type=text class=num value=0 name=tele_bottom_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td colspan=4>
-            Defense
-        </td></tr><tr><td colspan=2>
-            Pushed or Ran Into Opponent
-        </td><td colspan=2>
-            Otherwise Impeded Opponent
-        </td></tr><tr><td colspan=2>
-            <div class=defense><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
-            </div></div>
-        </td><td colspan=2>
-            <div class=defense><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <input type=text class=num value=0 name=NEEDSNAME size=1 disabled>
-            </div></div>
-        </td></tr><tr><td colspan=4>
-            <label><input type=radio name=NEEDSNAME value=1><span>Docked</span></label>
-            <label><input type=radio name=NEEDSNAME value=2><span>Engaged</span></label>
-            <label><input type=radio name=NEEDSNAME value=3><span>Docking Failed</span></label>
+            <label><input type=radio name=tele_docked value=1><span>Docked</span></label>
+            <label><input type=radio name=tele_engaged value=2><span>Engaged</span></label>
+            <label><input type=radio name=tele_docking_failed value=3><span>Docking Failed</span></label>
         </td></tr>
 	</table>
-	<label><input type=checkbox name=NEEDSNAME value=1><span>Collected From Ground</span></label>
-	<label><input type=checkbox name=NEEDSNAME value=1><span>Collected From Shelf</span></label>
 
     <hr class=teamColorBG>
     <fieldset class="left full">
         <legend>How many links did the <span class=teamColorBG></span> alliance have in total?</legend>
-        <div class=full><input type=number name=NEEDSNAME></div>
+        <div class=full><input type=number name=links></div>
     </fieldset>
     <hr class=teamColorBG>
     <fieldset class="left full">
         <legend>How does <span class=team></span> handle objects?</legend>
         <p>
-            <label><input type=checkbox name=NEEDSNAME value=1><span>Can Collect Cones in Any Orientation</span></label>
+            <label><input type=checkbox name=ground value=1><span>Collected From Ground</span></label>
+            <label><input type=checkbox name=shelf value=1><span>Collected From Shelf</span></label>
+        </p><p>
+            <label><input type=checkbox name=cone_sideways value=1><span>Can Collect Cones in Any Orientation</span></label>
             Can pick up cones both upright and sideways
         </p><p>
-            <label><input type=checkbox name=NEEDSNAME value=0><span>Can Throw Objects</span></label>
+            <label><input type=checkbox name=throw value=0><span>Can Throw Objects</span></label>
             Can throw cones or cubes while in the community
         </p>
     </fieldset>
-	<hr class=teamColorBG>
-	<fieldset class="left full">
-		<legend>Did <span class=team></span> receive any fouls?</legend>
-		<p>
-			<label><input type=radio name=fouls value=1><span>1</span></label>
-			<label><input type=radio name=fouls value=2><span>2</span></label>
-			<label><input type=radio name=fouls value=3><span>3 or more</span></label>
-			Fouls
-		</p>
-		<p>
-			<label><input type=radio name=techfouls value=1><span>1</span></label>
-			<label><input type=radio name=techfouls value=2><span>2</span></label>
-			<label><input type=radio name=techfouls value=3><span>3 or more</span></label>
-			Tech fouls
-		</p>
-	</fieldset>
 	<hr class=teamColorBG>
 	<fieldset class="left full">
 		<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
