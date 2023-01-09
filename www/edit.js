@@ -1,9 +1,10 @@
-var file=(location.hash.match(/^\#(?:(?:.*\&)?(?:file\=))?(20[0-9]{2}[a-zA-Z0-9_\-]+\.[a-z]+\.csv)(?:\&.*)?$/)||["",""])[1]
+var file=(location.hash.match(/^\#(?:(?:.*\&)?(?:file\=))?(20[0-9]{2}[a-zA-Z0-9\-]+\.[a-z]+\.csv)(?:\&.*)?$/)||["",""])[1]
 
+var editor
 $(document).ready(function(){
-	var editor
 	$('#file').val(file)
 	function loadFile(){
+		if (!file) return blankTable()
 		$.ajax({
 			async: true,
 			beforeSend: function(xhr){
@@ -13,24 +14,17 @@ $(document).ready(function(){
 			timeout: 5000,
 			type: "GET",
 			success: function(text){
-				var data = text.split(/[\r\n]+/).map(l=>l.split(/,/).map(unescapeField))
-				editor = new Handsontable($('#editor')[0],{
-					data: data,
-					rowHeaders: true,
-					colHeaders: true,
-					contextMenu: true,
-					manualColumnFreeze: true,
-					manualRowFreeze: true
-				})
+				tableEditor(text.split(/[\r\n]+/).map(l=>l.split(/,/).map(unescapeField)))
 			},
 			error: function(xhr,status,err){
 				console.log(err)
+				blankTable()
 			}
 		})
 	}
 	loadFile()
 	$('#saver').submit(function(e){
-		$('#csv').val((editor.getData().map(safeCSV).map(l=>l.join(",")).join('\n')+"\n").replace(/^,+[\r\n]+/gm,""))
+		$('#csv').val((editor.getData().map(safeCSV).map(l=>l.join(",")).join('\n')+"\n").replace(/,(\r|\n|(\r\n))/gm,"\n").replace(/^,+\n/gm,""))
 	})
 	$('#delete').click(function(e){
 		if (!confirm(`Are you sure you want to delete ${file}?`)){
@@ -40,6 +34,24 @@ $(document).ready(function(){
 	})
 })
 
+function blankTable(){
+	tableEditor([['','',''],['','',''],['','','']])
+	$('#file').removeAttr('readonly')
+	$('#delete').hide()
+}
+
+function tableEditor(data){
+	editor = new Handsontable($('#editor')[0],{
+		data: data,
+		rowHeaders: true,
+		colHeaders: true,
+		contextMenu: true,
+		manualColumnFreeze: true,
+		minSpareRows: 1,
+		minSpareCols: 1,
+	})
+}
+
 function unescapeField(s){
 	return s
 		.replace(/⏎/g, "\n")
@@ -48,6 +60,7 @@ function unescapeField(s){
 }
 
 function safeCSV(s){
+	if (!s) return ""
 	if (typeof s === 'object'){
 		return s.map(safeCSV)
 	}

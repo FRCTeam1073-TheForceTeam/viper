@@ -9,7 +9,7 @@ if (location.hash){
 		}
 	}
 	var next = location.hash.replace(/^\#[^\#]*\#/,"")
-	if (/^\/20[0-9]{2}\/scout\.html\#[a-zA-Z0-9\=\&]+$/.test(next)) redirect = next
+	if (/^\/[a-z0-9\-\.\/]+\#[a-zA-Z0-9\=\&]+$/.test(next)) redirect = next
 }
 setTimeout(function(){
 	location.href = redirect

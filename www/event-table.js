@@ -1,4 +1,4 @@
-"use strict";
+"use strict"
 
 function addRow(table){
 	if (!table) table = "qm"
@@ -63,7 +63,7 @@ function checkTeams(table){
 		var allEmpty = empties.length == inputs.length;
 		if (allEmpty) full = false;
 		if (!allEmpty) seenValue = true;
-		if (seenValue || i == rows.length-1){
+		if (seenValue){
 			inputs.attr('required','1')
 		} else {
 			inputs.removeAttr('required')
@@ -81,9 +81,13 @@ function focusFirst(table){
 function lf(){
 	return $('#schedule input.lastFocus')
 }
+function venueNameToId(){
+	$('#idInp').val($('#startInp').val().substr(0,4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
+}
 $(document).ready(function(){
 	addRow('qm')
 	addRow('pm')
+	$('#nameInp').change(venueNameToId).keyup(venueNameToId)
 	var otherCSV = ""
 	$('button.clearRow').click(function(){
 		if (confirm("Clear entire row?")){
@@ -92,8 +96,11 @@ $(document).ready(function(){
 		lf().focus()
 		return false
 	})
+	$('button.showInstructions').click(function(){
+		showLightBox($('#instructions'))
+		return false
+	})
 	$('#tableForm').submit(function(){
-		$('#eventInp').val($('#yearInp').val()+$('#venueInp').val())
 		var csv = "Match,R1,R2,R3,B1,B2,B3\n",
 		tables = ['pm','qm']
 		for (var k=0; k<tables.length; k++){
@@ -111,14 +118,11 @@ $(document).ready(function(){
 				}
 				if (hasVal)csv += line + "\n"
 			}
-		}	
+		}
 		$('#csvInp').val(csv + otherCSV)
-		$('#csvForm').submit()
-		return false
 	})
 	if (eventId){
-		$('#yearInp').val(eventYear)
-		$('#venueInp').val(eventVenue)
+		$('#idInp').val(eventId)
 		loadEventSchedule(function(){
 			for (var i=1; i<=eventMatches.length; i++){
 				var match = eventMatches[i-1],
@@ -140,6 +144,12 @@ $(document).ready(function(){
 					otherCSV += "\n"
 				}
 			}
+		})
+		loadEventInfo(function(){
+			$('#nameInp').val(eventInfo.name)
+			$('#locationInp').val(eventInfo.location)
+			$('#startInp').val(eventInfo.start)
+			$('#endInp').val(eventInfo.end)
 		})
 	}
 	setTimeout(focusFirst,100)

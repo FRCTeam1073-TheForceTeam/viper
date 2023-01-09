@@ -12,7 +12,7 @@ my $cgi = CGI->new;
 
 my $event = $cgi->param('event');
 $webutil->error("Missing event ID") if (!$event);
-$webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9_\-]+$/);
+$webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
 
 my $alliancesCsv = $cgi->param('alliancesCsv');
 $webutil->error("Missing alliances CSV") if (!$alliancesCsv);

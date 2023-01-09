@@ -43,6 +43,6 @@ function addToFields(fields, amount){
 	for (var i=0; i<fields.length; i++){
 		var field=fields[i],
 		input = $(`input[name="${field}"]`)
-		input.val(parseInt(input.val()||0)+amount)		
+		input.val(parseInt(input.val()||0)+amount)
 	}
 }

@@ -35,9 +35,13 @@ function showSelectTeam(){
 	$('.screen').hide()
 	location.hash = `#event=${eventId}`
 	window.scrollTo(0,0)
-	var el = $('#teamList').html("")
+	var el = $('#teamList').html(""),
+	withData = getTeamsWithPitData()
+	$('.location-pointer').remove()
 	for (var i=0; i<eventTeams.length;i++){
-		el.append($('<button>').text(eventTeams[i]).click(showPitScouting))
+		var button = $('<button>').text(eventTeams[i]).click(showPitScouting)
+		if (withData.hasOwnProperty(eventTeams[i])) button.addClass('stored')
+		el.append(button)
 	}
 	$('#select-team').show()
 }
@@ -109,6 +113,12 @@ function getScoutKey(t,m,e){
 	return `${e}_${m}_${t}`
 }
 
+function getPitScoutKey(t,m,e){
+	if (!t) t = team
+	if (!e) e = eventId
+	return `${e}_${t}`
+}
+
 function setHash(pos,orient,team,match){
 	location.hash = buildHash(pos,orient,team,match)
 }
@@ -129,11 +139,10 @@ function showPitScouting(t){
 	setHash(null,null,team,null)
 	var pit = $('#pit-scouting')
 	pit[0].reset()
+	$('.location-pointer').remove()
 	$('.team').text(team)
 	$('input[name="event"]').val(eventId).attr('value',eventId)
 	$('input[name="team"]').val(team).attr('value',team)
-	
-
 	pit.show()
 }
 
@@ -167,10 +176,10 @@ function toggleChecked(o){
 	})
 }
 
-function toCSV(){
+function toCSV(formId){
 	keys = []
 	values = {}
-	$('#scouting input,#scouting textarea').each(function(){
+	$(`${formId} input,${formId} textarea`).each(function(){
 		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type')
 		off=(type=='checkbox'||type=='radio')&&!el.prop('checked')
 		if (!values.hasOwnProperty(name)){
@@ -208,9 +217,19 @@ function formHasChanges(f){
 function store(){
 	if (formHasChanges(scouting)){
 		localStorage.setItem("last_match_"+eventId, match)
-		var csv = toCSV()
+		var csv = toCSV('#scouting')
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getScoutKey(), csv[1])
+		storeTime = new Date().getTime()
+	}
+}
+
+
+function storePitScouting(){
+	if (formHasChanges($('#pit-scouting'))){
+		var csv = toCSV('#pit-scouting')
+		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
+		localStorage.setItem(getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
 	}
 }
@@ -233,7 +252,19 @@ function getTeamsWithData(){
 			teams[t]=1
 		}
 	}
-	return teams	
+	return teams
+}
+
+
+function getTeamsWithPitData(){
+	var teams = {}
+	for (i in localStorage){
+		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_[0-9]+$/.test(i)){
+			var t = parseInt(i.replace(/.*_/,""))
+			teams[t]=1
+		}
+	}
+	return teams
 }
 
 function haveDataForMatch(m){
@@ -311,6 +342,16 @@ $(document).ready(function(){
 		input.val(val)
 	})
 
+	$("img.robot-location").click(function(e){
+        var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
+        y = Math.round(1000 * (e.pageY - this.offsetTop) / this.height)/10,
+		inp = $(this).parent().find('input'),
+		name = inp.attr('name')
+		$(`.${name}`).remove()
+		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
+        inp.val(`${x}%x${y}%`)
+	})
+
 	$("#nextBtn").click(function(e){
 		store()
 		var next = getNextMatch()
@@ -321,6 +362,11 @@ $(document).ready(function(){
 			match = next['Match']
 			showScouting()
 		}
+		return false
+	})
+	$("#pitScoutNext").click(function(e){
+		storePitScouting()
+		showSelectTeam()
 		return false
 	})
 	$("#matchBtn").click(function(e){
@@ -336,6 +382,10 @@ $(document).ready(function(){
 	$("#teamBtn").click(function(e){
 		store()
 		showTeamChange()
+		return false
+	})
+	$('.showInstructions').click(function(){
+		showLightBox($(this).parent().find('.instructions'))
 		return false
 	})
 	$("#uploadBtn").click(function(e){
@@ -354,5 +404,9 @@ $(document).ready(function(){
 		}
 		location.href="/upload.html" + returnTo
 		return false
+	})
+
+	$('img.expandable-image').click(function(){
+		showLightBox($('#lightBoxImage').html("").append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')))
 	})
 })

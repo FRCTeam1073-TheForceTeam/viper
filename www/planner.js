@@ -18,12 +18,12 @@ $(document).ready(function() {
           var color = $('button.pen.selected').css('color')
           data.options.graphics.fillStyle = color
           data.options.graphics.strokeStyle = color
-          data.sketch.pencil()            
+          data.sketch.pencil()
         }
       }
     }
   })
-  
+
   sketcher.sketchable('handler', sizeHandler)
 
   $(window).resize(function(ev) {
@@ -50,6 +50,11 @@ $(document).ready(function() {
     sketcher.sketchable('memento.undo')
   })
 
+	$('button.showInstructions').click(function(){
+		showLightBox($('#instructions'))
+		return false
+	})
+
   function setIcon() {
     var cursor = $('button.pen.selected').attr('data-type')
     sketcher.css('cursor', `url(${cursor}.svg), auto`);
@@ -67,7 +72,7 @@ $(document).ready(function() {
     })
     location.hash = hash
   }
-  
+
   function loadFromLocationHash(){
     $('#statsTable input').each(function(){
       var name = $(this).attr('id')
@@ -91,7 +96,7 @@ $(document).ready(function() {
   })
 
   $('#statsTable input').change(fillStats)
-  
+
   function fillStats(){
     setLocationHash()
     $('#teamButtons button').removeClass("picked")
@@ -197,21 +202,16 @@ $(document).ready(function() {
     if (!t) return
     $('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}&team=${t}`)
     window.scrollTo(0,0)
-    $('#lightBoxBG').show()
-    $('#statsLightBox').show()
+    showLightBox($('#statsLightBox'))
   }
 
   function showImg(){
-    $('#imageLightBox img').attr('src', $(this).find('img').attr('src'))
-    $('#lightBoxBG').show()
-    $('#imageLightBox').show()
+    showLightBox($('#fullPhoto').attr('src', $(this).find('img').attr('src')))
   }
-
+  $('#fullPhoto').click(closeLightBox)
 	$('title').text($('title').text().replace("EVENT", eventName))
 	$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
-		$('#lightBoxBG').hide()
-		$('.lightBoxContent').hide()
 		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	})
 })

@@ -1,2 +1,5 @@
-#teams{margin: 2em auto}
-img {margin:1em;max-width:150px;max-height:150px}
+.photoPreview {margin:1em;max-width:150px;max-height:150px;display:block}
+#fullPhoto{object-fit:contain;background:#0000;border:none}
+#teams td,#teams th{padding:0.5em;border:1px solid gray}
+#teams{margin: 1em auto}
+#showInstructions{margin-bottom:1em}

@@ -21,6 +21,7 @@
       <button class=pen data-type=eraser>◍</button>
       <button class=undo>↶</button>
       <button class=clear>✘</button>
+      <button class=showInstructions>Instructions</button>
     </div>
     <table id=statsTable>
       <thead>
@@ -58,9 +59,9 @@
     </table>
     <div id=teamButtons></div>
   </div>
-</div> 
-<div id=lightBoxBG style=display:none></div>
-<div id=statsLightBox class=lightBoxContent style=display:none><iframe></iframe></div>
-<div id=imageLightBox class=lightBoxContent style=display:none><img></div>
+</div>
+<div id=statsLightBox class=lightBoxFullContent style=display:none><iframe></iframe></div>
+<img id=fullPhoto class=lightBoxFullContent>
+<iframe id=instructions class=lightBoxFullContent src=/planner-instructions.html></iframe>
 </body>
 </html>

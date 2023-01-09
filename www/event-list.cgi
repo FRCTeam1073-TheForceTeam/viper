@@ -12,5 +12,17 @@ print "Content-type: text/csv; charset=UTF-8\n\n";
 foreach my $name (split /\n/, `ls -1 -t data/*.schedule.csv`){
 	$name =~ s/\..*//g; # Remove file extension
 	$name =~ s/.*\///g; # Remove directory
-	print "$name\n"
+	print "$name";
+	my $eventFile =  "data/$name.event.csv";
+	if ( -e $eventFile){
+		print ",";
+		my $data = `tail -n 1 $eventFile`;
+		chomp $data;
+		print $data;
+	} else {
+		my $mod = `date -r "data/$name.schedule.csv" "+%Y-%d-%m"`;
+		chomp $mod;
+		print ",,,,$mod,$mod"
+	}
+	print "\n";
 }

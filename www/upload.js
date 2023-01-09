@@ -1,6 +1,7 @@
 $(document).ready(showUploads)
 
-var csv = {}
+var scoutCsv = {}
+var pitCsv = {}
 
 function showUploads(){
 	var up = $('#uploads').html("")
@@ -9,10 +10,22 @@ function showUploads(){
 		if (/^20[0-9]{2}.*_.*_/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}).*/,"$1"),
 			header = localStorage.getItem(`${year}_headers`)
-			if (!csv[year]){
-				csv[year] = header
+			if (!scoutCsv[year]){
+				scoutCsv[year] = header
 			}
-			csv[year] += localStorage.getItem(i)
+			scoutCsv[year] += localStorage.getItem(i)
+			up.append($('<hr>'))
+			up.append($('<h4>').text(i))
+			up.append($('<pre>').text(header + localStorage.getItem(i)))
+			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
+			count++
+		} else if (/^20[0-9]{2}[A-Za-z0-9\-]+_[0-9]+/.test(i)){
+			var year = i.replace(/^(20[0-9]{2}).*/,"$1"),
+			header = localStorage.getItem(`${year}_pitheaders`)
+			if (!pitCsv[year]){
+				pitCsv[year] = header
+			}
+			pitCsv[year] += localStorage.getItem(i)
 			up.append($('<hr>'))
 			up.append($('<h4>').text(i))
 			up.append($('<pre>').text(header + localStorage.getItem(i)))
@@ -24,10 +37,14 @@ function showUploads(){
 		up.text('There is no data to upload.')
 		$('button').hide()
 	}
-	var years = Object.keys(csv);
+	var years = Object.keys(scoutCsv);
 	var text = ""
 	for (var i=0; i<years.length; i++){
-		text += csv[years[i]]
+		text += scoutCsv[years[i]]
+	}
+	years = Object.keys(pitCsv);
+	for (var i=0; i<years.length; i++){
+		text += pitCsv[years[i]]
 	}
 	$('#csv').val(text)
 	$('#next').val(location.hash.replace(/^\#/,''))

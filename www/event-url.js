@@ -2,16 +2,18 @@ $.ajaxSetup({
 	cache: true
 });
 
-var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9_\-]+)(?:\&.*)?$/)||["",""])[1]
+var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:event\=))?(20[0-9]{2}[a-zA-Z0-9\-]+)(?:\&.*)?$/)||["",""])[1]
 var eventYear = eventId.replace(/([0-9]{4}).*/,'$1')
 var eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1')
-var eventName = `${eventYear} ${eventVenue}`
+var eventName = eventYear+(eventYear?" ":"")+eventVenue
 var eventMatches = []
 var eventAlliances = []
 var eventStats = []
 var eventStatsByTeam = {}
 var eventFiles = []
 var eventTeams = []
+var eventInfo = {}
+var eventPitData = {}
 const BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
 
 function eventAjax(file,callback){
@@ -101,6 +103,25 @@ function loadEventFiles(callback){
 	eventAjax(`/event-files.cgi?event=${eventId}`,function(text){
 		eventFiles=text.split(/[\n\r]+/)
 		if (callback) callback(eventFiles)
+	})
+}
+
+function loadEventInfo(callback){
+	eventAjax(`/data/${eventId}.event.csv`,function(text){
+		if (text){
+			eventInfo = csvToArrayOfMaps(text)[0]
+			if (eventInfo.name) eventName = `${eventYear} ${eventInfo.name}`
+			if (callback) callback(eventInfo)
+		}
+	})
+}
+
+function loadPitScouting(callback){
+	eventAjax(`/data/${eventId}.pit.csv`,function(text){
+		if (text){
+			eventPitData = csvToArrayOfMaps(text)[0]
+			if (callback) callback(eventPitData)
+		}
 	})
 }
 

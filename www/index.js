@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
 	var yearStatsLinkHtml,
 	events = []
@@ -17,29 +19,34 @@ $(document).ready(function(){
 				var year = years[i]
 				$('#years').append($(`<option value=${year}>${year}</option>`))
 			}
-			if (!years.length) $('#years').hide()
+			$('#years').toggle(years.length > 1)
+			events = events.sort(dateCompare)
 			showEvents()
 		}
 	})
 	function showEvents(){
 		var list = $('#events-list')
 		list.html('');
-		var filter = location.hash.replace(/^\#/,"")
+		var filter = location.hash.replace(/^\#/,""),
+		eventsShown = 0
 		if (!filter) filter = $('#years option:last').attr('value')
 		for (var i=0; i<events.length; i++){
 			if (events[i] && events[i].startsWith(filter)){
-				var event = events[i]
-				var year = event.substring(0,4)
-				var venue = event.substring(4)
-				list.append($(`<li><a href=/event.html#${event}>${year} ${venue}</a></li>`))
+				var event = events[i],
+				fields = event.split(/,/),
+				id = fields[0],
+				year = id.substring(0,4),
+				venue = (fields.length>1&&fields[1])?fields[1]:id.substring(4)
+				list.append($(`<li><a href=/event.html#${id}>${year} ${venue}</a></li>`))
+				eventsShown++
 			}
 		}
 		if (!yearStatsLinkHtml) yearStatsLinkHtml = $('#yearStatsLink').html()
-		$('#yearStatsLink').html(yearStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}/.test(filter))
+		$('#yearStatsLink').html(yearStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}/.test(filter) && eventsShown > 1)
 	}
 	$(window).on('hashchange', showEvents)
 	$('#years').change(function(){
-		year = $('#years').val()
+		var year = $('#years').val()
 		if (/^[0-9]{4}$/.test(year)){
 			location.hash = `#${year}`
 		}

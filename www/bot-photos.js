@@ -13,18 +13,35 @@ $(document).ready(function(){
     if (eventId){
         loadEventSchedule(function(){
             for(var i=0; i<eventTeams.length; i++){
-               addTeam(eventTeams[i]) 
+               addTeam(eventTeams[i])
             }
         })
     }
+    $('#showInstructions').click(function(){
+        showLightBox($('#instructions'))
+        return false
+    })
+    $('#fullPhoto').click(closeLightBox)
 })
+
+function showFullPhoto(){
+    showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
+}
 
 function addTeam(team){
     if (!/^[0-9]+$/.test(team)) return
     var year = ($('#yearInp').val())
-    $('#teams')
-        .append(`<h2>Team ${team}</h2>`)
-        .append(`<img src=/data/${year}/${team}.jpg>`)
-        .append(`<input type=file name=${team} accept="image/*">`)
-        .append(`<hr>`)
+    $('#teams').append(
+        $('<tr>').append(
+            $('<th>').append(`<h2>Team ${team}</h2>`)
+        ).append(
+            $('<td>')
+                .append($(`<img class=photoPreview src=/data/${year}/${team}.jpg>`).click(showFullPhoto))
+                .append(`<input type=file name=${team} accept="image/*">`)
+        ).append(
+            $('<td>')
+                .append($(`<img class=photoPreview src=/data/${year}/${team}-top.jpg>`).click(showFullPhoto))
+                .append(`<input type=file name=${team}-top accept="image/*">`)
+        )
+    )
 }

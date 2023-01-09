@@ -1,3 +1,5 @@
+"use strict"
+
 var rawTitle="",rawH1=""
 $(document).ready(function(){
 	rawTitle = $('title').text()
@@ -20,8 +22,12 @@ function fillPage(){
 			matchNames.push(getMatchName(eventStats[i]['match']))
 		}
 	}
-
-	$('#photo').html(`<img src="/data/${eventYear}/${team}.jpg">`)
+	$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
+	$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
+	$('.imagePreview img').click(function(){
+		showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
+	})
+	$('#fullPhoto').click(closeLightBox)
 	var graphs = $('#statGraphs').html('')
 	var comments = $('#comments').html("")
 	if (!matchList.length) return;
@@ -69,6 +75,10 @@ function fillPage(){
 			.append($('<h3>').text(matchNames[i]))
 			.append($('<p class=comments>').text(matchList[i]['comments']||""))
 			.append($('<p class=scouter>').text(matchList[i]['scouter']||""))
+	}
+
+	if(typeof window.showPitScouting === 'function'){
+		window.showPitScouting($('#pit-scouting'))
 	}
 
 }

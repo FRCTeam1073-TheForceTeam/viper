@@ -15,7 +15,7 @@ my $webutil = webutil->new;
 my $event = $cgi->param('event');
 
 $webutil->error("No event specified") if (!$event);
-$webutil->error("Bad event format") if ($event !~ /^20[0-9]{2}[a-zA-Z0-9_\-]+$/);
+$webutil->error("Bad event format") if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
 
 # print web page beginning
 print "Content-type: text/csv; charset=UTF-8\n\n";

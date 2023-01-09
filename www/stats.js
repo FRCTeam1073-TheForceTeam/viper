@@ -14,7 +14,6 @@ $(document).ready(function(){
 	$('title').text($('title').text().replace("EVENT", eventName))
 	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
-		$('#lightBoxBG,.lightBoxContent').hide()
 		team=""
 		$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
 	})
@@ -116,7 +115,7 @@ function showStats(){
 				highGood = (info['good']||"high")=='high',
 				statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
 				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ")),
-				best = (highGood?-1:1)*99999999   
+				best = (highGood?-1:1)*99999999
 				for (var k=0; k<teamList.length; k++){
 					var t = teamList[k],
 					picked = teamsPicked[t],
@@ -145,8 +144,7 @@ function showSortOptions(){
 		name = getStatInfoName(field)
 		if(!/^(text|enum)$/.test(info['type'])) picker.append($('<button class=sortByBtn>').attr('data-field',field).text(name).click(reSort))
 	}
-	picker.show()
-    $('#lightBoxBG').show()
+	showLightBox(picker)
 }
 
 function showTeamPicker(callback, heading){
@@ -156,14 +154,13 @@ function showTeamPicker(callback, heading){
 		var team = teamList[i]
 		picker.append($('<button class=team>').text(team).addClass(teamsPicked[team]?"picked":"not-picked").click(callback))
 	}
-	picker.show()
-    $('#lightBoxBG').show()
-	
+	showLightBox(picker)
+
 }
 
 function setTeamPicked(){
 	var team = parseInt($(this).text())
-	$('#teamPicker,#lightBoxBG').hide()
+	closeLightBox()
 	teamsPicked[team] = !teamsPicked[team]
 	showStats()
 }
@@ -191,7 +188,7 @@ function bgArr(color){
 function reSort(){
 	sortStat=$($(this)).attr('data-field')
 	$('#sortBy .name').text($(this).text())
-	$('#lightBoxBG,.lightBoxContent').hide()
+	closeLightBox()
 	setHash()
 	showStats()
 }

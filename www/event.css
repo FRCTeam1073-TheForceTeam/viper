@@ -2,3 +2,9 @@ ul{max-width:25em;list-style-type:none}
 li{margin:.5em 0;}
 .initHid{display:none}
 #dataTable td,#dataTable th{padding:0.5em}
+#matchTable td, #matchTable th {padding:0.25em;border:1px solid gray;cursor:pointer}
+#matchTable{margin:1em auto}
+h3{margin:0 0 .25em 0;padding:0}
+.narrow{max-width:18em}
+.match-id{max-width:7.5em;hyphens:auto}
+#eventInfo{margin:1em}

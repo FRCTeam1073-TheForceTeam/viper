@@ -13,40 +13,86 @@
 <body>
 	<h1></h1>
 
-	<div class=initHid>
-		<h2>Scouting</h2>
-		<ul>
-			<li class=initHid><a class=dependUploads href="/upload.html">Upload Scouting Data (Matches: UPLOAD_COUNT)</a></li>
-			<li class=initHid><a class=dependSchedule href="/YEAR/scout.html#event=EVENT">Match Scouting</a></li>
-			<li class=initHid><a class=dependSchedule href="/bot-photos.html#event=EVENT">Bot Photo Scouting</a></li>
-		</ul>
+	<div class="side-by-side narrow">
+		<div id=eventInfo>
+		</div>
+
+		<button id=showInstructions>Instructions</button>
+
+		<div class=initHid>
+			<h2>Scouting</h2>
+			<ul>
+				<li class=initHid><a class=dependUploads href="/upload.html">Upload Scouting Data (Matches: UPLOAD_COUNT)</a></li>
+				<li class=initHid><a class=dependSchedule href="/YEAR/scout.html#event=EVENT">Match scouting</a></li>
+				<li class=initHid><a class=dependSchedule href="/bot-photos.html#event=EVENT">Bot photo scouting</a></li>
+				<li class=initHid><a class=dependSchedule href="/YEAR/pit-scout.html#event=EVENT">Pit scouting</a></li>
+			</ul>
+		</div>
+
+		<div class=initHid>
+			<h2>Use Data</h2>
+			<ul>
+				<li class=initHid><a class=dependScouting href="/predictor.html#event=EVENT">Match prediction</a></li>
+				<li class=initHid><a class=dependScouting href="/planner.html#event=EVENT">Match planner with whiteboard</a></li>
+				<li class=initHid><a class=dependScouting href="/stats.html#event=EVENT">Stats for alliance selection</a></li>
+			</ul>
+		</div>
+
+		<div class=initHid>
+			<h2>Edit Event</h2>
+			<ul>
+				<li class=initHid><a class=dependScouting href="/event-table.html#event=EVENT">Practice and qualifier matches</a></li>
+				<li class=initHid><a class=dependScouting href="/playoffs.html#event=EVENT">Alliances, playoffs, and finals</a></li>
+			</ul>
+		</div>
+
+		<div class=initHid>
+			<h2>CSV Data</h2>
+			<table border=1 id=dataTable>
+				<tr class=initHid><th>Event Info</th><td><a class=dependInfo href=/data/export/EVENT.event.csv>Download</a></td><td><a class=dependInfo href="/edit.html#file=EVENT.event.csv">Edit</a></td></tr>
+				<tr class=initHid><th>Pit Scouting</th><td><a class=dependPit href=/data/export/EVENT.pit.csv>Download</a></td><td><a class=dependPit href="/edit.html#file=EVENT.pit.csv">Edit</a></td></tr>
+				<tr class=initHid><th>Schedule</th><td><a class=dependSchedule href=/data/export/EVENT.schedule.csv>Download</a></td><td><a class=dependSchedule href="/edit.html#file=EVENT.schedule.csv">Edit</a></td></tr>
+				<tr class=initHid><th>Scouting</th><td><a class=dependScouting href=/data/export/EVENT.scouting.csv>Download</a></td><td><a class=dependScouting href="/edit.html#file=EVENT.scouting.csv">Edit</a></td></tr>
+				<tr class=initHid><th>Alliances</th><td><a class=dependAlliances href=/data/export/EVENT.alliances.csv>Download</a></td><td><a class=dependAlliances href="/edit.html#file=EVENT.alliances.csv">Edit</a></td></tr>
+			</table>
+		</div>
 	</div>
 
-	<div class=initHid>
-		<h2>Use Data</h2>
-		<ul>
-			<li class=initHid><a class=dependSchedule href="/schedule.html#event=EVENT">Event Schedule</a></li>
-			<li class=initHid><a class=dependScouting href="/stats.html#event=EVENT">Stats and Analysis</a></li>
-			<li class=initHid><a class=dependScouting href="/predictor.html#event=EVENT">Match Prediction</a></li>
-			<li class=initHid><a class=dependScouting href="/planner.html#event=EVENT">Match Planner</a></li>
-		</ul>
-	</div>
+	<table id=matchTable class=side-by-side>
+		<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+		<tbody id=matches></tbody>
+	</table>
 
-	<div class=initHid>
-		<h2>Edit Event</h2>
-		<ul>
-			<li class=initHid><a class=dependScouting href="/event-table.html#event=EVENT">Practice and Qualifier Matches</a></li>
-			<li class=initHid><a class=dependScouting href="/playoffs.html#event=EVENT">Alliances, Playoffs, and Finals</a></li>
-		</ul>
-	</div>
-
-	<div class=initHid>
-		<h2>CSV Data</h2>
-		<table border=1 id=dataTable>
-			<tr class=initHid><th>Schedule</th><td><a class=dependSchedule href=/data/export/EVENT.schedule.csv>Download</a></td><td><a class=dependSchedule href="/edit.html#file=EVENT.schedule.csv">Edit</a></td></tr>
-			<tr class=initHid><th>Scouting</th><td><a class=dependScouting href=/data/export/EVENT.scouting.csv>Download</a></td><td><a class=dependScouting href="/edit.html#file=EVENT.scouting.csv">Edit</a></td></tr>
-			<tr class=initHid><th>Alliances</th><td><a class=dependAlliances href=/data/export/EVENT.alliances.csv>Download</a></td><td><a class=dependAlliances href="/edit.html#file=EVENT.alliances.csv">Edit</a></td></tr>
-		</table>
-	</div>
+	<template id=matchRow>
+		<tr>
+			<th class=match-id></th>
+			<td class="R1 redTeamBG"></td>
+			<td class="R2 redTeamBG"></td>
+			<td class="R3 redTeamBG"></td>
+			<td class="B1 blueTeamBG"></td>
+			<td class="B2 blueTeamBG"></td>
+			<td class="B3 blueTeamBG"></td>
+		</tr>
+	</template>
+	<template id=matchActionsTemplate>
+		<div class=link>
+			<h3><a href="/predictor.html#event=$EVENT&R1=$R1&B1=$B1&R2=$R2&B2=$B2&R3=$R3&B3=$B3">Predictor</a></h3>
+			Predict $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3
+		</div>
+		<div class=link>
+			<h3><a href="/planner.html#event=$EVENT&R1=$R1&R2=$R2&R3=$R3&B1=$B1&B2=$B2&B3=$B3">Planner</a></h3>
+			Plan $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3
+		</div>
+		<div class="link dependTeam">
+			<h3><a href="/$YEAR/scout.html#event=$EVENT&pos=$POS&team=$TEAM&match=$MATCH_ID">Scouting</a></h3>
+			Scout $MATCH_NAME: $POS $TEAM
+		</div>
+		<div class="link dependTeam">
+			<h3><a href="/team.html#event=$EVENT&team=$TEAM">Stats</a></h3>
+			Team stats: $TEAM
+		</div>
+	</template>
+	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
+	<iframe id=instructions class=lightBoxFullContent src=/event-instructions.html></iframe>
 </body>
 </html>
