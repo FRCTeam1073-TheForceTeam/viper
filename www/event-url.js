@@ -13,6 +13,7 @@ var eventStatsByTeam = {}
 var eventFiles = []
 var eventTeams = []
 var eventInfo = {}
+var eventPitData = {}
 const BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
 
 function eventAjax(file,callback){
@@ -111,6 +112,15 @@ function loadEventInfo(callback){
 			eventInfo = csvToArrayOfMaps(text)[0]
 			if (eventInfo.name) eventName = `${eventYear} ${eventInfo.name}`
 			if (callback) callback(eventInfo)
+		}
+	})
+}
+
+function loadPitScouting(callback){
+	eventAjax(`/data/${eventId}.pit.csv`,function(text){
+		if (text){
+			eventPitData = csvToArrayOfMaps(text)[0]
+			if (callback) callback(eventPitData)
 		}
 	})
 }

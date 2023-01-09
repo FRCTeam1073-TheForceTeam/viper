@@ -1,3 +1,5 @@
+"use strict"
+
 function addStat(map,field,value){
 	if(/^(\%|avg)$/.test(statInfo[field]['type'])) map[field] = (map[field]||0)+(value||0)
 }
@@ -402,4 +404,14 @@ var matchPredictorSections = {
 	"Penalties":["fouls_score","techfouls_score"],
 	"Auto":["taxi_score","auto_low_hub_score","auto_high_hub_score"],
 	"Teleop":["teleop_low_hub_score","teleop_high_hub_score"]
+}
+
+function showPitScouting(el){
+	loadPitScouting(function(dat){
+		console.log(dat)
+		el.append("<p>" + (dat.auto_have?"Has":"Does NOT have") + " auto</p>")
+		if (dat.auto_preload){
+			el.append("<p>Preloaded cargo scored in " + dat.auto_preload + "</p>")
+		}
+	})
 }

@@ -1,3 +1,5 @@
+"use strict"
+
 var rawTitle="",rawH1=""
 $(document).ready(function(){
 	rawTitle = $('title').text()
@@ -73,6 +75,10 @@ function fillPage(){
 			.append($('<h3>').text(matchNames[i]))
 			.append($('<p class=comments>').text(matchList[i]['comments']||""))
 			.append($('<p class=scouter>').text(matchList[i]['scouter']||""))
+	}
+
+	if(typeof window.showPitScouting === 'function'){
+		window.showPitScouting($('#pit-scouting'))
 	}
 
 }
