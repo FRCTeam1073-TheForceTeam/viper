@@ -5,7 +5,7 @@ Watch your robot and record its actions. Use the upward facing triangles to incr
 The game is played in three segments:
 
  - Autonomous — The robot acts independently without input from human players.
- - TeleOp — The robot is controlled via remote control.
+ - Teleoperated — The robot is controlled via remote control.
  - End game — The robot attempts to dock on the charging station.
 
 Autonomous and teleop have their own sections to record data, so make sure to switch between them when auto ends. There are locations to record placements of cones and cubes on the grid for each level, as well as failed attempts at placing objects (shown by an icon with an X through it). Teleop also has a place to record the locations in which the robot collects objects (whether on the shelf or on the ground in the community, loading zone, or general field — refer to the image below if you are unsure which areas these are).
@@ -34,4 +34,4 @@ Placed cube
 Collection
 </th></tr></table>
 
-![field diagram](field_diagram.png)
+<img style="width:100%;max-width:770px" src=field_diagram.png>
