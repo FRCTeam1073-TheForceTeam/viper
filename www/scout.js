@@ -158,6 +158,7 @@ function showScouting(){
 	$('.orientRight').toggle(orient && orient=='right')
 	$('h1').text(`${eventName}, ${matchName}, Team ${team}`)
 	$('.team').text(team)
+	$('.teamColor').text(pos.startsWith('R')?"red":"blue")
 	$('input[name="event"]').val(eventId).attr('value',eventId)
 	$('input[name="match"]').val(match).attr('value',match)
 	$('input[name="team"]').val(team).attr('value',team)
