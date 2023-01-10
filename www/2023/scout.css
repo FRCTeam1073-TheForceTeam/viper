@@ -3,12 +3,12 @@ img.icon{height:6vmin;display:block;margin:1vmin auto}
 #scouting .side-by-side{display:table-cell;margin:0;padding:0}
 #scouting .side-by-side input {width:1.5em}
 input.num{width:6vmin;text-align:center;font-size:6vmin;font-weight: bold;font-family:serif}
-table{border-collapse:collapse;border:1px solid black;margin-top:3vmin !important}
+table{border-collapse:collapse;border:1px solid black;margin-top:3vmin!important;margin-bottom:3vmin!important}
 th{border:1px solid black;font-size:200%}
 td{border:1px solid black;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%}
 td div{display:flex;justify-content:space-around}
 .subheader{background:lightgray}
-.defense{justify-content:center}
+#to-auto{margin-bottom:3vmin}
 @media (max-width: 400px) {
     td{padding:.2em}
     img.count{margin:2vmin auto}

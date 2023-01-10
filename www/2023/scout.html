@@ -10,6 +10,7 @@
 <script src=/jquery.js></script>
 <script src=/event-url.js></script>
 <script src=/scout.js></script>
+<script src=scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
 <title>FRC Scouting App</title>
@@ -42,11 +43,17 @@
 	<button id=teamCancelBtn>Cancel</button>
 </div>
 
+<div id=select-match>
+	<button class=showInstructions>Instructions</button>
+	<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+	<ul id=match-list></ul>
+</div>
+
 <form id=scouting class=screen>
 	<input type=hidden name=event>
 	<input type=hidden name=match>
 	<input type=hidden name=team>
-	<table>
+	<div id=auto><table>
 		<tr><th colspan=4>
 			Auto
 		</th></tr><tr><td class=subheader colspan=4>
@@ -160,7 +167,12 @@
         </td></tr>
 	</table>
 
-    <table>
+    <h2>Please click the button below to start scouting teleop!</h2>
+
+    <button id=to-teleop>Proceed to Teleop</button>
+    </div>
+
+    <div id=teleop><table>
 		<tr><th colspan=4>
 			Teleop
 		</th></tr><tr><td class=subheader colspan=4>
@@ -310,6 +322,8 @@
         </td></tr>
 	</table>
 
+    <button id=to-auto>Back to Auto</button>
+
     <hr class=teamColorBG>
     <fieldset class="left full">
         <legend>How many links did the <span class=teamColor></span> alliance have in total?</legend>
@@ -345,7 +359,7 @@
 			<button id=teamBtn>Change Team</button>
 			<button id=uploadBtn>Upload Data</button>
 		</div>
-	</div>
+	</div></div>
 
 </form>
 </body>

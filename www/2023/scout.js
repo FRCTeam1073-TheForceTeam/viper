@@ -1,0 +1,11 @@
+$(document).ready(function(){
+    $('#teleop').hide()
+    $('#to-teleop').click(function(){
+        $('#auto').hide()
+        $('#teleop').show()
+    })
+    $('#to-auto').click(function(){
+        $('#teleop').hide()
+        $('#auto').show()
+    })
+})

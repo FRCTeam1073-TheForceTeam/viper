@@ -12,7 +12,7 @@ ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
 .lastFocus{background-color:lemonchiffon}
 .side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box}
 .winner{border-left-color:#EE6;border-right-color:#EE6}
-#hamburger{position:fixed;top:0;right:0.4em;font-size:300%}
+#hamburger{position:fixed;top:0;right:0.4em;font-size:300%;cursor:pointer}
 #hamburger.hasUploads{background-color:lightgreen}
 #mainMenu .dependUpload{font-weight:bold;color:green}
 #mainMenu h4 {margin:.75em 0 0 0}
