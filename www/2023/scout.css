@@ -7,6 +7,7 @@ table{border-collapse:collapse;border:1px solid black;margin-top:3vmin !importan
 th{border:1px solid black;font-size:200%}
 td{border:1px solid black;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%}
 td div{display:flex;justify-content:space-around}
+.subheader{background:lightgray}
 .defense{justify-content:center}
 @media (max-width: 400px) {
     td{padding:.2em}

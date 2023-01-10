@@ -21,7 +21,7 @@
 	<H2>Select your robot</H2>
 	<table><tr>
 		<td class=blueTeamBG><button>B1</button></td>
-		<td rowspan=3><img class=bigimg src=full_field_blue_robots.png></td>
+		<td rowspan=3><img class=bigimg src=field.png></td>
 		<td class=redTeamBG><button>R1</button></td>
 	</tr><tr>
 		<td class=blueTeamBG><button>B2</button></td>
@@ -49,7 +49,7 @@
 	<table>
 		<tr><th colspan=4>
 			Auto
-		</th></tr><tr><td colspan=4>
+		</th></tr><tr><td class=subheader colspan=4>
 			Top
         </td></tr><tr><td>
             <div><div class=side-by-side>
@@ -83,7 +83,7 @@
                 <img class=icon src=cube_failed.svg>
                 <input type=text class=num value=0 name=auto_top_cube_failed size=1 disabled>
             </div></div>
-        </td></tr><tr><td colspan=4>
+        </td></tr><tr><td class=subheader colspan=4>
             Middle
         </td></tr><tr><td>
             <div><div class=side-by-side>
@@ -117,7 +117,7 @@
                 <img class=icon src=cube_failed.svg>
                 <input type=text class=num value=0 name=auto_middle_cube_failed size=1 disabled>
             </div></div>
-        </td></tr><tr><td colspan=4>
+        </td></tr><tr><td class=subheader colspan=4>
             Bottom
         </td></tr><tr><td>
             <div><div class=side-by-side>
@@ -163,7 +163,45 @@
     <table>
 		<tr><th colspan=4>
 			Teleop
-		</th></tr><tr><td colspan=4>
+		</th></tr><tr><td class=subheader colspan=4>
+            Collection From
+        </td></tr><tr><td>
+            Shelf
+            <div><div class=side-by-side>
+                <img class=count src=/count_up.svg>
+                <img class=count src=/count_down.svg>
+            </div><div class=side-by-side>
+                <img class=icon src=claw.svg>
+                <input type=text class=num value=0 name=shelf size=1 disabled>
+            </div></div>
+        </td><td>
+            Loading Zone
+            <div><div class=side-by-side>
+                <img class=count src=/count_up.svg>
+                <img class=count src=/count_down.svg>
+            </div><div class=side-by-side>
+                <img class=icon src=claw.svg>
+                <input type=text class=num value=0 name=loading_zone size=1 disabled>
+            </div></div>
+        </td><td>
+            Community
+            <div><div class=side-by-side>
+                <img class=count src=/count_up.svg>
+                <img class=count src=/count_down.svg>
+            </div><div class=side-by-side>
+                <img class=icon src=claw.svg>
+                <input type=text class=num value=0 name=community size=1 disabled>
+            </div></div>
+        </td><td>
+            Field
+            <div><div class=side-by-side>
+                <img class=count src=/count_up.svg>
+                <img class=count src=/count_down.svg>
+            </div><div class=side-by-side>
+                <img class=icon src=claw.svg>
+                <input type=text class=num value=0 name=field size=1 disabled>
+            </div></div>
+        </td></tr><tr><td class=subheader colspan=4>    
 			Top
         </td></tr><tr><td>
             <div><div class=side-by-side>
@@ -197,7 +235,7 @@
                 <img class=icon src=cube_failed.svg>
                 <input type=text class=num value=0 name=tele_top_cube_failed size=1 disabled>
             </div></div>
-        </td></tr><tr><td colspan=4>
+        </td></tr><tr><td class=subheader colspan=4>
             Middle
         </td></tr><tr><td>
             <div><div class=side-by-side>
@@ -231,7 +269,7 @@
                 <img class=icon src=cube_failed.svg>
                 <input type=text class=num value=0 name=tele_middle_cube_failed size=1 disabled>
             </div></div>
-        </td></tr><tr><td colspan=4>
+        </td></tr><tr><td class=subheader colspan=4>
             Bottom
         </td></tr><tr><td>
             <div><div class=side-by-side>
