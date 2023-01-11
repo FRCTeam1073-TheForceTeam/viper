@@ -315,10 +315,21 @@
                 <img class=icon src=cube_failed.svg>
                 <input type=text class=num value=0 name=tele_bottom_cube_failed size=1 disabled>
             </div></div>
+        </td></tr><tr><td class=subheader colspan=4>
+            Full Cycles
+        </td></tr><tr class=cycleStats><td>
+            <div>Current</div>
+            <span id=currentCycleTimer>:00</span>
+        </td><td>
+            <div>Fastest</div>
+            <input type=text class=num value=0 name=full_cycle_fastest_seconds size=1 disabled>s
+        </td><td>
+            <div>Average</div>
+            <input type=text class=num value=0 name=full_cycle_average_seconds size=1 disabled>s
+        </td><td>
+            <div>Count</div>
+            <input type=text class=num value=0 name=full_cycle_count size=1 disabled>
         </td></tr><tr><td colspan=4>
-            <input id=minCycleTime type=hidden name=full_cycle_fastest_seconds value="">
-            <input id=avgCycleTime type=hidden name=full_cycle_average_seconds value="">
-            <input id=cycleCount type=hidden name=full_cycle_count value="">
             <label><input type=radio name=tele_docked value=1><span>Docked</span></label>
             <label><input type=radio name=tele_engaged value=2><span>Engaged</span></label>
             <label><input type=radio name=tele_docking_failed value=3><span>Docking Failed</span></label>
@@ -330,7 +341,7 @@
     <hr class=teamColorBG>
     <fieldset class="left full">
         <legend>How many links did the <span class=teamColor></span> alliance have in total?</legend>
-        <div class=full><input type=number name=links></div>
+        <div class=full><input type=number name=links value=0></div>
     </fieldset>
     <hr class=teamColorBG>
     <fieldset class="left full">

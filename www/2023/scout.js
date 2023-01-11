@@ -23,6 +23,10 @@ $(document).ready(function(){
         cycleStage("collect")
     })
 
+    setInterval(function(){
+        $('#currentCycleTimer').text(":" + ((""+Math.round((cycle.startTime==0?0:(Date.now()-cycle.startTime))/1000)).padStart(2, "0")))
+    }, 100)
+
     function cycleStage(place){
         if (cycle.stage==0 || cycle.lastPlace==place){
             cycle.stage = 1

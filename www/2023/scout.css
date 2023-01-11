@@ -14,3 +14,4 @@ td div{display:flex;justify-content:space-around}
     img.count{margin:2vmin auto}
     img.icon{margin:2vmin auto}
 }
+.cycleStats span,.cycleStats input{font-size:inherit;text-align:right;}
