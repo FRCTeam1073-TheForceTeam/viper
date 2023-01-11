@@ -4,14 +4,16 @@ img.icon{height:6vmin;display:block;margin:1vmin auto}
 #scouting .side-by-side input {width:1.5em}
 input.num{width:6vmin;text-align:center;font-size:6vmin;font-weight: bold;font-family:serif}
 table{border-collapse:collapse;border:1px solid black;margin-top:3vmin!important;margin-bottom:3vmin!important}
-th{border:1px solid black;font-size:200%}
-td{border:1px solid black!important;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%}
-td div{display:flex;justify-content:space-around}
+#scouting th{border:1px solid black;font-size:200%}
+#scouting td{border:1px solid black!important;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
+#scouting td div{display:flex;justify-content:space-around}
 .subheader{background:#b6b6b6}
-#to-auto{margin-bottom:3vmin}
-@media (max-width: 400px) {
+.teleop{display:none}
+.cycleStats span,.cycleStats input{font-size:inherit;width:fit-content;display:inline}
+.explain{font-size:65%}
+@media (max-width: 500px) {
     td{padding:.2em}
     img.count{margin:2vmin auto}
     img.icon{margin:2vmin auto}
+    body{margin-left:0;margin-right:0}
 }
-.cycleStats span,.cycleStats input{font-size:inherit;text-align:right;}

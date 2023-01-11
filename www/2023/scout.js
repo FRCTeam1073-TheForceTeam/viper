@@ -1,15 +1,19 @@
 $(document).ready(function(){
-    $('#teleop').hide()
     $('#to-teleop').click(function(){
-        $('#auto').hide()
-        $('#teleop').show()
+        $('.auto').hide()
+        $('.teleop').show()
         return false
     })
     $('#to-auto').click(function(){
-        $('#teleop').hide()
-        $('#auto').show()
+        showAuto()
         return false
     })
+    $('#nextButtons button').click(showAuto)
+
+    function showAuto(){
+        $('.teleop').hide()
+        $('.auto').show()
+    }
 
     var cycles = []
     var cycle

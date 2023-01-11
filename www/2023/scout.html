@@ -18,7 +18,7 @@
 
 <body>
 <h1>FRC Scouting App</h1>
-<div id=select-bot class=screen>
+<div id=select-bot class=screen style=display:none>
 	<H2>Select your robot</H2>
 	<table><tr>
 		<td class=blueTeamBG><button>B1</button></td>
@@ -33,31 +33,28 @@
 	</tr></table>
 </div>
 
-<div id=select-match class=screen>
+<div id=select-match class=screen style=display:none>
 	<ul id=match-list></ul>
 </div>
 
-<div id=change-team class=screen>
+<div id=change-team class=screen style=display:none>
 	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
 	<button id=teamChangeBtn>Change</button>
 	<button id=teamCancelBtn>Cancel</button>
 </div>
 
-<div id=select-match>
-	<button class=showInstructions>Instructions</button>
-	<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
-	<ul id=match-list></ul>
-</div>
-
-<form id=scouting class=screen>
+<form id=scouting class=screen style=display:none>
+    <div>
+        <button class=teleop id=to-auto style=display:none>Back to auto</button>
+	    <button class=showInstructions>Instructions</button>
+	    <iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+    </div>
 	<input type=hidden name=event>
 	<input type=hidden name=match>
 	<input type=hidden name=team>
-	<div id=auto><table>
-		<tr><th colspan=4>
-			Auto
-		</th></tr><tr><td class=subheader colspan=4>
-			Top
+	<div class=auto><table>
+		<tr><td class=subheader colspan=4>
+            Placed or failed to place on top row during auto
         </td></tr><tr><td>
             <div><div class=side-by-side>
                 <img class=count src=/count_up.svg>
@@ -91,7 +88,7 @@
                 <input type=text class=num value=0 name=auto_top_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td class=subheader colspan=4>
-            Middle
+            Placed or failed to place on middle row during auto
         </td></tr><tr><td>
             <div><div class=side-by-side>
                 <img class=count src=/count_up.svg>
@@ -125,7 +122,7 @@
                 <input type=text class=num value=0 name=auto_middle_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td class=subheader colspan=4>
-            Bottom
+            Placed or failed to place on bottom row during auto
         </td></tr><tr><td>
             <div><div class=side-by-side>
                 <img class=count src=/count_up.svg>
@@ -158,27 +155,25 @@
                 <img class=icon src=cube_failed.svg>
                 <input type=text class=num value=0 name=auto_bottom_cube_failed size=1 disabled>
             </div></div>
+        </td></tr><tr><td class=subheader colspan=4>
+            Other auto actions
         </td></tr><tr><td colspan=4>
-            <label><input type=checkbox name=auto_leave value=1><span>Robot Left Community</span></label>
+            <label><input type=checkbox name=auto_leave value=1><span>Robot Exited Community</span></label>
         </td></tr><tr><td colspan=4>
-            <label><input type=radio name=auto_docked value=1><span>Docked</span></label>
-            <label><input type=radio name=auto_engaged value=2><span>Engaged</span></label>
-            <label><input type=radio name=auto_docking_failed value=3><span>Docking Failed</span></label>
+            <label><input type=radio name=auto_dock value=docked><span>Docked</span></label>
+            <label><input type=radio name=auto_dock value=engaged><span>Engaged</span></label>
+            <label><input type=radio name=auto_dock value=failed><span>Docking Failed</span></label>
         </td></tr>
 	</table>
-
-    <h2>Please click the button below to start scouting teleop!</h2>
 
     <button id=to-teleop>Proceed to Teleop</button>
     </div>
 
-    <div id=teleop><table>
-		<tr><th colspan=4>
-			Teleop
-		</th></tr><tr><td class=subheader colspan=4>
+    <div class=teleop><table>
+		<tr><td class=subheader colspan=4>
             Collection From
         </td></tr><tr><td>
-            Shelf
+            <div class=explain>Shelf</div>
             <div><div class=side-by-side>
                 <img class="count collectLoadingZone"src=/count_up.svg>
                 <img class=count src=/count_down.svg>
@@ -187,7 +182,7 @@
                 <input type=text class=num value=0 name=shelf size=1 disabled>
             </div></div>
         </td><td>
-            Loading Zone
+            <div class=explain>Loading Zone Ground</div>
             <div><div class=side-by-side>
                 <img class="count collectLoadingZone" src=/count_up.svg>
                 <img class=count src=/count_down.svg>
@@ -196,7 +191,7 @@
                 <input type=text class=num value=0 name=loading_zone size=1 disabled>
             </div></div>
         </td><td>
-            Community
+            <div class=explain>Their Own Community</div>
             <div><div class=side-by-side>
                 <img class=count src=/count_up.svg>
                 <img class=count src=/count_down.svg>
@@ -205,7 +200,7 @@
                 <input type=text class=num value=0 name=community size=1 disabled>
             </div></div>
         </td><td>
-            Field
+            <div class=explain>Elsewhere</div>
             <div><div class=side-by-side>
                 <img class=count src=/count_up.svg>
                 <img class=count src=/count_down.svg>
@@ -214,7 +209,7 @@
                 <input type=text class=num value=0 name=field size=1 disabled>
             </div></div>
         </td></tr><tr><td class=subheader colspan=4>    
-			Top
+			Placed on Top Row
         </td></tr><tr><td>
             <div><div class=side-by-side>
                 <img class="count placement" src=/count_up.svg>
@@ -248,7 +243,7 @@
                 <input type=text class=num value=0 name=tele_top_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td class=subheader colspan=4>
-            Middle
+            Placed on Middle Row
         </td></tr><tr><td>
             <div><div class=side-by-side>
                 <img class="count placement" src=/count_up.svg>
@@ -282,7 +277,7 @@
                 <input type=text class=num value=0 name=tele_middle_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td class=subheader colspan=4>
-            Bottom
+            Placed on Bottom Row
         </td></tr><tr><td>
             <div><div class=side-by-side>
                 <img class="count placement" src=/count_up.svg>
@@ -316,44 +311,40 @@
                 <input type=text class=num value=0 name=tele_bottom_cube_failed size=1 disabled>
             </div></div>
         </td></tr><tr><td class=subheader colspan=4>
-            Full Cycles
+            Full Cycles (Loading&nbsp;Zone&nbsp;🡘&nbsp;Placement)
         </td></tr><tr class=cycleStats><td>
-            <div>Current</div>
+            <div class=explain>Current</div>
             <span id=currentCycleTimer>:00</span>
         </td><td>
-            <div>Fastest</div>
+            <div class=explain>Fastest</div>
             <input type=text class=num value=0 name=full_cycle_fastest_seconds size=1 disabled>s
         </td><td>
-            <div>Average</div>
+            <div class=explain>Average</div>
             <input type=text class=num value=0 name=full_cycle_average_seconds size=1 disabled>s
         </td><td>
-            <div>Count</div>
+            <div class=explain>Count</div>
             <input type=text class=num value=0 name=full_cycle_count size=1 disabled>
+        </td></tr><tr><td class=subheader colspan=4>
+            End Game
         </td></tr><tr><td colspan=4>
-            <label><input type=radio name=tele_docked value=1><span>Docked</span></label>
-            <label><input type=radio name=tele_engaged value=2><span>Engaged</span></label>
-            <label><input type=radio name=tele_docking_failed value=3><span>Docking Failed</span></label>
+            <label><input type=radio name=tele_dock value=docked><span>Docked</span></label>
+            <label><input type=radio name=tele_dock value=engaged><span>Engaged</span></label>
+            <label><input type=radio name=tele_dock value=failed><span>Docking Failed</span></label>
         </td></tr>
 	</table>
-
-    <button id=to-auto>Back to Auto</button>
-
     <hr class=teamColorBG>
     <fieldset class="left full">
-        <legend>How many links did the <span class=teamColor></span> alliance have in total?</legend>
+        <legend>How many links (placed three in a row) did the <span class=teamColor></span> alliance have in total?</legend>
         <div class=full><input type=number name=links value=0></div>
     </fieldset>
     <hr class=teamColorBG>
     <fieldset class="left full">
         <legend>How does <span class=team></span> handle objects?</legend>
         <p>
-            <label><input type=checkbox name=ground value=1><span>Collected From Ground</span></label>
-            <label><input type=checkbox name=shelf value=1><span>Collected From Shelf</span></label>
-        </p><p>
             <label><input type=checkbox name=cone_sideways value=1><span>Can Collect Cones in Any Orientation</span></label>
             Can pick up cones both upright and sideways
         </p><p>
-            <label><input type=checkbox name=throw value=0><span>Can Throw Objects</span></label>
+            <label><input type=checkbox name=throw value=0><span>Can Throw Cargo</span></label>
             Can throw cones or cubes while in the community
         </p>
     </fieldset>
@@ -362,7 +353,7 @@
 		<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
 		<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
 	</fieldset>
-	<div>
+	<div id=nextButtons>
 		Save data:
 		<div id=featuredButton>
 			<button id=nextBtn>Next Match</button>
