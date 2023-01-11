@@ -94,8 +94,8 @@ function showMatchList(){
 		var storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
 		if (lastDone == matchId) seenLastDone = true;
 		$('#match-list').append(
-			$('<li>').text(matchName+' ')
-			.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(pos + " : " + matchTeam).click(function(){
+			$('<div class=match>').text(matchName+' ')
+			.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
 				team = $(this).attr('data-team')
 				match = $(this).attr('data-match')
 				showScouting()
