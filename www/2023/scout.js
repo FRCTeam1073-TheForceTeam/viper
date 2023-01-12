@@ -8,7 +8,11 @@ $(document).ready(function(){
         showAuto()
         return false
     })
-    $('#nextButtons button').click(showAuto)
+    $('#nextButtons button').click(function(){
+        showAuto()
+        cycleInterrupt()
+        cycles=[]
+    })
 
     function showAuto(){
         $('.teleop').hide()
