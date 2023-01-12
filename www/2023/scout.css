@@ -1,11 +1,11 @@
-img.count{height:6vmin;width:auto;display:block;margin:1vmin auto}
-img.icon{height:6vmin;display:block;margin:1vmin auto}
+img.count{height:6vmin;width:auto;display:block;margin:1vmin auto;max-height:45px}
+img.icon{height:6vmin;display:block;margin:1vmin auto;max-height:45px}
 #scouting .side-by-side{display:table-cell;margin:0;padding:0}
 #scouting .side-by-side input {width:1.5em}
 input.num{width:6vmin;text-align:center;font-size:6vmin;font-weight: bold;font-family:serif}
 table{border-collapse:collapse;border:1px solid black;margin-top:3vmin!important;margin-bottom:3vmin!important}
 #scouting th{border:1px solid black;font-size:200%}
-#scouting td{border:1px solid black!important;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
+#scouting td{border:1px solid black!important;overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
 #scouting td > div{display:flex;justify-content:space-around}
 .subheader{background:#b6b6b6}
 .teleop{display:none}
