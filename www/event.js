@@ -95,6 +95,60 @@ $(document).ready(function(){
 			$('#matches').append(row)
 		}
 	})
+
+	function escapeExcelCsvField(s){
+		if (/[\",\r\n\t]/.test(s)){
+			s = '"'+s.replace(/"/g,"")+'"'
+		}
+		return s
+	}
+
+	function excelCsv(dat){
+		var csv=Object.keys(statInfo).map(escapeExcelCsvField).join(",")+"\n"
+		csv+=Object.keys(statInfo).map(name=>statInfo[name].name).map(escapeExcelCsvField).join(",")+"\n"
+		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
+		dat.forEach(row=>{			
+			csv+=Object.keys(statInfo).map(name=>row[name]||"").map(escapeExcelCsvField).join(",")+"\n"
+		})
+		return csv
+	}
+	function toTable(dat){
+		var table = $('<table border=1>')
+		toTableRow(table,Object.keys(statInfo),"th")
+		toTableRow(table,Object.keys(statInfo).map(name=>statInfo[name].name),"th")
+		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
+		dat.forEach(row=>{			
+			toTableRow(table,Object.keys(statInfo).map(name=>row[name]||""),"td")
+		})
+		var div = $('<div class=lightBoxFullContent style=overflow:auto>').append(table)
+		$('body').append(div)
+		return div
+	}
+	function toTableRow(table,dat,cell){
+		var tr = $('<tr>')		
+		dat.forEach(field=>{
+			tr.append($(`<${cell}>`).text(field))		
+		})
+		table.append(tr)
+	}
+	
+	loadEventStats(function(eventStats, eventStatsByTeam){
+		$('#extendedScoutingData')
+			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
+			.attr('download',`${eventId}.scouting.extended.csv`)
+		console.log(eventStatsByTeam)
+		$('#aggregatedScoutingData')
+			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
+			.attr('download',`${eventId}.scouting.aggregated.csv`)
+	})
+	$('#extendedScoutingDataView').click(function(){		
+		showLightBox(toTable(eventStats))
+		return false
+	})
+	$('#aggregatedScoutingDataView').click(function(){		
+		showLightBox(toTable(eventStatsByTeam))
+		return false
+	})
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
 	})
