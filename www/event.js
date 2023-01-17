@@ -114,7 +114,7 @@ $(document).ready(function(){
 	}
 	function toTable(dat){
 		var table = $('<table border=1>')
-		toTableRow(table,Object.keys(statInfo),"th")
+		toTableRow(table,Object.keys(statInfo).map(s=>s.replace(/_/g,"_\u00AD")),"th")
 		toTableRow(table,Object.keys(statInfo).map(name=>statInfo[name].name),"th")
 		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
 		dat.forEach(row=>{			
@@ -136,7 +136,6 @@ $(document).ready(function(){
 		$('#extendedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
 			.attr('download',`${eventId}.scouting.extended.csv`)
-		console.log(eventStatsByTeam)
 		$('#aggregatedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
 			.attr('download',`${eventId}.scouting.aggregated.csv`)
