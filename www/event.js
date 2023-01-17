@@ -108,7 +108,7 @@ $(document).ready(function(){
 		csv+=Object.keys(statInfo).map(name=>statInfo[name].name).map(escapeExcelCsvField).join(",")+"\n"
 		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
 		dat.forEach(row=>{			
-			csv+=Object.keys(statInfo).map(name=>row[name]||"").map(escapeExcelCsvField).join(",")+"\n"
+			csv+=Object.keys(statInfo).map(name=>row[name]!=null?row[name]:"").map(escapeExcelCsvField).join(",")+"\n"
 		})
 		return csv
 	}
@@ -118,7 +118,7 @@ $(document).ready(function(){
 		toTableRow(table,Object.keys(statInfo).map(name=>statInfo[name].name),"th")
 		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
 		dat.forEach(row=>{			
-			toTableRow(table,Object.keys(statInfo).map(name=>row[name]||""),"td")
+			toTableRow(table,Object.keys(statInfo).map(name=>row[name]!=null?row[name]:""),"td")
 		})
 		var div = $('<div class=lightBoxFullContent style=overflow:auto>').append(table)
 		$('body').append(div)
