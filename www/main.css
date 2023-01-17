@@ -1,7 +1,7 @@
 *{box-sizing:border-box}
-html{font-size: 2vmin;background:white url('/background.png') fixed;background-size:33vw auto;overflow-x:hidden}
+html{font-size: 2vmin;background:white url('/background.png') fixed;background-size:33vw auto}
 table,tr,td,th,button,input,select,option{font-size:inherit}
-body{text-align:center;;overflow-x:hidden}
+body{text-align:center}
 table,ul{margin:0 auto;}
 ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
 *+ul,*+ol,*+p{margin:1em auto}
