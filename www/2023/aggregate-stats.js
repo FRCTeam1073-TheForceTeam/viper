@@ -91,7 +91,8 @@ function aggregateStats(scout, aggregate){
 	fromParent("","","",function(stat){
 		return sumXStats("X","","","",["auto","tele"])
 	})
-	console.log(scout)
+
+
 
 	scout['auto_mobility_score'] = scout['auto_mobility']?pointValues['auto_mobility']:0
 	scout['auto_dock_score'] = pointValues['auto_'+scout['auto_dock']]||0
@@ -103,7 +104,7 @@ function aggregateStats(scout, aggregate){
 	scout['auto_dock_engaged_failed'] = scout['auto_dock_engaged_attempts']-scout['auto_dock_engaged']
 	scout['auto_score'] = scout['auto_place_score']+scout['auto_dock_score']+scout['auto_mobility_score']
 
-	scout['end_score'] = pointValues['end'+scout['end']]||0
+	scout['end_score'] = pointValues['end_'+scout['end']]||0
 	scout['end_dock_score'] = scout['end']=='parked'?0:scout['end_score']
 
 	scout['end_dock_docked'] = /docked|engaged/.test(scout['end']||"")?1:0
@@ -114,14 +115,19 @@ function aggregateStats(scout, aggregate){
 	scout['end_dock_engaged_attempts'] = (scout['end_dock_engaged']||scout['end_dock_fail']=='yes')?1:0
 	scout['end_dock_engaged_failed'] = scout['end_dock_engaged_attempts']-scout['end_dock_engaged']
 	
-	scout['links_score'] = scout['links']||0*pointValues['links']
+	scout['links_score'] = Math.round((scout['links']||0)*pointValues['links'])
 	scout['tele_score'] = scout['tele_place_score']+scout['links_score']
 	scout['dock_score'] = scout['auto_dock_score']+scout['end_dock_score']
 
 	scout['score'] = scout['auto_score']+scout['tele_score']+scout['end_score']
 
+	var cycleSeconds =  (scout['full_cycle_count']||0) * (scout["full_cycle_average_seconds"]||0) + (aggregate['full_cycle_count']||0) * (aggregate["full_cycle_average_seconds"]||0)
+	var cycles = (scout['full_cycle_count']||0) + (aggregate['full_cycle_count']||0)
+
 	Object.keys(statInfo).forEach(function(field){
-		addStat(aggregate,field,scout[field])
+		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])) aggregate[field] = (aggregate[field]||0)+(scout[field]||0)
+		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field] = aggregate[field]||scout[field]||0
+		if(/^text$/.test(statInfo[field]['type'])) aggregate[field] = (!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
 	})
 	Object.keys(statInfo).forEach(function(field){
 		if (/_reliability$/.test(field)){
@@ -129,77 +135,171 @@ function aggregateStats(scout, aggregate){
 			success = aggregate[base]||0,
 			attempts = aggregate[`${base}_attempts`]||0
 			if (attempts > 0) aggregate[field] = Math.round(100*success/attempts)
-			// if (attempts == 0){
-			// 	console.log(`${base}: ${aggregate[base]}`)
-			// 	console.log(`${base}_attempts: ${attempts}`)
-			// 	console.log(`${field}: ${aggregate[field]}`)
-			// }
 		}		
 	})
+	aggregate["count"] = (aggregate["count"]||0)+1
+	aggregate["event"] = scout["event"]
 	aggregate["full_cycle_fastest_seconds"] = (aggregate["full_cycle_fastest_seconds"]||999)>scout["full_cycle_fastest_seconds"]?scout["full_cycle_fastest_seconds"]:(aggregate["full_cycle_fastest_seconds"]||999)
+	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
 	aggregate["max_score"] = (aggregate["max_score"]||0)<scout["score"]?scout["score"]:(aggregate["max_score"]||0)
 	aggregate["min_score"] = (aggregate["min_score"]||999)>scout["score"]?scout["score"]:(aggregate["min_score"]||999)
 }
 
 var statInfo = {
+	"event": {
+		name: "Event",
+		type: "text"
+	},
 	"match": {
 		name: "Match",
 		type: "text"
 	},
-	"auto_mobility": {
-		name: "",
-		type: ""
+	"team": {
+		name: "Team",
+		type: "text"
 	},
 	"auto_dock": {
-		name: "",
-		type: ""
+		name: "Auto Dock State",
+		type: "text"
 	},
-	"shelf": {
-		name: "",
-		type: ""
-	},
-	"loading_zone": {
-		name: "",
-		type: ""
-	},
-	"community": {
-		name: "",
-		type: ""
-	},
-	"field": {
-		name: "",
-		type: ""
-	},
-	"full_cycle_fastest_seconds": {
-		name: "",
-		type: "minmax"
-	},
-	"full_cycle_average_seconds": {
-		name: "",
-		type: "avg"
-	},
-	"full_cycle_count": {
-		name: "engaged",
+	"auto_dock_docked": {
+		name: "Docked During Auto",
 		type: "count"
 	},
-	"tele_dock": {
-		name: "",
-		type: ""
+	"auto_dock_docked_attempts": {
+		name: "Dock During Auto Attempts",
+		type: "count"
 	},
-	"links": {
-		name: "",
-		type: ""
+	"auto_dock_docked_failed": {
+		name: "Dock During Auto Failed",
+		type: "count"
+	},
+	"auto_dock_docked_reliability": {
+		name: "Dock During Auto Reliability",
+		type: "fraction"
+	},
+	"auto_dock_engaged": {
+		name: "Engaged During Auto",
+		type: "count"
+	},
+	"auto_dock_engaged_attempts": {
+		name: "Engaged During Auto Attempts",
+		type: "count"
+	},
+	"auto_dock_engaged_failed": {
+		name: "Engaged During Auto Failed",
+		type: "count"
+	},
+	"auto_dock_engaged_reliability": {
+		name: "Engage During Auto Reliability",
+		type: "fraction"
+	},
+	"auto_dock_score": {
+		name: "Auto Docking Score",
+		type: "avg"
+	},
+	"auto_mobility": {
+		name: "Exited Community During Auto",
+		type: "%"
+	},
+	"auto_mobility_score": {
+		name: "Exited Community During Auto Score",
+		type: "avg"
+	},
+	"auto_score": {
+		name: "Auto Score",
+		type: "avg"
+	},
+	"community": {
+		name: "Cargo Picked from Community",
+		type: "avg"
 	},
 	"cone_sideways": {
-		name: "",
-		type: ""
+		name: "Can Pickup Sideways Cone",
+		type: "capability"
 	},
-	"throw": {
-		name: "",
-		type: ""
+	"count": {
+		name: "Number of Matches",
+		type: "count"
 	},
-	"score": {
-		name: "Score Contribution",
+	"dock_score": {
+		name: "Docking Score",
+		type: "avg"
+	},
+	"end": {
+		name: "End Game State",
+		type: "text"
+	},
+	"end_dock_docked": {
+		name: "Docked During End Game",
+		type: "avg"
+	},
+	"end_dock_docked_attempts": {
+		name: "Docked During End Game Attempts",
+		type: "avg"
+	},
+	"end_dock_docked_failed": {
+		name: "Docked During End Game Failures",
+		type: "avg"
+	},
+	"end_dock_docked_reliability": {
+		name: "Docked During End Game Reliability",
+		type: "fraction"
+	},
+	"end_dock_engaged": {
+		name: "Engaged During End Game",
+		type: "avg"
+	},
+	"end_dock_engaged_attempts": {
+		name: "Engaged During End Game Attempts",
+		type: "avg"
+	},
+	"end_dock_engaged_failed": {
+		name: "Engaged During End Game Failed",
+		type: "avg"
+	},
+	"end_dock_engaged_reliability": {
+		name: "Engaged During End Game Reliability",
+		type: "fraction"
+	},
+	"end_dock_fail": {
+		name: "End Game Docking Failures",
+		type: "text"
+	},
+	"end_dock_score": {
+		name: "End Game Docking Score",
+		type: "avg"
+	},
+	"end_score": {
+		name: "End Game Score",
+		type: "avg"
+	},
+	"field": {
+		name: "Cargo Picked from Field",
+		type: "avg"
+	},
+	"full_cycle_average_seconds": {
+		name: "Full Cycle Time Average",
+		type: "num"
+	},
+	"full_cycle_count": {
+		name: "Full Cycle Count",
+		type: "count"
+	},
+	"full_cycle_fastest_seconds": {
+		name: "Full Cycle Time Fastest",
+		type: "minmax"
+	},
+	"links": {
+		name: "Alliance links",
+		type: "avg"
+	},
+	"links_score": {
+		name: "Links Score (1/3 Alliance Score)",
+		type: "avg"
+	},
+	"loading_zone": {
+		name: "Cargo Picked from Chute",
 		type: "avg"
 	},
 	"max_score": {
@@ -210,21 +310,21 @@ var statInfo = {
 		name: "Minimum Score Contribution",
 		type: "minmax"
 	},
-	"count": {
-		name: "Number of Matches",
-		type: "count"
-	},
-	"auto_score": {
-		name: "Auto Score",
+	"score": {
+		name: "Score Contribution",
 		type: "avg"
 	},
-	"teleop_score": {
+	"shelf": {
+		name: "Cargo Picked from Shelf",
+		type: "avg"
+	},
+	"tele_score": {
 		name: "Teleop Score",
 		type: "avg"
 	},
-	"end_game_score": {
-		name: "End Game Score",
-		type: "avg"
+	"throw": {
+		name: "Can Throw Cargo",
+		type: "capability"
 	},
 	"scouter": {
 		name: "Scouter",
@@ -276,7 +376,6 @@ forEachStageRowCargoStat(true,function(stage,row,cargo,stat){
 		type: stat[2]
 	}
 })
-console.log(statInfo)
 
 var teamGraphs = {
 	"Overall":{
