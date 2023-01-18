@@ -388,7 +388,7 @@ var teamGraphs = {
 	},
 	"Auto":{
 		graph:"stacked",
-		data:[]
+		data:['auto_dock_docked_reliability','auto_dock_engaged_reliability']
 	},
 	"Teleop":{
 		graph:"stacked",
@@ -403,11 +403,11 @@ var aggregateGraphs = {
 	},
 	"Game Stages":{
 		graph:"stacked",
-		data:["auto_score","teleop_score","end_game_score"]
+		data:["auto_score","tele_score","end_score"]
 	},
 	"Auto":{
 		graph:"stacked",
-		data:[]
+		data:['auto_dock_docked_reliability','auto_dock_engaged_reliability']
 	},
 	"Teleop":{
 		graph:"stacked",
@@ -421,9 +421,9 @@ var aggregateGraphs = {
 
 var matchPredictorSections = {
 	"Total":["score"],
-	"Game Stages":["auto_score","teleop_score","end_game_score"],
-	"Auto":[],
-	"Teleop":[]
+	"Game Stages":["auto_score","tele_score","end_score"],
+	"Auto":['auto_dock_docked_reliability','auto_dock_engaged_reliability'],
+	"Teleop":['full_cycle_average_seconds']
 }
 
 function showPitScouting(el){
