@@ -40,7 +40,7 @@ $(document).ready(function(){
 						recentEventId = recent[0]
 						recentEventYear = recentEventId.replace(/([0-9]{4}).*/,'$1')
 						var venue = recentEventId.replace(/[0-9]{4}(.*)/,'$1')
-						recentEventName = `${recentEventYear} ` + (recent[1]||$venue)
+						recentEventName = `${recentEventYear} ` + (recent[1]||venue)
 					}
 				}
 			}).always(populateMainMenu)
