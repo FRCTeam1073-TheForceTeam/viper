@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pit Scouting EVENT - FRC Scouting App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/scout.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<title>FRC Scouting App</title>
+</head>
+<body>
+<h1><span class=team></span> Pit Scouting</h1>
+<div id=select-team style=display:none class=screen>
+	<H2>Select a team</H2>
+	<div id=teamList></div>
+</div>
+
+<form id=pit-scouting style=display:none class=screen>
+	<input type=hidden name=event>
+	<input type=hidden name=team>
+
+	<fieldset class=full>
+		<legend>Which of these auto routines can your bot perform?</legend>
+        <img src=auto-routines.svg style=height:15em>
+        <table><tr><td colspan=2>
+            <label><input type=checkbox name=auto_barrier value=1><span><span style=color:cyan>⬤</span> Use grid and lane by barrier, no docking</span></label>
+        </td><td colspan=2>
+            <label><input type=checkbox name=auto_charging value=1><span><span style=color:magenta>⬤</span> Use center grid, drive over charging station, no docking</span></label>
+        </td><td colspan=2>
+            <label><input type=checkbox name=auto_cable value=1><span><span style=color:green>⬤</span> Use grid and lane by cable protector, no docking</span></label>
+        </td></tr><tr><td colspan=2>
+            <label><input type=checkbox name=auto_barrier_dock value=1><span><span style=color:blue>⬤</span> Use grid and lane by barrier, then dock</span></label>
+        </td><td colspan=2>
+            <label><input type=checkbox name=auto_charging_dock value=1><span><span style=color:orange>⬤</span> Use center grid, drive over charging station, then dock</span></label>
+        </td><td colspan=2>
+            <label><input type=checkbox name=auto_cable_dock value=1><span><span style=color:red>⬤</span> Use grid and lane by cable protector, then dock</span></label>
+        </td></tr><tr><td colspan=3>               
+            <label><input type=checkbox name=auto_static value=1><span><span style=color:yellow>⬤</span> Stay put, place cargo</span></label>
+        </td><td colspan=3>               
+            <label><input type=checkbox name=auto_dock value=1><span><span style=color:purple>⬤</span> Don't exit community, then dock</span></label>
+        </td></tr></table>
+
+    </fieldset>
+
+	<fieldset class=full>
+		<legend>Other</legend>
+        <p>
+            Drive team:<br>            
+			<label><input type=radio name=drive_team value=rookies><span>Rookies</span></label>
+			<label><input type=radio name=drive_team value=veterans><span>Veterans</span></label>
+			<label><input type=radio name=drive_team value=mix><span>Mix</span></label>
+        </p>
+        <p>
+            Vision software used:<br>            
+			<label><input type=checkbox name=vision_driving value=yes><span>Driving</span></label>
+			<label><input type=checkbox name=vision_aiming value=yes><span>Aiming</span></label>
+			<label><input type=checkbox name=vision_climbing value=yes><span>Climbing</span></label>
+        </p>
+        <p>
+            What's your practice schedule?<br>
+			<label><input type=checkbox name=practice_sun value=yes><span>Sun</span></label>
+			<label><input type=checkbox name=practice_mon value=yes><span>Mon</span></label>
+			<label><input type=checkbox name=practice_tue value=yes><span>Tue</span></label>
+			<label><input type=checkbox name=practice_wed value=yes><span>Wed</span></label>
+			<label><input type=checkbox name=practice_thu value=yes><span>Thu</span></label>
+			<label><input type=checkbox name=practice_fri value=yes><span>Fri</span></label>
+			<label><input type=checkbox name=practice_sat value=yes><span>Sat</span></label>
+
+        </p>
+        <p><textarea name=notes placeholder="Notes (Please explain auto routines and insert other comments here)"></textarea></p>
+        <p>If you are also bot photo scouting, don't forget to take a picture!</p>
+    </fieldset>
+
+	<div>
+        <button id=pitScoutNext>Save</button>
+	</div>
+
+    <img src=/pointer.png style=display:none>
+</form>
+</body>
+</html>
