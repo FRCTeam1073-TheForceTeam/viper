@@ -422,8 +422,10 @@ var aggregateGraphs = {
 var matchPredictorSections = {
 	"Total":["score"],
 	"Game Stages":["auto_score","tele_score","end_score"],
-	"Auto":['auto_dock_docked_reliability','auto_dock_engaged_reliability'],
-	"Teleop":['full_cycle_average_seconds']
+	"Auto":['auto_mobility_score','auto_place_score','auto_dock_score',],
+	"Teleop":['tele_place_score','links_score'],
+	"Teleop Cargo":['tele_cone_score','tele_cube_score','tele_top_score','tele_middle_score','tele_bottom_score','full_cycle_average_seconds'],
+	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score']
 }
 
 function showPitScouting(el){
