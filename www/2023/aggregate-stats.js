@@ -428,6 +428,13 @@ var matchPredictorSections = {
 	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score']
 }
 
+var plannerSections = {
+	"Total":["score"],
+	"Game Stages":["auto_score","tele_score","end_score"],
+	"Reliability":['auto_dock_docked_reliability','auto_dock_engaged_reliability','end_dock_docked_reliability','end_dock_engaged_reliability'],
+	"Time":['full_cycle_average_seconds']
+}
+
 function showPitScouting(el){
 	loadPitScouting(function(dat){
 		console.log(dat)

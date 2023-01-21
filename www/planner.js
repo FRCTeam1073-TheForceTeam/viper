@@ -110,15 +110,15 @@ $(document).ready(function() {
       }
     })
     $('#teamButtons').toggle(teamCount!=6)
+    var sections = window.plannerSections||window.matchPredictorSections
+    if (!sections) return
     if(teamCount==6){
-      if (typeof matchPredictorSections === 'undefined') return
       var r1 = parseInt($('#R1').val())
       var r2 = parseInt($('#R2').val())
       var r3 = parseInt($('#R3').val())
       var b1 = parseInt($('#B1').val())
       var b2 = parseInt($('#B2').val())
       var b3 = parseInt($('#B3').val())
-      var sections = Object.keys(matchPredictorSections),
       row = $("<tr>")
       row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r1).click(showTeamStats).text(r1?'👁':''))
       row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r2).click(showTeamStats).text(r2?'👁':''))
@@ -137,10 +137,9 @@ $(document).ready(function() {
       row.append($('<td class="blueTeamBG">').attr('data-team',b3).click(showImg).html(`<img src=/data/${eventYear}/${b3}.jpg>`))
       row.append($('<th>'))
       tbody.append(row)
-      for (var i=0; i<sections.length; i++){
-        var section = sections[i]
-        for (var j=0; j<matchPredictorSections[section].length; j++){
-          var field = matchPredictorSections[section][j]
+      Object.keys(sections).forEach(function(section){
+        for (var j=0; j<sections[section].length; j++){
+          var field = sections[section][j]
           statInfo[field] = statInfo[field]||{}
           var statName = statInfo[field]['name']||field
           var row = $("<tr>")
@@ -153,7 +152,7 @@ $(document).ready(function() {
           row.append($('<th>').text(statName))
           tbody.append(row)
         }
-      }
+      })
     }
   }
 
@@ -190,8 +189,12 @@ $(document).ready(function() {
     if (!team) return ""
     if (! team in eventStatsByTeam) return ""
     var stats = eventStatsByTeam[team]
-    if (! stats || ! field in stats ||! 'count' in stats || !stats['count']) return ""
-    return Math.round((stats[field]||0) / stats['count'])
+    if (! stats || ! field in stats) return ""
+	if ('count' in stats && !stats['count'] && statInfo[field] && statInfo[field].type == 'avg'){
+   		return Math.round((stats[field]||0) / stats['count'])
+	}
+	if (stats[field] == null) return ""
+	return stats[field]
   }
 
   $('.viewTeam').click(showTeamStats)
