@@ -26,7 +26,7 @@
 
 	<fieldset class=full>
 		<legend>Which of these auto routines can your bot perform?</legend>
-		<img src=auto-routines.svg style=height:15em>
+		<img src=auto-routines.svg style=height:30em>
 		<table><tr><td colspan=2>
 			<label><input type=checkbox name=auto_barrier value=1><span><span style=color:cyan>⬤</span> Use grid and lane by barrier, no docking</span></label>
 		</td><td colspan=2>
@@ -69,16 +69,16 @@
 		<legend>Robot</legend>
 		<p>
 			What drivetrain is used?<br>
-			<label><input type=checkbox name=drivetrain_tank value=yes><span>Tank</span></label>
-			<label><input type=checkbox name=drivetrain_swerve value=yes><span>Swerve</span></label>
-			<label><input type=checkbox name=drivetrain_mechanum value=yes><span>Mechanum</span></label>
+			<label><input type=radio name=drivetrain value=tank><span>Tank</span></label>
+			<label><input type=radio name=drivetrain value=swerve><span>Swerve</span></label>
+			<label><input type=radio name=drivetrain value=mechanum><span>Mechanum</span></label>
 		</p>
 		<p>
 			What motors power the drivetrain?<br>
-			<label><input type=checkbox name=motors_neo value=yes><span>Neo</span></label>
-			<label><input type=checkbox name=motors_falcon500 value=yes><span>Falcon 500</span></label>
-			<label><input type=checkbox name=motors_fullsizecim value=yes><span>Full Size CIM</span></label>
-			<label><input type=checkbox name=motors_other value=yes><span>Other</span></label>
+			<label><input type=radio name=motors value=neo><span>Neo</span></label>
+			<label><input type=radio name=motors value=falcon500><span>Falcon 500</span></label>
+			<label><input type=radio name=motors value=fullsizecim><span>Full Size CIM</span></label>
+			<label><input type=radio name=motors value=other><span>Other</span></label>
 		</p>
 		<p>
 			Vision software used:<br>
@@ -116,14 +116,12 @@
 		</p>
 	</fieldset>
 
-	<p><textarea name=notes placeholder="Notes (Please explain auto routines and insert other comments here)"></textarea></p>
+	<p><textarea name=notes placeholder="Notes (Explain any other auto routines or things that would be good to know)"></textarea></p>
 	<p>If you are also bot photo scouting, don't forget to take a picture!</p>
 
 	<div>
 		<button id=pitScoutNext>Save</button>
 	</div>
-
-	<img src=/pointer.png style=display:none>
 </form>
 </body>
 </html>
