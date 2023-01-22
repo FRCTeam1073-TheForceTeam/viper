@@ -353,6 +353,7 @@ $(document).ready(function(){
 			return false
 		}
 	})
+	focusNext()
 })
 
 function showContent(){
