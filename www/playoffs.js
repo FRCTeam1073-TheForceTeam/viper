@@ -153,9 +153,16 @@ function showRoundSchedule(round){
 		var brackets = (round.orderBrackets)||['upper','lower','matches']
 		for (var k=0; k<brackets.length; k++){
 			var matches = (round[brackets[k]])||[]
-			for (var n=0; n<matches.length; n++){
-				num++
-				$('#schedule').append(scheduleRowHtml(matches[n][0],matches[n][1],round.abbreviation,num))
+			if (round.orderMatches == -1){
+				for (var n=matches.length-1; n>=0; n--){
+					num++
+					$('#schedule').append(scheduleRowHtml(matches[n][0],matches[n][1],round.abbreviation,num))
+				}
+			} else {
+				for (var n=0; n<matches.length; n++){
+					num++
+					$('#schedule').append(scheduleRowHtml(matches[n][0],matches[n][1],round.abbreviation,num))
+				}
 			}
 		}
 	}
@@ -186,8 +193,8 @@ function getDoubleEliminationBrackets(){
 		title: "Playoffs Round 3",
 		upper: [],
 		lower: [
-			[loserOf(rounds,1,'upper',0),winnerOf(rounds,1,'lower',0)],
-			[loserOf(rounds,1,'upper',1),winnerOf(rounds,1,'lower',1)]
+			[loserOf(rounds,1,'upper',1),winnerOf(rounds,1,'lower',0)],
+			[loserOf(rounds,1,'upper',0),winnerOf(rounds,1,'lower',1)]
 		],
 		orderMatches: -1,
 		abbreviation: '3p'
