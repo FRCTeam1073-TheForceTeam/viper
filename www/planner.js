@@ -190,7 +190,7 @@ $(document).ready(function() {
 		if (! team in eventStatsByTeam) return ""
 		var stats = eventStatsByTeam[team]
 		if (! stats || ! field in stats) return ""
-		if ('count' in stats && !stats['count'] && statInfo[field] && statInfo[field].type == 'avg'){
+		if ('count' in stats && stats['count'] && statInfo[field] && statInfo[field].type == 'avg'){
 			return Math.round((stats[field]||0) / stats['count'])
 		}
 		if (stats[field] == null) return ""
