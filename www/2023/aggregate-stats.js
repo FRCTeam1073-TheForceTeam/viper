@@ -384,15 +384,71 @@ var teamGraphs = {
 	},
 	"Game Stages":{
 		graph:"stacked",
-		data:["auto_score","teleop_score","end_game_score"]
+		data:["auto_score","tele_score","end_score"]
 	},
 	"Auto":{
 		graph:"stacked",
-		data:['auto_dock_docked_reliability','auto_dock_engaged_reliability']
+		data:['auto_mobility_score','auto_place_score','auto_dock_score']
 	},
 	"Teleop":{
 		graph:"stacked",
-		data:[]
+		data:['tele_place_score','links_score']
+	},
+	"Cargo Picking":{
+		graph:"stacked",
+		data:['shelf','loading_zone','community','field']
+	},
+	"capabilities":{
+		graph:"bar",
+		data:['cone_sideways','throw']
+	},
+	"Docking":{
+		graph:"bar",
+		data:['auto_dock_docked','auto_dock_engaged','end_dock_docked','end_dock_engaged']
+	},
+	"Docking Failures":{
+		graph:"bar",
+		data:['auto_dock_docked_failed','auto_dock_engaged_failed','end_dock_docked_failed','end_dock_engaged_failed']
+	},
+	"Cycle Time":{
+		graph:"bar",
+		data:["full_cycle_average_seconds","full_cycle_fastest_seconds"]
+	},
+	"Cycle Count":{
+		graph:"bar",
+		data:["full_cycle_count"]
+	},
+	"# Placed by Stage":{
+		graph:"stacked",
+		data:["auto_place","tele_place"]
+	},
+	"# Placed by Type":{
+		graph:"stacked",
+		data:["cone","cube"]
+	},
+	"# Placed by Level":{
+		graph:"stacked",
+		data:["bottom","middle","top"]
+	},
+	"# Placed by Type and Level":{
+		graph:"stacked",
+		data:["bottom_cone","bottom_cube","middle_cone","middle_cube","top_cone","top_cube"]
+	},
+	"Place Reliability by Stage":{
+		graph:"bar",
+		data:["auto_place_reliability","tele_place_reliability"]
+	},
+	"Place Reliability by Type":{
+		graph:"bar",
+		data:["cone_reliability","cube_reliability"]
+	},
+	"Place Reliability by Level":{
+		graph:"bar",
+		data:["bottom_reliability","middle_reliability","top_reliability"]
+	},
+	"Place Reliability Type and Level":{
+		graph:"bar",
+		data:["bottom_cone_reliability","bottom_cube_reliability","middle_cone_reliability","middle_cube_reliability","top_cone_reliability","top_cube_reliability"]
 	}
 }
 
@@ -422,7 +478,7 @@ var aggregateGraphs = {
 var matchPredictorSections = {
 	"Total":["score"],
 	"Game Stages":["auto_score","tele_score","end_score"],
-	"Auto":['auto_mobility_score','auto_place_score','auto_dock_score',],
+	"Auto":['auto_mobility_score','auto_place_score','auto_dock_score'],
 	"Teleop":['tele_place_score','links_score'],
 	"Teleop Cargo":['tele_cone_score','tele_cube_score','tele_top_score','tele_middle_score','tele_bottom_score','full_cycle_average_seconds'],
 	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score']
