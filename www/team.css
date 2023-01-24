@@ -4,6 +4,7 @@
 canvas{max-height:20em}
 .graph{display:inline-block;max-width:100%}
 .chart{padding:0 1em;display:inline-block}
+.chart canvas {min-height:11em}
 .comments{white-space:pre-wrap}
 .imagePreview img{width:320px}
 .imagePreview{display:inline}
