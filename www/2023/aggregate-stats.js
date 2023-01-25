@@ -491,116 +491,122 @@ var plannerSections = {
 	"Time":['full_cycle_average_seconds']
 }
 
-function showPitScouting(el){
-	loadPitScouting(function(dat){
-		console.log(dat)
-		el.append($("<h4>").text("Autos Implemented"))
-		el.append($("<ul>")
-			.append(dat['auto_barrier']?$('<li>').text("Use grid and lane by barrier, no docking"):"")
-			.append(dat['auto_charging']?$('<li>').text("Use center grid, drive over charging station, no docking"):"")
-			.append(dat['auto_cable']?$('<li>').text("Use grid and lane with cable protector, no docking"):"")
-			.append(dat['auto_barrier_dock']?$('<li>').text("Use grid and lane by barrier, then dock"):"")
-			.append(dat['auto_charging_dock']?$('<li>').text("Use center grid, drive over charging station, then dock"):"")
-			.append(dat['auto_cable_dock']?$('<li>').text("Use grid and lane with cable protector, then dock"):"")
-			.append(dat['auto_static']?$('<li>').text("Stay put, place cargo"):"")
-			.append(dat['auto_dock']?$('<li>').text("Don't exit community, then dock"):"")
-			.append(
-				(
-					!dat['auto_barrier']&&
-					!dat['auto_charging']&&
-					!dat['auto_cable']&&
-					!dat['auto_barrier_dock']&&
-					!dat['auto_charging_dock']&&
-					!dat['auto_cable_dock']&&
-					!dat['auto_static']&&
-					!dat['auto_dock']
-				)?$('<li>').text("None"):"")
-		)
-		el.append($("<h4>").text("Can Place"))
-		el.append($("<ul>")
-			.append(dat['place_cones_top']?$('<li>').text("Cones on top row"):"")
-			.append(dat['place_cubes_top']?$('<li>').text("Cubes on top row"):"")
-			.append(dat['place_cones_middle']?$('<li>').text("Cones on middle row"):"")
-			.append(dat['place_cubes_middle']?$('<li>').text("Cubes on middle row"):"")
-			.append(
-				(
-					!dat['place_cones_top']&&
-					!dat['place_cubes_top']&&
-					!dat['place_cones_middle']&&
-					!dat['place_cubes_middle']
-				)?$('<li>').text("None"):"")
-		)
-		el.append($("<h4>").text("End Game"))
-		el.append($("<ul>")
-			.append(dat['end_charging']?$('<li>').text("Can end on charging station"):"")
-			.append(dat['end_parking_brake']?$('<li>').text("Can stay on charging station while others get on"):"")
-			.append(
-				(
-					!dat['end_charging']&&
-					!dat['end_parking_brake']
-				)?$('<li>').text("None"):"")
-		)
-		el.append($("<h4>").text("Drivetrain"))
-		el.append($("<p>").text(format(dat['drivetrain'])))
-		el.append($("<h4>").text("Drivetrain Motors"))
-		el.append($("<p>").text(format(dat['motors'])))
-		el.append($("<h4>").text("Vision software used"))
-		el.append($("<ul>")
-			.append(dat['vision_auto']?$('<li>').text("Auto"):"")
-			.append(dat['vision_tele']?$('<li>').text("Teleop"):"")
-			.append(dat['vision_driving']?$('<li>').text("Driving"):"")
-			.append(dat['vision_collecting']?$('<li>').text("Collecting"):"")
-			.append(dat['vision_placing']?$('<li>').text("Placing"):"")
-			.append(dat['vision_docking']?$('<li>').text("Docking"):"")
-			.append(
-				(
-					!dat['vision_auto']&&
-					!dat['vision_tele']&&
-					!dat['vision_driving']&&
-					!dat['vision_collecting']&&
-					!dat['vision_placing']&&
-					!dat['vision_docking']
-				)?$('<li>').text("None"):"")
-		)
-		el.append($("<h4>").text("Robot tested"))
-		el.append($("<ul>")
-			.append(dat['field_built']?$('<li>').text("Built a practice field"):"")
-			.append(dat['field_other_team']?$('<li>').text("Used another team's practice field"):"")
-			.append(dat['field_wpi']?$('<li>').text("WPI Practice field"):"")
-			.append(dat['field_events']?$('<li>').text("Previous Events"):"")
-			.append(
-				(
-					!dat['field_built']&&
-					!dat['field_other_team']&&
-					!dat['field_wpi']&&
-					!dat['field_events']
-				)?$('<li>').text("None"):"")
-		)
-		el.append($("<h4>").text("Built field elements"))
-		el.append($("<ul>")
-			.append(dat['built_grid']?$('<li>').text("Grid"):"")
-			.append(dat['built_charging_station']?$('<li>').text("Charging Station"):"")
-			.append(dat['built_double_substation']?$('<li>').text("Double Substation"):"")
-			.append(dat['built_single_substation']?$('<li>').text("Single Substation"):"")
-			.append(
-				(
-					!dat['built_grid']&&
-					!dat['built_charging_station']&&
-					!dat['built_double_substation']&&
-					!dat['built_single_substation']
-				)?$('<li>').text("None"):"")
-		)
-		el.append($("<h4>").text("Meets days per week"))
-		el.append($("<p>").text(format(dat['practice_days'])))
-		if(dat['notes']){
-			el.append($("<h4>").text("Notes"))
-			el.append($("<p class=comments>").text(dat['notes']))
-		}
+function showPitScouting(el,team){
+	loadPitScouting(function(datas){
+		datas.forEach(function(dat){
+			if (dat.team != team) return
+			if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))
+			if (dat['team_location']) el.append($("<p>").text("Location: " + dat['team_location']))
+			if (dat['bot_name']) el.append($("<p>").text("Bot name: " + dat['bot_name']))
+			el.append($("<h4>").text("Autos Implemented"))
+			el.append($("<ul>")
+				.append(dat['auto_barrier']?$('<li>').text("Use grid and lane by barrier, no docking"):"")
+				.append(dat['auto_charging']?$('<li>').text("Use center grid, drive over charging station, no docking"):"")
+				.append(dat['auto_cable']?$('<li>').text("Use grid and lane with cable protector, no docking"):"")
+				.append(dat['auto_barrier_dock']?$('<li>').text("Use grid and lane by barrier, then dock"):"")
+				.append(dat['auto_charging_dock']?$('<li>').text("Use center grid, drive over charging station, then dock"):"")
+				.append(dat['auto_cable_dock']?$('<li>').text("Use grid and lane with cable protector, then dock"):"")
+				.append(dat['auto_static']?$('<li>').text("Stay put, place cargo"):"")
+				.append(dat['auto_dock']?$('<li>').text("Don't exit community, then dock"):"")
+				.append(
+					(
+						!dat['auto_barrier']&&
+						!dat['auto_charging']&&
+						!dat['auto_cable']&&
+						!dat['auto_barrier_dock']&&
+						!dat['auto_charging_dock']&&
+						!dat['auto_cable_dock']&&
+						!dat['auto_static']&&
+						!dat['auto_dock']
+					)?$('<li>').text("None"):"")
+			)
+			el.append($("<h4>").text("Can Place"))
+			el.append($("<ul>")
+				.append(dat['place_cones_top']?$('<li>').text("Cones on top row"):"")
+				.append(dat['place_cubes_top']?$('<li>').text("Cubes on top row"):"")
+				.append(dat['place_cones_middle']?$('<li>').text("Cones on middle row"):"")
+				.append(dat['place_cubes_middle']?$('<li>').text("Cubes on middle row"):"")
+				.append(
+					(
+						!dat['place_cones_top']&&
+						!dat['place_cubes_top']&&
+						!dat['place_cones_middle']&&
+						!dat['place_cubes_middle']
+					)?$('<li>').text("None"):"")
+			)
+			el.append($("<h4>").text("End Game"))
+			el.append($("<ul>")
+				.append(dat['end_charging']?$('<li>').text("Can end on charging station"):"")
+				.append(dat['end_parking_brake']?$('<li>').text("Can stay on charging station while others get on"):"")
+				.append(
+					(
+						!dat['end_charging']&&
+						!dat['end_parking_brake']
+					)?$('<li>').text("None"):"")
+			)
+			el.append($("<h4>").text("Drivetrain"))
+			el.append($("<p>").text(format(dat['drivetrain'])))
+			el.append($("<h4>").text("Drivetrain Motors"))
+			el.append($("<p>").text(format(dat['motors'])))
+			el.append($("<h4>").text("Vision software used"))
+			el.append($("<ul>")
+				.append(dat['vision_auto']?$('<li>').text("Auto"):"")
+				.append(dat['vision_tele']?$('<li>').text("Teleop"):"")
+				.append(dat['vision_driving']?$('<li>').text("Driving"):"")
+				.append(dat['vision_collecting']?$('<li>').text("Collecting"):"")
+				.append(dat['vision_placing']?$('<li>').text("Placing"):"")
+				.append(dat['vision_docking']?$('<li>').text("Docking"):"")
+				.append(
+					(
+						!dat['vision_auto']&&
+						!dat['vision_tele']&&
+						!dat['vision_driving']&&
+						!dat['vision_collecting']&&
+						!dat['vision_placing']&&
+						!dat['vision_docking']
+					)?$('<li>').text("None"):"")
+			)
+			el.append($("<h4>").text("Robot tested"))
+			el.append($("<ul>")
+				.append(dat['field_built']?$('<li>').text("Built a practice field"):"")
+				.append(dat['field_other_team']?$('<li>').text("Used another team's practice field"):"")
+				.append(dat['field_wpi']?$('<li>').text("WPI Practice field"):"")
+				.append(dat['field_events']?$('<li>').text("Previous Events"):"")
+				.append(
+					(
+						!dat['field_built']&&
+						!dat['field_other_team']&&
+						!dat['field_wpi']&&
+						!dat['field_events']
+					)?$('<li>').text("None"):"")
+			)
+			el.append($("<h4>").text("Built field elements"))
+			el.append($("<ul>")
+				.append(dat['built_grid']?$('<li>').text("Grid"):"")
+				.append(dat['built_charging_station']?$('<li>').text("Charging Station"):"")
+				.append(dat['built_double_substation']?$('<li>').text("Double Substation"):"")
+				.append(dat['built_single_substation']?$('<li>').text("Single Substation"):"")
+				.append(
+					(
+						!dat['built_grid']&&
+						!dat['built_charging_station']&&
+						!dat['built_double_substation']&&
+						!dat['built_single_substation']
+					)?$('<li>').text("None"):"")
+			)
+			el.append($("<h4>").text("Meets days per week"))
+			el.append($("<p>").text(format(dat['practice_days'])))
+			if(dat['notes']){
+				el.append($("<h4>").text("Notes"))
+				el.append($("<p class=comments>").text(dat['notes']))
+			}
+			el.append($("<p class=scouter>").text(dat['scouter']))
+		})
 	})
 
 	function format(s){
 		s = ""+s
-		if (!s) s = "Unknown"
+		if (!s||s=="0") s = "Unknown"
     	s = s[0].toUpperCase() + s.slice(1)
 		return s.replace(/_/g," ")
 	}

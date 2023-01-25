@@ -25,6 +25,13 @@
 	<input type=hidden name=team>
 
 	<fieldset class=full>
+		<legend>Team info</legend>
+		<p>Name: <input name=team_name type=text placeholder="Team name"></p>
+		<p>Location: <input name=team_location type=text placeholder="Anytown, ST, USA"></p>
+		<p>Bot name: <input name=bot_name type=text></p>
+	</fieldset>
+
+	<fieldset class=full>
 		<legend>Which of these auto routines can your bot perform?</legend>
 		<img src=auto-routines.svg style=height:30em>
 		<table><tr><td colspan=2>
@@ -113,7 +120,7 @@
 			<input type=number name=practice_days value=yes min=0 max=7>
 		</p>
 	</fieldset>
-
+	<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
 	<p><textarea name=notes placeholder="Notes (Explain any other auto routines or things that would be good to know)"></textarea></p>
 	<p>If you are also bot photo scouting, don't forget to take a picture!</p>
 
