@@ -80,5 +80,4 @@ function fillPage(){
 	if(typeof window.showPitScouting === 'function'){
 		window.showPitScouting($('#pit-scouting'))
 	}
-
 }
