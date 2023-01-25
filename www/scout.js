@@ -140,9 +140,7 @@ function showPitScouting(t){
 	var pit = $('#pit-scouting')
 	pit[0].reset()
 	$('.location-pointer').remove()
-	$('.team').text(team)
-	$('input[name="event"]').val(eventId).attr('value',eventId)
-	$('input[name="team"]').val(team).attr('value',team)
+	fillDefaultFormFields()
 	pit.show()
 }
 
@@ -157,14 +155,20 @@ function showScouting(){
 	$('.orientLeft').toggle(orient && orient=='left')
 	$('.orientRight').toggle(orient && orient=='right')
 	$('h1').text(`${eventName}, ${matchName}, Team ${team}`)
-	$('.team').text(team)
 	$('.teamColor').text(pos.startsWith('R')?"red":"blue")
-	$('input[name="event"]').val(eventId).attr('value',eventId)
 	$('input[name="match"]').val(match).attr('value',match)
-	$('input[name="team"]').val(team).attr('value',team)
+	fillDefaultFormFields()
 	$('.match').text(matchName)
 	setTeamBG()
 	scouting.show()
+}
+
+function fillDefaultFormFields(){
+	$('.team').text(team)
+	$('input[name="event"]').val(eventId).attr('value',eventId)
+	$('input[name="team"]').val(team).attr('value',team)
+	var lastScouter = localStorage.getItem("last_scouter")||""
+	$('input[name="scouter"]').val(lastScouter).attr('value',lastScouter)
 }
 
 function setTeamBG(){
@@ -222,9 +226,13 @@ function store(){
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getScoutKey(), csv[1])
 		storeTime = new Date().getTime()
+		storeScouter($('#scouting'))
 	}
 }
 
+function storeScouter(form){
+	localStorage.setItem('last_scouter',form.find('input[name="scouter"]').val())
+}
 
 function storePitScouting(){
 	if (formHasChanges($('#pit-scouting'))){
@@ -232,6 +240,7 @@ function storePitScouting(){
 		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
 		localStorage.setItem(getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
+		storeScouter($('#pit-scouting'))
 	}
 }
 
