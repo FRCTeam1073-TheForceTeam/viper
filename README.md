@@ -7,7 +7,7 @@ It runs on as a web app on a server that can be taken to events and powered by a
 
 ## Usage
 
-1. The lead scouter enters the match schedule for practice matches and qualifiers.\
+1. The lead scouter enters the match schedule for practice matches and qualification matches.\
    [<img src=doc/event-table.png width=200>](doc/event-table.png)
 1. Team members can go interview other teams and collect pit scouting data.\
    [<img src=doc/pit-scout.png width=200>](doc/pit-scout.png)

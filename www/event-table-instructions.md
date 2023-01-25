@@ -14,8 +14,8 @@ When you get to an event, you are often handed a paper with the event schedule o
  - Click on a team slot to focus the yellow background there.
  - It is possible to over-write a team number by focusing the yellow background on it and clicking a different team button.
  - If you are not planning to scout during practice matches, practice matches don't need to be entered. They are optional.
- - It is possible to start by entering just the practice matches then come back and add qualifier matches later.
+ - It is possible to start by entering just the practice matches then come back and add qualification matches later.
  - Don't forget to use the "Save Event" button when the data entry is done.
  - If want to edit the data, you can change it later.
-   - From the event's page, under "Edit Event" click the "Practice and Qualifier Matches" link. 
+   - From the event's page, under "Edit Event" click the "Practice and Qualification Matches" link. 
    - You can also click the "Edit" link for the schedule CSV data to edit the data like a spreadsheet. Be more careful with that option because there is no data validation and the app may not work correctly if the data is not in the expected format.

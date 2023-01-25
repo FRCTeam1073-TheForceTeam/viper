@@ -139,7 +139,7 @@ function getUploads(){
 function getMatchName(matchId){
 	return matchId
 		.replace(/^pm/, "Practice ")
-		.replace(/^qm/, "Qualifier ")
+		.replace(/^qm/, "Qualification ")
 		.replace(/^qf/, "Quarter-final ")
 		.replace(/^sf/, "Semi-final ")
 		.replace(/^1p/, "Playoffs first round ")
