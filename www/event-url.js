@@ -120,7 +120,7 @@ function loadEventInfo(callback){
 function loadPitScouting(callback){
 	eventAjax(`/data/${eventId}.pit.csv`,function(text){
 		if (text){
-			eventPitData = csvToArrayOfMaps(text)[0]
+			eventPitData = csvToArrayOfMaps(text)
 			if (callback) callback(eventPitData)
 		}
 	})
