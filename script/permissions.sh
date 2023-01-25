@@ -3,7 +3,7 @@
 set -e
 
 # The web server needs to write to this directory
-sudo chgrp -R www-data www/data/
+sudo chown -R `whoami`:www-data www/data/
 sudo chmod -R g+rw www/data/
 # Set it so that new files in that directory
 # use the same group user and permissions
