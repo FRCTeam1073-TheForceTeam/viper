@@ -136,7 +136,10 @@ function showStats(){
 
 function showSortOptions(){
 	var picker = $('#sortChooser').html(`<h2>Choose Sorting</h2>`)
-	var allStats = Object.keys(statInfo)
+	var allStats = []
+	Object.keys(aggregateGraphs).forEach(x=>{
+		aggregateGraphs[x].data.forEach(y=>allStats.push(y))
+	})
 	allStats.sort((a,b)=>{return getStatInfoName(a).localeCompare(getStatInfoName(b))})
 	for (var i=0; i<allStats.length; i++){
 		var field = allStats[i],
