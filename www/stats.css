@@ -5,7 +5,7 @@
 td,th{padding:0.2em}
 .graph{display:inline-block;max-width:100%}
 .chart{padding:0 1em;display:inline-block}
-canvas{max-height:20em}
+canvas{max-height:20em;min-height:11em}}
 #teamPicker{padding:2em}
 button.team.picked{background-color:darkslategray;}
 button.team{width:3.5em;height:1.5em;margin:0.25em}

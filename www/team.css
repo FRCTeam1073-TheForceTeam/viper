@@ -1,10 +1,9 @@
 #comments{max-width:30em;margin:0 auto;text-align:left}
 .scouter{text-align:right}
 .scouter::before{content:"-- "}
-canvas{max-height:20em}
+canvas{max-height:20em;min-height:11em}
 .graph{display:inline-block;max-width:100%}
 .chart{padding:0 1em;display:inline-block}
-.chart canvas {min-height:11em}
 .comments{white-space:pre-wrap}
 .imagePreview img{width:320px}
 .imagePreview{display:inline}
