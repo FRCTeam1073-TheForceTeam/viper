@@ -49,6 +49,8 @@ function showStats(){
 	}
 	teamList.sort((a,b)=>{
 		if (teamsPicked[a] != teamsPicked[b]) return teamsPicked[b]?-1:1
+		console.log(statInfo[sortStat].good)
+		if (statInfo[sortStat].good == 'low') return getTeamValue(sortStat,a)-getTeamValue(sortStat,b)
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
 	var graphs = $('#statGraphs').html(''),
@@ -213,6 +215,6 @@ function getTeamValue(field, team){
 	var stats = eventStatsByTeam[team],
 	info = statInfo[field]||{}
 	if (! field in stats ||! 'count' in stats || !stats['count']) return 0
-	var divisor = /count|minmax/.test(info['type'])?1:stats['count']
+	var divisor = /(avg|\%)$/.test(info['type'])?stats['count']:1
 	return (stats[field]||0) / divisor * (info['type']=='%'?100:1)
 }
