@@ -49,7 +49,6 @@ function showStats(){
 	}
 	teamList.sort((a,b)=>{
 		if (teamsPicked[a] != teamsPicked[b]) return teamsPicked[b]?-1:1
-		console.log(statInfo[sortStat].good)
 		if (statInfo[sortStat].good == 'low') return getTeamValue(sortStat,a)-getTeamValue(sortStat,b)
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
