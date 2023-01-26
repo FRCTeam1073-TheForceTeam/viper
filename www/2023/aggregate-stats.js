@@ -280,15 +280,17 @@ var statInfo = {
 	},
 	"full_cycle_average_seconds": {
 		name: "Full Cycle Time Average",
-		type: "num"
+		type: "num",
+		good: "low"
 	},
 	"full_cycle_count": {
 		name: "Full Cycle Count",
-		type: "count"
+		type: "avg"
 	},
 	"full_cycle_fastest_seconds": {
 		name: "Full Cycle Time Fastest",
-		type: "minmax"
+		type: "minmax",
+		good: "low"
 	},
 	"links": {
 		name: "Alliance links",
@@ -359,7 +361,7 @@ function forEachStageRowCargo(full,callback){
 
 function forEachStageRowCargoStat(full,callback){
 	forEachStageRowCargo(full,function(stage,row,cargo){
-		;[["","Placed","count"],["score","Score","avg"],["failed","Failed","count"],["attempts","Place Attempts","count"],["reliability","Reliability","fraction"]].forEach(stat=>{
+		;[["","Placed","avg"],["score","Score","avg"],["failed","Failed","avg"],["attempts","Place Attempts","avg"],["reliability","Reliability","fraction"]].forEach(stat=>{
 			if(full)callback(stage,row,cargo,stat)
 			else callback(stage,row,cargo,stat[0])
 		})
@@ -398,7 +400,7 @@ var teamGraphs = {
 		graph:"stacked",
 		data:['shelf','loading_zone','community','field']
 	},
-	"capabilities":{
+	"Capabilities":{
 		graph:"bar",
 		data:['cone_sideways','throw']
 	},
@@ -463,15 +465,63 @@ var aggregateGraphs = {
 	},
 	"Auto":{
 		graph:"stacked",
-		data:['auto_dock_docked_reliability','auto_dock_engaged_reliability']
+		data:['auto_mobility_score','auto_place_score','auto_dock_score']
 	},
 	"Teleop":{
 		graph:"stacked",
-		data:[]
+		data:['tele_place_score','links_score']
 	},
-	"Scouting Coverage":{
+	"Cargo Picking":{
 		graph:"stacked",
-		data:["count"]
+		data:['shelf','loading_zone','community','field']
+	},
+	"Capabilities":{
+		graph:"bar",
+		data:['cone_sideways','throw']
+	},
+	"Docking":{
+		graph:"bar",
+		data:['auto_dock_docked_reliability','auto_dock_engaged_reliability','end_dock_docked_reliability','end_dock_engaged_reliability']
+	},
+	"Cycle Time":{
+		graph:"bar",
+		data:["full_cycle_average_seconds","full_cycle_fastest_seconds"]
+	},
+	"Cycle Count":{
+		graph:"bar",
+		data:["full_cycle_count"]
+	},
+	"# Placed by Stage":{
+		graph:"stacked",
+		data:["auto_place","tele_place"]
+	},
+	"# Placed by Type":{
+		graph:"stacked",
+		data:["cone","cube"]
+	},
+	"# Placed by Level":{
+		graph:"stacked",
+		data:["bottom","middle","top"]
+	},
+	"# Placed by Type and Level":{
+		graph:"stacked",
+		data:["bottom_cone","bottom_cube","middle_cone","middle_cube","top_cone","top_cube"]
+	},
+	"Place Reliability by Stage":{
+		graph:"bar",
+		data:["auto_place_reliability","tele_place_reliability"]
+	},
+	"Place Reliability by Type":{
+		graph:"bar",
+		data:["cone_reliability","cube_reliability"]
+	},
+	"Place Reliability by Level":{
+		graph:"bar",
+		data:["bottom_reliability","middle_reliability","top_reliability"]
+	},
+	"Place Reliability Type and Level":{
+		graph:"bar",
+		data:["bottom_cone_reliability","bottom_cube_reliability","middle_cone_reliability","middle_cube_reliability","top_cone_reliability","top_cube_reliability"]
 	}
 }
 
