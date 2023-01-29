@@ -48,315 +48,322 @@
 </div>
 
 <form id=scouting class=screen style=display:none>
-    <div>
-        <button class=teleop id=to-auto style=display:none>Back to auto</button>
-	    <button class=showInstructions>Instructions</button>
-	    <iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
-    </div>
+	<div>
+		<button class=teleop id=to-auto style=display:none>Back to auto</button>
+		<button class=showInstructions>Instructions</button>
+		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+	</div>
 	<input type=hidden name=event>
 	<input type=hidden name=match>
 	<input type=hidden name=team>
-	<div class=auto><table>
-		<tr><td class=teamColorBG colspan=4>
-            Auto: Placed (or Failed) on Top Row
-        </td></tr><tr><td>
-            <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=auto_top_cone size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=auto_top_cone_failed size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=auto_top_cube size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=auto_top_cube_failed size=1 disabled>
-            </div></div>
-        </td></tr><tr><td class=teamColorBG colspan=4>
-            Middle Row
-        </td></tr><tr><td>
-            <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=auto_middle_cone size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=auto_middle_cone_failed size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=auto_middle_cube size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=auto_middle_cube_failed size=1 disabled>
-            </div></div>
-        </td></tr><tr><td class=teamColorBG colspan=4>
-            Bottom Row
-        </td></tr><tr><td>
-            <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=auto_bottom_cone size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=auto_bottom_cone_failed size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=auto_bottom_cube size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=auto_bottom_cube_failed size=1 disabled>
-            </div></div>
-        </td></tr><tr><td class=teamColorBG colspan=4>
-            Other Auto Actions
-        </td></tr><tr><td colspan=4>
-            <label><input type=checkbox name=auto_mobility value=1><span>Robot Exited Community</span></label>
-        </td></tr><tr><td colspan=4>
-            <label><input type=radio name=auto_dock value=docked><span>Docked</span></label>
-            <label><input type=radio name=auto_dock value=engaged><span>Engaged</span></label>
-            <label><input type=radio name=auto_dock value=failed><span>Docking Failed</span></label>
-        </td></tr>
-	</table>
+	<div class=auto>
 
-    <button id=to-teleop>Proceed to Teleop</button>
-    </div>
+		<fieldset>
+			<legend>Which grid section is the robot starting in front of?</legend>
+			<label><input type=radio name=auto_start value=barrier><span>Barrier</span></label>
+			<label><input type=radio name=auto_start value=charging><span>Charging Station</span></label>
+			<label><input type=radio name=auto_start value=cable><span>Cable Protector</span></label>
+		</fieldset>
+		
+		<table><tr><td class=teamColorBG colspan=4>
+			Auto: Placed (or Failed) on Top Row
+		</td></tr><tr><td>
+			<div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone.svg>
+				<input type=text class=num value=0 name=auto_top_cone size=1 max=3 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone_failed.svg>
+				<input type=text class=num value=0 name=auto_top_cone_failed size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube.svg>
+				<input type=text class=num value=0 name=auto_top_cube max=2 size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube_failed.svg>
+				<input type=text class=num value=0 name=auto_top_cube_failed size=1 disabled>
+			</div></div>
+		</td></tr><tr><td class=teamColorBG colspan=4>
+			Middle Row
+		</td></tr><tr><td>
+			<div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone.svg>
+				<input type=text class=num value=0 name=auto_middle_cone max=3 size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone_failed.svg>
+				<input type=text class=num value=0 name=auto_middle_cone_failed size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube.svg>
+				<input type=text class=num value=0 name=auto_middle_cube max=2 size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube_failed.svg>
+				<input type=text class=num value=0 name=auto_middle_cube_failed size=1 disabled>
+			</div></div>
+		</td></tr><tr><td class=teamColorBG colspan=4>
+			Bottom Row
+		</td></tr><tr><td>
+			<div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone.svg>
+				<input type=text class=num value=0 name=auto_bottom_cone max=7 size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone_failed.svg>
+				<input type=text class=num value=0 name=auto_bottom_cone_failed size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube.svg>
+				<input type=text class=num value=0 name=auto_bottom_cube max=7 size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube_failed.svg>
+				<input type=text class=num value=0 name=auto_bottom_cube_failed size=1 disabled>
+			</div></div>
+		</td></tr><tr><td class=teamColorBG colspan=4>
+			Other Auto Actions
+		</td></tr><tr><td colspan=4>
+			<label><input type=checkbox name=auto_mobility value=1><span>Robot Exited Community</span></label>
+		</td></tr><tr><td colspan=4>
+			<label><input type=radio name=auto_dock value=docked><span>Docked</span></label>
+			<label><input type=radio name=auto_dock value=engaged><span>Engaged</span></label>
+			<label><input type=radio name=auto_dock value=failed><span>Docking Failed</span></label>
+		</td></tr></table>
 
-    <div class=teleop><table>
+		<button id=to-teleop>Proceed to Teleop</button>
+	</div>
+
+	<div class=teleop><table>
 		<tr><td class=subheader colspan=4>
-           Teleop: Collection From
-        </td></tr><tr><td>
-            <div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Shelf</div></div>
-            <div><div class=side-by-side>
-                <img class="count collectLoadingZone"src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=claw.svg>
-                <input type=text class=num value=0 name=shelf size=1 disabled>
-            </div></div>
-        </td><td>
-            <div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Chute</div></div>
-            <div><div class=side-by-side>
-                <img class="count collectLoadingZone" src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=claw.svg>
-                <input type=text class=num value=0 name=loading_zone size=1 disabled>
-            </div></div>
-        </td><td>
-            <div class=explain><div><span class='teamColor teamColorBG'></span> Com&shy;munity</div></div>
-            <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=claw.svg>
-                <input type=text class=num value=0 name=community size=1 disabled>
-            </div></div>
-        </td><td>
-            <div class=explain>Else&shy;where</div>
-            <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=claw.svg>
-                <input type=text class=num value=0 name=field size=1 disabled>
-            </div></div>
-        </td></tr><tr><td class=subheader colspan=4>    
+		   Teleop: Collection From
+		</td></tr><tr><td>
+			<div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Shelf</div></div>
+			<div><div class=side-by-side>
+				<img class="count collectLoadingZone"src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=claw.svg>
+				<input type=text class=num value=0 name=shelf size=1 disabled>
+			</div></div>
+		</td><td>
+			<div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Chute</div></div>
+			<div><div class=side-by-side>
+				<img class="count collectLoadingZone" src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=claw.svg>
+				<input type=text class=num value=0 name=loading_zone size=1 disabled>
+			</div></div>
+		</td><td>
+			<div class=explain><div><span class='teamColor teamColorBG'></span> Com&shy;munity</div></div>
+			<div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=claw.svg>
+				<input type=text class=num value=0 name=community size=1 disabled>
+			</div></div>
+		</td><td>
+			<div class=explain>Else&shy;where</div>
+			<div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=claw.svg>
+				<input type=text class=num value=0 name=field size=1 disabled>
+			</div></div>
+		</td></tr><tr><td class=subheader colspan=4>    
 			Placed (or Failed) on Top Row
-        </td></tr><tr><td>
-            <div><div class=side-by-side>
-                <img class="count placement" src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=tele_top_cone size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=tele_top_cone_failed size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class="count placement" src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=tele_top_cube size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=tele_top_cube_failed size=1 disabled>
-            </div></div>
-        </td></tr><tr><td class=subheader colspan=4>
-            Middle Row
-        </td></tr><tr><td>
-            <div><div class=side-by-side>
-                <img class="count placement" src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=tele_middle_cone size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=tele_middle_cone_failed size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class="count placement" src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=tele_middle_cube size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=tele_middle_cube_failed size=1 disabled>
-            </div></div>
-        </td></tr><tr><td class=subheader colspan=4>
-            Bottom Row
-        </td></tr><tr><td>
-            <div><div class=side-by-side>
-                <img class="count placement" src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone.svg>
-                <input type=text class=num value=0 name=tele_bottom_cone size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cone_failed.svg>
-                <input type=text class=num value=0 name=tele_bottom_cone_failed size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class="count placement" src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube.svg>
-                <input type=text class=num value=0 name=tele_bottom_cube size=1 disabled>
-            </div></div>
-        </td><td>
-           <div><div class=side-by-side>
-                <img class=count src=/count_up.svg>
-                <img class=count src=/count_down.svg>
-            </div><div class=side-by-side>
-                <img class=icon src=cube_failed.svg>
-                <input type=text class=num value=0 name=tele_bottom_cube_failed size=1 disabled>
-            </div></div>
-        </td></tr><tr><td class=subheader colspan=4>
-            Full Cycles (Loading&nbsp;Zone&nbsp;🡘&nbsp;Placement)
-        </td></tr><tr class=cycleStats><td>
-            <div class=explain>Current</div>
-            <span id=currentCycleTimer>:00</span>
-        </td><td>
-            <div class=explain>Fastest</div>
-            <input type=text class=num value=0 name=full_cycle_fastest_seconds size=1 disabled>s
-        </td><td>
-            <div class=explain>Average</div>
-            <input type=text class=num value=0 name=full_cycle_average_seconds size=1 disabled>s
-        </td><td>
-            <div class=explain>Count</div>
-            <input type=text class=num value=0 name=full_cycle_count size=1 disabled>
-        </td></tr><tr><td class=subheader colspan=4>
-            End Game
-        </td></tr><tr><td colspan=4>
-            <label><input type=radio name=end value=parked><span>Parked</span></label>
-            <label><input type=radio name=end value=docked><span>Docked</span></label>
-            <label><input type=radio name=end value=engaged><span>Engaged</span></label>
-            <fieldset>
-                <legend>Was docking attempted without engaging?</legend>
-                <label><input type=radio name=end_dock_fail value=yes><span>Yes</span></label>
-                <label><input type=radio name=end_dock_fail value=nofault><span>Yes, but not team <span class=team></span>'s fault</label>
-            </fieldset>
-        </td></tr>
+		</td></tr><tr><td>
+			<div><div class=side-by-side>
+				<img class="count placement" src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone.svg>
+				<input type=text class=num value=0 name=tele_top_cone size=1 max=3 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone_failed.svg>
+				<input type=text class=num value=0 name=tele_top_cone_failed size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class="count placement" src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube.svg>
+				<input type=text class=num value=0 name=tele_top_cube size=1 max=2 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube_failed.svg>
+				<input type=text class=num value=0 name=tele_top_cube_failed size=1 disabled>
+			</div></div>
+		</td></tr><tr><td class=subheader colspan=4>
+			Middle Row
+		</td></tr><tr><td>
+			<div><div class=side-by-side>
+				<img class="count placement" src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone.svg>
+				<input type=text class=num value=0 name=tele_middle_cone size=1 max=3 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone_failed.svg>
+				<input type=text class=num value=0 name=tele_middle_cone_failed size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class="count placement" src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube.svg>
+				<input type=text class=num value=0 name=tele_middle_cube size=1 max=2 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube_failed.svg>
+				<input type=text class=num value=0 name=tele_middle_cube_failed size=1 disabled>
+			</div></div>
+		</td></tr><tr><td class=subheader colspan=4>
+			Bottom Row
+		</td></tr><tr><td>
+			<div><div class=side-by-side>
+				<img class="count placement" src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone.svg>
+				<input type=text class=num value=0 name=tele_bottom_cone size=1 max=9 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cone_failed.svg>
+				<input type=text class=num value=0 name=tele_bottom_cone_failed size=1 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class="count placement" src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube.svg>
+				<input type=text class=num value=0 name=tele_bottom_cube size=1 max=9 disabled>
+			</div></div>
+		</td><td>
+		   <div><div class=side-by-side>
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class=side-by-side>
+				<img class=icon src=cube_failed.svg>
+				<input type=text class=num value=0 name=tele_bottom_cube_failed size=1 disabled>
+			</div></div>
+		</td></tr><tr><td class=subheader colspan=4>
+			Full Cycles (Loading&nbsp;Zone&nbsp;🡘&nbsp;Placement)
+		</td></tr><tr class=cycleStats><td>
+			<div class=explain>Current</div>
+			<span id=currentCycleTimer>:00</span>
+		</td><td>
+			<div class=explain>Fastest</div>
+			<input type=text class=num value=0 name=full_cycle_fastest_seconds size=1 disabled>s
+		</td><td>
+			<div class=explain>Average</div>
+			<input type=text class=num value=0 name=full_cycle_average_seconds size=1 disabled>s
+		</td><td>
+			<div class=explain>Count</div>
+			<input type=text class=num value=0 name=full_cycle_count size=1 disabled>
+		</td></tr><tr><td class=subheader colspan=4>
+			End Game
+		</td></tr><tr><td colspan=4>
+			<label><input type=radio name=end value=parked><span>Parked</span></label>
+			<label><input type=radio name=end value=docked><span>Docked</span></label>
+			<label><input type=radio name=end value=engaged><span>Engaged</span></label>
+			<fieldset>
+				<legend>Was docking attempted without engaging?</legend>
+				<label><input type=radio name=end_dock_fail value=yes><span>Yes</span></label>
+				<label><input type=radio name=end_dock_fail value=nofault><span>Yes, but not team <span class=team></span>'s fault</label>
+			</fieldset>
+		</td></tr>
 	</table>
-    <hr class=teamColorBG>
-    <fieldset class="left full">
-        <legend>How many links (placed three in a row) did the <span class=teamColor></span> alliance have in total?</legend>
-        <div class=full><input type=number name=links value=0></div>
-    </fieldset>
-    <hr class=teamColorBG>
-    <fieldset class="left full">
-        <legend>How does <span class=team></span> handle objects?</legend>
-        <p>
-            <label><input type=checkbox name=cone_sideways value=1><span>Can Collect Cones in Any Orientation</span></label>
-            Can pick up cones both upright and sideways
-        </p><p>
-            <label><input type=checkbox name=throw value=1><span>Can Throw Cargo</span></label>
-            Can throw cones or cubes while in the community
-        </p>
-    </fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>How many links (placed three in a row) did the <span class=teamColor></span> alliance have in total?</legend>
+		<div class=full><input type=number name=links value=0 max=9 min=0></div>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>How does <span class=team></span> handle objects?</legend>
+		<p>
+			<label><input type=checkbox name=cone_sideways value=1><span>Can Collect Cones in Any Orientation</span></label>
+			Can pick up cones both upright and sideways
+		</p><p>
+			<label><input type=checkbox name=throw value=1><span>Can Throw Cargo</span></label>
+			Can throw cones or cubes while in the community
+		</p>
+	</fieldset>
 	<hr class=teamColorBG>
 	<fieldset class="left full">
 		<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
