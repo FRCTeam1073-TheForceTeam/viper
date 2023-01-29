@@ -15,7 +15,7 @@
    version="1.1"
    id="svg2105"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="cube-failed.svg">
+   sodipodi:docname="cube_failed.svg">
   <defs
      id="defs2099" />
   <sodipodi:namedview
@@ -26,19 +26,19 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.1908203"
-     inkscape:cx="150.57247"
-     inkscape:cy="16.657411"
+     inkscape:cx="-23.257284"
+     inkscape:cy="8.679717"
      inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="text889-3"
      showgrid="false"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1920"
-     inkscape:window-height="1016"
+     inkscape:window-width="3840"
+     inkscape:window-height="2136"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="0"
      inkscape:window-maximized="1" />
   <metadata
      id="metadata2102">
@@ -48,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -74,18 +74,14 @@
        d="m 68.980795,150.01622 c -2.299184,2.29918 -38.345038,2.29918 -40.644222,0 -2.299185,-2.29919 -2.299185,-38.34504 0,-40.64422 2.299184,-2.29919 38.345037,-2.29919 40.644222,0 2.299184,2.29918 2.299184,38.34503 0,40.64422 z"
        inkscape:export-xdpi="95.839996"
        inkscape:export-ydpi="95.839996" />
-    <text
-       xml:space="preserve"
+    <g
+       aria-label="x"
        style="font-size:6.51570606px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1"
-       x="25.345659"
-       y="150.41399"
-       id="text889-3"
-       inkscape:export-xdpi="95.839996"
-       inkscape:export-ydpi="95.839996"><tspan
-         sodipodi:role="line"
-         id="tspan887-5"
-         x="25.345659"
-         y="150.41399"
-         style="font-size:78.18847656px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1">x</tspan></text>
+       id="text889-3">
+      <path
+         d="m 68.257694,107.65466 -15.462076,20.807 16.263814,21.95233 H 60.774813 L 48.328795,133.61568 35.882778,150.41399 H 27.598159 L 44.205575,128.0417 29.010744,107.65466 h 8.284619 l 11.338856,15.23301 11.338856,-15.23301 z"
+         style="font-size:78.18847656px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1"
+         id="path2159" />
+    </g>
   </g>
 </svg>
