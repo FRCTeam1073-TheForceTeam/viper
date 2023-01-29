@@ -1,3 +1,5 @@
+"use strict"
+
 var pos = "",
 team = "",
 match = "",
@@ -255,8 +257,7 @@ function safeCSV(s){
 function getTeamsWithData(){
 	var teams = {}
 	teams[team]=1
-
-	for (i in localStorage){
+	for (var i in localStorage){
 		if (/^20[0-9]{2}.*_.*_[0-9]+$/.test(i)){
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
@@ -268,7 +269,7 @@ function getTeamsWithData(){
 
 function getTeamsWithPitData(){
 	var teams = {}
-	for (i in localStorage){
+	for (var i in localStorage){
 		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_[0-9]+$/.test(i)){
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
@@ -344,11 +345,14 @@ $(document).ready(function(){
 		else if(/down/.test(src))toAdd = -1
 		else if(/three/.test(src))toAdd = 3
 		else if(/five/.test(src))toAdd = 5
-		var input = $(this).closest('td').find('input')
-		var val = input.val()
+		var input = $(this).closest('td').find('input'),
+		val = input.val(),
+		max = parseInt(input.attr('max')||"9999999"),
+		min = parseInt(input.attr('min')||"0")
 		val = /^[0-9]+$/.test(val)?parseInt(val):0
 		val = val+toAdd
-		val = val<0?0:val
+		val = val<min?min:val
+		val = val>max?max:val
 		input.val(val)
 	})
 
