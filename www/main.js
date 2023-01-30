@@ -49,7 +49,7 @@ $(document).ready(function(){
 		}
 
 		function populateMainMenu(){
-			$.get("/main-menu.html",function(data){	
+			$.get("/main-menu.html",function(data){
 				mainMenu.html(
 					data
 						.replace(/EVENT_NAME/g, (window.eventName)||recentEventName)
@@ -60,7 +60,7 @@ $(document).ready(function(){
 				showMainMenuUploads()
 			})
 		}
-
+		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
 		function showMainMenuUploads(){
 			hamburger.toggleClass("hasUploads", hasUploads())
 			mainMenu.find('.dependUpload').toggle(hasUploads())
@@ -69,12 +69,19 @@ $(document).ready(function(){
 		$('body').append($('<div id=lightBoxBG>').click(closeLightBox))
 	}
 })
-function closeLightBox(){	
+function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
 }
 function showLightBox(content){
 	$('#lightBoxBG').show()
 	content.show()
+}
+
+function toggleFullScreen() {
+	if (!document.fullscreenElement) document.documentElement.requestFullscreen()
+	else if (document.exitFullscreen) document.exitFullscreen()
+	closeLightBox()
+	return false
 }
 
 function hasUploads(){
@@ -85,9 +92,9 @@ function hasUploads(){
 }
 
 function inIframe(){
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
-    }
+	try {
+		return window.self !== window.top;
+	} catch (e) {
+		return true;
+	}
 }
