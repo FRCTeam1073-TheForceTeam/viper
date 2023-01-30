@@ -184,10 +184,10 @@ function toggleChecked(o){
 }
 
 function toCSV(formId){
-	keys = []
+	var keys = [],
 	values = {}
 	$(`${formId} input,${formId} textarea`).each(function(){
-		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type')
+		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type'),
 		off=(type=='checkbox'||type=='radio')&&!el.prop('checked')
 		if (!values.hasOwnProperty(name)){
 			keys.push(name)
