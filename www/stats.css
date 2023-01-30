@@ -1,7 +1,7 @@
 .dosort.active{color:blue}
 .statRow{text-align: right}
-.picked{background-color:darkgray}
-.best{background-color:greenyellow}
+.picked{background:#333}
+.best{background:#060}
 td,th{padding:0.2em}
 .graph{display:inline-block;max-width:100%}
 .chart{padding:0 1em;display:inline-block}

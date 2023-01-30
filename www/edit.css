@@ -1,4 +1,4 @@
 body {text-align:left;padding-top:3.5em}
 form {margin:1em;display:inline-block}
-.handsontable{font-size:12px}
-#saver{position:fixed;top:0.4em;left:0.4em;z-index:99999;background:white; margin:0;padding:0.7em}
+.handsontable{font-size:12px;color:black}
+#saver{position:fixed;top:0.4em;left:0.4em;z-index:99999;background:black; margin:0;padding:0.7em}
