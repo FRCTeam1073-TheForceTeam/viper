@@ -1,3 +1,5 @@
+"use strict"
+
 function addStat(map,field,value){
 	if(/^(\%|avg)$/.test(statInfo[field]['type'])) map[field] = (map[field]||0)+(value||0)
 }
