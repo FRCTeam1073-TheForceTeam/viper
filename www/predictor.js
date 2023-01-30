@@ -1,3 +1,4 @@
+"use strict"
 
 function lf(){
 	return $('#matchTable .lastFocus')
@@ -43,7 +44,7 @@ function setPickedTeams(){
 	$('#teamButtons button').removeClass("picked")
 	var teamCount = 0
 	$('#matchTable input').each(function(){
-		val = $(this).val()
+		var val = $(this).val()
 		if (val){
 			$(`#team-${val}`).addClass("picked")
 			teamCount++
