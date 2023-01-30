@@ -1,3 +1,5 @@
+"use strict"
+
 var hasHeartbeat = true
 
 setInterval(function(){
