@@ -1,3 +1,5 @@
+"use strict" 
+
 $(document).ready(showUploads)
 
 var scoutCsv = {}
