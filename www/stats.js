@@ -104,6 +104,7 @@ function showStats(){
 		var sections = Object.keys(aggregateGraphs)
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i]
+			table.append($('<tr><td class=blank></td></tr>'))
 			var hr = $('<tr>')
 			hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
 			for (var j=0; j<teamList.length; j++){
