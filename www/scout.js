@@ -333,7 +333,7 @@ $(document).ready(function(){
 
 	$("label").click(function(e){
 		e.preventDefault()
-		check=$(this).find(':checkbox,:radio')
+		var check=$(this).find(':checkbox,:radio')
 		if (check.attr('disabled') && !check.prop('checked')) return
 		toggleChecked(check)
 	})
