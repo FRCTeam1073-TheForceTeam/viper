@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
 	loadEventStats(function(){
 		$('#sortBy').click(showSortOptions)
@@ -112,7 +114,7 @@ function showStats(){
 			table.append(hr)
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
 				var field = aggregateGraphs[section]['data'][j],
-				info = statInfo[field]||{}
+				info = statInfo[field]||{},
 				highGood = (info['good']||"high")=='high',
 				statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
 				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ")),
