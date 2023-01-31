@@ -7,7 +7,7 @@ table{border-collapse:collapse;border:1px solid #CCC;margin-top:3vmin!important;
 #scouting th{border:1px solid #CCC;font-size:200%}
 #scouting td{border:1px solid #CCC!important;overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
 #scouting td > div{display:flex;justify-content:space-around}
-.subheader{background:#222}
+.subheader{background:#333}
 .teleop{display:none}
 .cycleStats span,.cycleStats input{font-size:inherit;width:fit-content;display:inline}
 .colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px;border:1px solid white}
