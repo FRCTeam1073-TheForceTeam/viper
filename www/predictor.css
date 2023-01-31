@@ -4,6 +4,8 @@ button.team{width:3em;height:1.5em;margin:0.25em}
 h4{margin:0;padding:0.5em 0 0 0}
 .vertical {writing-mode:vertical-rl;text-orientation:upright}
 .vertical th{min-width:2em;text-align:center;vertical-align:top}
+td.winner{margin:0;padding:0}
 .vertical input,.vertical div{border:none;margin:0 auto}
-#prediction h2{margin:0;padding:0}
+#prediction h2{margin:0;padding:0.5em}
+#prediction h2.winner{border-top:0.5em solid #EE6;border-bottom:0.5em solid #EE6}
 

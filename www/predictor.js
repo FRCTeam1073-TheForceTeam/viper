@@ -71,13 +71,15 @@ function setPickedTeams(){
 					bVal = Math.round(getAllianceValue(field,blue)),
 					b1Val = Math.round(getTeamValue(field,blue[0])),
 					b2Val = Math.round(getTeamValue(field,blue[1])),
-					b3Val = Math.round(getTeamValue(field,blue[2]))
+					b3Val = Math.round(getTeamValue(field,blue[2])),
+					bWinner=(first&&bVal>rVal)?" winner":"",
+					rWinner=(first&&rVal>bVal)?" winner":""
 					if (first){
-						bVal = `<h2>${bVal}</h2>`
-						rVal = `<h2>${rVal}</h2>`
+						bVal = `<h2 class="blueTeamBG${bWinner}">${bVal}</h2>`
+						rVal = `<h2 class="redTeamBG${rWinner}">${rVal}</h2>`
 						first = false
 					}
-					table.append($(`<tr><td class=redTeamBG>${r1Val}</td><td class=redTeamBG>${r2Val}</td><td class=redTeamBG>${r3Val}</td><td class=redTeamBG>${rVal}</td><td>${statName}</td><td class=blueTeamBG>${bVal}</td><td class=blueTeamBG>${b1Val}</td><td class=blueTeamBG>${b2Val}</td><td class=blueTeamBG>${b3Val}</td></tr>`))
+					table.append($(`<tr><td class=redTeamBG>${r1Val}</td><td class=redTeamBG>${r2Val}</td><td class=redTeamBG>${r3Val}</td><td class="redTeamBG${rWinner}">${rVal}</td><td>${statName}</td><td class="blueTeamBG${bWinner}">${bVal}</td><td class=blueTeamBG>${b1Val}</td><td class=blueTeamBG>${b2Val}</td><td class=blueTeamBG>${b3Val}</td></tr>`))
 				}
 			})
 		})
