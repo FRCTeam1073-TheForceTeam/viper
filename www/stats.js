@@ -148,8 +148,9 @@ function showSortOptions(){
 	for (var i=0; i<allStats.length; i++){
 		var field = allStats[i],
 		info = statInfo[field]||{},
-		name = getStatInfoName(field)
-		if(!/^(text|enum)$/.test(info['type'])) picker.append($('<button class=sortByBtn>').attr('data-field',field).text(name).click(reSort))
+		name = getStatInfoName(field),
+		active = sortStat==field?" active":""
+		if(!/^(text|enum)$/.test(info['type'])) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).text(name).click(reSort))
 	}
 	showLightBox(picker)
 }
@@ -162,7 +163,6 @@ function showTeamPicker(callback, heading){
 		picker.append($('<button class=team>').text(team).addClass(teamsPicked[team]?"picked":"not-picked").click(callback))
 	}
 	showLightBox(picker)
-
 }
 
 function setTeamPicked(){

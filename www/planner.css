@@ -1,5 +1,5 @@
-button.selected{background:greenyellow}
-#field{border:1px solid black;margin:0;padding:0;background-size:contain;background-repeat:no-repeat;width:50vh;height:100vh;}
+button.selected{background:var(--button-selected-bg-color)}
+#field{border:1px solid var(--main-border-color);margin:0;padding:0;background-size:contain;background-repeat:no-repeat;width:50vh;height:100vh;}
 #statsTable input{writing-mode:vertical-rl;text-orientation:upright;background-color:inherit;border:none;display:block;margin:0 auto}
 #statsTable th {padding:0.1em;min-width:1.5em}
 html,body{margin:0;padding:0;text-align:left}
@@ -9,7 +9,7 @@ html,body{margin:0;padding:0;text-align:left}
 iframe{width:100%;height:100%}
 .viewTeam{text-align:center}
 .rightColumn{max-width:24em}
-button.team.picked{background-color:darkslategray;}
+button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 button.team{width:3em;height:1.5em;margin:0.25em}
 #statsTable img{max-width:2em;max-height:2em;display:block;margin:0 auto;padding:0;border:none}
 #statsTable td{width:2em;text-align:center}
