@@ -22,8 +22,10 @@ function fillPage(){
 			matchNames.push(getMatchName(eventStats[i]['match']))
 		}
 	}
-	$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
-	$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
+	if(team){
+		$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
+		$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
+	}
 	$('.imagePreview img').click(function(){
 		showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
 	})

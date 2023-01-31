@@ -1,3 +1,5 @@
+"use strict"
+
 var redirect = "/"
 if (location.hash){
 	var keys = location.hash.replace(/^\#/,"").replace(/\#.*/,"").split(/,/)

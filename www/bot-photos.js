@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
     if (/^\#[0-9]+(,[0-9]+)*$/.test(location.hash)){
         var teams = location.hash.replace(/^\#/,"").split(/,/)
@@ -30,7 +32,7 @@ function showFullPhoto(){
 
 function addTeam(team){
     if (!/^[0-9]+$/.test(team)) return
-    var year = ($('#yearInp').val())
+    var year = $('#yearInp').val()
     $('#teams').append(
         $('<tr>').append(
             $('<th>').append(`<h2>Team ${team}</h2>`)
@@ -44,4 +46,5 @@ function addTeam(team){
                 .append(`<input type=file name=${team}-top accept="image/*">`)
         )
     )
+    $('#team').val("")
 }

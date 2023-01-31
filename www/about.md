@@ -15,6 +15,7 @@ The app is available [from GitHub](https://github.com/FRCTeam1073-TheForceTeam/w
  - [Bot photo scouting instructions](/bot-photos-instructions.html)
  - [Scouting instructions — select a bot](/scouting-select-bot-instructions.html)
  - [Scouting instructions — select a match](/scouting-select-match-instructions.html)
- - [2022 Scouting instructions — record data](/2022/scouting-instructions.html)
- - [2023 Scouting instructions — record data](/2023/scouting-instructions.html)
+ - Scouting instructions — record data
+   - [2022](/2022/scouting-instructions.html)
+   - [2023](/2023/scouting-instructions.html)
  - [Match planner instructions](/planner-instructions.html)

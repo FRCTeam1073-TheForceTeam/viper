@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
 	$('#blueAllianceSource').submit(function(){
 		var re= /(?:\/match\/(20[0-9]{2}[a-zA-Z0-9]+)_qm([0-9]+))|(?:\/team\/([0-9]+)\/20)/g,
@@ -20,7 +22,7 @@ $(document).ready(function(){
 		}
 		var csv = ""
 		for (var i=0; i<schedule.length; i++){
-			row = schedule[i]
+			var row = schedule[i]
 			if (row.length != 7){
 				alert("Could not find six teams for match: " + row[0])
 				return false

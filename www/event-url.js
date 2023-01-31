@@ -1,3 +1,5 @@
+"use strict"
+
 $.ajaxSetup({
 	cache: true
 });
@@ -65,7 +67,7 @@ function loadEventSchedule(callback){
 		eventMatches=csvToArrayOfMaps(text)
 		var teams = {}
 		for (var i=0; i<eventMatches.length; i++){
-			for (j=0; j<BOT_POSITIONS.length; j++){
+			for (var j=0; j<BOT_POSITIONS.length; j++){
 				teams[eventMatches[i][BOT_POSITIONS[j]]] = 1
 			}
 		}
@@ -129,7 +131,7 @@ function loadPitScouting(callback){
 function getUploads(){
 	var uploads = []
 	var year = eventId.substring(0,4)
-	for (i in localStorage){
+	for (var i in localStorage){
 		if (new RegExp(`^${year}.*_.*_`).test(i)) {
 			uploads.push(localStorage.getItem(i))
 		}

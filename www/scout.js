@@ -1,3 +1,5 @@
+"use strict"
+
 var pos = "",
 team = "",
 match = "",
@@ -94,12 +96,12 @@ function showMatchList(){
 		var storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
 		if (lastDone == matchId) seenLastDone = true;
 		$('#match-list').append(
-			$('<div class=match>').text(matchName+' ')
+			$('<div class=match>')
 			.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
 				team = $(this).attr('data-team')
 				match = $(this).attr('data-match')
 				showScouting()
-			}))
+			})).append($('<span>').text(' ' + matchName))
 		)
 	}
 	setTeamBG()
@@ -182,10 +184,10 @@ function toggleChecked(o){
 }
 
 function toCSV(formId){
-	keys = []
+	var keys = [],
 	values = {}
 	$(`${formId} input,${formId} textarea`).each(function(){
-		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type')
+		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type'),
 		off=(type=='checkbox'||type=='radio')&&!el.prop('checked')
 		if (!values.hasOwnProperty(name)){
 			keys.push(name)
@@ -255,8 +257,7 @@ function safeCSV(s){
 function getTeamsWithData(){
 	var teams = {}
 	teams[team]=1
-
-	for (i in localStorage){
+	for (var i in localStorage){
 		if (/^20[0-9]{2}.*_.*_[0-9]+$/.test(i)){
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
@@ -268,7 +269,7 @@ function getTeamsWithData(){
 
 function getTeamsWithPitData(){
 	var teams = {}
-	for (i in localStorage){
+	for (var i in localStorage){
 		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_[0-9]+$/.test(i)){
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
@@ -332,7 +333,7 @@ $(document).ready(function(){
 
 	$("label").click(function(e){
 		e.preventDefault()
-		check=$(this).find(':checkbox,:radio')
+		var check=$(this).find(':checkbox,:radio')
 		if (check.attr('disabled') && !check.prop('checked')) return
 		toggleChecked(check)
 	})
@@ -344,11 +345,14 @@ $(document).ready(function(){
 		else if(/down/.test(src))toAdd = -1
 		else if(/three/.test(src))toAdd = 3
 		else if(/five/.test(src))toAdd = 5
-		var input = $(this).closest('td').find('input')
-		var val = input.val()
+		var input = $(this).closest('td').find('input'),
+		val = input.val(),
+		max = parseInt(input.attr('max')||"9999999"),
+		min = parseInt(input.attr('min')||"0")
 		val = /^[0-9]+$/.test(val)?parseInt(val):0
 		val = val+toAdd
-		val = val<0?0:val
+		val = val<min?min:val
+		val = val>max?max:val
 		input.val(val)
 	})
 

@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="cone-failed.svg">
+   sodipodi:docname="cone_failed.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -26,15 +26,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.80203632"
-     inkscape:cx="191.63557"
-     inkscape:cy="224.9972"
+     inkscape:cx="-66.45748"
+     inkscape:cy="210.6587"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1016"
+     inkscape:window-width="3840"
+     inkscape:window-height="2136"
      inkscape:window-x="0"
-     inkscape:window-y="27"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
@@ -48,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -77,18 +77,14 @@
        ry="0"
        inkscape:export-xdpi="95.839996"
        inkscape:export-ydpi="95.839996" />
-    <text
-       xml:space="preserve"
+    <g
+       aria-label="x"
        style="font-size:6.51570606px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1"
-       x="33.519485"
-       y="217.2998"
-       id="text889"
-       inkscape:export-xdpi="95.839996"
-       inkscape:export-ydpi="95.839996"><tspan
-         sodipodi:role="line"
-         id="tspan887"
-         x="33.519485"
-         y="217.2998"
-         style="font-size:78.18847656px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1">x</tspan></text>
+       id="text889">
+      <path
+         d="M 76.43152,174.54048 60.969444,195.34747 77.233258,217.2998 H 68.948639 L 56.502622,200.5015 44.056604,217.2998 H 35.771986 L 52.379401,194.92752 37.18457,174.54048 h 8.284619 l 11.338856,15.23301 11.338857,-15.23301 z"
+         style="font-size:78.18847656px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1"
+         id="path819" />
+    </g>
   </g>
 </svg>

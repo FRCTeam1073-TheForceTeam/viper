@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
 	loadEventStats(function(){
 		$('#sortBy').click(showSortOptions)
@@ -102,6 +104,7 @@ function showStats(){
 		var sections = Object.keys(aggregateGraphs)
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i]
+			table.append($('<tr><td class=blank></td></tr>'))
 			var hr = $('<tr>')
 			hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
 			for (var j=0; j<teamList.length; j++){
@@ -112,7 +115,7 @@ function showStats(){
 			table.append(hr)
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
 				var field = aggregateGraphs[section]['data'][j],
-				info = statInfo[field]||{}
+				info = statInfo[field]||{},
 				highGood = (info['good']||"high")=='high',
 				statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
 				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ")),
@@ -170,11 +173,11 @@ function setTeamPicked(){
 }
 
 function showTeamStats(){
-	var team = parseInt($(this).text())
+	var team = parseInt($(this).attr('data-team')||$(this).text())
 	$('#teamPicker').hide()
     $('#teamStats iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
     window.scrollTo(0,0)
-    $('#teamStats').show()
+    showLightBox($('#teamStats'))
 }
 
 function bgArr(color){

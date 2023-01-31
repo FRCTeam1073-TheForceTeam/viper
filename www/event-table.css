@@ -5,5 +5,5 @@ button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
 #schedule{overflow-x:auto;max-width:100%}
 table{margin:1em auto}
 .side-by-side{max-width:500px}
-#buttons {position:fixed;left:0;right:0;bottom:0;background:white;padding-bottom:1em}
+#buttons {position:fixed;left:0;right:0;bottom:0;background:black;padding-bottom:1em}
 body{padding-bottom:100vh}

@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
     $('#to-teleop').click(function(){
         $('.auto').hide()
