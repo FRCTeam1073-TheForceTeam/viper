@@ -7,9 +7,11 @@ table{border-collapse:collapse;border:1px solid black;margin-top:3vmin!important
 #scouting th{border:1px solid black;font-size:200%}
 #scouting td{border:1px solid black!important;overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
 #scouting td > div{display:flex;justify-content:space-around}
-.subheader{background:#b6b6b6}
+.subheader{background:#333}
 .teleop{display:none}
 .cycleStats span,.cycleStats input{font-size:inherit;width:fit-content;display:inline}
+.colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px;border:1px solid white}
+.colorBar.teamColorBG{border-color:#8C160A}
 .explain{font-size:65%;display:block;text-transform:capitalize}
 @media (max-width: 500px) {
     td{padding:.2em}
