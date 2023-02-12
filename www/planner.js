@@ -1,13 +1,19 @@
 "use strict"
 $(document).ready(function() {
-	var field = $('#field')
-	if (typeof eventYear !== 'undefined') field.css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
+	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
-	var sketcher = field.sketchable({
+	var sketcher = $("#fieldDraw").sketchable({
 		events: {
 			// We use the "before" event hook to update brush type right before drawing starts.
 			mousedownBefore: function(elem, data, evt){
-				if ($('button.pen.selected').attr('data-type') == 'eraser'){
+				var pen = $('button.pen.selected'),
+				img = pen.find('img')
+				if (img.length){
+					data.options.graphics.fillStyle = '#fff0' // transparent
+					data.options.graphics.strokeStyle = '#fff0'
+					var bounds = $('#fieldDraw')[0].getBoundingClientRect()
+					data.sketch.drawImage(img.attr('src'), evt.clientX - bounds.left, evt.clientY - bounds.top)
+				} else if (pen.attr('data-type') == 'eraser'){
 					// There is a method to set the brush in eraser mode.
 					data.options.graphics.lineWidth = 20
 					data.sketch.eraser()
@@ -15,7 +21,7 @@ $(document).ready(function() {
 					// There is a method to get the default mode (pencil) back.
 					data.options.graphics.lineWidth = 3
 					data.options.graphics.firstPointSize = 3
-					var color = $('button.pen.selected').css('color')
+					var color = pen.css('color')
 					data.options.graphics.fillStyle = color
 					data.options.graphics.strokeStyle = color
 					data.sketch.pencil()
@@ -37,12 +43,16 @@ $(document).ready(function() {
 	$('button.pen').click(function(){
 		$('button.pen').removeClass('selected')
 		$(this).addClass('selected')
-		setIcon()
+		setCursorImage()
 	})
 
 	$('.clear').click(function(evt) {
 		evt.preventDefault()
 		sketcher.sketchable('clear')
+	})
+
+	$('.rotate').click(function(evt) {
+		$('#fieldBG').toggleClass('rotated')
 	})
 
 	$('.undo').click(function(evt) {
@@ -55,11 +65,13 @@ $(document).ready(function() {
 		return false
 	})
 
-	function setIcon() {
-		var cursor = $('button.pen.selected').attr('data-type')
-		sketcher.css('cursor', `url(${cursor}.svg), auto`);
+	function setCursorImage() {
+		var pen = $('button.pen.selected'),
+		img = pen.find('img'),
+		cursor = img.length?img.attr('src'):pen.attr('data-type') + '.svg'
+		sketcher.css('cursor', `url(${cursor}), auto`);
 	}
-	setIcon()
+	setCursorImage()
 
 	function setLocationHash(){
 		var hash = `event=${eventId}`
