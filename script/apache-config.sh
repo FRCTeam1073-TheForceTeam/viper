@@ -17,6 +17,7 @@ source ./local.conf
 SERVER_NAME=${SERVER_NAMES%% *}
 SERVER_ALIASES=${SERVER_NAMES#* }
 DOCUMENT_ROOT=`pwd`/www
+DOCUMENT_ROOT=${DOCUMENT_ROOT/#\/c\//C:\/}
 
 TMPCONF=`mktemp /tmp/webscout-XXXXXXXXXX.conf`
 
@@ -51,7 +52,7 @@ echo '    AuthName "webscout"' >> $TMPCONF
 echo '    AuthType Digest' >> $TMPCONF
 echo '    AuthDigestDomain /' >> $TMPCONF
 echo '    AuthDigestProvider file' >> $TMPCONF
-echo '    AuthUserFile /etc/apache2/webscout.auth' >> $TMPCONF
+echo '    AuthUserFile $APACHE_DIR/webscout.auth' >> $TMPCONF
 echo '    <RequireAny>' >> $TMPCONF
 if [ "z$GUEST_USER" == "z" ]
 then
@@ -107,53 +108,93 @@ then
 fi
 echo '  </VirtualHost>' >> $TMPCONF
 
-RELOAD_NEEDED=0
-sudo touch /etc/apache2/sites-available/webscout.conf
-sudo chmod a+r /etc/apache2/sites-available/webscout.conf
-if ! cmp $TMPCONF /etc/apache2/sites-available/webscout.conf >/dev/null 2>&1
+SUDO=""
+if which sudo &> /dev/null
 then
-    sudo cp -v $TMPCONF /etc/apache2/sites-available/webscout.conf
+  SUDO=sudo
+fi
+
+APACHE_DIR=""
+if [ -e /etc/apache2 ]
+then
+    APACHE_DIR=/etc/apache2
+elif [ -e /C/xampp/apache/conf ]
+then
+    APACHE_DIR=/C/xampp/apache/conf
+fi
+
+if [ "z$APACHE_DIR" == "z" ]
+then
+    echo "Apache conf directory not found."
+    exit 1
+fi
+
+$SUDO mkdir -p $APACHE_DIR/sites-available/
+$SUDO mkdir -p $APACHE_DIR/sites-enabled/
+
+RELOAD_NEEDED=0
+$SUDO touch $APACHE_DIR/sites-available/webscout.conf
+$SUDO chmod a+r $APACHE_DIR/sites-available/webscout.conf
+if ! cmp $TMPCONF $APACHE_DIR/sites-available/webscout.conf >/dev/null 2>&1
+then
+    $SUDO cp -v $TMPCONF $APACHE_DIR/sites-available/webscout.conf
     RELOAD_NEEDED=1
 fi
 rm -f $TMPCONF
 
-if [ ! -e /etc/apache2/sites-enabled/webscout.conf ]
+if [ ! -e $APACHE_DIR/sites-enabled/webscout.conf ]
 then
-    sudo a2ensite webscout
-    RELOAD_NEEDED=1
-fi
-
-if [ -e /etc/apache2/sites-enabled/000-default.conf ]
-then
-    sudo a2dissite 000-default
-    RELOAD_NEEDED=1
-fi
-
-for mod in auth_digest.load headers.load rewrite.load cgid.load alias.load
-do
-    if [ ! -e /etc/apache2/mods-enabled/$mod ]
+    if which a2ensite &> /dev/null
     then
-        sudo a2enmod $mod
-        RELOAD_NEEDED=1
+        $SUDO a2ensite webscout
+    else
+        cp $APACHE_DIR/sites-available/webscout.conf $APACHE_DIR/sites-enabled/webscout.conf
     fi
-done
+    RELOAD_NEEDED=1
+fi
+
+if [ -e $APACHE_DIR/sites-enabled/000-default.conf ]
+then
+    $SUDO a2dissite 000-default
+    RELOAD_NEEDED=1
+fi
+
+if which a2enmod &> /dev/null
+then
+    for mod in auth_digest.load headers.load rewrite.load cgid.load alias.load
+    do
+        if [ ! -e $APACHE_DIR/mods-enabled/$mod ]
+        then
+            $SUDO a2enmod $mod
+            RELOAD_NEEDED=1
+        fi
+    done
+else
+    sed -i -E 's/^\#(.*((mod_auth_digest\.so)|(mod_headers\.so)|(mod_rewrite\.so)|(mod_cgi\.so)|(mod_alias\.so)))$/\1/g' $APACHE_DIR/httpd.conf
+fi
+
+HTDIGEST=htdigest
+if [ -e /c/xampp/apache/bin/htdigest.exe ]
+then
+    HTDIGEST=/c/xampp/apache/bin/htdigest.exe
+fi
 
 for USER in $GUEST_USER $SCOUTING_USER $ADMIN_USER
 do
     CREATE=""
-    if [ ! -e /etc/apache2/webscout.auth ]
+    if [ ! -e $APACHE_DIR/webscout.auth ]
     then
         CREATE="-c"
     fi
-    if ! grep -Eq "^$USER:" /etc/apache2/webscout.auth
+    if ! grep -Eq "^$USER:" $APACHE_DIR/webscout.auth
     then
-        sudo  htdigest $CREATE /etc/apache2/webscout.auth webscout $USER
+        $SUDO $HTDIGEST $CREATE $APACHE_DIR/webscout.auth webscout $USER
         RELOAD_NEEDED=1
     fi
 done
 
 if [ "$RELOAD_NEEDED" == "1" ]
 then
-    sudo service apache2 reload
+    $SUDO service apache2 reload
     echo "Webserver configuration reloaded"
 fi
