@@ -353,7 +353,20 @@ $(document).ready(function(){
 		val = val+toAdd
 		val = val<min?min:val
 		val = val>max?max:val
+		$(this).parent().find('.count').each(function(){
+			if(/down/.test($(this).attr('src'))){
+				$(this).css('visibility', val==min?'hidden':'visible');
+			} else {
+				$(this).css('visibility', val==max?'hidden':'visible');
+			}
+		})
 		input.val(val)
+	})
+
+	$('.count').each(function(){
+		if(/down/.test($(this).attr('src'))){
+			$(this).css('visibility','hidden');
+		}
 	})
 
 	$("img.robot-location").click(function(e){
