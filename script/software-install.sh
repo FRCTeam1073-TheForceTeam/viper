@@ -11,5 +11,7 @@ sudo apt-get install -y \
 	libcgi-pm-perl \
 	libfile-flock-perl \
 	libhtml-escape-perl \
+	libjson-parse-perl \
+	libmime-base64-perl \
 	perl \
 	;
