@@ -6,6 +6,7 @@ use CGI;
 use JSON::Parse 'parse_json';
 use MIME::Base64;
 use Data::Dumper;
+use File::Slurp;
 use File::Path 'make_path';
 use lib '../../pm';
 use webutil;
@@ -13,7 +14,13 @@ my $webutil = webutil->new;
 my $cgi = CGI->new;
 my $json = $cgi->param('json');
 $webutil->error("Missing data parameter: json") if (!$json);
-my $data = parse_json ($json);
+my $upload_fh = $cgi->upload('json');
+my $info = $cgi->uploadInfo($upload_fh);
+if ($info){
+    my $upload_file = $cgi->tmpFileName(scalar $json);
+    $json = read_file($upload_file)
+}
+my $data = parse_json($json);
 my $event = "";
 
 for my $fileName (keys(%$data)){

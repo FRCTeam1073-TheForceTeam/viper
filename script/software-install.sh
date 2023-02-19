@@ -10,6 +10,7 @@ sudo apt-get install -y \
 	imagemagick \
 	libcgi-pm-perl \
 	libfile-flock-perl \
+	libfile-slurp-perl \
 	libhtml-escape-perl \
 	libjson-parse-perl \
 	libmime-base64-perl \
