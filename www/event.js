@@ -74,9 +74,12 @@ $(document).ready(function(){
 	function toDisplayDate(d){
 		if (!d) return ""
 		try {
-			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(Date.parse(d))
+			var b = d.split(/\D/)
+			var date = new Date(b[0], b[1]-1, b[2])
+			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(date)
 		} catch (x){
 			console.log("Could not parse " + d)
+			console.log(x)
 			return ""
 		}
 	}
