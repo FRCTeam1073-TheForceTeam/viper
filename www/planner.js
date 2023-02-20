@@ -107,7 +107,12 @@ $(document).ready(function() {
 		fillStats()
 	})
 
-	$('#statsTable input').change(fillStats)
+	$('#statsTable input').change(fillStats).focus(function(){
+		focusInput($(this))
+		$('#teamButtons').show()
+	}).blur(function(e){
+		if (!$(e.relatedTarget).is('button.team'))$('#teamButtons').toggle(focusNext())
+	})
 
 	function fillStats(){
 		setLocationHash()
