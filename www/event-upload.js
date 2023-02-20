@@ -34,6 +34,8 @@ $(document).ready(function(){
 		}
 		if (m = /itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/.exec(src)){
 			$('#endInp').val(m[1])
+		} else {
+			$('#endInp').val($('#startInp').val())
 		}
 		if (m = /id\=\"event-name\"\>([^\<]+)\</.exec(src)){
 			$('#nameInp').val(m[1])
