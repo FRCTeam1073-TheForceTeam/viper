@@ -17,6 +17,7 @@ Stats will show up when all six team numbers have been entered.
   - ◍ — Eraser
   - ↶ — Undo
   - ✘ — Clear
+  - 🗘 — Rotate the field
 
 The current brush (color or eraser) is highlighted with a green background on its button.
 
@@ -24,5 +25,5 @@ The current brush (color or eraser) is highlighted with a green background on it
 
 The stats are based on the previous performance of each team during this event.
 
- - 👁 — Click on the eye to see details about the team including individual scores in each previous match
- - Click on the bot photo to see a bigger version of it.    
+ - ![](/graph.svg) — Click on the graph icon to see details about the team including individual scores in each previous match
+ - Click on the bot photo to see a bigger version of it.
