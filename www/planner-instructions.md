@@ -25,5 +25,5 @@ The current brush (color or eraser) is highlighted with a green background on it
 
 The stats are based on the previous performance of each team during this event.
 
- - ![](/graph.svg) — Click on the graph icon to see details about the team including individual scores in each previous match
+ - <img src=/graph.svg width=30> — Click on the graph icon to see details about the team including individual scores in each previous match
  - Click on the bot photo to see a bigger version of it.
