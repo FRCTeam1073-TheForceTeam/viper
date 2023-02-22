@@ -338,6 +338,17 @@ $(document).ready(function(){
 		toggleChecked(check)
 	})
 
+	$("input,textarea").focus(function(){
+		// Select pre-filled input values
+		if ($(this).attr('disabled')) return
+		if (!$(this).attr('value')) return
+		if ($(this).attr('value') != $(this).val()) return
+		$(this).one('mouseup',function(){
+			$(this).select()
+			return false
+		}).select()
+	})
+
 	$("img.count").click(function(e){
 		var src = $(this).attr('src')
 		var toAdd = 0
@@ -370,13 +381,13 @@ $(document).ready(function(){
 	})
 
 	$("img.robot-location").click(function(e){
-        var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
-        y = Math.round(1000 * (e.pageY - this.offsetTop) / this.height)/10,
+		var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
+		y = Math.round(1000 * (e.pageY - this.offsetTop) / this.height)/10,
 		inp = $(this).parent().find('input'),
 		name = inp.attr('name')
 		$(`.${name}`).remove()
 		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
-        inp.val(`${x}%x${y}%`)
+		inp.val(`${x}%x${y}%`)
 	})
 
 	$("#nextBtn").click(function(e){
