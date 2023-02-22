@@ -668,3 +668,8 @@ function showPitScouting(el,team){
 		return s.replace(/_/g," ")
 	}
 }
+
+var whiteboardStamps = [
+	"/2023/cone-stamp.png",
+	"/2023/cube-stamp.png"
+]

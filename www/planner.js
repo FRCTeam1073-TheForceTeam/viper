@@ -1,14 +1,15 @@
 "use strict"
 $(document).ready(function() {
 
-
 	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
-	$('button.pen').click(function(){
+	$('button.pen').click(penButtonClicked)
+	
+	function penButtonClicked(){
 		$('button.pen').removeClass('selected')
 		$(this).addClass('selected')
 		setCursorImage()
-	})
+	}
 
 	$('.clear').click(function(evt) {
 		evt.preventDefault()
@@ -61,6 +62,13 @@ $(document).ready(function() {
 			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
 		}
 		fillStats()
+
+		if (window.whiteboardStamps){
+			window.whiteboardStamps.forEach(function(stamp){
+				console.log(stamp)
+				$('#stamps').append(" ").append($(`<button class=pen><img src=${stamp}></button>`).click(penButtonClicked))
+			})
+		}
 	})
 
 	$('#statsTable input').change(fillStats).focus(function(){
