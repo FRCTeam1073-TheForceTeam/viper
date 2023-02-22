@@ -27,7 +27,7 @@ function showScreen(){
 
 $(window).on('hashchange', function(){
 	if (scouting.is(':visible') && formHasChanges(scouting)){
-		if (confirm("Do you want to save your data?")) store()
+		if (confirm("Do you want to save your data?") && !store()) return false
 	}
 	parseHash()
 	showScreen()
@@ -221,8 +221,13 @@ function formHasChanges(f){
 	return changes
 }
 
+var onStore = []
+
 function store(){
 	if (formHasChanges(scouting)){
+		for (var i=0; i<onStore.length; i++){
+			if(!onStore[i]()) return false
+		}
 		localStorage.setItem("last_match_"+eventId, match)
 		var csv = toCSV('#scouting')
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
@@ -230,6 +235,7 @@ function store(){
 		storeTime = new Date().getTime()
 		storeScouter($('#scouting'))
 	}
+	return true
 }
 
 function storeScouter(form){
@@ -391,7 +397,7 @@ $(document).ready(function(){
 	})
 
 	$("#nextBtn").click(function(e){
-		store()
+		if (!store()) return false
 		var next = getNextMatch()
 		if (!next){
 			alert("Data saved and done. That was the last match!")
@@ -408,17 +414,17 @@ $(document).ready(function(){
 		return false
 	})
 	$("#matchBtn").click(function(e){
-		store()
+		if (!store()) return false
 		showMatchList()
 		return false
 	})
 	$("#robotBtn").click(function(e){
-		store()
+		if (!store()) return false
 		showPosList()
 		return false
 	})
 	$("#teamBtn").click(function(e){
-		store()
+		if (!store()) return false
 		showTeamChange()
 		return false
 	})
@@ -427,7 +433,7 @@ $(document).ready(function(){
 		return false
 	})
 	$("#uploadBtn").click(function(e){
-		store()
+		if (!store()) return false
 		var returnTo = "",
 		nextTeam = team,
 		nextMatch = match,

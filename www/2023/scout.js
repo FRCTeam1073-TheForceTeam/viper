@@ -10,11 +10,6 @@ $(document).ready(function(){
         showAuto()
         return false
     })
-    $('#nextButtons button').click(function(){
-        showAuto()
-        cycleInterrupt()
-        cycles=[]
-    })
 
     function showAuto(){
         $('.teleop').hide()
@@ -56,6 +51,17 @@ $(document).ready(function(){
         }
         cycle.lastPlace = place
     }
+
+    onStore.push(function(){
+        if(!$('input[name="links"]').val()){
+            alert("Links not set")
+            return false
+        }
+        showAuto()
+        cycleInterrupt()
+        cycles=[]
+        return true
+    })
 
     function cycleInterrupt(){
         cycle = {
