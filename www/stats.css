@@ -16,3 +16,4 @@ iframe{width:100%;height:100%}
 #statsTable th,#statsTable td{border:1px solid var(--main-border-color)}
 #statsTable .borderless{border:none}
 #statsTable td.blank{border:none;height:2em}
+#statsTable .picked{background-color:var(--lowlight-bg-color)}
