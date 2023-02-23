@@ -22,8 +22,8 @@ button.team{width:3em;height:1.5em;margin:0.25em}
 #stamps img{height:.8em}
 #fullPhoto{object-fit:contain;background:#0000;border:none}
 @media only screen and (max-width: 1150px) and (min-width: 750px){
-    .f{display:table;width:100%}
-    canvas,.rightColumn{display:table-cell;vertical-align:middle}
-    .rightColumn>*{margin:0 auto;width:auto}
-    html{overflow-y:hidden}
+	.f{display:table;width:100%}
+	canvas,.rightColumn{display:table-cell;vertical-align:middle}
+	.rightColumn>*{margin:0 auto;width:auto}
+	html{overflow-y:hidden}
 }

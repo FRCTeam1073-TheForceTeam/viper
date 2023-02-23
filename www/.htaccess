@@ -1,8 +1,8 @@
 Options +ExecCGI
 AddHandler cgi-script .cgi .pl
 <FilesMatch "\.(dat|elims|csv)$">
-    ForceType text/plain;charset=UTF-8
-    Header set Content-Disposition attachment
+	ForceType text/plain;charset=UTF-8
+	Header set Content-Disposition attachment
 </FilesMatch>
 AddType text/plain;charset=UTF-8 .txt
 AddType text/html;charset=UTF-8 .html

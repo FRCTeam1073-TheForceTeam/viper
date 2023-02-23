@@ -664,7 +664,7 @@ function showPitScouting(el,team){
 	function format(s){
 		s = ""+s
 		if (!s||s=="0") s = "Unknown"
-    	s = s[0].toUpperCase() + s.slice(1)
+		s = s[0].toUpperCase() + s.slice(1)
 		return s.replace(/_/g," ")
 	}
 }
