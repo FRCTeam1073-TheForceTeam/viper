@@ -1,6 +1,15 @@
 {
-    "cSpell.words": [
-        "tele",
-        "teleop"
-    ]
+	"cSpell.words": [
+		"tele",
+		"teleop"
+	],
+	"editor.detectIndentation": false,
+	"editor.insertSpaces": false,
+	"files.trimTrailingWhitespace": true,
+	"[yaml]": {
+		"editor.insertSpaces": true
+	},
+	"[markdown]": {
+		"editor.insertSpaces": true
+	}
 }
