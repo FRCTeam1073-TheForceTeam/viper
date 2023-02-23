@@ -9,6 +9,14 @@ Click on the match schedule to get deep links relevant for that team and match:
  - Scouting
  - Stats
 
+The colors in the match table provide extra information:
+
+ - Red background: red alliance
+ - Blue background: blue alliance
+ - White text: not scouted
+ - Green text: already scouted
+ - Red wavy crossed-out: scouting problem (like duplicate data)
+
 ### Scouting
 
 Collect data about each team and match. 
