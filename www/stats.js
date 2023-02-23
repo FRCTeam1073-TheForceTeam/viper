@@ -55,7 +55,7 @@ function showStats(){
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
 	var graphs = $('#statGraphs').html(''),
-    table = $('#statsTable').html('')
+	table = $('#statsTable').html('')
 	var sections = Object.keys(aggregateGraphs)
 
 	if ($('#displayType').val() == 'graph'){
@@ -175,9 +175,9 @@ function setTeamPicked(){
 function showTeamStats(){
 	var team = parseInt($(this).attr('data-team')||$(this).text())
 	$('#teamPicker').hide()
-    $('#teamStats iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
-    window.scrollTo(0,0)
-    showLightBox($('#teamStats'))
+	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
+	window.scrollTo(0,0)
+	showLightBox($('#teamStats'))
 }
 
 function bgArr(color){
