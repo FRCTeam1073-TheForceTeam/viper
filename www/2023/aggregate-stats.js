@@ -24,10 +24,10 @@ function aggregateStats(scout, aggregate){
 		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])) map[field] = (map[field]||0)+(value||0)
 	}
 
-	function fromParent(stage,row,cargo,doSum){	
+	function fromParent(stage,row,cargo,doSum){
 		;["","score","failed"].forEach(stat=>{
 			scout[placementKey(stage,row,cargo,stat)] = doSum(stat)
-		})						
+		})
 		reliability(scout,placementKey(stage,row,cargo))
 	}
 
@@ -114,7 +114,7 @@ function aggregateStats(scout, aggregate){
 	scout['end_dock_engaged'] = scout['end']=="engaged"?1:0
 	scout['end_dock_engaged_attempts'] = (scout['end_dock_engaged']||scout['end_dock_fail']=='yes')?1:0
 	scout['end_dock_engaged_failed'] = scout['end_dock_engaged_attempts']-scout['end_dock_engaged']
-	
+
 	scout['links_score'] = Math.round((scout['links']||0)*pointValues['links'])
 	scout['tele_score'] = scout['tele_place_score']+scout['links_score']
 	scout['dock_score'] = scout['auto_dock_score']+scout['end_dock_score']
@@ -135,7 +135,7 @@ function aggregateStats(scout, aggregate){
 			success = aggregate[base]||0,
 			attempts = aggregate[`${base}_attempts`]||0
 			if (attempts > 0) aggregate[field] = Math.round(100*success/attempts)
-		}		
+		}
 	})
 	aggregate["count"] = (aggregate["count"]||0)+1
 	aggregate["event"] = scout["event"]

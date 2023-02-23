@@ -1,6 +1,6 @@
 ## Selecting a match
 
-The list of matches shows the teams in the bot position that you are scouting. 
+The list of matches shows the teams in the bot position that you are scouting.
 The list is color coded either red or blue to remind you which color bumpers your team will have.
 
 - <s>Crossed out</s> - Match has already been played. If this isn't correct, a crossed out match can still be scouted.

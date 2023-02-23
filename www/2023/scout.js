@@ -42,7 +42,7 @@ $(document).ready(function(){
 			var cycleTime = Math.round((Date.now() - cycle.startTime)/1000)
 			if (cycleTime >= 7){ // Faster than seven seconds is not possible, scouter error.
 				cycles.push(cycleTime)
-				$('input[name="full_cycle_fastest_seconds"]').val(Math.min(...cycles))			   
+				$('input[name="full_cycle_fastest_seconds"]').val(Math.min(...cycles))
 				$('input[name="full_cycle_average_seconds"]').val(Math.round(cycles.reduce((a,b) => a + b, 0) / cycles.length))
 				$('input[name="full_cycle_count"]').val(cycles.length)
 			}

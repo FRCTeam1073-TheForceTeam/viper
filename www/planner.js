@@ -4,7 +4,7 @@ $(document).ready(function() {
 	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
 	$('button.pen').click(penButtonClicked)
-	
+
 	function penButtonClicked(){
 		$('button.pen').removeClass('selected')
 		$(this).addClass('selected')

@@ -63,4 +63,3 @@ function toDataURL(url, callback){
 	xhr.responseType = 'blob'
 	xhr.send()
 }
-  

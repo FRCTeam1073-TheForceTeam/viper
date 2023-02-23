@@ -25,7 +25,7 @@ function fillPage(){
 		showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
 	})
 	$('#fullPhoto').click(closeLightBox)
-	
+
 	showStats()
 
 	if(typeof window.showPitScouting === 'function'){

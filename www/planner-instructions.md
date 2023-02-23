@@ -2,7 +2,7 @@
 
  ### Teams
 
- The team numbers are editable.  
+ The team numbers are editable.
 
   - Erase a team number and click elsewhere to remove it.
   - Focus on an empty team slot and press a team button or type a team number to add a team.
