@@ -36,7 +36,7 @@ then
 	exit 1
 fi
 
-if  grep -q $STATIC_IP /etc/dhcp/dhcpd.conf
+if grep -q $STATIC_IP /etc/dhcp/dhcpd.conf
 then
 	sudo cp -v orig/etc.dhcp.dhcpd.conf /etc/dhcp/dhcpd.conf
 	sudo service isc-dhcp-server stop || true

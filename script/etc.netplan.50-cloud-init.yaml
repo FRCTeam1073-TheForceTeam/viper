@@ -1,17 +1,17 @@
 network:
-    ethernets:
-        eth0:
-            dhcp4: no
-            addresses: [STATIC_IP/24]
-            gateway4: STATIC_GATEWAY
-            nameservers:
-                addresses: [8.8.8.8,8.8.4.4]
-    version: 2
-    renderer: networkd
-#    wifis:
-#        wlan0:
-#            optional: true
-#            access-points:
-#                "MY_SSID":
-#                    password: "PASSWORD"
-#            dhcp4: true
+  ethernets:
+    eth0:
+      dhcp4: no
+      addresses: [STATIC_IP/24]
+      gateway4: STATIC_GATEWAY
+      nameservers:
+        addresses: [8.8.8.8,8.8.4.4]
+  version: 2
+  renderer: networkd
+#  wifis:
+#    wlan0:
+#      optional: true
+#      access-points:
+#        "MY_SSID":
+#          password: "PASSWORD"
+#      dhcp4: true

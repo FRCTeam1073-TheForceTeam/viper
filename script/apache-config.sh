@@ -23,89 +23,89 @@ TMPCONF=`mktemp /tmp/webscout-XXXXXXXXXX.conf`
 echo '<VirtualHost *:80>' > $TMPCONF
 if [ "z$SERVER_NAME" != "z" ]
 then
-	echo "  Servername $SERVER_NAME" >> $TMPCONF
+	echo "	Servername $SERVER_NAME" >> $TMPCONF
 fi
 for SERVER_ALIAS in $SERVER_ALIASES
 do
-	echo "  ServerAlias $SERVER_ALIAS" >> $TMPCONF
+	echo "	ServerAlias $SERVER_ALIAS" >> $TMPCONF
 done
 if [ "z$HTTPS_INCLUDE" != "z" ]
 then
-	echo "  Redirect / https://$SERVER_NAME/" >> $TMPCONF
+	echo "	Redirect / https://$SERVER_NAME/" >> $TMPCONF
 	echo '</VirtualHost>' >> $TMPCONF
 	echo '<VirtualHost *:443>' >> $TMPCONF
 	if [ "z$SERVER_NAME" != "z" ]
 	then
-		echo "  Servername $SERVER_NAME" >> $TMPCONF
+		echo "	Servername $SERVER_NAME" >> $TMPCONF
 	fi
 	for SERVER_ALIAS in $SERVER_ALIASES
 	do
-		echo "  ServerAlias $SERVER_ALIAS" >> $TMPCONF
+		echo "	ServerAlias $SERVER_ALIAS" >> $TMPCONF
 	done
-	echo "  Include $HTTPS_INCLUDE" >> $TMPCONF
+	echo "	Include $HTTPS_INCLUDE" >> $TMPCONF
 fi
-echo "  DocumentRoot $DOCUMENT_ROOT" >> $TMPCONF
-echo "  <Directory $DOCUMENT_ROOT/>" >> $TMPCONF
-echo '	AllowOverride All' >> $TMPCONF
-echo '	AuthName "webscout"' >> $TMPCONF
-echo '	AuthType Digest' >> $TMPCONF
-echo '	AuthDigestDomain /' >> $TMPCONF
-echo '	AuthDigestProvider file' >> $TMPCONF
-echo '	AuthUserFile /etc/apache2/webscout.auth' >> $TMPCONF
-echo '	<RequireAny>' >> $TMPCONF
+echo "	DocumentRoot $DOCUMENT_ROOT" >> $TMPCONF
+echo "	<Directory $DOCUMENT_ROOT/>" >> $TMPCONF
+echo '		AllowOverride All' >> $TMPCONF
+echo '		AuthName "webscout"' >> $TMPCONF
+echo '		AuthType Digest' >> $TMPCONF
+echo '		AuthDigestDomain /' >> $TMPCONF
+echo '		AuthDigestProvider file' >> $TMPCONF
+echo '		AuthUserFile /etc/apache2/webscout.auth' >> $TMPCONF
+echo '		<RequireAny>' >> $TMPCONF
 if [ "z$GUEST_USER" == "z" ]
 then
-	echo '	  Require all granted' >> $TMPCONF
+	echo '			Require all granted' >> $TMPCONF
 else
-	echo '	  Require valid-user' >> $TMPCONF
+	echo '			Require valid-user' >> $TMPCONF
 	if [ "$ALLOW_LOCAL" == "1" ]
 	then
-		echo '	  Require local' >> $TMPCONF
+		echo '			Require local' >> $TMPCONF
 	fi
 	if [ "z$ALLOW_IPS" != "z" ]
 	then
-		echo "	  Require ip $ALLOW_IPS" >> $TMPCONF
+		echo "			Require ip $ALLOW_IPS" >> $TMPCONF
 	fi
 fi
-echo '	</RequireAny>' >> $TMPCONF
-echo '  </Directory>' >> $TMPCONF
+echo '		</RequireAny>' >> $TMPCONF
+echo '	</Directory>' >> $TMPCONF
 if [ "z$SCOUTING_USER" != "z" ]
 then
-	echo "  <Directory $DOCUMENT_ROOT/scout/>" >> $TMPCONF
-	echo '	<RequireAny>' >> $TMPCONF
-	echo "	  Require user $SCOUTING_USER" >> $TMPCONF
+	echo "	<Directory $DOCUMENT_ROOT/scout/>" >> $TMPCONF
+	echo '		<RequireAny>' >> $TMPCONF
+	echo "			Require user $SCOUTING_USER" >> $TMPCONF
 	if [ "z$ADMIN_USER" != "z" ]
 	then
-		echo "	  Require user $ADMIN_USER" >> $TMPCONF
+		echo "			Require user $ADMIN_USER" >> $TMPCONF
 	fi
 	if [ "$ALLOW_LOCAL" == "1" ]
 	then
-		echo '	  Require local' >> $TMPCONF
+		echo '			Require local' >> $TMPCONF
 	fi
 	if [ "z$ALLOW_IPS" != "z" ]
 	then
-		echo "	  Require ip $ALLOW_IPS" >> $TMPCONF
+		echo "			Require ip $ALLOW_IPS" >> $TMPCONF
 	fi
-	echo '	</RequireAny>' >> $TMPCONF
-	echo '  </Directory>' >> $TMPCONF
+	echo '		</RequireAny>' >> $TMPCONF
+	echo '	</Directory>' >> $TMPCONF
 fi
 if [ "z$ADMIN_USER" != "z" ]
 then
-	echo "  <Directory $DOCUMENT_ROOT/admin/>" >> $TMPCONF
-	echo '	<RequireAny>' >> $TMPCONF
-	echo "	  Require user $ADMIN_USER" >> $TMPCONF
+	echo "	<Directory $DOCUMENT_ROOT/admin/>" >> $TMPCONF
+	echo '		<RequireAny>' >> $TMPCONF
+	echo "			Require user $ADMIN_USER" >> $TMPCONF
 	if [ "$ALLOW_LOCAL" == "1" ]
 	then
-		echo '	  Require local' >> $TMPCONF
+		echo '			Require local' >> $TMPCONF
 	fi
 	if [ "z$ALLOW_IPS" != "z" ]
 	then
-		echo "	  Require ip $ALLOW_IPS" >> $TMPCONF
+		echo "			Require ip $ALLOW_IPS" >> $TMPCONF
 	fi
-	echo '	</RequireAny>' >> $TMPCONF
-	echo '  </Directory>' >> $TMPCONF
+	echo '		</RequireAny>' >> $TMPCONF
+	echo '	</Directory>' >> $TMPCONF
 fi
-echo '  </VirtualHost>' >> $TMPCONF
+echo '	</VirtualHost>' >> $TMPCONF
 
 RELOAD_NEEDED=0
 sudo touch /etc/apache2/sites-available/webscout.conf
@@ -147,7 +147,7 @@ do
 	fi
 	if ! grep -Eq "^$USER:" /etc/apache2/webscout.auth
 	then
-		sudo  htdigest $CREATE /etc/apache2/webscout.auth webscout $USER
+		sudo htdigest $CREATE /etc/apache2/webscout.auth webscout $USER
 		RELOAD_NEEDED=1
 	fi
 done
