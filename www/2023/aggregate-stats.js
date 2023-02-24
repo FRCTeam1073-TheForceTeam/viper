@@ -426,7 +426,7 @@ var teamGraphs = {
 	},
 	"# Placed by Type":{
 		graph:"stacked",
-		data:["cone","cube"]
+		data:["cube","cone"]
 	},
 	"# Placed by Level":{
 		graph:"stacked",
@@ -497,7 +497,7 @@ var aggregateGraphs = {
 	},
 	"# Placed by Type":{
 		graph:"stacked",
-		data:["cone","cube"]
+		data:["cube","cone"]
 	},
 	"# Placed by Level":{
 		graph:"stacked",
