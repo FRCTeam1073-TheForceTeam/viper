@@ -5,6 +5,7 @@ team = "",
 match = "",
 orient = "",
 matchName = "",
+teamList=[],
 scouting,
 storeTime=0
 parseHash()
@@ -14,6 +15,7 @@ function parseHash(){
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
 	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",""])[1]
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
+	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1]
 }
 
 function showScreen(){
@@ -35,14 +37,17 @@ $(window).on('hashchange', function(){
 
 function showSelectTeam(){
 	$('.screen').hide()
-	location.hash = `#event=${eventId}`
+	setHash(null,null,null,null,teamList)
 	window.scrollTo(0,0)
 	var el = $('#teamList').html(""),
-	withData = getTeamsWithPitData()
+	withData = getTeamsWithPitData(),
+	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+	console.log(showTeams)
+	console.log(withData)
 	$('.location-pointer').remove()
-	for (var i=0; i<eventTeams.length;i++){
-		var button = $('<button>').text(eventTeams[i]).click(showPitScouting)
-		if (withData.hasOwnProperty(eventTeams[i])) button.addClass('stored')
+	for (var i=0; i<showTeams.length;i++){
+		var button = $('<button>').text(showTeams[i]).click(showPitScouting)
+		if (withData.hasOwnProperty(showTeams[i])) button.addClass('stored')
 		el.append(button)
 	}
 	$('#select-team').show()
@@ -125,8 +130,8 @@ function getPitScoutKey(t,m,e){
 	return `${e}_${t}`
 }
 
-function setHash(pos,orient,team,match){
-	location.hash = buildHash(pos,orient,team,match)
+function setHash(pos,orient,team,match,teamList){
+	location.hash = buildHash(pos,orient,team,match,teamList)
 }
 
 function buildHash(pos,orient,team,match){
@@ -134,7 +139,8 @@ function buildHash(pos,orient,team,match){
 		(pos?`&pos=${pos}`:"")+
 		(orient?`&orient=${orient}`:"")+
 		(team?`&team=${team}`:"")+
-		(match?`&match=${match}`:"")
+		(match?`&match=${match}`:"")+
+		(teamList?`&teams=${teamList}`:"")
 }
 
 function showPitScouting(t){
@@ -142,7 +148,7 @@ function showPitScouting(t){
 	if (t) team = t
 	$('.screen').hide()
 	window.scrollTo(0,0)
-	setHash(null,null,team,null)
+	setHash(null,null,team,null,teamList)
 	var pit = $('#pit-scouting')
 	pit[0].reset()
 	$('.location-pointer').remove()

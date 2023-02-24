@@ -1,18 +1,17 @@
 "use strict"
 
 $(document).ready(function(){
-	if (/^\#[0-9]+(,[0-9]+)*$/.test(location.hash)){
-		var teams = location.hash.replace(/^\#/,"").split(/,/)
-		for (var i=0; i<teams.length; i++){
-			addTeam(teams[i]);
-		}
+	var teams = /(?:(?:^\#)|(?:\&teams\=))([0-9]+(?:,[0-9]+)*)$/g.exec(location.hash)
+	if (teams) teams = teams[1].split(/,/)
+	for (var i=1; teams && i<teams.length; i++){
+		addTeam(teams[i]);
 	}
 	$('#add').click(function(e){
 		e.preventDefault()
 		addTeam($('#team').val())
 		return false
 	})
-	if (eventId){
+	if (eventId && !teams){
 		loadEventSchedule(function(){
 			for(var i=0; i<eventTeams.length; i++){
 			   addTeam(eventTeams[i])

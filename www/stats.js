@@ -118,7 +118,7 @@ function showStats(){
 				info = statInfo[field]||{},
 				highGood = (info['good']||"high")=='high',
 				statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
-				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ")),
+				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").attr('data-field',field).click(reSort)),
 				best = (highGood?-1:1)*99999999
 				for (var k=0; k<teamList.length; k++){
 					var t = teamList[k],

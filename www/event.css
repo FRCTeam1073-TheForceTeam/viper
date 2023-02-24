@@ -10,3 +10,6 @@ h3{margin:0 0 .25em 0;padding:0}
 #eventInfo{margin:1em}
 #matchTable .scouted{color:var(--highlight-fg-color)}
 #matchTable .error{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
+#pitScoutSetup img{width:2em;display:block}
+#pitScoutSetup{text-align:left}
+#pitScoutSetup .side-by-side{margin:.5em .1em}
