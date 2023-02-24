@@ -59,7 +59,11 @@ function showTeamChange(){
 		return false
 	})
 	$('#teamCancelBtn').click(function(){
-		showPosList()
+		eventMatches.forEach(matchData=>{
+			if (matchData.Match == match) team = matchData[pos]
+		})
+		if (team) showScouting()
+		else showMatchList()
 		return false
 	})
 	$('#change-team').show()
@@ -371,7 +375,7 @@ $(document).ready(function(){
 		val = val<min?min:val
 		val = val>max?max:val
 		var parent = $(this)
-		while(parent.find('.count').length <2) parent = parent.parent()
+		while(parent.find('.count').length<2) parent = parent.parent()
 		parent.find('.count').each(function(){
 			if(/down/.test($(this).attr('src'))){
 				$(this).css('visibility', val==min?'hidden':'visible');
