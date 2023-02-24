@@ -370,7 +370,9 @@ $(document).ready(function(){
 		val = val+toAdd
 		val = val<min?min:val
 		val = val>max?max:val
-		$(this).parent().find('.count').each(function(){
+		var parent = $(this)
+		while(parent.find('.count').length <2) parent = parent.parent()
+		parent.find('.count').each(function(){
 			if(/down/.test($(this).attr('src'))){
 				$(this).css('visibility', val==min?'hidden':'visible');
 			} else {
