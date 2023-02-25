@@ -1,3 +1,4 @@
 /www/data/*
 /local.conf
 /orig/
+*.tar.gz
