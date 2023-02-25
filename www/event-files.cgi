@@ -5,7 +5,6 @@
 use strict;
 use warnings;
 use CGI;
-use HTML::Escape qw/escape_html/;
 use lib '../pm';
 use webutil;
 
@@ -21,6 +20,6 @@ $webutil->error("Bad event format") if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
 print "Content-type: text/csv; charset=UTF-8\n\n";
 
 # get all of the event files containing match schedules
-foreach my $name (split /\n/, `ls -1 -r data/$event.*`){
+foreach my $name (glob("data/$event.*")){
 	print "/$name\n"
 }
