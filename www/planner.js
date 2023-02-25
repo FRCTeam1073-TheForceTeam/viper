@@ -65,7 +65,6 @@ $(document).ready(function() {
 
 		if (window.whiteboardStamps){
 			window.whiteboardStamps.forEach(function(stamp){
-				console.log(stamp)
 				$('#stamps').append(" ").append($(`<button class=pen><img src=${stamp}></button>`).click(penButtonClicked))
 			})
 		}
