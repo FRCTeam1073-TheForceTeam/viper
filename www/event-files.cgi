@@ -1,4 +1,4 @@
-#!C:/xampp/perl/bin/perl.exe -w
+#!/usr/bin/perl -w
 
 # Displays a list of files associated with a particular event
 
