@@ -26,7 +26,12 @@ $(document).ready(function(){
 	$('#siteSite').change(function(){
 		var url = $('#siteSite').val()
 		if (!url) url = "webscout.example.com"
-		if (!/^https?\:\/\//.test(url)) url = "https://" + url
+		if (!/^https?\:\/\//.test(url)){
+			var prefix = "http"
+			if (/\./.test(url)) prefix="https" // fully qualified domain
+			if (/^[0-9\.\:]+$/.test(url)) prefix="http" // IP address
+			url = `${prefix}://${url}`
+		}
 		url += "/admin/import.cgi"
 		$('#transferForm').attr('action',url)
 	})
