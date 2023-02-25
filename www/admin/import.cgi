@@ -1,9 +1,9 @@
-#!/usr/bin/perl -w
+#!C:/xampp/perl/bin/perl.exe -w
 
 use strict;
 use warnings;
 use CGI;
-use JSON::Parse 'parse_json';
+use JSON::PP;
 use MIME::Base64;
 use Data::Dumper;
 use File::Slurp;
@@ -20,7 +20,7 @@ if ($info){
     my $upload_file = $cgi->tmpFileName(scalar $json);
     $json = read_file($upload_file)
 }
-my $data = parse_json($json);
+my $data = decode_json($json);
 my $event = "";
 
 for my $fileName (keys(%$data)){
