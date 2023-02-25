@@ -19,7 +19,7 @@ $event =~ s/\.[a-z]+\.csv$//g;
 $file = "../data/${file}";
 
 if ($delete){
-	`rm ${file}`;
+	unlink $file;
 	$webutil->redirect("/") if ($file =~ /\.schedule\./);
 	$webutil->redirect("/event.html#$event");
 } else {
