@@ -25,16 +25,13 @@ function showAllianceSelection(){
 				t[data[i][BOT_POSITIONS[j]]] = 1
 			}
 		}
-		teams = Object.keys(t);
-		teams.sort((a,b) => {return a-b})
-		for (var i=0; i<teams.length; i++){
-			var team = teams[i]
+		eventTeams.forEach(function(team){
 			$('#teams').append($(`<button class=team id=t${team}>${team}</button>`).click(function(){
 				$(this).addClass('picked')
 				lf().val($(this).text())
 				if (!focusNext()) computeStartingSchedule()
 			}))
-		}
+		})
 	})
 	$('#alliance-selection').show()
 }
