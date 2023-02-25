@@ -30,10 +30,9 @@ if ($newSchedule){
 	$newSchedule =~ //g;
 	my $rounds = join("|", do { my %seen; grep { !$seen{$_}++ } $newSchedule =~ /^(f|sf|qf|1p|2p|3p|4p|5p)/gm});
 	$fileName = "../data/${event}.schedule.csv";
-	if (! -f $fileName){
-		`touch $fileName`;
-	}
-	open $fh, '+<', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
+	my $openMode = "+<"; # append
+	$openMode = "<" if (! -f $fileName);
+	open $fh, $openMode, $fileName or $webutil->error("Cannot open $fileName", "$!\n");
 	flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
 	$/ = undef;
 	my $schedule = <$fh>;
