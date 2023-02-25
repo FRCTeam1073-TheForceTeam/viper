@@ -4,12 +4,12 @@ set -e
 
 if [ -e local.conf ]
 then
-    source ./local.conf
+	source ./local.conf
 else
-    cp ./script/example.conf ./local.conf
-    echo "Created local.conf file"
-    echo "Please edit it and re-run this script"
-    exit 1
+	cp ./script/example.conf ./local.conf
+	echo "Created local.conf file"
+	echo "Please edit it and re-run this script"
+	exit 1
 fi
 
 source ./local.conf
@@ -42,26 +42,26 @@ APACHE_DIR_CONF=${APACHE_DIR_CONF/#\/c\//C:\/}
 echo '<VirtualHost *:80>' > $TMPCONF
 if [ "z$SERVER_NAME" != "z" ]
 then
-    echo "  Servername $SERVER_NAME" >> $TMPCONF
+	echo "	Servername $SERVER_NAME" >> $TMPCONF
 fi
 for SERVER_ALIAS in $SERVER_ALIASES
 do
-    echo "  ServerAlias $SERVER_ALIAS" >> $TMPCONF
+	echo "	ServerAlias $SERVER_ALIAS" >> $TMPCONF
 done
 if [ "z$HTTPS_INCLUDE" != "z" ]
 then
-    echo "  Redirect / https://$SERVER_NAME/" >> $TMPCONF
-    echo '</VirtualHost>' >> $TMPCONF
-    echo '<VirtualHost *:443>' >> $TMPCONF
-    if [ "z$SERVER_NAME" != "z" ]
-    then
-        echo "  Servername $SERVER_NAME" >> $TMPCONF
-    fi
-    for SERVER_ALIAS in $SERVER_ALIASES
-    do
-        echo "  ServerAlias $SERVER_ALIAS" >> $TMPCONF
-    done
-    echo "  Include $HTTPS_INCLUDE" >> $TMPCONF
+	echo "	Redirect / https://$SERVER_NAME/" >> $TMPCONF
+	echo '</VirtualHost>' >> $TMPCONF
+	echo '<VirtualHost *:443>' >> $TMPCONF
+	if [ "z$SERVER_NAME" != "z" ]
+	then
+		echo "	Servername $SERVER_NAME" >> $TMPCONF
+	fi
+	for SERVER_ALIAS in $SERVER_ALIASES
+	do
+		echo "	ServerAlias $SERVER_ALIAS" >> $TMPCONF
+	done
+	echo "	Include $HTTPS_INCLUDE" >> $TMPCONF
 fi
 echo "  DocumentRoot $DOCUMENT_ROOT" >> $TMPCONF
 echo "  <Directory $DOCUMENT_ROOT/>" >> $TMPCONF
@@ -74,57 +74,57 @@ echo "    AuthUserFile $APACHE_DIR_CONF/webscout.auth" >> $TMPCONF
 echo '    <RequireAny>' >> $TMPCONF
 if [ "z$GUEST_USER" == "z" ]
 then
-    echo '      Require all granted' >> $TMPCONF
+	echo '			Require all granted' >> $TMPCONF
 else
-    echo '      Require valid-user' >> $TMPCONF
-    if [ "$ALLOW_LOCAL" == "1" ]
-    then
-        echo '      Require local' >> $TMPCONF
-    fi
-    if [ "z$ALLOW_IPS" != "z" ]
-    then
-        echo "      Require ip $ALLOW_IPS" >> $TMPCONF
-    fi
+	echo '			Require valid-user' >> $TMPCONF
+	if [ "$ALLOW_LOCAL" == "1" ]
+	then
+		echo '			Require local' >> $TMPCONF
+	fi
+	if [ "z$ALLOW_IPS" != "z" ]
+	then
+		echo "			Require ip $ALLOW_IPS" >> $TMPCONF
+	fi
 fi
-echo '    </RequireAny>' >> $TMPCONF
-echo '  </Directory>' >> $TMPCONF
+echo '		</RequireAny>' >> $TMPCONF
+echo '	</Directory>' >> $TMPCONF
 if [ "z$SCOUTING_USER" != "z" ]
 then
-    echo "  <Directory $DOCUMENT_ROOT/scout/>" >> $TMPCONF
-    echo '    <RequireAny>' >> $TMPCONF
-    echo "      Require user $SCOUTING_USER" >> $TMPCONF
-    if [ "z$ADMIN_USER" != "z" ]
-    then
-        echo "      Require user $ADMIN_USER" >> $TMPCONF
-    fi
-    if [ "$ALLOW_LOCAL" == "1" ]
-    then
-        echo '      Require local' >> $TMPCONF
-    fi
-    if [ "z$ALLOW_IPS" != "z" ]
-    then
-        echo "      Require ip $ALLOW_IPS" >> $TMPCONF
-    fi
-    echo '    </RequireAny>' >> $TMPCONF
-    echo '  </Directory>' >> $TMPCONF
+	echo "	<Directory $DOCUMENT_ROOT/scout/>" >> $TMPCONF
+	echo '		<RequireAny>' >> $TMPCONF
+	echo "			Require user $SCOUTING_USER" >> $TMPCONF
+	if [ "z$ADMIN_USER" != "z" ]
+	then
+		echo "			Require user $ADMIN_USER" >> $TMPCONF
+	fi
+	if [ "$ALLOW_LOCAL" == "1" ]
+	then
+		echo '			Require local' >> $TMPCONF
+	fi
+	if [ "z$ALLOW_IPS" != "z" ]
+	then
+		echo "			Require ip $ALLOW_IPS" >> $TMPCONF
+	fi
+	echo '		</RequireAny>' >> $TMPCONF
+	echo '	</Directory>' >> $TMPCONF
 fi
 if [ "z$ADMIN_USER" != "z" ]
 then
-    echo "  <Directory $DOCUMENT_ROOT/admin/>" >> $TMPCONF
-    echo '    <RequireAny>' >> $TMPCONF
-    echo "      Require user $ADMIN_USER" >> $TMPCONF
-    if [ "$ALLOW_LOCAL" == "1" ]
-    then
-        echo '      Require local' >> $TMPCONF
-    fi
-    if [ "z$ALLOW_IPS" != "z" ]
-    then
-        echo "      Require ip $ALLOW_IPS" >> $TMPCONF
-    fi
-    echo '    </RequireAny>' >> $TMPCONF
-    echo '  </Directory>' >> $TMPCONF
+	echo "	<Directory $DOCUMENT_ROOT/admin/>" >> $TMPCONF
+	echo '		<RequireAny>' >> $TMPCONF
+	echo "			Require user $ADMIN_USER" >> $TMPCONF
+	if [ "$ALLOW_LOCAL" == "1" ]
+	then
+		echo '			Require local' >> $TMPCONF
+	fi
+	if [ "z$ALLOW_IPS" != "z" ]
+	then
+		echo "			Require ip $ALLOW_IPS" >> $TMPCONF
+	fi
+	echo '		</RequireAny>' >> $TMPCONF
+	echo '	</Directory>' >> $TMPCONF
 fi
-echo '  </VirtualHost>' >> $TMPCONF
+echo '	</VirtualHost>' >> $TMPCONF
 
 SUDO=""
 if which sudo &> /dev/null

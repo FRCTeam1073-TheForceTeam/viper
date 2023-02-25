@@ -1,50 +1,15 @@
 "use strict"
 $(document).ready(function() {
+
 	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
-	var sketcher = $("#fieldDraw").sketchable({
-		events: {
-			// We use the "before" event hook to update brush type right before drawing starts.
-			mousedownBefore: function(elem, data, evt){
-				var pen = $('button.pen.selected'),
-				img = pen.find('img')
-				if (img.length){
-					data.options.graphics.fillStyle = '#fff0' // transparent
-					data.options.graphics.strokeStyle = '#fff0'
-					var bounds = $('#fieldDraw')[0].getBoundingClientRect()
-					data.sketch.drawImage(img.attr('src'), evt.clientX - bounds.left, evt.clientY - bounds.top)
-				} else if (pen.attr('data-type') == 'eraser'){
-					// There is a method to set the brush in eraser mode.
-					data.options.graphics.lineWidth = 20
-					data.sketch.eraser()
-				} else {
-					// There is a method to get the default mode (pencil) back.
-					data.options.graphics.lineWidth = 3
-					data.options.graphics.firstPointSize = 3
-					var color = pen.css('color')
-					data.options.graphics.fillStyle = color
-					data.options.graphics.strokeStyle = color
-					data.sketch.pencil()
-				}
-			}
-		}
-	})
+	$('button.pen').click(penButtonClicked)
 
-	sketcher.sketchable('handler', sizeHandler)
-
-	$(window).resize(function(ev) {
-		sketcher.sketchable('handler', sizeHandler)
-	})
-
-	function sizeHandler(node, data){
-		data.sketch.size(Math.floor(node.innerWidth()), Math.floor(node.innerHeight()))
-	}
-
-	$('button.pen').click(function(){
+	function penButtonClicked(){
 		$('button.pen').removeClass('selected')
 		$(this).addClass('selected')
 		setCursorImage()
-	})
+	}
 
 	$('.clear').click(function(evt) {
 		evt.preventDefault()
@@ -64,14 +29,6 @@ $(document).ready(function() {
 		showLightBox($('#instructions'))
 		return false
 	})
-
-	function setCursorImage() {
-		var pen = $('button.pen.selected'),
-		img = pen.find('img'),
-		cursor = img.length?img.attr('src'):pen.attr('data-type') + '.svg'
-		sketcher.css('cursor', `url(${cursor}), auto`);
-	}
-	setCursorImage()
 
 	function setLocationHash(){
 		var hash = `event=${eventId}`
@@ -105,9 +62,21 @@ $(document).ready(function() {
 			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
 		}
 		fillStats()
+
+		if (window.whiteboardStamps){
+			window.whiteboardStamps.forEach(function(stamp){
+				console.log(stamp)
+				$('#stamps').append(" ").append($(`<button class=pen><img src=${stamp}></button>`).click(penButtonClicked))
+			})
+		}
 	})
 
-	$('#statsTable input').change(fillStats)
+	$('#statsTable input').change(fillStats).focus(function(){
+		focusInput($(this))
+		$('#teamButtons').show()
+	}).blur(function(e){
+		if (!$(e.relatedTarget).is('button.team'))$('#teamButtons').toggle(focusNext())
+	})
 
 	function fillStats(){
 		setLocationHash()
@@ -218,4 +187,57 @@ $(document).ready(function() {
 	$('#lightBoxBG').click(function(){
 		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	})
+
+	function sizeWhiteboard(){
+		var winH = $(window).height(),
+		winW = $(window).width(),
+		tableW=Math.max(400,$('#statsTable').width()+10),
+		w = winW<750?winW:winW-tableW,
+		h=2*w
+		if (h>winH){
+			h=winH
+			w=winH/2
+		}
+		$('#field,#fieldBG,#fieldDraw').css('width',`${w}px`).css('height',`${h}px`)
+	}
+	sizeWhiteboard()
+
+	var sketcher = $("#fieldDraw").sketchable({
+		events: {
+			// We use the "before" event hook to update brush type right before drawing starts.
+			mousedownBefore: function(elem, data, evt){
+				var pen = $('button.pen.selected'),
+				img = pen.find('img')
+				if (img.length){
+					data.options.graphics.fillStyle = '#fff0' // transparent
+					data.options.graphics.strokeStyle = '#fff0'
+					var bounds = $('#fieldDraw')[0].getBoundingClientRect()
+					data.sketch.drawImage(img.attr('src'), evt.clientX - bounds.left, evt.clientY - bounds.top)
+				} else if (pen.attr('data-type') == 'eraser'){
+					// There is a method to set the brush in eraser mode.
+					data.options.graphics.lineWidth = 20
+					data.sketch.eraser()
+				} else {
+					// There is a method to get the default mode (pencil) back.
+					data.options.graphics.lineWidth = 3
+					data.options.graphics.firstPointSize = 3
+					var color = pen.css('color')
+					data.options.graphics.fillStyle = color
+					data.options.graphics.strokeStyle = color
+					data.sketch.pencil()
+				}
+			}
+		}
+	})
+	sketcher.sketchable('handler', function(node, data){
+		data.sketch.size(Math.floor(node.innerWidth()), Math.floor(node.innerHeight()))
+	})
+
+	function setCursorImage() {
+		var pen = $('button.pen.selected'),
+		img = pen.find('img'),
+		cursor = img.length?img.attr('src'):pen.attr('data-type') + '.svg'
+		sketcher.css('cursor', `url(${cursor}), auto`);
+	}
+	setCursorImage()
 })

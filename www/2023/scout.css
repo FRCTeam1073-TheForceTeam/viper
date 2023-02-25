@@ -13,8 +13,8 @@ table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-
 .colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px;border:1px solid var(--main-fg-color)}
 .explain{font-size:65%;display:block;text-transform:capitalize}
 @media (max-width: 500px) {
-    td{padding:.2em}
-    img.count{margin:2vmin auto}
-    img.icon{margin:2vmin auto}
-    body{margin-left:0;margin-right:0}
+	td{padding:.2em}
+	img.count{margin:2vmin auto}
+	img.icon{margin:2vmin auto}
+	body{margin-left:0;margin-right:0}
 }

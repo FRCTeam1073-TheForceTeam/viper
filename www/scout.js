@@ -5,6 +5,7 @@ team = "",
 match = "",
 orient = "",
 matchName = "",
+teamList=[],
 scouting,
 storeTime=0
 parseHash()
@@ -14,6 +15,7 @@ function parseHash(){
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
 	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",""])[1]
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
+	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1]
 }
 
 function showScreen(){
@@ -27,7 +29,7 @@ function showScreen(){
 
 $(window).on('hashchange', function(){
 	if (scouting.is(':visible') && formHasChanges(scouting)){
-		if (confirm("Do you want to save your data?")) store()
+		if (confirm("Do you want to save your data?") && !store()) return false
 	}
 	parseHash()
 	showScreen()
@@ -35,14 +37,17 @@ $(window).on('hashchange', function(){
 
 function showSelectTeam(){
 	$('.screen').hide()
-	location.hash = `#event=${eventId}`
+	setHash(null,null,null,null,teamList)
 	window.scrollTo(0,0)
 	var el = $('#teamList').html(""),
-	withData = getTeamsWithPitData()
+	withData = getTeamsWithPitData(),
+	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+	console.log(showTeams)
+	console.log(withData)
 	$('.location-pointer').remove()
-	for (var i=0; i<eventTeams.length;i++){
-		var button = $('<button>').text(eventTeams[i]).click(showPitScouting)
-		if (withData.hasOwnProperty(eventTeams[i])) button.addClass('stored')
+	for (var i=0; i<showTeams.length;i++){
+		var button = $('<button>').text(showTeams[i]).click(showPitScouting)
+		if (withData.hasOwnProperty(showTeams[i])) button.addClass('stored')
 		el.append(button)
 	}
 	$('#select-team').show()
@@ -59,7 +64,11 @@ function showTeamChange(){
 		return false
 	})
 	$('#teamCancelBtn').click(function(){
-		showPosList()
+		eventMatches.forEach(matchData=>{
+			if (matchData.Match == match) team = matchData[pos]
+		})
+		if (team) showScouting()
+		else showMatchList()
 		return false
 	})
 	$('#change-team').show()
@@ -121,8 +130,8 @@ function getPitScoutKey(t,m,e){
 	return `${e}_${t}`
 }
 
-function setHash(pos,orient,team,match){
-	location.hash = buildHash(pos,orient,team,match)
+function setHash(pos,orient,team,match,teamList){
+	location.hash = buildHash(pos,orient,team,match,teamList)
 }
 
 function buildHash(pos,orient,team,match){
@@ -130,7 +139,8 @@ function buildHash(pos,orient,team,match){
 		(pos?`&pos=${pos}`:"")+
 		(orient?`&orient=${orient}`:"")+
 		(team?`&team=${team}`:"")+
-		(match?`&match=${match}`:"")
+		(match?`&match=${match}`:"")+
+		(teamList?`&teams=${teamList}`:"")
 }
 
 function showPitScouting(t){
@@ -138,7 +148,7 @@ function showPitScouting(t){
 	if (t) team = t
 	$('.screen').hide()
 	window.scrollTo(0,0)
-	setHash(null,null,team,null)
+	setHash(null,null,team,null,teamList)
 	var pit = $('#pit-scouting')
 	pit[0].reset()
 	$('.location-pointer').remove()
@@ -221,8 +231,13 @@ function formHasChanges(f){
 	return changes
 }
 
+var onStore = []
+
 function store(){
 	if (formHasChanges(scouting)){
+		for (var i=0; i<onStore.length; i++){
+			if(!onStore[i]()) return false
+		}
 		localStorage.setItem("last_match_"+eventId, match)
 		var csv = toCSV('#scouting')
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
@@ -230,6 +245,7 @@ function store(){
 		storeTime = new Date().getTime()
 		storeScouter($('#scouting'))
 	}
+	return true
 }
 
 function storeScouter(form){
@@ -338,6 +354,17 @@ $(document).ready(function(){
 		toggleChecked(check)
 	})
 
+	$("input,textarea").focus(function(){
+		// Select pre-filled input values
+		if ($(this).attr('disabled')) return
+		if (!$(this).attr('value')) return
+		if ($(this).attr('value') != $(this).val()) return
+		$(this).one('mouseup',function(){
+			$(this).select()
+			return false
+		}).select()
+	})
+
 	$("img.count").click(function(e){
 		var src = $(this).attr('src')
 		var toAdd = 0
@@ -353,21 +380,36 @@ $(document).ready(function(){
 		val = val+toAdd
 		val = val<min?min:val
 		val = val>max?max:val
+		var parent = $(this)
+		while(parent.find('.count').length<2) parent = parent.parent()
+		parent.find('.count').each(function(){
+			if(/down/.test($(this).attr('src'))){
+				$(this).css('visibility', val==min?'hidden':'visible');
+			} else {
+				$(this).css('visibility', val==max?'hidden':'visible');
+			}
+		})
 		input.val(val)
 	})
 
+	$('.count').each(function(){
+		if(/down/.test($(this).attr('src'))){
+			$(this).css('visibility','hidden');
+		}
+	})
+
 	$("img.robot-location").click(function(e){
-        var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
-        y = Math.round(1000 * (e.pageY - this.offsetTop) / this.height)/10,
+		var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
+		y = Math.round(1000 * (e.pageY - this.offsetTop) / this.height)/10,
 		inp = $(this).parent().find('input'),
 		name = inp.attr('name')
 		$(`.${name}`).remove()
 		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
-        inp.val(`${x}%x${y}%`)
+		inp.val(`${x}%x${y}%`)
 	})
 
 	$("#nextBtn").click(function(e){
-		store()
+		if (!store()) return false
 		var next = getNextMatch()
 		if (!next){
 			alert("Data saved and done. That was the last match!")
@@ -384,17 +426,17 @@ $(document).ready(function(){
 		return false
 	})
 	$("#matchBtn").click(function(e){
-		store()
+		if (!store()) return false
 		showMatchList()
 		return false
 	})
 	$("#robotBtn").click(function(e){
-		store()
+		if (!store()) return false
 		showPosList()
 		return false
 	})
 	$("#teamBtn").click(function(e){
-		store()
+		if (!store()) return false
 		showTeamChange()
 		return false
 	})
@@ -403,7 +445,7 @@ $(document).ready(function(){
 		return false
 	})
 	$("#uploadBtn").click(function(e){
-		store()
+		if (!store()) return false
 		var returnTo = "",
 		nextTeam = team,
 		nextMatch = match,

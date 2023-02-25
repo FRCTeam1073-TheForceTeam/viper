@@ -55,7 +55,7 @@ function showStats(){
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
 	var graphs = $('#statGraphs').html(''),
-    table = $('#statsTable').html('')
+	table = $('#statsTable').html('')
 	var sections = Object.keys(aggregateGraphs)
 
 	if ($('#displayType').val() == 'graph'){
@@ -118,7 +118,7 @@ function showStats(){
 				info = statInfo[field]||{},
 				highGood = (info['good']||"high")=='high',
 				statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
-				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ")),
+				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").attr('data-field',field).click(reSort)),
 				best = (highGood?-1:1)*99999999
 				for (var k=0; k<teamList.length; k++){
 					var t = teamList[k],
@@ -175,9 +175,9 @@ function setTeamPicked(){
 function showTeamStats(){
 	var team = parseInt($(this).attr('data-team')||$(this).text())
 	$('#teamPicker').hide()
-    $('#teamStats iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
-    window.scrollTo(0,0)
-    showLightBox($('#teamStats'))
+	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
+	window.scrollTo(0,0)
+	showLightBox($('#teamStats'))
 }
 
 function bgArr(color){

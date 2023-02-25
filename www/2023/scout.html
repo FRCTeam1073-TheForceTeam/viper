@@ -51,6 +51,7 @@
 	<div>
 		<button class=teleop id=to-auto style=display:none>Back to auto</button>
 		<button class=showInstructions>Instructions</button>
+		<button id=teamBtn>Team # Correction</button>
 		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
 	</div>
 	<input type=hidden name=event>
@@ -71,7 +72,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=auto_top_cone size=1 max=3 disabled>
+				<input type=text class=num value=0 name=auto_top_cone size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -105,7 +106,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=auto_middle_cone max=3 size=1 disabled>
+				<input type=text class=num value=0 name=auto_middle_cone max=6 size=1 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -221,7 +222,7 @@
 				<img class=icon src=claw.svg>
 				<input type=text class=num value=0 name=field size=1 disabled>
 			</div></div>
-		</td></tr><tr><td class=subheader colspan=4>    
+		</td></tr><tr><td class=subheader colspan=4>
 			Placed (or Failed) on Top Row
 		</td></tr><tr><td>
 			<div><div class=side-by-side>
@@ -229,7 +230,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=tele_top_cone size=1 max=3 disabled>
+				<input type=text class=num value=0 name=tele_top_cone size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -263,7 +264,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=tele_middle_cone size=1 max=3 disabled>
+				<input type=text class=num value=0 name=tele_middle_cone size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -279,7 +280,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cube.svg>
-				<input type=text class=num value=0 name=tele_middle_cube size=1 max=3 disabled>
+				<input type=text class=num value=0 name=tele_middle_cube size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -353,7 +354,7 @@
 	<hr class=teamColorBG>
 	<fieldset class="left full">
 		<legend>How many links (placed three in a row) did the <span class=teamColor></span> alliance have in total?</legend>
-		<div class=full><input type=number name=links value=0 max=9 min=0></div>
+		<div class=full><input type=number name=links max=9 min=0></div>
 	</fieldset>
 	<hr class=teamColorBG>
 	<fieldset class="left full">
@@ -379,7 +380,6 @@
 		<div id=otherButtons>
 			<button id=matchBtn>Choose Match</button>
 			<button id=robotBtn>Change Robot</button>
-			<button id=teamBtn>Change Team</button>
 			<button id=uploadBtn>Upload Data</button>
 		</div>
 	</div></div>
