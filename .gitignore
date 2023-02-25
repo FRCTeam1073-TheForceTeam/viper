@@ -2,3 +2,5 @@
 /local.conf
 /orig/
 *.tar.gz
+*.tgz
+*.zip

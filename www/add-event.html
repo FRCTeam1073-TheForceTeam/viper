@@ -21,8 +21,20 @@
 	Copy and paste data from The Blue Alliance website
 </div>
 <div class="option side-by-side">
+	<h3><a href="/team-list.html">Upload team list</a></h3>
+	Paste a list of teams to create a temporary practice match schedule that allows you to start pit scouting.
+</div>
+<div class="option side-by-side">
 	<h3><a href="/edit.html">Create CSV</a></h3>
 	Paste in CSV data
+</div>
+<div class="option side-by-side">
+	<h3>Import</h3>
+	Import data exported from webscout.
+	<form method=POST action=/admin/import.cgi enctype=multipart/form-data>
+		.json file: <input type=file name=json accept=application/json>
+		<input type=submit value=Upload>
+	</form>
 </div>
 </body>
 </html>

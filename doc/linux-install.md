@@ -25,7 +25,7 @@ The installation will touch a number of files.
  - `/etc/apache2/sites-available/webscout.conf`: Apache configuration
  - `/etc/apache2/webscout.auth`: User names and passwords for web app access (If you specified user names in the configuration.)
  - `/etc/netplan/50-cloud-init.yaml`: Network configuration. (If you chose a static IP address in the configuration.) A backup of the original file is kept in `./orig/`.
- - `/etc/cloud/cloud.cfg.d/99-disable-network-config.cfg`: Disable auto network configuration. (If you chose a static IP address in the configuration.) 
+ - `/etc/cloud/cloud.cfg.d/99-disable-network-config.cfg`: Disable auto network configuration. (If you chose a static IP address in the configuration.)
  - `/etc/dhcp/dhcpd.conf` DHCP server configuration. (If you chose a static IP address and DHCP address range in the configuration.)  A backup of the original file is kept in `./orig/`.
 
  ## DHCP

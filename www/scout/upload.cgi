@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!C:/xampp/perl/bin/perl.exe -w
 
 use strict;
 use warnings;
@@ -44,7 +44,7 @@ foreach my $row (@{$uCsv}){
 		my $eventCsv = $pitCsv;
 		my $eventHeaders = $pitHeaders;
 		if (exists $uHead->{'match'}){
-			$webutil->error("Unexpected match name",$row->[$uHead->{'match'}]) if($row->[$uHead->{'match'}] !~ /^[a-z]+[0-9]+$/);
+			$webutil->error("Unexpected match name",$row->[$uHead->{'match'}]) if($row->[$uHead->{'match'}] !~ /^[0-9]*[a-z]+[0-9]+$/);
 			$eventCsv = $scoutCsv;
 			$eventHeaders = $scoutHeaders;
 		}

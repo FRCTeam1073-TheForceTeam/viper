@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!C:/xampp/perl/bin/perl.exe
 
 use strict;
 use warnings;
@@ -23,18 +23,18 @@ $/ = undef;
 my $csv = csv->new(<$fh>);
 
 sub unescapeField(){
-    my ($s) = @_;
+	my ($s) = @_;
 	$s =~ s/⏎/\r\n/g;
 	$s =~ s/״/\"/g;
 	$s =~ s/،/,/g;
-    return $s;
+	return $s;
 }
 
 sub escapeField(){
-    my ($s) = @_;
-    return $s if ($s !~ /[,\r\n\"]/);
+	my ($s) = @_;
+	return $s if ($s !~ /[,\r\n\"]/);
 	$s =~ s/\"/\"\"/g;
-    return "\"$s\"";
+	return "\"$s\"";
 }
 
 print "Content-Disposition: attachment\n";
@@ -43,11 +43,11 @@ print "\n";
 
 my $headers = $csv->getHeaders();
 for my $i (0..$csv->getRowCount()){
-    my $first = 1;
-    for my $header (@{$headers}){
-        print "," if (!$first);
-        print &escapeField(&unescapeField($csv->getByName($i,$header)));
-        $first = 0;
-    }
-    print "\n";
+	my $first = 1;
+	for my $header (@{$headers}){
+		print "," if (!$first);
+		print &escapeField(&unescapeField($csv->getByName($i,$header)));
+		$first = 0;
+	}
+	print "\n";
 }

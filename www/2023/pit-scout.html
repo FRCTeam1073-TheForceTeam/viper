@@ -75,17 +75,37 @@
 	<fieldset class=full>
 		<legend>Robot</legend>
 		<p>
+			What are the robot frame dimensions <b>without</b> bumpers?<br>
+			<label>Length: <input type=number min=12 step=1 max=48 name=frame_length> inches</label><br>
+			<label>Width: <input type=number min=12 step=1 max=48 name=frame_width> inches</label><br>
+		</p>
+		<p>
 			What drivetrain is used?<br>
 			<label><input type=radio name=drivetrain value=tank><span>Tank</span></label>
 			<label><input type=radio name=drivetrain value=swerve><span>Swerve</span></label>
-			<label><input type=radio name=drivetrain value=mechanum><span>Mechanum</span></label>
+			<label><input type=radio name=drivetrain value=other><span>Other</span></label>
 		</p>
 		<p>
-			What motors power the drivetrain?<br>
+			How many motors power the drive train?<br>
+			<input type=number min=1 step=1 name=motor_count>
+		</p>
+		<p>
+			What type of motors power the drivetrain?<br>
 			<label><input type=radio name=motors value=neo><span>Neo</span></label>
 			<label><input type=radio name=motors value=falcon_500><span>Falcon 500</span></label>
 			<label><input type=radio name=motors value=full_size_cim><span>Full Size CIM</span></label>
 			<label><input type=radio name=motors value=other><span>Other</span></label>
+		</p>
+		<p>
+			How many wheels?<br>
+			<input type=number min=4 step=1 name=wheel_count value=4>
+		</p>
+		<p>
+			What type of wheels?<br>
+			<label><input type=radio name=wheels value=traction><span>Traction</span></label>
+			<label><input type=radio name=wheels value=mechanum><span>Omni/Mechanum</span></label>
+			<label><input type=radio name=wheels value=mixed><span>Mixed</span></label>
+			<label><input type=radio name=wheels value=other><span>Other</span></label>
 		</p>
 		<p>
 			Vision software used:<br>

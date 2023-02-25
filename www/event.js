@@ -74,26 +74,41 @@ $(document).ready(function(){
 	function toDisplayDate(d){
 		if (!d) return ""
 		try {
-			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(Date.parse(d))
+			var b = d.split(/\D/)
+			var date = new Date(b[0], b[1]-1, b[2])
+			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(date)
 		} catch (x){
 			console.log("Could not parse " + d)
+			console.log(x)
 			return ""
 		}
 	}
-	loadEventSchedule(function(data){
-		if (!data.length) return $('body').html("Match not found")
-		for (var i=0; i<data.length; i++){
-			var row = $($('template#matchRow').html())
-			row.find('.R1').text(data[i]['R1'])
-			row.find('.R2').text(data[i]['R2'])
-			row.find('.R3').text(data[i]['R3'])
-			row.find('.B1').text(data[i]['B1'])
-			row.find('.B2').text(data[i]['B2'])
-			row.find('.B3').text(data[i]['B3'])
-			row.find('.match-id').text(hyphenate(getMatchName(data[i]['Match']))).attr('data-match-id',data[i]['Match'])
-			row.click(showLinks)
-			$('#matches').append(row)
-		}
+	loadEventSchedule(eventData=>{
+		if (!eventData.length) return $('body').html("Match not found")
+		loadEventStats((eventStats,eventStatsByTeam)=>{
+			var matchTeams = {}
+			eventStats.forEach(scouting=>{
+				var scoutKey=`${scouting.match}:${scouting.team}`
+				matchTeams[scoutKey] = matchTeams[scoutKey]||[0]
+				matchTeams[scoutKey]++
+			})
+			eventData.forEach(match=>{
+				var row = $($('template#matchRow').html())
+				BOT_POSITIONS.forEach(pos=>{
+					var scouted=matchTeams[`${match.Match}:${match[pos]}`]||0
+					row.find(`.${pos}`).text(match[pos]).addClass(scouted==0?"":"scouted").addClass(scouted>1?"error":"")
+				})
+				row.find('.match-id').text(hyphenate(getMatchName(match.Match))).attr('data-match-id',match.Match)
+				row.click(showLinks)
+				$('#matches').append(row)
+			})
+			$('#extendedScoutingData')
+				.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
+				.attr('download',`${eventId}.scouting.extended.csv`)
+			$('#aggregatedScoutingData')
+				.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
+				.attr('download',`${eventId}.scouting.aggregated.csv`)
+		})
 	})
 
 	function escapeExcelCsvField(s){
@@ -107,17 +122,17 @@ $(document).ready(function(){
 		var csv=Object.keys(statInfo).map(escapeExcelCsvField).join(",")+"\n"
 		csv+=Object.keys(statInfo).map(name=>statInfo[name].name).map(escapeExcelCsvField).join(",")+"\n"
 		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
-		dat.forEach(row=>{			
+		dat.forEach(row=>{
 			csv+=Object.keys(statInfo).map(name=>row[name]!=null?row[name]:"").map(escapeExcelCsvField).join(",")+"\n"
 		})
 		return csv
 	}
 	function toTable(dat){
 		var table = $('<table border=1>')
-		toTableRow(table,Object.keys(statInfo).map(s=>s.replace(/_/g,"_\u00AD")),"th")
+		toTableRow(table,Object.keys(statInfo),"th")
 		toTableRow(table,Object.keys(statInfo).map(name=>statInfo[name].name),"th")
 		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
-		dat.forEach(row=>{			
+		dat.forEach(row=>{
 			toTableRow(table,Object.keys(statInfo).map(name=>row[name]!=null?row[name]:""),"td")
 		})
 		var div = $('<div class=lightBoxFullContent style=overflow:auto>').append(table)
@@ -125,32 +140,50 @@ $(document).ready(function(){
 		return div
 	}
 	function toTableRow(table,dat,cell){
-		var tr = $('<tr>')		
+		var tr = $('<tr>')
 		dat.forEach(field=>{
-			tr.append($(`<${cell}>`).text(field))		
+			var el = $(`<${cell}>`).text(field)
+			el.html(el.html().replace(/_/g,'_<wbr>'))
+			tr.append(el)
 		})
 		table.append(tr)
 	}
-	
-	loadEventStats(function(eventStats, eventStatsByTeam){
-		$('#extendedScoutingData')
-			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
-			.attr('download',`${eventId}.scouting.extended.csv`)
-		$('#aggregatedScoutingData')
-			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
-			.attr('download',`${eventId}.scouting.aggregated.csv`)
-	})
-	$('#extendedScoutingDataView').click(function(){		
+
+	$('#extendedScoutingDataView').click(function(){
 		showLightBox(toTable(eventStats))
 		return false
 	})
-	$('#aggregatedScoutingDataView').click(function(){		
+	$('#aggregatedScoutingDataView').click(function(){
 		showLightBox(toTable(eventStatsByTeam))
 		return false
 	})
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
 	})
+	var pitScoutSetupButtonCount=6
+	function drawPitScoutSetupButtons(){
+		$('#pitScoutSetupButtons').html("")
+		for (var i=1; i<=pitScoutSetupButtonCount; i++){
+			$('#pitScoutSetupButtons').append($(`<button>${i}</button>`).click(openPitBotScout))
+		}
+	}
+	drawPitScoutSetupButtons()
+	$('#pitScoutSetup img').click(function(){
+		pitScoutSetupButtonCount+=/up/.test($(this).attr('src'))?1:-1
+		if (pitScoutSetupButtonCount < 1) pitScoutSetupButtonCount = 1
+		if (pitScoutSetupButtonCount > 10) pitScoutSetupButtonCount = 10
+		drawPitScoutSetupButtons()
+	})
+	function openPitBotScout(){
+		var squad = parseInt($(this).text())-1
+		var perSquad = Math.floor(eventTeams.length/(pitScoutSetupButtonCount)),
+		extras = eventTeams.length%(pitScoutSetupButtonCount),
+		start = squad*perSquad+Math.min(squad,extras),
+		end = start+perSquad+((squad+1>extras)?0:1),
+		teamList=eventTeams.slice(start,end).join(",")
+		window.open(`/bot-photos.html#event=${eventId}&teams=${teamList}`)
+		location.href=(`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`)
+	}
 })
 
 function showLinks(e){
@@ -188,4 +221,3 @@ function showLinks(e){
 	ma.html(html).find('.dependTeam').toggle(!!team)
 	showLightBox(ma)
 }
-

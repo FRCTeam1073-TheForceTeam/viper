@@ -5,23 +5,18 @@ $(document).ready(function(){
 	rawTitle = $('title').text()
 	rawH1 = $('h1').text()
 	loadEventStats(fillPage)
+	$('#displayType').change(showStats)
 })
 
 $(window).on('hashchange',fillPage)
 
+var team
+
 function fillPage(){
 	window.scroll(0,0)
-	var team = parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||"",
-	matchList = [],
-	matchNames = []
+	team = parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||""
 	$('title').text(rawTitle.replace("EVENT", eventName).replace("TEAM", team))
 	$('h1').text(rawH1.replace("EVENT", eventName).replace("TEAM", team))
-	for (var i=0; i<eventStats.length; i++){
-		if (eventStats[i]['team']==team){
-			matchList.push(eventStats[i])
-			matchNames.push(getMatchName(eventStats[i]['match']))
-		}
-	}
 	if(team){
 		$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
 		$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
@@ -30,23 +25,64 @@ function fillPage(){
 		showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
 	})
 	$('#fullPhoto').click(closeLightBox)
-	var graphs = $('#statGraphs').html('')
-	var comments = $('#comments').html("")
+
+	showStats()
+
+	if(typeof window.showPitScouting === 'function'){
+		window.showPitScouting($('#pit-scouting'),team)
+	}
+}
+
+function showStats(){
+	var matchList = [],
+	matchNames = []
+	for (var i=0; i<eventStats.length; i++){
+		if (eventStats[i]['team']==team){
+			matchList.push(eventStats[i])
+			matchNames.push(getMatchName(eventStats[i]['match']))
+		}
+	}
 	if (!matchList.length) return;
 
-	var sections = Object.keys(teamGraphs)
-	for (var i=0; i<sections.length; i++){
-		var section = sections[i],
-		chart = $('<canvas>'),
+	if ($('#displayType').val() == 'graph')	showGraphs(matchList, matchNames)
+	else showTables(matchList, matchNames)
+	showComments(matchList, matchNames)
+}
+
+function showTables(matchList, matchNames){
+	var table = $('<table>')
+	Object.keys(teamGraphs).forEach(function(section){
+		table.append($('<tr><td class=blank></td></tr>'))
+		var hr = $('<tr>')
+		hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
+		for (var j=0; j<matchList.length; j++){
+			hr.append($('<th class=match>').text(matchNames[j]))
+		}
+		table.append(hr)
+		teamGraphs[section]['data'].forEach(function(field){
+			var info = statInfo[field]||{},
+			tr = $('<tr class=statRow>').append($('<th>').text(info['name']||field))
+			matchList.forEach(function(match){
+				tr.append($('<td>').text(match[field]||0))
+			})
+			table.append(tr)
+		})
+	})
+	$('#stats').html('').append(table)
+}
+
+function showGraphs(matchList, matchNames){
+	var graphs = $('#stats').html('')
+	Object.keys(teamGraphs).forEach(function(section){
+		var chart = $('<canvas>'),
 		data=[],
 		graph=$('<div class=graph>')
 		graphs.append(graph)
 		graph.append($('<h2>').text(section))
 		graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
-		for (var j=0; j<teamGraphs[section]['data'].length; j++){
-			var field = teamGraphs[section]['data'][j],
-			info = statInfo[field]||{}
-			var values = []
+		teamGraphs[section]['data'].forEach(function(field,j){
+			var info = statInfo[field]||{},
+			values = []
 			for (var k=0; k<matchList.length; k++){
 				values.push(matchList[k][field]||0)
 			}
@@ -55,7 +91,7 @@ function fillPage(){
 				data: values,
 				backgroundColor: Array(matchList.length).fill(graphColors[j])
 			})
-		}
+		})
 		var stacked = teamGraphs[section]['graph']=="stacked"
 		new Chart(chart,{
 			type: 'bar',
@@ -70,16 +106,15 @@ function fillPage(){
 				}
 			}
 		})
-	}
+	})
+}
 
+function showComments(matchList, matchNames){
+	var comments = $('#comments').html("")
 	for (var i=0; i<matchList.length; i++){
 		comments
 			.append($('<h3>').text(matchNames[i]))
 			.append($('<p class=comments>').text(matchList[i]['comments']||""))
 			.append($('<p class=scouter>').text(matchList[i]['scouter']||""))
-	}
-
-	if(typeof window.showPitScouting === 'function'){
-		window.showPitScouting($('#pit-scouting'),team)
 	}
 }

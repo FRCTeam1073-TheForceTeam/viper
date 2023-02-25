@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pit Scouting EVENT - FRC Scouting App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/export.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/main.js></script>
+<script src=/export.js></script>
+<title>Export Event &mdash; FRC Scouting App</title>
+</head>
+<body>
+	<h2>Download Event</h2>
+	<p>Download all CSV and images for this event in JSON format:</p>
+	<p><a id=download>Download</a></p>
+	<h2>Transfer Event</h2>
+	<p>Transfer all the event data to another webscout instance.</p>
+	<input id=siteSite placeholder=webscout.example.com>
+	<form id=transferForm method=POST action=https://webscout.example.com/admin/import.cgi>
+		<input name=json id=transferJson type=hidden>
+		<input type=submit value=Transfer>
+	</form>
+</body>
+</html>

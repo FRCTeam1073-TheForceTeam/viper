@@ -24,10 +24,10 @@ function aggregateStats(scout, aggregate){
 		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])) map[field] = (map[field]||0)+(value||0)
 	}
 
-	function fromParent(stage,row,cargo,doSum){	
+	function fromParent(stage,row,cargo,doSum){
 		;["","score","failed"].forEach(stat=>{
 			scout[placementKey(stage,row,cargo,stat)] = doSum(stat)
-		})						
+		})
 		reliability(scout,placementKey(stage,row,cargo))
 	}
 
@@ -114,7 +114,7 @@ function aggregateStats(scout, aggregate){
 	scout['end_dock_engaged'] = scout['end']=="engaged"?1:0
 	scout['end_dock_engaged_attempts'] = (scout['end_dock_engaged']||scout['end_dock_fail']=='yes')?1:0
 	scout['end_dock_engaged_failed'] = scout['end_dock_engaged_attempts']-scout['end_dock_engaged']
-	
+
 	scout['links_score'] = Math.round((scout['links']||0)*pointValues['links'])
 	scout['tele_score'] = scout['tele_place_score']+scout['links_score']
 	scout['dock_score'] = scout['auto_dock_score']+scout['end_dock_score']
@@ -135,7 +135,7 @@ function aggregateStats(scout, aggregate){
 			success = aggregate[base]||0,
 			attempts = aggregate[`${base}_attempts`]||0
 			if (attempts > 0) aggregate[field] = Math.round(100*success/attempts)
-		}		
+		}
 	})
 	aggregate["count"] = (aggregate["count"]||0)+1
 	aggregate["event"] = scout["event"]
@@ -426,7 +426,7 @@ var teamGraphs = {
 	},
 	"# Placed by Type":{
 		graph:"stacked",
-		data:["cone","cube"]
+		data:["cube","cone"]
 	},
 	"# Placed by Level":{
 		graph:"stacked",
@@ -497,7 +497,7 @@ var aggregateGraphs = {
 	},
 	"# Placed by Type":{
 		graph:"stacked",
-		data:["cone","cube"]
+		data:["cube","cone"]
 	},
 	"# Placed by Level":{
 		graph:"stacked",
@@ -529,9 +529,9 @@ var matchPredictorSections = {
 	"Total":["score"],
 	"Game Stages":["auto_score","tele_score","end_score"],
 	"Auto":['auto_mobility_score','auto_place_score','auto_dock_score'],
+	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score'],
 	"Teleop":['tele_place_score','links_score'],
-	"Teleop Cargo":['tele_cone_score','tele_cube_score','tele_top_score','tele_middle_score','tele_bottom_score','full_cycle_average_seconds'],
-	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score']
+	"Teleop Cargo":['tele_cone_score','tele_cube_score','tele_top_score','tele_middle_score','tele_bottom_score','full_cycle_average_seconds']
 }
 
 var plannerSections = {
@@ -594,10 +594,17 @@ function showPitScouting(el,team){
 						!dat['end_parking_brake']
 					)?$('<li>').text("None"):"")
 			)
+			el.append($("<h4>").text("Dimensions"))
+			if (dat['length'] && dat['width']) el.append($("<p>").text(dat['length']+'x'+dat['width']+'"'))
+			else el.append($("<p>").text("Unknown"))
 			el.append($("<h4>").text("Drivetrain"))
 			el.append($("<p>").text(format(dat['drivetrain'])))
 			el.append($("<h4>").text("Drivetrain Motors"))
+			el.append($("<p>").text(format(dat['motor_count'])))
 			el.append($("<p>").text(format(dat['motors'])))
+			el.append($("<h4>").text("Wheels"))
+			el.append($("<p>").text(format(dat['wheel_count'])))
+			el.append($("<p>").text(format(dat['wheels'])))
 			el.append($("<h4>").text("Vision software used"))
 			el.append($("<ul>")
 				.append(dat['vision_auto']?$('<li>').text("Auto"):"")
@@ -657,7 +664,12 @@ function showPitScouting(el,team){
 	function format(s){
 		s = ""+s
 		if (!s||s=="0") s = "Unknown"
-    	s = s[0].toUpperCase() + s.slice(1)
+		s = s[0].toUpperCase() + s.slice(1)
 		return s.replace(/_/g," ")
 	}
 }
+
+var whiteboardStamps = [
+	"/2023/cone-stamp.png",
+	"/2023/cube-stamp.png"
+]

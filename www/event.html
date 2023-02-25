@@ -19,14 +19,24 @@
 
 		<button id=showInstructions>Instructions</button>
 
-		<div class=initHid>
+		<div>
 			<h2>Scouting</h2>
 			<ul>
 				<li class=initHid><a class=dependUploads href="/upload.html">Upload Scouting Data (Matches: UPLOAD_COUNT)</a></li>
 				<li class=initHid><a class=dependSchedule href="/YEAR/scout.html#event=EVENT">Match scouting</a></li>
-				<li class=initHid><a class=dependSchedule href="/bot-photos.html#event=EVENT">Bot photo scouting</a></li>
-				<li class=initHid><a class=dependSchedule href="/YEAR/pit-scout.html#event=EVENT">Pit scouting</a></li>
+				<li><a href="/bot-photos.html#event=EVENT">Bot photo scouting</a></li>
+				<li><a href="/YEAR/pit-scout.html#event=EVENT">Pit scouting</a></li>
 			</ul>
+			<div id=pitScoutSetup>
+				<div>Pit/bot scouting squads:</div>
+				<div class=side-by-side>
+					<img src=/count_up.svg>
+					<img src=/count_down.svg>
+				</div>
+				<div id=pitScoutSetupButtons class=side-by-side>
+
+				</div>
+			</div>
 		</div>
 
 		<div class=initHid>
@@ -38,10 +48,10 @@
 			</ul>
 		</div>
 
-		<div class=initHid>
+		<div>
 			<h2>Edit Event</h2>
 			<ul>
-				<li class=initHid><a class=dependScouting href="/event-table.html#event=EVENT">Practice and qualification matches</a></li>
+				<li><a href="/event-table.html#event=EVENT">Practice and qualification matches</a></li>
 				<li class=initHid><a class=dependScouting href="/playoffs.html#event=EVENT">Alliances, playoffs, and finals</a></li>
 			</ul>
 		</div>
@@ -57,11 +67,13 @@
 				<tr class=initHid><th>Scouting with Computations</th><td><a id=extendedScoutingData class=dependScouting href="javascript:void(0)">Download</a></td><td><a id=extendedScoutingDataView class=dependScouting href="javascript:void(0)">View</a></td></tr>
 				<tr class=initHid><th>Scouting Aggregation</th><td><a id=aggregatedScoutingData class=dependScouting href="javascript:void(0)">Download</a></td><td><a id=aggregatedScoutingDataView class=dependScouting href="javascript:void(0)">View</a></td></tr>
 			</table>
+			<p><a class=dependSchedule href="/export.html#event=EVENT">Export all event data</a></p>
 		</div>
+
 	</div>
 
 	<table id=matchTable class=side-by-side>
-		<thead><tr><th>Match</th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+		<thead><tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
 		<tbody id=matches></tbody>
 	</table>
 

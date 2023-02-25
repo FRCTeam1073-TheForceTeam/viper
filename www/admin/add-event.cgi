@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!C:/xampp/perl/bin/perl.exe -w
 
 use strict;
 use warnings;
@@ -20,11 +20,11 @@ my $start = $cgi->param('start')||$today;
 my $end = $cgi->param('end')||$today;
 
 sub escapeCsv(){
-    my ($s) = @_;
+	my ($s) = @_;
 	$s =~ s/\r\n|\r|\n/⏎/g;
 	$s =~ s/"/״/g;
 	$s =~ s/,/،/g;
-    return $s
+	return $s
 }
 
 $webutil->error("Missing event ID") if (!$event);

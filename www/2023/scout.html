@@ -51,21 +51,20 @@
 	<div>
 		<button class=teleop id=to-auto style=display:none>Back to auto</button>
 		<button class=showInstructions>Instructions</button>
+		<button id=teamBtn>Team # Correction</button>
 		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
 	</div>
 	<input type=hidden name=event>
 	<input type=hidden name=match>
 	<input type=hidden name=team>
 	<div class=auto>
-
-		<fieldset>
-			<legend>Which grid section is the robot starting in front of?</legend>
+		<table><tr><td class=teamColorBG colspan=4>
+			In front of which grid section is the robot starting?
+		</td></tr><tr><td colspan=4>
 			<label><input type=radio name=auto_start value=barrier><span>Barrier</span></label>
 			<label><input type=radio name=auto_start value=charging><span>Charging Station</span></label>
 			<label><input type=radio name=auto_start value=cable><span>Cable Protector</span></label>
-		</fieldset>
-		
-		<table><tr><td class=teamColorBG colspan=4>
+		</td></tr><tr><td class=teamColorBG colspan=4>
 			Auto: Placed (or Failed) on Top Row
 		</td></tr><tr><td>
 			<div><div class=side-by-side>
@@ -73,7 +72,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=auto_top_cone size=1 max=3 disabled>
+				<input type=text class=num value=0 name=auto_top_cone size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -107,7 +106,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=auto_middle_cone max=3 size=1 disabled>
+				<input type=text class=num value=0 name=auto_middle_cone max=6 size=1 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -184,7 +183,8 @@
 		<tr><td class=subheader colspan=4>
 		   Teleop: Collection From
 		</td></tr><tr><td>
-			<div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Shelf</div></div>
+			<div class="colorBar teamColorBG"></div>
+			<div class=explain><div><span class=teamColor></span> Shelf</div></div>
 			<div><div class=side-by-side>
 				<img class="count collectLoadingZone"src=/count_up.svg>
 				<img class=count src=/count_down.svg>
@@ -193,7 +193,8 @@
 				<input type=text class=num value=0 name=shelf size=1 disabled>
 			</div></div>
 		</td><td>
-			<div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Chute</div></div>
+			<div class="colorBar teamColorBG"></div>
+			<div class=explain><div><span class=teamColor></span> Chute</div></div>
 			<div><div class=side-by-side>
 				<img class="count collectLoadingZone" src=/count_up.svg>
 				<img class=count src=/count_down.svg>
@@ -202,7 +203,8 @@
 				<input type=text class=num value=0 name=loading_zone size=1 disabled>
 			</div></div>
 		</td><td>
-			<div class=explain><div><span class='teamColor teamColorBG'></span> Com&shy;munity</div></div>
+			<div class="colorBar teamColorBG"></div>
+			<div class=explain><div><span class=teamColor></span> Com&shy;munity</div></div>
 			<div><div class=side-by-side>
 				<img class=count src=/count_up.svg>
 				<img class=count src=/count_down.svg>
@@ -211,6 +213,7 @@
 				<input type=text class=num value=0 name=community size=1 disabled>
 			</div></div>
 		</td><td>
+			<div class="colorBar"></div>
 			<div class=explain>Else&shy;where</div>
 			<div><div class=side-by-side>
 				<img class=count src=/count_up.svg>
@@ -219,7 +222,7 @@
 				<img class=icon src=claw.svg>
 				<input type=text class=num value=0 name=field size=1 disabled>
 			</div></div>
-		</td></tr><tr><td class=subheader colspan=4>    
+		</td></tr><tr><td class=subheader colspan=4>
 			Placed (or Failed) on Top Row
 		</td></tr><tr><td>
 			<div><div class=side-by-side>
@@ -227,7 +230,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=tele_top_cone size=1 max=3 disabled>
+				<input type=text class=num value=0 name=tele_top_cone size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -261,7 +264,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cone.svg>
-				<input type=text class=num value=0 name=tele_middle_cone size=1 max=3 disabled>
+				<input type=text class=num value=0 name=tele_middle_cone size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -277,7 +280,7 @@
 				<img class=count src=/count_down.svg>
 			</div><div class=side-by-side>
 				<img class=icon src=cube.svg>
-				<input type=text class=num value=0 name=tele_middle_cube size=1 max=3 disabled>
+				<input type=text class=num value=0 name=tele_middle_cube size=1 max=6 disabled>
 			</div></div>
 		</td><td>
 		   <div><div class=side-by-side>
@@ -351,7 +354,7 @@
 	<hr class=teamColorBG>
 	<fieldset class="left full">
 		<legend>How many links (placed three in a row) did the <span class=teamColor></span> alliance have in total?</legend>
-		<div class=full><input type=number name=links value=0 max=9 min=0></div>
+		<div class=full><input type=number name=links max=9 min=0></div>
 	</fieldset>
 	<hr class=teamColorBG>
 	<fieldset class="left full">
@@ -377,7 +380,6 @@
 		<div id=otherButtons>
 			<button id=matchBtn>Choose Match</button>
 			<button id=robotBtn>Change Robot</button>
-			<button id=teamBtn>Change Team</button>
 			<button id=uploadBtn>Upload Data</button>
 		</div>
 	</div></div>

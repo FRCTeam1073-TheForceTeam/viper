@@ -9,11 +9,19 @@ Click on the match schedule to get deep links relevant for that team and match:
  - Scouting
  - Stats
 
+The colors in the match table provide extra information:
+
+ - Red background: red alliance
+ - Blue background: blue alliance
+ - White text: not scouted
+ - Green text: already scouted
+ - Red wavy crossed-out: scouting problem (like duplicate data)
+
 ### Scouting
 
-Collect data about each team and match. 
+Collect data about each team and match.
 
-Once a scouting page is open, the tablet, phone, or laptop can be unplugged from the scouting briefcase. 
+Once a scouting page is open, the tablet, phone, or laptop can be unplugged from the scouting briefcase.
 Plug back in when you need to upload data.
 
 You must be logged in as "scouter" or "admin" to be able to upload scouting data.

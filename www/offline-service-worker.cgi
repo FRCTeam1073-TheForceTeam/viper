@@ -1,19 +1,20 @@
-#!/usr/bin/perl -w
+#!C:/xampp/perl/bin/perl.exe -w
+
+use File::Slurp;
 
 print "Content-type: text/javascript;charset=UTF-8\n\n";
-
-my $tmpHome = `mktemp -d /tmp/XXXXXXXXXX`;
-chomp $tmpHome;
-my $gitdir = `readlink  -f ..`;
-`HOME=$tmpHome git config --global --add safe.directory $gitdir`;
 
 if ($ENV{REMOTE_ADDR} eq "127.0.0.1" or $ENV{DEBUG}){
 	# For local development, don't use a service worker cache
 	print "const CACHE_NAME = ''\n\n";
 } else {
-	my $hash = `HOME=$tmpHome git rev-parse HEAD`;
-	chomp $hash;
+	my $head = read_file('../.git/HEAD');
+	chomp $head;
+	my $hash = "";
+	if ($head =~ /^ref: (.*)$/g){
+		$hash = read_file("../.git/$1");
+		chomp $hash;
+	}
 	print "const CACHE_NAME = '$hash'\n\n";
 }
-print `cat offline-service-worker.js`;
-`rm -rf $tmpHome`;
+print read_file('offline-service-worker.js');
