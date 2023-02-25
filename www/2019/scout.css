@@ -9,7 +9,7 @@
 #scouting table.cargo-ship, #scouting table.rocket{margin:2em 0}
 td table{width:100%}
 td.team{width:12em;font-size:200%;font-weight:bold;text-align:center}
-.rocket .toggle,.cargo-ship .toggle{background-color:antiquewhite}
+.rocket .toggle,.cargo-ship .toggle{background-color:var(--section-bg-color)}
 
 #scouting table{border-collapse:collapse;border:none;margin:0;padding:0}
 #scouting td{border:none;margin:0;padding:0}

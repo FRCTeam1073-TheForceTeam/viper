@@ -57,15 +57,13 @@
 	<input type=hidden name=match>
 	<input type=hidden name=team>
 	<div class=auto>
-
-		<fieldset>
-			<legend>Which grid section is the robot starting in front of?</legend>
+		<table><tr><td class=teamColorBG colspan=4>
+			In front of which grid section is the robot starting?
+		</td></tr><tr><td colspan=4>
 			<label><input type=radio name=auto_start value=barrier><span>Barrier</span></label>
 			<label><input type=radio name=auto_start value=charging><span>Charging Station</span></label>
 			<label><input type=radio name=auto_start value=cable><span>Cable Protector</span></label>
-		</fieldset>
-		
-		<table><tr><td class=teamColorBG colspan=4>
+		</td></tr><tr><td class=teamColorBG colspan=4>
 			Auto: Placed (or Failed) on Top Row
 		</td></tr><tr><td>
 			<div><div class=side-by-side>
@@ -184,7 +182,8 @@
 		<tr><td class=subheader colspan=4>
 		   Teleop: Collection From
 		</td></tr><tr><td>
-			<div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Shelf</div></div>
+			<div class="colorBar teamColorBG"></div>
+			<div class=explain><div><span class=teamColor></span> Shelf</div></div>
 			<div><div class=side-by-side>
 				<img class="count collectLoadingZone"src=/count_up.svg>
 				<img class=count src=/count_down.svg>
@@ -193,7 +192,8 @@
 				<input type=text class=num value=0 name=shelf size=1 disabled>
 			</div></div>
 		</td><td>
-			<div class=explain><div><span class='teamColor teamColorBG'></span> Sub&shy;station Chute</div></div>
+			<div class="colorBar teamColorBG"></div>
+			<div class=explain><div><span class=teamColor></span> Chute</div></div>
 			<div><div class=side-by-side>
 				<img class="count collectLoadingZone" src=/count_up.svg>
 				<img class=count src=/count_down.svg>
@@ -202,7 +202,8 @@
 				<input type=text class=num value=0 name=loading_zone size=1 disabled>
 			</div></div>
 		</td><td>
-			<div class=explain><div><span class='teamColor teamColorBG'></span> Com&shy;munity</div></div>
+			<div class="colorBar teamColorBG"></div>
+			<div class=explain><div><span class=teamColor></span> Com&shy;munity</div></div>
 			<div><div class=side-by-side>
 				<img class=count src=/count_up.svg>
 				<img class=count src=/count_down.svg>
@@ -211,6 +212,7 @@
 				<input type=text class=num value=0 name=community size=1 disabled>
 			</div></div>
 		</td><td>
+			<div class="colorBar"></div>
 			<div class=explain>Else&shy;where</div>
 			<div><div class=side-by-side>
 				<img class=count src=/count_up.svg>

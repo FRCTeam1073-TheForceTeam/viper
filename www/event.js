@@ -107,17 +107,17 @@ $(document).ready(function(){
 		var csv=Object.keys(statInfo).map(escapeExcelCsvField).join(",")+"\n"
 		csv+=Object.keys(statInfo).map(name=>statInfo[name].name).map(escapeExcelCsvField).join(",")+"\n"
 		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
-		dat.forEach(row=>{			
+		dat.forEach(row=>{
 			csv+=Object.keys(statInfo).map(name=>row[name]!=null?row[name]:"").map(escapeExcelCsvField).join(",")+"\n"
 		})
 		return csv
 	}
 	function toTable(dat){
 		var table = $('<table border=1>')
-		toTableRow(table,Object.keys(statInfo).map(s=>s.replace(/_/g,"_\u00AD")),"th")
+		toTableRow(table,Object.keys(statInfo),"th")
 		toTableRow(table,Object.keys(statInfo).map(name=>statInfo[name].name),"th")
 		if (!dat.forEach) dat = Object.keys(dat).map(team=>dat[team])
-		dat.forEach(row=>{			
+		dat.forEach(row=>{
 			toTableRow(table,Object.keys(statInfo).map(name=>row[name]!=null?row[name]:""),"td")
 		})
 		var div = $('<div class=lightBoxFullContent style=overflow:auto>').append(table)
@@ -125,13 +125,15 @@ $(document).ready(function(){
 		return div
 	}
 	function toTableRow(table,dat,cell){
-		var tr = $('<tr>')		
+		var tr = $('<tr>')
 		dat.forEach(field=>{
-			tr.append($(`<${cell}>`).text(field))		
+			var el = $(`<${cell}>`).text(field)
+			el.html(el.html().replace(/_/g,'_<wbr>'))
+			tr.append(el)
 		})
 		table.append(tr)
 	}
-	
+
 	loadEventStats(function(eventStats, eventStatsByTeam){
 		$('#extendedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
@@ -140,11 +142,11 @@ $(document).ready(function(){
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
 			.attr('download',`${eventId}.scouting.aggregated.csv`)
 	})
-	$('#extendedScoutingDataView').click(function(){		
+	$('#extendedScoutingDataView').click(function(){
 		showLightBox(toTable(eventStats))
 		return false
 	})
-	$('#aggregatedScoutingDataView').click(function(){		
+	$('#aggregatedScoutingDataView').click(function(){
 		showLightBox(toTable(eventStatsByTeam))
 		return false
 	})

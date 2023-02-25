@@ -14,13 +14,18 @@
 </head>
 <body>
 <div class=f>
-  <canvas id=field></canvas>
+  <div id=field><div id=fieldBG></div><canvas id=fieldDraw></canvas></div>
   <div class=rightColumn>
     <div id=drawingControls>
       <button class="pen selected" data-type=pencil style=color:black>⬤</button>
+      <span id=stamps>
+        <button class=pen><img src=/2023/cone-stamp.png></button>
+        <button class=pen><img src=/2023/cube-stamp.png></button>
+      </span>
       <button class=pen data-type=eraser>◍</button>
       <button class=undo>↶</button>
       <button class=clear>✘</button>
+      <button class=rotate>🗘</button>
       <button class=showInstructions>Instructions</button>
     </div>
     <table id=statsTable>

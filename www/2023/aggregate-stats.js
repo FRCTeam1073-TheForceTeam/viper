@@ -529,9 +529,9 @@ var matchPredictorSections = {
 	"Total":["score"],
 	"Game Stages":["auto_score","tele_score","end_score"],
 	"Auto":['auto_mobility_score','auto_place_score','auto_dock_score'],
+	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score'],
 	"Teleop":['tele_place_score','links_score'],
-	"Teleop Cargo":['tele_cone_score','tele_cube_score','tele_top_score','tele_middle_score','tele_bottom_score','full_cycle_average_seconds'],
-	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score']
+	"Teleop Cargo":['tele_cone_score','tele_cube_score','tele_top_score','tele_middle_score','tele_bottom_score','full_cycle_average_seconds']
 }
 
 var plannerSections = {
@@ -594,10 +594,17 @@ function showPitScouting(el,team){
 						!dat['end_parking_brake']
 					)?$('<li>').text("None"):"")
 			)
+			el.append($("<h4>").text("Dimensions"))
+			if (dat['length'] && dat['width']) el.append($("<p>").text(dat['length']+'x'+dat['width']+'"'))
+			else el.append($("<p>").text("Unknown"))
 			el.append($("<h4>").text("Drivetrain"))
 			el.append($("<p>").text(format(dat['drivetrain'])))
 			el.append($("<h4>").text("Drivetrain Motors"))
+			el.append($("<p>").text(format(dat['motor_count'])))
 			el.append($("<p>").text(format(dat['motors'])))
+			el.append($("<h4>").text("Wheels"))
+			el.append($("<p>").text(format(dat['wheel_count'])))
+			el.append($("<p>").text(format(dat['wheels'])))
 			el.append($("<h4>").text("Vision software used"))
 			el.append($("<ul>")
 				.append(dat['vision_auto']?$('<li>').text("Auto"):"")

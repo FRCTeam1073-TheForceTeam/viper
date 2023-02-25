@@ -1,13 +1,19 @@
 "use strict"
 $(document).ready(function() {
-	var field = $('#field')
-	if (typeof eventYear !== 'undefined') field.css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
+	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
-	var sketcher = field.sketchable({
+	var sketcher = $("#fieldDraw").sketchable({
 		events: {
 			// We use the "before" event hook to update brush type right before drawing starts.
 			mousedownBefore: function(elem, data, evt){
-				if ($('button.pen.selected').attr('data-type') == 'eraser'){
+				var pen = $('button.pen.selected'),
+				img = pen.find('img')
+				if (img.length){
+					data.options.graphics.fillStyle = '#fff0' // transparent
+					data.options.graphics.strokeStyle = '#fff0'
+					var bounds = $('#fieldDraw')[0].getBoundingClientRect()
+					data.sketch.drawImage(img.attr('src'), evt.clientX - bounds.left, evt.clientY - bounds.top)
+				} else if (pen.attr('data-type') == 'eraser'){
 					// There is a method to set the brush in eraser mode.
 					data.options.graphics.lineWidth = 20
 					data.sketch.eraser()
@@ -15,7 +21,7 @@ $(document).ready(function() {
 					// There is a method to get the default mode (pencil) back.
 					data.options.graphics.lineWidth = 3
 					data.options.graphics.firstPointSize = 3
-					var color = $('button.pen.selected').css('color')
+					var color = pen.css('color')
 					data.options.graphics.fillStyle = color
 					data.options.graphics.strokeStyle = color
 					data.sketch.pencil()
@@ -37,12 +43,16 @@ $(document).ready(function() {
 	$('button.pen').click(function(){
 		$('button.pen').removeClass('selected')
 		$(this).addClass('selected')
-		setIcon()
+		setCursorImage()
 	})
 
 	$('.clear').click(function(evt) {
 		evt.preventDefault()
 		sketcher.sketchable('clear')
+	})
+
+	$('.rotate').click(function(evt) {
+		$('#fieldBG').toggleClass('rotated')
 	})
 
 	$('.undo').click(function(evt) {
@@ -55,11 +65,13 @@ $(document).ready(function() {
 		return false
 	})
 
-	function setIcon() {
-		var cursor = $('button.pen.selected').attr('data-type')
-		sketcher.css('cursor', `url(${cursor}.svg), auto`);
+	function setCursorImage() {
+		var pen = $('button.pen.selected'),
+		img = pen.find('img'),
+		cursor = img.length?img.attr('src'):pen.attr('data-type') + '.svg'
+		sketcher.css('cursor', `url(${cursor}), auto`);
 	}
-	setIcon()
+	setCursorImage()
 
 	function setLocationHash(){
 		var hash = `event=${eventId}`
@@ -100,55 +112,44 @@ $(document).ready(function() {
 	function fillStats(){
 		setLocationHash()
 		$('#teamButtons button').removeClass("picked")
-		var teamCount = 0,
+		var teamList=[],
 		tbody = $('#statsTable tbody').html("")
 		$('#statsTable input').each(function(){
 			var val = $(this).val()
+			val = val?parseInt(val):0
 			if (val){
 				$(`#team-${val}`).addClass("picked")
-				teamCount++
+				teamList.push(val)
 			}
 		})
-		$('#teamButtons').toggle(teamCount!=6)
+		$('#teamButtons').toggle(teamList.length!=6)
 		var sections = window.plannerSections||window.matchPredictorSections
 		if (!sections) return
-		if(teamCount==6){
-			var r1 = parseInt($('#R1').val()),
-			r2 = parseInt($('#R2').val()),
-			r3 = parseInt($('#R3').val()),
-			b1 = parseInt($('#B1').val()),
-			b2 = parseInt($('#B2').val()),
-			b3 = parseInt($('#B3').val()),
-			row = $("<tr>")
-			row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r1).click(showTeamStats).text(r1?'👁':''))
-			row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r2).click(showTeamStats).text(r2?'👁':''))
-			row.append($('<td class="redTeamBG viewTeam">').attr('data-team',r3).click(showTeamStats).text(r3?'👁':''))
-			row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b1).click(showTeamStats).text(b1?'👁':''))
-			row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b2).click(showTeamStats).text(b2?'👁':''))
-			row.append($('<td class="blueTeamBG viewTeam">').attr('data-team',b3).click(showTeamStats).text(b3?'👁':''))
-			row.append($('<th>'))
+		if(teamList.length==6){
+			var row = $("<tr>")
+			teamList.forEach(function(team,i){
+				var color = i<3?"red":"blue"
+				row.append($(`<td class="${color}TeamBG viewTeam" data-team=${team}>`).click(showTeamStats).html('<img src=/graph.svg>'))
+			})
 			tbody.append(row)
-			row = $("<tr>")
-			row.append($('<td class="redTeamBG">').attr('data-team',r1).click(showImg).html(`<img src=/data/${eventYear}/${r1}.jpg>`))
-			row.append($('<td class="redTeamBG">').attr('data-team',r2).click(showImg).html(`<img src=/data/${eventYear}/${r2}.jpg>`))
-			row.append($('<td class="redTeamBG">').attr('data-team',r3).click(showImg).html(`<img src=/data/${eventYear}/${r3}.jpg>`))
-			row.append($('<td class="blueTeamBG">').attr('data-team',b1).click(showImg).html(`<img src=/data/${eventYear}/${b1}.jpg>`))
-			row.append($('<td class="blueTeamBG">').attr('data-team',b2).click(showImg).html(`<img src=/data/${eventYear}/${b2}.jpg>`))
-			row.append($('<td class="blueTeamBG">').attr('data-team',b3).click(showImg).html(`<img src=/data/${eventYear}/${b3}.jpg>`))
-			row.append($('<th>'))
-			tbody.append(row)
+			;["","-top"].forEach(function(imageSuffix){
+				row = $("<tr>")
+				teamList.forEach(function(team,i){
+					var color = i<3?"red":"blue"
+					row.append($(`<td class="${color}TeamBG">`).click(showImg).html(`<img src=/data/${eventYear}/${team}${imageSuffix}.jpg>`))
+				})
+				tbody.append(row)
+			})
 			Object.keys(sections).forEach(function(section){
 				for (var j=0; j<sections[section].length; j++){
 					var field = sections[section][j]
 					statInfo[field] = statInfo[field]||{}
 					var statName = statInfo[field]['name']||field
-					var row = $("<tr>")
-					row.append($('<td class=redTeamBG>').text(getTeamValue(field,r1)))
-					row.append($('<td class=redTeamBG>').text(getTeamValue(field,r2)))
-					row.append($('<td class=redTeamBG>').text(getTeamValue(field,r3)))
-					row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b1)))
-					row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b2)))
-					row.append($('<td class=blueTeamBG>').text(getTeamValue(field,b3)))
+					row = $("<tr>")
+					teamList.forEach(function(team,i){
+						var color = i<3?"red":"blue"
+						row.append($(`<td class="${color}TeamBG">`).text(getTeamValue(field,team)))
+					})
 					row.append($('<th>').text(statName))
 					tbody.append(row)
 				}
