@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!C:/xampp/perl/bin/perl.exe -w
 
 print "Content-type: text/javascript;charset=UTF-8\n\n";
 

@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!C:/xampp/perl/bin/perl.exe -w
 
 # Displays a list of events in CSV
 
