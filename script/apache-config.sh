@@ -221,7 +221,7 @@ fi
 
 if [ -e /c/xampp/perl/bin/perl.exe ]
 then
-    find www/ -name *.cgi -exec sed -iE 's|^#!/usr/bin/perl|#!C:/xampp/perl/bin/perl.exe|g' {} \;
+    find www/ -name *.cgi -exec sed -E -i 's|^#!/usr/bin/perl|#!C:/xampp/perl/bin/perl.exe|g' {} \;
 else
-    find www/ -name *.cgi -exec sed -iE 's|^#!C:/xampp/perl/bin/perl.exe|#!/usr/bin/perl|g' {} \;
+    find www/ -name *.cgi -exec sed -E -i 's|^#!C:/xampp/perl/bin/perl.exe|#!/usr/bin/perl|g' {} \;
 fi
