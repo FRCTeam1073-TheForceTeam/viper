@@ -61,7 +61,8 @@ sub writeData(){
 	foreach my $event (keys %{$eventCsv}){
 		my $fileName = "../data/$event.$type.csv";
 		if (! -f $fileName){
-			`touch $fileName`;
+			open my $fc, ">", $fileName or $webutil->error("Cannot create $fileName", "$!\n");
+			close $fc;
 		}
 		$csvHeaders = $eventHeaders->{$event};
 
