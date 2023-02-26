@@ -210,14 +210,18 @@ $(document).ready(function() {
 				if (img.length){
 					data.options.graphics.fillStyle = '#fff0' // transparent
 					data.options.graphics.strokeStyle = '#fff0'
+					data.options.graphics.lineWidth = 3
+					data.sketch.pencil()
 					var bounds = $('#fieldDraw')[0].getBoundingClientRect()
 					data.sketch.drawImage(img.attr('src'), evt.clientX - bounds.left, evt.clientY - bounds.top)
 				} else if (pen.attr('data-type') == 'eraser'){
-					// There is a method to set the brush in eraser mode.
+					// Set the brush in eraser mode.
 					data.options.graphics.lineWidth = 20
+					data.options.graphics.fillStyle = '#ffff'
+					data.options.graphics.strokeStyle = '#ffff'
 					data.sketch.eraser()
 				} else {
-					// There is a method to get the default mode (pencil) back.
+					// Set the brush in pencil mode.
 					data.options.graphics.lineWidth = 3
 					data.options.graphics.firstPointSize = 3
 					var color = pen.css('color')
