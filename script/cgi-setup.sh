@@ -18,7 +18,6 @@ do
 	dst=${src/cgi/www}
 	dstdir=${dst%%/*}
 	mkdir -p "$dstdir"
-	exit
 	if [ "$PERL" == "/usr/bin/perl" ]
 	then
 		rm -f "$dst"
