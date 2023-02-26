@@ -16,7 +16,7 @@ fi
 for src in `find cgi/ -name *.cgi`
 do
 	dst=${src/cgi/www}
-	dstdir=${dst%%/*}
+	dstdir=${dst%/*}
 	mkdir -p "$dstdir"
 	if [ "$PERL" == "/usr/bin/perl" ]
 	then
