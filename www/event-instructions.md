@@ -38,6 +38,10 @@ Take pictures of each robot.
 
 Interview each team.
 
+#### Pit/bot scouting squads
+
+Use squads to divide up pit and bot scouting work. Clicking the up and down arrows will increase or decrease the number of devices that will be used for scouting. Clicking the numbered buttons will open the pit scouting and the bot scouting in separate browser tabs with a fair share of the teams.
+
 ### Use data
 
 #### Match prediction
