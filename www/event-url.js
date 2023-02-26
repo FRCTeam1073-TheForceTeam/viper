@@ -141,14 +141,14 @@ function getUploads(){
 
 function getMatchName(matchId){
 	return matchId
-		.replace(/^pm/, "Practice ")
-		.replace(/^qm/, "Qualification ")
-		.replace(/^qf/, "Quarter-final ")
+		.replace(/^pm/, "Prac­tice ")
+		.replace(/^qm/, "Qual­ific­ation ")
+		.replace(/^qf/, "Quar­ter-final ")
 		.replace(/^sf/, "Semi-final ")
-		.replace(/^1p/, "Playoffs first round ")
-		.replace(/^2p/, "Playoffs second round ")
-		.replace(/^3p/, "Playoffs third round ")
-		.replace(/^4p/, "Playoffs fourth round ")
-		.replace(/^5p/, "Playoffs fifth round ")
+		.replace(/^1p/, "Play­offs first round ")
+		.replace(/^2p/, "Play­offs second round ")
+		.replace(/^3p/, "Play­offs third round ")
+		.replace(/^4p/, "Play­offs fourth round ")
+		.replace(/^5p/, "Play­offs fifth round ")
 		.replace(/^f/, "Final ")
 }
