@@ -15,8 +15,16 @@ fi
 
 for src in `find cgi/ -name *.cgi`
 do
-	#find cgi/ -name *.cgi -exec sed -E -i 's|^#!/usr/bin/perl|#!C:/xampp/perl/bin/perl.exe|g' {} \;
 	dst=${src/cgi/www}
-	sed -E "s|^#!/usr/bin/perl|#!$PERL|g" "$src" > "$dst"
+	dstdir=${dst%%/*}
+	mkdir -p "$dstdir"
+	exit
+	if [ "$PERL" == "/usr/bin/perl" ]
+	then
+		rm -f "$dst"
+		ln "$src" "$dst"
+	else
+		sed -E "s|^#!/usr/bin/perl|#!$PERL|g" "$src" > "$dst"
+	fi
 	chmod a+x "$dst"
 done
