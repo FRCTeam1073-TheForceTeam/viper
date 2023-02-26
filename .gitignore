@@ -4,3 +4,6 @@
 *.tar.gz
 *.tgz
 *.zip
+/www/*.cgi
+/www/admin/
+/www/scout/

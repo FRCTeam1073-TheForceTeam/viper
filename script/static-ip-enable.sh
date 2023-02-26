@@ -20,7 +20,7 @@ fi
 
 if [ ! -e /etc/netplan/50-cloud-init.yaml ]
 then
-	"Could not find expected file: /etc/netplan/50-cloud-init.yaml"
+	echo "Could not find expected file: /etc/netplan/50-cloud-init.yaml"
 	exit 1
 fi
 

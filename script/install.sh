@@ -3,8 +3,8 @@
 set -e
 
 ./script/software-install.sh
+./script/cgi-setup.sh
 ./script/permissions.sh
 ./script/apache-config.sh
 ./script/static-ip-enable.sh
 ./script/dhcp-enable.sh
-
