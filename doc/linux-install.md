@@ -4,14 +4,14 @@
 
 1. Use git to clone the code
 1. Navigate to the webscout directory on the command line
-1. Run the installation script: `./scripts/install.sh`
+1. Run the installation script: `./script/install.sh`
    - It will start by installing software dependencies (like Apache).
    - Then it will create a configuration file: `local.conf`.
    - See the [example configuration file](../script/example.conf) for a preview.
 1. Edit the configuration: `nano local.conf`
    - Most of the defaults are probably fine to start with.
    - Use the documentation comments for guidance about any setting you want to change.
-1. Run the installation script again to finish up the installation: `./scripts/install.sh`
+1. Run the installation script again to finish up the installation: `./script/install.sh`
 1. The webserver should be up and running, so you should be able to visit it: `http://localhost/` (The URL may differ depending on your chosen configuration options.)
 
 The installation script is idempotent. That means it can be run multiple times and it will only change the things that need to be changed. If you change the configuration, rerun the installation script to apply the new configuration.
