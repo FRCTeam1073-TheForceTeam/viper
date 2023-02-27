@@ -19,3 +19,4 @@ The app is available [from GitHub](https://github.com/FRCTeam1073-TheForceTeam/w
    - [2022](/2022/scouting-instructions.html)
    - [2023](/2023/scouting-instructions.html)
  - [Match planner instructions](/planner-instructions.html)
+ - [Data import/export instructions](/import-export-instructions.html)
