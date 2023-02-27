@@ -1,23 +1,30 @@
 "use strict"
 
 $(document).ready(function(){
-	var teams = /(?:(?:^\#)|(?:\&teams\=))([0-9]+(?:,[0-9]+)*)$/g.exec(location.hash)
-	if (teams) teams = teams[1].split(/,/)
-	for (var i=1; teams && i<teams.length; i++){
-		addTeam(teams[i]);
-	}
-	$('#add').click(function(e){
-		e.preventDefault()
-		addTeam($('#team').val())
-		return false
-	})
-	if (eventId && !teams){
+	var teams = (/(?:(?:^\#)|(?:\&teams\=))([0-9]+(?:,[0-9]+)*)$/g.exec(location.hash)||["",""])[1].split(/,/)
+	if(teams[0]){
+		teams.forEach(function(team){
+			addTeam(team);
+		})
+	} else if (eventId){
 		loadEventSchedule(function(){
 			for(var i=0; i<eventTeams.length; i++){
 			   addTeam(eventTeams[i])
 			}
 		})
 	}
+	$('#add').click(function(e){
+		e.preventDefault()
+		addTeam($('#team').val())
+		return false
+	})
+	$('#team').keydown(function(e) {
+		if (e.key == 'Enter') {
+			e.preventDefault()
+			addTeam($('#team').val())
+			return false
+		}
+	})
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
 		return false
