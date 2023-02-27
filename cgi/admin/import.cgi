@@ -30,14 +30,16 @@ for my $fileName (keys(%$data)){
 $webutil->error("No files files imported have an event name") if (!$event);
 for my $fileName (keys(%$data)){
 	my $fileContents = $data->{$fileName};
+	my $raw = "";
 	if ($fileContents =~ /^data:[a-z]+\/[a-z]+;base64,(.*)/){
 		$fileContents = decode_base64($1);
+		$raw = ":raw"
 	}
 	$fileName =~ s/^\/data\//..\/data\//g;
 	my $dir = $fileName;
 	$dir =~ s/[^\/]*$//g;
 	make_path($dir);
-	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">", $fileName);
+	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$raw", $fileName);
 	print $fh $fileContents;
 	close $fh;
 }
