@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Pit Scouting EVENT - FRC Scouting App</title>
+<title>Export EVENT - FRC Scouting App</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
@@ -13,9 +13,13 @@
 <title>Export Event &mdash; FRC Scouting App</title>
 </head>
 <body>
+	<h1>Exporting EVENT data</h1>
+	<button id=showInstructions>Instructions</button>
+
 	<h2>Download Event</h2>
 	<p>Download all CSV and images for this event in JSON format:</p>
 	<p><a id=download>Download</a></p>
+
 	<h2>Transfer Event</h2>
 	<p>Transfer all the event data to another webscout instance.</p>
 	<input id=siteSite placeholder=webscout.example.com>
@@ -23,5 +27,8 @@
 		<input name=json id=transferJson type=hidden>
 		<input type=submit value=Transfer>
 	</form>
+
+
+	<iframe id=instructions class=lightBoxFullContent src=/import-export-instructions.html></iframe>
 </body>
 </html>

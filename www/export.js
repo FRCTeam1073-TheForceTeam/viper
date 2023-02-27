@@ -35,6 +35,13 @@ $(document).ready(function(){
 		url += "/admin/import.cgi"
 		$('#transferForm').attr('action',url)
 	})
+	$('#showInstructions').click(function(){
+		showLightBox($('#instructions'))
+		return false
+	})
+	$('title,h1').each(function(){
+		$(this).text($(this).text().replace(/EVENT/, eventName))
+	})
 	function done(){
 		if (Object.keys(data).length != types.length + teams.length*2){
 			setTimeout(done,100)
