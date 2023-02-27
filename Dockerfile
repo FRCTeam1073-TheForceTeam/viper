@@ -4,11 +4,15 @@ FROM httpd:2.4
 RUN apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y \
-		apache2 \
 		git \
+		imagemagick \
 		libcgi-pm-perl \
 		libfile-flock-perl \
+		libfile-slurp-perl \
+		libfile-touch-perl \
 		libhtml-escape-perl \
+		libjson-pp-perl \
+		libmime-base64-perl \
 		perl \
 	&& apt-get clean autoclean \
 	&& apt-get autoremove -y \
