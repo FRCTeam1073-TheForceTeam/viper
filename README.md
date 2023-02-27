@@ -40,4 +40,4 @@ It runs on as a web app on a server that can be taken to events and powered by a
       - [2022](www/2022/scouting-instructions.md)
       - [2023](www/2023/scouting-instructions.md)
    - [Match planner instructions](www/planner-instructions.md)
-   - [Data import/export instructions](www/import-export-instructions.html)
+   - [Data import/export instructions](www/import-export-instructions.md)
