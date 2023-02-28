@@ -7,4 +7,4 @@
 /www/*.cgi
 /www/admin/
 /www/scout/
-/www/local.js
+/www/local.*
