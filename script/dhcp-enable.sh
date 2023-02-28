@@ -6,21 +6,18 @@ if [ -e local.conf ]
 then
 	source ./local.conf
 else
-	cp ./script/example.conf ./local.conf
-	echo "Created local.conf file"
-	echo "Please edit it and re-run this script"
-	exit 1
+	./script/local-conf.sh
 fi
 
 if [ "z$STATIC_IP" == "z" ]
 then
-	echo "No static IP configured."
+	echo "Not enabling DHCP: no static IP configured."
 	exit 0
 fi
 
 if [ "z$DHCP_RANGE" == "z" ]
 then
-	echo "No DHCP range configured."
+	echo "Not enabling DHCP: No DHCP range configured."
 	exit 0
 fi
 
