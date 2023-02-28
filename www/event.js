@@ -50,10 +50,9 @@ $(document).ready(function(){
 		if (uploadCount) $('.dependUploads').show().parents().show()
 	})
 	function setName(){
-		title.text(eventName + " " + title.text())
+		title.text(title.text().replace(/EVENT/, eventName))
 		$('h1').text(eventName)
 	}
-	setName()
 	loadEventInfo(function(){
 		setName()
 		var info = $('#eventInfo').html('')
