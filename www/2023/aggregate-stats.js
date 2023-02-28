@@ -141,8 +141,8 @@ function aggregateStats(scout, aggregate){
 	aggregate["event"] = scout["event"]
 	aggregate["full_cycle_fastest_seconds"] = (aggregate["full_cycle_fastest_seconds"]||999)>scout["full_cycle_fastest_seconds"]?scout["full_cycle_fastest_seconds"]:(aggregate["full_cycle_fastest_seconds"]||999)
 	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
-	aggregate["max_score"] = (aggregate["max_score"]||0)<scout["score"]?scout["score"]:(aggregate["max_score"]||0)
-	aggregate["min_score"] = (aggregate["min_score"]===undefined?999:aggregate["min_score"])>scout["score"]?scout["score"]:(aggregate["min_score"]===undefined?999:aggregate["min_score"])
+	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
+	aggregate["min_score"] = Math.min(aggregate["min_score"]===undefined?999:aggregate["min_score"],scout["score"])
 }
 
 var statInfo = {
