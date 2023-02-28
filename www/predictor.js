@@ -74,15 +74,16 @@ function setPickedTeams(){
 					})
 					teamScores=teamScores.map(Math.round)
 					allianceScores=allianceScores.map(Math.round)
-					var teamMax=Math.max(...teamScores),
-					allianceMax=Math.max(...allianceScores),
+					var compare=statInfo[field].good=='low'?Math.min:Math.max,
+					teamBest=compare(...teamScores),
+					allianceBest=compare(...allianceScores),
 					tr=$('<tr>').addClass(first?"first":"")
 					BOT_POSITIONS.forEach(function(pos, i){
-						tr.append($('<td>').addClass(i<3?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamMax?"winner":"")))
+						tr.append($('<td>').addClass(i<3?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamBest?"winner":"")))
 						if(i==2){
-							tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceMax?("winner"):"")))
+							tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceBest?("winner"):"")))
 							tr.append($('<td>').append($('<div>').text(statName)))
-							tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceMax?"winner":"")))
+							tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceBest?"winner":"")))
 						}
 					})
 					table.append(tr)
