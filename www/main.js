@@ -68,7 +68,12 @@ $(document).ready(function(){
 			mainMenu.find('.dependUpload').toggle(hasUploads())
 		}
 		$(window).on('hashchange',showMainMenuUploads)
-		$('body').append($('<div id=lightBoxBG>').click(closeLightBox))
+		$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
+			if (e.key=='Escape' && $('#lightBoxBG').is(":visible")){
+				e.preventDefault()
+				closeLightBox()
+			}
+		})
 	}
 })
 function closeLightBox(){
