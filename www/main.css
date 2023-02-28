@@ -23,7 +23,7 @@ html{font-size:2vmin;color:var(--main-fg-color);background:var(--main-bg-color) 
 a:link{color:var(--link-color)}
 a:visited{color:var(--link-visited-color)}
 table,tr,td,th,button,input,select,option,input,textarea,form{font-size:inherit;color:inherit;background:inherit}
-button,input[type="submit"]{border-radius:0.3em;background:var(--button-bg-color);border-color:var(--button-bg-color);color:var(--button-fg-color)}
+button,input[type="submit"],select{border-radius:0.3em;background:var(--button-bg-color);border-color:var(--button-bg-color);color:var(--button-fg-color)}
 body{text-align:center}
 table,ul{margin:0 auto;}
 ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
