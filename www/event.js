@@ -50,10 +50,9 @@ $(document).ready(function(){
 		if (uploadCount) $('.dependUploads').show().parents().show()
 	})
 	function setName(){
-		title.text(eventName + " " + title.text())
+		title.text(title.text().replace(/EVENT/, eventName))
 		$('h1').text(eventName)
 	}
-	setName()
 	loadEventInfo(function(){
 		setName()
 		var info = $('#eventInfo').html('')
@@ -96,7 +95,10 @@ $(document).ready(function(){
 				var row = $($('template#matchRow').html())
 				BOT_POSITIONS.forEach(pos=>{
 					var scouted=matchTeams[`${match.Match}:${match[pos]}`]||0
-					row.find(`.${pos}`).text(match[pos]).addClass(scouted==0?"":"scouted").addClass(scouted>1?"error":"")
+					row.find(`.${pos}`).text(match[pos])
+						.addClass(scouted==0?"":"scouted")
+						.addClass(scouted>1?"error":"")
+						.addClass(""+match[pos]==""+window.ourTeam?"ourTeam":"")
 				})
 				row.find('.match-id').text(hyphenate(getMatchName(match.Match))).attr('data-match-id',match.Match)
 				row.click(showLinks)

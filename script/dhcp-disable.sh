@@ -6,10 +6,7 @@ if [ -e local.conf ]
 then
 	source ./local.conf
 else
-	cp ./script/example.conf ./local.conf
-	echo "Created local.conf file"
-	echo "Please edit it and re-run this script"
-	exit 1
+	./script/local-conf.sh
 fi
 
 if [ "z$STATIC_IP" == "z" ]

@@ -2,6 +2,7 @@
 
 set -e
 
+./script/local-conf.sh
 ./script/software-install.sh
 ./script/cgi-setup.sh
 ./script/permissions.sh

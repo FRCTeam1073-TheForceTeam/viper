@@ -114,8 +114,8 @@ function loadEventInfo(callback){
 		if (text){
 			eventInfo = csvToArrayOfMaps(text)[0]
 			if (eventInfo.name) eventName = `${eventYear} ${eventInfo.name}`
-			if (callback) callback(eventInfo)
 		}
+		if (callback) callback(eventInfo)
 	})
 }
 

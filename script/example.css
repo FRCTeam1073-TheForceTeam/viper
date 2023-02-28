@@ -1,0 +1,28 @@
+/** To use this style sheet, uncomment a line in local.js **/
+
+/** local.* files are ignored by git **/
+
+/* Your own custom color scheme */
+:root {
+	--main-bg-color:orange;
+	--main-fg-color:green;
+	--main-border-color:darkblue;
+	--section-bg-color:#333;
+	--link-color:purple;
+	--link-visited-color:indigo;
+	--red-team-color:red;
+	--blue-team-color:blue;
+	--winner-color:#EE6;
+	--button-bg-color:#BBB;
+	--button-fg-color:#333;
+	--button-selected-bg-color:#7D7;
+	--button-disabled-decoration-color:#C66;
+	--highlight-bg-color:#060;
+	--highlight-fg-color:#7D7;
+	--lowlight-bg-color:#333;
+	--focus-bg-color:#650;
+	--translucent-hide-color:#333D;
+}
+
+/** Your own custom background image (Create the image and uncomment the rule)**/
+/* html{background:var(--main-bg-color) url('/local.background.png') fixed} */

@@ -17,6 +17,7 @@ button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy 
 button.team{width:3em;height:1.5em;margin:0.25em}
 #statsTable img{max-width:40px;max-height:40px;display:block;margin:0 auto;padding:0;border:none;cursor:pointer}
 #statsTable td{text-align:center}
+#statsTable td.best{color:var(--highlight-fg-color);font-weight:bold}
 #statsTable th{max-width:8em}
 #imageLightBox img{object-fit:contain;width:100%;height:100%}
 #stamps img{height:.8em}

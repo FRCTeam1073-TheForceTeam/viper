@@ -114,9 +114,19 @@ $(document).ready(function() {
 					statInfo[field] = statInfo[field]||{}
 					var statName = statInfo[field]['name']||field
 					row = $("<tr>")
+					var best = statInfo[field].good=='low'?99999999:0
+					teamList.forEach(function(team,i){
+						var val = getTeamValue(field,team)
+						if (statInfo[field].good=='low'){
+							if (val<best&&val>0)best=val
+						} else {
+							if (val>best)best=val
+						}
+					})
 					teamList.forEach(function(team,i){
 						var color = i<3?"red":"blue"
-						row.append($(`<td class="${color}TeamBG">`).text(getTeamValue(field,team)))
+						var val = getTeamValue(field,team)
+						row.append($(`<td class="${color}TeamBG">`).addClass(val==best?"best":"").text(val))
 					})
 					row.append($('<th>').text(statName))
 					tbody.append(row)

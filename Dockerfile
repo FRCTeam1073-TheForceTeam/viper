@@ -1,6 +1,7 @@
 FROM httpd:2.4
 
-# Install needed dependencies
+# When changing this list of installed software
+# PLEASE ALSO UPDATE the similar list in software-install.sh
 RUN apt-get update \
 	&& apt-get upgrade -y \
 	&& apt-get install -y \
