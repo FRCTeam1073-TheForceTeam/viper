@@ -15,8 +15,12 @@ SERVER_NAME=${SERVER_NAMES%% *}
 SERVER_ALIASES=${SERVER_NAMES#* }
 DOCUMENT_ROOT=`pwd`/www
 DOCUMENT_ROOT=${DOCUMENT_ROOT/#\/c\//C:\/}
+if [ "z$APACHE_SITE_NAME" == "z" ]
+then
+	APACHE_SITE_NAME="webscout"
+fi
 
-TMPCONF=`mktemp /tmp/webscout-XXXXXXXXXX.conf`
+TMPCONF=`mktemp /tmp/$APACHE_SITE_NAME-XXXXXXXXXX.conf`
 
 APACHE_DIR=""
 if [ -e /etc/apache2 ]
@@ -60,15 +64,15 @@ then
 	done
 	echo "	Include $HTTPS_INCLUDE" >> $TMPCONF
 fi
-echo "  DocumentRoot $DOCUMENT_ROOT" >> $TMPCONF
-echo "  <Directory $DOCUMENT_ROOT/>" >> $TMPCONF
-echo '    AllowOverride All' >> $TMPCONF
-echo '    AuthName "webscout"' >> $TMPCONF
-echo '    AuthType Digest' >> $TMPCONF
-echo '    AuthDigestDomain /' >> $TMPCONF
-echo '    AuthDigestProvider file' >> $TMPCONF
-echo "    AuthUserFile $APACHE_DIR_CONF/webscout.auth" >> $TMPCONF
-echo '    <RequireAny>' >> $TMPCONF
+echo "	DocumentRoot $DOCUMENT_ROOT" >> $TMPCONF
+echo "	<Directory $DOCUMENT_ROOT/>" >> $TMPCONF
+echo '		AllowOverride All' >> $TMPCONF
+echo "		AuthName \"$APACHE_SITE_NAME\"" >> $TMPCONF
+echo '		AuthType Digest' >> $TMPCONF
+echo '		AuthDigestDomain /' >> $TMPCONF
+echo '		AuthDigestProvider file' >> $TMPCONF
+echo "		AuthUserFile $APACHE_DIR_CONF/$APACHE_SITE_NAME.auth" >> $TMPCONF
+echo '		<RequireAny>' >> $TMPCONF
 if [ "z$GUEST_USER" == "z" ]
 then
 	echo '			Require all granted' >> $TMPCONF
@@ -133,22 +137,22 @@ $SUDO mkdir -p $APACHE_DIR/sites-available/
 $SUDO mkdir -p $APACHE_DIR/sites-enabled/
 
 RELOAD_NEEDED=0
-$SUDO touch $APACHE_DIR/sites-available/webscout.conf
-$SUDO chmod a+r $APACHE_DIR/sites-available/webscout.conf
-if ! cmp $TMPCONF $APACHE_DIR/sites-available/webscout.conf >/dev/null 2>&1
+$SUDO touch $APACHE_DIR/sites-available/$APACHE_SITE_NAME.conf
+$SUDO chmod a+r $APACHE_DIR/sites-available/$APACHE_SITE_NAME.conf
+if ! cmp $TMPCONF $APACHE_DIR/sites-available/$APACHE_SITE_NAME.conf >/dev/null 2>&1
 then
-    $SUDO cp -v $TMPCONF $APACHE_DIR/sites-available/webscout.conf
+    $SUDO cp -v $TMPCONF $APACHE_DIR/sites-available/$APACHE_SITE_NAME.conf
     RELOAD_NEEDED=1
 fi
 rm -f $TMPCONF
 
-if [ ! -e $APACHE_DIR/sites-enabled/webscout.conf ]
+if [ ! -e $APACHE_DIR/sites-enabled/$APACHE_SITE_NAME.conf ]
 then
     if which a2ensite &> /dev/null
     then
-        $SUDO a2ensite webscout
+        $SUDO a2ensite $APACHE_SITE_NAME
     else
-        $SUDO ln -s $APACHE_DIR/sites-available/webscout.conf $APACHE_DIR/sites-enabled/webscout.conf
+        $SUDO ln -s $APACHE_DIR/sites-available/$APACHE_SITE_NAME.conf $APACHE_DIR/sites-enabled/$APACHE_SITE_NAME.conf
     fi
     RELOAD_NEEDED=1
 fi
@@ -188,13 +192,13 @@ fi
 for USER in $GUEST_USER $SCOUTING_USER $ADMIN_USER
 do
     CREATE=""
-    if [ ! -e $APACHE_DIR/webscout.auth ]
+    if [ ! -e $APACHE_DIR/$APACHE_SITE_NAME.auth ]
     then
         CREATE="-c"
     fi
-    if ! grep -Eq "^$USER:" $APACHE_DIR/webscout.auth
+    if ! grep -Eq "^$USER:" $APACHE_DIR/$APACHE_SITE_NAME.auth
     then
-        $SUDO $HTDIGEST $CREATE $APACHE_DIR/webscout.auth webscout $USER
+        $SUDO $HTDIGEST $CREATE $APACHE_DIR/$APACHE_SITE_NAME.auth $APACHE_SITE_NAME $USER
         RELOAD_NEEDED=1
     fi
 done
