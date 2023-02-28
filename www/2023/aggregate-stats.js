@@ -297,7 +297,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"links_score": {
-		name: "Links Score (1/3 Alliance Score)",
+		name: "Links Score (⅓ Alliance Score)",
 		type: "avg"
 	},
 	"loading_zone": {
