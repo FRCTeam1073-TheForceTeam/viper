@@ -125,14 +125,6 @@ function getTeamValue(field, team){
 	return (stats[field]||0) / stats['count']
 }
 
-function getAllianceValue(field, teams){
-	var value = 0
-	for (var i = 0; i<teams.length; i++){
-		value += getTeamValue(field, teams[i])
-	}
-	return value
-}
-
 function teamButtonClicked(){
 	lf().val($(this).text())
 	focusNext()
