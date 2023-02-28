@@ -64,22 +64,29 @@ function setPickedTeams(){
 				var statName = statInfo[field]['name']||field,
 				statType = statInfo[field]['type']||""
 				if (statType=='avg'){
-					var r1Val = Math.round(getTeamValue(field,red[0])),
-					r2Val = Math.round(getTeamValue(field,red[1])),
-					r3Val = Math.round(getTeamValue(field,red[2])),
-					rVal = Math.round(getAllianceValue(field,red)),
-					bVal = Math.round(getAllianceValue(field,blue)),
-					b1Val = Math.round(getTeamValue(field,blue[0])),
-					b2Val = Math.round(getTeamValue(field,blue[1])),
-					b3Val = Math.round(getTeamValue(field,blue[2])),
-					bWinner=(first&&bVal>rVal)?" winner":"",
-					rWinner=(first&&rVal>bVal)?" winner":""
-					if (first){
-						bVal = `<h2 class="blueTeamBG${bWinner}">${bVal}</h2>`
-						rVal = `<h2 class="redTeamBG${rWinner}">${rVal}</h2>`
-						first = false
-					}
-					table.append($(`<tr><td class=redTeamBG>${r1Val}</td><td class=redTeamBG>${r2Val}</td><td class=redTeamBG>${r3Val}</td><td class="redTeamBG${rWinner}">${rVal}</td><td>${statName}</td><td class="blueTeamBG${bWinner}">${bVal}</td><td class=blueTeamBG>${b1Val}</td><td class=blueTeamBG>${b2Val}</td><td class=blueTeamBG>${b3Val}</td></tr>`))
+					var teamNumbers = [],
+					teamScores = [],
+					allianceScores = [0,0]
+					BOT_POSITIONS.forEach(function(pos, i){
+						teamNumbers[i]=parseInt($(`#${pos}`).val())
+						teamScores[i]=getTeamValue(field,teamNumbers[i])
+						allianceScores[Math.floor(i/3)]+=teamScores[i]
+					})
+					teamScores=teamScores.map(Math.round)
+					allianceScores=allianceScores.map(Math.round)
+					var teamMax=Math.max(...teamScores),
+					allianceMax=Math.max(...allianceScores),
+					tr=$('<tr>').addClass(first?"first":"")
+					BOT_POSITIONS.forEach(function(pos, i){
+						tr.append($('<td>').addClass(i<3?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamMax?"winner":"")))
+						if(i==2){
+							tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceMax?("winner"):"")))
+							tr.append($('<td>').append($('<div>').text(statName)))
+							tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceMax?"winner":"")))
+						}
+					})
+					table.append(tr)
+					first=false
 				}
 			})
 		})

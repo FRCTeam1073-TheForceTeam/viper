@@ -1,11 +1,13 @@
-table th,table td{padding:0.5em}
+table th{padding:0.5em}
 button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 button.team{width:3em;height:1.5em;margin:0.25em}
-h4{margin:0;padding:0.5em 0 0 0}
+h4{margin:0;padding:0.5em 0 0 0;font-size:130%}
 .vertical {writing-mode:vertical-rl;text-orientation:upright}
 .vertical th{min-width:2em;text-align:center;vertical-align:top}
-td.winner{margin:0;padding:0}
+td{margin:0;padding:0;max-width:15em}
 .vertical input,.vertical div{border:none;margin:0 auto}
-#prediction h2{margin:0;padding:0.5em}
-#prediction h2.winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color)}
-
+td div{margin:0;padding:0.5em;width:100%;height: 100%}
+.winner{color:var(--highlight-fg-color);font-weight:bold}
+.first .alliance .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color);color:var(--main-fg-color)}
+.alliance{font-size:150%}
+.first .alliance{font-size:200%;font-weight:bold}
