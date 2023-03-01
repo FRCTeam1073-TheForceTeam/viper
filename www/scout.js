@@ -7,7 +7,8 @@ orient = "",
 matchName = "",
 teamList=[],
 scouting,
-storeTime=0
+storeTime=0,
+pitDataLoaded=false
 parseHash()
 
 function parseHash(){
@@ -19,7 +20,7 @@ function parseHash(){
 }
 
 function showScreen(){
-	if (!team && $('#select-team').length) showSelectTeam()
+	if (!team && $('#select-team').length) showSelectPitScoutTeam()
 	else if (team && $('#pit-scouting').length) showPitScouting()
 	else if (!pos) showPosList()
 	else if (!match) showMatchList()
@@ -35,19 +36,17 @@ $(window).on('hashchange', function(){
 	showScreen()
 })
 
-function showSelectTeam(){
+function showSelectPitScoutTeam(){
 	$('.screen').hide()
 	setHash(null,null,null,null,teamList)
 	window.scrollTo(0,0)
 	var el = $('#teamList').html(""),
 	withData = getTeamsWithPitData(),
 	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
-	console.log(showTeams)
-	console.log(withData)
 	$('.location-pointer').remove()
 	for (var i=0; i<showTeams.length;i++){
 		var button = $('<button>').text(showTeams[i]).click(showPitScouting)
-		if (withData.hasOwnProperty(showTeams[i])) button.addClass('stored')
+		if (withData.hasOwnProperty(showTeams[i])||eventPitData[showTeams[i]]) button.addClass('stored')
 		el.append(button)
 	}
 	$('#select-team').show()
@@ -345,7 +344,10 @@ $(document).ready(function(){
 
 	scouting = $('#scouting')
 
-	loadEventSchedule(showScreen)
+	loadEventSchedule(function(){
+		if ($('#pit-scouting').length) loadPitScouting(showScreen)
+		else showScreen()
+	})
 
 	$("label").click(function(e){
 		e.preventDefault()
@@ -422,7 +424,7 @@ $(document).ready(function(){
 	})
 	$("#pitScoutNext").click(function(e){
 		storePitScouting()
-		showSelectTeam()
+		showSelectPitScoutTeam()
 		return false
 	})
 	$("#matchBtn").click(function(e){

@@ -4,19 +4,19 @@ $.ajaxSetup({
 	cache: true
 });
 
-var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1]
-var eventYear = eventId.replace(/([0-9]{4}).*/,'$1')
-var eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1')
-var eventName = eventYear+(eventYear?" ":"")+eventVenue
-var eventMatches = []
-var eventAlliances = []
-var eventStats = []
-var eventStatsByTeam = {}
-var eventFiles = []
-var eventTeams = []
-var eventInfo = {}
-var eventPitData = {}
-const BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
+var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1],
+eventYear = eventId.replace(/([0-9]{4}).*/,'$1'),
+eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1'),
+eventName = eventYear+(eventYear?" ":"")+eventVenue,
+eventMatches,
+eventAlliances,
+eventStats,
+eventStatsByTeam={},
+eventFiles,
+eventTeams,
+eventInfo,
+eventPitData,
+BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
 
 function eventAjax(file,callback){
 	$.ajax({
@@ -63,6 +63,10 @@ function unescapeField(s){
 }
 
 function loadEventSchedule(callback){
+	if (eventMatches){
+		if (callback) callback(eventMatches)
+		return
+	}
 	eventAjax(`/data/${eventId}.schedule.csv`,function(text){
 		eventMatches=csvToArrayOfMaps(text)
 		var teams = {}
@@ -78,6 +82,10 @@ function loadEventSchedule(callback){
 }
 
 function loadAlliances(callback){
+	if (eventAlliances){
+		if (callback) callback(eventAlliances)
+		return
+	}
 	eventAjax(`/data/${eventId}.alliances.csv`,function(text){
 		eventAlliances=csvToArrayOfMaps(text)
 		if (callback) callback(eventAlliances)
@@ -85,6 +93,10 @@ function loadAlliances(callback){
 }
 
 function loadEventStats(callback){
+	if (eventStats){
+		if (callback) callback(eventStats, eventStatsByTeam)
+		return
+	}
 	if (eventYear && eventId){
 		$.getScript(`/${eventYear}/aggregate-stats.js`, function(){
 			eventAjax(`/data/${eventId}.scouting.csv`,function(text){
@@ -103,6 +115,10 @@ function loadEventStats(callback){
 }
 
 function loadEventFiles(callback){
+	if (eventFiles){
+		if (callback) callback(eventFiles)
+		return
+	}
 	eventAjax(`/event-files.cgi?event=${eventId}`,function(text){
 		eventFiles=text.split(/[\n\r]+/)
 		if (callback) callback(eventFiles)
@@ -110,21 +126,32 @@ function loadEventFiles(callback){
 }
 
 function loadEventInfo(callback){
+	if (eventInfo){
+		if (callback) callback(eventInfo)
+		return
+	}
 	eventAjax(`/data/${eventId}.event.csv`,function(text){
 		if (text){
 			eventInfo = csvToArrayOfMaps(text)[0]
 			if (eventInfo.name) eventName = `${eventYear} ${eventInfo.name}`
+		} else {
+			eventInfo = []
 		}
 		if (callback) callback(eventInfo)
 	})
 }
 
 function loadPitScouting(callback){
+	if (eventPitData){
+		if (callback) callback(eventPitData)
+		return
+	}
 	eventAjax(`/data/${eventId}.pit.csv`,function(text){
-		if (text){
-			eventPitData = csvToArrayOfMaps(text)
-			if (callback) callback(eventPitData)
-		}
+		eventPitData = {}
+		csvToArrayOfMaps(text).forEach(function(teamData){
+			eventPitData[teamData.team]=teamData
+		})
+		if (callback) callback(eventPitData)
 	})
 }
 

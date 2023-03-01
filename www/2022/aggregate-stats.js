@@ -407,8 +407,8 @@ var matchPredictorSections = {
 }
 
 function showPitScouting(el){
-	loadPitScouting(function(dat){
-		console.log(dat)
+	loadPitScouting(function(pitData){
+		dat = pitData[team]||{}
 		el.append("<p>" + (dat.auto_have?"Has":"Does NOT have") + " auto</p>")
 		if (dat.auto_preload){
 			el.append("<p>Preloaded cargo scored in " + dat.auto_preload + "</p>")
