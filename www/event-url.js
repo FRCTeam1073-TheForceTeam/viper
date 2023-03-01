@@ -179,3 +179,17 @@ function getMatchName(matchId){
 		.replace(/^5p/, "Play­offs fifth round ")
 		.replace(/^f/, "Final ")
 }
+
+function getShortMatchName(matchId){
+	return matchId
+		.replace(/^pm/, "Prac­ ")
+		.replace(/^qm/, "Qual­ ")
+		.replace(/^qf/, "QF ")
+		.replace(/^sf/, "SF ")
+		.replace(/^1p/, "Playoff R1 M")
+		.replace(/^2p/, "Playoff R2 M")
+		.replace(/^3p/, "Playoff R3 M")
+		.replace(/^4p/, "Playoff R4 M")
+		.replace(/^5p/, "Playoff R5 M")
+		.replace(/^f/, "Final ")
+}
