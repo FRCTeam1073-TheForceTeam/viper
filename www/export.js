@@ -1,5 +1,8 @@
+"use strict"
+
 $(document).ready(function(){
-	var data = {},
+	var dataFull = {},
+	dataCsv = {},
 	types = ["alliances","event","pit","schedule","scouting"],
 	teams = []
 	types.forEach(function(csv){
@@ -15,16 +18,17 @@ $(document).ready(function(){
 					["","-top"].forEach(function(suffix){
 						var image = `/data/${eventYear}/${team}${suffix}.jpg`
 						toDataURL(image, function(dataUrl) {
-							data[image] = dataUrl
+							dataFull[image] = dataUrl
 						})
 					})
 				})
 			}
-			data[file] = text||""
+			dataFull[file] = text||""
+			dataCsv[file] = text||""
 		})
 	})
-	$('#siteSite').change(function(){
-		var url = $('#siteSite').val()
+	$('.siteInput').change(function(){
+		var url = $(this).val()
 		if (!url) url = "webscout.example.com"
 		if (!/^https?\:\/\//.test(url)){
 			var prefix = "http"
@@ -32,8 +36,10 @@ $(document).ready(function(){
 			if (/^[0-9\.\:]+$/.test(url)) prefix="http" // IP address
 			url = `${prefix}://${url}`
 		}
+		url = url.replace(/\/$/,"")
 		url += "/admin/import.cgi"
-		$('#transferForm').attr('action',url)
+		console.log(url)
+		$(this).closest('form').attr('action',url)
 	})
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
@@ -42,21 +48,36 @@ $(document).ready(function(){
 	$('title,h1').each(function(){
 		$(this).text($(this).text().replace(/EVENT/, eventName))
 	})
-	function done(){
-		if (Object.keys(data).length != types.length + teams.length*2){
-			setTimeout(done,100)
+	function fullDataLoaded(){
+		if (Object.keys(dataFull).length != types.length + teams.length*2){
+			setTimeout(fullDataLoaded,100)
 			return
 		}
-		Object.keys(data).forEach(function(key){
-			if (!data[key]) delete data[key]
+		Object.keys(dataFull).forEach(function(key){
+			if (!dataFull[key]) delete dataFull[key]
 		})
-		data = JSON.stringify(data)
-		$('#download')
-			.attr('href', window.URL.createObjectURL(new Blob([data], {type: 'text/json;charset=utf-8'})))
-			.attr('download',`${eventId}.json`)
-		$('#transferJson').val(data)
+		var json = JSON.stringify(dataFull)
+		$('#downloadImages')
+			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
+			.attr('download',`${eventId}.full.json`)
+		$('#transferJsonImages').val(json)
 	}
-	done()
+	fullDataLoaded()
+	function csvDataLoaded(){
+		if (Object.keys(dataCsv).length != types.length){
+			setTimeout(csvDataLoaded,100)
+			return
+		}
+		Object.keys(dataCsv).forEach(function(key){
+			if (!dataCsv[key]) delete dataCsv[key]
+		})
+		var json = JSON.stringify(dataCsv)
+		$('#downloadCsv')
+			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
+			.attr('download',`${eventId}.csv.json`)
+		$('#transferJsonCsv').val(json)
+	}
+	csvDataLoaded()
 })
 
 // https://stackoverflow.com/a/20285053

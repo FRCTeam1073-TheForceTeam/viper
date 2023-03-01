@@ -13,20 +13,40 @@
 <title>Export Event &mdash; FRC Scouting App</title>
 </head>
 <body>
-	<h1>Exporting EVENT data</h1>
-	<button id=showInstructions>Instructions</button>
+	<h1>Export EVENT data</h1>
+	<div><button id=showInstructions>Instructions</button></div>
 
-	<h2>Download Event</h2>
-	<p>Download all CSV and images for this event in JSON format:</p>
-	<p><a id=download>Download</a></p>
+	<div class=side-by-side>
+		<h2>With Images</h2>
 
-	<h2>Transfer Event</h2>
-	<p>Transfer all the event data to another webscout instance.</p>
-	<input id=siteSite placeholder=webscout.example.com>
-	<form id=transferForm method=POST action=https://webscout.example.com/admin/import.cgi>
-		<input name=json id=transferJson type=hidden>
-		<input type=submit value=Transfer>
-	</form>
+		<p>Download all CSV and images for this event in JSON format:</p>
+		<a id=downloadImages>Download Full Event</a>
+
+		<hr>
+
+		<p>Transfer all the event data to another webscout instance.</p>
+		<form method=POST action=https://webscout.example.com/admin/import.cgi>
+			<input class=siteInput placeholder=webscout.example.com>
+			<input name=json id=transferJsonImages type=hidden>
+			<input type=submit value="Transfer Full Event">
+		</form>
+	</div>
+
+	<div class=side-by-side>
+		<h2>Without Images</h2>
+
+		<p>Download all CSV for this event in JSON format:</p>
+		<a id=downloadCsv>Download CSV</a>
+
+		<hr>
+
+		<p>Transfer all the CSV data to another webscout instance.</p>
+		<form method=POST action=https://webscout.example.com/admin/import.cgi>
+			<input class=siteInput placeholder=webscout.example.com>
+			<input name=json id=transferJsonCsv type=hidden>
+			<input type=submit value="Transfer CSV">
+		</form>
+	</div>
 
 
 	<iframe id=instructions class=lightBoxFullContent src=/import-export-instructions.html></iframe>
