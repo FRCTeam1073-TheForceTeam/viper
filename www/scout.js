@@ -123,7 +123,7 @@ function getScoutKey(t,m,e){
 	return `${e}_${m}_${t}`
 }
 
-function getPitScoutKey(t,m,e){
+function getPitScoutKey(t,e){
 	if (!t) t = team
 	if (!e) e = eventId
 	return `${e}_${t}`
@@ -142,6 +142,58 @@ function buildHash(pos,orient,team,match){
 		(teamList?`&teams=${teamList}`:"")
 }
 
+function fillPreviousFormData(form,data){
+	if (!data) return
+	form.find('input,textarea').each(function(){
+		var input = $(this),
+		type = input.attr('type'),
+		name = input.attr('name'),
+		val = data[name]
+		if (name){
+			if (/^radio|checkbox$/.test(type)){
+				if(input.attr('value')==val) input.attr('checked',"")
+				else  input.removeAttr('checked')
+				input.prop('checked',input.attr('value')==val)
+			} else if (!/^submit$/.test(type) && val){
+				input.val(val)
+				input.attr('value',val)
+			}
+		}
+	})
+}
+
+function storeOrigValues(form){
+	form.find('input,textarea').each(function(){
+		var input = $(this),
+		type = input.attr('type'),
+		orig = input.attr('data-orig-value')
+		if (typeof orig === 'undefined' || orig === false) {
+			if (/^radio|checkbox$/.test(type)){
+				var checked = input.attr('checked')
+				checked = typeof checked !== 'undefined' && checked !== false
+				input.attr('data-orig-value',checked?"checked":"unchecked")
+			} else if (!/^submit$/.test(type)){
+				input.attr('data-orig-value',input.attr('value')||"")
+			}
+		}
+	})
+}
+function resetOrigValues(form){
+	form.find('input,textarea').each(function(){
+		var input = $(this),
+		type = input.attr('type'),
+		orig = input.attr('data-orig-value')
+		if (typeof orig !== 'undefined' && orig !== false) {
+			if (/^radio|checkbox$/.test(type)){
+				if(orig=='checked') input.attr('checked','checked')
+				else input.removeAttr('checked')
+			} else if (!/^submit$/.test(type)){
+				input.attr('value',orig)
+			}
+		}
+	})
+}
+
 function showPitScouting(t){
 	if (t && typeof t != 'number') t = parseInt($(this).text())
 	if (t) team = t
@@ -149,9 +201,12 @@ function showPitScouting(t){
 	window.scrollTo(0,0)
 	setHash(null,null,team,null,teamList)
 	var pit = $('#pit-scouting')
+	resetOrigValues(pit)
 	pit[0].reset()
 	$('.location-pointer').remove()
+	storeOrigValues(pit)
 	fillDefaultFormFields()
+	fillPreviousFormData(pit, localPitScoutingData(team)||eventPitData[team])
 	pit.show()
 }
 
@@ -259,6 +314,12 @@ function storePitScouting(){
 		storeTime = new Date().getTime()
 		storeScouter($('#pit-scouting'))
 	}
+}
+
+function localPitScoutingData(t){
+	var data = localStorage.getItem(getPitScoutKey(t))
+	if (!data) return null
+	return csvToArrayOfMaps(localStorage.getItem(`${eventYear}_pitheaders`)+"\n"+data)[0]
 }
 
 function safeCSV(s){
