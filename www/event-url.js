@@ -12,6 +12,7 @@ eventMatches,
 eventAlliances,
 eventStats,
 eventStatsByTeam={},
+eventStatsByMatchTeam={},
 eventFiles,
 eventTeams,
 eventInfo,
@@ -94,7 +95,7 @@ function loadAlliances(callback){
 
 function loadEventStats(callback){
 	if (eventStats){
-		if (callback) callback(eventStats, eventStatsByTeam)
+		if (callback) callback(eventStats, eventStatsByTeam, eventStatsByMatchTeam)
 		return
 	}
 	if (eventYear && eventId){
@@ -102,13 +103,15 @@ function loadEventStats(callback){
 			eventAjax(`/data/${eventId}.scouting.csv`,function(text){
 				eventStats=csvToArrayOfMaps(text)
 				for (var i=0; i<eventStats.length; i++){
-					var scout = eventStats[i]
-					var team = scout['team']
-					var aggregate = eventStatsByTeam[team] || {}
+					var scout = eventStats[i],
+					team = scout['team'],
+					match = scout['match'],
+					aggregate = eventStatsByTeam[team] || {}
 					aggregateStats(scout, aggregate)
 					eventStatsByTeam[team] = aggregate
+					eventStatsByMatchTeam[`${match}-${team}`]=scout
 				}
-				if (callback) callback(eventStats, eventStatsByTeam)
+				if (callback) callback(eventStats, eventStatsByTeam, eventStatsByMatchTeam)
 			})
 		})
 	}
