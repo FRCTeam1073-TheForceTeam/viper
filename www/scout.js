@@ -208,17 +208,51 @@ function showPitScouting(t){
 	storeOrigValues(pit)
 	fillDefaultFormFields()
 	fillPreviousFormData(pit, localPitScoutingData(team)||eventPitData[team])
+	$('.count').each(countHandler)
 	pit.show()
+}
+
+function countHandler(e){
+	var count=$(this),
+	clicked = e&&e.hasOwnProperty('type')&&e.type==='click',
+	parent = count,
+	src = count.attr('src')
+	for(var i=0;parent.find('.count,input').length<3&&i<10;i++) parent = parent.parent()
+	var input = parent.find('input'),
+	val=parseInt(input.val())||0,
+	max=parseInt(input.attr('max'))||999999,
+	min=parseInt(input.attr('min'))||0
+	if (!input.length) throw ("No input for counter")
+	if (clicked){
+		var toAdd = 0
+		if(/up/.test(src))toAdd = 1
+		else if(/down/.test(src))toAdd = -1
+		else if(/three/.test(src))toAdd = 3
+		else if(/five/.test(src))toAdd = 5
+		val+=toAdd
+		val = val<min?min:val
+		val = val>max?max:val
+		input.val(val)
+		parent.find('.count').each(countHandler)
+	} else {
+		if(/down/.test(count.attr('src'))){
+			count.css('visibility', val<=min?'hidden':'visible');
+		} else {
+			count.css('visibility', val>=max?'hidden':'visible');
+		}
+	}
 }
 
 function showScouting(){
 	$('.screen').hide()
 	setHash(pos,orient,team,match)
 	window.scrollTo(0,0)
+	resetOrigValues(scouting)
 	scouting[0].reset()
 	if (typeof beforeShowScouting == 'function') beforeShowScouting()
 	matchName = getMatchName(match)
 	setupButtons()
+	storeOrigValues(scouting)
 	$('.orientLeft').toggle(orient && orient=='left')
 	$('.orientRight').toggle(orient && orient=='right')
 	$('h1').text(`${eventName}, ${matchName}, Team ${team}`)
@@ -227,6 +261,8 @@ function showScouting(){
 	fillDefaultFormFields()
 	$('.match').text(matchName)
 	setTeamBG()
+	fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
+	$('.count').each(countHandler)
 	scouting.show()
 }
 
@@ -323,6 +359,12 @@ function localPitScoutingData(t){
 	return csvToArrayOfMaps(localStorage.getItem(`${eventYear}_pitheaders`)+"\n"+data)[0]
 }
 
+function localScoutingData(t,m){
+	var data = localStorage.getItem(getScoutKey(t,m))
+	if (!data) return null
+	return csvToArrayOfMaps(localStorage.getItem(`${eventYear}_headers`)+"\n"+data)[0]
+}
+
 function safeCSV(s){
 	return s
 		.replace(/\t/g, " ")
@@ -408,7 +450,7 @@ $(document).ready(function(){
 
 	loadEventSchedule(function(){
 		if ($('#pit-scouting').length) loadPitScouting(showScreen)
-		else showScreen()
+		else loadEventStats(showScreen)
 	})
 
 	$("label").click(function(e){
@@ -429,38 +471,7 @@ $(document).ready(function(){
 		}).select()
 	})
 
-	$("img.count").click(function(e){
-		var src = $(this).attr('src')
-		var toAdd = 0
-		if(/up/.test(src))toAdd = 1
-		else if(/down/.test(src))toAdd = -1
-		else if(/three/.test(src))toAdd = 3
-		else if(/five/.test(src))toAdd = 5
-		var input = $(this).closest('td').find('input'),
-		val = input.val(),
-		max = parseInt(input.attr('max')||"9999999"),
-		min = parseInt(input.attr('min')||"0")
-		val = /^[0-9]+$/.test(val)?parseInt(val):0
-		val = val+toAdd
-		val = val<min?min:val
-		val = val>max?max:val
-		var parent = $(this)
-		while(parent.find('.count').length<2) parent = parent.parent()
-		parent.find('.count').each(function(){
-			if(/down/.test($(this).attr('src'))){
-				$(this).css('visibility', val==min?'hidden':'visible');
-			} else {
-				$(this).css('visibility', val==max?'hidden':'visible');
-			}
-		})
-		input.val(val)
-	})
-
-	$('.count').each(function(){
-		if(/down/.test($(this).attr('src'))){
-			$(this).css('visibility','hidden');
-		}
-	})
+	$("img.count").click(countHandler)
 
 	$("img.robot-location").click(function(e){
 		var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
