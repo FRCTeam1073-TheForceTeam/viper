@@ -40,6 +40,7 @@ function showSelectPitScoutTeam(){
 	$('.screen').hide()
 	setHash(null,null,null,null,teamList)
 	window.scrollTo(0,0)
+	$('h1').text("Pit Scouting " + eventName)
 	var el = $('#teamList').html(""),
 	withData = getTeamsWithPitData(),
 	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
@@ -99,7 +100,7 @@ function showMatchList(){
 	for (var i=0; i<eventMatches.length; i++){
 		var matchTeam = eventMatches[i][pos]
 		var matchId = eventMatches[i]['Match']
-		var matchName = getMatchName(matchId)
+		var matchName = getShortMatchName(matchId)
 		var completeClass=(lastDone&&!seenLastDone)?"complete":""
 		var storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
 		if (lastDone == matchId) seenLastDone = true;
