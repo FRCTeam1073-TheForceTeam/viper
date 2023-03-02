@@ -2,7 +2,8 @@
 
 /** local.* files are ignored by git **/
 
-/* Your own custom color scheme */
+/* Your own custom color scheme (uncomment the rule)*/
+/*
 :root {
 	--main-bg-color:orange;
 	--main-fg-color:green;
@@ -23,6 +24,9 @@
 	--focus-bg-color:#650;
 	--translucent-hide-color:#333D;
 }
+*/
 
 /** Your own custom background image (Create the image and uncomment the rule)**/
-/* html{background:var(--main-bg-color) url('/local.background.png') fixed} */
+/*
+html{background-image:url('/local.background.png');background-size:33vw auto}
+*/

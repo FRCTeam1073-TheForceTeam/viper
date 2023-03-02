@@ -17,3 +17,6 @@ var ourTeam=9999999
 //$('title,h1').each(function(){
 //	$(this).text($(this).text().replace(/FRC Scouting App/g,`${ourTeam}'s Scouting`))
 //})
+
+// Use a custom CSS file
+//$('head').append("<link rel=stylesheet type=text/css href=/local.css>")
