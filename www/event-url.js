@@ -76,8 +76,8 @@ function loadEventSchedule(callback){
 				teams[eventMatches[i][BOT_POSITIONS[j]]] = 1
 			}
 		}
-		eventTeams = Object.keys(teams)
-		eventTeams.sort((a,b)=>{parseInt(a)-parseInt(b)})
+		eventTeams = Object.keys(teams).map(t=>parseInt(t)).sort((a,b)=>{a-b})
+		console.log(eventTeams)
 		if (callback) callback(eventMatches)
 	})
 }

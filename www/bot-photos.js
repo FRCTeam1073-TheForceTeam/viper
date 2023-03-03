@@ -8,9 +8,7 @@ $(document).ready(function(){
 		})
 	} else if (eventId){
 		loadEventSchedule(function(){
-			for(var i=0; i<eventTeams.length; i++){
-			   addTeam(eventTeams[i])
-			}
+			eventTeams.forEach(addTeam)
 		})
 	}
 	$('#add').click(function(e){
