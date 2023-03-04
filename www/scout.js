@@ -255,7 +255,7 @@ function showScouting(){
 	storeOrigValues(scouting)
 	$('.orientLeft').toggle(orient && orient=='left')
 	$('.orientRight').toggle(orient && orient=='right')
-	$('h1').text(`${eventName}, ${matchName}, Team ${team}`)
+	$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
 	$('.teamColor').text(pos.startsWith('R')?"red":"blue")
 	$('input[name="match"]').val(match).attr('value',match)
 	fillDefaultFormFields()
