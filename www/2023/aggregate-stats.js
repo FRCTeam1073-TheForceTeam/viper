@@ -1,6 +1,5 @@
 "use strict"
 
-
 function aggregateStats(scout, aggregate){
 
 	function sumXStats(stage,row,cargo,stat,values){
@@ -91,8 +90,6 @@ function aggregateStats(scout, aggregate){
 	fromParent("","","",function(stat){
 		return sumXStats("X","","","",["auto","tele"])
 	})
-
-
 
 	scout['auto_mobility_score'] = scout['auto_mobility']?pointValues['auto_mobility']:0
 	scout['auto_dock_score'] = pointValues['auto_'+scout['auto_dock']]||0
