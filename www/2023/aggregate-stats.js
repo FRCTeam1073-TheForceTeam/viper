@@ -593,9 +593,10 @@ function showPitScouting(el,team){
 					!dat['end_parking_brake']
 				)?$('<li>').text("None"):"")
 		)
-		el.append($("<h4>").text("Dimensions"))
+		el.append($("<h4>").text("Dimensions (inches without bumpers)"))
 		if (dat['length'] && dat['width']) el.append($("<p>").text(dat['length']+'x'+dat['width']+'"'))
-		else el.append($("<p>").text("Unknown"))
+		el.append($("<h4>").text("Weight (pounds)"))
+		el.append($("<p>").text(format(dat['weight'])))
 		el.append($("<h4>").text("Drivetrain"))
 		el.append($("<p>").text(format(dat['drivetrain'])))
 		el.append($("<h4>").text("Drivetrain Motors"))
