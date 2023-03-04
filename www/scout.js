@@ -330,6 +330,7 @@ function store(){
 			if(!onStore[i]()) return false
 		}
 		localStorage.setItem("last_match_"+eventId, match)
+		localStorage.setItem("last_pos", pos)
 		var csv = toCSV('#scouting')
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getScoutKey(), csv[1])
@@ -521,19 +522,7 @@ $(document).ready(function(){
 	})
 	$("#uploadBtn").click(function(e){
 		if (!store()) return false
-		var returnTo = "",
-		nextTeam = team,
-		nextMatch = match,
-		next = getNextMatch()
-		if (next){
-			returnTo = "#" + location.pathname
-			if (formHasChanges(scouting)){
-				nextTeam = next[pos]
-				nextMatch = next['Match']
-			}
-			returnTo += buildHash(pos,orient,nextTeam,nextMatch)
-		}
-		location.href="/upload.html" + returnTo
+		location.href="/upload.html"
 		return false
 	})
 

@@ -19,6 +19,12 @@ eventInfo,
 eventPitData,
 BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
 
+if (eventId){
+	localStorage.setItem("last_event_id", eventId)
+	localStorage.setItem("last_event_name", eventName)
+	localStorage.setItem("last_event_year", eventYear)
+}
+
 function eventAjax(file,callback){
 	$.ajax({
 		async: true,

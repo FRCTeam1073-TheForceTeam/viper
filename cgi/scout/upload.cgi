@@ -17,9 +17,6 @@ my $uCsv = $cgi->param('csv');
 $webutil->error("No data uploaded", "Scouting CSV data not found.") if (!$uCsv);
 $uCsv = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $uCsv) ];
 $webutil->error("Not enough CSV lines", "expected at least two lines in uploaded CSV") if(scalar(@{$uCsv})<2);
-my $next = $cgi->param('next')|"";
-webutil->error("Bad next", $next) if ($next and $next !~ /^\/20[0-9]{2}\/scout\.html\#[a-zA-Z0-9\=\&]+$/);
-$next = "#$next" if ($next);
 my $csvHeaders;
 my $uHead;
 my $scoutCsv = {};
@@ -106,4 +103,4 @@ sub writeData(){
 &writeData($scoutCsv,$scoutHeaders,'scouting');
 &writeData($pitCsv,$pitHeaders,'pit');
 
-$webutil->redirect("/upload-done.html#$savedKeys$next");
+$webutil->redirect("/upload-done.html#$savedKeys");

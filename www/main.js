@@ -8,10 +8,6 @@ window.addEventListener("load", () => {
 	}
 })
 
-var recentEventName = ""
-var recentEventId = ""
-var recentEventYear = ""
-
 function getDate(s){
 	if (!s) return ""
 	var m = /[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(s)
@@ -31,33 +27,20 @@ $(document).ready(function(){
 		$('body').append(hamburger).append(mainMenu)
 		hamburger.click(function(){showLightBox(mainMenu)})
 
-		if (!window.eventId){
-			$.get("/event-list.cgi",function(data){
-				var events = data.split(/[\r\n]/)
-				if (events.length){
-					events = events.sort(dateCompare)
-					var recent = events[0].split(",")
-					if (recent.length>=4){
-						recentEventId = recent[0]
-						recentEventYear = recentEventId.replace(/([0-9]{4}).*/,'$1')
-						var venue = recentEventId.replace(/[0-9]{4}(.*)/,'$1')
-						recentEventName = `${recentEventYear} ` + (recent[1]||venue)
-					}
-				}
-			}).always(populateMainMenu)
-		} else {
-			populateMainMenu()
-		}
+		populateMainMenu()
 
 		function populateMainMenu(){
 			$.get("/main-menu.html",function(data){
+				var eName = window.eventName||localStorage.getItem('last_event_name')||"",
+				eId = window.eventId||localStorage.getItem('last_event_id')||"",
+				eYear = window.eventName||localStorage.getItem('last_event_year')||""
 				mainMenu.html(
 					data
-						.replace(/EVENT_NAME/g, (window.eventName)||recentEventName)
-						.replace(/EVENT_ID/g, (window.eventId)||recentEventId)
-						.replace(/YEAR/g, (window.eventYear)||recentEventYear)
+						.replace(/EVENT_NAME/g,eName)
+						.replace(/EVENT_ID/g,eId)
+						.replace(/YEAR/g,eYear)
 				)
-				mainMenu.find('.dependEvent').toggle(!!(window.eventName||recentEventName))
+				mainMenu.find('.dependEvent').toggle(!!(eName))
 				showMainMenuUploads()
 			})
 		}

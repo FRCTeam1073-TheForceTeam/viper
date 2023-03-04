@@ -49,7 +49,6 @@ function showUploads(){
 		text += pitCsv[years[i]]
 	}
 	$('#csv').val(text)
-	$('#next').val(location.hash.replace(/^\#/,''))
 }
 
 function deleteMatch(){
