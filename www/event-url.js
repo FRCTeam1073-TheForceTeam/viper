@@ -122,7 +122,6 @@ function haveNonPracticeMatchForEachTeam(){
 	forEachTeamMatch(function(team,match){
 		if (!/^pm[0-9]+$/.test(match))delete practiceTeams[team]
 	})
-	console.log(practiceTeams)
 	return Object.keys(practiceTeams).length == 0
 }
 
