@@ -80,6 +80,9 @@ function showPosList(){
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
 	$('.orientLeft,.orientRight').show()
+	$('#select-bot button').each(function(){
+		$(this).toggleClass("highlighted", $(this).text() == localStorage.getItem("last_pos"))
+	})
 	$('#select-bot button').click(function(){
 		pos = $(this).text()
 		if ($(this).closest('.orientLeft').length) orient='left'
@@ -95,14 +98,24 @@ function showMatchList(){
 	window.scrollTo(0,0)
 	$('#match-list').html('')
 	$('h1').text(`${eventName} ${pos}`)
-	var lastDone = localStorage.getItem("last_match_"+eventId)
+	var alreadyScouted = {}
+	forEachTeamMatch(function(team,match){
+		alreadyScouted[match]=1
+	})
+	alreadyScouted[localStorage.getItem("last_match_"+eventId)||""] = 1
+	var lastDone
+	for (var i=eventMatches.length-1; !lastDone && i>=0; i--){
+		var m = eventMatches[i]['Match']
+		if(alreadyScouted[m])lastDone=m
+	}
+	console.log(lastDone)
 	var seenLastDone = false;
-	for (var i=0; i<eventMatches.length; i++){
-		var matchTeam = eventMatches[i][pos]
-		var matchId = eventMatches[i]['Match']
-		var matchName = getShortMatchName(matchId)
-		var completeClass=(lastDone&&!seenLastDone)?"complete":""
-		var storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
+	eventMatches.forEach(function(m){
+		var matchTeam = m[pos],
+		matchId = m['Match'],
+		matchName = getShortMatchName(matchId),
+		completeClass=(lastDone&&!seenLastDone)?"complete":"",
+		storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
 		if (lastDone == matchId) seenLastDone = true;
 		$('#match-list').append(
 			$('<div class=match>')
@@ -112,7 +125,7 @@ function showMatchList(){
 				showScouting()
 			})).append($('<span>').text(' ' + matchName))
 		)
-	}
+	})
 	setTeamBG()
 	$('#select-match').show()
 }

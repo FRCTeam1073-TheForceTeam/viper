@@ -1,7 +1,8 @@
-#select-bot table, #scouting table {margin: 0 auto}
-#select-bot td {width:20vw}
-#select-bot button {font-size:150%}
-#match-list {font-size:120%;font-weight:bold;margin:0 auto;column-width:12em;margin:1em 0;max-width:100%}
+#select-bot table, #scouting table{margin: 0 auto}
+#select-bot td{width:20vw}
+#select-bot button{font-size:150%}
+#select-bot button.highlighted{background-color:var(--highlight-bg-color);border-color:var(--highlight-bg-color);color:var(--main-fg-color)}
+#match-list{font-size:120%;font-weight:bold;margin:0 auto;column-width:12em;margin:1em 0;max-width:100%}
 #match-list .match{white-space:nowrap;margin:0;width:12em;text-align:left}
 img.bigimg{width:48vw}
 img.expandable-image{width:5em;vertical-align:middle;cursor:pointer}
