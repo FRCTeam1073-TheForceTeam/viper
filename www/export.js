@@ -1,5 +1,17 @@
 "use strict"
 
+function onLocalJs(){
+	;(localStorage.getItem("transferHosts")||"").split(",").forEach(addHost)
+	if (window.transferHosts) window.transferHosts.forEach(addHost)
+	addHost('localhost')
+}
+
+function addHost(host){
+	if (host && !$(`#hostOptions option[value="${host}"]`).length){
+		$('#hostOptions').append($('<option>').attr('value',host))
+	}
+}
+
 $(document).ready(function(){
 	var dataFull = {},
 	dataCsv = {},
@@ -29,6 +41,16 @@ $(document).ready(function(){
 	})
 	$('.siteInput').change(function(){
 		var url = $(this).val()
+		if (/^((https?\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$/.test(url)){
+			var hosts = (localStorage.getItem("transferHosts")||"").split(/,/),
+			hostList = hosts.reduce((m,o)=>(m[o]=o,m),{})
+			if (!hostList.hasOwnProperty(url)){
+				hosts.push(url)
+				hosts = hosts.slice(-5)
+				localStorage.setItem("transferHosts",hosts.join(","))
+			}
+			addHost(url)
+		}
 		if (!url) url = "webscout.example.com"
 		if (!/^https?\:\/\//.test(url)){
 			var prefix = "http"
@@ -38,7 +60,6 @@ $(document).ready(function(){
 		}
 		url = url.replace(/\/$/,"")
 		url += "/admin/import.cgi"
-		console.log(url)
 		$(this).closest('form').attr('action',url)
 	})
 	$('#showInstructions').click(function(){

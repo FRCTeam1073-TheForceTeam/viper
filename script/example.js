@@ -5,6 +5,15 @@
 // and highlighting
 var ourTeam=9999999
 
+// A list of options that will drop down from the host name
+// box on export.html
+var transferHosts = [
+	"localhost",
+	//"webscout2.example.com",
+	//"localhost:1234",
+	//"http://insecure-webscout.example.com",
+]
+
 // Any code here gets run on every page.
 
 // Inject a site wide message

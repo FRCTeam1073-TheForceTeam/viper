@@ -1,7 +1,5 @@
 "use strict"
 
-$.getScript("/local.js")
-
 window.addEventListener("load", () => {
 	if ("serviceWorker" in navigator){
 		navigator.serviceWorker.register("/offline-service-worker.cgi").then(function(reg) {
@@ -26,6 +24,7 @@ function dateCompare(a,b){
 }
 
 $(document).ready(function(){
+	$.getScript("/local.js", window.onLocalJs)
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger>☰</div>'),
 		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')

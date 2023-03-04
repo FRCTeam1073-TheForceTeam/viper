@@ -26,7 +26,7 @@
 
 		<p>Transfer all the event data to another webscout instance.</p>
 		<form method=POST action=https://webscout.example.com/admin/import.cgi>
-			<input class=siteInput placeholder=webscout.example.com>
+			<input class=siteInput list=hostOptions placeholder=webscout.example.com>
 			<input name=json id=transferJsonImages type=hidden>
 			<input type=submit value="Transfer Full Event">
 		</form>
@@ -42,12 +42,14 @@
 
 		<p>Transfer all the CSV data to another webscout instance.</p>
 		<form method=POST action=https://webscout.example.com/admin/import.cgi>
-			<input class=siteInput placeholder=webscout.example.com>
+			<input class=siteInput list=hostOptions placeholder=webscout.example.com>
 			<input name=json id=transferJsonCsv type=hidden>
 			<input type=submit value="Transfer CSV">
 		</form>
 	</div>
 
+	<datalist id=hostOptions>
+	</datalist>
 
 	<iframe id=instructions class=lightBoxFullContent src=/import-export-instructions.html></iframe>
 </body>
