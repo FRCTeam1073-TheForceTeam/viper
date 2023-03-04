@@ -83,7 +83,6 @@ function loadEventSchedule(callback){
 			}
 		}
 		eventTeams = Object.keys(teams).map(t=>parseInt(t)).sort((a,b)=>{a-b})
-		console.log(eventTeams)
 		if (callback) callback(eventMatches)
 	})
 }
@@ -108,19 +107,46 @@ function loadEventStats(callback){
 		$.getScript(`/${eventYear}/aggregate-stats.js`, function(){
 			eventAjax(`/data/${eventId}.scouting.csv`,function(text){
 				eventStats=csvToArrayOfMaps(text)
-				for (var i=0; i<eventStats.length; i++){
-					var scout = eventStats[i],
-					team = scout['team'],
-					match = scout['match'],
-					aggregate = eventStatsByTeam[team] || {}
-					aggregateStats(scout, aggregate)
-					eventStatsByTeam[team] = aggregate
-					eventStatsByMatchTeam[`${match}-${team}`]=scout
-				}
+				aggregateAllEventStats()
 				if (callback) callback(eventStats, eventStatsByTeam, eventStatsByMatchTeam)
 			})
 		})
 	}
+}
+
+function haveNonPracticeMatchForEachTeam(){
+	var practiceTeams = {}
+	forEachTeamMatch(function(team,match){
+		if (/^pm[0-9]+$/.test(match))practiceTeams[team]=1
+	})
+	forEachTeamMatch(function(team,match){
+		if (!/^pm[0-9]+$/.test(match))delete practiceTeams[team]
+	})
+	console.log(practiceTeams)
+	return Object.keys(practiceTeams).length == 0
+}
+
+function forEachTeamMatch(callback){
+	eventStats.forEach(function(scout){
+		callback(scout['team'],scout['match'],scout)
+	})
+}
+
+function aggregateAllEventStats(includePractice){
+	if (typeof includePractice != "boolean"){
+		includePractice=!haveNonPracticeMatchForEachTeam()
+	}
+	$('.aggregationIncludesPractice').text(includePractice?"include":"exclude")
+	eventStatsByTeam = {}
+	eventStatsByMatchTeam = {}
+	forEachTeamMatch(function(team,match,scout){
+		if (!/^pm[0-9]+$/.test(match) || includePractice){
+			var aggregate = eventStatsByTeam[team] || {}
+			aggregateStats(scout, aggregate)
+			eventStatsByTeam[team] = aggregate
+		}
+		eventStatsByMatchTeam[`${match}-${team}`]=scout
+	})
 }
 
 function loadEventFiles(callback){
