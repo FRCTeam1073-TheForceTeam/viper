@@ -1,4 +1,5 @@
 button.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
+#teams{column-width:3.5em}
 button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
 table{margin:1em auto;border-spacing:.1em;border-collapse:separate}
 table td,table th{padding:0.25em}
