@@ -3,7 +3,7 @@
 // Enter your team number here
 // to enable team specific features
 // and highlighting
-var ourTeam=9999999
+var ourTeam=0
 
 // A list of options that will drop down from the host name
 // box on export.html

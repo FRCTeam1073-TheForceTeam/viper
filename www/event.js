@@ -85,20 +85,24 @@ $(document).ready(function(){
 	loadEventSchedule(eventData=>{
 		if (!eventData.length) return $('body').html("Match not found")
 		loadEventStats((eventStats,eventStatsByTeam)=>{
-			var matchTeams = {}
-			eventStats.forEach(scouting=>{
-				var scoutKey=`${scouting.match}:${scouting.team}`
-				matchTeams[scoutKey] = matchTeams[scoutKey]||[0]
-				matchTeams[scoutKey]++
-			})
+			var lastDone,
+			ourNext
+			for (var i=eventMatches.length-1; !lastDone && i>=0; i--){
+				var m = eventMatches[i]
+				if (matchHasScoutingData(m)) lastDone = m
+				else if (matchHasTeam(m,window.ourTeam)) ourNext=m
+			}
+			var seenOurNext = false
 			eventData.forEach(match=>{
+				if(ourNext && ourNext.Match==match.Match) seenOurNext=true
 				var row = $($('template#matchRow').html())
 				BOT_POSITIONS.forEach(pos=>{
-					var scouted=matchTeams[`${match.Match}:${match[pos]}`]||0
+					var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0
 					row.find(`.${pos}`).text(match[pos])
-						.addClass(scouted==0?"":"scouted")
-						.addClass(scouted>1?"error":"")
-						.addClass(""+match[pos]==""+window.ourTeam?"ourTeam":"")
+						.toggleClass("scouted",!!scouted)
+						.toggleClass("needed",!scouted&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
+						.toggleClass("error",scouted>1)
+						.toggleClass("ourTeam",""+match[pos]==""+window.ourTeam)
 				})
 				row.find('.match-id').text(hyphenate(getMatchName(match.Match))).attr('data-match-id',match.Match)
 				row.click(showLinks)

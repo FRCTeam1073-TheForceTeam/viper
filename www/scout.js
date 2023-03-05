@@ -108,7 +108,6 @@ function showMatchList(){
 		var m = eventMatches[i]['Match']
 		if(alreadyScouted[m])lastDone=m
 	}
-	console.log(lastDone)
 	var seenLastDone = false;
 	eventMatches.forEach(function(m){
 		var matchTeam = m[pos],
@@ -411,25 +410,37 @@ function getTeamsWithPitData(){
 	return teams
 }
 
-function haveDataForMatch(m){
-	if (!m) return 0
-	var have = getTeamsWithData();
-	if (have[m['R1']]) return 1
-	if (have[m['R2']]) return 1
-	if (have[m['R3']]) return 1
-	if (have[m['B1']]) return 1
-	if (have[m['B2']]) return 1
-	if (have[m['B3']]) return 1
-	return 0
-}
-
 function setupButtons(){
 	var next = getNextMatch()
-	if (!next || haveDataForMatch(next)){
+	if (!next || haveDataForMatch(next) || haveAllDataForOurNextMatch()){
 		setFeaturedButton($('#uploadBtn'))
 		return
 	}
 	setFeaturedButton($('#nextBtn'))
+}
+
+function haveDataForMatch(m){
+	if (!m) return 0
+	var have = getTeamsWithData()
+	return BOT_POSITIONS.reduce((sum,pos)=>sum+(have[m[pos]]?1:0),0)
+}
+
+function haveAllDataForOurNextMatch(){
+	if (!window.ourTeam) return 0
+	var seenCurrentMatch = 0
+	var toBeCollected = {}
+	for (var i=0; i<eventMatches.length; i++){
+		var m = eventMatches[i]
+		if (!seenCurrentMatch){
+			if (match == m.Match) seenCurrentMatch = 1
+		} else if (matchHasTeam(m, window.ourTeam)){
+			if (!haveDataForMatch(m)) return 0
+			return !(BOT_POSITIONS.reduce((sum,pos)=>sum|(toBeCollected[m[pos]]?1:0),0))
+		} else {
+			toBeCollected[m[pos]]=1
+		}
+	}
+	return 0
 }
 
 function setFeaturedButton(btn){
