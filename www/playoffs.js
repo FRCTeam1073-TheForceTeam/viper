@@ -43,8 +43,38 @@ function allianceDisplay(num, oppNum, showButton, column, teamColor){
 	c = a['Captain'],
 	p1 = a['First Pick'],
 	p2 = a['Second Pick'],
-	button = showButton?`<br><button class=winnerBtn data-alliance=${num} data-opponent=${oppNum} data-column="${column}">Set Winner</button>`:""
-	return `<div class="${teamColor}TeamBG matchup ${winClass}"><h4>Alliance ${num}</h4>${c}, ${p1}, ${p2}${button}</div>`
+	button=showButton?`<div><button class=winnerBtn data-alliance=${num} data-opponent=${oppNum} data-column="${column}">Set Winner</button></div>`:"",
+	predictorLink = getPredictorLink(num,oppNum,teamColor),
+	score=getPrediction(num),
+	prediction=""
+	if (!/^[01]$/.test(a[column])){
+		if (predictorLink) prediction =`<div class=prediction><a href="${predictorLink}">Prediction: <div>${score}</div></a></div>`
+		else prediction = `<div class=prediction>Prediction: <div>${score}</div></div>`
+	}
+	return `<div class="${teamColor}TeamBG matchup ${winClass}"><h4>Alliance ${num}</h4>${c}, ${p1}, ${p2}${prediction}${button}</div>`
+}
+
+function getPredictorLink(num, oppNum, teamColor){
+	var red=eventAlliances[(teamColor=='red'?num:oppNum)-1],
+	blue=eventAlliances[(teamColor=='red'?oppNum:num)-1]
+	if (!red||!blue) return ""
+	return `/predictor.html#event=${eventId}&R1=${red['Captain']}&R2=${red['First Pick']}&R3=${red['Second Pick']}&B1=${blue['Captain']}&B2=${blue['First Pick']}&B3=${blue['Second Pick']}`
+}
+
+function getPrediction(num){
+	var score = 0,
+	alliance = eventAlliances[num-1]
+	if (!alliance) return 0
+	score += getScore(alliance['Captain'])
+	score += getScore(alliance['First Pick'])
+	score += getScore(alliance['Second Pick'])
+	return Math.round(score)
+}
+
+function getScore(team){
+	var stats = eventStatsByTeam[team]
+	if (!stats) return 0
+	return (stats.score||0)/(stats.count||1)
 }
 
 function matchupDisplay(nums, showButton, column){
@@ -355,7 +385,9 @@ $(document).ready(function(){
 
 function showContent(){
 	if (!eventAlliances.length) showAllianceSelection()
-	else showBracket(getBrackets())
+	else loadEventStats(function(){
+		showBracket(getBrackets())
+	})
 }
 
 function getBrackets(){
