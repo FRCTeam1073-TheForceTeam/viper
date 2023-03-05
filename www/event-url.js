@@ -132,10 +132,12 @@ function forEachTeamMatch(callback){
 }
 
 function matchHasTeam(m,t){
+	if (!m || !t) return false
 	return !!(BOT_POSITIONS.reduce((sum,pos)=>sum+(m[pos]==t?1:0),0))
 }
 
 function matchHasScoutingData(m){
+	if (!m) return false
 	return !!(BOT_POSITIONS.reduce((sum,pos)=>sum+((eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]||0))?1:0,0))
 }
 
