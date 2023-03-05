@@ -4,8 +4,6 @@ button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
 table{margin:1em auto;border-spacing:.1em;border-collapse:separate}
 table td,table th{padding:0.25em}
 .prediction div{font-size:200%}
-.prediction{border-color:inherit;border-width:.2em;border-style:solid;padding:0 .2em}
-.prediction.winner{border-left-color:var(--winner-color);border-right-color:var(--winner-color)}
 .matchup{padding:0 .5em;border-width:0.5em;border-style:solid}
 h4{padding:0;margin:0}
 .hidden{display:none}
