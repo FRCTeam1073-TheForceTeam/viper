@@ -13,11 +13,11 @@ setInterval(function(){
 		type: "GET",
 		success: function(){
 			hasHeartbeat = true
-			$('#hamburger').show()
+			$('.show-only-when-connected').show()
 		},
 		error: function(){
 			hasHeartbeat = false
-			$('#hamburger').hide()
+			$('.show-only-when-connected').hide()
 		}
 	})
 }, 6*1000) // 6 seconds
