@@ -93,8 +93,6 @@ $(document).ready(function(){
 				if (matchScoutingDataCount(m)==6) lastFullyDone = m
 				if (!lastDone && matchScoutingDataCount(m)) lastDone = m
 				if (!lastDone && matchHasTeam(m,window.ourTeam)) ourNext=m
-				console.log(m)
-				console.log(matchScoutingDataCount(m))
 			}
 			var seenOurNext = false,
 			seenLastFullyDone = false
