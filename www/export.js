@@ -22,7 +22,7 @@ $(document).ready(function(){
 		eventAjax(file ,function(text){
 			if (csv=='schedule'){
 				var teamMap = {}
-				text.match(/\b[0-9]{4,}\b/g).forEach(function(team){
+				text.match(/\b[0-9]+\b/g).forEach(function(team){
 					teamMap[team]=1
 				})
 				teams = Object.keys(teamMap)
