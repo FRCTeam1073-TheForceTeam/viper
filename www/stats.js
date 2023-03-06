@@ -59,6 +59,7 @@ function showStats(){
 	var sections = Object.keys(aggregateGraphs)
 
 	if ($('#displayType').val() == 'graph'){
+		Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i],
 			chart = $('<canvas>'),
