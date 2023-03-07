@@ -22,7 +22,7 @@ setInterval(function(){
 	})
 }, 6*1000) // 6 seconds
 
-window.addEventListener('beforeunload',(event) =>{
+window.addEventListener('beforeunload',(event)=>{
 	if (!hasHeartbeat){
 		event.preventDefault()
 		return "You are not connected to the hub. Are you sure?"

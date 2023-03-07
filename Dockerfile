@@ -12,6 +12,7 @@ RUN apt-get update \
 		libfile-slurp-perl \
 		libfile-touch-perl \
 		libhtml-escape-perl \
+		libjpeg-turbo-progs \
 		libjson-pp-perl \
 		libmime-base64-perl \
 		perl \

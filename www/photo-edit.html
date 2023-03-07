@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Photo - FRC Scouting App</title>
+<meta name=viewport content=width=device-width,initial-scale=1.0>
+<meta charset=UTF-8>
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/photo-edit.css>
+<script src=/jquery.js></script>
+<script src=/photo-edit.js></script>
+<script src=/main.js></script>
+</head>
+<body>
+<h1>Edit Photo</h1>
+<form method=get action=/admin/photo-edit.cgi>
+	<input type=hidden id=file name=file>
+	<input type=submit name=rotate-counter-clockwise value=↶>
+	<input type=submit name=rotate-clockwise value=↷>
+	<input type=submit name=delete id=delete value=Delete>
+</form>
+<img id=photo>
+</body>
+</html>

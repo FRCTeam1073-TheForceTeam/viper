@@ -30,25 +30,45 @@ $(document).ready(function(){
 	$('#fullPhoto').click(closeLightBox)
 })
 
+function photoChange(url){
+	$('img').each(function(){
+		var src = $(this).attr('src')
+		if (src && src.includes(url)){
+			$(this).attr('src',src.replace(/\?.*/,"")+"?"+(new Date().getTime()))
+		}
+	})
+}
+
 function showFullPhoto(){
 	showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
 }
 
 function addTeam(team){
 	if (!/^[0-9]+$/.test(team)) return
-	var year = $('#yearInp').val()
 	$('#teams').append(
 		$('<tr>').append(
 			$('<th>').append(`<h2>Team ${team}</h2>`)
-		).append(
-			$('<td>')
-				.append($(`<img class=photoPreview src=/data/${year}/${team}.jpg>`).click(showFullPhoto))
-				.append(`<input type=file name=${team} accept="image/*">`)
-		).append(
-			$('<td>')
-				.append($(`<img class=photoPreview src=/data/${year}/${team}-top.jpg>`).click(showFullPhoto))
-				.append(`<input type=file name=${team}-top accept="image/*">`)
 		)
+		.append(imageCell(team))
+		.append(imageCell(`${team}-top`))
 	)
 	$('#team').val("")
+}
+
+function photoEditLightBox(){
+	showLightBox($('#photoEdit').attr('src',$(this).attr('href')))
+	return false
+}
+
+function imageCell(imgName){
+	var year = $('#yearInp').val(),
+	td = $('<td>')
+	td.append($(`<a class=show-only-when-connected href=/photo-edit.html#${year}/${imgName}.jpg>Edit</a>`).click(photoEditLightBox))
+	.append($(`<img class=photoPreview src=/data/${year}/${imgName}.jpg>`).click(showFullPhoto).on('error',function(){
+		$(this).parent().find('a,img').remove()
+	}).each(function(){
+		if(this.error) $(this).error()
+	}))
+	.append(`<input type=file name=${imgName} accept="image/*">`)
+	return td
 }

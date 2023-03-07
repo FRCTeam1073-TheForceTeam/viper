@@ -29,7 +29,7 @@ for my $team ($cgi->param){
 				$webutil->error("Expected image photo upload", $info->{'Content-Type'}) if ($info->{'Content-Type'} !~ /^image\//);
 				my $teamPicFile = "../data/$year/$param.jpg";
 				my $upload_file = $cgi->tmpFileName(scalar $cgi->param($param));
-				`convert "$upload_file" -resize 1000x1000 "$teamPicFile"`;
+				`convert "$upload_file" -auto-orient -resize 1000x1000 "$teamPicFile"`;
 				$success = 1;
 			}
 		}
