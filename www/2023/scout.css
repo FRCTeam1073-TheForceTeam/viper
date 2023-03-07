@@ -1,4 +1,5 @@
-img.count{height:6vmin;width:auto;display:block;margin:1vmin auto;max-height:42px}
+img.count.count-up{height:12vmin;width:auto;display:block;margin:1vmin auto;margin-left:.9em;max-height:84px}
+img.count-down{height:6vmin;display:block;margin:1vmin auto;max-height:42px}
 img.icon{height:6vmin;display:block;margin:1vmin auto;max-height:42px}
 #scouting .side-by-side{display:table-cell;margin:0;padding:0}
 #scouting .side-by-side input {width:1.4em}
@@ -6,12 +7,13 @@ input.num{width:6vmin;text-align:center;font-size:6vmin;font-weight: bold;font-f
 table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-top:3vmin!important;margin-bottom:3vmin!important;width:100%;max-width:40em}
 #scouting th{border:1px solid var(--main-border-color);font-size:200%}
 #scouting td{border:1px solid var(--main-border-color)!important;overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
-#scouting td > div{display:flex;justify-content:space-around}
+#scouting td > div{display:flex;justify-content:center}
 label > span,button{font-size:125%}
 .subheader{background:var(--section-bg-color)}
 .teleop{display:none}
 .cycleStats span,.cycleStats input{font-size:inherit;width:fit-content;display:inline}
-.colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px;border:1px solid var(--main-fg-color)}
+.colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px}
+.colorBar.white{background-color:var(--main-fg-color)}
 .explain{font-size:65%;display:block;text-transform:capitalize}
 @media (max-width: 500px) {
 	td{padding:.2em}

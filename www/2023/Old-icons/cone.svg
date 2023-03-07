@@ -13,11 +13,11 @@
    height="50.213165mm"
    viewBox="0 0 47.0177 50.213165"
    version="1.1"
-   id="svg8"
+   id="svg915"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="cone_failed.svg">
+   sodipodi:docname="cone.svg">
   <defs
-     id="defs2" />
+     id="defs909" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -25,23 +25,23 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.80203632"
-     inkscape:cx="-66.45748"
-     inkscape:cy="210.6587"
+     inkscape:zoom="3.8476126"
+     inkscape:cx="73.249296"
+     inkscape:cy="101.37383"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="3840"
-     inkscape:window-height="2136"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0" />
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1016"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
   <metadata
-     id="metadata5">
+     id="metadata912">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -56,35 +56,26 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-33.232139,-167.97824)">
+     transform="translate(-55.367099,-134.58261)">
     <path
-       style="opacity:1;vector-effect:none;fill:#e1d41f;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.39404678;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:1;vector-effect:none;fill:#e1d41f;fill-opacity:1;fill-rule:nonzero;stroke:#e1d41f;stroke-width:3.39404678;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        inkscape:transform-center-y="-13.392905"
-       d="M 75.995561,216.31185 H 37.48641 L 56.740987,172.2188 Z"
-       id="path819-6"
+       d="M 98.130523,182.91622 H 59.621372 l 19.254577,-44.09305 z"
+       id="path819"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccc"
        inkscape:export-filename="/home/olivia/GitHub/webscout/www/path819.png"
        inkscape:export-xdpi="95.839996"
        inkscape:export-ydpi="95.839996" />
     <rect
-       style="opacity:1;vector-effect:none;fill:#e1d41f;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.03243327;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect821-7"
+       style="opacity:1;vector-effect:none;fill:#e1d41f;fill-opacity:1;fill-rule:nonzero;stroke:#e1d41f;stroke-width:3.03243327;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect821"
        width="43.985268"
        height="9.3585663"
-       x="34.748356"
-       y="207.31662"
+       x="56.883316"
+       y="173.92099"
        ry="0"
        inkscape:export-xdpi="95.839996"
        inkscape:export-ydpi="95.839996" />
-    <g
-       aria-label="x"
-       style="font-size:6.51570606px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1"
-       id="text889">
-      <path
-         d="M 76.43152,174.54048 60.969444,195.34747 77.233258,217.2998 H 68.948639 L 56.502622,200.5015 44.056604,217.2998 H 35.771986 L 52.379401,194.92752 37.18457,174.54048 h 8.284619 l 11.338856,15.23301 11.338857,-15.23301 z"
-         style="font-size:78.18847656px;fill:#cc0000;fill-opacity:1;stroke:none;stroke-width:0.40723163;stroke-opacity:1"
-         id="path819" />
-    </g>
   </g>
 </svg>

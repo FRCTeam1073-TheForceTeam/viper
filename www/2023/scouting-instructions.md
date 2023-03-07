@@ -8,7 +8,7 @@ The game is played in three segments:
  - Teleoperated — The robot is controlled via remote control.
  - End game — The robot attempts to dock on the charging station.
 
-Autonomous and teleop have their own sections to record data, so make sure to switch between them when auto ends. There are locations to record placements of cones and cubes on the grid for each level, as well as failed attempts at placing objects (shown by an icon with an X through it). Teleop also has a place to record the locations in which the robot collects objects (whether on the shelf or on the ground in the community, loading zone, or general field — refer to the image below if you are unsure which areas these are).
+Autonomous and teleop have their own sections to record data, so make sure to switch between them when auto ends. There are locations to record placements of cones and cubes on the grid for each level, as well as failed attempts at placing objects (shown by colored X's). Teleop also has a place to record the locations in which the robot collects objects (whether on the shelf or on the ground in the community, loading zone, or general field — refer to the image below if you are unsure which areas these are).
 
 Use one of the buttons at the bottom to save the data when you're done. The suggested button will be enlarged — usually this will be the button to progress to the next match, but in certain cases the app will recommend that you upload your data to the scouting hub. Plug your device into the hub in order to upload your data.
 
@@ -17,15 +17,15 @@ Failed cone
 </th><td></td><th>
 Failed cube
 </td></tr><tr><td>
-<img width=80 src=cone.svg>
+<img width=80 src=cone-up.svg>
 </td><td>
-<img width=80 src=cone_failed.svg>
+<img width=80 src=cone-failed-up.svg>
 </td><td>
-<img width=80 src=cube.svg>
+<img width=80 src=cube-up.svg>
 </td><td>
-<img width=80 src=cube_failed.svg>
+<img width=80 src=cube-failed-up.svg>
 </td><td>
-<img width=80 src=claw.svg>
+<img width=80 src=claw-up.svg>
 </tr><tr><th>
 Placed cone
 </th><td></td><th>

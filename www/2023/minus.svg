@@ -9,25 +9,25 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="47.72319mm"
-   height="46.134541mm"
-   viewBox="0 0 47.72319 46.134541"
+   width="47.0177mm"
+   height="50.213165mm"
+   viewBox="0 0 47.0177 50.213165"
    version="1.1"
-   id="svg829"
+   id="svg915"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="claw.svg">
+   sodipodi:docname="minus.svg">
   <defs
-     id="defs823" />
+     id="defs909" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#000000"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.82709996"
-     inkscape:cx="-249.23732"
-     inkscape:cy="175.20876"
+     inkscape:zoom="2.7923692"
+     inkscape:cx="49.977862"
+     inkscape:cy="55.153917"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -39,9 +39,12 @@
      inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="27"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     inkscape:snap-page="true"
+     inkscape:snap-others="true"
+     inkscape:snap-object-midpoints="true" />
   <metadata
-     id="metadata826">
+     id="metadata912">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -56,12 +59,17 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-110.18029,-146.24576)">
-    <path
-       style="opacity:1;vector-effect:none;fill:#dd6521;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 145.03454,172.2915 -11.02632,-7.47402 -10.94321,7.47996 -0.1293,19.3071 -10.85796,-23.13499 14.96203,-10.33518 v -10.38861 h 13.94811 v 10.36711 l 15.0173,10.35415 -10.93324,23.27554 z"
-       id="path1398"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccccccc" />
+     transform="translate(-55.367099,-134.58261)">
+    <rect
+       inkscape:export-ydpi="95.839996"
+       inkscape:export-xdpi="95.839996"
+       ry="0"
+       y="-164.18622"
+       x="-100.01199"
+       height="8.9940634"
+       width="42.272102"
+       id="rect833-6"
+       style="opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:2.91402769;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       transform="scale(-1)" />
   </g>
 </svg>
