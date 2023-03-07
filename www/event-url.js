@@ -136,9 +136,9 @@ function matchHasTeam(m,t){
 	return !!(BOT_POSITIONS.reduce((sum,pos)=>sum+(m[pos]==t?1:0),0))
 }
 
-function matchHasScoutingData(m){
+function matchScoutingDataCount(m){
 	if (!m) return false
-	return !!(BOT_POSITIONS.reduce((sum,pos)=>sum+((eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]||0))?1:0,0))
+	return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
 }
 
 function aggregateAllEventStats(includePractice){

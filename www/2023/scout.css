@@ -8,6 +8,7 @@ table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-
 #scouting th{border:1px solid var(--main-border-color);font-size:200%}
 #scouting td{border:1px solid var(--main-border-color)!important;overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
 #scouting td > div{display:flex;justify-content:space-around}
+label > span,button{font-size:125%}
 .subheader{background:var(--section-bg-color)}
 .teleop{display:none}
 .cycleStats span,.cycleStats input{font-size:inherit;width:fit-content;display:inline}

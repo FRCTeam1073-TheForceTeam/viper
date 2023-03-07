@@ -11,6 +11,7 @@
 <script src=/bot-photos.js></script>
 <script src=/event-url.js></script>
 <script src=/main.js></script>
+<script src=/heartbeat.js></script>
 </head>
 <body>
 <h1>Bot Photos</h1>
@@ -22,7 +23,7 @@
 </table>
 <input inputmode=numeric id=team type=text placeholder="Team #" pattern="^[0-9]+$" name=add size=5>
 <button id=add>Add Team</button>
-<input type=submit VALUE="Upload All">
+<input type=submit value="Upload All" class=show-only-when-connected>
 </form>
 <iframe id=instructions class=lightBoxFullContent src=/bot-photos-instructions.html></iframe>
 <img id=fullPhoto class=lightBoxFullContent>

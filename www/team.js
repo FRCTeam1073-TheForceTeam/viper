@@ -72,6 +72,7 @@ function showTables(matchList, matchNames){
 }
 
 function showGraphs(matchList, matchNames){
+	Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
 	var graphs = $('#stats').html('')
 	Object.keys(teamGraphs).forEach(function(section){
 		var chart = $('<canvas>'),

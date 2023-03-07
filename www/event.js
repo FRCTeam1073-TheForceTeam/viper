@@ -86,21 +86,25 @@ $(document).ready(function(){
 		if (!eventData.length) return $('body').html("Match not found")
 		loadEventStats((eventStats,eventStatsByTeam)=>{
 			var lastDone,
+			lastFullyDone,
 			ourNext
-			for (var i=eventMatches.length-1; !lastDone && i>=0; i--){
+			for (var i=eventMatches.length-1; !lastFullyDone && i>=0; i--){
 				var m = eventMatches[i]
-				if (matchHasScoutingData(m)) lastDone = m
-				else if (matchHasTeam(m,window.ourTeam)) ourNext=m
+				if (matchScoutingDataCount(m)==6) lastFullyDone = m
+				if (!lastDone && matchScoutingDataCount(m)) lastDone = m
+				if (!lastDone && matchHasTeam(m,window.ourTeam)) ourNext=m
 			}
-			var seenOurNext = false
+			var seenOurNext = false,
+			seenLastFullyDone = false
 			eventData.forEach(match=>{
 				if(ourNext && ourNext.Match==match.Match) seenOurNext=true
+				if(lastFullyDone && lastFullyDone.Match==match.Match) seenLastFullyDone=true
 				var row = $($('template#matchRow').html())
 				BOT_POSITIONS.forEach(pos=>{
 					var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0
 					row.find(`.${pos}`).text(match[pos])
 						.toggleClass("scouted",!!scouted)
-						.toggleClass("needed",!scouted&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
+						.toggleClass("needed",!scouted&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
 						.toggleClass("error",scouted>1)
 						.toggleClass("ourTeam",""+match[pos]==""+window.ourTeam)
 				})

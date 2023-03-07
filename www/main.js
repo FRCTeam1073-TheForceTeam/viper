@@ -22,7 +22,7 @@ function dateCompare(a,b){
 $(document).ready(function(){
 	$.getScript("/local.js", window.onLocalJs)
 	if (!inIframe()){
-		var hamburger = $('<div id=hamburger>☰</div>'),
+		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
 		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')
 		$('body').append(hamburger).append(mainMenu)
 		hamburger.click(function(){showLightBox(mainMenu)})
