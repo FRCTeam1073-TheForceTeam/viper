@@ -15,7 +15,7 @@
    version="1.1"
    id="svg829"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="claw.svg">
+   sodipodi:docname="claw-up.svg">
   <defs
      id="defs823" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.6724101"
-     inkscape:cx="128.45554"
-     inkscape:cy="115.54318"
+     inkscape:zoom="2.1845991"
+     inkscape:cx="98.496235"
+     inkscape:cy="135.19266"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -39,7 +39,9 @@
      inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="27"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     inkscape:snap-nodes="false"
+     inkscape:snap-object-midpoints="true" />
   <metadata
      id="metadata826">
     <rdf:RDF>
@@ -63,5 +65,27 @@
        id="path1398"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccccc" />
+    <rect
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.83585584;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect821-7"
+       width="12.125276"
+       height="2.5798454"
+       x="150.81487"
+       y="-135.3318"
+       ry="0"
+       inkscape:export-xdpi="95.839996"
+       inkscape:export-ydpi="95.839996"
+       transform="rotate(90)" />
+    <rect
+       inkscape:export-ydpi="95.839996"
+       inkscape:export-xdpi="95.839996"
+       ry="0"
+       y="-158.16743"
+       x="-140.10452"
+       height="2.5798454"
+       width="12.125276"
+       id="rect833-5"
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.83585584;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       transform="scale(-1)" />
   </g>
 </svg>
