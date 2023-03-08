@@ -577,6 +577,8 @@ function showPitScouting(el,team){
 		el.append($("<p>").text(format(dat['weight'])))
 		el.append($("<h4>").text("Drivetrain"))
 		el.append($("<p>").text(format(dat['drivetrain'])))
+		el.append($("<h4>").text("Swerve"))
+		el.append($("<p>").text(format(dat['swerve'])))
 		el.append($("<h4>").text("Drivetrain Motors"))
 		el.append($("<p>").text(format(dat['motor_count'])))
 		el.append($("<p>").text(format(dat['motors'])))
