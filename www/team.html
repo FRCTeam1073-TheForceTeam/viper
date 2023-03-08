@@ -15,14 +15,20 @@
 <script src=/heartbeat.js></script>
 </head>
 <body>
-<h1>Team TEAM at EVENT Match Stats</h1>
-<p><select id=displayType><option value=graph selected>Graphs</option><option value=table>Table</option></select></p>
-<div id=sidePhoto class=imagePreview></div>
-<div id=topPhoto class=imagePreview></div>
-<div id=stats></div>
-<h2>Pit Scouting</h2>
-<div id=pit-scouting></div>
-<h2>Comments</h2>
-<div id=comments></div>
+<div id=teamButtons></div>
+<div id=teamStats>
+	<h1>Team TEAM at EVENT Match Stats</h1>
+	<p>
+		<select id=displayType><option value=graph selected>Graphs</option><option value=table>Table</option></select>
+		<a class=jumpPitScouting href="#pit-scouting">Pit Scouting</a>
+	</p>
+	<div id=sidePhoto class=imagePreview></div>
+	<div id=topPhoto class=imagePreview></div>
+	<div id=stats></div>
+	<h2>Pit Scouting</h2>
+	<div id=pit-scouting></div>
+	<h2>Comments</h2>
+	<div id=comments></div>
+</div>
 <img class=lightBoxFullContent id=fullPhoto>
 </body></html>

@@ -45,6 +45,7 @@
 				<li class=initHid><a class=dependScouting href="/predictor.html#event=EVENT">Match prediction</a></li>
 				<li class=initHid><a class=dependScouting href="/planner.html#event=EVENT">Match planner with whiteboard</a></li>
 				<li class=initHid><a class=dependScouting href="/stats.html#event=EVENT">Stats for alliance selection</a></li>
+				<li class=initHid><a class=dependScouting href="/team.html#event=EVENT">One team's stats and pit scouting data</a></li>
 			</ul>
 		</div>
 
@@ -100,11 +101,15 @@
 		</div>
 		<div class="link dependTeam">
 			<h3><a href="/$YEAR/scout.html#event=$EVENT&pos=$POS&team=$TEAM&match=$MATCH_ID">Scouting</a></h3>
-			Scout $MATCH_NAME: $POS $TEAM
+			Collect scouting data for $MATCH_NAME: $POS $TEAM
 		</div>
 		<div class="link dependTeam">
 			<h3><a href="/team.html#event=$EVENT&team=$TEAM">Stats</a></h3>
-			Team stats: $TEAM
+			Graphs of scouting data for team #$TEAM
+		</div>
+		<div class="link dependTeam">
+			<h3><a href="/team.html#event=$EVENT&team=$TEAM&pit-scouting">Pit Scouting Data</a></h3>
+			Data from pit scouting for team #$TEAM
 		</div>
 	</template>
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>

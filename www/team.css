@@ -14,3 +14,5 @@ canvas{height:20em}
 #stats th,#stats td{border:1px solid var(--main-border-color)}
 #stats .borderless{border:none}
 #stats td.blank{border:none;height:2em}
+#teamButtons{column-width:4.5em}
+#teamButtons button {margin:0.2em;width:4em}

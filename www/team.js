@@ -15,22 +15,48 @@ var team
 function fillPage(){
 	window.scroll(0,0)
 	team = parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||""
-	$('title').text(rawTitle.replace("EVENT", eventName).replace("TEAM", team))
-	$('h1').text(rawH1.replace("EVENT", eventName).replace("TEAM", team))
-	if(team){
-		$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
-		$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
-	}
-	$('.imagePreview img').click(function(){
-		showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
-	})
-	$('#fullPhoto').click(closeLightBox)
+	$('#teamButtons').toggle(!team)
+	$('#teamStats').toggle(!!team)
+	if (!team){
+		$('#teamButtons').html("")
+		var teamList = Object.keys(eventStatsByTeam)
+		teamList.sort((a,b) => a-b)
+		teamList.forEach(function(team){
+			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
+		})
+	} else {
+		$('title').text(rawTitle.replace("EVENT", eventName).replace("TEAM", team))
+		$('h1').text(rawH1.replace("EVENT", eventName).replace("TEAM", team))
+		if(team){
+			$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
+			$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
+		}
+		$('.imagePreview img').click(function(){
+			showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
+		})
+		$('#fullPhoto').click(closeLightBox)
 
-	showStats()
+		showStats()
 
-	if(typeof window.showPitScouting === 'function'){
-		window.showPitScouting($('#pit-scouting'),team)
+		if(typeof window.showPitScouting === 'function'){
+			$('.jumpPitScouting').attr('href', `#event=${eventId}&team=${team}&pit-scouting`)
+			$('#pit-scouting').html("")
+			window.showPitScouting($('#pit-scouting'),team)
+			if (/pit-scouting/i.test(location.hash)){
+				setTimeout(function(){
+					window.scroll(0,$('#pit-scouting').position().top-100)
+				},200)
+			}
+		} else {
+			$('.jumpPitScouting').hide()
+		}
 	}
+}
+
+function teamButtonClicked(){
+	team = parseInt($(this).text())
+	location.hash=`#event=${eventId}&team=${team}`
+	fillPage()
 }
 
 function showStats(){
