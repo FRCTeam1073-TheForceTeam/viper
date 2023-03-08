@@ -19,13 +19,10 @@ function aggregateStats(scout, aggregate){
 		if (attempts > 0) dat[stat+"_reliability"] = Math.round(100*success/attempts)
 	}
 
-	function addStat(map,field,value){
-		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])) map[field] = (map[field]||0)+(value||0)
-	}
-
 	function fromParent(stage,row,cargo,doSum){
 		;["","score","failed"].forEach(stat=>{
-			scout[placementKey(stage,row,cargo,stat)] = doSum(stat)
+			var key = placementKey(stage,row,cargo,stat)
+			scout[key] = (scout[key]||0) + doSum(stat)
 		})
 		reliability(scout,placementKey(stage,row,cargo))
 	}
@@ -440,14 +437,6 @@ var teamGraphs = {
 	"Place Reliability by Type":{
 		graph:"bar",
 		data:["cone_reliability","cube_reliability"]
-	},
-	"Place Reliability by Level":{
-		graph:"bar",
-		data:["bottom_reliability","middle_reliability","top_reliability"]
-	},
-	"Place Reliability Type and Level":{
-		graph:"bar",
-		data:["bottom_cone_reliability","bottom_cube_reliability","middle_cone_reliability","middle_cube_reliability","top_cone_reliability","top_cube_reliability"]
 	}
 }
 
@@ -511,14 +500,6 @@ var aggregateGraphs = {
 	"Place Reliability by Type":{
 		graph:"bar",
 		data:["cone_reliability","cube_reliability"]
-	},
-	"Place Reliability by Level":{
-		graph:"bar",
-		data:["bottom_reliability","middle_reliability","top_reliability"]
-	},
-	"Place Reliability Type and Level":{
-		graph:"bar",
-		data:["bottom_cone_reliability","bottom_cube_reliability","middle_cone_reliability","middle_cube_reliability","top_cone_reliability","top_cube_reliability"]
 	}
 }
 
