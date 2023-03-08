@@ -572,7 +572,7 @@ function showPitScouting(el,team){
 				)?$('<li>').text("None"):"")
 		)
 		el.append($("<h4>").text("Dimensions (inches without bumpers)"))
-		if (dat['length'] && dat['width']) el.append($("<p>").text(dat['length']+'x'+dat['width']+'"'))
+		el.append($("<p>").text(format(dat['length']+'x'+dat['width']+'"')))
 		el.append($("<h4>").text("Weight (pounds)"))
 		el.append($("<p>").text(format(dat['weight'])))
 		el.append($("<h4>").text("Drivetrain"))
@@ -580,11 +580,9 @@ function showPitScouting(el,team){
 		el.append($("<h4>").text("Swerve"))
 		el.append($("<p>").text(format(dat['swerve'])))
 		el.append($("<h4>").text("Drivetrain Motors"))
-		el.append($("<p>").text(format(dat['motor_count'])))
-		el.append($("<p>").text(format(dat['motors'])))
+		el.append($("<p>").text((dat['motor_count']||"")+" "+format(dat['motors'])))
 		el.append($("<h4>").text("Wheels"))
-		el.append($("<p>").text(format(dat['wheel_count'])))
-		el.append($("<p>").text(format(dat['wheels'])))
+		el.append($("<p>").text((dat['wheel_count']||"")+" "+format(dat['wheels'])))
 		el.append($("<h4>").text("Vision software used"))
 		el.append($("<ul>")
 			.append(dat['vision_auto']?$('<li>').text("Auto"):"")
@@ -642,7 +640,7 @@ function showPitScouting(el,team){
 
 	function format(s){
 		s = ""+s
-		if (!s||s=="0") s = "Unknown"
+		if (!s||s=="0"||/^undefined/.test(s)) s = "Unknown"
 		s = s[0].toUpperCase() + s.slice(1)
 		return s.replace(/_/g," ")
 	}
