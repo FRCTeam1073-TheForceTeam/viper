@@ -36,8 +36,7 @@ function eventAjax(file,callback){
 		type: "GET",
 		success: callback,
 		error: function(xhr,status,err){
-			console.log(file)
-			console.log(err)
+			console.error(file,err)
 			callback("")
 		}
 	})

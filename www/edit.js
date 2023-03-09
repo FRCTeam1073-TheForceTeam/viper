@@ -19,7 +19,7 @@ $(document).ready(function(){
 				tableEditor(text.split(/[\r\n]+/).map(l=>l.split(/,/).map(unescapeField)))
 			},
 			error: function(xhr,status,err){
-				console.log(err)
+				console.error(err)
 				blankTable()
 			}
 		})
