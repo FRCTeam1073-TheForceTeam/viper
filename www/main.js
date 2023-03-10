@@ -1,5 +1,9 @@
 "use strict"
 
+$.ajaxSetup({
+	cache: true
+});
+
 window.addEventListener("load", () => {
 	if ("serviceWorker" in navigator){
 		navigator.serviceWorker.register("/offline-service-worker.cgi").then(function(reg) {
@@ -34,6 +38,7 @@ $(document).ready(function(){
 				var eName = window.eventName||localStorage.getItem('last_event_name')||"",
 				eId = window.eventId||localStorage.getItem('last_event_id')||"",
 				eYear = window.eventName||localStorage.getItem('last_event_year')||""
+				if (localStorage.getItem('last_event_id')==eId)eName = localStorage.getItem('last_event_name')||window.eventName||""
 				mainMenu.html(
 					data
 						.replace(/EVENT_NAME/g,eName)

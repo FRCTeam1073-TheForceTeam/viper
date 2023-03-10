@@ -19,7 +19,7 @@ eventInfo,
 eventPitData,
 BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
 
-if (eventId){
+if (eventId && eventId != localStorage.getItem("last_event_id")){
 	localStorage.setItem("last_event_id", eventId)
 	localStorage.setItem("last_event_name", eventName)
 	localStorage.setItem("last_event_year", eventYear)
@@ -176,10 +176,11 @@ function loadEventInfo(callback){
 	eventAjax(`/data/${eventId}.event.csv`,function(text){
 		if (text){
 			eventInfo = csvToArrayOfMaps(text)[0]
-			if (eventInfo.name) eventName = `${eventYear} ${eventInfo.name}`
+			if (eventInfo.name)	eventName = (eventInfo.name.includes(eventYear)?"":`${eventYear} `)+eventInfo.name
 		} else {
 			eventInfo = []
 		}
+		localStorage.setItem("last_event_name", eventName)
 		if (callback) callback(eventInfo)
 	})
 }

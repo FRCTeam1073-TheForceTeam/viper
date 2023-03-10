@@ -36,8 +36,9 @@ $(document).ready(function(){
 				fields = event.split(/,/),
 				id = fields[0],
 				year = id.substring(0,4),
-				venue = (fields.length>1&&fields[1])?fields[1]:id.substring(4)
-				list.append($(`<li><a href=/event.html#${id}>${year} ${venue}</a></li>`))
+				venue = (fields.length>1&&fields[1])?fields[1]:id.substring(4),
+				name=venue.includes(year)?venue:`${year} ${venue}`
+				list.append($(`<li><a href=/event.html#${id}>${name}</a></li>`))
 				eventsShown++
 			}
 		}
