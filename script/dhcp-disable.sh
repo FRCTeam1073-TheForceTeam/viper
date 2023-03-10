@@ -23,13 +23,13 @@ fi
 
 if [ ! -e /etc/dhcp/dhcpd.conf ]
 then
-	"Could not find expected file: /etc/dhcp/dhcpd.conf"
+	echo "Could not find expected file: /etc/dhcp/dhcpd.conf"
 	exit 1
 fi
 
 if [ ! -e orig/etc.dhcp.dhcpd.conf ]
 then
-	"Could not find expected file: orig/etc.dhcp.dhcpd.conf"
+	echo "Could not find expected file: orig/etc.dhcp.dhcpd.conf"
 	exit 1
 fi
 
