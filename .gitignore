@@ -2,6 +2,7 @@
 /www/admin/
 /www/scout/
 /www/data/*
+/orig
 local.*
 *.tar.gz
 *.tgz
