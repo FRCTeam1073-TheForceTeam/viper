@@ -22,6 +22,11 @@ It runs on as a web app on a server that can be taken to events and powered by a
 1. This software stores data in CSV files which can be imported into Excel or Tableau for further analysis.\
    [<img src=doc/csv.png width=200>](doc/csv.png)
 
+## Demo
+
+ - [Half hour video](https://drive.google.com/file/d/18dF44_FT35HEZ7824Iv5jhn8GvhnvuFO/view)
+ - [Interactive demo](https://webscoutdemo.deadsea.ostermiller.org)
+
 ## Other documentation
 
  - [Recommended hardware](doc/hardware.md)
