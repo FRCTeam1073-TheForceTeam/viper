@@ -94,5 +94,4 @@ $(document).ready(function(){
 		.sort((a, b) => a.sort - b.sort)
 		.map(({value}) => value)
 	}
-
 })
