@@ -491,8 +491,6 @@ $(document).ready(function(){
 		if (!$(this).attr('value')) return
 		if (/^radio|checkbox|submit$/i.test($(this).attr('type'))) return
 		if ($(this).attr('value') != $(this).val()) return
-		console.log("Selecting")
-		console.log($(this))
 		$(this).one('mouseup',function(){
 			$(this).select()
 			return false
