@@ -489,6 +489,7 @@ $(document).ready(function(){
 		// Select pre-filled input values
 		if ($(this).attr('disabled')) return
 		if (!$(this).attr('value')) return
+		if (/^radio|checkbox|submit$/i.test($(this).attr('type'))) return
 		if ($(this).attr('value') != $(this).val()) return
 		$(this).one('mouseup',function(){
 			$(this).select()
