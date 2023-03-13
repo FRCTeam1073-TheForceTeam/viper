@@ -224,9 +224,10 @@ function showPitScouting(t){
 	pit.show()
 }
 
+var lastClickTime = 0
 function countHandler(e){
 	var count=$(this),
-	clicked = e&&e.hasOwnProperty('type')&&e.type==='click',
+	clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTime-e.timeStamp)>100,
 	parent = count,
 	src = count.attr('src')
 	for(var i=0;parent.find('.count,input').length<3&&i<10;i++) parent = parent.parent()
@@ -236,6 +237,7 @@ function countHandler(e){
 	min=parseInt(input.attr('min'))||0
 	if (!input.length) throw ("No input for counter")
 	if (clicked){
+		lastClickTime=e.timeStamp
 		var toAdd = 0
 		if(/up/.test(src))toAdd = 1
 		else if(/down/.test(src))toAdd = -1
