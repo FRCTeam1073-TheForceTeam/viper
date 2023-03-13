@@ -1,65 +1,46 @@
 "use strict"
 
 $(document).ready(function(){
-	$('#blueAllianceSource').submit(function(){
-		var src=$('textarea').val(),csv="",m,
-		eventId=src.match(/event_key=(20[0-9]+[a-z]+)/)[1]
-		if (!eventId){
-			alert("No event ID found")
-			return false
-		}
-		if (!csv) csv=getMatchSchedule(src)
-		if (!csv) csv=getPracticeSchedule(src)
+	$('#importData').submit(processInput)
+	$('input[type=submit]').click(processInput)
+
+	function processInput(){
+		var src=$('#sourceInp').val(),csv="",m
+		if (!csv) csv=getBlueAllianceMatchSchedule(src)
+		if (!csv) csv=randomPracticeSchedule(getBlueAllianceTeamList(src))
+		if (!csv) csv=randomPracticeSchedule(getGenericTeamList(src))
 		if (!csv){
 			alert("No data found!")
 			return false
 		}
-		if (m = /itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/.exec(src)){
-			if (m[1].length>1) $('#startInp').val(m[1])
-		}
-		if (m = /itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/.exec(src)){
-			if (m[1].length>1) $('#endInp').val(m[1])
-		} else {
-			if (m[1].length>1) $('#endInp').val($('#startInp').val())
-		}
-		if (m = /id\=\"event-name\"\>([^\<]+)\</.exec(src)){
-			if (m[1].length>1) $('#nameInp').val(m[1])
-		}
-		if (m = /\<span itemprop\=\"location\"\>(.|[\r\n])*?\<\/span\>/m.exec(src)){
-			if (m[1].length) $('#locationInp').val($(m[0]).text().trim())
-		}
-		$('#eventInp').val(eventId)
+		$('#idInp').val((src.match(/event_key=(20[0-9]+[a-z]+)/)||["",$('#idInp').val()])[1])
+		$('#startInp').val((src.match(/itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",$('#startInp').val()])[1])
+		$('#endInp').val((src.match(/itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",$('#endInp').val()])[1])
+		$('#nameInp').val((src.match(/id\=\"event-name\"\>([^\<]+)\</)||["",$('#nameInp').val()])[1])
+		$('#locationInp').val((src.match(/\<span itemprop\=\"location\"\>(.|[\r\n])*?\<\/span\>/m)||["",$('#locationInp').val()])[1])
 		$('#csvInp').val(csv)
-		$('#csvForm').submit()
-		return false
-	})
-
-	function getPracticeSchedule(src){
-		var teams = src.match(/\/team\/([0-9]+)\//g).map(s=>s.replace(/[^0-9]/g,"")),
-		match=0,
-		matchTeams=0,
-		csv="Match,R1,R2,R3,B1,B2,B3"
-		if (!teams.length) return ""
-		teams = shuffleArray([...new Set(teams)])
-		teams.forEach(function(team){
-			if (matchTeams >= 6) matchTeams = 0
-			if (matchTeams == 0){
-				match++
-				csv+="\npm"+match
-			}
-			csv+=","+team
-			matchTeams++
-		})
-		while (matchTeams < 6){
-			teams = shuffleArray(teams)
-			csv+=","+teams[0]
-			matchTeams++
+		if($('#autoFields input:empty').length){
+			$('#autoFields').show()
+			$('#csvInp').show()
+			$('#sourceInp').hide()
 		}
-		csv+="\n"
-		return csv
 	}
 
-	function getMatchSchedule(src){
+	function venueNameToId(){
+		$('#idInp').val($('#startInp').val().substr(0,4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
+	}
+
+	$('#nameInp').change(venueNameToId).keyup(venueNameToId)
+
+	function getBlueAllianceTeamList(src){
+		return (src.match(/\/team\/([0-9]+)\//g)||[]).map(s=>s.replace(/[^0-9]/g,""))
+	}
+
+	function getGenericTeamList(src){
+		return src.match(/\b([0-9]+)\b/g)
+	}
+
+	function getBlueAllianceMatchSchedule(src){
 		var re= /(?:\/match\/(20[0-9]{2}[a-zA-Z0-9]+)_qm([0-9]+))|(?:\/team\/([0-9]+)\/20)/g,
 		m, qual, schedule = [["Match","R1","R2","R3","B1","B2","B3"]]
 		do {
@@ -85,6 +66,30 @@ $(document).ready(function(){
 			}
 			csv += row.join(",") + "\n"
 		}
+		return csv
+	}
+
+	function randomPracticeSchedule(teams){
+		if (!teams || !teams.length) return ""
+		var match=0,
+		matchTeams=0,
+		csv="Match,R1,R2,R3,B1,B2,B3"
+		teams = shuffleArray([...new Set(teams)])
+		teams.forEach(function(team){
+			if (matchTeams >= 6) matchTeams = 0
+			if (matchTeams == 0){
+				match++
+				csv+="\npm"+match
+			}
+			csv+=","+team
+			matchTeams++
+		})
+		while (matchTeams < 6){
+			teams = shuffleArray(teams)
+			csv+=","+teams[0]
+			matchTeams++
+		}
+		csv+="\n"
 		return csv
 	}
 
