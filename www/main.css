@@ -36,6 +36,7 @@ ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
 .lastFocus{background-color:var(--focus-bg-color)}
 .side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box}
 .winner{border-left-color:var(--winner-color);border-right-color:var(--winner-color)}
+h1{padding:0 2.5em}
 #fullscreen{position:fixed;bottom:0.4em;right:0.4em;font-size:200%;cursor:pointer}
 #hamburger{position:fixed;top:0;right:0.4em;font-size:300%;cursor:pointer}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
