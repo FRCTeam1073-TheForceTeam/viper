@@ -13,15 +13,23 @@
 </head>
 <body>
 		<h1>Import an Event</h1>
+
+		Paste data from another source into the text area below.
+
+		<h2>Event From The Blue Alliance</h2>
 		<ol>
 		<li>Go to <a href="https://www.thebluealliance.com/">The Blue Alliance website</a></li>
 		<li>Navigate to the event page on that site for the event you want to import.</li>
 		<li>Use <code>Ctrl-u</code> to view the web page source for that event page.</li>
 		<li>Use <code>Ctrl-a</code> to select the entire source code.</li>
 		<li>Use <code>Ctrl-c</code> to copy all the selected source code.</li>
-		<li>Use <code>Ctrl-v</code> to paste it all into the text area below.</li>
-		<li>Click the submit button.</li>
 		</ol>
+
+		<h2>Team list</h2>
+		Copy and paste any list of teams. Non-team-number data (such as team names)
+		will be ignored. The list of team numbers will generate a random practice schedule
+		which will allow you to start pit scouting and photo scouting before the official
+		match schedule for the event is known.
 
 		<form id=importData method=POST action=/admin/add-event.cgi>
 			<div class=initHid id=autoFields>
