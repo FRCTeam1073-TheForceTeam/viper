@@ -91,10 +91,12 @@ function aggregateStats(scout, aggregate){
 	scout['auto_mobility_score'] = scout['auto_mobility']?pointValues['auto_mobility']:0
 	scout['auto_dock_score'] = pointValues['auto_'+scout['auto_dock']]||0
 	scout['auto_dock_docked_attempts'] = scout['auto_dock']?1:0
-	scout['auto_dock_docked'] = /docked|engaged/.test(scout['auto_dock']||"")?1:0
-	scout['auto_dock_docked_failed'] = scout['auto_dock_docked_attempts']-scout['auto_dock_docked']
-	scout['auto_dock_engaged_attempts'] = scout['auto_dock']?1:0
+	scout['auto_dock_docked'] = scout['auto_dock']=="docked"?1:0
 	scout['auto_dock_engaged'] = scout['auto_dock']=="engaged"?1:0
+	scout['auto_dock_failed'] = scout['auto_dock']=="failed"?1:0
+	scout['auto_dock_none'] = scout['auto_dock']?0:1
+	scout['auto_dock_docked_failed'] = scout['auto_dock_docked_attempts']-scout['auto_dock_engaged']-scout['auto_dock_docked']
+	scout['auto_dock_engaged_attempts'] = scout['auto_dock']?1:0
 	scout['auto_dock_engaged_failed'] = scout['auto_dock_engaged_attempts']-scout['auto_dock_engaged']
 	scout['auto_score'] = scout['auto_place_score']+scout['auto_dock_score']+scout['auto_mobility_score']
 
@@ -183,6 +185,16 @@ var statInfo = {
 	},
 	"auto_dock_engaged_failed": {
 		name: "Engaged During Auto Failed",
+		type: "count",
+		good: "low"
+	},
+	"auto_dock_failed": {
+		name: "Dock Failed During Auto",
+		type: "count",
+		good: "low"
+	},
+	"auto_dock_none": {
+		name: "Dock Not Attempted During Auto",
 		type: "count",
 		good: "low"
 	},
@@ -468,6 +480,10 @@ var aggregateGraphs = {
 	"Capabilities":{
 		graph:"bar",
 		data:['cone_sideways','throw']
+	},
+	"Auto Dock":{
+		graph:"stacked_percent",
+		data:['auto_dock_engaged', 'auto_dock_docked', 'auto_dock_failed', 'auto_dock_none']
 	},
 	"Docking":{
 		graph:"bar",

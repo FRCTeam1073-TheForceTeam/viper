@@ -69,21 +69,22 @@ function showStats(){
 			graphs.append(graph)
 			graph.append($('<h2>').text(section))
 			graph.append($('<div class=chart>').append(chart).css('min-width', (teamList.length*23+100) + 'px'))
+			var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent"
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
 				var field = aggregateGraphs[section]['data'][j],
 				info = statInfo[field]||{}
 				var values = []
 				for (var k=0; k<teamList.length; k++){
-					values.push(getTeamValue(field, teamList[k]))
+					values.push(getTeamValue(field, teamList[k],stackedPercent))
 				}
 				data.push({
 					label: (info['type']=='avg'?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
 					data: values,
 					backgroundColor: bgArr(graphColors[j])
 				})
-				if (info['type']=='%') percent=true
+				if (info['type']=='%'||stackedPercent) percent=true
 			}
-			var stacked = aggregateGraphs[section]['graph']=="stacked"
+			var stacked = aggregateGraphs[section]['graph'].includes("stacked")
 			var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
 			if (percent)yScale['suggestedMax'] = 100
 			new Chart(chart,{
@@ -213,11 +214,12 @@ function darkenColor(color){
 
 }
 
-function getTeamValue(field, team){
+function getTeamValue(field, team, percent){
 	if (! team in eventStatsByTeam) return 0
 	var stats = eventStatsByTeam[team],
 	info = statInfo[field]||{}
+	percent = percent || info['type']=='%'
 	if (! field in stats ||! 'count' in stats || !stats['count']) return 0
-	var divisor = /(avg|\%)$/.test(info['type'])?stats['count']:1
-	return (stats[field]||0) / divisor * (info['type']=='%'?100:1)
+	var divisor = (percent||"avg"==info['type'])?stats['count']:1
+	return (stats[field]||0) / divisor * (percent?100:1)
 }
