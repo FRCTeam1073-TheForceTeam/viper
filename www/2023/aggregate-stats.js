@@ -166,7 +166,8 @@ var statInfo = {
 	},
 	"auto_dock_docked_failed": {
 		name: "Dock During Auto Failed",
-		type: "count"
+		type: "count",
+		good: "low"
 	},
 	"auto_dock_docked_reliability": {
 		name: "Dock During Auto Reliability",
@@ -182,7 +183,8 @@ var statInfo = {
 	},
 	"auto_dock_engaged_failed": {
 		name: "Engaged During Auto Failed",
-		type: "count"
+		type: "count",
+		good: "low"
 	},
 	"auto_dock_engaged_reliability": {
 		name: "Engage During Auto Reliability",
@@ -230,11 +232,12 @@ var statInfo = {
 	},
 	"end_dock_docked_attempts": {
 		name: "Docked During End Game Attempts",
-		type: "avg"
+		type: "count"
 	},
 	"end_dock_docked_failed": {
 		name: "Docked During End Game Failures",
-		type: "avg"
+		type: "count",
+		good: "low"
 	},
 	"end_dock_docked_reliability": {
 		name: "Docked During End Game Reliability",
@@ -242,15 +245,16 @@ var statInfo = {
 	},
 	"end_dock_engaged": {
 		name: "Engaged During End Game",
-		type: "avg"
+		type: "count"
 	},
 	"end_dock_engaged_attempts": {
 		name: "Engaged During End Game Attempts",
-		type: "avg"
+		type: "count"
 	},
 	"end_dock_engaged_failed": {
 		name: "Engaged During End Game Failed",
-		type: "avg"
+		type: "count",
+		good: "low"
 	},
 	"end_dock_engaged_reliability": {
 		name: "Engaged During End Game Reliability",
@@ -515,8 +519,9 @@ var matchPredictorSections = {
 var plannerSections = {
 	"Total":["score"],
 	"Game Stages":["auto_score","tele_score","end_score"],
-	"Reliability":['auto_dock_docked_reliability','auto_dock_engaged_reliability','end_dock_docked_reliability','end_dock_engaged_reliability'],
-	"Time":['full_cycle_average_seconds']
+	"Auto":['auto_place','auto_dock_engaged_attempts','auto_dock_engaged_reliability'],
+	"Teleop":['tele_place','full_cycle_average_seconds'],
+	"End":['end_dock_engaged_attempts','end_dock_engaged_reliability']
 }
 
 function showPitScouting(el,team){
