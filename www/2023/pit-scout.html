@@ -25,14 +25,14 @@
 	<input type=hidden name=team>
 
 	<fieldset class=full>
-		<legend>Team info</legend>
-		<p>Name: <input name=team_name type=text placeholder="Team name"></p>
+		<legend><span class=team></span> Team info</legend>
+		<p>Name: <input name=team_name type=text placeholder="NOT the team number"></p>
 		<p>Location: <input name=team_location type=text placeholder="Anytown, ST, USA"></p>
 		<p>Bot name: <input name=bot_name type=text></p>
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Which of these auto routines can your bot perform?</legend>
+		<legend>Which of these auto routines can <span class=team></span> perform?</legend>
 		<img src=auto-routines.svg style=height:30em>
 		<table><tr><td colspan=2>
 			<label><input type=checkbox name=auto_barrier value=1><span><span style=color:cyan>⬤</span> Use grid and lane by barrier, no docking</span></label>
@@ -54,7 +54,7 @@
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Can your bot place cargo?</legend>
+		<legend>Can <span class=team></span> place cargo?</legend>
 		<table><tr><td>
 			<label><input type=checkbox name=place_cones_top value=1><span>Cones on top row</span></label>
 		</td><td>
@@ -133,21 +133,21 @@
 	<fieldset class=full>
 		<legend>Practice</legend>
 		<p>
-			Where has your robot been tested?<br>
+			Where has <span class=team></span>'s robot been tested?<br>
 			<label><input type=checkbox name=field_built value=yes><span>Built a practice field</span></label>
 			<label><input type=checkbox name=field_other_team value=yes><span>Used another team's practice field</span></label>
 			<label><input type=checkbox name=field_wpi value=yes><span>WPI Practice field</span></label>
 			<label><input type=checkbox name=field_events value=yes><span>Previous Events</span></label>
 		</p>
 		<p>
-			If your team built a practice field, which elements got built?<br>
+			If <span class=team></span> built a practice field, which elements got built?<br>
 			<label><input type=checkbox name=built_grid value=yes><span>Grid</span></label>
 			<label><input type=checkbox name=built_charging_station value=yes><span>Charging Station</span></label>
 			<label><input type=checkbox name=built_double_substation value=yes><span>Double Substation</span></label>
 			<label><input type=checkbox name=built_single_substation value=yes><span>Single Substation</span></label>
 		</p>
 		<p>
-			How many days a week does your team (or parts of it) meet?
+			How many days a week does <span class=team></span> (or parts of it) meet?
 			<br>
 			<input type=number name=practice_days value=yes min=0 max=7>
 		</p>

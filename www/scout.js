@@ -211,6 +211,7 @@ function showPitScouting(t){
 	if (t && typeof t != 'number') t = parseInt($(this).text())
 	if (t) team = t
 	$('.screen').hide()
+	$('h1').text("Pit Scouting " + eventName + " Team " + team)
 	window.scrollTo(0,0)
 	setHash(null,null,team,null,teamList)
 	var pit = $('#pit-scouting')
