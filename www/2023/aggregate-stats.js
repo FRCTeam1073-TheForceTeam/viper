@@ -572,7 +572,7 @@ function showPitScouting(el,team){
 				)?$('<li>').text("None"):"")
 		)
 		el.append($("<h4>").text("Dimensions (inches without bumpers)"))
-		el.append($("<p>").text(format(dat['length']+'x'+dat['width']+'"')))
+		el.append($("<p>").text(format(dat['frame_length']+'x'+dat['frame_width']+'"')))
 		el.append($("<h4>").text("Weight (pounds)"))
 		el.append($("<p>").text(format(dat['weight'])))
 		el.append($("<h4>").text("Drivetrain"))
