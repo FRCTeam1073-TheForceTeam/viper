@@ -20,7 +20,7 @@
 --translucent-hide-color:#333D;
 }
 *{box-sizing:border-box}
-html{font-size:2vmin;color:var(--main-fg-color);background:var(--main-bg-color) url('/background.png') fixed;background-size:33vw auto}
+html{font-size:2vmin;color:var(--main-fg-color);background:var(--main-bg-color) url('/background.png') fixed;background-size:33vw auto;padding-bottom:100vh}
 a:link{color:var(--link-color)}
 a:visited{color:var(--link-visited-color)}
 table,tr,td,th,button,input,select,option,input,textarea,form{font-size:inherit;color:inherit;background:inherit}
