@@ -54,7 +54,7 @@ $(document).ready(function(){
 
 	onStore.push(function(){
 		if(!$('input[name="links"]').val()){
-			alert("Links not set")
+			alert("Missing data: 'How many links?'")
 			return false
 		}
 		showAuto()
