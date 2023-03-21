@@ -97,7 +97,7 @@ function loadAlliances(callback){
 	})
 }
 
-function loadEventStats(callback){
+function loadEventStats(callback, includePractice){
 	if (eventStats){
 		if (callback) callback(eventStats, eventStatsByTeam, eventStatsByMatchTeam)
 		return
@@ -106,7 +106,7 @@ function loadEventStats(callback){
 		$.getScript(`/${eventYear}/aggregate-stats.js`, function(){
 			eventAjax(`/data/${eventId}.scouting.csv`,function(text){
 				eventStats=csvToArrayOfMaps(text)
-				aggregateAllEventStats()
+				aggregateAllEventStats(includePractice)
 				if (callback) callback(eventStats, eventStatsByTeam, eventStatsByMatchTeam)
 			})
 		})
@@ -140,10 +140,13 @@ function matchScoutingDataCount(m){
 	return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
 }
 
+var statsIncludePractice = true
+
 function aggregateAllEventStats(includePractice){
 	if (typeof includePractice != "boolean"){
 		includePractice=!haveNonPracticeMatchForEachTeam()
 	}
+	statsIncludePractice = includePractice
 	$('.aggregationIncludesPractice').text(includePractice?"include":"exclude")
 	eventStatsByTeam = {}
 	eventStatsByMatchTeam = {}
