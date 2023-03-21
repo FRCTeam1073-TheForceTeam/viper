@@ -4,7 +4,7 @@ var rawTitle="",rawH1=""
 $(document).ready(function(){
 	rawTitle = $('title').text()
 	rawH1 = $('h1').text()
-	loadEventStats(fillPage)
+	loadEventStats(fillPage, true)
 	$('#displayType').change(showStats)
 })
 
@@ -62,12 +62,13 @@ function teamButtonClicked(){
 function showStats(){
 	var matchList = [],
 	matchNames = []
-	for (var i=0; i<eventStats.length; i++){
-		if (eventStats[i]['team']==team){
-			matchList.push(eventStats[i])
-			matchNames.push(getMatchName(eventStats[i]['match']))
+	eventStats.forEach(function(stat){
+		var match = stat['match']
+		if (stat['team']==team && (statsIncludePractice || !/^pm/.test(match))){
+			matchList.push(stat)
+			matchNames.push(getMatchName(match))
 		}
-	}
+	})
 	if (!matchList.length) return;
 
 	if ($('#displayType').val() == 'graph')	showGraphs(matchList, matchNames)
