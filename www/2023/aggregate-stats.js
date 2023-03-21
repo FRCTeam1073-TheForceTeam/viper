@@ -90,26 +90,22 @@ function aggregateStats(scout, aggregate){
 
 	scout['auto_mobility_score'] = scout['auto_mobility']?pointValues['auto_mobility']:0
 	scout['auto_dock_score'] = pointValues['auto_'+scout['auto_dock']]||0
-	scout['auto_dock_docked_attempts'] = scout['auto_dock']?1:0
 	scout['auto_dock_docked'] = scout['auto_dock']=="docked"?1:0
 	scout['auto_dock_engaged'] = scout['auto_dock']=="engaged"?1:0
 	scout['auto_dock_failed'] = scout['auto_dock']=="failed"?1:0
 	scout['auto_dock_none'] = scout['auto_dock']?0:1
-	scout['auto_dock_docked_failed'] = scout['auto_dock_docked_attempts']-scout['auto_dock_engaged']-scout['auto_dock_docked']
 	scout['auto_dock_engaged_attempts'] = scout['auto_dock']?1:0
 	scout['auto_dock_engaged_failed'] = scout['auto_dock_engaged_attempts']-scout['auto_dock_engaged']
 	scout['auto_score'] = scout['auto_place_score']+scout['auto_dock_score']+scout['auto_mobility_score']
 
 	scout['end_score'] = pointValues['end_'+scout['end']]||0
 	scout['end_dock_score'] = scout['end']=='parked'?0:scout['end_score']
-
-	scout['end_dock_docked'] = /docked|engaged/.test(scout['end']||"")?1:0
-	scout['end_dock_docked_attempts'] = (scout['end_dock_docked']||scout['end_dock_fail']=='yes')?1:0
-	scout['end_dock_docked_failed'] = scout['end_dock_docked_attempts']-scout['end_dock_docked']
-
+	scout['end_dock_docked'] = (scout['end']=='docked'&&scout['end_dock_fail']!='yes')?1:0
 	scout['end_dock_engaged'] = scout['end']=="engaged"?1:0
-	scout['end_dock_engaged_attempts'] = (scout['end_dock_engaged']||scout['end_dock_fail']=='yes')?1:0
-	scout['end_dock_engaged_failed'] = scout['end_dock_engaged_attempts']-scout['end_dock_engaged']
+	scout['end_dock_engaged_none'] = (!/^docked|engaged$/.test(scout['end'])&&!scout['end_dock_fail'])?1:0
+	scout['end_dock_engaged_attempts'] = (/^docked|engaged$/.test(scout['end'])||scout['end_dock_fail']=='yes')?1:0
+	scout['end_dock_engaged_failed'] = ((scout['end']=='docked'&&scout['end_dock_fail']!='nofault')||(scout['end']!='engaged'&&scout['end_dock_fail']=='yes'))?1:0
+	scout['end_dock_engaged_failed_nofault'] = (scout['end']!='engaged'&&scout['end_dock_fail']=='nofault')?1:0
 
 	scout['links_score'] = Math.round((scout['links']||0)*pointValues['links'])
 	scout['tele_score'] = scout['tele_place_score']+scout['links_score']
@@ -161,19 +157,6 @@ var statInfo = {
 	"auto_dock_docked": {
 		name: "Docked During Auto",
 		type: "count"
-	},
-	"auto_dock_docked_attempts": {
-		name: "Dock During Auto Attempts",
-		type: "count"
-	},
-	"auto_dock_docked_failed": {
-		name: "Dock During Auto Failed",
-		type: "count",
-		good: "low"
-	},
-	"auto_dock_docked_reliability": {
-		name: "Dock During Auto Reliability",
-		type: "fraction"
 	},
 	"auto_dock_engaged": {
 		name: "Engaged During Auto",
@@ -242,22 +225,14 @@ var statInfo = {
 		name: "Docked During End Game",
 		type: "avg"
 	},
-	"end_dock_docked_attempts": {
-		name: "Docked During End Game Attempts",
-		type: "count"
-	},
-	"end_dock_docked_failed": {
-		name: "Docked During End Game Failures",
-		type: "count",
-		good: "low"
-	},
-	"end_dock_docked_reliability": {
-		name: "Docked During End Game Reliability",
-		type: "fraction"
-	},
 	"end_dock_engaged": {
 		name: "Engaged During End Game",
 		type: "count"
+	},
+	"end_dock_engaged_none": {
+		name: "No Attempt to Engage During End Game",
+		type: "count",
+		good: "low"
 	},
 	"end_dock_engaged_attempts": {
 		name: "Engaged During End Game Attempts",
@@ -265,6 +240,11 @@ var statInfo = {
 	},
 	"end_dock_engaged_failed": {
 		name: "Engaged During End Game Failed",
+		type: "count",
+		good: "low"
+	},
+	"end_dock_engaged_failed_nofault": {
+		name: "Engaged During End Game Failed but Not at Fault",
 		type: "count",
 		good: "low"
 	},
@@ -398,6 +378,18 @@ var teamGraphs = {
 		graph:"stacked",
 		data:["auto_score","tele_score","end_score"]
 	},
+	"Auto Dock":{
+		graph:"stacked",
+		data:['auto_dock_engaged', 'auto_dock_docked', 'auto_dock_failed', 'auto_dock_none']
+	},
+	"# Placed by Stage":{
+		graph:"stacked",
+		data:["auto_place","tele_place"]
+	},
+	"End Engage":{
+		graph:"stacked",
+		data:['end_dock_engaged', 'end_dock_engaged_failed_nofault', 'end_dock_engaged_failed', 'end_dock_engaged_none']
+	},
 	"Auto":{
 		graph:"stacked",
 		data:['auto_mobility_score','auto_place_score','auto_dock_score']
@@ -418,21 +410,17 @@ var teamGraphs = {
 		graph:"bar",
 		data:['auto_dock_docked','auto_dock_engaged','end_dock_docked','end_dock_engaged']
 	},
-	"Docking Failures":{
+	"Engage Failures":{
 		graph:"bar",
-		data:['auto_dock_docked_failed','auto_dock_engaged_failed','end_dock_docked_failed','end_dock_engaged_failed']
+		data:['auto_dock_engaged_failed','end_dock_engaged_failed']
 	},
-	"Cycle Time":{
+	"Full Cycle Time":{
 		graph:"bar",
 		data:["full_cycle_average_seconds","full_cycle_fastest_seconds"]
 	},
-	"Cycle Count":{
+	"Full Cycle Count":{
 		graph:"bar",
 		data:["full_cycle_count"]
-	},
-	"# Placed by Stage":{
-		graph:"stacked",
-		data:["auto_place","tele_place"]
 	},
 	"# Placed by Type":{
 		graph:"stacked",
@@ -444,7 +432,7 @@ var teamGraphs = {
 	},
 	"# Placed by Type and Level":{
 		graph:"stacked",
-		data:["bottom_cone","bottom_cube","middle_cone","middle_cube","top_cone","top_cube"]
+		data:["bottom_cube","bottom_cone","middle_cube","middle_cone","top_cube","top_cone"]
 	},
 	"Place Reliability by Stage":{
 		graph:"bar",
@@ -465,6 +453,18 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["auto_score","tele_score","end_score"]
 	},
+	"Auto Dock %":{
+		graph:"stacked_percent",
+		data:['auto_dock_engaged', 'auto_dock_docked', 'auto_dock_failed', 'auto_dock_none']
+	},
+	"# Placed by Stage":{
+		graph:"stacked",
+		data:["auto_place","tele_place"]
+	},
+	"End Engage %":{
+		graph:"stacked_percent",
+		data:['end_dock_engaged', 'end_dock_engaged_failed_nofault', 'end_dock_engaged_failed', 'end_dock_engaged_none']
+	},
 	"Auto":{
 		graph:"stacked",
 		data:['auto_mobility_score','auto_place_score','auto_dock_score']
@@ -481,25 +481,17 @@ var aggregateGraphs = {
 		graph:"bar",
 		data:['cone_sideways','throw']
 	},
-	"Auto Dock":{
-		graph:"stacked_percent",
-		data:['auto_dock_engaged', 'auto_dock_docked', 'auto_dock_failed', 'auto_dock_none']
-	},
 	"Docking":{
 		graph:"bar",
-		data:['auto_dock_docked_reliability','auto_dock_engaged_reliability','end_dock_docked_reliability','end_dock_engaged_reliability']
+		data:['auto_dock_engaged_reliability','end_dock_engaged_reliability']
 	},
-	"Cycle Time":{
+	"Full Cycle Time":{
 		graph:"bar",
 		data:["full_cycle_average_seconds","full_cycle_fastest_seconds"]
 	},
-	"Cycle Count":{
+	"Full Cycle Count":{
 		graph:"bar",
 		data:["full_cycle_count"]
-	},
-	"# Placed by Stage":{
-		graph:"stacked",
-		data:["auto_place","tele_place"]
 	},
 	"# Placed by Type":{
 		graph:"stacked",
@@ -511,7 +503,7 @@ var aggregateGraphs = {
 	},
 	"# Placed by Type and Level":{
 		graph:"stacked",
-		data:["bottom_cone","bottom_cube","middle_cone","middle_cube","top_cone","top_cube"]
+		data:["bottom_cube","bottom_cone","middle_cube","middle_cone","top_cube","top_cone"]
 	},
 	"Place Reliability by Stage":{
 		graph:"bar",
