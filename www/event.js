@@ -16,6 +16,7 @@ $(document).ready(function(){
 			'href',$(this).attr('href')
 			.replace('YEAR', eventYear)
 			.replace('EVENT', eventId)
+			.replace('YSLEV', eventId.replace(/^(20[0-9]{2})/,"$1/")) // Year slash event
 			.replace('UPLOAD_COUNT', uploadCount)
 		)
 		$(this).text(
