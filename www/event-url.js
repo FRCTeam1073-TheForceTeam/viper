@@ -156,8 +156,8 @@ function aggregateAllEventStats(includePractice){
 			aggregateStats(scout, aggregate)
 			eventStatsByTeam[team] = aggregate
 		} else {
-{			aggregateStats(scout, {})
-}		}
+			aggregateStats(scout, {})
+		}
 		eventStatsByMatchTeam[`${match}-${team}`]=scout
 	})
 }
