@@ -96,7 +96,8 @@ function aggregateStats(scout, aggregate){
 	scout['auto_dock_none'] = scout['auto_dock']?0:1
 	scout['auto_dock_engaged_attempts'] = scout['auto_dock']?1:0
 	scout['auto_dock_engaged_failed'] = scout['auto_dock_engaged_attempts']-scout['auto_dock_engaged']
-	scout['auto_score'] = scout['auto_place_score']+scout['auto_dock_score']+scout['auto_mobility_score']
+	scout['auto_nondock_score'] = scout['auto_place_score']+scout['auto_mobility_score']
+	scout['auto_score'] = scout['auto_nondock_score']+scout['auto_dock_score']
 
 	scout['end_score'] = pointValues['end_'+scout['end']]||0
 	scout['end_dock_score'] = scout['end']=='parked'?0:scout['end_score']
@@ -187,6 +188,10 @@ var statInfo = {
 	},
 	"auto_dock_score": {
 		name: "Auto Docking Score",
+		type: "avg"
+	},
+	"auto_nondock_score": {
+		name: "Auto Mobility+Place Score",
 		type: "avg"
 	},
 	"auto_mobility": {
@@ -376,7 +381,7 @@ var teamGraphs = {
 	},
 	"Game Stages":{
 		graph:"stacked",
-		data:["auto_score","tele_score","end_score"]
+		data:["auto_nondock_score","auto_dock_score","tele_score","end_score"]
 	},
 	"Auto Dock":{
 		graph:"stacked",
@@ -451,7 +456,7 @@ var aggregateGraphs = {
 	},
 	"Game Stages":{
 		graph:"stacked",
-		data:["auto_score","tele_score","end_score"]
+		data:["auto_nondock_score","auto_dock_score","tele_score","end_score"]
 	},
 	"Auto Dock %":{
 		graph:"stacked_percent",
