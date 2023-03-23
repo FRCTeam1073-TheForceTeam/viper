@@ -105,7 +105,7 @@ $(document).ready(function(){
 					row.find(`.${pos}`).text(match[pos])
 						.toggleClass("scouted",!!scouted)
 						.toggleClass("needed",!scouted&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
-						.toggleClass("error",scouted>1)
+						.toggleClass("error",!!scouted.old)
 						.toggleClass("ourTeam",""+match[pos]==""+window.ourTeam)
 				})
 				row.find('.match-id').text(hyphenate(getMatchName(match.Match))).attr('data-match-id',match.Match)

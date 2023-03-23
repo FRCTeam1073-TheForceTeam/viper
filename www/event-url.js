@@ -158,7 +158,9 @@ function aggregateAllEventStats(includePractice){
 		} else {
 			aggregateStats(scout, {})
 		}
-		eventStatsByMatchTeam[`${match}-${team}`]=scout
+		var mt=`${match}-${team}`
+		scout.old=eventStatsByMatchTeam[mt]
+		eventStatsByMatchTeam[mt]=scout
 	})
 }
 
