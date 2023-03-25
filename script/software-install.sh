@@ -19,6 +19,7 @@ then
 		libjpeg-turbo-progs \
 		libjson-pp-perl \
 		libmime-base64-perl \
+		libwww-perl \
 		perl \
 		;
 fi

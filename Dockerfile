@@ -15,6 +15,7 @@ RUN apt-get update \
 		libjpeg-turbo-progs \
 		libjson-pp-perl \
 		libmime-base64-perl \
+		libwww-perl \
 		perl \
 	&& apt-get clean autoclean \
 	&& apt-get autoremove -y \
