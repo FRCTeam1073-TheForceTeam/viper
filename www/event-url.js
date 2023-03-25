@@ -13,6 +13,7 @@ eventAlliances,
 eventStats,
 eventStatsByTeam={},
 eventStatsByMatchTeam={},
+eventScores,
 eventFiles,
 eventTeams,
 eventInfo,
@@ -83,6 +84,29 @@ function loadEventSchedule(callback){
 		}
 		eventTeams = Object.keys(teams).map(t=>parseInt(t)).sort((a,b)=>{a-b})
 		if (callback) callback(eventMatches)
+	})
+}
+
+function loadEventScores(callback){
+	loadEventSchedule(function(){
+		if (eventScores){
+			if (callback) callback(eventScores)
+			return
+		}
+		$.getJSON(`/data/${eventId}.scores.qualification.json`, function(json){
+			eventScores={}
+			json.MatchScores.forEach(function(score){
+				eventScores[`qm${score.matchNumber}`] = score
+			})
+			$.getJSON(`/data/${eventId}.scores.playoff.json`, function(json){
+				eventMatches.forEach(function(match){
+					if (!/^pm|qm/.test(match.Match)){
+						eventScores[match.Match] = json.MatchScores.shift()
+					}
+				})
+				callback(eventScores)
+			})
+		})
 	})
 }
 

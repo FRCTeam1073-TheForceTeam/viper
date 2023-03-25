@@ -537,6 +537,15 @@ var plannerSections = {
 	"End":['end_dock_engaged_attempts','end_dock_engaged_reliability']
 }
 
+var fmsMapping = [
+	[["autoChargeStationPoints"],["auto_dock_score"]],
+	[["autoMobilityPoints"],["auto_mobility_score"]],
+	[["autoGamePiecePoints"],["auto_place_score"]],
+	[["teleopGamePiecePoints"],["tele_place_score"]],
+	[["endGameChargeStationPoints","endGameParkPoints"],["end_score"]],
+	[["linkPoints"],["links_score"]]
+]
+
 function showPitScouting(el,team){
 	loadPitScouting(function(pitData){
 		var dat = pitData[team]||{}
