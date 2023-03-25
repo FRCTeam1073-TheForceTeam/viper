@@ -93,17 +93,19 @@ function loadEventScores(callback){
 			if (callback) callback(eventScores)
 			return
 		}
+		eventScores={}
 		$.getJSON(`/data/${eventId}.scores.qualification.json`, function(json){
-			eventScores={}
 			json.MatchScores.forEach(function(score){
 				eventScores[`qm${score.matchNumber}`] = score
 			})
+		}).always(function(){
 			$.getJSON(`/data/${eventId}.scores.playoff.json`, function(json){
 				eventMatches.forEach(function(match){
 					if (!/^pm|qm/.test(match.Match)){
 						eventScores[match.Match] = json.MatchScores.shift()
 					}
 				})
+			}).always(function(){
 				callback(eventScores)
 			})
 		})
