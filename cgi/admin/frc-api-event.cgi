@@ -14,6 +14,7 @@ my $event = $cgi->param('event');
 
 $webutil->error("Missing event ID") if (!$event);
 $webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
+$event=lc($event);
 my ($eventYear,$eventId) = $event=~/^(20[0-9]{2})([a-zA-Z0-9\-]+)$/;
 
 $frcapi->writeFileFromAPI("$eventYear/events?eventCode=$eventId","../data/$event.info.json");
