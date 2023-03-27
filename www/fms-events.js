@@ -18,8 +18,7 @@ $(document).ready(function(){
 			.append($('<span>').text(`${event.city}, ${event.stateprov}, ${event.country}`))
 		})
 	}).fail(function(){
-		$('h1').text("No events found")
-		$('body').append(`<a href="/admin/frc-api-season.cgi?year=${year}">Download the official event list for ${year}</a>`)
+		location.href=`/admin/frc-api-season.cgi?year=${year}`
 	})
 })
 
