@@ -20,7 +20,12 @@ function loadScoutScoreCompare(callback){
 						if (dat.alliance.toLowerCase() == alliance.toLowerCase()) scoreData = dat
 					})
 					if (!thisMatch) thisMatch = {}
-					if (scoreData && scoutData.length == 3)thisMatch[alliance]=getScoreDifference(scoutData, scoreData)
+					if (scoreData && scoutData.length == 3){
+						thisMatch[alliance]=getScoreDifference(scoutData, scoreData)
+						thisMatch[alliance].alliance=alliance
+						thisMatch.match=match.Match
+						thisMatch[alliance].match=match.Match
+					}
 					scoutData.forEach(scout=>{
 						var scouter = scout.scouter.trim(),
 						key = scouter.toLowerCase().replace(/[^0-9a-z]/g,"")
@@ -35,7 +40,7 @@ function loadScoutScoreCompare(callback){
 						}
 					})
 				})
-				if (thisMatch) matchStats.push(thisMatch)
+				if (thisMatch.Red) matchStats.push(thisMatch)
 			})
 			callback()
 		})
@@ -44,7 +49,11 @@ function loadScoutScoreCompare(callback){
 
 function getScoreDifference(scoutData, scoreData){
 	if (!window.fmsMapping) return 0
-	var diff = {diff:0,dat:[]}
+	var diff = {diff:0,dat:[],teams:[],scouters:[]}
+	scoutData.forEach(scoutDat => {
+		diff.teams.push(scoutDat.team)
+		diff.scouters.push(scoutDat.scouter)
+	})
 	window.fmsMapping.forEach(map=>{
 		var dat = {fms:{},scout:{},diff:0}
 		map[0].forEach(fms=>{

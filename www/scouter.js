@@ -1,8 +1,5 @@
 "use strict"
 
-var scouterStats = {}
-var matchStats = []
-
 $(document).ready(function(){
 	loadScoutScoreCompare(showScouters)
 })
