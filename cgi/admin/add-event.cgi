@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI;
+use File::Slurp;
 use POSIX qw/strftime/;
 use lib '../../pm';
 use webutil;
@@ -40,6 +41,18 @@ $csv =~ s/\r\n|\r/\n/g;
 $webutil->error("Malformed CSV", $csv) if (!$csv or $csv !~ /\AMatch,R1,R2,R3,B1,B2,B3\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
 
 my $file = "../data/${event}.schedule.csv";
+if ( -e $file){
+	my $oldSchedule = read_file($file);
+	my ($oldPractice) = $oldSchedule =~ /((?:^pm.*\n)+)/m;
+	my ($oldQuals) = $oldSchedule =~ /((?:^qm.*\n)+)/m;
+	my ($oldPlayoffs) = $oldSchedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
+	my ($headers) = $csv =~ /((?:^Match.*\n)+)/m;
+	my ($newPractice) = $csv =~ /((?:^pm.*\n)+)/m;
+	my ($newQuals) = $csv =~ /((?:^qm.*\n)+)/m;
+	my ($newPlayoffs) = $csv =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
+	$csv = $headers.($newPractice||$oldPractice).($newQuals||$oldQuals).($newPlayoffs||$oldPlayoffs);
+}
+
 $webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
 print $fh $csv;
 close $fh;
