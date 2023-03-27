@@ -28,8 +28,8 @@ $(document).ready(function(){
 	})
 	$('.initHid').hide()
 	loadEventFiles(function(fileList){
-		for (var i=0; i<fileList.length; i++){
-			var extension = fileList[i].replace(/[^\.]+\./,"")
+		fileList.forEach(file=>{
+			var extension = file.replace(/[^\.]+\./,"")
 			switch (extension){
 				case "event.csv":
 					$('.dependInfo').show().parents().show()
@@ -46,8 +46,11 @@ $(document).ready(function(){
 				case "pit.csv":
 					$('.dependPit').show().parents().show()
 					break;
+				case "scores.qualification.json":
+					$('.dependScores').show().parents().show()
+					break;
 			}
-		}
+		})
 		if (uploadCount) $('.dependUploads').show().parents().show()
 	})
 	function setName(){
