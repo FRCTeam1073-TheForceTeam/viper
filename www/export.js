@@ -14,30 +14,26 @@ function addHost(host){
 
 $(document).ready(function(){
 	var dataFull = {},
-	dataCsv = {},
-	types = ["alliances","event","pit","schedule","scouting"],
-	teams = []
-	types.forEach(function(csv){
-		var file = `/data/${eventId}.${csv}.csv`
-		eventAjax(file ,function(text){
-			if (csv=='schedule'){
-				var teamMap = {}
-				text.match(/\b[0-9]+\b/g).forEach(function(team){
-					teamMap[team]=1
+	dataText = {},
+	fullFileCount = -1,
+	textFileCount = -1
+	loadEventFiles(function(fileList){
+		fullFileCount = fileList.length
+		var textFiles = 0
+		fileList.forEach(file=>{
+			if (/\.jpg$/.test(file)){
+				toDataURL(file, function(dataUrl) {
+					dataFull[file] = dataUrl
 				})
-				teams = Object.keys(teamMap)
-				teams.forEach(function(team){
-					["","-top"].forEach(function(suffix){
-						var image = `/data/${eventYear}/${team}${suffix}.jpg`
-						toDataURL(image, function(dataUrl) {
-							dataFull[image] = dataUrl
-						})
-					})
+			} else {
+				textFiles++
+				eventAjax(file ,function(text){
+					dataFull[file] = text||""
+					dataText[file] = text||""
 				})
 			}
-			dataFull[file] = text||""
-			dataCsv[file] = text||""
 		})
+		textFileCount = textFiles
 	})
 	$('.siteInput').change(function(){
 		var url = $(this).val()
@@ -70,13 +66,10 @@ $(document).ready(function(){
 		$(this).text($(this).text().replace(/EVENT/, eventName))
 	})
 	function fullDataLoaded(){
-		if (Object.keys(dataFull).length != types.length + teams.length*2){
+		if (Object.keys(dataFull).length != fullFileCount){
 			setTimeout(fullDataLoaded,100)
 			return
 		}
-		Object.keys(dataFull).forEach(function(key){
-			if (!dataFull[key]) delete dataFull[key]
-		})
 		var json = JSON.stringify(dataFull)
 		$('#downloadImages')
 			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
@@ -84,21 +77,18 @@ $(document).ready(function(){
 		$('#transferJsonImages').val(json)
 	}
 	fullDataLoaded()
-	function csvDataLoaded(){
-		if (Object.keys(dataCsv).length != types.length){
-			setTimeout(csvDataLoaded,100)
+	function textDataLoaded(){
+		if (Object.keys(dataText).length != textFileCount){
+			setTimeout(textDataLoaded,100)
 			return
 		}
-		Object.keys(dataCsv).forEach(function(key){
-			if (!dataCsv[key]) delete dataCsv[key]
-		})
-		var json = JSON.stringify(dataCsv)
-		$('#downloadCsv')
+		var json = JSON.stringify(dataText)
+		$('#downloadData')
 			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
-			.attr('download',`${eventId}.csv.json`)
-		$('#transferJsonCsv').val(json)
+			.attr('download',`${eventId}.dat.json`)
+		$('#transferJsonData').val(json)
 	}
-	csvDataLoaded()
+	textDataLoaded()
 })
 
 // https://stackoverflow.com/a/20285053

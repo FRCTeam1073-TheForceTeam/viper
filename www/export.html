@@ -19,12 +19,12 @@
 	<div class=side-by-side>
 		<h2>With Images</h2>
 
-		<p>Download all CSV and images for this event in JSON format:</p>
+		<p>Download all data and images for this event in JSON format:</p>
 		<a id=downloadImages>Download Full Event</a>
 
 		<hr>
 
-		<p>Transfer all the event data to another webscout instance.</p>
+		<p>Transfer all the event data and images to another webscout instance.</p>
 		<form method=POST action=https://webscout.example.com/admin/import.cgi>
 			<input class=siteInput list=hostOptions placeholder=webscout.example.com>
 			<input name=json id=transferJsonImages type=hidden>
@@ -35,16 +35,16 @@
 	<div class=side-by-side>
 		<h2>Without Images</h2>
 
-		<p>Download all CSV for this event in JSON format:</p>
-		<a id=downloadCsv>Download CSV</a>
+		<p>Download all data (but no images) for this event in JSON format:</p>
+		<a id=downloadData>Download Data</a>
 
 		<hr>
 
-		<p>Transfer all the CSV data to another webscout instance.</p>
+		<p>Transfer all the data to another webscout instance.</p>
 		<form method=POST action=https://webscout.example.com/admin/import.cgi>
 			<input class=siteInput list=hostOptions placeholder=webscout.example.com>
-			<input name=json id=transferJsonCsv type=hidden>
-			<input type=submit value="Transfer CSV">
+			<input name=json id=transferJsonData type=hidden>
+			<input type=submit value="Transfer Data">
 		</form>
 	</div>
 
