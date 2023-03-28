@@ -1,3 +1,4 @@
+table{border-collapse:collapse}
 table td, table th{border:.1em var(--main-fg-color) solid;vertical-align:top;padding:0.2em}
 .mainDiff{font-size:200%}
 table table{width:100%}
