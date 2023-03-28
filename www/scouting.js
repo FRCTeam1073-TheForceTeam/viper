@@ -1,6 +1,7 @@
 "use strict"
 
 $(document).ready(function(){
+	$('h1').text(`${eventName} Scouting Stats`)
 	loadScoutScoreCompare(function(){
 		var allianceStats = []
 		matchStats.forEach(match=>{
