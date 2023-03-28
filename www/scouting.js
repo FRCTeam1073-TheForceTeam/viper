@@ -4,8 +4,8 @@ $(document).ready(function(){
 	loadScoutScoreCompare(function(){
 		var allianceStats = []
 		matchStats.forEach(match=>{
-			allianceStats.push(match.Red)
-			allianceStats.push(match.Blue)
+			if (match.Red) allianceStats.push(match.Red)
+			if (match.Blue) allianceStats.push(match.Blue)
 		})
 		allianceStats = allianceStats.sort((a,b)=>b.diff-a.diff)
 		allianceStats.forEach(alliance=>{
@@ -44,7 +44,6 @@ $(document).ready(function(){
 					if (i>=scoutFields.length){
 						row.append("<td>").append("<td>").append("<td>").append("<td>").append("<td>")
 					} else {
-						console.log(stat.scout[scoutFields[i]])
 						row.append($("<td>").text(scoutFields[i]))
 						.append($('<td>').text(stat.scout[scoutFields[i]].total))
 						stat.scout[scoutFields[i]].teams.forEach(team=>{
