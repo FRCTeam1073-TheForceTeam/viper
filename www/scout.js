@@ -37,6 +37,7 @@ $(window).on('hashchange', function(){
 })
 
 function showSelectPitScoutTeam(){
+	loadTeamsInfo()
 	$('.screen').hide()
 	setHash(null,null,null,null,teamList)
 	window.scrollTo(0,0)
@@ -221,6 +222,13 @@ function showPitScouting(t){
 	storeOrigValues(pit)
 	fillDefaultFormFields()
 	fillPreviousFormData(pit, localPitScoutingData(team)||eventPitData[team])
+	loadTeamsInfo(function(ti){
+		if (ti[team]){
+			$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
+			var loc = `${ti[team].city}, ${ti[team].stateProv}, ${ti[team].country}`
+			$('input[name="team_location"]').val(loc).attr('value',loc)
+		}
+	})
 	$('.count').each(countHandler)
 	pit.show()
 }

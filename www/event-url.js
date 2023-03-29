@@ -18,6 +18,7 @@ eventFiles,
 eventTeams,
 eventInfo,
 eventPitData,
+eventTeamsInfo,
 BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
 
 if (eventId && eventId != localStorage.getItem("last_event_id")){
@@ -87,6 +88,23 @@ function loadEventSchedule(callback){
 	})
 }
 
+function loadTeamsInfo(callback){
+	loadEventSchedule(function(){
+		if (eventTeamsInfo){
+			if (callback) callback(eventTeamsInfo)
+			return
+		}
+		eventTeamsInfo={}
+		$.getJSON(`/data/${eventId}.teams.json`, function(json){
+			json.teams.forEach(function(team){
+				eventTeamsInfo[parseInt(team.teamNumber)] = team
+			})
+		}).always(function(){
+			if (callback) callback(eventTeamsInfo)
+		})
+	})
+}
+
 function loadEventScores(callback){
 	loadEventSchedule(function(){
 		if (eventScores){
@@ -106,7 +124,7 @@ function loadEventScores(callback){
 					}
 				})
 			}).always(function(){
-				callback(eventScores)
+				if (callback) callback(eventScores)
 			})
 		})
 	})
