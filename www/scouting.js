@@ -21,7 +21,7 @@ $(document).ready(function(){
 			dh2.append($('<td>').text("Name"))
 			dh2.append($('<td>').text("Value"))
 			alliance.teams.forEach((team,i)=>{
-				dh2.append($('<td>').text(`${team} - ${alliance.scouters[i]}`)
+				dh2.append($('<td>').append($(`<a target=_blank href="/${eventYear}/scout.html#event=${eventId}&pos=${alliance.alliance.charAt(0)}${i+1}&team=${team}&match=${alliance.match}">`).text(`${team} - ${alliance.scouters[i]}`))
 				)
 			})
 			details.append(dh1).append(dh2)
