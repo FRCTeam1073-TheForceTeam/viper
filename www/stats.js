@@ -60,9 +60,10 @@ function showStats(){
 
 	if ($('#displayType').val() == 'graph'){
 		Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
+		var charts = {}
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i],
-			canvas = $('<canvas>'),
+			canvas = $(`<canvas data-section="${section}">`),
 			data=[],
 			percent=false,
 			graph=$('<div class=graph>')
@@ -78,6 +79,7 @@ function showStats(){
 					values.push(getTeamValue(field, teamList[k],stackedPercent))
 				}
 				data.push({
+					field: field,
 					label: (info['type']=='avg'?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
 					data: values,
 					backgroundColor: bgArr(graphColors[j])
@@ -87,7 +89,7 @@ function showStats(){
 			var stacked = aggregateGraphs[section]['graph'].includes("stacked")
 			var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
 			if (percent)yScale['suggestedMax'] = 100
-			var chart = new Chart(canvas,{
+			charts[section] = new Chart(canvas,{
 				type: 'bar',
 				data: {
 					labels: teamList,
@@ -101,26 +103,16 @@ function showStats(){
 				}
 			})
 			canvas.click(function(evt) {
-				const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
-				console.log(evt)
-				console.log(points)
+				var section = $(this).attr('data-section'),
+				myChart = charts[section],
+				points = myChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
 				if (points.length) {
-					const firstPoint = points[0]
-					const label = chart.data.labels[firstPoint.index]
-					const value = chart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index]
-					console.log(firstPoint)
-					console.log(`Label: ${label}`)
-					console.log(`Value: ${value}`)
-				} else {
-					const rect = canvas[0].getBoundingClientRect()
-					var x = evt.clientX - rect.left
-					if (x > chart.chartArea.right) x = chart.chartArea.right
-    				const dataX = chart.scales["x"].getValueForPixel(x)
-					if (dataX > -1){
-						const label = chart.data.labels[dataX]
-						//console.log(label)
-					}
-
+					showStatClickMenu(
+						evt,
+						myChart.data.labels[points[0].index],
+						myChart.data.datasets[points[0].datasetIndex].label,
+						myChart.data.datasets[points[0].datasetIndex].field
+					)
 				}
 			})
 		}
@@ -135,7 +127,7 @@ function showStats(){
 			for (var j=0; j<teamList.length; j++){
 				var t = teamList[j],
 				picked = teamsPicked[t]
-				hr.append($('<th class=team>').text(t).click(setTeamPicked).toggleClass('picked',picked))
+				hr.append($('<th class=team>').text(t).click(showStatClickMenu).toggleClass('picked',picked))
 			}
 			table.append(hr)
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
@@ -155,12 +147,28 @@ function showStats(){
 					var t = teamList[k]
 					picked = teamsPicked[t],
 					value = getTeamValue(field, t)
-					tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).click(showTeamStats).text(Math.round(value)))
+					tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).click(showStatClickMenu).text(Math.round(value)))
 				}
 				table.append(tr)
 			}
 		}
 	}
+}
+
+function showStatClickMenu(e, team, field, label){
+	if (!team) team = $(this).attr('data-team')||$(this).text()
+	if (!/^[0-9]+$/.test(team)) team=null
+	if (!field){
+		var th = $(this).closest('tr').find('th')
+		field = th.attr('data-field')
+		label = th.text()
+	}
+	if (!team && !field)return
+	var ca = $('#clickActions').html("")
+	if (team) ca.append($('<p>').append("Mark picked: ").append($('<button>').text(team).click(setTeamPicked)))
+	if (team) ca.append($('<p>').append("View stats: ").append($('<button>').text(team).click(showTeamStats)))
+	if (field) ca.append($('<p>').append("Sort by: ").append($('<button>').text(label).attr('data-field',field).click(reSort)))
+	showLightBox(ca)
 }
 
 function showSortOptions(){
