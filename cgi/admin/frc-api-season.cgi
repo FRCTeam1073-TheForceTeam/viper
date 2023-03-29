@@ -19,4 +19,4 @@ $frcapi->writeFileFromAPI("$year","../data/$year.season.json");
 $frcapi->writeFileFromAPI("$year/events","../data/$year.events.json");
 $frcapi->writeFileFromAPI("$year/districts","../data/$year.districts.json");
 
-$webutil->redirect("/fms-events.html#$year");
+$webutil->redirect("/api-events.html#$year");

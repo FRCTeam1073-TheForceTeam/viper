@@ -62,13 +62,13 @@ function showStats(){
 		Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i],
-			chart = $('<canvas>'),
+			canvas = $('<canvas>'),
 			data=[],
 			percent=false,
 			graph=$('<div class=graph>')
 			graphs.append(graph)
 			graph.append($('<h2>').text(section))
-			graph.append($('<div class=chart>').append(chart).css('min-width', (teamList.length*23+100) + 'px'))
+			graph.append($('<div class=chart>').append(canvas).css('min-width', (teamList.length*23+100) + 'px'))
 			var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent"
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
 				var field = aggregateGraphs[section]['data'][j],
@@ -87,7 +87,7 @@ function showStats(){
 			var stacked = aggregateGraphs[section]['graph'].includes("stacked")
 			var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
 			if (percent)yScale['suggestedMax'] = 100
-			new Chart(chart,{
+			var chart = new Chart(canvas,{
 				type: 'bar',
 				data: {
 					labels: teamList,
@@ -98,6 +98,29 @@ function showStats(){
 						y: yScale,
 						x: {stacked: stacked}
 					}
+				}
+			})
+			canvas.click(function(evt) {
+				const points = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
+				console.log(evt)
+				console.log(points)
+				if (points.length) {
+					const firstPoint = points[0]
+					const label = chart.data.labels[firstPoint.index]
+					const value = chart.data.datasets[firstPoint.datasetIndex].data[firstPoint.index]
+					console.log(firstPoint)
+					console.log(`Label: ${label}`)
+					console.log(`Value: ${value}`)
+				} else {
+					const rect = canvas[0].getBoundingClientRect()
+					var x = evt.clientX - rect.left
+					if (x > chart.chartArea.right) x = chart.chartArea.right
+    				const dataX = chart.scales["x"].getValueForPixel(x)
+					if (dataX > -1){
+						const label = chart.data.labels[dataX]
+						//console.log(label)
+					}
+
 				}
 			})
 		}
