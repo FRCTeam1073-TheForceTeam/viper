@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Import API Event - FRC Scouting App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/import-frc-api-event.js></script>
+<script src=/main.js></script>
+</head>
+<body>
+
+<form id=importData method=POST action=/admin/add-event.cgi>
+	<input id=nameInp name=name type=text>
+	<input name=start type=date id=startInp>
+	<input name=end type=date id=endInp>
+	<input name=location type=text id=locationInp>
+	<input id=idInp type=text name=event>
+	<textarea id=csvInp name=csv></textarea>
+</form>
+</body>
+</html>

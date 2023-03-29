@@ -24,4 +24,7 @@ $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/qualification","../data/$e
 $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json");
 $frcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json");
 
-$webutil->error("Done");
+if ( ! -e "../data/$event.schedule.csv"){
+	$webutil->redirect("/import-frc-api-event.html#event=$event");
+}
+$webutil->redirect("/frc-event-downloaded.html#event=$event");
