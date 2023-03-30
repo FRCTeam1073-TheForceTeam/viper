@@ -110,8 +110,8 @@ function showStats(){
 					showStatClickMenu(
 						evt,
 						myChart.data.labels[points[0].index],
-						myChart.data.datasets[points[0].datasetIndex].label,
-						myChart.data.datasets[points[0].datasetIndex].field
+						myChart.data.datasets[points[0].datasetIndex].field,
+						myChart.data.datasets[points[0].datasetIndex].label
 					)
 				}
 			})
