@@ -26,11 +26,28 @@ $(document).ready(function(){
 			} else {
 				$.getJSON(`/data/${eventId}.teams.json`, function(json){
 					var teams = []
-					json.teams.forEach(function(team){
-						teams.push(team.teamNumber)
-					})
-					$('#csvInp').val(randomPracticeSchedule(teams))
-					$('#importData').submit()
+					if (json.teams){
+						json.teams.forEach(function(team){
+							teams.push(team.teamNumber)
+						})
+						$('#csvInp').val(randomPracticeSchedule(teams))
+						$('#importData').submit()
+					} else if (json.pageTotal){
+						var waitFor = []
+						for (var i=1; i<=json.pageTotal; i++){
+							waitFor.push($.getJSON(`/data/${eventId}.teams.${i}.json`, function(json){
+								if (json.teams){
+									json.teams.forEach(function(team){
+										teams.push(team.teamNumber)
+									})
+								}
+							}))
+						}
+						$.when(...waitFor).then(function() {
+							$('#csvInp').val(randomPracticeSchedule(teams))
+							//$('#importData').submit()
+						});
+					}
 				})
 			}
 		})
