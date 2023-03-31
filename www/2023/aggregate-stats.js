@@ -118,7 +118,12 @@ function aggregateStats(scout, aggregate){
 	var cycles = (scout['full_cycle_count']||0) + (aggregate['full_cycle_count']||0)
 
 	Object.keys(statInfo).forEach(function(field){
-		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])) aggregate[field] = (aggregate[field]||0)+(scout[field]||0)
+		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
+			aggregate[field] = (aggregate[field]||0)+(scout[field]||0)
+			var set = `${field}_set`
+			aggregate[set] = aggregate[set]||[]
+			aggregate[set].push(scout[field]||0)
+		}
 		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field] = aggregate[field]||scout[field]||0
 		if(/^text$/.test(statInfo[field]['type'])) aggregate[field] = (!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
 	})
@@ -136,8 +141,8 @@ function aggregateStats(scout, aggregate){
 	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
 	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
 	aggregate["min_score"] = Math.min(aggregate["min_score"]===undefined?999:aggregate["min_score"],scout["score"])
-	aggregate["tele_max_score"] = Math.max(aggregate["tele_max_score"]||0,scout["tele_score"])
-	aggregate["tele_min_score"] = Math.min(aggregate["tele_min_score"]===undefined?999:aggregate["tele_min_score"],scout["tele_score"])
+	aggregate["tele_max_place_score"] = Math.max(aggregate["tele_max_place_score"]||0,scout["tele_place_score"])
+	aggregate["tele_min_place_score"] = Math.min(aggregate["tele_min_place_score"]===undefined?999:aggregate["tele_min_place_score"],scout["tele_place_score"])
 }
 
 var statInfo = {
@@ -321,12 +326,12 @@ var statInfo = {
 		name: "Teleop Score",
 		type: "avg"
 	},
-	"tele_min_score": {
-		name: "Teleop Minimum Score",
+	"tele_min_place_score": {
+		name: "Teleop Minimum Placing Score",
 		type: "minmax"
 	},
-	"tele_max_score": {
-		name: "Teleop Maximum Score",
+	"tele_max_place_score": {
+		name: "Teleop Maximum  Placing Score",
 		type: "minmax"
 	},
 	"throw": {
@@ -461,7 +466,7 @@ var teamGraphs = {
 
 var aggregateGraphs = {
 	"Overall":{
-		graph:"bar",
+		graph:"boxplot",
 		data:["max_score","score","min_score"]
 	},
 	"Game Stages":{
@@ -488,9 +493,9 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:['tele_place_score','links_score']
 	},
-	"Teleop Minmax":{
-		graph:"bar",
-		data:["tele_max_score","tele_score","tele_min_score"]
+	"Teleop Placing":{
+		graph:"boxplot",
+		data:["tele_max_place_score","tele_place_score","tele_min_place_score"]
 	},
 	"Cargo Picking":{
 		graph:"stacked",

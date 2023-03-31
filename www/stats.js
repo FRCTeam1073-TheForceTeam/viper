@@ -70,27 +70,34 @@ function showStats(){
 			graphs.append(graph)
 			graph.append($('<h2>').text(section))
 			graph.append($('<div class=chart>').append(canvas).css('min-width', (teamList.length*23+100) + 'px'))
-			var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent"
+			var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent",
+			boxplot = aggregateGraphs[section]['graph']=='boxplot'
 			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
 				var field = aggregateGraphs[section]['data'][j],
-				info = statInfo[field]||{}
-				var values = []
-				for (var k=0; k<teamList.length; k++){
-					values.push(getTeamValue(field, teamList[k],stackedPercent))
+				info = statInfo[field]||{},
+				values = []
+				if (!boxplot || info['type']!='minmax'){
+					for (var k=0; k<teamList.length; k++){
+						values.push(getTeamValue(field, teamList[k],stackedPercent,boxplot))
+					}
+					data.push({
+						field: field,
+						label: (info['type']=='avg'&&!boxplot?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
+						data: values,
+						backgroundColor: bgArr(graphColors[j]),
+						borderColor: bgArr(graphColors[j]),
+						lowerBackgroundColor: bgArr(darkenColor(graphColors[j])),
+						quantiles: 'nearest',
+						coef: 0
+					})
+					if (info['type']=='%'||stackedPercent) percent=true
 				}
-				data.push({
-					field: field,
-					label: (info['type']=='avg'?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
-					data: values,
-					backgroundColor: bgArr(graphColors[j])
-				})
-				if (info['type']=='%'||stackedPercent) percent=true
 			}
 			var stacked = aggregateGraphs[section]['graph'].includes("stacked")
 			var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
 			if (percent)yScale['suggestedMax'] = 100
 			charts[section] = new Chart(canvas,{
-				type: 'bar',
+				type: boxplot?'boxplot':'bar',
 				data: {
 					labels: teamList,
 					datasets: data
@@ -106,12 +113,12 @@ function showStats(){
 				var section = $(this).attr('data-section'),
 				myChart = charts[section],
 				points = myChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
+				console.log(aggregateGraphs[section])
 				if (points.length) {
 					showStatClickMenu(
 						evt,
 						myChart.data.labels[points[0].index],
-						myChart.data.datasets[points[0].datasetIndex].field,
-						myChart.data.datasets[points[0].datasetIndex].label
+						aggregateGraphs[section].data
 					)
 				}
 			})
@@ -155,19 +162,23 @@ function showStats(){
 	}
 }
 
-function showStatClickMenu(e, team, field, label){
+function showStatClickMenu(e, team, fields){
 	if (!team) team = $(this).attr('data-team')||$(this).text()
 	if (!/^[0-9]+$/.test(team)) team=null
-	if (!field){
+	if (!fields){
 		var th = $(this).closest('tr').find('th')
-		field = th.attr('data-field')
-		label = th.text()
+		fields = th.attr('data-field')
 	}
-	if (!team && !field)return
+	if (!team && !fields)return
 	var ca = $('#clickActions').html("")
 	if (team) ca.append($('<p>').append("Mark picked: ").append($('<button>').text(team).click(setTeamPicked)))
 	if (team) ca.append($('<p>').append("View stats: ").append($('<button>').text(team).click(showTeamStats)))
-	if (field) ca.append($('<p>').append("Sort by: ").append($('<button>').text(label).attr('data-field',field).click(reSort)))
+	if (fields){
+		if (typeof fields === 'string') fields = [fields]
+		fields.forEach(field=>{
+			ca.append($('<p>').append("Sort by: ").append($('<button>').text(getStatInfoName(field)).attr('data-field',field).click(reSort)))
+		})
+	}
 	showLightBox(ca)
 }
 
@@ -245,12 +256,14 @@ function darkenColor(color){
 
 }
 
-function getTeamValue(field, team, percent){
+function getTeamValue(field, team, percent, boxplot){
 	if (! team in eventStatsByTeam) return 0
-	var stats = eventStatsByTeam[team],
-	info = statInfo[field]||{}
+	var stats = eventStatsByTeam[team]
+	if (boxplot) field+="_set"
+	var info = statInfo[field]||{}
 	percent = percent || info['type']=='%'
-	if (! field in stats ||! 'count' in stats || !stats['count']) return 0
+	if (! field in stats ||! 'count' in stats || !stats['count']) return boxplot?[]:0
+	if (boxplot) return stats[field]||[]
 	var divisor = (percent||"avg"==info['type'])?stats['count']:1
 	return (stats[field]||0) / divisor * (percent?100:1)
 }
