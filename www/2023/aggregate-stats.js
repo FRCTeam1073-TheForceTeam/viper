@@ -136,6 +136,8 @@ function aggregateStats(scout, aggregate){
 	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
 	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
 	aggregate["min_score"] = Math.min(aggregate["min_score"]===undefined?999:aggregate["min_score"],scout["score"])
+	aggregate["tele_max_score"] = Math.max(aggregate["tele_max_score"]||0,scout["tele_score"])
+	aggregate["tele_min_score"] = Math.min(aggregate["tele_min_score"]===undefined?999:aggregate["tele_min_score"],scout["tele_score"])
 }
 
 var statInfo = {
@@ -319,6 +321,14 @@ var statInfo = {
 		name: "Teleop Score",
 		type: "avg"
 	},
+	"tele_min_score": {
+		name: "Teleop Minimum Score",
+		type: "minmax"
+	},
+	"tele_max_score": {
+		name: "Teleop Maximum Score",
+		type: "minmax"
+	},
 	"throw": {
 		name: "Can Throw Cargo",
 		type: "capability"
@@ -477,6 +487,10 @@ var aggregateGraphs = {
 	"Teleop":{
 		graph:"stacked",
 		data:['tele_place_score','links_score']
+	},
+	"Teleop Minmax":{
+		graph:"bar",
+		data:["tele_max_score","tele_score","tele_min_score"]
 	},
 	"Cargo Picking":{
 		graph:"stacked",
