@@ -210,10 +210,14 @@ function showTeamPicker(callback, heading){
 }
 
 function setTeamPicked(){
-	var team = parseInt($(this).text())
+	var y = window.scrollY,
+	team = parseInt($(this).text())
 	closeLightBox()
 	teamsPicked[team] = !teamsPicked[team]
 	showStats()
+	setTimeout(function(){
+		window.scrollTo(0,y)
+	},200)
 }
 
 function showTeamStats(){
@@ -237,11 +241,15 @@ function bgArr(color){
 }
 
 function reSort(){
+	var y = window.scrollY
 	sortStat=$($(this)).attr('data-field')
 	$('#sortBy .name').text($(this).text())
 	closeLightBox()
 	setHash()
 	showStats()
+	setTimeout(function(){
+		window.scrollTo(0,y)
+	},200)
 }
 
 function darkenColor(color){
