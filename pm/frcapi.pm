@@ -42,6 +42,10 @@ sub writeFileFromAPI(){
 	my $content = $this->fetchFromAPI($url);
 	my $fh;
 	my $pages = 1;
+	if ($content =~ /^\{\"[A-Za-z0-9]+\"\:\[\]\}$/){
+		# No content
+		return;
+	}
 	if ($content =~ /\"pageTotal\"\:\s*([0-9]+)\,/){
 		$pages = $1;
 	}
