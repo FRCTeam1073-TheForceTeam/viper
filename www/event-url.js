@@ -214,7 +214,7 @@ function loadEventFiles(callback){
 		return
 	}
 	eventAjax(`/event-files.cgi?event=${eventId}`,function(text){
-		eventFiles=text.split(/[\n\r]+/)
+		eventFiles=text.split(/[\n\r]+/).filter(x=>/\./.test(x))
 		if (callback) callback(eventFiles)
 	})
 }
