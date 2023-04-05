@@ -42,7 +42,7 @@ $(document).ready(function(){
 					}
 					$.when(...waitFor).then(function() {
 						$('#csvInp').val(randomPracticeSchedule(teams))
-						//$('#importData').submit()
+						$('#importData').submit()
 					});
 				}
 			})
