@@ -20,6 +20,10 @@ $(document).ready(function(){
 		$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
 	})
 	$('#displayType').change(showStats)
+	$('.showInstructions').click(function(){
+		showLightBox($('#instructions'))
+		return false
+	})
 })
 
 function getStatInfoName(field){
