@@ -15,7 +15,10 @@ $(document).ready(function(){
 			return false
 		}
 		$('#csvInp').val(csv)
-		var newEventId = src.match(/event_key=(20[0-9]+[a-z]+)/)||src.match(/href\=\"\/(20[0-9]{2}\/[A-Z]+)\"\>Event Info/||["",$('#idInp').val()])[1].replace(/\//g,"").toLowerCase()
+		var newEventId = src.match(/event_key=(20[0-9]+[a-z]+)/)
+		if (!newEventId || !newEventId.length) newEventId = src.match(/href\=\"\/(20[0-9]{2}\/[A-Z]+)\"\>Event Info/)
+		if (!newEventId || !newEventId.length) newEventId = ["",$('#idInp').val()]
+		newEventId = newEventId[1].replace(/\//g,"").toLowerCase()
 		if (newEventId != eventId){
 			eventInfo=null
 			eventId=newEventId
