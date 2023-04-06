@@ -8,6 +8,7 @@ $(document).ready(function(){
 	$.getJSON(`/data/${year}.events.json`, function(json){
 		$('h1').text(`${year} FRC Events`)
 		$('body').append("<p>Click on an event to download the official data for it.</p>")
+		$('body').append(`<p><a href="/admin/frc-api-season.cgi?year=${year}">Refresh event list</a></p>`)
 		var events = json.Events.sort((a,b)=>a.dateStart.localeCompare(b.dateStart))
 		events.forEach(function(event){
 			$('body')

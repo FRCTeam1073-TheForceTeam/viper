@@ -24,8 +24,8 @@ my $data = decode_json($json);
 my $event = "";
 
 for my $fileName (keys(%$data)){
-	$webutil->error("Unexpected file in data:", $fileName) if ($fileName !~ /^\/data\/20[0-9]{2}((\/[0-9]+[a-z\-]*\.jpg)|([a-z0-9A-Z\-]+\.[a-z]+\.csv))$/);
-	$event = $1 if ($fileName =~ /\/data\/(20[0-9]{2}[a-z0-9\-]+)/);
+	$webutil->error("Unexpected file in data:", $fileName) if ($fileName !~ /^\/?data(\/20[0-9]{2})?\/([\.a-z0-9A-Z\-]+)\.(json|csv|jpg|webp)$/);
+	$event = $1 if ($fileName =~ /data\/(20[0-9]{2}[a-z0-9\-]+)/);
 }
 $webutil->error("No files files imported have an event name") if (!$event);
 for my $fileName (keys(%$data)){
@@ -35,7 +35,7 @@ for my $fileName (keys(%$data)){
 		$fileContents = decode_base64($1);
 		$raw = ":raw"
 	}
-	$fileName =~ s/^\/data\//..\/data\//g;
+	$fileName =~ s/^\/?data\//..\/data\//g;
 	my $dir = $fileName;
 	$dir =~ s/[^\/]*$//g;
 	make_path($dir);

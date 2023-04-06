@@ -20,36 +20,32 @@ $(document).ready(function(){
 				})
 				csv+="\n"
 			})
-			if (json.Schedule.length){
-				$('#csvInp').val(csv)
-				$('#importData').submit()
-			} else {
-				$.getJSON(`/data/${eventId}.teams.json`, function(json){
-					var teams = []
-					if (json.teams){
-						json.teams.forEach(function(team){
-							teams.push(team.teamNumber)
-						})
+		}).fail(function(){
+			$.getJSON(`/data/${eventId}.teams.json`, function(json){
+				var teams = []
+				if (json.teams){
+					json.teams.forEach(function(team){
+						teams.push(team.teamNumber)
+					})
+					$('#csvInp').val(randomPracticeSchedule(teams))
+					$('#importData').submit()
+				} else if (json.pageTotal){
+					var waitFor = []
+					for (var i=1; i<=json.pageTotal; i++){
+						waitFor.push($.getJSON(`/data/${eventId}.teams.${i}.json`, function(json){
+							if (json.teams){
+								json.teams.forEach(function(team){
+									teams.push(team.teamNumber)
+								})
+							}
+						}))
+					}
+					$.when(...waitFor).then(function() {
 						$('#csvInp').val(randomPracticeSchedule(teams))
 						$('#importData').submit()
-					} else if (json.pageTotal){
-						var waitFor = []
-						for (var i=1; i<=json.pageTotal; i++){
-							waitFor.push($.getJSON(`/data/${eventId}.teams.${i}.json`, function(json){
-								if (json.teams){
-									json.teams.forEach(function(team){
-										teams.push(team.teamNumber)
-									})
-								}
-							}))
-						}
-						$.when(...waitFor).then(function() {
-							$('#csvInp').val(randomPracticeSchedule(teams))
-							//$('#importData').submit()
-						});
-					}
-				})
-			}
+					});
+				}
+			})
 		})
 	})
 })

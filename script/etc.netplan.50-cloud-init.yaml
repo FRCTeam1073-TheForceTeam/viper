@@ -6,7 +6,7 @@ network:
       dhcp4: no
       addresses: [STATIC_IP/24]
       routes:
-        - to: default
+        - to: STATIC_ROUTE
           via: STATIC_GATEWAY
       nameservers:
         addresses: [8.8.8.8,8.8.4.4]

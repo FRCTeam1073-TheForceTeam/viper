@@ -17,12 +17,14 @@ $webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0
 $event=lc($event);
 my ($eventYear,$eventId) = $event=~/^(20[0-9]{2})([a-zA-Z0-9\-]+)$/;
 
-$frcapi->writeFileFromAPI("$eventYear/events?eventCode=$eventId","../data/$event.info.json");
-$frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=qualification","../data/$event.schedule.qualification.json");
-$frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=playoff","../data/$event.schedule.playoff.json");
-$frcapi->writeFileFromAPI("$eventYear/scores/$eventId/qualification","../data/$event.scores.qualification.json");
-$frcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json");
-$frcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json");
+my $filesWritten = 0;
+$filesWritten += $frcapi->writeFileFromAPI("$eventYear/events?eventCode=$eventId","../data/$event.info.json");
+$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=qualification","../data/$event.schedule.qualification.json");
+$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=playoff","../data/$event.schedule.playoff.json");
+$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/qualification","../data/$event.scores.qualification.json");
+$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json");
+$filesWritten += $frcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json");
+$webutil->error("API returned no data") if ($filesWritten==0);
 
 if ( ! -e "../data/$event.schedule.csv"){
 	$webutil->redirect("/import-frc-api-event.html#event=$event");

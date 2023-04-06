@@ -42,6 +42,11 @@ sub writeFileFromAPI(){
 	my $content = $this->fetchFromAPI($url);
 	my $fh;
 	my $pages = 1;
+	my $filesWritten=0;
+	if ($content =~ /^\{\"[A-Za-z0-9]+\"\:\[\]\}$/){
+		# No content
+		return $filesWritten;
+	}
 	if ($content =~ /\"pageTotal\"\:\s*([0-9]+)\,/){
 		$pages = $1;
 	}
@@ -49,11 +54,13 @@ sub writeFileFromAPI(){
 		$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
 		print $fh "{\"pageTotal\":$pages}\n";
 		close $fh;
+		$filesWritten++;
 		my $pageFile = $file;
 		$pageFile =~ s/(\.[0-9]+)?\.json/.1.json/g;
 		$webutil->error("Error opening $pageFile for writing", "$!") if (!open $fh, ">", $pageFile);
 		print $fh $content;
 		close $fh;
+		$filesWritten++;
 		for (my $i=2; $i<=$pages; $i++){
 			my $pageUrl = $url.($url=~/\?/?"&":"?")."page=$i";
 			$content = $this->fetchFromAPI($pageUrl);
@@ -62,12 +69,15 @@ sub writeFileFromAPI(){
 			$webutil->error("Error opening $pageFile for writing", "$!") if (!open $fh, ">", $pageFile);
 			print $fh $content;
 			close $fh;
+		$filesWritten++;
 		}
 	} else {
 		$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
 		print $fh $content;
 		close $fh;
+		$filesWritten++;
 	}
+	return $filesWritten;
 }
 
 1;
