@@ -98,6 +98,10 @@ function aggregateStats(scout, aggregate){
 	scout['auto_dock_engaged_failed'] = scout['auto_dock_engaged_attempts']-scout['auto_dock_engaged']
 	scout['auto_nondock_score'] = scout['auto_place_score']+scout['auto_mobility_score']
 	scout['auto_score'] = scout['auto_nondock_score']+scout['auto_dock_score']
+	scout['auto_start_cable'] = scout['auto_start']=='cable'?1:0
+	scout['auto_start_barrier'] = scout['auto_start']=='barrier'?1:0
+	scout['auto_start_charging'] = scout['auto_start']=='charging'?1:0
+	scout['auto_start_unknown'] = /^(cable|barrier|charging)$/.test(scout['auto_start']||"")?0:1
 
 	scout['end_score'] = pointValues['end_'+scout['end']]||0
 	scout['end_dock_score'] = scout['end']=='parked'?0:scout['end_score']
@@ -157,6 +161,26 @@ var statInfo = {
 	"team": {
 		name: "Team",
 		type: "text"
+	},
+	"auto_start": {
+		name: "Location where the robot starts",
+		type: "text"
+	},
+	"auto_start_barrier": {
+		name: "Started by the barrier",
+		type: "count"
+	},
+	"auto_start_charging": {
+		name: "Started by the charge station",
+		type: "count"
+	},
+	"auto_start_unknown": {
+		name: "Unknown starting position",
+		type: "count"
+	},
+	"auto_start_cable": {
+		name: "Started by the cable protector",
+		type: "count"
 	},
 	"auto_dock": {
 		name: "Auto Dock State",
@@ -516,6 +540,10 @@ var aggregateGraphs = {
 	"Full Cycle Count":{
 		graph:"bar",
 		data:["full_cycle_count"]
+	},
+	"Start Location %":{
+		graph:"stacked_percent",
+		data:['auto_start_barrier', 'auto_start_charging', 'auto_start_cable', 'auto_start_unknown']
 	},
 	"# Placed by Type":{
 		graph:"stacked",
