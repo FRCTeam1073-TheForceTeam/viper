@@ -101,6 +101,9 @@ function aggregateStats(scout, aggregate){
 	scout['auto_start_cable'] = scout['auto_start']=='cable'?1:0
 	scout['auto_start_barrier'] = scout['auto_start']=='barrier'?1:0
 	scout['auto_start_charging'] = scout['auto_start']=='charging'?1:0
+	scout['auto_start_cable_nondock_score'] = scout['auto_start']=='cable'?scout['auto_nondock_score']:0
+	scout['auto_start_barrier_nondock_score'] = scout['auto_start']=='barrier'?scout['auto_nondock_score']:0
+	scout['auto_start_charging_nondock_score'] = scout['auto_start']=='charging'?scout['auto_nondock_score']:0
 	scout['auto_start_unknown'] = /^(cable|barrier|charging)$/.test(scout['auto_start']||"")?0:1
 
 	scout['end_score'] = pointValues['end_'+scout['end']]||0
@@ -235,6 +238,18 @@ var statInfo = {
 	},
 	"auto_score": {
 		name: "Auto Score",
+		type: "avg"
+	},
+	'auto_start_cable_nondock_score': {
+		name: "Non-docking Auto Score Starting by Cable Protector",
+		type: "avg"
+	},
+	'auto_start_barrier_nondock_score': {
+		name: "Non-docking Auto Score Starting by Barrier",
+		type: "avg"
+	},
+	'auto_start_charging_nondock_score': {
+		name: "Non-docking Auto Score Starting by Charging Station",
 		type: "avg"
 	},
 	"community": {
@@ -544,6 +559,10 @@ var aggregateGraphs = {
 	"Start Location %":{
 		graph:"stacked_percent",
 		data:['auto_start_barrier', 'auto_start_charging', 'auto_start_cable', 'auto_start_unknown']
+	},
+	"Start Location Non-dock Auto Score":{
+		graph:"bar",
+		data:['auto_start_cable_nondock_score','auto_start_barrier_nondock_score','auto_start_charging_nondock_score']
 	},
 	"# Placed by Type":{
 		graph:"stacked",
