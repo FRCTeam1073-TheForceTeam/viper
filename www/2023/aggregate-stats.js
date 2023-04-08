@@ -150,6 +150,18 @@ function aggregateStats(scout, aggregate){
 	aggregate["min_score"] = Math.min(aggregate["min_score"]===undefined?999:aggregate["min_score"],scout["score"])
 	aggregate["tele_max_place_score"] = Math.max(aggregate["tele_max_place_score"]||0,scout["tele_place_score"])
 	aggregate["tele_min_place_score"] = Math.min(aggregate["tele_min_place_score"]===undefined?999:aggregate["tele_min_place_score"],scout["tele_place_score"])
+	aggregate['auto_start_cable_sum'] = (aggregate['auto_start_cable_sum']||0) + scout['auto_start_cable_score']
+	aggregate['auto_start_barrier_sum'] = (aggregate['auto_start_barrier_sum']||0) + scout['auto_start_barrier_score']
+	aggregate['auto_start_charging_sum'] = (aggregate['auto_start_charging_sum']||0) + scout['auto_start_charging_score']
+	aggregate['auto_start_cable_score'] = aggregate['auto_start_cable_sum'] / (aggregate['auto_start_cable']||1)
+	aggregate['auto_start_barrier_score'] = aggregate['auto_start_barrier_sum'] / (aggregate['auto_start_barrier']||1)
+	aggregate['auto_start_charging_score'] = aggregate['auto_start_charging_sum'] / (aggregate['auto_start_charging']||1)
+	if (scout.team+""=="1073"){
+		console.log('--------')
+		console.log(aggregate['auto_start_charging_sum'])
+		console.log(aggregate['auto_start_charging'])
+		console.log(aggregate['auto_start_charging_score'])
+	}
 }
 
 var statInfo = {
@@ -242,15 +254,15 @@ var statInfo = {
 	},
 	'auto_start_cable_score': {
 		name: "Non-docking Auto Score Starting by Cable Protector",
-		type: "avg"
+		type: "fraction"
 	},
 	'auto_start_barrier_score': {
 		name: "Non-docking Auto Score Starting by Barrier",
-		type: "avg"
+		type: "fraction"
 	},
 	'auto_start_charging_score': {
 		name: "Non-docking Auto Score Starting by Charging Station",
-		type: "avg"
+		type: "fraction"
 	},
 	"community": {
 		name: "Cargo Picked from Community",
