@@ -195,7 +195,6 @@ $(document).ready(function(){
 			if (/\.json$/.test(href)){
 				lb.find('h2').text(href.replace(/.*\//,""))
 				$.getJSON(href, function(json){
-					console.log(json)
 					jv.jsonViewer(json, {
 						collapsed:false,
 						rootCollapsable:false,
