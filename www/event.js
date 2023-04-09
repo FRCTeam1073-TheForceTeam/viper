@@ -33,39 +33,39 @@ $(document).ready(function(){
 			switch (extension){
 				case "event.csv":
 					$('.dependInfo').show().parents().show()
-					break;
+					break
 				case "schedule.csv":
 					$('.dependSchedule').show().parents().show()
-					break;
+					break
 				case "scouting.csv":
 					$('.dependScouting').show().parents().show()
-					break;
+					break
 				case "alliances.csv":
 					$('.dependAlliances').show().parents().show()
-					break;
+					break
 				case "pit.csv":
 					$('.dependPit').show().parents().show()
-					break;
+					break
 				case "info.json":
 					$('.dependApiInfo').show().parents().show()
-					break;
+					break
 				case "teams.json":
 					$('.dependApiTeams').show().parents().show()
-					break;
+					break
 				case "schedule.qualification.json":
 					$('.dependApiQualSchedule').show().parents().show()
-					break;
+					break
 				case "schedule.playoff.json":
 					$('.dependApiPlayoffSchedule').show().parents().show()
-					break;
+					break
 				case "scores.qualification.json":
 					$('.dependScores').show().parents().show()
 					$('.dependApiQualScores').show().parents().show()
-					break;
+					break
 				case "scores.playoff.json":
 					$('.dependScores').show().parents().show()
 					$('.dependApiPlayoffScores').show().parents().show()
-					break;
+					break
 			}
 		})
 		if (uploadCount) $('.dependUploads').show().parents().show()
