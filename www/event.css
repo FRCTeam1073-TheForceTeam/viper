@@ -15,3 +15,5 @@ h3{margin:0 0 .25em 0;padding:0}
 #pitScoutSetup .side-by-side{margin:.5em .1em}
 .ourTeam{text-decoration:solid underline var(--highlight-fg-color) 4px}
 .needed{text-decoration:solid underline var(--highlight2-fg-color) 4px}
+#jsonLightBox{text-align:left;overflow:auto}
+#jsonLightBox h2{margin-left:1em}

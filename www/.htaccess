@@ -1,11 +1,12 @@
 Options +ExecCGI
 AddHandler cgi-script .cgi .pl
-<FilesMatch "\.(dat|elims|csv)$">
-	ForceType text/plain;charset=UTF-8
+<FilesMatch "\.(json|csv)$">
 	Header set Content-Disposition attachment
 </FilesMatch>
-AddType text/plain;charset=UTF-8 .txt
 AddType text/html;charset=UTF-8 .html
+AddType text/plain;charset=UTF-8 .txt
+AddType text/plain;charset=UTF-8 .csv
+AddType text/json;charset=UTF-8 .json
 Header always unset "<!-- warning"
 RedirectMatch permanent /(20[0-9]{2})/?$ /#$1
 Redirect permanent /favicon.ico /logo.png

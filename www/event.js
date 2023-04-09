@@ -46,8 +46,25 @@ $(document).ready(function(){
 				case "pit.csv":
 					$('.dependPit').show().parents().show()
 					break;
+				case "info.json":
+					$('.dependApiInfo').show().parents().show()
+					break;
+				case "teams.json":
+					$('.dependApiTeams').show().parents().show()
+					break;
+				case "schedule.qualification.json":
+					$('.dependApiQualSchedule').show().parents().show()
+					break;
+				case "schedule.playoff.json":
+					$('.dependApiPlayoffSchedule').show().parents().show()
+					break;
 				case "scores.qualification.json":
 					$('.dependScores').show().parents().show()
+					$('.dependApiQualScores').show().parents().show()
+					break;
+				case "scores.playoff.json":
+					$('.dependScores').show().parents().show()
+					$('.dependApiPlayoffScores').show().parents().show()
 					break;
 			}
 		})
@@ -168,6 +185,27 @@ $(document).ready(function(){
 	})
 	$('#aggregatedScoutingDataView').click(function(){
 		showLightBox(toTable(eventStatsByTeam))
+		return false
+	})
+	$('.viewJson').click(function(){
+		var jv = $('#jsonViewer').html(""),
+		lb = $('#jsonLightBox')
+		$(this).closest('tr').find('a').each(function(){
+			var href=$(this).attr('href')
+			if (/\.json$/.test(href)){
+				lb.find('h2').text(href.replace(/.*\//,""))
+				$.getJSON(href, function(json){
+					console.log(json)
+					jv.jsonViewer(json, {
+						collapsed:false,
+						rootCollapsable:false,
+						withQuotes:false,
+						withLinks:false
+					})
+				})
+			}
+		})
+		showLightBox(lb)
 		return false
 	})
 	$('#showInstructions').click(function(){
