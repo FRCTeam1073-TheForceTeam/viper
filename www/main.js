@@ -2,14 +2,6 @@
 
 $.ajaxSetup({
 	cache: true
-});
-
-window.addEventListener("load", () => {
-	if ("serviceWorker" in navigator){
-		navigator.serviceWorker.register("/offline-service-worker.cgi").then(function(reg) {
-			//console.log('Registration succeeded. Scope is ' + reg.scope)
-		})
-	}
 })
 
 function getDate(s){
@@ -87,8 +79,8 @@ function hasUploads(){
 
 function inIframe(){
 	try {
-		return window.self !== window.top;
+		return window.self !== window.top
 	} catch (e) {
-		return true;
+		return true
 	}
 }
