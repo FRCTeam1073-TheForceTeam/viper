@@ -15,10 +15,14 @@ $(document).ready(function(){
 			return false
 		}
 		$('#csvInp').val(csv)
-		var newEventId = src.match(/event_key=(20[0-9]+[a-z]+)/)
-		if (!newEventId || !newEventId.length) newEventId = src.match(/href\=\"\/(20[0-9]{2}\/[A-Z]+)\"\>Event Info/)
+		var newEventId = src.match(/event_key=(20[0-9]+[a-z0-9]+)/)
+		console.log(newEventId)
+		if (!newEventId || !newEventId.length) newEventId = src.match(/href\=\"\/(20[0-9]{2}\/[A-Z0-9]+)\"\>Event Info/)
+		console.log(newEventId)
 		if (!newEventId || !newEventId.length) newEventId = ["",$('#idInp').val()]
+		console.log(newEventId)
 		newEventId = newEventId[1].replace(/\//g,"").toLowerCase()
+		console.log(newEventId)
 		if (newEventId != eventId){
 			eventInfo=null
 			eventId=newEventId
