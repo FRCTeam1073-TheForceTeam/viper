@@ -286,6 +286,9 @@ function showScouting(){
 	setTeamBG()
 	fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
 	$('.count').each(countHandler)
+	for (var i=0; i<onShowScouting.length; i++){
+		if(!onShowScouting[i]()) return false
+	}
 	scouting.show()
 }
 
@@ -346,6 +349,7 @@ function formHasChanges(f){
 }
 
 var onStore = []
+var onShowScouting = []
 
 function store(){
 	if (formHasChanges(scouting)){

@@ -57,9 +57,13 @@ $(document).ready(function(){
 			alert("Missing data: 'How many links?'")
 			return false
 		}
-		showAuto()
+		return true
+	})
+
+	onShowScouting.push(function(){
 		cycleInterrupt()
 		cycles=[]
+		showAuto()
 		return true
 	})
 
