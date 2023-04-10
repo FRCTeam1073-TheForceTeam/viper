@@ -2,13 +2,14 @@ ul{max-width:25em;list-style-type:none}
 li{margin:.5em 0;}
 .initHid{display:none}
 #dataTable td,#dataTable th{padding:0.5em}
-#matchTable td, #matchTable th {padding:0.25em;border:1px solid gray;cursor:pointer}
-#matchTable{margin:1em auto}
+#matchTable td, #matchTable th {padding:0.15em;border:1px solid gray;cursor:pointer}
+#matchTable{margin:1em auto;max-width:27em}
 h3{margin:0 0 .25em 0;padding:0}
 .narrow{max-width:18em}
 .match-id{max-width:7.5em;hyphens:auto}
 #eventInfo{margin:1em}
-#matchTable .scouted{color:var(--highlight-fg-color)}
+#matchTable .scouted,#matchTable .score{color:var(--highlight-fg-color)}
+#matchTable .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color)}
 #matchTable .error{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 #pitScoutSetup img{width:2em;display:block}
 #pitScoutSetup{text-align:left}
