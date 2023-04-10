@@ -37,7 +37,7 @@
 
 <div id=select-match class=screen style=display:none>
 	<button class=showInstructions>Instructions</button>
-	<button id=robotBtn>Change Robot</button>
+	<button class=robotBtn>Change Robot</button>
 	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
 	<div id=match-list></div>
 </div>
@@ -53,6 +53,8 @@
 		<button class=teleop id=to-auto style=display:none>Back to auto</button>
 		<button class=showInstructions>Instructions</button>
 		<button id=teamBtn>Team # Correction</button>
+		<button id=matchBtn>Choose Match</button>
+		<button class=robotBtn>Change Robot</button>
 		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
 	</div>
 	<input type=hidden name=event>
@@ -310,8 +312,6 @@
 			<button id=nextBtn>Next Match</button>
 		</div>
 		<div id=otherButtons>
-			<button id=matchBtn>Choose Match</button>
-			<button id=robotBtn>Change Robot</button>
 			<button id=uploadBtn>Upload Data</button>
 		</div>
 	</div></div>

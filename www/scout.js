@@ -532,7 +532,7 @@ $(document).ready(function(){
 		}
 		return false
 	})
-	$("#pitScoutNext").click(function(e){
+	$("#pitScoutNext,#pitTeamButton").click(function(e){
 		storePitScouting()
 		showSelectPitScoutTeam()
 		return false
@@ -542,7 +542,7 @@ $(document).ready(function(){
 		showMatchList()
 		return false
 	})
-	$("#robotBtn").click(function(e){
+	$(".robotBtn").click(function(e){
 		if (!store()) return false
 		showPosList()
 		return false
