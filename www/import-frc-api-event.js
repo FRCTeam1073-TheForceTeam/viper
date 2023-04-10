@@ -20,7 +20,7 @@ $(document).ready(function(){
 				})
 				csv+="\n"
 			})
-		}).fail(function(){
+		}).always(function(){
 			$.getJSON(`/data/${eventId}.teams.json`, function(json){
 				var teams = []
 				if (json.teams){
@@ -43,7 +43,7 @@ $(document).ready(function(){
 					$.when(...waitFor).then(function() {
 						$('#csvInp').val(randomPracticeSchedule(teams))
 						$('#importData').submit()
-					});
+					})
 				}
 			})
 		})
