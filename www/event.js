@@ -102,7 +102,6 @@ $(document).ready(function(){
 		if (!eventData.length) return $('body').html("Match not found")
 		loadEventStats((eventStats,eventStatsByTeam)=>{
 			loadEventScores(eventScores=>{
-				console.log(eventScores)
 				var lastDone,
 				lastFullyDone,
 				ourNext
