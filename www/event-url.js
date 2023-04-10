@@ -51,7 +51,7 @@ function csvToArrayOfMaps(csv){
 		var headers = lines.shift().split(/,/)
 		for(var i=0; i<lines.length; i++){
 			if (lines[i]){
-				var data = lines[i].split(/[,]/)
+				var data = lines[i].split(/[,]/).map(s=>s.trim())
 				var map = {}
 				for (var j=0; j<data.length; j++){
 					map[headers[j]] = /^[0-9]+$/.test(data[j])?parseInt(data[j]):unescapeField(data[j])
@@ -277,14 +277,14 @@ function getMatchName(matchId){
 
 function getShortMatchName(matchId){
 	return matchId
-		.replace(/^pm/, "Prac­ ")
-		.replace(/^qm/, "Qual­ ")
+		.replace(/^pm/, "Prac ")
+		.replace(/^qm/, "Qual ")
 		.replace(/^qf/, "QF ")
 		.replace(/^sf/, "SF ")
-		.replace(/^1p/, "Playoff R1 M")
-		.replace(/^2p/, "Playoff R2 M")
-		.replace(/^3p/, "Playoff R3 M")
-		.replace(/^4p/, "Playoff R4 M")
-		.replace(/^5p/, "Playoff R5 M")
+		.replace(/^1p/, "Play­off R1 M")
+		.replace(/^2p/, "Play­off R2 M")
+		.replace(/^3p/, "Play­off R3 M")
+		.replace(/^4p/, "Play­off R4 M")
+		.replace(/^5p/, "Play­off R5 M")
 		.replace(/^f/, "Final ")
 }
