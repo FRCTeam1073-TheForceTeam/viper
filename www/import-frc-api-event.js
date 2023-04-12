@@ -20,7 +20,9 @@ $(document).ready(function(){
 				})
 				csv+="\n"
 			})
-		}).always(function(){
+			$('#csvInp').val(csv)
+			$('#importData').submit()
+		}).fail(function(){
 			$.getJSON(`/data/${eventId}.teams.json`, function(json){
 				var teams = []
 				if (json.teams){
