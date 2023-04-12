@@ -117,13 +117,20 @@ function aggregateStats(scout, aggregate){
 	scout['end_dock_engaged_failed_nofault'] = (scout['end']!='engaged'&&scout['end_dock_fail']=='nofault')?1:0
 
 	scout['links_score'] = Math.round((scout['links']||0)*pointValues['links'])
-	scout['super_charge_cube_score'] = (scout['links']||0)==9?((scout['super_charge_cube']||0)*pointValues['super_charge']):0
-	scout['super_charge_cone_score'] = (scout['links']||0)==9?((scout['super_charge_cone']||0)*pointValues['super_charge']):0
+
+	scout['super_charge_cube'] = (scout['links']||0)==9?(scout['super_charge_cube']||0):0
+	scout['cube']=scout['cube']+scout['super_charge_cube']
+	scout['super_charge_cone'] = (scout['links']||0)==9?(scout['super_charge_cone']||0):0
+	scout['cone']=scout['cone']+scout['super_charge_cone']
+	scout['super_charge_place'] = scout['super_charge_cube']+scout['super_charge_cone']
+	scout['super_charge_cube_score'] = (scout['super_charge_cube']||0)*pointValues['super_charge']
+	scout['super_charge_cone_score'] = (scout['super_charge_cone']||0)*pointValues['super_charge']
 	scout['super_charge_score'] = scout['super_charge_cube_score']+scout['super_charge_cone_score']
-	scout['tele_score'] = scout['tele_place_score']+scout['links_score']+scout['super_charge_score']
+
+	scout['tele_score'] = scout['tele_place_score']+scout['links_score']
 	scout['dock_score'] = scout['auto_dock_score']+scout['end_dock_score']
 
-	scout['score'] = scout['auto_score']+scout['tele_score']+scout['end_score']
+	scout['score'] = scout['auto_score']+scout['tele_score']+scout['super_charge_score']+scout['end_score']
 
 	var cycleSeconds =  (scout['full_cycle_count']||0) * (scout["full_cycle_average_seconds"]||0) + (aggregate['full_cycle_count']||0) * (aggregate["full_cycle_average_seconds"]||0)
 	var cycles = (scout['full_cycle_count']||0) + (aggregate['full_cycle_count']||0)
@@ -389,6 +396,10 @@ var statInfo = {
 		name: "Super Charge Cones Placed",
 		type: "avg"
 	},
+	"super_charge_place": {
+		name: "Super Charge Cargo Placed",
+		type: "avg"
+	},
 	"super_charge_cube_score": {
 		name: "Super Charge Cube Score",
 		type: "avg"
@@ -463,7 +474,7 @@ var teamGraphs = {
 	},
 	"Game Stages":{
 		graph:"stacked",
-		data:["auto_nondock_score","auto_dock_score","tele_score","end_score"]
+		data:["auto_nondock_score","auto_dock_score","tele_score","super_charge_score","end_score"]
 	},
 	"Auto Dock":{
 		graph:"stacked",
@@ -471,7 +482,7 @@ var teamGraphs = {
 	},
 	"# Placed by Stage":{
 		graph:"stacked",
-		data:["auto_place","tele_place"]
+		data:["auto_place","tele_place","super_charge_place"]
 	},
 	"End Engage":{
 		graph:"stacked",
@@ -483,7 +494,7 @@ var teamGraphs = {
 	},
 	"Teleop":{
 		graph:"stacked",
-		data:['tele_place_score','links_score','super_charge_score']
+		data:['tele_place_score','links_score']
 	},
 	"Cargo Picking":{
 		graph:"stacked",
@@ -519,7 +530,7 @@ var teamGraphs = {
 	},
 	"# Placed by Type and Level":{
 		graph:"stacked",
-		data:["bottom_cube","bottom_cone","middle_cube","middle_cone","top_cube","top_cone"]
+		data:["bottom_cube","bottom_cone","middle_cube","middle_cone","top_cube","top_cone","super_charge_cube","super_charge_cone"]
 	},
 	"Place Reliability by Stage":{
 		graph:"bar",
@@ -542,7 +553,7 @@ var aggregateGraphs = {
 	},
 	"Game Stages":{
 		graph:"stacked",
-		data:["auto_nondock_score","auto_dock_score","tele_score","end_score"]
+		data:["auto_nondock_score","auto_dock_score","tele_score","super_charge_score","end_score"]
 	},
 	"Auto Dock %":{
 		graph:"stacked_percent",
@@ -550,7 +561,7 @@ var aggregateGraphs = {
 	},
 	"# Placed by Stage":{
 		graph:"stacked",
-		data:["auto_place","tele_place"]
+		data:["auto_place","tele_place","super_charge_place"]
 	},
 	"End Engage %":{
 		graph:"stacked_percent",
@@ -598,11 +609,11 @@ var aggregateGraphs = {
 	},
 	"# Placed by Level":{
 		graph:"stacked",
-		data:["bottom","middle","top"]
+		data:["bottom","middle","top","super_charge_place"]
 	},
 	"# Placed by Type and Level":{
 		graph:"stacked",
-		data:["bottom_cube","bottom_cone","middle_cube","middle_cone","top_cube","top_cone"]
+		data:["bottom_cube","bottom_cone","middle_cube","middle_cone","top_cube","top_cone","super_charge_cube","super_charge_cone"]
 	},
 	"Place Reliability by Stage":{
 		graph:"bar",
