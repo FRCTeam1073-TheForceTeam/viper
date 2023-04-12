@@ -126,10 +126,8 @@ function aggregateStats(scout, aggregate){
 	scout['super_charge_cube_score'] = (scout['super_charge_cube']||0)*pointValues['super_charge']
 	scout['super_charge_cone_score'] = (scout['super_charge_cone']||0)*pointValues['super_charge']
 	scout['super_charge_score'] = scout['super_charge_cube_score']+scout['super_charge_cone_score']
-
 	scout['tele_score'] = scout['tele_place_score']+scout['links_score']
 	scout['dock_score'] = scout['auto_dock_score']+scout['end_dock_score']
-
 	scout['score'] = scout['auto_score']+scout['tele_score']+scout['super_charge_score']+scout['end_score']
 
 	var cycleSeconds =  (scout['full_cycle_count']||0) * (scout["full_cycle_average_seconds"]||0) + (aggregate['full_cycle_count']||0) * (aggregate["full_cycle_average_seconds"]||0)
@@ -389,15 +387,15 @@ var statInfo = {
 		type: "minmax"
 	},
 	"super_charge_cube": {
-		name: "Super Charge Cubes Placed",
+		name: "Cubes Placed During Super Charge",
 		type: "avg"
 	},
 	"super_charge_cone": {
-		name: "Super Charge Cones Placed",
+		name: "Cones Placed During Super Charge",
 		type: "avg"
 	},
 	"super_charge_place": {
-		name: "Super Charge Cargo Placed",
+		name: "Cargo Placed During Super Charge",
 		type: "avg"
 	},
 	"super_charge_cube_score": {
@@ -627,7 +625,7 @@ var aggregateGraphs = {
 
 var matchPredictorSections = {
 	"Total":["score"],
-	"Game Stages":["auto_score","tele_score","end_score"],
+	"Game Stages":["auto_nondock_score","auto_dock_score","tele_score","super_charge_score","end_score"],
 	"Auto":['auto_mobility_score','auto_place_score','auto_dock_score'],
 	"Auto Cargo":['auto_cone_score','auto_cube_score','auto_top_score','auto_middle_score','auto_bottom_score'],
 	"Teleop":['tele_place_score','links_score'],
@@ -636,7 +634,7 @@ var matchPredictorSections = {
 
 var plannerSections = {
 	"Total":["score"],
-	"Game Stages":["auto_score","tele_score","end_score"],
+	"Game Stages":["auto_nondock_score","auto_dock_score","tele_score","super_charge_score","end_score"],
 	"Auto":['auto_place','auto_dock_engaged_attempts','auto_dock_engaged_reliability'],
 	"Teleop":['tele_place','full_cycle_average_seconds'],
 	"End":['end_dock_engaged_attempts','end_dock_engaged_reliability']
