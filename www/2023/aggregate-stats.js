@@ -37,6 +37,7 @@ function aggregateStats(scout, aggregate){
 		"tele_top":5,
 		"tele_middle":3,
 		"tele_bottom":2,
+		"super_charge":3,
 		"end_parked":2,
 		"end_docked":6,
 		"end_engaged":10,
@@ -116,7 +117,10 @@ function aggregateStats(scout, aggregate){
 	scout['end_dock_engaged_failed_nofault'] = (scout['end']!='engaged'&&scout['end_dock_fail']=='nofault')?1:0
 
 	scout['links_score'] = Math.round((scout['links']||0)*pointValues['links'])
-	scout['tele_score'] = scout['tele_place_score']+scout['links_score']
+	scout['super_charge_cube_score'] = (scout['links']||0)==9?((scout['super_charge_cube']||0)*pointValues['super_charge']):0
+	scout['super_charge_cone_score'] = (scout['links']||0)==9?((scout['super_charge_cone']||0)*pointValues['super_charge']):0
+	scout['super_charge_score'] = scout['super_charge_cube_score']+scout['super_charge_cone_score']
+	scout['tele_score'] = scout['tele_place_score']+scout['links_score']+scout['super_charge_score']
 	scout['dock_score'] = scout['auto_dock_score']+scout['end_dock_score']
 
 	scout['score'] = scout['auto_score']+scout['tele_score']+scout['end_score']
@@ -374,8 +378,28 @@ var statInfo = {
 		type: "minmax"
 	},
 	"tele_max_place_score": {
-		name: "Teleop Maximum  Placing Score",
+		name: "Teleop Maximum Placing Score",
 		type: "minmax"
+	},
+	"super_charge_cube": {
+		name: "Super Charge Cubes Placed",
+		type: "avg"
+	},
+	"super_charge_cone": {
+		name: "Super Charge Cones Placed",
+		type: "avg"
+	},
+	"super_charge_cube_score": {
+		name: "Super Charge Cube Score",
+		type: "avg"
+	},
+	"super_charge_cone_score": {
+		name: "Super Charge Cone Score",
+		type: "avg"
+	},
+	"super_charge_score": {
+		name: "Super Charge Score",
+		type: "avg"
 	},
 	"throw": {
 		name: "Can Throw Cargo",
@@ -459,7 +483,7 @@ var teamGraphs = {
 	},
 	"Teleop":{
 		graph:"stacked",
-		data:['tele_place_score','links_score']
+		data:['tele_place_score','links_score','super_charge_score']
 	},
 	"Cargo Picking":{
 		graph:"stacked",
@@ -538,7 +562,7 @@ var aggregateGraphs = {
 	},
 	"Teleop":{
 		graph:"stacked",
-		data:['tele_place_score','links_score']
+		data:['tele_place_score','links_score','super_charge_score']
 	},
 	"Teleop Placing":{
 		graph:"boxplot",
