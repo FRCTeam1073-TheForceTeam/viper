@@ -19,6 +19,8 @@
       - Most of the defaults are probably fine to start with.
       - Use the documentation comments for guidance about any setting you want to change.
       - Static IP and DHCP settings aren't supported on Windows, so don't try to enable them.
+      - Setting up password protection doesn't work on *some* Windows computers. If the installation script hangs when asking for passwords, set `GUEST_USER=""`, `SCOUTING_USER=""`, and
+`ADMIN_USER=""` which will disable passwords for the web interface entirely.
 1. Run the installation script again to finish up the installation: `./script/install.sh`
 
 ## Limitations
