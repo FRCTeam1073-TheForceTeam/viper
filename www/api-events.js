@@ -25,7 +25,6 @@ $(document).ready(function(){
 			toShow=eventFilters.upcoming
 			$('#filter').val('upcoming')
 		}
-		console.log(eventFilters.upcoming)
 		showEvents(toShow)
 	}).fail(function(){
 		location.href=`/admin/frc-api-season.cgi?year=${year}`
