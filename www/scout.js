@@ -351,18 +351,26 @@ function formHasChanges(f){
 var onStore = []
 var onShowScouting = []
 
+function setTimeStamps(form){
+	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
+	created = form.find('input[name="created"]')
+	if (created.length && !created.val()) created.val(time)
+	form.find('input[name="modified"]').val(time)
+}
+
 function store(){
 	if (formHasChanges(scouting)){
 		for (var i=0; i<onStore.length; i++){
 			if(!onStore[i]()) return false
 		}
+		setTimeStamps(scouting)
 		localStorage.setItem("last_match_"+eventId, match)
 		localStorage.setItem("last_pos", pos)
 		var csv = toCSV('#scouting')
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getScoutKey(), csv[1])
 		storeTime = new Date().getTime()
-		storeScouter($('#scouting'))
+		storeScouter(scouting)
 	}
 	return true
 }
@@ -372,12 +380,14 @@ function storeScouter(form){
 }
 
 function storePitScouting(){
-	if (formHasChanges($('#pit-scouting'))){
+	var f=$('#pit-scouting')
+	if (formHasChanges(f)){
+		setTimeStamps(f)
 		var csv = toCSV('#pit-scouting')
 		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
 		localStorage.setItem(getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
-		storeScouter($('#pit-scouting'))
+		storeScouter(f)
 	}
 }
 
