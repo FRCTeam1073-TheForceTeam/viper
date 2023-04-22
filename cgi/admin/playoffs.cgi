@@ -22,6 +22,7 @@ my $fileName = "../data/${event}.alliances.csv";
 $webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">", $fileName);
 print $fh $alliancesCsv;
 close $fh;
+$webutil->commitDataFile($fileName, "playoffs");
 
 my $newSchedule = $cgi->param('scheduleCsv');
 if ($newSchedule){
@@ -52,6 +53,7 @@ if ($newSchedule){
 	truncate $fh, 0;
 	print $fh $schedule;
 	close $fh;
+	$webutil->commitDataFile($fileName, "playoffs");
 }
 
 $webutil->redirect("/event.html#$event");

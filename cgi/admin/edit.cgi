@@ -28,5 +28,6 @@ if ($delete){
 	$webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
 	print $fh $csv;
 	close $fh;
+	$webutil->commitDataFile($file, "edit");
 	$webutil->redirect("/event.html#$event");
 }

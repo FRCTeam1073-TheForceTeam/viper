@@ -97,6 +97,7 @@ sub writeData(){
 			$savedKeys .= $row->[$uHead->{"event"}].(($type eq 'scouting')?("_".$row->[$uHead->{"match"}]):"")."_".$row->[$uHead->{"team"}];
 		}
 		close $fh;
+		$webutil->commitDataFile($fileName, "scouting");
 	}
 }
 

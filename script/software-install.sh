@@ -21,5 +21,7 @@ then
 		libmime-base64-perl \
 		libwww-perl \
 		perl \
+		rcs \
+		simple-revision-control \
 		;
 fi

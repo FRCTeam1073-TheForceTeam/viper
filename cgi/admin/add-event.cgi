@@ -50,17 +50,19 @@ if ( -e $file){
 	my ($newPractice) = $csv =~ /((?:^pm.*\n)+)/m;
 	my ($newQuals) = $csv =~ /((?:^qm.*\n)+)/m;
 	my ($newPlayoffs) = $csv =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
-	$csv = $headers.($newPractice||$oldPractice).($newQuals||$oldQuals).($newPlayoffs||$oldPlayoffs);
+	$csv = $headers.($newPractice||$oldPractice||"").($newQuals||$oldQuals||"").($newPlayoffs||$oldPlayoffs||"");
 }
 
 $webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
 print $fh $csv;
 close $fh;
+$webutil->commitDataFile($file, "add-event");
 
 $file = "../data/${event}.event.csv";
 $webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
 print $fh "name,location,start,end\n";
 print $fh "$name,$location,$start,$end\n";
 close $fh;
+$webutil->commitDataFile($file, "add-event");
 
 $webutil->redirect("/event.html#$event");

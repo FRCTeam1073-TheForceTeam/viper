@@ -42,5 +42,6 @@ for my $fileName (keys(%$data)){
 	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$raw", $fileName);
 	print $fh $fileContents;
 	close $fh;
+	$webutil->commitDataFile($fileName, "import") if ($fileName =~ /\.csv$/);
 }
 $webutil->redirect("/event.html#$event");

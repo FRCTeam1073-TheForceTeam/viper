@@ -35,4 +35,13 @@ sub redirect {
 	 exit 0;
 }
 
+sub commitDataFile {
+	my ($self, $file, $message) = @_;
+	$file =~ /((?:.*\/)?data\/)([^\/]+)/ or die "No data directory found in $file";
+	my $datadir = $1;
+	$file = $2;
+	return if (!`sh -c 'command -v src'`);
+	`pushd "$datadir" && src commit -m "$message" "$file" && popd` or die "$!";
+}
+
 1;
