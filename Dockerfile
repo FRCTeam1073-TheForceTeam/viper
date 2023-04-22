@@ -17,6 +17,7 @@ RUN apt-get update \
 		libmime-base64-perl \
 		libwww-perl \
 		perl \
+		simple-revision-control \
 	&& apt-get clean autoclean \
 	&& apt-get autoremove -y \
 	&& rm -rf /var/lib/{apt,dpkg,cache,log}/ \
