@@ -23,46 +23,59 @@ $(document).ready(function(){
 		)
 	})
 	$('.initHid').hide()
+	var extensionMap = {
+		"event.csv": ['.dependInfo','Event Info CSV'],
+		"schedule.csv": ['.dependSchedule','Sched&shy;ule CSV'],
+		"scouting.csv": ['.dependScouting','Scout&shy;ing CSV'],
+		"alliances.csv": ['.dependAlliances','All&shy;ianc&shy;es CSV'],
+		"pit.csv": ['.dependPit','Pit Scout&shy;ing CSV'],
+		"info.json": ['','API Event Info JSON'],
+		"teams.json": ['','API Team List JSON'],
+		"schedule.qualification.json": ['','API Qual&shy;if&shy;ic&shy;a&shy;tion Sched&shy;ule JSON'],
+		"schedule.playoff.json": ['','API Play&shy;off Schedule JSON'],
+		"scores.qualification.json": ['.dependScores','API Qual&shy;if&shy;ic&shy;a&shy;tion Scores JSON'],
+		"scores.playoff.json": ['.dependScores','API Play&shy;off Scores JSON'],
+	}
+	function showDataActions(){
+		var url = $(this).attr('href'),
+		da = $('#dataActions'),
+		file = url.replace(/.*\//,""),
+		list = da.find('ul').html(""),
+		download = $('<a>').attr('href',url).text('Download')
+		da.find('h2').text($(this).attr('download')?$(this).attr('download'):file)
+		if ($(this).attr('download')) download.attr('download', $(this).attr('download'))
+		list.append($('<li>').append(download))
+		if (/\.csv/.test(file)){
+			list.append($('<li>').append($('<a>').attr('href',`/edit.html#file=${file}`).text('Edit')))
+			list.append($('<li>').append($('<a>').attr('href',`/revisions.html#file=${file}`).text('History')))
+		}
+		if (/\.json/.test(file)){
+			list.append($('<li>').append($('<a>').attr('href',url).text('View').click(viewJson)))
+		}
+		if (/^blob/.test(url)){
+			list.append($('<li>').append($('<a>').attr('href',url).attr('data-source',$(this).attr('data-source')).text('View').click(viewDataAsTable)))
+		}
+		showLightBox(da)
+		return false
+	}
 	loadEventFiles(function(fileList){
+		fileList.sort((a,b)=>{
+			var aType = a.replace(/.*\./,"")
+			var bType = b.replace(/.*\./,"")
+			if(aType != bType) return aType.localeCompare(bType)
+			return a.localeCompare(b)
+		})
 		fileList.forEach(file=>{
-			var extension = file.replace(/[^\.]+\./,"")
-			switch (extension){
-				case "event.csv":
-					$('.dependInfo').show().parents().show()
-					break
-				case "schedule.csv":
-					$('.dependSchedule').show().parents().show()
-					break
-				case "scouting.csv":
-					$('.dependScouting').show().parents().show()
-					break
-				case "alliances.csv":
-					$('.dependAlliances').show().parents().show()
-					break
-				case "pit.csv":
-					$('.dependPit').show().parents().show()
-					break
-				case "info.json":
-					$('.dependApiInfo').show().parents().show()
-					break
-				case "teams.json":
-					$('.dependApiTeams').show().parents().show()
-					break
-				case "schedule.qualification.json":
-					$('.dependApiQualSchedule').show().parents().show()
-					break
-				case "schedule.playoff.json":
-					$('.dependApiPlayoffSchedule').show().parents().show()
-					break
-				case "scores.qualification.json":
-					$('.dependScores').show().parents().show()
-					$('.dependApiQualScores').show().parents().show()
-					break
-				case "scores.playoff.json":
-					$('.dependScores').show().parents().show()
-					$('.dependApiPlayoffScores').show().parents().show()
-					break
+			var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
+			title = extension,
+			fileNum = (file.match(/\.([0-9])+\./)||['',''])[1]
+			if (extensionMap[extension]){
+				var depend = extensionMap[extension][0]
+				title = extensionMap[extension][1]
+				if (depend) $(depend).show().parents().show()
 			}
+			title+=fileNum?(" "+fileNum):""
+			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents().show()
 		})
 		if (uploadCount) $('.dependUploads').show().parents().show()
 	})
@@ -155,15 +168,16 @@ $(document).ready(function(){
 				$('#extendedScoutingData')
 					.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
 					.attr('download',`${eventId}.scouting.extended.csv`)
+					.attr('data-source','eventStats')
+					.click(showDataActions)
 				$('#aggregatedScoutingData')
 					.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
 					.attr('download',`${eventId}.scouting.aggregated.csv`)
+					.attr('data-source','eventStatsByTeam')
+					.click(showDataActions)
 			})
 		})
 	})
-
-
-
 
 	function getScore(team){
 		var stats = eventStatsByTeam[team]
@@ -188,6 +202,10 @@ $(document).ready(function(){
 		})
 		return csv
 	}
+	function viewDataAsTable(){
+		showLightBox(toTable(window[$(this).attr('data-source')]))
+		return false
+	}
 	function toTable(dat){
 		var table = $('<table border=1>')
 		toTableRow(table,Object.keys(statInfo),"th")
@@ -209,35 +227,6 @@ $(document).ready(function(){
 		})
 		table.append(tr)
 	}
-
-	$('#extendedScoutingDataView').click(function(){
-		showLightBox(toTable(eventStats))
-		return false
-	})
-	$('#aggregatedScoutingDataView').click(function(){
-		showLightBox(toTable(eventStatsByTeam))
-		return false
-	})
-	$('.viewJson').click(function(){
-		var jv = $('#jsonViewer').html(""),
-		lb = $('#jsonLightBox')
-		$(this).closest('tr').find('a').each(function(){
-			var href=$(this).attr('href')
-			if (/\.json$/.test(href)){
-				lb.find('h2').text(href.replace(/.*\//,""))
-				$.getJSON(href, function(json){
-					jv.jsonViewer(json, {
-						collapsed:false,
-						rootCollapsable:false,
-						withQuotes:false,
-						withLinks:false
-					})
-				})
-			}
-		})
-		showLightBox(lb)
-		return false
-	})
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
 	})
@@ -267,6 +256,22 @@ $(document).ready(function(){
 	}
 })
 
+function viewJson(){
+	var jv = $('#jsonViewer').html(""),
+	lb = $('#jsonLightBox')
+	var href=$(this).attr('href')
+	lb.find('h2').text(href.replace(/.*\//,""))
+	$.getJSON(href, function(json){
+		jv.jsonViewer(json, {
+			collapsed:false,
+			rootCollapsable:false,
+			withQuotes:false,
+			withLinks:false
+		})
+	})
+	showLightBox(lb)
+	return false
+}
 function showLinks(e){
 	var el = $(e.target),
 	team,pos,

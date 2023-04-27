@@ -59,6 +59,7 @@ function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
 }
 function showLightBox(content){
+	closeLightBox()
 	$('#lightBoxBG').show()
 	content.show()
 }

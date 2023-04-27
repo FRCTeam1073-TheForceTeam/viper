@@ -18,6 +18,8 @@
 --lowlight-bg-color:#333;
 --focus-bg-color:#650;
 --translucent-hide-color:#333D;
+--diff-add-bg-color:#141;
+--diff-rem-bg-color:#411;
 }
 *{box-sizing:border-box}
 html{font-size:2vmin;color:var(--main-fg-color);background:var(--main-bg-color) url('/background.png') fixed;background-size:33vw auto;padding-bottom:100vh}
