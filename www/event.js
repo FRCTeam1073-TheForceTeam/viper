@@ -7,21 +7,6 @@ $(document).ready(function(){
 	}
 	var title = $('title')
 	var uploadCount = getUploads().length
-	$('a').each(function(){
-		$(this).attr(
-			'href',$(this).attr('href')
-			.replace('YEAR', eventYear)
-			.replace('EVENT', eventId)
-			.replace('YSLEV', eventId.replace(/^(20[0-9]{2})/,"$1/")) // Year slash event
-			.replace('UPLOAD_COUNT', uploadCount)
-		)
-		$(this).text(
-			$(this).text()
-			.replace('YEAR', eventYear)
-			.replace('EVENT', eventId)
-			.replace('UPLOAD_COUNT', uploadCount)
-		)
-	})
 	$('.initHid').hide()
 	var extensionMap = {
 		"event.csv": ['.dependInfo','Event Info CSV'],
@@ -85,6 +70,26 @@ $(document).ready(function(){
 	}
 	loadEventInfo(function(){
 		setName()
+		if (eventInfo['blue_alliance_id']) blueAllianceId = eventInfo['blue_alliance_id']
+		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
+		if (!/^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) $('#blueAllianceLinks').hide()
+		if (!/^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('#firstInspiresLinks').hide()
+		$('a').each(function(){
+			$(this).attr(
+				'href',$(this).attr('href')
+				.replace('YEAR', eventYear)
+				.replace('EVENT', eventId)
+				.replace('FIID', firstInspiresId)
+				.replace('BAID', blueAllianceId)
+				.replace('UPLOAD_COUNT', uploadCount)
+			)
+			$(this).text(
+				$(this).text()
+				.replace('YEAR', eventYear)
+				.replace('EVENT', eventId)
+				.replace('UPLOAD_COUNT', uploadCount)
+			)
+		})
 		var info = $('#eventInfo').html('')
 		if (eventInfo.location) info.append($('<div>').text(eventInfo.location))
 		if (eventInfo.start || eventInfo.end){
@@ -255,6 +260,9 @@ $(document).ready(function(){
 		location.href=(`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`)
 	}
 })
+
+var blueAllianceId = eventId
+var firstInspiresId = eventId.replace(/^(20[0-9]{2})/,"$1/")
 
 function viewJson(){
 	var jv = $('#jsonViewer').html(""),
