@@ -45,6 +45,9 @@ h1{padding:0 2.5em}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
 #mainMenu .dependUpload{font-weight:bold;color:var(--highlight-fg-color)}
 #mainMenu h4 {margin:.75em 0 0 0}
+#mainMenu ul {list-style:none;margin:0;padding:0}
+#mainMenu li {margin:.25em 0;padding:0}
+#mainMenu li+li{padding-top:0.25em;border-top:1px solid var(--main-border-color)}
 #lightBoxBG{z-index:9998;width:100vw;height:100vh;position:fixed;background-color:var(--translucent-hide-color);left:0;top:0;display:none}
 #lightBoxBG::before{content:'ⓧ';position:fixed;z-index:9999;top:.1em;left:.3em;font-size:150%}
 .lightBoxCenterContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:50%;left:50%;transform:translate(-50%,-50%);padding:1em;display:none;text-align:left}
