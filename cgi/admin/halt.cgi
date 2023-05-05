@@ -14,7 +14,7 @@ print "Content-type: text/html; charset=UTF-8\n\n";
 print "<!DOCTYPE html>\n";
 print "<html>\n";
 print "<head>\n";
-print "<title>Halt Server - FRC Scouting App</title>\n";
+print "<title>Halt Server - Viper</title>\n";
 print "</head>\n";
 print "<body bgcolor=\"#dddddd\"><center>\n";
 
