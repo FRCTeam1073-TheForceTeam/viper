@@ -12,6 +12,7 @@ then
 		git \
 		imagemagick \
 		libcgi-pm-perl \
+		libdbi-perl \
 		libfile-flock-perl \
 		libfile-slurp-perl \
 		libfile-touch-perl \
