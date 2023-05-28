@@ -34,6 +34,7 @@ $(document).ready(function(){
 	}
 
 	function srcToField(src){
+		eventInfo=eventInfo||{}
 		$('#startInp').val((src.match(/itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.start||$('#startInp').val()])[1])
 		$('#endInp').val((src.match(/itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.end||$('#endInp').val()])[1])
 		$('#nameInp').val((src.match(/id\=\"event-name\"\>([^\<]+)\</)||src.match(/\<span class\=\"hidden-xs hidden-sm align-middle\"\> - ([^\<]+)\</)||["",eventInfo.name||$('#nameInp').val()])[1].replace(/ Event$/,""))
