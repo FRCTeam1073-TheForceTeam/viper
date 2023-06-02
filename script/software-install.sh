@@ -11,6 +11,7 @@ then
 		apache2-utils \
 		git \
 		imagemagick \
+		libdbd-mysql-perl \
 		libcgi-pm-perl \
 		libdbi-perl \
 		libfile-flock-perl \

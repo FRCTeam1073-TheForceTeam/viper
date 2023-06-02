@@ -7,6 +7,7 @@ RUN apt-get update \
 	&& apt-get install -y \
 		git \
 		imagemagick \
+		libdbd-mysql-perl \
 		libcgi-pm-perl \
 		libdbi-perl \
 		libfile-flock-perl \

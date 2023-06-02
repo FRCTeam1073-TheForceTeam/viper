@@ -39,6 +39,15 @@ sub getHeaders(){
 	return $self->{_headers};
 }
 
+sub getRowMap(){
+	my($self, $row) = @_;
+	my $data = {};
+	for my $header (@{$self->{_headers}}){
+		$data->{$header} = $self->getByName($row,$header);
+	}
+	return $data;
+}
+
 sub getValue(){
 	my($self, $row, $col) = @_;
 	return $self->{_headers}->[$col] if ($row == 0);
