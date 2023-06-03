@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 package webutil;
+use Cwd;
 
 use HTML::Entities;
 
@@ -41,7 +42,8 @@ sub commitDataFile {
 	my $datadir = $1;
 	$file = $2;
 	return if (!`sh -c 'command -v src'`);
-	`pushd "$datadir" && src commit -m "$message" "$file" && popd` or die "$!";
+	my $cwd = getcwd();
+	`cd "$datadir" && src commit -m "$message" "$file" && cd "$cwd"` or die "$!";
 }
 
 1;
