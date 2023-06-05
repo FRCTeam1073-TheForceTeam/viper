@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 package webutil;
+use Cwd;
 
 use HTML::Entities;
 
@@ -41,7 +42,12 @@ sub commitDataFile {
 	my $datadir = $1;
 	$file = $2;
 	return if (!`sh -c 'command -v src'`);
-	`pushd "$datadir" && src commit -m "$message" "$file" && popd` or die "$!";
+	my $cwd = getcwd();
+	chdir "data/" if (-d "data/");
+	chdir "../data/" if (-d "../data/");
+	my $srcOut = `src commit -m "$message" "$file" 2>\&1`;
+	die "Could not track revision history: $srcOut" if ($?);
+	chdir $cwd;
 }
 
 1;

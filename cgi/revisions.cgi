@@ -5,6 +5,7 @@
 use strict;
 use warnings;
 use File::Slurp;
+use Data::Dumper;
 use CGI;
 use JSON::PP;
 use lib '../pm';
@@ -35,7 +36,7 @@ my $log = `src log -u "$file"`;
 $log =~ s/\A[^\n]*\n//;
 my $entries = [
 	map {
-		$_ =~ /\A([0-9+]) *\| ([^ ]+) \| ([^\n]+)\n(.*?)\n\n((?:.|\n)*)\Z/?{
+		$_ =~ /\A([0-9+]+) *\| ([^ ]+) \| ([^\n]+)\n(.*?)\n\n((?:.|\n)*)\Z/?{
 			"revision"=>$1,
 			"date"=>$2,
 			"branch"=>$3,
