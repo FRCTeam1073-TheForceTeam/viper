@@ -45,7 +45,8 @@ sub commitDataFile {
 	my $cwd = getcwd();
 	chdir "data/" if (-d "data/");
 	chdir "../data/" if (-d "../data/");
-	`src commit -m "$message" "$file"` or die "$!";
+	my $srcOut = `src commit -m "$message" "$file" 2>\&1`;
+	die "Could not track revision history: $srcOut" if ($?);
 	chdir $cwd;
 }
 
