@@ -29,7 +29,7 @@ $(document).ready(function(){
 			}
 			fieldList.append(links)
 			revItem.append(fieldList)
-			var diffLines = revision.diffs.replace(/^.*\n.*\n.*\n/,"").split(/\n/),
+			var diffLines = (revision.diffs||"").replace(/^.*\n.*\n.*\n/,"").split(/\n/),
 			pre = $('<pre>')
 			diffLines.forEach(line=>{
 				var span=$('<span>')
