@@ -43,7 +43,10 @@ sub commitDataFile {
 	$file = $2;
 	return if (!`sh -c 'command -v src'`);
 	my $cwd = getcwd();
-	`cd "$datadir" && src commit -m "$message" "$file" && cd "$cwd"` or die "$!";
+	chdir "data/" if (-d "data/");
+	chdir "../data/" if (-d "../data/");
+	`src commit -m "$message" "$file"` or die "$!";
+	chdir $cwd;
 }
 
 1;
