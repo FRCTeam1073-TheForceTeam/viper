@@ -8,10 +8,12 @@ use warnings;
 use DBI;
 use File::Slurp;
 use Data::Dumper;
+use webutil;
 
 our $viper_database_name;
 our $viper_site;
 our $dbh;
+our $config;
 
 sub new {
 	my ($class) = @_;
@@ -20,18 +22,36 @@ sub new {
 	return $self;
 }
 
+sub getConfig {
+	return $db::config if ($db::config);
+	$db::config = {};
+	my $configFile = $INC{"db.pm"};
+	$configFile =~ s/pm\/db\.pm/local.conf/g;
+	my $conf = read_file($configFile);
+ 	my @list = $conf =~/^([A-Z_]+)\s*=\s*\"?([^\"\r\n]+)\"?$/gm;
+	while (my ($name,$value) = splice @list, 0, 2){
+	 	$db::config->{$name} = $value;
+	}
+	return $db::config;
+}
+
+sub getSite {
+	my $site = getConfig()->{'APACHE_SITE_NAME'};
+	$site = "webscout" if (!$site);
+	return $site;
+}
+
 sub dbConnection {
 	return $db::dbh if ($db::dbh);
 	my $configFile = $INC{"db.pm"};
 	$configFile =~ s/pm\/db\.pm/local.conf/g;
-	my $conf = read_file($configFile);
-	my($host) = $conf =~ /^MYSQL_HOST\s*=\s*\"?([^\"]+)\"?/gm;
-	my($port) = $conf =~ /^MYSQL_PORT\s*=\s*\"?([^\"]+)\"?/gm;
-	($db::viper_database_name) = $conf =~ /^MYSQL_DATABASE\s*=\s*\"?([^\"]+)\"?/gm;
-	my($user) = $conf =~ /^MYSQL_USER\s*=\s*\"?([^\"]+)\"?/gm;
-	my($password) = $conf	 =~ /^MYSQL_PASSWORD\s*=\s*\"?([^\"]+)\"?/gm;
-	($db::viper_site) = $conf =~ /^APACHE_SITE_NAME\s*=\s*\"?([^\"]+)\"?/gm;
-	$db::viper_site = "webscout" if (!$db::viper_site);
+	my $conf = getConfig();
+	my $host = $conf->{'MYSQL_HOST'};
+	my $port = $conf->{'MYSQL_PORT'};
+	$db::viper_database_name = $conf->{'MYSQL_DATABASE'};
+	my $user = $conf->{'MYSQL_USER'};
+	my $password = $conf->{'MYSQL_PASSWORD'};
+	my $site = getSite();
 
 	return 0 if (!$host or !$port or !$db::viper_database_name or !$user or !$password);
 
@@ -49,18 +69,65 @@ sub dbConnection {
 	return $db::dbh;
 }
 
+sub printCsv(){
+	my($self, $sth) = @_;
+
+	my $columns = $sth->{NAME};
+	my $data = $sth->fetchall_arrayref();
+
+	webutil->new()->notfound() if (!scalar(@$data));
+
+	binmode(STDOUT, ":utf8");
+	print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
+	print "Content-type: text/plain; charset=UTF-8\n\n";
+
+	my @withData = map {0} @$columns;
+	for my $row (@$data){
+		my $i=0;
+		for my $field (@$row){
+			$withData[$i] = 1 if ($field);
+			$i++;
+		}
+	}
+
+	my $i = 0;
+	my $first = 1;
+	for my $field (@$columns){
+		if ($field ne 'site' and $withData[$i]){
+			print (",") if (!$first);
+			print("$field");
+			$first = 0;
+		}
+		$i++;
+	}
+	print "\n";
+
+	for my $row (@$data){
+		my $i = 0;
+		my $first = 1;
+		for my $field (@$row){
+			if ($columns->[$i] ne 'site' and $withData[$i]){
+				print (",") if (!$first);
+				print($field||"");
+				$first = 0;
+			}
+			$i++;
+		}
+		print "\n";
+	}
+}
+
 sub upsert {
 	my($self, $table, $data) = @_;
 	my $conn = $self->dbConnection();
-	$data->{'site'} = $db::viper_site;
+	$data->{'site'} = getSite();
 	my @allFields = keys(%$data);
 	my $fields = join("`,`", @allFields);
 	my $placeholders = join(",", map {"?"} @allFields);
-	my @updateFields = grep(!/^(site|event|Match|Alliance)$/, @allFields);
-	my $updates = join(",", map {"`$_`=?"} @updateFields);
+	my $updates = join(",", map {"`$_`=?"} @allFields);
 	my @values = ();
 	push @values, map {$data->{$_}} @allFields;
-	push @values, map {$data->{$_}} @updateFields;
+	push @values, map {$data->{$_}} @allFields;
 
 	my $done = 0;
 
@@ -188,6 +255,40 @@ sub schema {
 	 	"
 	);
 	$dbh->commit();
+
+	print("Creating table `apijson`\n");
+	$dbh->do(
+		"
+			CREATE TABLE IF NOT EXISTS
+				apijson
+			(
+				`site` VARCHAR(16) NOT NULL,
+				`event` VARCHAR(32) NOT NULL,
+				`file` VARCHAR(32) NOT NULL,
+				`json` MEDIUMTEXT NOT NULL,
+				UNIQUE(`site`,`event`,`file`)
+			)  $tableOptions
+	 	"
+	);
+	$dbh->commit();
+
+	print("Creating table `images`\n");
+	$dbh->do(
+		"
+			CREATE TABLE IF NOT EXISTS
+				images
+			(
+				`site` VARCHAR(16) NOT NULL,
+				`year` VARCHAR(4) NOT NULL,
+				`team` VARCHAR(8) NOT NULL,
+				`view` VARCHAR(8) NOT NULL,
+				`image` MEDIUMBLOB NOT NULL,
+				UNIQUE(`site`,`year`,`team`,`view`)
+			)  $tableOptions
+	 	"
+	);
+	$dbh->commit();
+
 
 	my $wwwDir = $INC{"db.pm"};
 	$wwwDir =~ s/pm\/db\.pm/www\//g;

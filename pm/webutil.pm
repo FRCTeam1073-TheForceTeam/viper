@@ -36,6 +36,13 @@ sub redirect {
 	 exit 0;
 }
 
+sub notfound {
+	print "Status: 404 Not Found\n";
+	print "Content-Type: text/html\n\n";
+	print "<h1>404 Not Found</h1>";
+	exit 0;
+}
+
 sub commitDataFile {
 	my ($self, $file, $message) = @_;
 	$file =~ /((?:.*\/)?data\/)([^\/]+)/ or die "No data directory found in $file";

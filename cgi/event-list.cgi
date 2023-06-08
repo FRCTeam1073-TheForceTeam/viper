@@ -5,6 +5,12 @@
 use strict;
 use warnings;
 use File::Slurp;
+use lib '../pm';
+use db;
+
+binmode(STDOUT, ":utf8");
+
+my $db = db->new();
 
 sub isoDate(){
 	my ($time) = @_;
@@ -20,6 +26,14 @@ sub isoDate(){
 
 # print web page beginning
 print "Content-type: text/csv; charset=UTF-8\n\n";
+
+my $dbh = $db->dbConnection();
+if ($dbh){
+	my $sth = $dbh->prepare("SELECT * from `event` where `site`=?");
+	$sth->execute($db->getSite());
+	$db->printCsv($sth);
+	exit 0;
+}
 
 # get all of the event files containing match schedules
 foreach my $name (glob("data/*.schedule.csv")){

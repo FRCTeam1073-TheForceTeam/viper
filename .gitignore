@@ -1,7 +1,7 @@
 /www/*.cgi
 /www/admin/
 /www/scout/
-/www/data/*
+/www/data/
 /orig
 local.*
 *.tar.gz
