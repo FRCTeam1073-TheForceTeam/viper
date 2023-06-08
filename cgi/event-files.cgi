@@ -6,21 +6,56 @@ use strict;
 use warnings;
 use File::Slurp;
 use CGI;
+use Data::Dumper;
 use lib '../pm';
 use webutil;
+use db;
 
 my $cgi = CGI->new;
 my $webutil = webutil->new;
+my $db = db->new;
 
 my $event = $cgi->param('event');
 
 $webutil->error("No event specified") if (!$event);
 $webutil->error("Bad event format") if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
-my $year = $event;
-$year =~ s/^(20[0-9]{2}).*/$1/g;
+my ($year) = $event =~ /^(20[0-9]{2})/;
 
 # print web page beginning
 print "Content-type: text/csv; charset=UTF-8\n\n";
+
+my $dbh = $db->dbConnection();
+if ($dbh){
+	my $site = $db->getSite();
+	my $files = $dbh->selectall_arrayref("
+		SELECT '/data/$event.event.csv' AS `file` FROM `event` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.schedule.csv' AS `file` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.alliances.csv' AS `file` FROM `alliances` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.pit.csv' AS `file` FROM `${year}pit` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.scouting.csv' AS `file` FROM `${year}scouting` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT CONCAT('/data/$year/',`img`,'.jpg') AS `file` FROM (
+			SELECT DISTINCT CONCAT(`team`,'-',`view`) AS img FROM (
+				SELECT DISTINCT `R1` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
+				UNION SELECT DISTINCT `R2` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
+				UNION SELECT DISTINCT `R3` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
+				UNION SELECT DISTINCT `B1` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
+				UNION SELECT DISTINCT `B2` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
+				UNION SELECT DISTINCT `B3` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
+			) AS teams
+			JOIN `images` ON teams.t=images.team
+			WHERE `site`='$site' AND `year`='$year'
+
+		) AS imgs
+		ORDER BY `file`
+		;
+	");
+	for my $file (@$files){
+		$file = $file->[0];
+		$file =~ s/\-\././g;
+		print $file,"\n";
+	}
+	exit 0;
+}
 
 # get all of the event files containing match schedules
 foreach my $name (glob("data/$event.*")){
