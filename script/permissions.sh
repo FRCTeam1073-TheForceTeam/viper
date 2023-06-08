@@ -4,6 +4,7 @@ set -e
 
 if which sudo &> /dev/null
 then
+	mkdir -p www/data
 	# The web server needs to write to this directory
 	sudo chown -R `whoami`:www-data www/data/
 	sudo chmod -R ug+rw www/data/
