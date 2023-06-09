@@ -57,7 +57,7 @@ if ($dbh){
 	exit 0;
 }
 
-# get all of the event files containing match schedules
+# list all of the event files
 foreach my $name (glob("data/$event.*")){
 	print "/$name\n"
 }

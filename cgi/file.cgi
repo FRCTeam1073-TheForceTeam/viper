@@ -32,7 +32,7 @@ sub json(){
 	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\..*\.json$/);
 	my ($event, $name) = $file =~ /^(20[0-9]+[^\.]+)\.(.*)\.json$/;
 	my $dbh = $db->dbConnection();
-	my $sth = $dbh->prepare("SELECT `json` from `apijson` where `site`=? and `event`=? and `file`=?");
+	my $sth = $dbh->prepare("SELECT `json` FROM `apijson` WHERE `site`=? AND `event`=? AND `file`=?");
 	$sth->execute($db->getSite(), $event, $name);
 	my $data = $sth->fetchall_arrayref();
 
@@ -50,7 +50,7 @@ sub image(){
 	my ($year, $team, $view) = $file =~ /^(20[0-9]{2})\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
 	$view = $view||"";
 	my $dbh = $db->dbConnection();
-	my $sth = $dbh->prepare("SELECT `image` from `images` where `site`=? and `year`=? and `team`=? and `view`=?");
+	my $sth = $dbh->prepare("SELECT `image` FROM `images` WHERE `site`=? AND `year`=? AND `team`=? AND `view`=?");
 	$sth->execute($db->getSite(), $year, $team, $view);
 	my $data = $sth->fetchall_arrayref();
 	$webutil->notfound() if (!scalar(@$data));
@@ -66,11 +66,17 @@ sub csv(){
 	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|pit|event|schedule|alliances)\.csv$/);
 
 	my ($year, $event, $table) = $file =~ /^(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
+	my $combined = $event eq 'combined' and $table eq 'scouting';
 	$table = "$year$table" if ($table =~ /^scouting|pit$/);
 	$event = "$year$event";
 
 	my $dbh = $db->dbConnection();
-	my $sth = $dbh->prepare("SELECT * from `$table` where `site`=? and `event`=?");
-	$sth->execute($db->getSite(), $event);
+	my $sth;
+	if ($combined){
+		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event` LIKE '$year%'");
+	} else {
+		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event`='$event");
+	}
+	$sth->execute($db->getSite());
 	$db->printCsv($sth)
 }
