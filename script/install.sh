@@ -4,7 +4,7 @@ set -e
 
 ./script/local-conf.sh
 ./script/software-install.sh
-./script/db-schema.sh
+./script/db-schema.pl
 ./script/htaccess-setup.sh
 ./script/cgi-setup.sh
 ./script/permissions.sh
