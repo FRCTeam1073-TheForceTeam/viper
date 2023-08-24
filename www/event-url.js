@@ -19,7 +19,20 @@ eventTeams,
 eventInfo,
 eventPitData,
 eventTeamsInfo,
-BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3']
+BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
+MATCH_TYPE_SORT = {
+	'pm':'00',
+	'qm':'01',
+	'qf':'02',
+	'sf':'03',
+	'1p':'04',
+	'2p':'05',
+	'3p':'06',
+	'4p':'07',
+	'5p':'08',
+	'sf':'09',
+	'f':'10',
+}
 
 if (eventId && eventId != localStorage.getItem("last_event_id")){
 	localStorage.setItem("last_event_id", eventId)
@@ -70,6 +83,13 @@ function unescapeField(s){
 		.replace(/،/g, ",")
 }
 
+function scheduleSortKey(match){
+	var event = match.event,
+	id = match.Match,
+	m = id.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)([0-9]+)$/)
+	return event + "---" + MATCH_TYPE_SORT[m[1]] + "---" + m[2].padStart(12,'0')
+}
+
 function loadEventSchedule(callback){
 	if (eventMatches){
 		if (callback) callback(eventMatches)
@@ -77,6 +97,8 @@ function loadEventSchedule(callback){
 	}
 	eventAjax(`/data/${eventId}.schedule.csv`,function(text){
 		eventMatches=csvToArrayOfMaps(text)
+		console.log(eventMatches)
+		eventMatches.sort((a,b)=>scheduleSortKey(a).localeCompare(scheduleSortKey(b)))
 		var teams = {}
 		for (var i=0; i<eventMatches.length; i++){
 			for (var j=0; j<BOT_POSITIONS.length; j++){
