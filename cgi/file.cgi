@@ -66,7 +66,8 @@ sub csv(){
 	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|pit|event|schedule|alliances)\.csv$/);
 
 	my ($year, $event, $table) = $file =~ /^(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
-	my $combined = $event eq 'combined' and $table eq 'scouting';
+
+	my $combined = ($event eq 'combined') and ($table eq 'scouting');
 	$table = "$year$table" if ($table =~ /^scouting|pit$/);
 	$event = "$year$event";
 
@@ -75,7 +76,7 @@ sub csv(){
 	if ($combined){
 		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event` LIKE '$year%'");
 	} else {
-		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event`='$event");
+		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event`='$event'");
 	}
 	$sth->execute($db->getSite());
 	$db->printCsv($sth)
