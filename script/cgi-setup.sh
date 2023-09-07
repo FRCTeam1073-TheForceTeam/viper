@@ -13,15 +13,24 @@ else
 	exit 1
 fi
 
+base=`pwd`
+
+find www -name '*.cgi' -exec rm {} \;
+
 for src in `find cgi/ -name *.cgi`
 do
-	dst=${src/cgi/www}
-	dstdir=${dst%/*}
+	dst="${src/cgi/www}"
+	dstdir="${dst%/*}"
 	mkdir -p "$dstdir"
-	rm -f "$dst"
+
 	if [ "$PERL" == "/usr/bin/perl" ]
 	then
-		ln "$src" "$dst"
+		dstfile=${dst##*/}
+		srcdir="${src%/*}/"
+		srcrel=`echo "$srcdir" | sed -E 's|[^/]+/|../|g'`
+		cd "$dstdir"
+		ln -fs "$srcrel$src" "$dstfile"
+		cd "$base"
 	else
 		sed -E "s|^#!/usr/bin/perl|#!$PERL|g" "$src" > "$dst"
 	fi
