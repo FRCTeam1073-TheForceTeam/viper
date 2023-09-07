@@ -9,9 +9,13 @@ use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
 use csv;
 use webutil;
+use db;
+
 
 my $cgi = CGI->new;
 my $webutil = webutil->new;
+my $db = db->new();
+
 
 my $uCsv = $cgi->param('csv');
 $webutil->error("No data uploaded", "Scouting CSV data not found.") if (!$uCsv);
@@ -52,8 +56,9 @@ foreach my $row (@{$uCsv}){
 }
 
 my $savedKeys = "";
+my $dbh = $db->dbConnection();
 
-sub writeData(){
+sub writeCsvData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
 	foreach my $event (keys %{$eventCsv}){
 		my $fileName = "../data/$event.$type.csv";
@@ -98,6 +103,33 @@ sub writeData(){
 		}
 		close $fh;
 		$webutil->commitDataFile($fileName, "scouting");
+	}
+}
+
+
+sub writeDbData(){
+	my ($eventCsv, $eventHeaders, $type) = @_;
+	foreach my $event (keys %{$eventCsv}){
+		my ($year) = $event =~ /^(20[0-9]{2})/;
+		my $table = "$year$type";
+		$csvHeaders = $eventHeaders->{$event};
+		foreach my $row (@{$eventCsv->{$event}}){
+			my $data = {};
+			@$data{@$csvHeaders} = @$row;
+			$db->upsert($table, $data);
+			$savedKeys .= "," if($savedKeys);
+			$savedKeys .= $data->{"event"}.(($type eq 'scouting')?("_".$data->{"match"}):"")."_".$data->{"team"};
+		}
+		$db->commit();
+	}
+}
+
+sub writeData(){
+	my ($eventCsv, $eventHeaders, $type) = @_;
+	if ($dbh){
+		&writeDbData($eventCsv,$eventHeaders,$type);
+	} else {
+		&writeCsvData($eventCsv,$eventHeaders,$type);
 	}
 }
 
