@@ -11,11 +11,9 @@ use csv;
 use webutil;
 use db;
 
-
 my $cgi = CGI->new;
 my $webutil = webutil->new;
 my $db = db->new();
-
 
 my $uCsv = $cgi->param('csv');
 $webutil->error("No data uploaded", "Scouting CSV data not found.") if (!$uCsv);
@@ -105,7 +103,6 @@ sub writeCsvData(){
 		$webutil->commitDataFile($fileName, "scouting");
 	}
 }
-
 
 sub writeDbData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
