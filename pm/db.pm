@@ -308,7 +308,7 @@ sub schema {
 						`event` VARCHAR(32) NOT NULL,
 						`match` VARCHAR(8) NOT NULL,
 						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL,
+						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
 						INDEX(`site`,`event`),
 						UNIQUE(`site`,`event`,`match`,`team`,`scouter`)
 					)  $tableOptions
@@ -345,7 +345,7 @@ sub schema {
 						`site` VARCHAR(16) NOT NULL,
 						`event` VARCHAR(32) NOT NULL,
 						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL,
+						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
 						INDEX(`site`,`event`),
 						UNIQUE(`site`,`event`,`team`,`scouter`)
 					)  $tableOptions
