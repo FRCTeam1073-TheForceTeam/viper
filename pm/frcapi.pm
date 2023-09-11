@@ -4,10 +4,14 @@ package frcapi;
 
 use strict;
 use warnings;
+use Data::Dumper;
 use File::Slurp;
 use LWP::UserAgent;
 use lib '.';
 use webutil;
+use db;
+
+our $db = db->new;
 
 sub new {
 	my ($class) = @_;
@@ -40,7 +44,6 @@ sub fetchFromAPI(){
 sub writeFileFromAPI(){
 	my ($this, $url, $file) = @_;
 	my $content = $this->fetchFromAPI($url);
-	my $fh;
 	my $pages = 1;
 	my $filesWritten=0;
 	if ($content =~ /^\{\"[A-Za-z0-9]+\"\:\[\]\}$/){
@@ -51,33 +54,43 @@ sub writeFileFromAPI(){
 		$pages = $1;
 	}
 	if ($pages > 1){
-		$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
-		print $fh "{\"pageTotal\":$pages}\n";
-		close $fh;
+
+		$this->writeSingle($file, "{\"pageTotal\":$pages}\n");
 		$filesWritten++;
 		my $pageFile = $file;
 		$pageFile =~ s/(\.[0-9]+)?\.json/.1.json/g;
-		$webutil->error("Error opening $pageFile for writing", "$!") if (!open $fh, ">", $pageFile);
-		print $fh $content;
-		close $fh;
+		$this->writeSingle($pageFile, $content);
 		$filesWritten++;
 		for (my $i=2; $i<=$pages; $i++){
 			my $pageUrl = $url.($url=~/\?/?"&":"?")."page=$i";
 			$content = $this->fetchFromAPI($pageUrl);
 			my $pageFile = $file;
 			$pageFile =~ s/(\.[0-9]+)?\.json/.$i.json/g;
-			$webutil->error("Error opening $pageFile for writing", "$!") if (!open $fh, ">", $pageFile);
-			print $fh $content;
-			close $fh;
-		$filesWritten++;
+			$this->writeSingle($pageFile, $content);
+			$filesWritten++;
 		}
 	} else {
-		$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
-		print $fh $content;
-		close $fh;
+		$this->writeSingle($file, $content);
 		$filesWritten++;
 	}
 	return $filesWritten;
+}
+
+sub writeSingle(){
+	my ($this, $fileName, $contents) = @_;
+	if ($frcapi::db->dbConnection()){
+		my ($event,$file) = $fileName =~/^.*\/?(20[0-9]{2}[a-zA-Z0-9\-]*)\.([^\/]*)\.json$/;
+		$frcapi::db->upsert('apijson', {
+			'event'=>$event,
+			'file'=>$file,
+			'json'=>$contents,
+		});
+		$frcapi::db->commit();
+	} else {
+		$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">", $fileName);
+		print $fh $contents;
+		close $fh;
+	}
 }
 
 1;
