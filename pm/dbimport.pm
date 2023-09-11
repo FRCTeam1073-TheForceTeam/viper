@@ -18,14 +18,26 @@ sub new {
 	return $self;
 }
 
-sub importCsvFile(){
-	my ($self, $file, $contents) = @_;
+sub getEventAndTable(){
+	my($self, $file) = @_;
 	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
 	$table = "$year$table" if ($table =~ /^scouting|pit$/);
 	$event = "$year$event";
+	return $event, $table;
+}
 
+sub deleteCsvFile(){
+	my($self, $file, $commit) = @_;
+	my ($event, $table) = $self->getEventAndTable($file);
 	$dbimport::db->dbConnection()->prepare("DELETE FROM `$table` WHERE `site`=? AND `event`=?")->execute($db->getSite(), $event);
-	my $csv = csv->new(scalar($contents));
+	$dbimport::db->commit() if ($commit);
+}
+
+sub importCsvFile(){
+	my ($self, $file, $contents) = @_;
+	my ($event, $table) = $self->getEventAndTable($file);
+	$self->deleteCsvFile($file, 0);
+	my $csv = csv->new($contents);
 
 	for my $row (1..$csv->getRowCount()){
 		my $data = $csv->getRowMap($row);

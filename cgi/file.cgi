@@ -67,7 +67,7 @@ sub csv(){
 
 	my ($year, $event, $table) = $file =~ /^(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
 
-	my $combined = ($event eq 'combined') and ($table eq 'scouting');
+	my $combined = (($event eq 'combined') and ($table eq 'scouting'));
 	$table = "$year$table" if ($table =~ /^scouting|pit$/);
 	$event = "$year$event";
 
