@@ -40,7 +40,7 @@ for my $team ($cgi->param){
 				$webutil->error("Expected image photo upload", $info->{'Content-Type'}) if ($info->{'Content-Type'} !~ /^image\//);
 				my $teamPicFile = "../data/$year/$param.jpg";
 				if ($dbh){
-					$teamPicFile = File::Temp->new(TEMPLATE => 'viperXXXXXXX', SUFFIX => '.jpg', TMPDIR => 1)->filename;
+					$teamPicFile = File::Temp->new(TEMPLATE => 'viperXXXXXXX', SUFFIX => '.jpg', TMPDIR => 1, OPEN => 0)->filename;
 				}
 				my $upload_file = $cgi->tmpFileName(scalar $cgi->param($param));
 				`convert "$upload_file" -auto-orient -resize 1000x1000 "$teamPicFile"`;
