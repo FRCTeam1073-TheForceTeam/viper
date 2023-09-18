@@ -36,8 +36,17 @@ sub getConfig {
 }
 
 sub getSite {
-	my $site = getConfig()->{'APACHE_SITE_NAME'};
-	$site = "webscout" if (!$site);
+	my $site =  getConfig()->{'DB_SITE_NAME'};
+	$site = getConfig()->{'APACHE_SITE_NAME'} if (!$site);
+	$site = "webscout" if (!$site );
+	if ($site eq "*"){
+		if (exists $ENV{'HTTP_HOST'}){
+			my $host = $ENV{'HTTP_HOST'};
+			$host =~ s/^www\.//gi;
+			$site = lc($1) if ($host =~ /^([A-Za-z0-9\-]+)\./);
+		}
+	}
+	$site = "webscout" if ($site eq "*");
 	return $site;
 }
 
