@@ -127,7 +127,7 @@ $(document).ready(function(){
 					var m = eventMatches[i]
 					if (matchScoutingDataCount(m)==6) lastFullyDone = m
 					if (!lastDone && matchScoutingDataCount(m)) lastDone = m
-					if (!lastDone && matchHasTeam(m,window.ourTeam)) ourNext=m
+					if (!lastDone && matchHasTeam(m,getLocalTeam())) ourNext=m
 				}
 				var seenOurNext = false,
 				seenLastFullyDone = false
@@ -147,7 +147,7 @@ $(document).ready(function(){
 							.toggleClass("scouted",!!scouted)
 							.toggleClass("needed",!scouted&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
 							.toggleClass("error",!!scouted.old)
-							.toggleClass("ourTeam",""+match[pos]==""+window.ourTeam)
+							.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
 					})
 					redPrediction=Math.round(redPrediction)
 					bluePrediction=Math.round(bluePrediction)

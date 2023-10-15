@@ -38,6 +38,9 @@ $(document).ready(function(){
 						.replace(/YEAR/g,eYear)
 				)
 				mainMenu.find('.dependEvent').toggle(!!(eName))
+				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
+					localStorage.setItem('my-team', parseInt($(this).val()))
+				})
 				showMainMenuUploads()
 			})
 		}
@@ -55,6 +58,10 @@ $(document).ready(function(){
 		})
 	}
 })
+function getLocalTeam(){
+	console.log("LOCAL TEAM:" + (localStorage.getItem('my-team') || window.ourTeam || 0))
+	return localStorage.getItem('my-team') || window.ourTeam || 0
+}
 function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
 }
