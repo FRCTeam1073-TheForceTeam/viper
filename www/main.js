@@ -38,6 +38,10 @@ $(document).ready(function(){
 						.replace(/YEAR/g,eYear)
 				)
 				mainMenu.find('.dependEvent').toggle(!!(eName))
+				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
+					localStorage.setItem('my-team', parseInt($(this).val()))
+					location.reload()
+				})
 				showMainMenuUploads()
 			})
 		}
@@ -55,6 +59,9 @@ $(document).ready(function(){
 		})
 	}
 })
+function getLocalTeam(){
+	return localStorage.getItem('my-team') || window.ourTeam || 0
+}
 function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
 }
