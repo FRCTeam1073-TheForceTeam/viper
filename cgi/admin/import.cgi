@@ -8,6 +8,7 @@ use MIME::Base64;
 use Data::Dumper;
 use File::Slurp;
 use File::Path 'make_path';
+use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
 use webutil;
 use db;
@@ -43,10 +44,16 @@ sub writeFileData(){
 	my $dir = $fileName;
 	$dir =~ s/[^\/]*$//g;
 	make_path($dir);
-	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$openMode", $fileName);
+
+	my $lockFile = "$fileName.lock";
+	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
+	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$openmode", $fileName);
 	print $fh $fileContents;
 	close $fh;
 	$webutil->commitDataFile($fileName, "import") if ($fileName =~ /\.csv$/);
+	close $lock;
+	unlink($lockFile);
 }
 
 sub writeDbData(){

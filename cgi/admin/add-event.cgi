@@ -6,6 +6,7 @@ use CGI;
 use File::Slurp;
 use Data::Dumper;
 use POSIX qw/strftime/;
+use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
 use webutil;
 use csv;
@@ -49,6 +50,9 @@ my $dbh = $db->dbConnection();
 
 sub writeCsvData(){
 	my $file = "../data/${event}.schedule.csv";
+	my $lockFile = "$file.lock";
+	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 	if ( -e $file){
 		my $oldSchedule = read_file($file);
 		my ($oldPractice) = $oldSchedule =~ /((?:^pm.*\n)+)/m;
@@ -65,8 +69,13 @@ sub writeCsvData(){
 	print $fh $schedule;
 	close $fh;
 	$webutil->commitDataFile($file, "add-event");
+	close $lock;
+	unlink($lockFile);
 
 	$file = "../data/${event}.event.csv";
+	$lockFile = "$file.lock";
+	open($lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 	my $blueAllianceId = $event;
 	my $firstInspiresId = $event;
 	$firstInspiresId =~ s/^([0-9]{4})/$1\//g;
@@ -81,6 +90,8 @@ sub writeCsvData(){
 	print $fh "$name,$location,$start,$end,$blueAllianceId,$firstInspiresId\n";
 	close $fh;
 	$webutil->commitDataFile($file, "add-event");
+	close $lock;
+	unlink($lockFile);
 }
 
 sub writeDbData(){

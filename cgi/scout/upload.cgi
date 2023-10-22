@@ -60,14 +60,16 @@ sub writeCsvData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
 	foreach my $event (keys %{$eventCsv}){
 		my $fileName = "../data/$event.$type.csv";
+		$csvHeaders = $eventHeaders->{$event};
+
+		my $lockFile = "$fileName.lock";
+		open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 		if (! -f $fileName){
 			open my $fc, ">", $fileName or $webutil->error("Cannot create $fileName", "$!\n");
 			close $fc;
 		}
-		$csvHeaders = $eventHeaders->{$event};
-
 		open my $fh, '+<', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
-		flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
 		$/ = undef;
 		my $fCsv = <$fh>;
 		$fCsv = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $fCsv) ];
@@ -101,6 +103,8 @@ sub writeCsvData(){
 		}
 		close $fh;
 		$webutil->commitDataFile($fileName, "scouting");
+		close $lock;
+		unlink($lockFile);
 	}
 }
 
