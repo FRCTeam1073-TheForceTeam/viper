@@ -31,6 +31,9 @@ if ($newSchedule){
 	$newSchedule =~ //g;
 	my $rounds = join("|", do { my %seen; grep { !$seen{$_}++ } $newSchedule =~ /^(f|sf|qf|1p|2p|3p|4p|5p)/gm});
 	$fileName = "../data/${event}.schedule.csv";
+	my $lockFile = "$fileName.lock";
+	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 	if (! -f $fileName){
 		open my $fc, ">", $fileName or $webutil->error("Cannot create $fileName", "$!\n");
 		close $fc;
@@ -54,6 +57,8 @@ if ($newSchedule){
 	print $fh $schedule;
 	close $fh;
 	$webutil->commitDataFile($fileName, "playoffs");
+	close $lock;
+	unlink($lockFile);
 }
 
 $webutil->redirect("/event.html#$event");

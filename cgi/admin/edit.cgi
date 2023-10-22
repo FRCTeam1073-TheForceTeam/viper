@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use CGI;
+use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
 use webutil;
 
@@ -25,9 +26,14 @@ if ($delete){
 } else {
 	$csv =~ s/(\r|\n|\r\n)+/\n/g;
 	$webutil->error("Missing CSV") if (!$csv);
+	my $lockFile = "$file.lock";
+	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 	$webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
 	print $fh $csv;
 	close $fh;
 	$webutil->commitDataFile($file, "edit");
+	close $lock;
+	unlink($lockFile);
 	$webutil->redirect("/event.html#$event");
 }
