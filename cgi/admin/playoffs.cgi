@@ -19,10 +19,15 @@ $webutil->error("Missing alliances CSV") if (!$alliancesCsv);
 $alliancesCsv =~ s/\r\n|\r/\n/g;
 $webutil->error("Malformed alliances CSV", $alliancesCsv) if (!$alliancesCsv or $alliancesCsv !~ /\AAlliance,Captain,First Pick,Second Pick,(?:(?:Won Quarter-Finals,Won Semi-Finals)|(?:Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5)),Won Finals\n(?:[0-9]+(?:,[0-9]+){3}(,[01]?){3,6}\n){8}\Z/g);
 my $fileName = "../data/${event}.alliances.csv";
+my $lockFile = "$fileName.lock";
+open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 $webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">", $fileName);
 print $fh $alliancesCsv;
 close $fh;
 $webutil->commitDataFile($fileName, "playoffs");
+close $lock;
+unlink($lockFile);
 
 my $newSchedule = $cgi->param('scheduleCsv');
 if ($newSchedule){
@@ -31,15 +36,14 @@ if ($newSchedule){
 	$newSchedule =~ //g;
 	my $rounds = join("|", do { my %seen; grep { !$seen{$_}++ } $newSchedule =~ /^(f|sf|qf|1p|2p|3p|4p|5p)/gm});
 	$fileName = "../data/${event}.schedule.csv";
-	my $lockFile = "$fileName.lock";
-	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	$lockFile = "$fileName.lock";
+	open($lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 	if (! -f $fileName){
 		open my $fc, ">", $fileName or $webutil->error("Cannot create $fileName", "$!\n");
 		close $fc;
 	}
 	open $fh, "+<", $fileName or $webutil->error("Cannot open $fileName", "$!\n");
-	flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
 	$/ = undef;
 	my $schedule = <$fh>;
 	if (!$schedule){

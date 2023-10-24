@@ -72,7 +72,7 @@ my $blueAllianceId = $event;
 my $firstInspiresId = $event;
 $firstInspiresId =~ s/^([0-9]{4})/$1\//g;
 $lockFile = "$file.lock";
-open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+open($lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 if (-e $file){
 	my $oldFile = read_file($file);
