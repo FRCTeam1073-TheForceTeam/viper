@@ -41,16 +41,20 @@ sub writeCsvData(){
 	print $fh $alliancesCsv;
 	close $fh;
 	$webutil->commitDataFile($fileName, "playoffs");
+	close $lock;
+	unlink($lockFile);
 
 	if ($newSchedule){
 		my $rounds = join("|", do { my %seen; grep { !$seen{$_}++ } $newSchedule =~ /^(f|sf|qf|1p|2p|3p|4p|5p)/gm});
 		$fileName = "../data/${event}.schedule.csv";
+		$lockFile = "$fileName.lock";
+		open($lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 		if (! -f $fileName){
 			open my $fc, ">", $fileName or $webutil->error("Cannot create $fileName", "$!\n");
 			close $fc;
 		}
 		open $fh, "+<", $fileName or $webutil->error("Cannot open $fileName", "$!\n");
-		flock($fh, LOCK_EX) or $webutil->error("Cannot lock $fileName", "$!\n");
 		$/ = undef;
 		my $schedule = <$fh>;
 		if (!$schedule){
