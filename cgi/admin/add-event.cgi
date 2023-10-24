@@ -6,6 +6,7 @@ use CGI;
 use File::Slurp;
 use Data::Dumper;
 use POSIX qw/strftime/;
+use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
 use webutil;
 use csv;
@@ -55,15 +56,24 @@ if ( -e $file){
 	$csv = $headers.($newPractice||$oldPractice||"").($newQuals||$oldQuals||"").($newPlayoffs||$oldPlayoffs||"");
 }
 
+
+my $lockFile = "$file.lock";
+open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 $webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
 print $fh $csv;
 close $fh;
 $webutil->commitDataFile($file, "add-event");
+close $lock;
+unlink($lockFile);
 
 $file = "../data/${event}.event.csv";
 my $blueAllianceId = $event;
 my $firstInspiresId = $event;
 $firstInspiresId =~ s/^([0-9]{4})/$1\//g;
+$lockFile = "$file.lock";
+open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 if (-e $file){
 	my $oldFile = read_file($file);
 	my $oldEvent = csv->new($oldFile);
@@ -75,5 +85,7 @@ print $fh "name,location,start,end,blue_alliance_id,first_inspires_id\n";
 print $fh "$name,$location,$start,$end,$blueAllianceId,$firstInspiresId\n";
 close $fh;
 $webutil->commitDataFile($file, "add-event");
+close $lock;
+unlink($lockFile);
 
 $webutil->redirect("/event.html#$event");
