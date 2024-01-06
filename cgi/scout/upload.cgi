@@ -9,9 +9,11 @@ use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
 use csv;
 use webutil;
+use db;
 
 my $cgi = CGI->new;
 my $webutil = webutil->new;
+my $db = db->new();
 
 my $uCsv = $cgi->param('csv');
 $webutil->error("No data uploaded", "Scouting CSV data not found.") if (!$uCsv);
@@ -101,7 +103,12 @@ sub writeData(){
 	}
 }
 
-&writeData($scoutCsv,$scoutHeaders,'scouting');
-&writeData($pitCsv,$pitHeaders,'pit');
+my $dbh = $db->dbConnection();
+if ($dbh){
+	$webutil->error("db upload", Dumper($scoutCsv));
+} else {
+	&writeData($scoutCsv,$scoutHeaders,'scouting');
+	&writeData($pitCsv,$pitHeaders,'pit');
+}
 
 $webutil->redirect("/upload-done.html#$savedKeys");
