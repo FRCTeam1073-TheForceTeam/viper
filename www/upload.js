@@ -49,6 +49,11 @@ function showUploads(){
 		text += pitCsv[years[i]]
 	}
 	$('#csv').val(text)
+
+	$('#uploadBtn').click(function(){
+		$(this).text('Uploading, please wait ...')
+		$('button').prop('disabled', 'true')
+	})
 }
 
 function deleteMatch(){

@@ -6,14 +6,18 @@ use CGI;
 use File::Slurp;
 use Data::Dumper;
 use POSIX qw/strftime/;
+use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
 use webutil;
 use csv;
+use db;
 
 my $webutil = webutil->new;
 my $cgi = CGI->new;
+my $db = db->new();
+
 my $today = strftime("%Y-%m-%d", localtime);
-my $csv = $cgi->param('csv');
+my $schedule = $cgi->param('csv');
 my $event = $cgi->param('event');
 my $name = $event;
 $name =~ s/^20[0-9]{2}//g;
@@ -32,48 +36,94 @@ sub escapeCsv(){
 
 $webutil->error("Missing event ID") if (!$event);
 $webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
-$webutil->error("Missing CSV") if (!$csv);
+$webutil->error("Missing schedule") if (!$schedule);
 $webutil->error("Malformed name", $name) if ($name !~ /^[\x20-\x7F]*$/);
 $webutil->error("Malformed location", $location) if ($location !~ /^[\x20-\x7F]*$/);
 $webutil->error("Malformed start", $start) if ($start !~ /^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/);
 $webutil->error("Malformed end", $end) if ($end !~ /^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/);
 $name = &escapeCsv($name);
 $location = &escapeCsv($location);
-$csv =~ s/\r\n|\r/\n/g;
-$webutil->error("Malformed CSV", $csv) if (!$csv or $csv !~ /\AMatch,R1,R2,R3,B1,B2,B3\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
+$schedule =~ s/\r\n|\r/\n/g;
+$webutil->error("Malformed CSV", $schedule) if (!$schedule or $schedule !~ /\AMatch,R1,R2,R3,B1,B2,B3\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
 
-my $file = "../data/${event}.schedule.csv";
-if ( -e $file){
-	my $oldSchedule = read_file($file);
-	my ($oldPractice) = $oldSchedule =~ /((?:^pm.*\n)+)/m;
-	my ($oldQuals) = $oldSchedule =~ /((?:^qm.*\n)+)/m;
-	my ($oldPlayoffs) = $oldSchedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
-	my ($headers) = $csv =~ /((?:^Match.*\n)+)/m;
-	my ($newPractice) = $csv =~ /((?:^pm.*\n)+)/m;
-	my ($newQuals) = $csv =~ /((?:^qm.*\n)+)/m;
-	my ($newPlayoffs) = $csv =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
-	$csv = $headers.($newPractice||$oldPractice||"").($newQuals||$oldQuals||"").($newPlayoffs||$oldPlayoffs||"");
+my $dbh = $db->dbConnection();
+
+sub writeCsvData(){
+	my $file = "../data/${event}.schedule.csv";
+	my $lockFile = "$file.lock";
+	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
+	if ( -e $file){
+		my $oldSchedule = read_file($file);
+		my ($oldPractice) = $oldSchedule =~ /((?:^pm.*\n)+)/m;
+		my ($oldQuals) = $oldSchedule =~ /((?:^qm.*\n)+)/m;
+		my ($oldPlayoffs) = $oldSchedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
+		my ($headers) = $schedule =~ /((?:^Match.*\n)+)/m;
+		my ($newPractice) = $schedule =~ /((?:^pm.*\n)+)/m;
+		my ($newQuals) = $schedule =~ /((?:^qm.*\n)+)/m;
+		my ($newPlayoffs) = $schedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
+		$schedule = $headers.($newPractice||$oldPractice||"").($newQuals||$oldQuals||"").($newPlayoffs||$oldPlayoffs||"");
+	}
+
+	$webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
+	print $fh $schedule;
+	close $fh;
+	$webutil->commitDataFile($file, "add-event");
+	close $lock;
+	unlink($lockFile);
+
+	$file = "../data/${event}.event.csv";
+	$lockFile = "$file.lock";
+	open($lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
+	my $blueAllianceId = $event;
+	my $firstInspiresId = $event;
+	$firstInspiresId =~ s/^([0-9]{4})/$1\//g;
+	if (-e $file){
+		my $oldFile = read_file($file);
+		my $oldEvent = csv->new($oldFile);
+		$blueAllianceId = $oldEvent->getByName(1,"blue_alliance_id")||$blueAllianceId;
+		$firstInspiresId = $oldEvent->getByName(1,"first_inspires_id")||$firstInspiresId;
+	}
+	$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
+	print $fh "name,location,start,end,blue_alliance_id,first_inspires_id\n";
+	print $fh "$name,$location,$start,$end,$blueAllianceId,$firstInspiresId\n";
+	close $fh;
+	$webutil->commitDataFile($file, "add-event");
+	close $lock;
+	unlink($lockFile);
 }
 
-$webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
-print $fh $csv;
-close $fh;
-$webutil->commitDataFile($file, "add-event");
-
-$file = "../data/${event}.event.csv";
-my $blueAllianceId = $event;
-my $firstInspiresId = $event;
-$firstInspiresId =~ s/^([0-9]{4})/$1\//g;
-if (-e $file){
-	my $oldFile = read_file($file);
-	my $oldEvent = csv->new($oldFile);
-	$blueAllianceId = $oldEvent->getByName(1,"blue_alliance_id")||$blueAllianceId;
-	$firstInspiresId = $oldEvent->getByName(1,"first_inspires_id")||$firstInspiresId;
+sub writeDbData(){
+	if ($schedule =~ /((?:^pm.*\n)+)/m){
+		$dbh->prepare("DELETE FROM `schedule` WHERE `site`=? AND `event`=? AND `match` like 'pm%'")->execute($db->getSite(), $event);
+	}
+	if ($schedule =~ /((?:^qm.*\n)+)/m){
+		$dbh->prepare("DELETE FROM `schedule` WHERE `site`=? AND `event`=? AND `match` like 'qm%'")->execute($db->getSite(), $event);
+	}
+	if ($schedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m){
+		$dbh->prepare("DELETE FROM `schedule` WHERE `site`=? AND `event`=? AND (`match` like 'qf%' OR `match` like 'sf%' OR `match` like '1p%' OR `match` like '2p%' OR `match` like '3p%' OR `match` like '4p%' OR `match` like '5p%')")->execute($db->getSite(), $event);
+	}
+	my $csv = csv->new($schedule);
+	for my $row (1..$csv->getRowCount()){
+		my $data = $csv->getRowMap($row);
+		$data->{'event'}=$event;
+		$db->upsert('schedule', $data);
+	}
+	$db->upsert('event', {
+		'event' => $event,
+		'name'=> $name,
+		'location' => $location,
+		'start'=> $start,
+		'end'=> $end,
+	});
+	$db->commit();
 }
-$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
-print $fh "name,location,start,end,blue_alliance_id,first_inspires_id\n";
-print $fh "$name,$location,$start,$end,$blueAllianceId,$firstInspiresId\n";
-close $fh;
-$webutil->commitDataFile($file, "add-event");
+
+if ($dbh){
+	&writeDbData();
+} else {
+	&writeCsvData();
+}
 
 $webutil->redirect("/event.html#$event");

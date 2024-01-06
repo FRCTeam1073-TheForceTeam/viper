@@ -36,8 +36,17 @@ sub getConfig {
 }
 
 sub getSite {
-	my $site = getConfig()->{'APACHE_SITE_NAME'};
-	$site = "webscout" if (!$site);
+	my $site =  getConfig()->{'DB_SITE_NAME'};
+	$site = getConfig()->{'APACHE_SITE_NAME'} if (!$site);
+	$site = "webscout" if (!$site );
+	if ($site eq "*"){
+		if (exists $ENV{'HTTP_HOST'}){
+			my $host = $ENV{'HTTP_HOST'};
+			$host =~ s/^www\.//gi;
+			$site = lc($1) if ($host =~ /^([A-Za-z0-9\-]+)\./);
+		}
+	}
+	$site = "webscout" if ($site eq "*");
 	return $site;
 }
 
@@ -147,7 +156,7 @@ sub upsert {
 			1;
 		} or do {
 			my $error = $@;
-			if ($error =~ /Unknown column '([^']+)'/i){
+			if ($table =~ /^20[0-9]{2}(pit|scouting)$/ and $error =~ /Unknown column '([^']+)'/i){
 				my $column = $1;
 				my $type = "VARCHAR(256)";
 				$dbh->do("
@@ -308,7 +317,7 @@ sub schema {
 						`event` VARCHAR(32) NOT NULL,
 						`match` VARCHAR(8) NOT NULL,
 						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL,
+						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
 						INDEX(`site`,`event`),
 						UNIQUE(`site`,`event`,`match`,`team`,`scouter`)
 					)  $tableOptions
@@ -345,7 +354,7 @@ sub schema {
 						`site` VARCHAR(16) NOT NULL,
 						`event` VARCHAR(32) NOT NULL,
 						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL,
+						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
 						INDEX(`site`,`event`),
 						UNIQUE(`site`,`event`,`team`,`scouter`)
 					)  $tableOptions

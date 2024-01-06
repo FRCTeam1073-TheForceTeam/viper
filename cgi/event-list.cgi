@@ -29,7 +29,7 @@ print "Content-type: text/csv; charset=UTF-8\n\n";
 
 my $dbh = $db->dbConnection();
 if ($dbh){
-	my $sth = $dbh->prepare("SELECT * from `event` where `site`=?");
+	my $sth = $dbh->prepare("SELECT * FROM `event` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	$db->printCsv($sth);
 	exit 0;

@@ -4,7 +4,8 @@ set -e
 
 mkdir -p www/data
 cp script/data-htaccess www/data/.htaccess
-if ! grep -qE 'MYSQL_[A-Z]+=\"\"' local.conf
+DB_SETTINGS_COUNT=`grep -cE '^MYSQL_(HOST|PORT|DATABASE|USER|PASSWORD)=\".+\"' local.conf`
+if [ $DB_SETTINGS_COUNT -ge 5 ]
 then
 	echo >> www/data/.htaccess
 	echo 'RewriteEngine on' >> www/data/.htaccess

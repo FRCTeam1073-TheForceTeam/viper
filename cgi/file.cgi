@@ -29,8 +29,8 @@ if ($file =~ /\.csv$/){
 
 sub json(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\..*\.json$/);
-	my ($event, $name) = $file =~ /^(20[0-9]+[^\.]+)\.(.*)\.json$/;
+	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]*\.[a-z0-9\.]+\.json$/);
+	my ($event, $name) = $file =~ /^(20[0-9]+[^\.]*)\.([a-z0-9\.]+)\.json$/;
 	my $dbh = $db->dbConnection();
 	my $sth = $dbh->prepare("SELECT `json` FROM `apijson` WHERE `site`=? AND `event`=? AND `file`=?");
 	$sth->execute($db->getSite(), $event, $name);
@@ -67,7 +67,7 @@ sub csv(){
 
 	my ($year, $event, $table) = $file =~ /^(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
 
-	my $combined = ($event eq 'combined') and ($table eq 'scouting');
+	my $combined = (($event eq 'combined') and ($table eq 'scouting'));
 	$table = "$year$table" if ($table =~ /^scouting|pit$/);
 	$event = "$year$event";
 

@@ -3,6 +3,8 @@
 // Enter your team number here
 // to enable team specific features
 // and highlighting
+// To get it from the subdomain, for multiple site hosting, use:
+// var ourTeam=parseInt((location.hostname.match(/[0-9]+/g)||["0"])[0]); // team number from sub-domain
 var ourTeam=0
 
 // A list of options that will drop down from the host name
