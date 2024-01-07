@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scout EVENT - Viper</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/scout.js></script>
+<script src=scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<title>Viper</title>
+</head>
+
+<body>
+<h1>Viper</h1>
+<div id=select-bot class=screen style=display:none>
+	<H2>Select your robot</H2>
+	<table><tr>
+		<td class=blueTeamBG><button>B1</button></td>
+		<td rowspan=3><img class=bigimg src=field.png></td>
+		<td class=redTeamBG><button>R1</button></td>
+	</tr><tr>
+		<td class=blueTeamBG><button>B2</button></td>
+		<td class=redTeamBG><button>R2</button></td>
+	</tr><tr>
+		<td class=blueTeamBG><button>B3</button></td>
+		<td class=redTeamBG><button>R3</button></td>
+	</tr></table>
+	<button class=showInstructions>Instructions</button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
+</div>
+
+<div id=select-match class=screen style=display:none>
+	<button class=showInstructions>Instructions</button>
+	<button class=robotBtn>Change Robot</button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
+	<div id=match-list></div>
+</div>
+
+<div id=change-team class=screen style=display:none>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn>Cancel</button>
+</div>
+
+<form id=scouting class=screen style=display:none>
+	<div>
+		<button class=teleop id=to-auto style=display:none>Back to auto</button>
+		<button class=showInstructions>Instructions</button>
+		<button id=teamBtn>Team # Correction</button>
+		<button id=matchBtn>Choose Match</button>
+		<button class=robotBtn>Change Robot</button>
+		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+	</div>
+	<input type=hidden name=event>
+	<input type=hidden name=match>
+	<input type=hidden name=team>
+	<div class=auto>
+		<table><tr><td class=teamColorBG colspan=2>
+			In front of which driver station is the robot starting?
+		</td></tr><tr><td colspan=2>
+			<label><input type=radio name=auto_start value=start_amp><span>Amp</span></label>
+			<label><input type=radio name=auto_start value=start_speaker><span>Speaker</span></label>
+			<label><input type=radio name=auto_start value=start_cable><span>Source</span></label>
+		</td></tr><tr><td class=teamColorBG colspan=2>
+			Auto
+		</td></tr><tr><td class=subheader>
+			Collection
+		</td><td>
+			Placement
+		</td></tr><tr><td>
+			Home Wing
+		</td><td>
+			Amp
+		</td><td>
+			Center Field
+		</td><td>
+			Speaker
+		</td><tr><tr><td colspan=2>
+			<label><input type=checkbox name=auto_mobility value=1><span>Robot Exited Community</span></label>
+		</td></tr><table>
+
+		<button id=to-teleop>Proceed to Teleop</button>
+	</div>
+
+	<div class=teleop>
+		<table><tr><td class=teamColorBG colspan=2>
+			In front of which driver station is the robot starting?
+		</td></tr><tr><td colspan=2>
+			<label><input type=radio name=auto_start value=start_amp><span>Amp</span></label>
+			<label><input type=radio name=auto_start value=start_speaker><span>Speaker</span></label>
+			<label><input type=radio name=auto_start value=start_cable><span>Source</span></label>
+		</td></tr><tr><td class=teamColorBG colspan=2>
+			Teleop
+		</td></tr><tr><td class=subheader>
+			Collection
+		</td><td class=subheader>
+			Placement
+		</td></tr><tr><td>
+			Home Wing
+		</td><td>
+			Amp
+		</td><td>
+			Center Field
+		</td><td>
+			Unamplified Speaker
+		</td><tr><tr><td>
+			Far Wing or Source
+		</td><td>
+			Amplified Speaker
+		</td></tr><tr><td></td><td>
+			Trap
+		</td></tr><tr><td></td><td>
+			Miss/Drop
+		</td></tr><tr><td colspan=2>
+			<label><input type=checkbox name=auto_mobility value=1><span>Robot Exited Community</span></label>
+		</td></tr><table>
+	</div>
+
+	<table><tr><td class=subheader colspan=4>
+		Full Cycles (Loading&nbsp;Zone&nbsp;🡘&nbsp;Placement)
+	</td></tr><tr class=cycleStats><td>
+		<div class=explain>Current</div>
+		<span id=currentCycleTimer>:00</span>
+	</td><td>
+		<div class=explain>Fastest</div>
+		<input type=text class=num value=0 name=full_cycle_fastest_seconds size=1 disabled>s
+	</td><td>
+		<div class=explain>Average</div>
+		<input type=text class=num value=0 name=full_cycle_average_seconds size=1 disabled>s
+	</td><td>
+		<div class=explain>Count</div>
+		<input type=text class=num value=0 name=full_cycle_count size=1 disabled>
+	</td></tr><tr><td class=subheader colspan=4>
+		End Game
+	</td></tr><tr><td colspan=4>
+		<label><input type=radio name=climb value=sucessful><span>Climbed Onstage</span></label>
+		<label><input type=radio name=climb value=failed><span>Failed to Climb</span></label>
+		<fieldset>
+			<legend>If onstage, how many other bots are on the same chain?</legend>
+			<label><input type=radio name=harmony value=no><span>0</span></label>
+			<label><input type=radio name=harmony value=1><span>1</span></label>
+			<label><input type=radio name=harmony value=2><span>2</span></label>
+		</fieldset>
+	</td></tr></table>
+
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Can team <span class=teamColor></span> pick up notes from the floor?</legend>
+		<label><input type=radio name=floor_pickup value=yes><span>Yes</span></label>
+		<label><input type=radio name=floor_picup value=no><span>No</span></label>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Did team <span class=teamColor></span> pass any notes to their teammates?</legend>
+		<label><input type=radio name=passing value=yes><span>Yes</span></label>
+		<label><input type=radio name=passing value=no><span>No</span></label>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Did team <span class=teamColor></span> stash notes for later?</legend>
+		<label><input type=radio name=stashing value=yes><span>Yes</span></label>
+		<label><input type=radio name=stashing value=no><span>No</span></label>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Can team <span class=teamColor></span> hang from the end of the chain when harmonizing?</legend>
+		<label><input type=radio name=chain_end value=yes><span>Yes</span></label>
+		<label><input type=radio name=chain_end value=no><span>No</span></label>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		Scouter name and notes:
+		<div class=full><input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q"></div>
+		<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+	</fieldset>
+	<input type=hidden name=created value="">
+	<input type=hidden name=modified value="">
+	<div id=nextButtons>
+		Save data:
+		<div id=featuredButton>
+			<button id=nextBtn>Next Match</button>
+		</div>
+		<div id=otherButtons>
+			<button id=uploadBtn>Upload Data</button>
+		</div>
+	</div></div>
+</form>
+</body>
+</html>
