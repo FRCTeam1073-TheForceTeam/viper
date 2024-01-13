@@ -38,7 +38,7 @@ $(window).on('hashchange', function(){
 
 function showSelectPitScoutTeam(){
 	loadTeamsInfo()
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash(null,null,null,null,teamList)
 	window.scrollTo(0,0)
 	$('h1').text("Pit Scouting " + eventName)
@@ -55,7 +55,7 @@ function showSelectPitScoutTeam(){
 }
 
 function showTeamChange(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	location.hash = `#event=${eventId}&pos=${pos}&match=${match}`
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
@@ -76,7 +76,7 @@ function showTeamChange(){
 }
 
 function showPosList(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash()
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
@@ -94,7 +94,7 @@ function showPosList(){
 }
 
 function showMatchList(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash(pos,orient)
 	window.scrollTo(0,0)
 	$('#match-list').html('')
@@ -211,7 +211,7 @@ function resetOrigValues(form){
 function showPitScouting(t){
 	if (t && typeof t != 'number') t = parseInt($(this).text())
 	if (t) team = t
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	$('h1').text("Pit Scouting " + eventName + " Team " + team)
 	window.scrollTo(0,0)
 	setHash(null,null,team,null,teamList)
@@ -267,7 +267,7 @@ function countHandler(e){
 }
 
 function showScouting(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash(pos,orient,team,match)
 	window.scrollTo(0,0)
 	resetOrigValues(scouting)
@@ -578,5 +578,12 @@ $(document).ready(function(){
 
 	$('img.expandable-image').click(function(){
 		showLightBox($('#lightBoxImage').html("").append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')))
+	})
+
+	$('.sequential-input-series textarea,.sequential-input-series input[type="text"]').change(function(){
+		var name = $(this).attr('name'),
+		n = /[0-9]/.exec(name),
+		next = name.replace(n,parseInt(n)+1)
+		$('textarea[name='+next+']').closest('.sequential-input-series').show()
 	})
 })

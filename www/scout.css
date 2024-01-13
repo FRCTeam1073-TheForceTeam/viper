@@ -11,7 +11,7 @@ img.count{max-width:10em;margin:0.25em 0;cursor:pointer}
 label > span,button{background:var(--button-bg-color);color:var(--button-fg-color);display:inline-block;padding:.5vw;border-radius:1vw;min-width:8vw;text-align:center;margin:.5vw 0;cursor:pointer;}
 label :checked+span{background:var(--button-selected-bg-color)}
 label :disabled+span{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
-input[type='checkbox'],input[type='radio']{display:none}
+input[type='checkbox'],input[type='radio'], .init-hide{display:none}
 .full{width:calc(100% - 1em);margin:.5em auto;max-width:50em;display:block}
 label,fieldset{display:inline-block}
 input[type="text"]:disabled{background-color:inherit;border:none;color:inherit}

@@ -11,16 +11,16 @@
 <script src=/scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
-<title>Viper</title>
+<title>Viper Pit Scouting 2024</title>
 </head>
 <body>
 <h1><span class=team></span> Pit Scouting</h1>
-<div id=select-team style=display:none class=screen>
+<div id=select-team class="sequential-input-series init-hide" class=screen>
 	<H2>Select a team</H2>
 	<div id=teamList></div>
 </div>
 
-<form id=pit-scouting style=display:none class=screen>
+<form id=pit-scouting class="sequential-input-series init-hide" class=screen>
 
 	<button id=pitTeamButton>Back to Team Selection</button>
 
@@ -35,44 +35,87 @@
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Which of these auto routines can <span class=team></span> perform?</legend>
-		<img src=auto-routines.svg style=height:30em>
-		<table><tr><td colspan=2>
-			<label><input type=checkbox name=auto_barrier value=1><span><span style=color:cyan>⬤</span> Use grid and lane by barrier, no docking</span></label>
-		</td><td colspan=2>
-			<label><input type=checkbox name=auto_charging value=1><span><span style=color:magenta>⬤</span> Use center grid, drive over charging station, no docking</span></label>
-		</td><td colspan=2>
-			<label><input type=checkbox name=auto_cable value=1><span><span style=color:orange>⬤</span> Use grid and lane with cable protector, no docking</span></label>
-		</td></tr><tr><td colspan=2>
-			<label><input type=checkbox name=auto_barrier_dock value=1><span><span style=color:blue>⬤</span> Use grid and lane by barrier, then dock</span></label>
-		</td><td colspan=2>
-			<label><input type=checkbox name=auto_charging_dock value=1><span><span style=color:green>⬤</span> Use center grid, drive over charging station, then dock</span></label>
-		</td><td colspan=2>
-			<label><input type=checkbox name=auto_cable_dock value=1><span><span style=color:red>⬤</span> Use grid and lane with cable protector, then dock</span></label>
-		</td></tr><tr><td colspan=3>
-			<label><input type=checkbox name=auto_static value=1><span><span style=color:yellow>⬤</span> Stay put, place cargo</span></label>
-		</td><td colspan=3>
-			<label><input type=checkbox name=auto_dock value=1><span><span style=color:purple>⬤</span> Don't exit community, then dock</span></label>
-		</td></tr></table>
+		<legend>Describe the auto routines that team <span class=team></span> can perform</legend>
+		<table border=0 width=100%><tr>
+			<td>Description</td>
+			<td>Has it succeeded?</td>
+		</tr><tr class="sequential-input-series">
+			<td><textarea class=auto-description name=auto_1_description placeholder="Describe the first auto routine here. After you type, an input for another auto routine will appear."></textarea></td>
+			<td><select class=auto-description name=auto_1_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_2_description></textarea></td>
+			<td><select class=auto-description name=auto_2_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_3_description></textarea></td>
+			<td><select class=auto-description name=auto_3_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_4_description></textarea></td>
+			<td><select class=auto-description name=auto_4_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_5_description></textarea></td>
+			<td><select class=auto-description name=auto_5_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_6_description></textarea></td>
+			<td><select class=auto-description name=auto_6_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_7_description></textarea></td>
+			<td><select class=auto-description name=auto_7_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_8_description></textarea></td>
+			<td><select class=auto-description name=auto_8_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea class=auto-description name=auto_9_description></textarea></td>
+			<td><select class=auto-description name=auto_9_testing>
+				<option value=no selected>No</option>
+				<option value=practice>Practice only</option>
+				<option value=match>In a match</option>
+			</select></td>
+		</tr></table>
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Can <span class=team></span> place cargo?</legend>
+		<legend>Capabilities</legend>
 		<table><tr><td>
-			<label><input type=checkbox name=place_cones_top value=1><span>Cones on top row</span></label>
+			<label><input type=checkbox name=notes_amp value=1><span>Get notes in the amp</span></label>
 		</td><td>
-			<label><input type=checkbox name=place_cubes_top value=1><span>Cubes on top row</span></label>
+			<label><input type=checkbox name=notes_speaker value=1><span>Get notes in the speaker </span></label>
 		</td></tr><tr><td>
-			<label><input type=checkbox name=place_cones_middle value=1><span>Cones on middle row</span></label>
+			<label><input type=checkbox name=onstage value=1><span>Get onstage</span></label>
 		</td><td>
-			<label><input type=checkbox name=place_cubes_middle value=1><span>Cubes on middle row</span></label>
+			<label><input type=checkbox name=notes_trap value=1><span>Get notes in the trap</span></label>
 		</td></tr></table>
-	</fieldset>
-
-	<fieldset class=full>
-		<legend>End Game</legend>
-		<label><input type=checkbox name=end_charging value=1><span>Can end on charging station</span></label>
-		<label><input type=checkbox name=end_parking_brake value=1><span>Can stay on charging station while others get on</span></label>
 	</fieldset>
 
 	<fieldset class=full>
@@ -109,6 +152,7 @@
 			<label><input type=radio name=motors value=neo><span>Neo</span></label>
 			<label><input type=radio name=motors value=falcon_500><span>Falcon 500</span></label>
 			<label><input type=radio name=motors value=full_size_cim><span>Full Size CIM</span></label>
+			<label><input type=radio name=motors value=kraken><span>Kraken</span></label>
 			<label><input type=radio name=motors value=other><span>Other</span></label>
 		</p>
 		<p>
@@ -119,45 +163,25 @@
 			What type of wheels?<br>
 			<label><input type=radio name=wheels value=traction><span>Traction</span></label>
 			<label><input type=radio name=wheels value=mechanum><span>Omni/Mechanum</span></label>
+			<label><input type=radio name=wheels value=colson><span>Colson</span></label>
+			<label><input type=radio name=wheels value=blue-nitrile><span>Blue nitrile</span></label>
 			<label><input type=radio name=wheels value=mixed><span>Mixed</span></label>
 			<label><input type=radio name=wheels value=other><span>Other</span></label>
 		</p>
 		<p>
-			Vision software used:<br>
+			Computer vision can assist the robot with:<br>
 			<label><input type=checkbox name=vision_auto value=yes><span>Auto</span></label>
 			<label><input type=checkbox name=vision_tele value=yes><span>Teleop</span></label>
 			<label><input type=checkbox name=vision_driving value=yes><span>Driving</span></label>
 			<label><input type=checkbox name=vision_collecting value=yes><span>Collecting</span></label>
-			<label><input type=checkbox name=vision_placing value=yes><span>Placing</span></label>
-			<label><input type=checkbox name=vision_docking value=yes><span>Docking</span></label>
+			<label><input type=checkbox name=vision_placing value=yes><span>Placing, shooting or aiming</span></label>
+			<label><input type=checkbox name=vision_localization value=yes><span>Localization</span></label>
 		</p>
 	</fieldset>
 
-	<fieldset class=full>
-		<legend>Practice</legend>
-		<p>
-			Where has <span class=team></span>'s robot been tested?<br>
-			<label><input type=checkbox name=field_built value=yes><span>Built a practice field</span></label>
-			<label><input type=checkbox name=field_other_team value=yes><span>Used another team's practice field</span></label>
-			<label><input type=checkbox name=field_wpi value=yes><span>WPI Practice field</span></label>
-			<label><input type=checkbox name=field_events value=yes><span>Previous Events</span></label>
-		</p>
-		<p>
-			If <span class=team></span> built a practice field, which elements got built?<br>
-			<label><input type=checkbox name=built_grid value=yes><span>Grid</span></label>
-			<label><input type=checkbox name=built_charging_station value=yes><span>Charging Station</span></label>
-			<label><input type=checkbox name=built_double_substation value=yes><span>Double Substation</span></label>
-			<label><input type=checkbox name=built_single_substation value=yes><span>Single Substation</span></label>
-		</p>
-		<p>
-			How many days a week does <span class=team></span> (or parts of it) meet?
-			<br>
-			<input type=number name=practice_days min=0 max=7>
-		</p>
-	</fieldset>
 	Scouter name and notes:
 	<div class=full><input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q"></div>
-	<p><textarea name=notes placeholder="Notes (Explain any other auto routines or things that would be good to know)"></textarea></p>
+	<p><textarea name=notes placeholder="Notes (Other things that would be good to know)"></textarea></p>
 	<p>If you are also bot photo scouting, don't forget to take a picture!</p>
 
 	<input type=hidden name=created value="">
