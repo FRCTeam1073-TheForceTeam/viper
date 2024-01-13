@@ -6,7 +6,7 @@ img.icon{height:6vmin;display:block;margin:1vmin auto;max-height:42px}
 input.num{width:6vmin;text-align:center;font-size:6vmin;font-weight: bold;font-family:serif}
 table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-top:3vmin!important;margin-bottom:3vmin!important;width:100%;max-width:40em}
 #scouting th{border:1px solid var(--main-border-color);font-size:200%}
-#scouting td{border:1px solid var(--main-border-color)!important;overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
+#scouting td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
 #scouting td > div{display:flex;justify-content:center}
 label > span,button{font-size:125%}
 .subheader{background:var(--section-bg-color)}
@@ -21,3 +21,17 @@ label > span,button{font-size:125%}
 	img.icon{margin:2vmin auto}
 	body{margin-left:0;margin-right:0}
 }
+#collect-map{aspect-ratio: 1 / 1;position: relative}
+.blueTeam #collect-map{background:url(auto-collect-blue.png) no-repeat center center / 100% 100%}
+.redTeam #collect-map{background:url(auto-collect-red.png) no-repeat center center / 100% 100%}
+#collect-map label{position:absolute;display:block}
+#collect-map label span{color:orange;font-weight:bold;min-width:2vw}
+.blueTeam .auto_collect_red{display:none}
+.redTeam .auto_collect_blue{display:none}
+.auto_collect_centerline{top:80%}
+.auto_collect_red,.auto_collect_blue{top:30%}
+.redTeam .auto_collect_amp, .blueTeam .auto_collect_source{left:2.5%}
+.redTeam .auto_collect_mid_amp, .blueTeam .auto_collect_mid_source{left:22.5%}
+.auto_collect_mid{left:42.5%}
+.blueTeam .auto_collect_mid_amp, .redTeam .auto_collect_mid_source{left:62.5%}
+.blueTeam .auto_collect_amp, .redTeam .auto_collect_source{left:82.5%}

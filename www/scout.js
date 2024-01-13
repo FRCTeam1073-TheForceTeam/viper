@@ -302,6 +302,7 @@ function fillDefaultFormFields(){
 
 function setTeamBG(){
 	$('.teamColorBG').toggleClass('redTeamBG', pos.startsWith('R')).toggleClass('blueTeamBG', pos.startsWith('B'))
+	$('body').toggleClass('redTeam', pos.startsWith('R')).toggleClass('blueTeam', pos.startsWith('B'))
 }
 
 function toggleChecked(o){

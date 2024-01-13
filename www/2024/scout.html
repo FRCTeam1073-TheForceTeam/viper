@@ -62,27 +62,39 @@
 	<input type=hidden name=team>
 	<div class=auto>
 		<table><tr><td class=teamColorBG colspan=2>
+			Auto
+		</td></tr><tr><td colspan=2>
 			In front of which driver station is the robot starting?
 		</td></tr><tr><td colspan=2>
 			<label><input type=radio name=auto_start value=start_amp><span>Amp</span></label>
 			<label><input type=radio name=auto_start value=start_speaker><span>Speaker</span></label>
-			<label><input type=radio name=auto_start value=start_cable><span>Source</span></label>
-		</td></tr><tr><td class=teamColorBG colspan=2>
-			Auto
+			<label><input type=radio name=auto_start value=start_source><span>Source</span></label>
 		</td></tr><tr><td class=subheader>
 			Collection
 		</td><td>
 			Placement
+		</td></tr><tr><td rowspan=2>
+			<div id=collect-map>
+				<label class="auto_collect_blue auto_collect_mid"><input type=checkbox name=auto_collect_blue_mid value=1><span>◯</span></label>
+				<label class="auto_collect_blue auto_collect_mid_amp"><input type=checkbox name=auto_collect_blue_mid_amp value=1><span>◯</span></label>
+				<label class="auto_collect_blue auto_collect_amp"><input type=checkbox name=auto_collect_blue_amp value=1><span>◯</span></label>
+
+				<label class="auto_collect_centerline auto_collect_source"><input type=checkbox name=auto_collect_centerline_source value=1><span>◯</span></label>
+				<label class="auto_collect_centerline auto_collect_mid_source"><input type=checkbox name=auto_collect_centerline_mid_source value=1><span>◯</span></label>
+				<label class="auto_collect_centerline auto_collect_mid"><input type=checkbox name=auto_collect_centerline_mid value=1><span>◯</span></label>
+				<label class="auto_collect_centerline auto_collect_mid_amp"><input type=checkbox name=auto_collect_centerline_mid_amp value=1><span>◯</span></label>
+				<label class="auto_collect_centerline auto_collect_amp"><input type=checkbox name=auto_collect_centerline_amp value=1><span>◯</span></label>
+
+				<label class="auto_collect_red auto_collect_mid"><input type=checkbox name=auto_collect_red_mid value=1><span>◯</span></label>
+				<label class="auto_collect_red auto_collect_mid_amp"><input type=checkbox name=auto_collect_red_mid_amp value=1><span>◯</span></label>
+				<label class="auto_collect_red auto_collect_amp"><input type=checkbox name=auto_collect_red_amp value=1><span>◯</span></label>
+			</div>
+		</td><td>
+			<div>Amp</div>
 		</td></tr><tr><td>
-			Home Wing
-		</td><td>
-			Amp
-		</td><td>
-			Center Field
-		</td><td>
-			Speaker
+			<div>Speaker</div>
 		</td><tr><tr><td colspan=2>
-			<label><input type=checkbox name=auto_mobility value=1><span>Robot Exited Community</span></label>
+			<label><input type=checkbox name=auto_mobility value=1><span>Leave Starting Zone</span></label>
 		</td></tr><table>
 
 		<button id=to-teleop>Proceed to Teleop</button>
@@ -90,12 +102,6 @@
 
 	<div class=teleop>
 		<table><tr><td class=teamColorBG colspan=2>
-			In front of which driver station is the robot starting?
-		</td></tr><tr><td colspan=2>
-			<label><input type=radio name=auto_start value=start_amp><span>Amp</span></label>
-			<label><input type=radio name=auto_start value=start_speaker><span>Speaker</span></label>
-			<label><input type=radio name=auto_start value=start_cable><span>Source</span></label>
-		</td></tr><tr><td class=teamColorBG colspan=2>
 			Teleop
 		</td></tr><tr><td class=subheader>
 			Collection
