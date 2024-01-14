@@ -4,6 +4,7 @@ $(document).ready(function(){
 	$('#to-teleop').click(function(){
 		$('.auto').hide()
 		$('.teleop').show()
+		window.scrollTo(0,0)
 		return false
 	})
 	$('#to-auto').click(function(){
@@ -24,7 +25,7 @@ $(document).ready(function(){
 		cycleStage("placement")
 	})
 
-	$('.collectLoadingZone').click(function(){
+	$('.collectSource').click(function(){
 		cycleStage("collect")
 	})
 
@@ -52,14 +53,6 @@ $(document).ready(function(){
 		cycle.lastPlace = place
 	}
 
-	onStore.push(function(){
-		if(!$('input[name="links"]').val()){
-			alert("Missing data: 'How many links?'")
-			return false
-		}
-		return true
-	})
-
 	onShowScouting.push(function(){
 		cycleInterrupt()
 		cycles=[]
@@ -76,6 +69,6 @@ $(document).ready(function(){
 	}
 
 	$('.count,button,label').click(function(){
-		if (!$(this).is('.placement,.collectLoadingZone')) cycleInterrupt()
+		if (!$(this).is('.placement,.collectSource')) cycleInterrupt()
 	})
 })
