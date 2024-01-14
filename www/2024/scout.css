@@ -1,37 +1,20 @@
-img.count.count-up{height:12vmin;width:auto;display:block;margin:1vmin auto;margin-left:.9em;max-height:84px}
-img.count-down{height:6vmin;display:block;margin:1vmin auto;max-height:42px}
-img.icon{height:6vmin;display:block;margin:1vmin auto;max-height:42px}
-#scouting .side-by-side{display:table-cell;margin:0;padding:0}
-#scouting .side-by-side input {width:1.4em}
-input.num{width:6vmin;text-align:center;font-size:6vmin;font-weight: bold;font-family:serif}
-table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-top:3vmin!important;margin-bottom:3vmin!important;width:100%;max-width:40em}
-#scouting th{border:1px solid var(--main-border-color);font-size:200%}
-#scouting td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;vertical-align:top;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;width:25%;max-width:200px;vertical-align:bottom}
-#scouting td > div{display:flex;justify-content:center}
-label > span,button{font-size:125%}
-.subheader{background:var(--section-bg-color)}
-.teleop{display:none}
-.cycleStats span,.cycleStats input{font-size:inherit;width:fit-content;display:inline}
-.colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px}
-.colorBar.white{background-color:var(--main-fg-color)}
-.explain{font-size:65%;display:block;text-transform:capitalize}
-@media (max-width: 500px) {
-	td{padding:.2em}
-	img.count{margin:2vmin auto}
-	img.icon{margin:2vmin auto}
-	body{margin-left:0;margin-right:0}
-}
-#collect-map{aspect-ratio: 1 / 1;position: relative}
+#scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-top:3vmin;margin-bottom:3vmin;width:100%;max-width:40em}
+#scouting>div>table>tbody>tr>th{border:1px solid var(--main-border-color);font-size:200%}
+#scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;vertical-align:top}
+img.count{max-width:7em}
+.two-column{column-count:2;column-gap:1em}
+.two-column>div{break-inside:avoid-column}
+#collect-map{width:20em;height:20em;position:relative;display:inline-block}
 .blueTeam #collect-map{background:url(auto-collect-blue.png) no-repeat center center / 100% 100%}
 .redTeam #collect-map{background:url(auto-collect-red.png) no-repeat center center / 100% 100%}
 #collect-map label{position:absolute;display:block}
 #collect-map label span{color:orange;font-weight:bold;min-width:2vw}
 .blueTeam .auto_collect_red{display:none}
 .redTeam .auto_collect_blue{display:none}
-.auto_collect_centerline{top:80%}
+.auto_collect_centerline{top:86%}
 .auto_collect_red,.auto_collect_blue{top:30%}
-.redTeam .auto_collect_amp, .blueTeam .auto_collect_source{left:2.5%}
-.redTeam .auto_collect_mid_amp, .blueTeam .auto_collect_mid_source{left:22.5%}
-.auto_collect_mid{left:42.5%}
-.blueTeam .auto_collect_mid_amp, .redTeam .auto_collect_mid_source{left:62.5%}
-.blueTeam .auto_collect_amp, .redTeam .auto_collect_source{left:82.5%}
+.redTeam .auto_collect_amp, .blueTeam .auto_collect_source{left:5.5%}
+.redTeam .auto_collect_mid_amp, .blueTeam .auto_collect_mid_source{left:25.5%}
+.auto_collect_mid{left:45.5%}
+.blueTeam .auto_collect_mid_amp, .redTeam .auto_collect_mid_source{left:65.5%}
+.blueTeam .auto_collect_amp, .redTeam .auto_collect_source{left:85.5%}
