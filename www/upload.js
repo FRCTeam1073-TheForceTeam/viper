@@ -52,7 +52,11 @@ function showUploads(){
 
 	$('#uploadBtn').click(function(){
 		$(this).text('Uploading, please wait ...')
-		$('button').prop('disabled', 'true')
+		if ($('button').prop('disabled') != 'true'){
+			$('button').prop('disabled', 'true')
+			$('#upload').submit()
+		}
+		return false
 	})
 }
 
