@@ -1,22 +1,6 @@
 "use strict"
 
 $(document).ready(function(){
-	$('#to-teleop').click(function(){
-		$('.auto').hide()
-		$('.teleop').show()
-		window.scrollTo(0,0)
-		return false
-	})
-	$('#to-auto').click(function(){
-		showAuto()
-		return false
-	})
-
-	function showAuto(){
-		$('.teleop').hide()
-		$('.auto').show()
-		toggleOnstage()
-	}
 
 	$('.onstage-state').click(toggleOnstage)
 
@@ -65,7 +49,7 @@ $(document).ready(function(){
 	onShowScouting.push(function(){
 		cycleInterrupt()
 		cycles=[]
-		showAuto()
+		toggleOnstage()
 		return true
 	})
 

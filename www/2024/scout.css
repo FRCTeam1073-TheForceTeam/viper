@@ -1,4 +1,4 @@
-#scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-top:3vmin;margin-bottom:3vmin;width:100%;max-width:40em}
+#scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-bottom:3vmin;width:100%;max-width:40em}
 #scouting>div>table>tbody>tr>th{border:1px solid var(--main-border-color);font-size:200%}
 #scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;vertical-align:top}
 img.count{max-width:7em}

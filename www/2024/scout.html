@@ -50,7 +50,6 @@
 
 <form id=scouting class=screen style=display:none>
 	<div>
-		<button class=teleop id=to-auto style=display:none>Back to auto</button>
 		<button class=showInstructions>Instructions</button>
 		<button id=teamBtn>Team # Correction</button>
 		<button id=matchBtn>Choose Match</button>
@@ -60,10 +59,15 @@
 	<input type=hidden name=event>
 	<input type=hidden name=match>
 	<input type=hidden name=team>
-	<div class=auto>
-		<table><tr><td class=teamColorBG colspan=2>
-			<h3>Auto</h3>
-		</td></tr><tr><td colspan=2>
+
+	<div class=tabs>
+		<div class="tab default-tab" data-content=auto>Auto</div>
+		<div class=tab data-content=teleop>Teleop</div>
+		<div class=tab data-content=end-game>End Game</div>
+	</div>
+
+	<div class="auto tab-content">
+		<table><tr><td colspan=2>
 			<div>In front of which driver station is the robot starting?</div>
 			<label><input type=radio name=auto_start value=start_amp><span>Amp</span></label>
 			<label><input type=radio name=auto_start value=start_speaker><span>Speaker</span></label>
@@ -101,13 +105,11 @@
 			</div>
 		</td></tr></table>
 
-		<button id=to-teleop>Proceed to Teleop</button>
+		<button class=tab-button data-content=teleop>Proceed to Teleop</button>
 	</div>
 
-	<div class=teleop>
-		<table><tr><td class=teamColorBG colspan=4>
-			<h4>Teleop</h4>
-		</td></tr><tr><td colspan=4>
+	<div class="teleop tab-content">
+		<table><tr><td colspan=4>
 			<div><label><input type=checkbox name=coopertition value=yes><span><span class=teamColor></span> alliance activated coopertition light</span></label></div>
 		</td></tr><tr><td colspan=2>
 			<h4>Collection</h4>
@@ -171,9 +173,11 @@
 			<input type=text class=num value=0 name=full_cycle_count size=1 disabled>
 		</td></tr></table>
 
-		<table><tr><td class=subheader colspan=4>
-			End Game
-		</td></tr><tr><td colspan=4>
+		<button class=tab-button data-content=end-game>Proceed to End Game</button>
+	</div>
+
+	<div class="end-game tab-content">
+		<table><tr><td colspan=4>
 			<fieldset>
 				<legend>Is the robot in the <span class=teamColor></span> stage area?</legend>
 				<label class=onstage-state><input type=radio name=end_game_position value=parked><span>Parked</span></label>

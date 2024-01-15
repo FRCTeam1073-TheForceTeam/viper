@@ -289,6 +289,7 @@ function showScouting(){
 	for (var i=0; i<onShowScouting.length; i++){
 		if(!onShowScouting[i]()) return false
 	}
+	showTab(null, $('.default-tab'))
 	scouting.show()
 }
 
@@ -488,11 +489,25 @@ function getNextMatch(){
 
 var originalTitle
 
+function showTab(event, tab){
+	var button = (tab||$(this)),
+	name = button.attr('data-content'),
+	tab=$(`.tab[data-content="${name}"]`)
+	$('.tab').removeClass("redTeamBG").removeClass("blueTeamBG")
+	tab.addClass(pos.startsWith('R')?"redTeamBg":"blueTeamBG")
+	$('.tab-content').hide()
+	$(`.${name}`).show()
+	if(button.is('.tab-button')) window.scrollTo(tab.offset())
+	return false
+}
+
 $(document).ready(function(){
 	if (!eventYear || !eventVenue){
 		$('h1').text("Event Not Found")
 		return
 	}
+
+	$('.tab,.tab-button').click(showTab)
 
 	if(!originalTitle) originalTitle = $('title').text()
 	$('title').text(originalTitle.replace(/EVENT/g, eventName))
