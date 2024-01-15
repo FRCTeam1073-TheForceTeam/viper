@@ -2,6 +2,8 @@
 #scouting>div>table>tbody>tr>th{border:1px solid var(--main-border-color);font-size:200%}
 #scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;vertical-align:top}
 img.count{max-width:7em}
+input.num{text-align:center}
+.teleop img.count{max-width:4em}
 .two-column{column-count:2;column-gap:1em}
 .two-column>div{break-inside:avoid-column}
 #collect-map{width:20em;height:20em;position:relative;display:inline-block}
