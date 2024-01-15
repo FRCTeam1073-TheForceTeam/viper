@@ -9,41 +9,43 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="47.092999mm"
-   height="47.092999mm"
-   viewBox="0 0 47.092999 47.092999"
+   width="100.30019mm"
+   height="47.662426mm"
+   viewBox="0 0 100.30019 47.662426"
    version="1.1"
-   id="svg2105"
+   id="svg8"
    inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="count-down.svg">
+   sodipodi:docname="count_down.svg"
+   inkscape:export-filename="/home/olivia/GitHub/webscout/www/count_up.svg"
+   inkscape:export-xdpi="95.839996"
+   inkscape:export-ydpi="95.839996">
   <defs
-     id="defs2099" />
+     id="defs2" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#000000"
+     pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0"
+     inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="3.4158924"
-     inkscape:cx="7.380368"
-     inkscape:cy="87.860618"
+     inkscape:zoom="2.1183991"
+     inkscape:cx="175.21653"
+     inkscape:cy="91.50203"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
      inkscape:window-width="1920"
      inkscape:window-height="1016"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:snap-object-midpoints="true"
-     inkscape:snap-page="true" />
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:snap-object-midpoints="true" />
   <metadata
-     id="metadata2102">
+     id="metadata5">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -58,12 +60,16 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-25.112184,-106.14761)">
+     transform="translate(-31.035475,-125.47575)">
     <path
-       style="opacity:1;vector-effect:none;fill:#d0d0d0;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10.62537479;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="M 48.658681,129.37553 71.886613,106.14761 H 25.430756 Z"
-       id="rect818"
+       style="opacity:1;vector-effect:none;fill:#b6b6b6;fill-opacity:1;fill-rule:nonzero;stroke:#202020;stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       inkscape:transform-center-y="13.392901"
+       d="M 127.57999,126.97575 H 34.791149 L 81.18557,171.0688 Z"
+       id="path819"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/olivia/GitHub/webscout/www/path819.png"
+       inkscape:export-xdpi="95.839996"
+       inkscape:export-ydpi="95.839996" />
   </g>
 </svg>
