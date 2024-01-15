@@ -96,7 +96,7 @@
 			</div>
 			<div>
 				<div><img class=count src=/count_up.svg></div>
-				<div>Speaker<br><input type=text class=num value=0 name=auto_amp size=1 disabled max=9></div>
+				<div>Speaker<br><input type=text class=num value=0 name=auto_speaker size=1 disabled max=9></div>
 				<div><img class=count src=/count_down.svg></div>
 			</div>
 		</td></tr></table>
@@ -107,6 +107,8 @@
 	<div class=teleop>
 		<table><tr><td class=teamColorBG colspan=4>
 			<h4>Teleop</h4>
+		</td></tr><tr><td colspan=4>
+			<div><label><input type=checkbox name=coopertition value=yes><span><span class=teamColor></span> alliance activated coopertition light</span></label></div>
 		</td></tr><tr><td colspan=2>
 			<h4>Collection</h4>
 			<div>
@@ -172,12 +174,29 @@
 		<table><tr><td class=subheader colspan=4>
 			End Game
 		</td></tr><tr><td colspan=4>
-			<label><input type=radio name=onstage value=yes><span>Climbed Onstage</span></label>
-			<label><input type=radio name=onstage value=failed><span>Failed to Climb</span></label>
 			<fieldset>
-				<legend>Harmony with other bots?</legend>
-				<label><input type=radio name=harmony value=1><span>1</span></label>
-				<label><input type=radio name=harmony value=2><span>2</span></label>
+				<legend>Is the robot in the stage area?</legend>
+				<label class=onstage-state><input type=radio name=end_game_position value=parked><span>Parked</span></label>
+				<label class=onstage-state><input id=onstage-input type=radio name=end_game_position value=onstage><span>Onstage</span></label>
+			</fieldset>
+			<fieldset id=not-onstage>
+				<legend>If not onstage</legend>
+				<label><input type=checkbox name=end_game_climb_fail value=yes><span>Attempted to climb, but failed</span></label>
+			</fieldset>
+			<fieldset id=is-onstage>
+				<legend>If onstage</legend>
+				<label><input type=checkbox name=end_game_spotlit value=spotlit><span>Spotlit</span></label>
+				<div>
+					Other bots in harmony with <span class=team></span>:
+					<label><input type=radio name=end_game_harmony value=1><span>1</span></label>
+					<label><input type=radio name=end_game_harmony value=2><span>2</span></label>
+				</div>
+				<div>
+					<span class=team></span>'s chain location:
+					<label><input type=radio name=end_game_hang_location value=middle><span>Middle</span></label>
+					<label><input type=radio name=end_game_hang_location value=offcenter><span>Off-center</span></label>
+					<label><input type=radio name=end_game_hang_location value=end><span>Near an end</span></label>
+				</div>
 			</fieldset>
 		</td></tr></table>
 		<hr class=teamColorBG>
@@ -187,7 +206,6 @@
 			<div><label><input type=checkbox name=source_pickup value=yes><span>Collect notes from the source directly into the bot</span></label></div>
 			<div><label><input type=checkbox name=passing value=yes><span>Pass notes to teammates</span></label></div>
 			<div><label><input type=checkbox name=stashing value=yes><span>Stash notes for later</span></label></div>
-			<div><label><input type=checkbox name=chain_end value=yes><span>Hang near the end of the chain when onstage</span></label></div>
 		</fieldset>
 		<hr class=teamColorBG>
 		<fieldset class="left full">

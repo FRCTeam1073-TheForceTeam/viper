@@ -15,6 +15,15 @@ $(document).ready(function(){
 	function showAuto(){
 		$('.teleop').hide()
 		$('.auto').show()
+		toggleOnstage()
+	}
+
+	$('.onstage-state').click(toggleOnstage)
+
+	function toggleOnstage(){
+		var onstage = $('#onstage-input').prop('checked')
+		$('#not-onstage').toggle(!onstage)
+		$('#is-onstage').toggle(onstage)
 	}
 
 	var cycles = []
