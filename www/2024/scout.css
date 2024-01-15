@@ -20,3 +20,4 @@ input.num{text-align:center}
 .auto_collect_mid{left:45.5%}
 .blueTeam .auto_collect_mid_amp, .redTeam .auto_collect_mid_source{left:65.5%}
 .blueTeam .auto_collect_amp, .redTeam .auto_collect_source{left:85.5%}
+hr{height:1px;background-color:var(--main-border-color)}

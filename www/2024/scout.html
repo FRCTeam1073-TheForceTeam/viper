@@ -74,7 +74,7 @@
 			<label><input type=radio name=auto_start value=start_source><span>Source</span></label>
 		</td></tr><tr><td colspan=2>
 			<label><input type=checkbox name=auto_leave value=1><span>Leave Starting Zone</span></label>
-		</td></tr><tr><td rowspan=2>
+		</td></tr><tr><td>
 			<h4>Collection</h4>
 			<div id=collect-map>
 				<label class="auto_collect_blue auto_collect_mid"><input type=checkbox name=auto_collect_blue_mid value=1><span>◯</span></label>
@@ -98,14 +98,15 @@
 				<div>Amp<br><input type=text class=num value=0 name=auto_amp size=1 disabled max=9></div>
 				<div><img class=count src=/count_down.svg></div>
 			</div>
+			<hr>
 			<div>
 				<div><img class=count src=/count_up.svg></div>
 				<div>Speaker<br><input type=text class=num value=0 name=auto_speaker size=1 disabled max=9></div>
 				<div><img class=count src=/count_down.svg></div>
 			</div>
+		</td><tr><tr><td colspan=2>
+			<button class=tab-button data-content=teleop>Proceed to Teleop</button>
 		</td></tr></table>
-
-		<button class=tab-button data-content=teleop>Proceed to Teleop</button>
 	</div>
 
 	<div class="teleop tab-content">
