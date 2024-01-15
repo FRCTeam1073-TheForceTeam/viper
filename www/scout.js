@@ -494,7 +494,7 @@ function showTab(event, tab){
 	name = button.attr('data-content'),
 	tab=$(`.tab[data-content="${name}"]`)
 	$('.tab').removeClass("redTeamBG").removeClass("blueTeamBG")
-	tab.addClass(pos.startsWith('R')?"redTeamBg":"blueTeamBG")
+	tab.addClass(pos.startsWith('R')?"redTeamBG":"blueTeamBG")
 	$('.tab-content').hide()
 	$(`.${name}`).show()
 	if(button.is('.tab-button')) window.scrollTo(tab.offset())
