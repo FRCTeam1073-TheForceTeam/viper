@@ -16,46 +16,58 @@ function aggregateStats(scout, aggregate){
 		"tele_harmony":2,
 	}
 
-	scout["auto_leave_score"] = pointValues["auto_leave"] * (scout["auto_leave"]||0)
-	scout["auto_collect_home"] =
-		(scout["auto_collect_blue_mid"]||0)+
-		(scout["auto_collect_blue_mid_amp"]||0)+
-		(scout["auto_collect_blue_amp"]||0)+
-		(scout["auto_collect_red_mid"]||0)+
-		(scout["auto_collect_red_mid_amp"]||0)+
-		(scout["auto_collect_red_amp"]||0)
-	scout["auto_collect_center"] =
-		(scout["auto_collect_centerline_source"]||0)+
-		(scout["auto_collect_centerline_mid_source"]||0)+
-		(scout["auto_collect_centerline_mid"]||0)+
-		(scout["auto_collect_centerline_mid_amp"]||0)+
-		(scout["auto_collect_centerline_amp"]||0)
-	scout["auto_collect"] = scout["auto_collect_home"] + scout["auto_collect_center"]
-	scout["auto_amp_score"] = pointValues["auto_amp"] * (scout["auto_amp"]||0)
-	scout["auto_speaker_score"] = pointValues["auto_speaker"] * (scout["auto_speaker"]||0)
-	scout["auto_score"] = scout["auto_leave_score"] + scout["auto_amp_score"] + scout["auto_speaker_score"]
-	scout["tele_collect"] = (scout["tele_collect_home"]||0)+
-		(scout["tele_collect_center"]||0)+
-		(scout["tele_collect_source"]||0)
-	scout["tele_amp_score"] = pointValues["tele_amp"] * (scout["tele_amp"]||0)
-	scout["tele_speaker_unamped_score"] = pointValues["tele_speaker_unamped"] * (scout["tele_speaker_unamped"]||0)
-	scout["tele_speaker_amped_score"] = pointValues["tele_speaker_amped"] * (scout["tele_speaker_amped"]||0)
-	scout["tele_speaker"] = (scout["tele_speaker_unamped"]||0) + (scout["tele_speaker_amped"]||0)
-	scout["tele_speaker_score"] = scout["tele_speaker_unamped_score"] + scout["tele_speaker_amped_score"]
-	scout["trap_score"] = pointValues["tele_trap"] * (scout["trap"]||0)
+	Object.keys(statInfo).forEach(function(field){
+		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
+			scout[field] = scout[field]||0
+		}
+	})
 
+	scout["auto_leave_score"] = pointValues["auto_leave"] * scout["auto_leave"]
+	scout["auto_collect_home"] =
+		scout["auto_collect_blue_mid"]+
+		scout["auto_collect_blue_mid_amp"]+
+		scout["auto_collect_blue_amp"]+
+		scout["auto_collect_red_mid"]+
+		scout["auto_collect_red_mid_amp"]+
+		scout["auto_collect_red_amp"]
+	scout["auto_collect_center"] =
+		scout["auto_collect_centerline_source"]+
+		scout["auto_collect_centerline_mid_source"]+
+		scout["auto_collect_centerline_mid"]+
+		scout["auto_collect_centerline_mid_amp"]+
+		scout["auto_collect_centerline_amp"]
+	scout["auto_collect"] = scout["auto_collect_home"] + scout["auto_collect_center"]
+	scout["auto_amp_score"] = pointValues["auto_amp"] * scout["auto_amp"]
+	scout["auto_speaker_score"] = pointValues["auto_speaker"] * scout["auto_speaker"]
+	scout["auto_amp_speaker_score"] = scout["auto_amp_score"] + scout["auto_speaker_score"]
+	scout["auto_place"] = scout["auto_amp"] + scout["auto_speaker"]
+	scout["auto_score"] = scout["auto_leave_score"] + scout["auto_amp_score"] + scout["auto_speaker_score"]
+	scout["tele_collect"] = scout["tele_collect_home"]+
+		scout["tele_collect_center"]+
+		scout["tele_collect_source"]
+	scout["tele_amp_score"] = pointValues["tele_amp"] * scout["tele_amp"]
+	scout["tele_speaker_unamped_score"] = pointValues["tele_speaker_unamped"] * scout["tele_speaker_unamped"]
+	scout["tele_speaker_amped_score"] = pointValues["tele_speaker_amped"] * scout["tele_speaker_amped"]
+	scout["tele_speaker"] = scout["tele_speaker_unamped"] + scout["tele_speaker_amped"]
+	scout["tele_speaker_score"] = scout["tele_speaker_unamped_score"] + scout["tele_speaker_amped_score"]
+	scout["trap_score"] = pointValues["tele_trap"] * scout["trap"]
+	scout["tele_place"] = scout["tele_amp"] + scout["tele_speaker"] + scout["tele_trap"]
+	scout["tele_amp_speaker_score"] = scout["tele_amp_score"] + scout["tele_speaker_score"]
+	scout["amp_score"] = scout["auto_amp_score"] + scout["tele_amp_score"]
+	scout["speaker_score"] = scout["auto_speaker_score"] + scout["tele_speaker_score"]
+	scout["amp_speaker_score"] = scout["auto_amp_speaker_score"] + scout["tele_amp_speaker_score"]
 
 	// TODO
 
-	var cycleSeconds =  (scout['full_cycle_count']||0) * (scout["full_cycle_average_seconds"]||0) + (aggregate['full_cycle_count']||0) * (aggregate["full_cycle_average_seconds"]||0)
-	var cycles = (scout['full_cycle_count']||0) + (aggregate['full_cycle_count']||0)
+	var cycleSeconds =  scout['full_cycle_count'] * scout["full_cycle_average_seconds"] + aggregate['full_cycle_count'] * aggregate["full_cycle_average_seconds"]
+	var cycles = scout['full_cycle_count'] + aggregate['full_cycle_count']
 
 	Object.keys(statInfo).forEach(function(field){
 		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
-			aggregate[field] = (aggregate[field]||0)+(scout[field]||0)
+			aggregate[field] = (aggregate[field]||0)+scout[field]
 			var set = `${field}_set`
 			aggregate[set] = aggregate[set]||[]
-			aggregate[set].push(scout[field]||0)
+			aggregate[set].push(scout[field])
 		}
 		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field] = aggregate[field]||scout[field]||0
 		if(/^text$/.test(statInfo[field]['type'])) aggregate[field] = (!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
@@ -167,6 +179,14 @@ var statInfo = {
 		name: "Score in the Speaker During Auto",
 		type: "avg"
 	},
+	"auto_amp_speaker_score": {
+		name: "Score in the Speaker and Amp During Auto",
+		type: "avg"
+	},
+	"auto_place": {
+		name: "Notes Placed During Auto",
+		type: "avg"
+	},
 	"auto_score": {
 		name: "Score During Auto",
 		type: "avg"
@@ -231,8 +251,58 @@ var statInfo = {
 		name: "Score in the Trap",
 		type: "avg"
 	},
-	//tele_drop,full_cycle_fastest_seconds,full_cycle_average_seconds,full_cycle_count,onstage,harmony,floor_pickup,source_pickup,passing,stashing,chain_end,scouter,comments,created,modified
+	"tele_amp_speaker_score": {
+		name: "Score in the Speaker and Amp During Teleop",
+		type: "avg"
+	},
+	"amp_score": {
+		name: "Score in the Amp",
+		type: "avg"
+	},
+	"speaker_score": {
+		name: "Score in the Speaker",
+		type: "avg"
+	},
+	"amp_speaker_score": {
+		name: "Score in the Speaker and Amp",
+		type: "avg"
+	},
+	"tele_place": {
+		name: "Notes Placed During Teleop",
+		type: "avg"
+	},
+	"full_cycle_average_seconds": {
+		name: "Full Cycle Time Average",
+		type: "num",
+		good: "low"
+	},
+	"full_cycle_count": {
+		name: "Full Cycle Count",
+		type: "avg"
+	},
+	"full_cycle_fastest_seconds": {
+		name: "Full Cycle Time Fastest",
+		type: "minmax",
+		good: "low"
+	},
+	//onstage,harmony,floor_pickup,source_pickup,passing,stashing,chain_end
 
+	"scouter": {
+		name: "Scouter",
+		type: "text"
+	},
+	"comments": {
+		name: "Comments",
+		type: "text"
+	},
+	"created": {
+		name: "Created",
+		type: "datetime"
+	},
+	"modified": {
+		name: "Modified",
+		type: "datetime"
+	}
 }
 
 var teamGraphs = {
