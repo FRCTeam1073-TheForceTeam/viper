@@ -16,22 +16,34 @@ function aggregateStats(scout, aggregate){
 		"tele_harmony":2,
 	}
 
+	scout["auto_leave_score"] = pointValues["auto_leave"] * (scout["auto_leave"]||0)
 	scout["auto_collect_home"] =
-		scout["auto_collect_blue_mid"]||0+
-		scout["auto_collect_blue_mid_amp"]||0+
-		scout["auto_collect_blue_amp"]||0+
-		scout["auto_collect_red_mid"]||0+
-		scout["auto_collect_red_mid_amp"]||0+
-		scout["auto_collect_red_amp"]||0
+		(scout["auto_collect_blue_mid"]||0)+
+		(scout["auto_collect_blue_mid_amp"]||0)+
+		(scout["auto_collect_blue_amp"]||0)+
+		(scout["auto_collect_red_mid"]||0)+
+		(scout["auto_collect_red_mid_amp"]||0)+
+		(scout["auto_collect_red_amp"]||0)
 	scout["auto_collect_center"] =
-		scout["auto_collect_centerline_source"]||0+
-		scout["auto_collect_centerline_mid_source"]||0+
-		scout["auto_collect_centerline_mid"]||0+
-		scout["auto_collect_centerline_mid_amp"]||0+
-		scout["auto_collect_centerline_amp"]||0
+		(scout["auto_collect_centerline_source"]||0)+
+		(scout["auto_collect_centerline_mid_source"]||0)+
+		(scout["auto_collect_centerline_mid"]||0)+
+		(scout["auto_collect_centerline_mid_amp"]||0)+
+		(scout["auto_collect_centerline_amp"]||0)
 	scout["auto_collect"] = scout["auto_collect_home"] + scout["auto_collect_center"]
-	scout["auto_amp_score"] = pointValues["auto_amp"] * scout["auto_amp"]||0
-	scout["auto_speaker_score"] = pointValues["auto_speaker"] * scout["auto_speaker"]||0
+	scout["auto_amp_score"] = pointValues["auto_amp"] * (scout["auto_amp"]||0)
+	scout["auto_speaker_score"] = pointValues["auto_speaker"] * (scout["auto_speaker"]||0)
+	scout["auto_score"] = scout["auto_leave_score"] + scout["auto_amp_score"] + scout["auto_speaker_score"]
+	scout["tele_collect"] = (scout["tele_collect_home"]||0)+
+		(scout["tele_collect_center"]||0)+
+		(scout["tele_collect_source"]||0)
+	scout["tele_amp_score"] = pointValues["tele_amp"] * (scout["tele_amp"]||0)
+	scout["tele_speaker_unamped_score"] = pointValues["tele_speaker_unamped"] * (scout["tele_speaker_unamped"]||0)
+	scout["tele_speaker_amped_score"] = pointValues["tele_speaker_amped"] * (scout["tele_speaker_amped"]||0)
+	scout["tele_speaker"] = (scout["tele_speaker_unamped"]||0) + (scout["tele_speaker_amped"]||0)
+	scout["tele_speaker_score"] = scout["tele_speaker_unamped_score"] + scout["tele_speaker_amped_score"]
+	scout["trap_score"] = pointValues["tele_trap"] * (scout["trap"]||0)
+
 
 	// TODO
 
@@ -78,6 +90,10 @@ var statInfo = {
 	"auto_leave": {
 		name: "Exited the Starting Area During Auto",
 		type: "%"
+	},
+	"auto_leave_score": {
+		name: "Score for Exiting the Starting Area During Auto",
+		type: "avg"
 	},
 	"auto_collect_blue_mid": {
 		name: "Collected Blue Wing Note Midfield During Auto",
@@ -151,11 +167,71 @@ var statInfo = {
 		name: "Score in the Speaker During Auto",
 		type: "avg"
 	},
+	"auto_score": {
+		name: "Score During Auto",
+		type: "avg"
+	},
 	"coopertition": {
 		name: "Alliance activated coopertition light",
 		type: "%"
-	}
-	//tele_collect_home,tele_collect_center,tele_collect_source,tele_amp,tele_speaker_unamped,tele_speaker_amped,trap,tele_drop,full_cycle_fastest_seconds,full_cycle_average_seconds,full_cycle_count,onstage,harmony,floor_pickup,source_pickup,passing,stashing,chain_end,scouter,comments,created,modified
+	},
+	"tele_collect_home": {
+		name: "Notes Collected from Home Wing During Teleop",
+		type: "avg"
+	},
+	"tele_collect_center": {
+		name: "Notes Collected from Center Field During Teleop",
+		type: "avg"
+	},
+	"tele_collect_source": {
+		name: "Notes Collected from Source During Teleop",
+		type: "avg"
+	},
+	"tele_collect": {
+		name: "Notes Collected During Teleop",
+		type: "avg"
+	},
+	"tele_amp": {
+		name: "Notes Placed in the Amp During Teleop",
+		type: "avg"
+	},
+	"tele_amp_score": {
+		name: "Score in the Amp During Teleop",
+		type: "avg"
+	},
+	"tele_speaker_unamped": {
+		name: "Notes Shot in the Speaker when Not Amped During Teleop",
+		type: "avg"
+	},
+	"tele_speaker_unamped_score": {
+		name: "Score in the Speaker when Not Amped During Teleop",
+		type: "avg"
+	},
+	"tele_speaker_amped": {
+		name: "Notes Shot in the Speaker when Amped During Teleop",
+		type: "avg"
+	},
+	"tele_speaker_amped_score": {
+		name: "Score in the Speaker when Amped During Teleop",
+		type: "avg"
+	},
+	"tele_speaker": {
+		name: "Notes Shot in the Speaker During Teleop",
+		type: "avg"
+	},
+	"tele_speaker_score": {
+		name: "Score in the Speaker During Teleop",
+		type: "avg"
+	},
+	"trap": {
+		name: "Notes Placed in the Trap",
+		type: "avg"
+	},
+	"trap_score": {
+		name: "Score in the Trap",
+		type: "avg"
+	},
+	//tele_drop,full_cycle_fastest_seconds,full_cycle_average_seconds,full_cycle_count,onstage,harmony,floor_pickup,source_pickup,passing,stashing,chain_end,scouter,comments,created,modified
 
 }
 
