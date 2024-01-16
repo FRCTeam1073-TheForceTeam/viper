@@ -6,7 +6,7 @@ input.num{text-align:center}
 .teleop img.count{max-width:4em}
 .two-column{column-count:2;column-gap:1em}
 .two-column>div{break-inside:avoid-column}
-#collect-map{width:20em;height:20em;position:relative;display:inline-block}
+#collect-map{width:60vmin;height:60vmin;max-width:20em;max-height:20em;position:relative;display:inline-block}
 .blueTeam #collect-map{background:url(auto-collect-blue.png) no-repeat center center / 100% 100%}
 .redTeam #collect-map{background:url(auto-collect-red.png) no-repeat center center / 100% 100%}
 #collect-map label{position:absolute;display:block}
