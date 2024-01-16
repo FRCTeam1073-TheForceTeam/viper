@@ -203,32 +203,30 @@
 					<label><input type=radio name=end_game_hang_location value=end><span>Near an end</span></label>
 				</div>
 			</fieldset>
+			<fieldset class="left full">
+				<legend>Did team <span class=team></span>?</legend>
+				<div><label><input type=checkbox name=floor_pickup value=yes><span>Pick up notes from the floor</span></label></div>
+				<div><label><input type=checkbox name=source_pickup value=yes><span>Collect notes from the source directly into the bot</span></label></div>
+				<div><label><input type=checkbox name=passing value=yes><span>Pass notes to teammates</span></label></div>
+				<div><label><input type=checkbox name=stashing value=yes><span>Stash notes for later</span></label></div>
+			</fieldset>
+			<fieldset class="left full">
+				Scouter name and notes:
+				<div class=full><input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q"></div>
+				<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+			</fieldset>
+			<input type=hidden name=created value="">
+			<input type=hidden name=modified value="">
+			<div id=nextButtons>
+				Save data:
+				<div id=featuredButton>
+					<button id=nextBtn>Next Match</button>
+				</div>
+				<div id=otherButtons>
+					<button id=uploadBtn>Upload Data</button>
+				</div>
+			</div>
 		</td></tr></table>
-		<hr class=teamColorBG>
-		<fieldset class="left full">
-			<legend>Did team <span class=team></span>?</legend>
-			<div><label><input type=checkbox name=floor_pickup value=yes><span>Pick up notes from the floor</span></label></div>
-			<div><label><input type=checkbox name=source_pickup value=yes><span>Collect notes from the source directly into the bot</span></label></div>
-			<div><label><input type=checkbox name=passing value=yes><span>Pass notes to teammates</span></label></div>
-			<div><label><input type=checkbox name=stashing value=yes><span>Stash notes for later</span></label></div>
-		</fieldset>
-		<hr class=teamColorBG>
-		<fieldset class="left full">
-			Scouter name and notes:
-			<div class=full><input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q"></div>
-			<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
-		</fieldset>
-		<input type=hidden name=created value="">
-		<input type=hidden name=modified value="">
-		<div id=nextButtons>
-			Save data:
-			<div id=featuredButton>
-				<button id=nextBtn>Next Match</button>
-			</div>
-			<div id=otherButtons>
-				<button id=uploadBtn>Upload Data</button>
-			</div>
-		</div>
 	</div>
 </form>
 </body>
