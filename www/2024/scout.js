@@ -50,6 +50,7 @@ $(document).ready(function(){
 		cycleInterrupt()
 		cycles=[]
 		toggleOnstage()
+		setTimeout(initialRobotStartPosition,500)
 		return true
 	})
 
@@ -64,4 +65,41 @@ $(document).ready(function(){
 	$('.count,button,label').click(function(){
 		if (!$(this).is('.placement,.collectSource')) cycleInterrupt()
 	})
+
+	function initialRobotStartPosition(){
+		var s = $('#auto-start-input').val()
+		var m = s.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+		if (!m || !m.length) return
+		var px = parseInt(m[1]),
+		py = parseInt(m[2])
+		if (pos.startsWith('R')) px = 100 - px
+		var d = document.getElementById('start-area').getBoundingClientRect(),
+		r = document.getElementById('robot-starting-position'),
+		s = r.getBoundingClientRect(),
+		x = Math.round(px * d.width / 100 - s.width/2),
+		y = Math.round(py * d.height / 100 - s.height/2)
+		r.style.left=x+"px"
+		r.style.top=y+"px"
+	}
+
+	function setRobotStartPosition(e){
+		var d = document.getElementById('start-area').getBoundingClientRect(),
+		r = document.getElementById('robot-starting-position'),
+		s = r.getBoundingClientRect(),
+		x = e.clientX - d.left,
+		y = e.clientY - d.top,
+		px = Math.round(100 * x / d.width),
+		py = Math.round(100 * y / d.height)
+		if (pos.startsWith('R')) px = 100 - px
+		r.style.left=(x-s.width/2)+"px"
+		r.style.top=(y-s.height/2)+"px"
+		$('#auto-start-input').val(px+"x"+py)
+	}
+
+	$('#start-area').mousemove(function(e){
+		if (e.buttons) setRobotStartPosition(e)
+	})
+
+
+	$('#start-area').click(setRobotStartPosition)
 })

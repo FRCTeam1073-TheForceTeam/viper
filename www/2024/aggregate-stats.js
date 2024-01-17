@@ -97,7 +97,8 @@ var statInfo = {
 	},
 	"auto_start": {
 		name: "Location where the robot starts",
-		type: "text"
+		type: "heatmap",
+		image: "/2024/auto-start-blue.png"
 	},
 	"auto_leave": {
 		name: "Exited the Starting Area During Auto",

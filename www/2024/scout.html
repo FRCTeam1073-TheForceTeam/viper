@@ -68,10 +68,9 @@
 
 	<div class="auto tab-content">
 		<table><tr><td colspan=2>
-			<div>In front of which driver station is the robot starting?</div>
-			<label><input type=radio name=auto_start value=start_amp><span>Amp</span></label>
-			<label><input type=radio name=auto_start value=start_speaker><span>Speaker</span></label>
-			<label><input type=radio name=auto_start value=start_source><span>Source</span></label>
+			<div>Click the robot's starting position:</div>
+			<div id=start-area><div id=robot-starting-position></div></div>
+			<input id=auto-start-input type=hidden name=auto_start>
 		</td></tr><tr><td colspan=2>
 			<label><input type=checkbox name=auto_leave value=1><span>Leave Starting Zone</span></label>
 		</td></tr><tr><td>
