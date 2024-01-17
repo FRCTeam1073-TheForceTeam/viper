@@ -67,14 +67,17 @@ $(document).ready(function(){
 	})
 
 	function initialRobotStartPosition(){
-		var s = $('#auto-start-input').val()
-		var m = s.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
-		if (!m || !m.length) return
+		var m = $('#auto-start-input').val().match(/^([0-9]{1,2})x([0-9]{1,2})$/),
+		r = document.getElementById('robot-starting-position')
+		if (!m || !m.length){
+			r.style.left="0px"
+			r.style.top="0px"
+			return
+		}
 		var px = parseInt(m[1]),
 		py = parseInt(m[2])
 		if (pos.startsWith('R')) px = 100 - px
 		var d = document.getElementById('start-area').getBoundingClientRect(),
-		r = document.getElementById('robot-starting-position'),
 		s = r.getBoundingClientRect(),
 		x = Math.round(px * d.width / 100 - s.width/2),
 		y = Math.round(py * d.height / 100 - s.height/2)
