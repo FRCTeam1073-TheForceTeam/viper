@@ -19,6 +19,11 @@ function aggregateStats(scout, aggregate){
 	Object.keys(statInfo).forEach(function(field){
 		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
 			scout[field] = scout[field]||0
+			aggregate[field] = aggregate[field]||0
+		}
+		if(/^heatmap$/.test(statInfo[field]['type'])){
+			scout[field] = scout[field]||""
+			aggregate[field] = aggregate[field]||""
 		}
 	})
 
@@ -71,6 +76,7 @@ function aggregateStats(scout, aggregate){
 		}
 		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field] = aggregate[field]||scout[field]||0
 		if(/^text$/.test(statInfo[field]['type'])) aggregate[field] = (!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
+		if(/^heatmap$/.test(statInfo[field]['type'])) aggregate[field] += ((aggregate[field]&&scout[field])?" ":"")+scout[field]
 	})
 	aggregate["count"] = (aggregate["count"]||0)+1
 	aggregate["event"] = scout["event"]
@@ -78,8 +84,6 @@ function aggregateStats(scout, aggregate){
 	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
 	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
 	aggregate["min_score"] = Math.min(aggregate["min_score"]===undefined?999:aggregate["min_score"],scout["score"])
-	aggregate["tele_max_place_score"] = Math.max(aggregate["tele_max_place_score"]||0,scout["tele_place_score"])
-	aggregate["tele_min_place_score"] = Math.min(aggregate["tele_min_place_score"]===undefined?999:aggregate["tele_min_place_score"],scout["tele_place_score"])
 }
 
 var statInfo = {
