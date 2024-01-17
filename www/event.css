@@ -1,7 +1,8 @@
 ul{max-width:25em;list-style-type:none}
 li{margin:.5em 0;}
 .initHid,.more{display:none}
-.show-more{cursor:pointer}
+.show-more{cursor:pointer; color:var(--link-color);font-size:80%}
+.show-more:hover{text-decoration:underline}
 #dataTable td,#dataTable th{padding:0.5em}
 #matchTable td, #matchTable th {padding:0.15em;border:1px solid var(--main-border-color);cursor:pointer}
 #matchTable{margin:1em auto;max-width:27em}
@@ -21,5 +22,5 @@ h3{margin:0 0 .25em 0;padding:0}
 #jsonLightBox h2{margin-left:1em}
 .narrow ul{margin:0;padding:0}
 .narrow li{margin:.2em 0;padding:0}
-.narrow li:visible+li,.narrow li:visible+ul{border-top:1px solid var(--main-border-color);padding-top:0.2em}
+.narrow li+li,.narrow li+ul{border-top:1px solid var(--main-border-color);padding-top:0.2em}
 .narrow li>ul{border-top:1px solid var(--main-border-color);margin-top:0.2em;padding-left:0.5em}
