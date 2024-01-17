@@ -43,6 +43,11 @@ $(document).ready(function(){
 		showLightBox(da)
 		return false
 	}
+	$('.show-more').click(function(){
+		$(this).siblings('.more').show()
+		$(this).hide()
+
+	})
 	loadEventFiles(function(fileList){
 		fileList.sort((a,b)=>{
 			var aType = a.replace(/.*\./,"")
@@ -57,12 +62,12 @@ $(document).ready(function(){
 			if (extensionMap[extension]){
 				var depend = extensionMap[extension][0]
 				title = extensionMap[extension][1]
-				if (depend) $(depend).show().parents().show()
+				if (depend) $(depend).show().parents('.initHid').show()
 			}
 			title+=fileNum?(" "+fileNum):""
-			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents().show()
+			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents('.initHid').show()
 		})
-		if (uploadCount) $('.dependUploads').show().parents().show()
+		if (uploadCount) $('.dependUploads').show().parents('.initHid').show()
 	})
 	function setName(){
 		title.text(title.text().replace(/EVENT/, eventName))
