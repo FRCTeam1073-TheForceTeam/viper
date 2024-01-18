@@ -61,7 +61,12 @@ function aggregateStats(scout, aggregate){
 	scout["amp_score"] = scout["auto_amp_score"] + scout["tele_amp_score"]
 	scout["speaker_score"] = scout["auto_speaker_score"] + scout["tele_speaker_score"]
 	scout["amp_speaker_score"] = scout["auto_amp_speaker_score"] + scout["tele_amp_speaker_score"]
-
+	scout["parked_score"] = pointValues["tele_park"] * (scout["end_game_position"]=="parked"?1:0)
+	scout["onstage_score"] = pointValues["tele_onstage"] * (scout["end_game_position"]=="onstage"?1:0)
+	scout["spotlit_score"] = pointValues["tele_spotlit"] * (scout["end_game_position"]=="onstage"&&scout["end_game_spotlit"]=="spotlit"?1:0)
+	scout["harmony_score"] = Math.round(pointValues["tele_harmony"] * scout["end_game_harmony"] / (scout["end_game_harmony"]+1))
+	scout["stage_score"] = scout["trap_score"] + scout["parked_score"] + scout["onstage_score"] + scout["spotlit_score"] + scout["harmony_score"]
+	scout["score"] = scout["auto_score"] + scout["tele_amp_speaker_score"] + scout["stage_score"]
 	// TODO
 
 	var cycleSeconds =  scout['full_cycle_count'] * scout["full_cycle_average_seconds"] + aggregate['full_cycle_count'] * aggregate["full_cycle_average_seconds"]
