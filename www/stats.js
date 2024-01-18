@@ -103,7 +103,6 @@ function showStats(){
 					min:0,
 					data:points
 				})
-
 			} else {
 				var canvas = $(`<canvas data-section="${section}">`),
 				data=[],

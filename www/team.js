@@ -102,38 +102,70 @@ function showGraphs(matchList, matchNames){
 	Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
 	var graphs = $('#stats').html('')
 	Object.keys(teamGraphs).forEach(function(section){
-		var chart = $('<canvas>'),
-		data=[],
-		graph=$('<div class=graph>')
+		var graph=$('<div class=graph>')
 		graphs.append(graph)
 		graph.append($('<h2>').text(section))
-		graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
-		teamGraphs[section]['data'].forEach(function(field,j){
-			var info = statInfo[field]||{},
-			values = []
-			for (var k=0; k<matchList.length; k++){
-				values.push(matchList[k][field]||0)
-			}
-			data.push({
-				label: info['name']||field,
-				data: values,
-				backgroundColor: Array(matchList.length).fill(graphColors[j])
+		if (teamGraphs[section]['graph']=='heatmap'){
+			var statName = teamGraphs[section]['data'][0],
+			stat=statInfo[statName],
+			image=stat['image'],
+			width=Math.min($(document).width(),1000),
+			height=Math.round(width/stat['aspect_ratio']),
+			points=[],
+			chart = $('<div class="heatmap">')
+			.css("width",width)
+			.css("height",height)
+			.css("background", `url(${image}) no-repeat center center / 100% 100%`)
+			graph.append(chart)
+			var heatmap = h337.create({
+				container: chart[0],
 			})
-		})
-		var stacked = teamGraphs[section]['graph']=="stacked"
-		new Chart(chart,{
-			type: 'bar',
-			data: {
-				labels: matchNames,
-				datasets: data
-			},
-			options: {
-				scales: {
-					y: {beginAtZero: true,stacked: stacked},
-					x: {stacked: stacked}
-				}
+			for (var k=0; k<matchList.length; k++){
+				((matchList[k][statName]||"").match(/[0-9]{1,2}x[0-9]{1,2}/g)||[]).forEach(function(point){
+					var m = point.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+					points.push({
+						x:Math.round(parseInt(m[1]) * width / 100),
+						y:Math.round(parseInt(m[2]) * height / 100),
+						value:1
+					})
+				})
 			}
-		})
+			heatmap.setData({
+				max:1,
+				min:0,
+				data:points
+			})
+		} else {
+			var chart = $('<canvas>'),
+			data=[]
+			graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
+			teamGraphs[section]['data'].forEach(function(field,j){
+				var info = statInfo[field]||{},
+				values = []
+				for (var k=0; k<matchList.length; k++){
+					values.push(matchList[k][field]||0)
+				}
+				data.push({
+					label: info['name']||field,
+					data: values,
+					backgroundColor: Array(matchList.length).fill(graphColors[j])
+				})
+			})
+			var stacked = teamGraphs[section]['graph']=="stacked"
+			new Chart(chart,{
+				type: 'bar',
+				data: {
+					labels: matchNames,
+					datasets: data
+				},
+				options: {
+					scales: {
+						y: {beginAtZero: true,stacked: stacked},
+						x: {stacked: stacked}
+					}
+				}
+			})
+		}
 	})
 }
 
