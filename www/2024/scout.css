@@ -27,3 +27,7 @@ hr{height:1px;background-color:var(--main-border-color)}
 #robot-starting-position{position:absolute;top:0;left:0;width:2.5em;height:2.5em;border-radius:.3em;}
 .blueTeam #robot-starting-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
 .redTeam #robot-starting-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
+@media (max-width: 450px){
+	#start-area{width:18em;height:4.5em}
+	#robot-starting-position{width:1.7em;height:1.7em;}
+}
