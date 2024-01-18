@@ -95,7 +95,6 @@ function showStats(){
 								y:Math.round(parseInt(m[2]) * height / 100),
 								value:1
 							})
-							console.log(points)
 						})
 					}
 				}
@@ -153,7 +152,6 @@ function showStats(){
 					var section = $(this).attr('data-section'),
 					myChart = charts[section],
 					points = myChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
-					console.log(aggregateGraphs[section])
 					if (points.length) {
 						showStatClickMenu(
 							evt,
