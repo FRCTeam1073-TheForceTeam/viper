@@ -102,7 +102,8 @@ var statInfo = {
 	"auto_start": {
 		name: "Location where the robot starts",
 		type: "heatmap",
-		image: "/2024/auto-start-blue.png"
+		image: "/2024/start-area-blue.png",
+		aspect_ratio: 4
 	},
 	"auto_leave": {
 		name: "Exited the Starting Area During Auto",
@@ -292,6 +293,10 @@ var statInfo = {
 	},
 	//onstage,harmony,floor_pickup,source_pickup,passing,stashing,chain_end
 
+	"score": {
+		name: "Score Contribution",
+		type: "avg"
+	},
 	"scouter": {
 		name: "Scouter",
 		type: "text"
@@ -311,9 +316,17 @@ var statInfo = {
 }
 
 var teamGraphs = {
+	"Start Location":{
+		graph:"heatmap",
+		data:['auto_start']
+	},
 }
 
 var aggregateGraphs = {
+	"Start Location":{
+		graph:"heatmap",
+		data:['auto_start']
+	},
 }
 
 function showPitScouting(el,team){

@@ -67,65 +67,102 @@ function showStats(){
 		var charts = {}
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i],
-			canvas = $(`<canvas data-section="${section}">`),
-			data=[],
-			percent=false,
 			graph=$('<div class=graph>')
 			graphs.append(graph)
 			graph.append($('<h2>').text(section))
-			graph.append($('<div class=chart>').append(canvas).css('min-width', (teamList.length*23+100) + 'px'))
-			var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent",
-			boxplot = aggregateGraphs[section]['graph']=='boxplot'
-			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
-				var field = aggregateGraphs[section]['data'][j],
-				info = statInfo[field]||{},
-				values = []
-				if (!boxplot || info['type']!='minmax'){
-					for (var k=0; k<teamList.length; k++){
-						values.push(getTeamValue(field, teamList[k],stackedPercent,boxplot))
+			if (aggregateGraphs[section]['graph']=='heatmap'){
+				var statName = aggregateGraphs[section]['data'][0],
+				stat=statInfo[statName],
+				image=stat['image'],
+				width=Math.min($(document).width(),1000),
+				height=Math.round(width/stat['aspect_ratio']),
+				points=[],
+				chart = $('<div class="heatmap">')
+				.css("width",width)
+				.css("height",height)
+				.css("background", `url(${image}) no-repeat center center / 100% 100%`)
+				graph.append(chart)
+				var heatmap = h337.create({
+					container: chart[0],
+				})
+				for (var k=0; k<teamList.length; k++){
+					stat = eventStatsByTeam[teamList[k]]
+					if (stat && statName in stat){
+						((stat[statName]||"").match(/[0-9]{1,2}x[0-9]{1,2}/g)||[]).forEach(function(point){
+							var m = point.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+							points.push({
+								x:Math.round(parseInt(m[1]) * width / 100),
+								y:Math.round(parseInt(m[2]) * height / 100),
+								value:1
+							})
+							console.log(points)
+						})
 					}
-					data.push({
-						field: field,
-						label: (info['type']=='avg'&&!boxplot?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
-						data: values,
-						backgroundColor: bgArr(graphColors[j]),
-						borderColor: bgArr(graphColors[j]),
-						lowerBackgroundColor: bgArr(darkenColor(graphColors[j])),
-						quantiles: 'nearest',
-						coef: 0
-					})
-					if (info['type']=='%'||stackedPercent) percent=true
 				}
+				heatmap.setData({
+					max:1,
+					min:0,
+					data:points
+				})
+
+			} else {
+				var canvas = $(`<canvas data-section="${section}">`),
+				data=[],
+				percent=false
+				graph.append($('<div class=chart>').append(canvas).css('min-width', (teamList.length*23+100) + 'px'))
+				var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent",
+				boxplot = aggregateGraphs[section]['graph']=='boxplot'
+				for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
+					var field = aggregateGraphs[section]['data'][j],
+					info = statInfo[field]||{},
+					values = []
+					if (!boxplot || info['type']!='minmax'){
+						for (var k=0; k<teamList.length; k++){
+							values.push(getTeamValue(field, teamList[k],stackedPercent,boxplot))
+						}
+						data.push({
+							field: field,
+							label: (info['type']=='avg'&&!boxplot?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
+							data: values,
+							backgroundColor: bgArr(graphColors[j]),
+							borderColor: bgArr(graphColors[j]),
+							lowerBackgroundColor: bgArr(darkenColor(graphColors[j])),
+							quantiles: 'nearest',
+							coef: 0
+						})
+						if (info['type']=='%'||stackedPercent) percent=true
+					}
+				}
+				var stacked = aggregateGraphs[section]['graph'].includes("stacked")
+				var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
+				if (percent)yScale['suggestedMax'] = 100
+				charts[section] = new Chart(canvas,{
+					type: boxplot?'boxplot':'bar',
+					data: {
+						labels: teamList,
+						datasets: data
+					},
+					options: {
+						scales: {
+							y: yScale,
+							x: {stacked: stacked}
+						}
+					}
+				})
+				canvas.click(function(evt) {
+					var section = $(this).attr('data-section'),
+					myChart = charts[section],
+					points = myChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
+					console.log(aggregateGraphs[section])
+					if (points.length) {
+						showStatClickMenu(
+							evt,
+							myChart.data.labels[points[0].index],
+							aggregateGraphs[section].data
+						)
+					}
+				})
 			}
-			var stacked = aggregateGraphs[section]['graph'].includes("stacked")
-			var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
-			if (percent)yScale['suggestedMax'] = 100
-			charts[section] = new Chart(canvas,{
-				type: boxplot?'boxplot':'bar',
-				data: {
-					labels: teamList,
-					datasets: data
-				},
-				options: {
-					scales: {
-						y: yScale,
-						x: {stacked: stacked}
-					}
-				}
-			})
-			canvas.click(function(evt) {
-				var section = $(this).attr('data-section'),
-				myChart = charts[section],
-				points = myChart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true)
-				console.log(aggregateGraphs[section])
-				if (points.length) {
-					showStatClickMenu(
-						evt,
-						myChart.data.labels[points[0].index],
-						aggregateGraphs[section].data
-					)
-				}
-			})
 		}
 	} else {
 		var tableWidth = teamList.length + 1
