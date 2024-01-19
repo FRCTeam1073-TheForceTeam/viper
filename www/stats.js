@@ -99,7 +99,7 @@ function showStats(){
 					}
 				}
 				heatmap.setData({
-					max:1,
+					max:3,
 					min:0,
 					data:points
 				})

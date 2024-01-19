@@ -131,7 +131,7 @@ function showGraphs(matchList, matchNames){
 				})
 			}
 			heatmap.setData({
-				max:1,
+				max:2,
 				min:0,
 				data:points
 			})
