@@ -11,10 +11,8 @@ input.num{text-align:center}
 .redTeam #collect-map{background:url(auto-collect-red.png) no-repeat center center / 100% 100%}
 #collect-map label{position:absolute;display:block}
 #collect-map label span{color:orange;font-weight:bold;min-width:2vw}
-.blueTeam .auto_collect_red{display:none}
-.redTeam .auto_collect_blue{display:none}
 .auto_collect_centerline{top:86%}
-.auto_collect_red,.auto_collect_blue{top:30%}
+.auto_collect_wing{top:30%}
 .redTeam .auto_collect_amp, .blueTeam .auto_collect_source{left:5.5%}
 .redTeam .auto_collect_mid_amp, .blueTeam .auto_collect_mid_source{left:25.5%}
 .auto_collect_mid{left:45.5%}

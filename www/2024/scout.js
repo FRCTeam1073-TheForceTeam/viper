@@ -66,6 +66,20 @@ $(document).ready(function(){
 		if (!$(this).is('.placement,.collectSource')) cycleInterrupt()
 	})
 
+	$('.auto_collect').click(function(){
+		var input = $(this).find('input'),
+		order = $('#auto_collect_order'),
+		text = order.val(),
+		name = input.attr('name').replace('auto_collect_','')
+		if (input.is(':checked')){
+			if (text) text += " "
+			text += name
+		} else {
+			text = text.replace(new RegExp(`${name}( |$)`),"").trim()
+		}
+		order.val(text)
+	})
+
 	function initialRobotStartPosition(){
 		var m = $('#auto-start-input').val().match(/^([0-9]{1,2})x([0-9]{1,2})$/),
 		r = document.getElementById('robot-starting-position')
@@ -100,6 +114,7 @@ $(document).ready(function(){
 	}
 
 	$('#start-area').mousemove(function(e){
+		console.log(e.buttons)
 		if (e.buttons) setRobotStartPosition(e)
 	})
 

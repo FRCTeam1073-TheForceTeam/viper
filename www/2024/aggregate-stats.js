@@ -29,12 +29,9 @@ function aggregateStats(scout, aggregate){
 
 	scout["auto_leave_score"] = pointValues["auto_leave"] * scout["auto_leave"]
 	scout["auto_collect_home"] =
-		scout["auto_collect_blue_mid"]+
-		scout["auto_collect_blue_mid_amp"]+
-		scout["auto_collect_blue_amp"]+
-		scout["auto_collect_red_mid"]+
-		scout["auto_collect_red_mid_amp"]+
-		scout["auto_collect_red_amp"]
+		scout["auto_collect_wing_mid"]+
+		scout["auto_collect_wing_mid_amp"]+
+		scout["auto_collect_wing_amp"]
 	scout["auto_collect_center"] =
 		scout["auto_collect_centerline_source"]+
 		scout["auto_collect_centerline_mid_source"]+
@@ -122,16 +119,20 @@ var statInfo = {
 		name: "Score for Exiting the Starting Area During Auto",
 		type: "avg"
 	},
-	"auto_collect_blue_mid": {
-		name: "Collected Blue Wing Note Midfield During Auto",
+	"auto_collect_order": {
+		name: "Order of Auto Collection",
+		type: "text"
+	},
+	"auto_collect_wing_mid": {
+		name: "Collected Wing Note Midfield During Auto",
 		type: "%"
 	},
-	"auto_collect_blue_mid_amp": {
-		name: "Collected Blue Wing Note Between Midfield and Amp During Auto",
+	"auto_collect_wing_mid_amp": {
+		name: "Collected Wing Note Between Midfield and Amp During Auto",
 		type: "%"
 	},
-	"auto_collect_blue_amp": {
-		name: "Collected Blue Wing Note Nearest Amp During Auto",
+	"auto_collect_wing_amp": {
+		name: "Collected Wing Note Nearest Amp During Auto",
 		type: "%"
 	},
 	"auto_collect_centerline_source": {
@@ -152,18 +153,6 @@ var statInfo = {
 	},
 	"auto_collect_centerline_amp": {
 		name: "Collected Centerline Nearest Amp During Auto",
-		type: "%"
-	},
-	"auto_collect_red_mid": {
-		name: "Collected Red Wing Note Midfield During Auto",
-		type: "%"
-	},
-	"auto_collect_red_mid_amp": {
-		name: "Collected Red Wing Note Between Midfield and Amp During Auto",
-		type: "%"
-	},
-	"auto_collect_red_amp": {
-		name: "Collected Red Wing Note Nearest Amp During Auto",
 		type: "%"
 	},
 	"auto_collect_home": {
