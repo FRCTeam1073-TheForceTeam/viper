@@ -63,7 +63,11 @@ function aggregateStats(scout, aggregate){
 	scout["amp_speaker_score"] = scout["auto_amp_speaker_score"] + scout["tele_amp_speaker_score"]
 	scout["parked_score"] = pointValues["tele_park"] * (scout["end_game_position"]=="parked"?1:0)
 	scout["onstage_score"] = pointValues["tele_onstage"] * (scout["end_game_position"]=="onstage"?1:0)
-	scout["spotlit_score"] = pointValues["tele_spotlit"] * (scout["end_game_position"]=="onstage"&&scout["end_game_spotlit"]=="spotlit"?1:0)
+	if (scout["end_game_position"]!="onstage"){
+		scout["end_game_spotlit"]=""
+		scout["end_game_harmony"]=0
+	}
+	scout["spotlit_score"] = pointValues["tele_spotlit"] * (scout["end_game_spotlit"]=="spotlit"?1:0)
 	scout["harmony_score"] = Math.round(pointValues["tele_harmony"] * scout["end_game_harmony"] / (scout["end_game_harmony"]+1))
 	scout["stage_score"] = scout["trap_score"] + scout["parked_score"] + scout["onstage_score"] + scout["spotlit_score"] + scout["harmony_score"]
 	scout["score"] = scout["auto_score"] + scout["tele_amp_speaker_score"] + scout["stage_score"]
@@ -296,8 +300,66 @@ var statInfo = {
 		type: "minmax",
 		good: "low"
 	},
-	//onstage,harmony,floor_pickup,source_pickup,passing,stashing,chain_end
-
+	"floor_pickup": {
+		name: "Floor Pickup",
+		type: "%"
+	},
+	"source_pickup": {
+		name: "Source Pickup",
+		type: "%"
+	},
+	"passing": {
+		name: "Passed Notes",
+		type: "%"
+	},
+	"stashing": {
+		name: "Stashed Notes",
+		type: "%"
+	},
+	"end_game_hang_location": {
+		name: "Hanging location at End Game",
+		type: "text"
+	},
+	"parked_score": {
+		name: "Parking Score",
+		type: "avg"
+	},
+	"end_game_position": {
+		name: "Position at End of Game",
+		type: "text"
+	},
+	"end_game_harmony": {
+		name: "Harmony at End of Game",
+		type: "text"
+	},
+	"onstage_score": {
+		name: "Onstage Score",
+		type: "avg"
+	},
+	"end_game_spotlit": {
+		name: "Spotlit at End of Game",
+		type: "text"
+	},
+	"spotlit_score": {
+		name: "Spotlit Score",
+		type: "avg"
+	},
+	"harmony_score": {
+		name: "Harmony Score",
+		type: "avg"
+	},
+	"stage_score": {
+		name: "Stage Score",
+		type: "avg"
+	},
+	"max_score": {
+		name: "Maximum Score Contribution",
+		type: "minmax"
+	},
+	"min_score": {
+		name: "Minimum Score Contribution",
+		type: "minmax"
+	},
 	"score": {
 		name: "Score Contribution",
 		type: "avg"
@@ -321,6 +383,10 @@ var statInfo = {
 }
 
 var teamGraphs = {
+	"Overall":{
+		graph:"stacked",
+		data:["score"]
+	},
 	"Start Location":{
 		graph:"heatmap",
 		data:['auto_start']
@@ -328,6 +394,10 @@ var teamGraphs = {
 }
 
 var aggregateGraphs = {
+	"Overall":{
+		graph:"boxplot",
+		data:["max_score","score","min_score"]
+	},
 	"Start Location":{
 		graph:"heatmap",
 		data:['auto_start']
