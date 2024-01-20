@@ -44,7 +44,13 @@ Interview each team.
 
 Use squads to divide up pit and bot scouting work. Clicking the up and down arrows will increase or decrease the number of devices that will be used for scouting. Clicking the numbered buttons will open the pit scouting and the bot scouting in separate browser tabs with a fair share of the teams.
 
-### Use data
+### Strategy
+
+#### Stats
+
+Aid in alliance selection with graphs of each teams performance.
+
+Open this page, unplug from the scouting briefcase, and take your device down to the field.
 
 #### Match prediction
 
@@ -56,19 +62,12 @@ Use scouting data to inform match strategy.
 
 Open this page, unplug from the scouting briefcase, and take your device down to the field.
 
-#### Stats
-
-Aid in alliance selection with graphs of each teams performance.
-
-Open this page, unplug from the scouting briefcase, and take your device down to the field.
-
-
-### Edit Event
-
-You must be logged in as "admin" to be able save edited event or CSV data.
-
-### CSV Data
+### Data
 
 All data is stored in comma separated value (CSV) format. Downloaded data can be imported into spreadsheets (Excel, Open Office, or Google Sheets).
 
 Be careful editing CSV files directly. There is data validation on changed data. The scouting app may not work correctly if data is not in the expected format.
+
+### Edit Event
+
+You must be logged in as "admin" to be able save edited event or CSV data.
