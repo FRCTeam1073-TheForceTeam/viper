@@ -44,7 +44,7 @@ $(document).ready(function(){
 		return false
 	}
 	$('.show-more').click(function(){
-		$(this).siblings('.more').show()
+		$('.more').show()
 		$(this).hide()
 
 	})
