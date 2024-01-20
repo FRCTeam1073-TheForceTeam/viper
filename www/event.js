@@ -197,6 +197,7 @@ $(document).ready(function(){
 
 
 	function escapeExcelCsvField(s){
+		if (Array.isArray(s)) s = s.join(" ")
 		if (/[\",\r\n\t]/.test(s)){
 			s = '"'+s.replace(/"/g,"")+'"'
 		}
