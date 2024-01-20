@@ -305,7 +305,7 @@ function darkenColor(color){
 function getTeamValue(field, team, percent, boxplot){
 	if (! team in eventStatsByTeam) return 0
 	var stats = eventStatsByTeam[team]
-	if (boxplot) field+="_set"
+	if (boxplot && (field+"_set") in stats) field+="_set"
 	var info = statInfo[field]||{}
 	percent = percent || info['type']=='%'
 	if (! field in stats ||! 'count' in stats || !stats['count']) return boxplot?[]:0

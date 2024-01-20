@@ -39,6 +39,7 @@ $(document).ready(function(){
 				$('input[name="full_cycle_fastest_seconds"]').val(Math.min(...cycles))
 				$('input[name="full_cycle_average_seconds"]').val(Math.round(cycles.reduce((a,b) => a + b, 0) / cycles.length))
 				$('input[name="full_cycle_count"]').val(cycles.length)
+				$('input[name="full_cycles"]').val(cycles.join(" "))
 			}
 			cycle.stage = 1
 			cycle.startTime = Date.now()

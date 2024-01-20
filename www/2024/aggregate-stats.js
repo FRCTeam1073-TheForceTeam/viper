@@ -25,6 +25,9 @@ function aggregateStats(scout, aggregate){
 			scout[field] = scout[field]||""
 			aggregate[field] = aggregate[field]||""
 		}
+		if(/^int-list$/.test(statInfo[field]['type'])){
+			scout[field] = (scout[field]||"").split(" ").map(num => parseInt(num, 10)).filter(Number)
+		}
 	})
 
 	scout["auto_leave_score"] = pointValues["auto_leave"] * scout["auto_leave"]
@@ -83,6 +86,7 @@ function aggregateStats(scout, aggregate){
 		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field] = aggregate[field]||scout[field]||0
 		if(/^text$/.test(statInfo[field]['type'])) aggregate[field] = (!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
 		if(/^heatmap$/.test(statInfo[field]['type'])) aggregate[field] += ((aggregate[field]&&scout[field])?" ":"")+scout[field]
+		if(/^int-list$/.test(statInfo[field]['type'])) aggregate[field] = (aggregate[field]||[]).concat(scout[field])
 	})
 	aggregate["count"] = (aggregate["count"]||0)+1
 	aggregate["event"] = scout["event"]
@@ -275,6 +279,10 @@ var statInfo = {
 		name: "Notes Placed During Teleop",
 		type: "avg"
 	},
+	"full_cycles": {
+		name: "Full Cycle Seconds",
+		type: "int-list"
+	},
 	"full_cycle_average_seconds": {
 		name: "Full Cycle Time Average",
 		type: "num",
@@ -372,9 +380,17 @@ var statInfo = {
 }
 
 var teamGraphs = {
-	"Overall":{
-		graph:"stacked",
+	"Match Score":{
+		graph:"bar",
 		data:["score"]
+	},
+	"Match Stages":{
+		graph:"stacked",
+		data:["auto_score","tele_amp_speaker_score","stage_score"]
+	},
+	"Full Cycle Times":{
+		graph:"boxplot",
+		data:['full_cycle_fastest_seconds','full_cycles']
 	},
 	"Start Location":{
 		graph:"heatmap",
@@ -383,9 +399,17 @@ var teamGraphs = {
 }
 
 var aggregateGraphs = {
-	"Overall":{
+	"Match Score":{
 		graph:"boxplot",
 		data:["max_score","score","min_score"]
+	},
+	"Match Stages":{
+		graph:"stacked",
+		data:["auto_score","tele_amp_speaker_score","stage_score"]
+	},
+	"Full Cycle Times":{
+		graph:"boxplot",
+		data:['full_cycle_fastest_seconds','full_cycles']
 	},
 	"Start Location":{
 		graph:"heatmap",
