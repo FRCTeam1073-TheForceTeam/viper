@@ -55,13 +55,16 @@ function aggregateStats(scout, aggregate){
 	scout["tele_speaker_amped_score"] = pointValues["tele_speaker_amped"] * scout["tele_speaker_amped"]
 	scout["tele_speaker"] = scout["tele_speaker_unamped"] + scout["tele_speaker_amped"]
 	scout["tele_speaker_score"] = scout["tele_speaker_unamped_score"] + scout["tele_speaker_amped_score"]
+	scout["trap_percent"] = scout["trap"]>0?1:0
 	scout["trap_score"] = pointValues["tele_trap"] * scout["trap"]
-	scout["tele_place"] = scout["tele_amp"] + scout["tele_speaker"] + scout["tele_trap"]
+	scout["tele_place"] = scout["tele_amp"] + scout["tele_speaker"] + scout["trap"]
+	scout["place"] = scout["auto_place"] + scout["tele_place"]
 	scout["tele_amp_speaker_score"] = scout["tele_amp_score"] + scout["tele_speaker_score"]
 	scout["amp_score"] = scout["auto_amp_score"] + scout["tele_amp_score"]
 	scout["speaker_score"] = scout["auto_speaker_score"] + scout["tele_speaker_score"]
 	scout["amp_speaker_score"] = scout["auto_amp_speaker_score"] + scout["tele_amp_speaker_score"]
 	scout["parked_score"] = pointValues["tele_park"] * (scout["end_game_position"]=="parked"?1:0)
+	scout["onstage_percent"] = scout["end_game_position"]=="onstage"?1:0
 	scout["onstage_score"] = pointValues["tele_onstage"] * (scout["end_game_position"]=="onstage"?1:0)
 	if (scout["end_game_position"]!="onstage"){
 		scout["end_game_spotlit"]=""
@@ -255,6 +258,10 @@ var statInfo = {
 		name: "Notes Placed in the Trap",
 		type: "avg"
 	},
+	"trap_percent": {
+		name: "Trap Percent",
+		type: "%"
+	},
 	"trap_score": {
 		name: "Trap Score",
 		type: "avg"
@@ -277,6 +284,10 @@ var statInfo = {
 	},
 	"tele_place": {
 		name: "Notes Placed During Teleop",
+		type: "avg"
+	},
+	"place": {
+		name: "Notes Placed",
 		type: "avg"
 	},
 	"full_cycles": {
@@ -328,6 +339,10 @@ var statInfo = {
 	"end_game_harmony": {
 		name: "Harmony at End of Game",
 		type: "text"
+	},
+	"onstage_percent": {
+		name: "Onstage Percent",
+		type: "%"
 	},
 	"onstage_score": {
 		name: "Onstage Score",
@@ -433,14 +448,35 @@ var matchPredictorSections = {
 var plannerSections = {
 	"Total":["score"],
 	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	"Placement":["speaker_score","amp_score","trap_score"],
-	"Coopertition":["coopertition"],
+	"Placement":["speaker_score","amp_score","trap_score","place"],
+	"Percents":["trap_percent","onstage_percent","coopertition"],
 }
 
 var fmsMapping = [
 ]
 
 function showPitScouting(el,team){
+
+	loadPitScouting(function(pitData){
+		var dat = pitData[team]||{}
+		if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))
+		if (dat['team_location']) el.append($("<p>").text("Location: " + dat['team_location']))
+		if (dat['bot_name']) el.append($("<p>").text("Bot name: " + dat['bot_name']))
+		el.append($("<h4>").text("Autos"))
+		var autoList = $("<ul>")
+		for (var i=0; i<9; i++){
+			var desc = dat[`auto_${i}_description`]
+			if (desc) autoList.append('<li style=white-space:pre-wrap>').text(desc)
+		}
+		el.append(autoList)
+	})
+
+	function format(s){
+		s = ""+s
+		if (!s||s=="0"||/^undefined/.test(s)) s = "Unknown"
+		s = s[0].toUpperCase() + s.slice(1)
+		return s.replace(/_/g," ")
+	}
 }
 
 var whiteboardStamps = [
