@@ -417,6 +417,26 @@ var aggregateGraphs = {
 	},
 }
 
+
+var matchPredictorSections = {
+	"Total":["score"],
+	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
+	"Auto":["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
+	"Teleop":["tele_amp_score","tele_speaker_score"],
+	"Stage":["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
+}
+
+var plannerSections = {
+	"Total":["score"],
+	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
+	"Auto":["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
+	"Teleop":["tele_amp_score","tele_speaker_score"],
+	"Stage":["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
+}
+
+var fmsMapping = [
+]
+
 function showPitScouting(el,team){
 }
 
