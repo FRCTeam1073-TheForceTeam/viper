@@ -176,7 +176,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"auto_amp_score": {
-		name: "Score in the Amp During Auto",
+		name: "Amp Score During Auto",
 		type: "avg"
 	},
 	"auto_speaker": {
@@ -184,11 +184,11 @@ var statInfo = {
 		type: "avg"
 	},
 	"auto_speaker_score": {
-		name: "Score in the Speaker During Auto",
+		name: "Speaker Score During Auto",
 		type: "avg"
 	},
 	"auto_amp_speaker_score": {
-		name: "Score in the Speaker and Amp During Auto",
+		name: "Speaker and Amp Score During Auto",
 		type: "avg"
 	},
 	"auto_place": {
@@ -224,7 +224,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"tele_amp_score": {
-		name: "Score in the Amp During Teleop",
+		name: "Amp Score During Teleop",
 		type: "avg"
 	},
 	"tele_speaker_unamped": {
@@ -232,7 +232,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"tele_speaker_unamped_score": {
-		name: "Score in the Speaker when Not Amped During Teleop",
+		name: "Speaker Score when Not Amped During Teleop",
 		type: "avg"
 	},
 	"tele_speaker_amped": {
@@ -240,7 +240,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"tele_speaker_amped_score": {
-		name: "Score in the Speaker when Amped During Teleop",
+		name: "Speaker Score when Amped During Teleop",
 		type: "avg"
 	},
 	"tele_speaker": {
@@ -248,7 +248,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"tele_speaker_score": {
-		name: "Score in the Speaker During Teleop",
+		name: "Speaker Score During Teleop",
 		type: "avg"
 	},
 	"trap": {
@@ -256,23 +256,23 @@ var statInfo = {
 		type: "avg"
 	},
 	"trap_score": {
-		name: "Score in the Trap",
+		name: "Trap Score",
 		type: "avg"
 	},
 	"tele_amp_speaker_score": {
-		name: "Score in the Speaker and Amp During Teleop",
+		name: "Speaker and Amp Score During Teleop",
 		type: "avg"
 	},
 	"amp_score": {
-		name: "Score in the Amp",
+		name: "Amp Score",
 		type: "avg"
 	},
 	"speaker_score": {
-		name: "Score in the Speaker",
+		name: "Speaker Score",
 		type: "avg"
 	},
 	"amp_speaker_score": {
-		name: "Score in the Speaker and Amp",
+		name: "Speaker and Amp Score",
 		type: "avg"
 	},
 	"tele_place": {
@@ -396,6 +396,10 @@ var teamGraphs = {
 		graph:"heatmap",
 		data:['auto_start']
 	},
+	"Auto Collection":{
+		graph:"stacked",
+		data:['auto_collect_wing_amp', 'auto_collect_wing_mid_amp', 'auto_collect_wing_mid', 'auto_collect_centerline_amp', 'auto_collect_centerline_mid_amp', 'auto_collect_centerline_mid', 'auto_collect_centerline_mid_source', 'auto_collect_centerline_source']
+	},
 }
 
 var aggregateGraphs = {
@@ -429,9 +433,8 @@ var matchPredictorSections = {
 var plannerSections = {
 	"Total":["score"],
 	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	"Auto":["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
-	"Teleop":["tele_amp_score","tele_speaker_score"],
-	"Stage":["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
+	"Placement":["speaker_score","amp_score","trap_score"],
+	"Coopertition":["coopertition"],
 }
 
 var fmsMapping = [
