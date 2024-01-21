@@ -124,9 +124,11 @@ $(document).ready(function() {
 						}
 					})
 					teamList.forEach(function(team,i){
-						var color = i<3?"red":"blue"
-						var val = getTeamValue(field,team)
-						row.append($(`<td class="${color}TeamBG">`).addClass(val==best?"best":"").text(val))
+						var color = i<3?"red":"blue",
+						val = getTeamValue(field,team),
+						dispVal = val
+						if(statInfo[field].type == '%') dispVal += "%"
+						row.append($(`<td class="${color}TeamBG">`).addClass(val==best?"best":"").text(dispVal))
 					})
 					row.append($('<th>').text(statName))
 					tbody.append(row)
@@ -169,8 +171,9 @@ $(document).ready(function() {
 		if (! team in eventStatsByTeam) return ""
 		var stats = eventStatsByTeam[team]
 		if (! stats || ! field in stats) return ""
-		if ('count' in stats && stats['count'] && statInfo[field] && statInfo[field].type == 'avg'){
-			return Math.round((stats[field]||0) / stats['count'])
+		if ('count' in stats && stats['count'] && statInfo[field]){
+			if (statInfo[field].type == 'avg')	return Math.round((stats[field]||0) / stats['count'])
+			if (statInfo[field].type == '%')	return Math.round(100 * (stats[field]||0) / stats['count'])
 		}
 		if (stats[field] == null) return ""
 		return stats[field]
