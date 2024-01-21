@@ -229,7 +229,11 @@ function showPitScouting(t){
 			$('input[name="team_location"]').val(loc).attr('value',loc)
 		}
 	})
+	resetSequentialInputSeries()
 	$('.count').each(countHandler)
+	for (var i=0; i<onShowPitScouting.length; i++){
+		if(!onShowPitScouting[i]()) return false
+	}
 	pit.show()
 }
 
@@ -286,6 +290,7 @@ function showScouting(){
 	setTeamBG()
 	fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
 	$('.count').each(countHandler)
+	resetSequentialInputSeries()
 	for (var i=0; i<onShowScouting.length; i++){
 		if(!onShowScouting[i]()) return false
 	}
@@ -352,6 +357,7 @@ function formHasChanges(f){
 
 var onStore = []
 var onShowScouting = []
+var onShowPitScouting = []
 
 function setTimeStamps(form){
 	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
@@ -600,6 +606,15 @@ $(document).ready(function(){
 		var name = $(this).attr('name'),
 		n = /[0-9]/.exec(name),
 		next = name.replace(n,parseInt(n)+1)
-		$('textarea[name='+next+']').closest('.sequential-input-series').show()
+		$('textarea[name='+next+'],input[name='+next+']').closest('.sequential-input-series').show()
 	})
 })
+
+function resetSequentialInputSeries(){
+	$('.sequential-input-series textarea,.sequential-input-series input[type="text"]').each(function(){
+		var name = $(this).attr('name'),
+		n = /[0-9]/.exec(name),
+		next = name.replace(n,parseInt(n)+1)
+		$('textarea[name='+next+'],input[name='+next+']').closest('.sequential-input-series').toggle($(this).val()!="")
+	})
+}

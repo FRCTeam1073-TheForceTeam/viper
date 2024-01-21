@@ -119,6 +119,5 @@ $(document).ready(function(){
 		if (e.buttons) setRobotStartPosition(e)
 	})
 
-
 	$('#start-area').click(setRobotStartPosition)
 })

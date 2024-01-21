@@ -464,9 +464,13 @@ function showPitScouting(el,team){
 		if (dat['bot_name']) el.append($("<p>").text("Bot name: " + dat['bot_name']))
 		el.append($("<h4>").text("Autos"))
 		var autoList = $("<ul>")
-		for (var i=0; i<9; i++){
+		for (var i=1; i<=9; i++){
 			var desc = dat[`auto_${i}_description`]
-			if (desc) autoList.append('<li style=white-space:pre-wrap>').text(desc)
+			var tested = dat[`auto_${i}_testing`]
+			if (tested == 'no') tested = ($('<span style=color:red>').text("Not tested"))
+			if (tested == 'practice') tested = ($('<span style=color:yellow>').text("Tested in practice only"))
+			if (tested == 'match') tested = ($('<span style=color:green>').text("Test in a match"))
+			if (desc.length) autoList.append($('<li style=white-space:pre-wrap>').append(tested).append(": ").append(desc))
 		}
 		el.append(autoList)
 	})
