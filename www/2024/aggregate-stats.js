@@ -453,6 +453,7 @@ var plannerSections = {
 }
 
 var fmsMapping = [
+	// TODO once we have example data from API (after week 0)
 ]
 
 function showPitScouting(el,team){
@@ -509,5 +510,5 @@ function showPitScouting(el,team){
 	}
 }
 
-var whiteboardStamps = [
-]
+// Only one game piece, no stamps needed this year
+var whiteboardStamps = []
