@@ -463,16 +463,42 @@ function showPitScouting(el,team){
 		if (dat['team_location']) el.append($("<p>").text("Location: " + dat['team_location']))
 		if (dat['bot_name']) el.append($("<p>").text("Bot name: " + dat['bot_name']))
 		el.append($("<h4>").text("Autos"))
-		var autoList = $("<ul>")
+		var list = $("<ul>")
 		for (var i=1; i<=9; i++){
 			var desc = dat[`auto_${i}_description`]
 			var tested = dat[`auto_${i}_testing`]
 			if (tested == 'no') tested = ($('<span style=color:red>').text("Not tested"))
 			if (tested == 'practice') tested = ($('<span style=color:yellow>').text("Tested in practice only"))
 			if (tested == 'match') tested = ($('<span style=color:green>').text("Test in a match"))
-			if (desc.length) autoList.append($('<li style=white-space:pre-wrap>').append(tested).append(": ").append(desc))
+			if (desc.length) list.append($('<li style=white-space:pre-wrap>').append(tested).append(": ").append(desc))
 		}
-		el.append(autoList)
+		el.append(list)
+
+		el.append('<h4>Capabilities</h4>')
+		list = $("<ul>")
+		list.append((dat['notes_amp']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Amp"))
+		list.append((dat['notes_speaker']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Speaker"))
+		list.append((dat['notes_trap']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Trap"))
+		list.append((dat['onstage']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Onstage"))
+		el.append(list)
+
+		el.append($("<h4>").text("Robot"))
+		list = $("<ul>")
+		list.append($("<li>").text("Dimensions (inches without bumpers): " + format(dat['frame_length']+'x'+dat['frame_width']+'"')))
+		list.append($("<li>").text("Weight (pounds): "+ format(dat['weight'])))
+		list.append($("<li>").text("Drivetrain: " + format(dat['drivetrain'])))
+		list.append($("<li>").text("Swerve: " + format(dat['swerve'])))
+		list.append($("<li>").text("Drivetrain motors: " +  (dat['motor_count']||"")+" "+format(dat['motors'])))
+		list.append($("<li>").text("Wheels: " + (dat['wheel_count']||"")+" "+format(dat['wheels'])))
+		el.append(list)
+
+		el.append($("<h4>").text("Computer Vision"))
+		list = $("<ul>")
+		list.append((dat['vision_auto']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Auto"))
+		list.append((dat['vision_collecting']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Collecting"))
+		list.append((dat['vision_placing']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Placing, shooting or aiming"))
+		list.append((dat['vision_localization']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Localization"))
+		el.append(list)
 	})
 
 	function format(s){
