@@ -40,7 +40,6 @@ foreach my $row (@{$uCsv}){
 		$webutil->error("Bad row size", "CSV row size (".(scalar @{$row}).") doesn't match heading row size(".(scalar keys %{$uHead}).")\n".join(",",keys %{$uHead})."\n".join(",", @{$row})) if (scalar keys %{$uHead} != scalar @{$row});
 		$webutil->error("Unexpected event name",$row->[$uHead->{'event'}]) if($row->[$uHead->{'event'}] !~ /^20\d\d[a-zA-Z0-9\-]+$/);
 		$webutil->error("Unexpected team name",$row->[$uHead->{'team'}]) if($row->[$uHead->{'team'}] !~ /^[0-9]+$/);
-		print STDERR Dumper($uHead);
 		my $eventCsv = $pitCsv;
 		my $eventHeaders = $pitHeaders;
 		if (exists $uHead->{'match'}){
