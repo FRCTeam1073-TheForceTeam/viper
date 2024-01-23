@@ -130,25 +130,19 @@
 		</tr>
 	</template>
 	<template id=matchActionsTemplate>
-		<div class=link>
-			<h3><a href="/predictor.html#event=$EVENT&R1=$R1&R2=$R2&R3=$R3&B1=$B1&B2=$B2&B3=$B3">Predictor</a></h3>
-			Predict $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3
-		</div>
-		<div class=link>
-			<h3><a href="/planner.html#event=$EVENT&R1=$R1&R2=$R2&R3=$R3&B1=$B1&B2=$B2&B3=$B3">Planner</a></h3>
-			Plan $MATCH_NAME:<br>$R1 $R2 $R3 vs $B1 $B2 $B3
-		</div>
-		<div class="link dependTeam">
-			<h3><a href="/$YEAR/scout.html#event=$EVENT&pos=$POS&team=$TEAM&match=$MATCH_ID">Scouting</a></h3>
-			Collect scouting data for $MATCH_NAME: $POS $TEAM
-		</div>
-		<div class="link dependTeam">
-			<h3><a href="/team.html#event=$EVENT&team=$TEAM">Stats</a></h3>
-			Graphs of scouting data for team #$TEAM
-		</div>
-		<div class="link dependTeam">
-			<h3><a href="/team.html#event=$EVENT&team=$TEAM&pit-scouting">Pit Scouting Data</a></h3>
-			Data from pit scouting for team #$TEAM
+		<h3>$MATCH_NAME — $R1 $R2 $R3 vs $B1 $B2 $B3</h3>
+		<ul>
+			<li><a href="/predictor.html#event=$EVENT&R1=$R1&R2=$R2&R3=$R3&B1=$B1&B2=$B2&B3=$B3">Predict match outcome</a></li>
+			<li><a href="/planner.html#event=$EVENT&R1=$R1&R2=$R2&R3=$R3&B1=$B1&B2=$B2&B3=$B3">View planner and whiteboard</a></li>
+		</ul>
+
+		<div class="dependTeam">
+			<h3>Team $TEAM</h3>
+			<ul>
+				<li><a href="/$YEAR/scout.html#event=$EVENT&pos=$POS&team=$TEAM&match=$MATCH_ID">Scout in $MATCH_NAME</a></li>
+				<li><a href="/team.html#event=$EVENT&team=$TEAM">View stats</a></li>
+				<li><a href="/team.html#event=$EVENT&team=$TEAM&pit-scouting">View pit scouting data</a></li>
+			</ul>
 		</div>
 	</template>
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
