@@ -346,7 +346,6 @@ function showScouting(){
 	}
 	showTab(null, $('.default-tab'))
 	scouting.show()
-	pit.show()
 	localStorage.setItem("last_scout_type", "scout")
 }
 
