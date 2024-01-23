@@ -7,8 +7,7 @@ orient = "",
 matchName = "",
 teamList=[],
 scouting,
-storeTime=0,
-pitDataLoaded=false
+storeTime=0
 parseHash()
 
 function parseHash(){
@@ -20,8 +19,10 @@ function parseHash(){
 }
 
 function showScreen(){
-	if (!team && $('#select-team').length) showSelectPitScoutTeam()
+	if (!team && $('#select-team').length && $('#pit-scouting').length) showSelectPitScoutTeam()
+	if (!team && $('#select-team').length && $('#subjective-scouting').length) showSelectSubjectiveScoutTeam()
 	else if (team && $('#pit-scouting').length) showPitScouting()
+	else if (team && $('#subjective-scouting').length) showSubjectiveScouting()
 	else if (!pos) showPosList()
 	else if (!match) showMatchList()
 	else if (!team) showTeamChange()
@@ -49,6 +50,24 @@ function showSelectPitScoutTeam(){
 	for (var i=0; i<showTeams.length;i++){
 		var button = $('<button>').text(showTeams[i]).click(showPitScouting)
 		if (withData.hasOwnProperty(showTeams[i])||eventPitData[showTeams[i]]) button.addClass('stored')
+		el.append(button)
+	}
+	$('#select-team').show()
+}
+
+function showSelectSubjectiveScoutTeam(){
+	loadTeamsInfo()
+	$('.screen,.init-hide').hide()
+	setHash(null,null,null,null,teamList)
+	window.scrollTo(0,0)
+	$('h1').text("Subjective Scouting " + eventName)
+	var el = $('#teamList').html(""),
+	withData = getTeamsWithSubjectiveData(),
+	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+	$('.location-pointer').remove()
+	for (var i=0; i<showTeams.length;i++){
+		var button = $('<button>').text(showTeams[i]).click(showSubjectiveScouting)
+		if (withData.hasOwnProperty(showTeams[i])||eventSubjectiveData[showTeams[i]]) button.addClass('stored')
 		el.append(button)
 	}
 	$('#select-team').show()
@@ -143,6 +162,12 @@ function getPitScoutKey(t,e){
 	return `${e}_${t}`
 }
 
+function getSubjectiveScoutKey(t,e){
+	if (!t) t = team
+	if (!e) e = eventId
+	return `${e}_subjective_${t}`
+}
+
 function setHash(pos,orient,team,match,teamList){
 	location.hash = buildHash(pos,orient,team,match,teamList)
 }
@@ -235,6 +260,31 @@ function showPitScouting(t){
 		if(!onShowPitScouting[i]()) return false
 	}
 	pit.show()
+	localStorage.setItem("last_scout_type", "pit-scout")
+}
+
+
+function showSubjectiveScouting(t){
+	if (t && typeof t != 'number') t = parseInt($(this).text())
+	if (t) team = t
+	$('.screen,.init-hide').hide()
+	$('h1').text("Subjective Scouting " + eventName + " Team " + team)
+	window.scrollTo(0,0)
+	setHash(null,null,team,null,teamList)
+	var form = $('#subjective-scouting')
+	resetOrigValues(form)
+	form[0].reset()
+	$('.location-pointer').remove()
+	storeOrigValues(form)
+	fillDefaultFormFields()
+	fillPreviousFormData(form, localSubjectiveScoutingData(team)||eventSubjectiveData[team])
+	resetSequentialInputSeries()
+	$('.count').each(countHandler)
+	for (var i=0; i<onShowSubjectiveScouting.length; i++){
+		if(!onShowSubjectiveScouting[i]()) return false
+	}
+	form.show()
+	localStorage.setItem("last_scout_type", "subjective-scout")
 }
 
 var lastClickTimeOnCounter = 0
@@ -296,6 +346,8 @@ function showScouting(){
 	}
 	showTab(null, $('.default-tab'))
 	scouting.show()
+	pit.show()
+	localStorage.setItem("last_scout_type", "scout")
 }
 
 function fillDefaultFormFields(){
@@ -358,6 +410,7 @@ function formHasChanges(f){
 var onStore = []
 var onShowScouting = []
 var onShowPitScouting = []
+var onShowSubjectiveScouting = []
 
 function setTimeStamps(form){
 	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
@@ -398,11 +451,30 @@ function storePitScouting(){
 		storeScouter(f)
 	}
 }
+function storeSubjectiveScouting(){
+	var f=$('#subjective-scouting')
+	if (formHasChanges(f)){
+		setTimeStamps(f)
+		var csv = toCSV('#subjective-scouting')
+		localStorage.setItem(`${eventYear}_subjectiveheaders`, csv[0])
+		console.log(getSubjectiveScoutKey())
+		console.log(csv[1])
+		localStorage.setItem(getSubjectiveScoutKey(), csv[1])
+		storeTime = new Date().getTime()
+		storeScouter(f)
+	}
+}
 
 function localPitScoutingData(t){
 	var data = localStorage.getItem(getPitScoutKey(t))
 	if (!data) return null
 	return csvToArrayOfMaps(localStorage.getItem(`${eventYear}_pitheaders`)+"\n"+data)[0]
+}
+
+function localSubjectiveScoutingData(t){
+	var data = localStorage.getItem(getSubjectiveScoutKey(t))
+	if (!data) return null
+	return csvToArrayOfMaps(localStorage.getItem(`${eventYear}_subjectiveheaders`)+"\n"+data)[0]
 }
 
 function localScoutingData(t,m){
@@ -436,6 +508,17 @@ function getTeamsWithPitData(){
 	var teams = {}
 	for (var i in localStorage){
 		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_[0-9]+$/.test(i)){
+			var t = parseInt(i.replace(/.*_/,""))
+			teams[t]=1
+		}
+	}
+	return teams
+}
+
+function getTeamsWithSubjectiveData(){
+	var teams = {}
+	for (var i in localStorage){
+		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_subjective_[0-9]+$/.test(i)){
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
 		}
@@ -522,6 +605,7 @@ $(document).ready(function(){
 
 	loadEventSchedule(function(){
 		if ($('#pit-scouting').length) loadPitScouting(showScreen)
+		if ($('#subjective-scouting').length) loadSubjectiveScouting(showScreen)
 		else loadEventStats(showScreen)
 	})
 
@@ -571,6 +655,11 @@ $(document).ready(function(){
 	$("#pitScoutNext,#pitTeamButton").click(function(e){
 		storePitScouting()
 		showSelectPitScoutTeam()
+		return false
+	})
+	$("#subjectiveScoutNext,#subjectiveTeamButton").click(function(e){
+		storeSubjectiveScouting()
+		showSelectSubjectiveScoutTeam()
 		return false
 	})
 	$("#matchBtn").click(function(e){

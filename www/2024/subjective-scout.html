@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Subjective Scouting EVENT - Viper</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/scout.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<title>Viper Subjective Scouting 2024</title>
+</head>
+<body>
+<h1><span class=team></span> Subjective Scouting</h1>
+<div id=select-team class="sequential-input-series init-hide" class=screen>
+	<H2>Select a team</H2>
+	<div id=teamList></div>
+</div>
+
+<form id=subjective-scouting class="sequential-input-series init-hide" class=screen>
+
+	<button id=subjectiveTeamButton>Back to Team Selection</button>
+
+	<input type=hidden name=event>
+	<input type=hidden name=team>
+
+	<div>TODO: Red/Blue select</div>
+
+	<fieldset class=full>
+		<legend>Speaker Shots</legend>
+		<div>Click where team <span class=team></span> shoots at the speaker</div>
+
+		<div>Todo: Clickable field map</div>
+
+		<input type=text name=speaker_shot_locations>
+	</fieldset>
+
+	<fieldset class=full>
+		<legend>Team <span class=team></span> Penalties</legend>
+		<textarea class=full name=penalties></textarea>
+	</fieldset>
+
+	<fieldset class=full>
+		<legend>Team <span class=team></span> Defense Tips</legend>
+		<textarea class=full name=defense_tips></textarea>
+	</fieldset>
+
+	<fieldset class=full>
+		<legend>Other</legend>
+		<textarea class=full name=notes></textarea>
+	</fieldset>
+
+	<fieldset class=full>
+		<legend>Scouter</legend>
+		<input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
+	</fieldset>
+
+	<input type=hidden name=created value="">
+	<input type=hidden name=modified value="">
+	<div>
+		<button id=subjectiveScoutNext>Save</button>
+	</div>
+</form>
+</body>
+</html>

@@ -4,12 +4,25 @@ $(document).ready(showUploads)
 
 var scoutCsv = {}
 var pitCsv = {}
+var subjectiveCsv = {}
 
 function showUploads(){
 	var up = $('#uploads').html("")
 	var count = 0
 	for (i in localStorage){
-		if (/^20[0-9]{2}.*_.*_/.test(i)){
+		if (/^20[0-9]{2}[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i)){
+			var year = i.replace(/^(20[0-9]{2}).*/,"$1"),
+			header = localStorage.getItem(`${year}_subjectiveheaders`)
+			if (!subjectiveCsv[year]){
+				subjectiveCsv[year] = header
+			}
+			subjectiveCsv[year] += localStorage.getItem(i)
+			up.append($('<hr>'))
+			up.append($('<h4>').text(i))
+			up.append($('<pre>').text(header + localStorage.getItem(i)))
+			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
+			count++
+		} else if (/^20[0-9]{2}.*_.*_/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}).*/,"$1"),
 			header = localStorage.getItem(`${year}_headers`)
 			if (!scoutCsv[year]){
@@ -47,6 +60,10 @@ function showUploads(){
 	years = Object.keys(pitCsv);
 	for (var i=0; i<years.length; i++){
 		text += pitCsv[years[i]]
+	}
+	years = Object.keys(subjectiveCsv);
+	for (var i=0; i<years.length; i++){
+		text += subjectiveCsv[years[i]]
 	}
 	$('#csv').val(text)
 
