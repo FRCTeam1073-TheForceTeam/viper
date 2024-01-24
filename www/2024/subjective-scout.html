@@ -6,9 +6,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
 <script src=/jquery.js></script>
 <script src=/event-url.js></script>
 <script src=/scout.js></script>
+<script src=scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
 <title>Viper Subjective Scouting 2024</title>
@@ -27,15 +29,19 @@
 	<input type=hidden name=event>
 	<input type=hidden name=team>
 
-	<div>TODO: Red/Blue select</div>
+	<div>
+		<button class="subjectiveColor redTeamBG">Red</button>
+		<button class="subjectiveColor blueTeamBG">Blue</button>
+	</div>
 
 	<fieldset class=full>
-		<legend>Speaker Shots</legend>
-		<div>Click where team <span class=team></span> shoots at the speaker</div>
+		<legend>Speaker Shots (click where team <span class=team></span> shoots)</legend>
 
-		<div>Todo: Clickable field map</div>
+		<div id=speaker-shoot-area></div>
 
-		<input type=text name=speaker_shot_locations>
+		<div><button id=undo-last-shot-location>Undo last shot</button></div>
+
+		<input type=hidden name=speaker_shot_locations>
 	</fieldset>
 
 	<fieldset class=full>

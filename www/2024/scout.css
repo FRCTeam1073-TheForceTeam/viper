@@ -29,3 +29,7 @@ hr{height:1px;background-color:var(--main-border-color)}
 	#start-area{width:18em;height:4.5em}
 	#robot-starting-position{width:1.7em;height:1.7em;}
 }
+#speaker-shoot-area{width:25em;height:35em;position:relative;margin:0 auto}
+#speaker-shoot-area{background:url(speaker-shoot-area-blue.png) no-repeat center center / 100% 100%}
+.redTeam #speaker-shoot-area{background:url(speaker-shoot-area-red.png) no-repeat center center / 100% 100%}
+.shot-location{position:absolute;display:inline-block;color:var(--highlight-fg-color)}

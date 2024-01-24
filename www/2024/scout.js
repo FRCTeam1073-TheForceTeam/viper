@@ -54,6 +54,10 @@ $(document).ready(function(){
 		setTimeout(initialRobotStartPosition,500)
 		return true
 	})
+	onShowSubjectiveScouting.push(function(){
+		setTimeout(drawAllShotLocations,500)
+		return true
+	})
 
 	function cycleInterrupt(){
 		cycle = {
@@ -82,42 +86,94 @@ $(document).ready(function(){
 	})
 
 	function initialRobotStartPosition(){
-		var m = $('#auto-start-input').val().match(/^([0-9]{1,2})x([0-9]{1,2})$/),
-		r = document.getElementById('robot-starting-position')
+		moveFloaterToPercentCoordinates(
+			document.getElementById('start-area'),
+			pos.startsWith('R'),
+			$('#auto-start-input').val(),
+			document.getElementById('robot-starting-position')
+		)
+	}
+
+	function moveFloaterToPercentCoordinates(mapImage, isRed, coordinates, floatingImage){
+		var m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
 		if (!m || !m.length){
-			r.style.left="0px"
-			r.style.top="0px"
+			floatingImage.style.left="0px"
+			floatingImage.style.top="0px"
 			return
 		}
 		var px = parseInt(m[1]),
 		py = parseInt(m[2])
-		if (pos.startsWith('R')) px = 100 - px
-		var d = document.getElementById('start-area').getBoundingClientRect(),
-		s = r.getBoundingClientRect(),
+		if (isRed) px = 100 - px
+		var d = mapImage.getBoundingClientRect(),
+		s = floatingImage.getBoundingClientRect(),
 		x = Math.round(px * d.width / 100 - s.width/2),
 		y = Math.round(py * d.height / 100 - s.height/2)
-		r.style.left=x+"px"
-		r.style.top=y+"px"
+		floatingImage.style.left=x+"px"
+		floatingImage.style.top=y+"px"
+	}
+
+	function getPercentCoordinates(event, mapImage, isRed){
+		var d = mapImage.getBoundingClientRect(),
+		x = event.clientX - d.left,
+		y = event.clientY - d.top,
+		px = Math.round(100 * x / d.width),
+		py = Math.round(100 * y / d.height)
+		if (isRed) px = 100 - px
+		return px+"x"+py
 	}
 
 	function setRobotStartPosition(e){
-		var d = document.getElementById('start-area').getBoundingClientRect(),
-		r = document.getElementById('robot-starting-position'),
-		s = r.getBoundingClientRect(),
-		x = e.clientX - d.left,
-		y = e.clientY - d.top,
-		px = Math.round(100 * x / d.width),
-		py = Math.round(100 * y / d.height)
-		if (pos.startsWith('R')) px = 100 - px
-		r.style.left=(x-s.width/2)+"px"
-		r.style.top=(y-s.height/2)+"px"
-		$('#auto-start-input').val(px+"x"+py)
+		var mi = document.getElementById('start-area'),
+		fi = document.getElementById('robot-starting-position'),
+		ir = pos.startsWith('R'),
+		co = getPercentCoordinates(e, mi, ir)
+		moveFloaterToPercentCoordinates(mi,ir,co, fi)
+		$('#auto-start-input').val(co)
 	}
 
 	$('#start-area').mousemove(function(e){
-		console.log(e.buttons)
 		if (e.buttons) setRobotStartPosition(e)
 	})
 
 	$('#start-area').click(setRobotStartPosition)
+
+	$('#speaker-shoot-area').click(function(e){
+		var floater = $('<div class=shot-location>X</div>)'),
+		ir = $('body').is('.redTeam')
+		$(this).append(floater)
+		var co = getPercentCoordinates(e, this, ir),
+		inp = $('input[name="speaker_shot_locations"]'),
+		val = inp.val()
+		moveFloaterToPercentCoordinates(this,ir,co,floater[0])
+		if (val) val += " "
+		inp.val((val?(val+" "):"")+co)
+	})
+
+	$('#undo-last-shot-location').click(function(){
+		var inp = $('input[name="speaker_shot_locations"]')
+		inp.val(inp.val().replace(/[^ ]+$/,"").trim())
+		drawAllShotLocations()
+		return false
+	})
+
+	function drawAllShotLocations(){
+		var area = $('#speaker-shoot-area').html(""),
+		ir = $('body').is('.redTeam')
+		$('input[name="speaker_shot_locations"]').val().split(" ").forEach(loc => {
+			if (loc){
+				var floater = $('<div class=shot-location>X</div>)')
+				area.append(floater)
+				moveFloaterToPercentCoordinates(area[0],ir,loc,floater[0])
+			}
+		});
+		return true
+	}
+
+	$('.subjectiveColor').click(function(){
+		var color = $(this).attr('class').replace(/.*(red|blue).*/i,"$1")
+		$('body').toggleClass('redTeam', color=='red')
+		$('body').toggleClass('blueTeam', color=='blue')
+		drawAllShotLocations()
+		return false
+	})
 })
