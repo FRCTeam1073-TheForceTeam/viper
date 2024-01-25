@@ -19,3 +19,6 @@
 @media (min-height:800px){
 	.chart canvas{max-height:50vh}
 }
+#topNav ul{display:inline-block}
+#topNav li{display:inline-block}
+#topNav li:not(:last-of-type)::after{content:" | "}

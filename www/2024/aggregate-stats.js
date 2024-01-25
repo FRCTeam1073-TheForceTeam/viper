@@ -466,8 +466,8 @@ function showPitScouting(el,team){
 		el.append($("<h4>").text("Autos"))
 		var list = $("<ul>")
 		for (var i=1; i<=9; i++){
-			var desc = dat[`auto_${i}_description`]
-			var tested = dat[`auto_${i}_testing`]
+			var desc = dat[`auto_${i}_description`]||""
+			var tested = dat[`auto_${i}_testing`]||'no'
 			if (tested == 'no') tested = ($('<span style=color:red>').text("Not tested"))
 			if (tested == 'practice') tested = ($('<span style=color:yellow>').text("Tested in practice only"))
 			if (tested == 'match') tested = ($('<span style=color:green>').text("Test in a match"))
@@ -508,6 +508,33 @@ function showPitScouting(el,team){
 		s = s[0].toUpperCase() + s.slice(1)
 		return s.replace(/_/g," ")
 	}
+}
+
+function showSubjectiveScouting(el,team){
+	loadSubjectiveScouting(function(subjectiveData){
+		var dat = subjectiveData[team]||{},
+		graph=$('<div class=graph>'),
+		f
+		el.append(graph)
+		graph.append($('<h4>').text('Speaker Shot Locations'))
+		displayHeatMap(graph,'/2024/speaker-shoot-area-blue.png',.75,2,[dat['speaker_shot_locations']||""])
+
+		f = dat['penalties']||""
+		if (f){
+			el.append('<h4>Penalties</h4>')
+			el.append($('<div style=white-space:pre-wrap>').text(f))
+		}
+		f = dat['defense_tips']||""
+		if (f){
+			el.append('<h4>Defense Tips</h4>')
+			el.append($('<div style=white-space:pre-wrap>').text(f))
+		}
+		f = dat['notes']||""
+		if (f){
+			el.append('<h4>Other</h4>')
+			el.append($('<div style=white-space:pre-wrap>').text(f))
+		}
+	})
 }
 
 // Only one game piece, no stamps needed this year

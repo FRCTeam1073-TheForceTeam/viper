@@ -19,15 +19,20 @@
 <div id=teamButtons></div>
 <div id=teamStats>
 	<h1>Team TEAM at EVENT Match Stats</h1>
-	<p>
+	<div id=topNav>
 		<select id=displayType><option value=graph selected>Graphs</option><option value=table>Table</option></select>
-		<a class=jumpPitScouting href="#pit-scouting">Pit Scouting</a>
-	</p>
+		<ul>
+			<li><a class=pitScouting href="#pit-scouting">Pit Scouting</a></li>
+			<li><a class=subjectiveScouting href="#subjective-scouting">Subjective Scouting</a></li>
+		</ul>
+	</div>
 	<div id=sidePhoto class=imagePreview></div>
 	<div id=topPhoto class=imagePreview></div>
 	<div id=stats></div>
-	<h2>Pit Scouting</h2>
-	<div id=pit-scouting></div>
+	<h2 class=pitScouting>Pit Scouting</h2>
+	<div class=pitScouting id=pit-scouting></div>
+	<h2 class=subjectiveScouting>Subjective Scouting</h2>
+	<div class=subjectiveScouting id=subjective-scouting></div>
 	<h2>Comments</h2>
 	<div id=comments></div>
 </div>

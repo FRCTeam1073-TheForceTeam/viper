@@ -456,8 +456,6 @@ function storeSubjectiveScouting(){
 		setTimeStamps(f)
 		var csv = toCSV('#subjective-scouting')
 		localStorage.setItem(`${eventYear}_subjectiveheaders`, csv[0])
-		console.log(getSubjectiveScoutKey())
-		console.log(csv[1])
 		localStorage.setItem(getSubjectiveScoutKey(), csv[1])
 		storeTime = new Date().getTime()
 		storeScouter(f)
