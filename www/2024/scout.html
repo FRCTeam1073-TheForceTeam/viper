@@ -67,14 +67,18 @@
 	</div>
 
 	<div class="auto tab-content">
-		<table><tr><td colspan=2>
-			<div>Click the robot's starting position:</div>
+		<table><tr><td class=teamColorBG colspan=2>
+			Click the robot's starting position.
+		</td></tr><tr><td colspan=2>
 			<div id=start-area><div id=robot-starting-position></div></div>
 			<input id=auto-start-input type=hidden name=auto_start>
 		</td></tr><tr><td colspan=2>
-			<label><input type=checkbox name=auto_leave value=1><span>Leave Starting Zone</span></label>
-		</td></tr><tr><td>
-			<h4>Collection</h4>
+			<label><input type=checkbox name=auto_leave value=1><span>Robot Left Starting Zone</span></label>
+		</td></tr><tr><td class=teamColorBG>
+			Collection
+		</td><td class=teamColorBG>
+			Placement
+		</td></tr><tr><td rowspan=2>
 			<div id=collect-map>
 				<label class="auto_collect auto_collect_wing auto_collect_mid"><input type=checkbox name=auto_collect_wing_mid value=1><span>◯</span></label>
 				<label class="auto_collect auto_collect_wing auto_collect_mid_amp"><input type=checkbox name=auto_collect_wing_mid_amp value=1><span>◯</span></label>
@@ -88,83 +92,64 @@
 			</div>
 			<input type=hidden name=auto_collect_order id=auto_collect_order>
 		</td><td>
-			<h4>Placement</h4>
-			<div>
-				<div><img class=count src=/count_up.svg></div>
-				<div>Amp<br><input type=text class=num value=0 name=auto_amp size=1 disabled max=9></div>
-				<div><img class=count src=/count_down.svg></div>
-			</div>
-			<hr>
-			<div>
-				<div><img class=count src=/count_up.svg></div>
-				<div>Speaker<br><input type=text class=num value=0 name=auto_speaker size=1 disabled max=9></div>
-				<div><img class=count src=/count_down.svg></div>
-			</div>
-		</td><tr><tr><td colspan=2>
-			<button class=tab-button data-content=teleop>Proceed to Teleop</button>
-		</td></tr></table>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Amp<br><input type=text class=num value=0 name=auto_amp size=1 disabled max=9></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Speaker<br><input type=text class=num value=0 name=auto_speaker size=1 disabled max=9></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><tr></table>
+		<button class=tab-button data-content=teleop>Proceed to Teleop</button>
 	</div>
 
 	<div class="teleop tab-content">
 		<table><tr><td colspan=4>
 			<div><label><input type=checkbox name=coopertition value=yes><span>Coopertition light activated for <span class=teamColor></span> alliance</span></label></div>
+		</td></tr><tr><td class=subheader colspan=2>
+			Collection
+		</td><td class=subheader colspan=2>
+			Placement
+		</td></tr><tr><td colspan=2 rowspan=2>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Home Wing<br><input type=text class=num value=0 name=tele_collect_home size=1 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td class=teamColorBG colspan=2>
+			Speaker
+		</td></tr><tr><td class=equalWidth>
+			<div><img class="count placement" src=/count_up.svg></div>
+			<div>Amplified<br><input type=text class=num value=0 name=tele_speaker_amped size=2 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td class=equalWidth>
+			<div><img class="count placement" src=/count_up.svg></div>
+			<div>Unamplified<br><input type=text class=num value=0 name=tele_speaker_unamped size=2 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr><tr><td colspan=2 rowspan=2>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Center Field<br><input type=text class=num value=0 name=tele_collect_center size=1 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td class=teamColorBG colspan=2>
+			Other Score
+		</td></tr><tr><td>
+			<div><img class="count placement" src=/count_up.svg></div>
+			<div>Amp<br><input type=text class=num value=0 name=tele_amp size=2 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class="count placement" src=/count_up.svg></div>
+			<div>Trap<br><input type=text class=num value=0 name=trap size=1 disabled max=3></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr><tr><td colspan=2 rowspan=2>
+			<div><img class="count collectSource" src=/count_up.svg></div>
+			<div>Far Wing<br>or Source<br><input type=text class=num value=0 name=tele_collect_source size=1 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td class=teamColorBG colspan=2>
+			Failure
 		</td></tr><tr><td colspan=2>
-			<h4>Collection</h4>
-			<div>
-				<div><img class=count src=/count_up.svg></div>
-				<div>Home Wing<br><input type=text class=num value=0 name=tele_collect_home size=1 disabled></div>
-				<div><img class=count src=/count_down.svg></div>
-			</div>
-			<hr>
-			<div>
-				<div><img class=count src=/count_up.svg></div>
-				<div>Center Field<br><input type=text class=num value=0 name=tele_collect_center size=1 disabled></div>
-				<div><img class=count src=/count_down.svg></div>
-			</div>
-			<hr>
-			<div>
-				<div><img class="count collectSource" src=/count_up.svg></div>
-				<div>Far Wing or Source<br><input type=text class=num value=0 name=tele_collect_source size=1 disabled></div>
-				<div><img class=count src=/count_down.svg></div>
-			</div>
-		</td><td colspan=2>
-			<h4>Placement</h4>
-			<div class=two-column>
-				<div>
-					<div>
-						<div><img class="count placement" src=/count_up.svg></div>
-						<div>Amp<br><input type=text class=num value=0 name=tele_amp size=2 disabled></div>
-						<div><img class=count src=/count_down.svg></div>
-					</div>
-					<hr>
-					<div>
-						<div><img class="count placement" src=/count_up.svg></div>
-						<div>Unamp Speaker<br><input type=text class=num value=0 name=tele_speaker_unamped size=2 disabled></div>
-						<div><img class=count src=/count_down.svg></div>
-					</div>
-					<hr>
-					<div>
-						<div><img class="count placement" src=/count_up.svg></div>
-						<div>Amped Speaker<br><input type=text class=num value=0 name=tele_speaker_amped size=2 disabled></div>
-						<div><img class=count src=/count_down.svg></div>
-					</div>
-				</div>
-				<div>
-					<div>
-						<div><img class="count placement" src=/count_up.svg></div>
-						<div>Trap<br><input type=text class=num value=0 name=trap size=1 disabled max=3></div>
-						<div><img class=count src=/count_down.svg></div>
-					</div>
-					<hr>
-					<div>
-						<div><img class=count src=/count_up.svg></div>
-						<div>Miss/Drop<br><input type=text class=num value=0 name=tele_drop size=2 disabled></div>
-						<div><img class=count src=/count_down.svg></div>
-					</div>
-					<hr>
-				</div>
-			</div>
-		</td></tr><tr><td class=subheader colspan=4>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Missed or Dropped<br><input type=text class=num value=0 name=tele_drop size=2 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr></table>
+		<table><tr><td class=subheader colspan=4>
 			Full Cycles (Far&nbsp;Wing&nbsp;↔&nbsp;Placement)
 			<input type=hidden name=full_cycles>
 		</td></tr><tr class=cycleStats><td>
@@ -179,24 +164,26 @@
 		</td><td>
 			<div class=explain>Count</div>
 			<input type=text class=num value=0 name=full_cycle_count size=1 disabled>
-		</td></tr><tr><td colspan=4>
-			<button class=tab-button data-content=end-game>Proceed to End Game</button>
 		</td></tr></table>
+		<button class=tab-button data-content=end-game>Proceed to End Game</button>
+
 	</div>
 
 	<div class="end-game tab-content">
-		<table><tr><td colspan=4>
-			<fieldset class="left full">
+		<table><tr><td class=subheader>
+			Stage
+		</td></tr><tr><td>
+			<fieldset class="full">
 				<legend>Is the robot in the <span class=teamColor></span> stage area?</legend>
 				<label class=onstage-state><input type=radio name=end_game_position value=parked><span>Parked</span></label>
 				<label class=onstage-state><input id=onstage-input type=radio name=end_game_position value=onstage><span>Onstage</span></label>
 			</fieldset>
-			<fieldset id=not-onstage class="left full">
-				<legend>If not onstage</legend>
-				<label><input type=checkbox name=end_game_climb_fail value=yes><span>Attempted to climb, but failed</span></label>
+			<fieldset id=not-onstage class="full">
+				<legend>If not onstage:</legend>
+				<label><input type=checkbox name=end_game_climb_fail value=yes><span>Robot attempted to climb, but failed</span></label>
 			</fieldset>
 			<fieldset id=is-onstage class="left full">
-				<legend>If onstage</legend>
+				<legend>If onstage:</legend>
 				<label><input type=checkbox name=end_game_spotlit value=spotlit><span>Spotlit</span></label>
 				<div>
 					Other bots in harmony with <span class=team></span>:
@@ -210,16 +197,26 @@
 					<label><input type=radio name=end_game_hang_location value=end><span>Near an end</span></label>
 				</div>
 			</fieldset>
+		</td></tr><tr><td class=subheader>
+			Gameplay
+		</td></tr><tr><td>
 			<fieldset class="left full">
-				<legend>Did team <span class=team></span>?</legend>
-				<div><label><input type=checkbox name=floor_pickup value=yes><span>Pick up notes from the floor</span></label></div>
-				<div><label><input type=checkbox name=source_pickup value=yes><span>Collect notes from the source directly into the bot</span></label></div>
-				<div><label><input type=checkbox name=passing value=yes><span>Pass notes to teammates</span></label></div>
-				<div><label><input type=checkbox name=stashing value=yes><span>Stash notes for later</span></label></div>
-				<div><label><input type=checkbox name=bricked value=yes><span>Become bricked or disabled?</span></label></div>
+				<legend>How does <span class=team></span> handle notes?</legend>
+				<div>Collects from: <label><input type=checkbox name=floor_pickup value=yes><span>Floor</span></label>
+				<label><input type=checkbox name=source_pickup value=yes><span>Source chute opening</span></label></div>
+				<div><label><input type=checkbox name=passing value=yes><span>Passes notes to teammates</span></label></div>
+				<div><label><input type=checkbox name=stashing value=yes><span>Stashes notes for later</span></label></div>
 			</fieldset>
+			<fieldset class="full">
+				<legend>Other info:</legend>
+				<label><input type=checkbox name=bricked value=yes><span>Robot broke or was disabled during match</span></label>
+
+			</fieldset>
+		</td></tr><tr><td class=subheader>
+			Scouter Info
+		</td></tr><tr><td>
 			<fieldset class="left full">
-				<legend>Scouter:</legend>
+				<legend>Name:</legend>
 				<input class=full type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
 			</fieldset>
 			<input type=hidden name=created value="">
