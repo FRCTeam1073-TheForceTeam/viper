@@ -394,6 +394,82 @@ var statInfo = {
 	}
 }
 
+
+
+$(document).ready(function(){
+	setTimeout(function(){
+		//console.log(JSON.stringify(toPurpleStandard(eventStats).entries[0].metadata))
+	},500)
+})
+
+function toPurpleStandard(scout){
+	function tpsScouter(scouter){
+		var r = {
+			name: scouter,
+			app: "Viper"
+		},
+		m = (scouter||"").match(/^([0-9]+),? (.*)/)
+		if (window.ourTeam) r.team = window.ourTeam+""
+		if (m){
+			r.name = m[2]
+			r.team = m[1]
+		}
+		return r
+	}
+	function tpsMatch(match){
+		console.log(match)
+		var m = (match||"").match(/^([1-5]?)(qm|p|f)([0-9]+)$/)
+		if (!m) return null
+		return {
+			level: m[2]=='p'?'sf':m[2],
+			number: parseInt(m[3]),
+			set: m[2]=='p'?parseInt(m[1]):1
+		}
+	}
+	function tpsStageLevel(scout){
+		if (scout["end_game_position"]=="parked") return 1
+		if (scout["end_game_position"]!="onstage") return 0
+		if (scout["end_game_harmony"]==1) return 3
+		if (scout["end_game_harmony"]==2) return 4
+		return 2
+	}
+	var tps = {
+		entries:[]
+	}
+	scout.forEach(function(row){
+		console.log(row)
+		var match = tpsMatch(row['match'])
+		if (match){
+			tps.entries.push({
+				metadata:{
+					scouter: tpsScouter(row['scouter']),
+					event: row['event'],
+					bot: row['team']+"",
+					match: match,
+					timestamp: new Date(row['created']).getTime(),
+					modified: new Date(row['created']).getTime()
+				},
+				abilities:{
+					"auto-leave-starting-zone": !!row['auto_leave'],
+					"ground-pick-up": !!['floor_pickup'],
+					"auto-center-line-pick-up": !!row[`auto_collect_centerline_amp`] || !!row[`auto_collect_centerline_mid`] || !!row[`auto_collect_centerline_mid_amp`] || !!row[`auto_collect_centerline_mid_source`] || !!row[`auto_collect_centerline_source`],
+					"teleop-spotlight-2024": !!row[`end_game_spotlit`],
+					"teleop-stage-level-2024": tpsStageLevel(scout)
+				},
+				counters: {
+					"auto-scoring-amp-2024": row['auto_amp'],
+					"auto-scoring-speaker-2024": row['auto_speaker'],
+					"teleop-scoring-amp-2024": row['tele_amp'],
+					"teleop-scoring-amplified-speaker-2024": row['tele_speaker_amped'],
+					"teleop-scoring-speaker-2024": row['tele_speaker_unamped'],
+					"teleop-scoring-trap-2024": row['trap']
+				}
+			},)
+		}
+	})
+	return tps
+}
+
 var teamGraphs = {
 	"Match Score":{
 		graph:"bar",
