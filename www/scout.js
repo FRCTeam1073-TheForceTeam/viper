@@ -20,9 +20,9 @@ function parseHash(){
 
 function showScreen(){
 	if (!team && $('#select-team').length && $('#pit-scouting').length) showSelectPitScoutTeam()
-	if (!team && $('#select-team').length && $('#subjective-scouting').length) showSelectSubjectiveScoutTeam()
-	else if (team && $('#pit-scouting').length) showPitScouting()
-	else if (team && $('#subjective-scouting').length) showSubjectiveScouting()
+	else if (!team && $('#select-team').length && $('#subjective-scouting').length) showSelectSubjectiveScoutTeam()
+	else if (team && $('#pit-scouting').length) showPitScoutingForm()
+	else if (team && $('#subjective-scouting').length) showSubjectiveScoutingForm()
 	else if (!pos) showPosList()
 	else if (!match) showMatchList()
 	else if (!team) showTeamChange()
@@ -48,7 +48,7 @@ function showSelectPitScoutTeam(){
 	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
 	$('.location-pointer').remove()
 	for (var i=0; i<showTeams.length;i++){
-		var button = $('<button>').text(showTeams[i]).click(showPitScouting)
+		var button = $('<button>').text(showTeams[i]).click(showPitScoutingForm)
 		if (withData.hasOwnProperty(showTeams[i])||eventPitData[showTeams[i]]) button.addClass('stored')
 		el.append(button)
 	}
@@ -66,7 +66,7 @@ function showSelectSubjectiveScoutTeam(){
 	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
 	$('.location-pointer').remove()
 	for (var i=0; i<showTeams.length;i++){
-		var button = $('<button>').text(showTeams[i]).click(showSubjectiveScouting)
+		var button = $('<button>').text(showTeams[i]).click(showSubjectiveScoutingForm)
 		if (withData.hasOwnProperty(showTeams[i])||eventSubjectiveData[showTeams[i]]) button.addClass('stored')
 		el.append(button)
 	}
@@ -233,7 +233,7 @@ function resetOrigValues(form){
 	})
 }
 
-function showPitScouting(t){
+function showPitScoutingForm(t){
 	if (t && typeof t != 'number') t = parseInt($(this).text())
 	if (t) team = t
 	$('.screen,.init-hide').hide()
@@ -264,7 +264,7 @@ function showPitScouting(t){
 }
 
 
-function showSubjectiveScouting(t){
+function showSubjectiveScoutingForm(t){
 	if (t && typeof t != 'number') t = parseInt($(this).text())
 	if (t) team = t
 	$('.screen,.init-hide').hide()
