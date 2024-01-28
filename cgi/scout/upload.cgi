@@ -25,6 +25,8 @@ my $scoutCsv = {};
 my $scoutHeaders = {};
 my $pitCsv = {};
 my $pitHeaders = {};
+my $subjectiveCsv = {};
+my $subjectiveHeaders = {};
 foreach my $row (@{$uCsv}){
 	if ($row->[0] eq 'event'){
 		$csvHeaders = $row;
@@ -46,6 +48,9 @@ foreach my $row (@{$uCsv}){
 			$webutil->error("Unexpected match name",$row->[$uHead->{'match'}]) if($row->[$uHead->{'match'}] !~ /^[0-9]*[a-z]+[0-9]+$/);
 			$eventCsv = $scoutCsv;
 			$eventHeaders = $scoutHeaders;
+		} elsif (exists $uHead->{'defense_tips'}){
+			$eventCsv = $subjectiveCsv;
+			$eventHeaders = $subjectiveHeaders;
 		}
 		$eventCsv->{$row->[$uHead->{'event'}]} = [] if (! exists  $eventCsv->{$row->[$uHead->{'event'}]});
 		$eventHeaders->{$row->[$uHead->{'event'}]} = $csvHeaders;
@@ -99,7 +104,13 @@ sub writeCsvData(){
 			}
 			print $fh "\n";
 			$savedKeys .= "," if($savedKeys);
-			$savedKeys .= $row->[$uHead->{"event"}].(($type eq 'scouting')?("_".$row->[$uHead->{"match"}]):"")."_".$row->[$uHead->{"team"}];
+			if ($type eq 'scouting'){
+				$savedKeys .= $row->[$uHead->{"event"}]."_".$row->[$uHead->{"match"}]."_".$row->[$uHead->{"team"}];
+			} elsif ($type eq 'pit'){
+				$savedKeys .= $row->[$uHead->{"event"}]."_".$row->[$uHead->{"team"}];
+			} elsif ($type eq 'subjective'){
+				$savedKeys .= $row->[$uHead->{"event"}]."_subjective_".$row->[$uHead->{"team"}];
+			}
 		}
 		close $fh;
 		$webutil->commitDataFile($fileName, "scouting");
@@ -120,6 +131,14 @@ sub writeDbData(){
 			$db->upsert($table, $data);
 			$savedKeys .= "," if($savedKeys);
 			$savedKeys .= $data->{"event"}.(($type eq 'scouting')?("_".$data->{"match"}):"")."_".$data->{"team"};
+			$savedKeys .= "," if($savedKeys);
+			if ($type eq 'scouting'){
+				$savedKeys .= $data->{"event"}."_".$data->{"match"}."_".$data->{"team"};
+			} elsif ($type eq 'pit'){
+				$savedKeys .= $data->{"event"}."_".$data->{"team"};
+			} elsif ($type eq 'subjective'){
+				$savedKeys .= $data->{"event"}."_subjective_".$data->{"team"};
+			}
 		}
 		$db->commit();
 	}
@@ -140,6 +159,7 @@ if ($dbh){
 } else {
 	&writeData($scoutCsv,$scoutHeaders,'scouting');
 	&writeData($pitCsv,$pitHeaders,'pit');
+	&writeData($subjectiveCsv,$subjectiveHeaders,'subjective');
 }
 
 $webutil->redirect("/upload-done.html#$savedKeys");

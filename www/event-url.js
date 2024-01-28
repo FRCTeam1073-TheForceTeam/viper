@@ -18,6 +18,7 @@ eventFiles,
 eventTeams,
 eventInfo,
 eventPitData,
+eventSubjectiveData,
 eventTeamsInfo,
 BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
 MATCH_TYPE_SORT = {
@@ -269,6 +270,20 @@ function loadPitScouting(callback){
 			eventPitData[teamData.team]=teamData
 		})
 		if (callback) callback(eventPitData)
+	})
+}
+
+function loadSubjectiveScouting(callback){
+	if (eventSubjectiveData){
+		if (callback) callback(eventSubjectiveData)
+		return
+	}
+	eventAjax(`/data/${eventId}.subjective.csv`,function(text){
+		eventSubjectiveData = {}
+		csvToArrayOfMaps(text).forEach(function(teamData){
+			eventSubjectiveData[teamData.team]=teamData
+		})
+		if (callback) callback(eventSubjectiveData)
 	})
 }
 

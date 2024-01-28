@@ -14,10 +14,12 @@ redirect()
 function redirect(){
 	var eId = localStorage.getItem('last_event_id'),
 	eYear = localStorage.getItem('last_event_year'),
-	ePos = localStorage.getItem('last_pos')
+	ePos = localStorage.getItem('last_pos'),
+	eType = localStorage.getItem("last_scout_type")
 	if (!eId) return delayRedirect(`/`)
-	if (eYear && ePos) return delayRedirect(`/${eYear}/scout.html#event=${eId}&pos=${ePos}`)
-	delayRedirect(`/event.html#event=${eId}`)
+	if (!eYear || !eType) return delayRedirect(`/event.html#event=${eId}`)
+	if (eType=='scout' && ePos) return delayRedirect(`/${eYear}/scout.html#event=${eId}&pos=${ePos}`)
+	delayRedirect(`/${eYear}/${eType}.html#event=${eId}`)
 }
 
 function delayRedirect(url){

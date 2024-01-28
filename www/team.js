@@ -39,7 +39,7 @@ function fillPage(){
 		showStats()
 
 		if(typeof window.showPitScouting === 'function'){
-			$('.jumpPitScouting').attr('href', `#event=${eventId}&team=${team}&pit-scouting`)
+			$('a.pitScouting').attr('href', `#event=${eventId}&team=${team}&pit-scouting`)
 			$('#pit-scouting').html("")
 			window.showPitScouting($('#pit-scouting'),team)
 			if (/pit-scouting/i.test(location.hash)){
@@ -48,7 +48,20 @@ function fillPage(){
 				},200)
 			}
 		} else {
-			$('.jumpPitScouting').hide()
+			$('.pitScouting').hide()
+		}
+
+		if(typeof window.showSubjectiveScouting === 'function'){
+			$('a.subjectiveScouting').attr('href', `#event=${eventId}&team=${team}&subjective-scouting`)
+			$('#subjective-scouting').html("")
+			window.showSubjectiveScouting($('#subjective-scouting'),team)
+			if (/subjective-scouting/i.test(location.hash)){
+				setTimeout(function(){
+					window.scroll(0,$('#subjective-scouting').position().top-100)
+				},200)
+			}
+		} else {
+			$('.subjectiveScouting').hide()
 		}
 	}
 }
@@ -98,42 +111,79 @@ function showTables(matchList, matchNames){
 	$('#stats').html('').append(table)
 }
 
+function displayHeatMap(parent,imageUrl,aspectRatio,max,data){
+	var width=Math.min($(document).width(),1000),
+	height=Math.round(width/aspectRatio),
+	points=[],
+	chart = $('<div class="heatmap">')
+	.css("width",width)
+	.css("height",height)
+	.css("background", `url(${imageUrl}) no-repeat center center / 100% 100%`)
+	parent.append(chart)
+	var heatmap = h337.create({
+		container: chart[0],
+	})
+	data.forEach(function(row){
+		(row.match(/[0-9]{1,2}x[0-9]{1,2}/g)||[]).forEach(function(point){
+			var m = point.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+			points.push({
+				x:Math.round(parseInt(m[1]) * width / 100),
+				y:Math.round(parseInt(m[2]) * height / 100),
+				value:1
+			})
+		})
+	})
+	heatmap.setData({
+		max:max,
+		min:0,
+		data:points
+	})
+}
+
 function showGraphs(matchList, matchNames){
 	Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
 	var graphs = $('#stats').html('')
 	Object.keys(teamGraphs).forEach(function(section){
-		var chart = $('<canvas>'),
-		data=[],
-		graph=$('<div class=graph>')
+		var graph=$('<div class=graph>')
 		graphs.append(graph)
 		graph.append($('<h2>').text(section))
-		graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
-		teamGraphs[section]['data'].forEach(function(field,j){
-			var info = statInfo[field]||{},
-			values = []
-			for (var k=0; k<matchList.length; k++){
-				values.push(matchList[k][field]||0)
-			}
-			data.push({
-				label: info['name']||field,
-				data: values,
-				backgroundColor: Array(matchList.length).fill(graphColors[j])
-			})
-		})
-		var stacked = teamGraphs[section]['graph']=="stacked"
-		new Chart(chart,{
-			type: 'bar',
-			data: {
-				labels: matchNames,
-				datasets: data
-			},
-			options: {
-				scales: {
-					y: {beginAtZero: true,stacked: stacked},
-					x: {stacked: stacked}
+		if (teamGraphs[section]['graph']=='heatmap'){
+			var statName = teamGraphs[section]['data'][0],
+			stat=statInfo[statName]
+			displayHeatMap(graph,stat['image'],stat['aspect_ratio'],2,matchList.map(function(el){
+				return (el[statName]||"")
+			}))
+		} else {
+			var chart = $('<canvas>'),
+			data=[]
+			graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
+			teamGraphs[section]['data'].forEach(function(field,j){
+				var info = statInfo[field]||{},
+				values = []
+				for (var k=0; k<matchList.length; k++){
+					values.push(matchList[k][field]||0)
 				}
-			}
-		})
+				data.push({
+					label: info['name']||field,
+					data: values,
+					backgroundColor: Array(matchList.length).fill(graphColors[j])
+				})
+			})
+			var stacked = teamGraphs[section]['graph']=="stacked"
+			new Chart(chart,{
+				type: 'bar',
+				data: {
+					labels: matchNames,
+					datasets: data
+				},
+				options: {
+					scales: {
+						y: {beginAtZero: true,stacked: stacked},
+						x: {stacked: stacked}
+					}
+				}
+			})
+		}
 	})
 }
 

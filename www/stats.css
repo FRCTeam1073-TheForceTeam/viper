@@ -3,8 +3,8 @@
 .best{background:var(--highlight-bg-color)}
 td,th{padding:0.2em}
 .graph{display:inline-block;max-width:100%}
-.chart{padding:0 1em;display:inline-block}
-canvas{height:20em}
+.chart,.heatmap{padding:0 1em;display:inline-block}
+.chart canvas{height:20em}
 #teamPicker{padding:2em}
 button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em;}
 button.team{width:3.5em;height:1.5em;margin:0.25em}
@@ -18,5 +18,5 @@ iframe{width:100%;height:100%}
 #statsTable td.blank{border:none;height:2em}
 #statsTable .picked{background-color:var(--lowlight-bg-color)}
 @media (min-height:800px){
-	canvas{max-height:50vh}
+	.chart canvas{max-height:50vh}
 }

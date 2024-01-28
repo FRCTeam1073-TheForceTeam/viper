@@ -7,8 +7,7 @@ orient = "",
 matchName = "",
 teamList=[],
 scouting,
-storeTime=0,
-pitDataLoaded=false
+storeTime=0
 parseHash()
 
 function parseHash(){
@@ -20,8 +19,10 @@ function parseHash(){
 }
 
 function showScreen(){
-	if (!team && $('#select-team').length) showSelectPitScoutTeam()
-	else if (team && $('#pit-scouting').length) showPitScouting()
+	if (!team && $('#select-team').length && $('#pit-scouting').length) showSelectPitScoutTeam()
+	else if (!team && $('#select-team').length && $('#subjective-scouting').length) showSelectSubjectiveScoutTeam()
+	else if (team && $('#pit-scouting').length) showPitScoutingForm()
+	else if (team && $('#subjective-scouting').length) showSubjectiveScoutingForm()
 	else if (!pos) showPosList()
 	else if (!match) showMatchList()
 	else if (!team) showTeamChange()
@@ -38,7 +39,7 @@ $(window).on('hashchange', function(){
 
 function showSelectPitScoutTeam(){
 	loadTeamsInfo()
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash(null,null,null,null,teamList)
 	window.scrollTo(0,0)
 	$('h1').text("Pit Scouting " + eventName)
@@ -47,15 +48,33 @@ function showSelectPitScoutTeam(){
 	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
 	$('.location-pointer').remove()
 	for (var i=0; i<showTeams.length;i++){
-		var button = $('<button>').text(showTeams[i]).click(showPitScouting)
+		var button = $('<button>').text(showTeams[i]).click(showPitScoutingForm)
 		if (withData.hasOwnProperty(showTeams[i])||eventPitData[showTeams[i]]) button.addClass('stored')
 		el.append(button)
 	}
 	$('#select-team').show()
 }
 
+function showSelectSubjectiveScoutTeam(){
+	loadTeamsInfo()
+	$('.screen,.init-hide').hide()
+	setHash(null,null,null,null,teamList)
+	window.scrollTo(0,0)
+	$('h1').text("Subjective Scouting " + eventName)
+	var el = $('#teamList').html(""),
+	withData = getTeamsWithSubjectiveData(),
+	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+	$('.location-pointer').remove()
+	for (var i=0; i<showTeams.length;i++){
+		var button = $('<button>').text(showTeams[i]).click(showSubjectiveScoutingForm)
+		if (withData.hasOwnProperty(showTeams[i])||eventSubjectiveData[showTeams[i]]) button.addClass('stored')
+		el.append(button)
+	}
+	$('#select-team').show()
+}
+
 function showTeamChange(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	location.hash = `#event=${eventId}&pos=${pos}&match=${match}`
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
@@ -76,7 +95,7 @@ function showTeamChange(){
 }
 
 function showPosList(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash()
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
@@ -94,7 +113,7 @@ function showPosList(){
 }
 
 function showMatchList(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash(pos,orient)
 	window.scrollTo(0,0)
 	$('#match-list').html('')
@@ -141,6 +160,12 @@ function getPitScoutKey(t,e){
 	if (!t) t = team
 	if (!e) e = eventId
 	return `${e}_${t}`
+}
+
+function getSubjectiveScoutKey(t,e){
+	if (!t) t = team
+	if (!e) e = eventId
+	return `${e}_subjective_${t}`
 }
 
 function setHash(pos,orient,team,match,teamList){
@@ -208,10 +233,10 @@ function resetOrigValues(form){
 	})
 }
 
-function showPitScouting(t){
+function showPitScoutingForm(t){
 	if (t && typeof t != 'number') t = parseInt($(this).text())
 	if (t) team = t
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	$('h1').text("Pit Scouting " + eventName + " Team " + team)
 	window.scrollTo(0,0)
 	setHash(null,null,team,null,teamList)
@@ -229,22 +254,61 @@ function showPitScouting(t){
 			$('input[name="team_location"]').val(loc).attr('value',loc)
 		}
 	})
+	resetSequentialInputSeries()
 	$('.count').each(countHandler)
+	for (var i=0; i<onShowPitScouting.length; i++){
+		if(!onShowPitScouting[i]()) return false
+	}
 	pit.show()
+	localStorage.setItem("last_scout_type", "pit-scout")
+}
+
+
+function showSubjectiveScoutingForm(t){
+	if (t && typeof t != 'number') t = parseInt($(this).text())
+	if (t) team = t
+	$('.screen,.init-hide').hide()
+	$('h1').text("Subjective Scouting " + eventName + " Team " + team)
+	window.scrollTo(0,0)
+	setHash(null,null,team,null,teamList)
+	var form = $('#subjective-scouting')
+	resetOrigValues(form)
+	form[0].reset()
+	$('.location-pointer').remove()
+	storeOrigValues(form)
+	fillDefaultFormFields()
+	fillPreviousFormData(form, localSubjectiveScoutingData(team)||eventSubjectiveData[team])
+	resetSequentialInputSeries()
+	$('.count').each(countHandler)
+	for (var i=0; i<onShowSubjectiveScouting.length; i++){
+		if(!onShowSubjectiveScouting[i]()) return false
+	}
+	form.show()
+	localStorage.setItem("last_scout_type", "subjective-scout")
+}
+
+function findParentFromButton(button){
+	var parent = button
+	for(var i=0;!parent.find('input').length&&i<10;i++) parent = parent.parent()
+	return parent
+}
+
+function findInputInEl(parent){
+	var input = findParentFromButton(parent).find('input')
+	if (!input.length) throw ("No input for counter")
+	return input
 }
 
 var lastClickTimeOnCounter = 0
 function countHandler(e){
 	var count=$(this),
 	clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
-	parent = count,
-	src = count.attr('src')
-	for(var i=0;parent.find('.count,input').length<3&&i<10;i++) parent = parent.parent()
-	var input = parent.find('input'),
+	parent = findParentFromButton(count),
+	input = findInputInEl(parent),
+	src = count.attr('src'),
 	val=parseInt(input.val())||0,
 	max=parseInt(input.attr('max'))||999999,
 	min=parseInt(input.attr('min'))||0
-	if (!input.length) throw ("No input for counter")
 	if (clicked){
 		lastClickTimeOnCounter=e.timeStamp
 		var toAdd = 0
@@ -267,7 +331,7 @@ function countHandler(e){
 }
 
 function showScouting(){
-	$('.screen').hide()
+	$('.screen,.init-hide').hide()
 	setHash(pos,orient,team,match)
 	window.scrollTo(0,0)
 	resetOrigValues(scouting)
@@ -286,10 +350,13 @@ function showScouting(){
 	setTeamBG()
 	fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
 	$('.count').each(countHandler)
+	resetSequentialInputSeries()
 	for (var i=0; i<onShowScouting.length; i++){
 		if(!onShowScouting[i]()) return false
 	}
+	showTab(null, $('.default-tab'))
 	scouting.show()
+	localStorage.setItem("last_scout_type", "scout")
 }
 
 function fillDefaultFormFields(){
@@ -302,6 +369,8 @@ function fillDefaultFormFields(){
 
 function setTeamBG(){
 	$('.teamColorBG').toggleClass('redTeamBG', pos.startsWith('R')).toggleClass('blueTeamBG', pos.startsWith('B'))
+	$('.otherTeamBG').toggleClass('blueTeamBG', pos.startsWith('R')).toggleClass('redTeamBG', pos.startsWith('B'))
+	$('body').toggleClass('redTeam', pos.startsWith('R')).toggleClass('blueTeam', pos.startsWith('B'))
 }
 
 function toggleChecked(o){
@@ -350,6 +419,8 @@ function formHasChanges(f){
 
 var onStore = []
 var onShowScouting = []
+var onShowPitScouting = []
+var onShowSubjectiveScouting = []
 
 function setTimeStamps(form){
 	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
@@ -390,11 +461,28 @@ function storePitScouting(){
 		storeScouter(f)
 	}
 }
+function storeSubjectiveScouting(){
+	var f=$('#subjective-scouting')
+	if (formHasChanges(f)){
+		setTimeStamps(f)
+		var csv = toCSV('#subjective-scouting')
+		localStorage.setItem(`${eventYear}_subjectiveheaders`, csv[0])
+		localStorage.setItem(getSubjectiveScoutKey(), csv[1])
+		storeTime = new Date().getTime()
+		storeScouter(f)
+	}
+}
 
 function localPitScoutingData(t){
 	var data = localStorage.getItem(getPitScoutKey(t))
 	if (!data) return null
 	return csvToArrayOfMaps(localStorage.getItem(`${eventYear}_pitheaders`)+"\n"+data)[0]
+}
+
+function localSubjectiveScoutingData(t){
+	var data = localStorage.getItem(getSubjectiveScoutKey(t))
+	if (!data) return null
+	return csvToArrayOfMaps(localStorage.getItem(`${eventYear}_subjectiveheaders`)+"\n"+data)[0]
 }
 
 function localScoutingData(t,m){
@@ -428,6 +516,17 @@ function getTeamsWithPitData(){
 	var teams = {}
 	for (var i in localStorage){
 		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_[0-9]+$/.test(i)){
+			var t = parseInt(i.replace(/.*_/,""))
+			teams[t]=1
+		}
+	}
+	return teams
+}
+
+function getTeamsWithSubjectiveData(){
+	var teams = {}
+	for (var i in localStorage){
+		if (/^20[0-9]{2}[a-zA-Z0-9\-]+_subjective_[0-9]+$/.test(i)){
 			var t = parseInt(i.replace(/.*_/,""))
 			teams[t]=1
 		}
@@ -487,11 +586,25 @@ function getNextMatch(){
 
 var originalTitle
 
+function showTab(event, tab){
+	var button = (tab||$(this)),
+	name = button.attr('data-content'),
+	tab=$(`.tab[data-content="${name}"]`)
+	$('.tab').removeClass("redTeamBG").removeClass("blueTeamBG")
+	tab.addClass(pos.startsWith('R')?"redTeamBG":"blueTeamBG")
+	$('.tab-content').hide()
+	$(`.${name}`).show()
+	if(button.is('.tab-button')) window.scrollTo(tab.offset())
+	return false
+}
+
 $(document).ready(function(){
 	if (!eventYear || !eventVenue){
 		$('h1').text("Event Not Found")
 		return
 	}
+
+	$('.tab,.tab-button').click(showTab)
 
 	if(!originalTitle) originalTitle = $('title').text()
 	$('title').text(originalTitle.replace(/EVENT/g, eventName))
@@ -500,6 +613,7 @@ $(document).ready(function(){
 
 	loadEventSchedule(function(){
 		if ($('#pit-scouting').length) loadPitScouting(showScreen)
+		if ($('#subjective-scouting').length) loadSubjectiveScouting(showScreen)
 		else loadEventStats(showScreen)
 	})
 
@@ -551,6 +665,11 @@ $(document).ready(function(){
 		showSelectPitScoutTeam()
 		return false
 	})
+	$("#subjectiveScoutNext,#subjectiveTeamButton").click(function(e){
+		storeSubjectiveScouting()
+		showSelectSubjectiveScoutTeam()
+		return false
+	})
 	$("#matchBtn").click(function(e){
 		if (!store()) return false
 		showMatchList()
@@ -579,4 +698,20 @@ $(document).ready(function(){
 	$('img.expandable-image').click(function(){
 		showLightBox($('#lightBoxImage').html("").append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')))
 	})
+
+	$('.sequential-input-series textarea,.sequential-input-series input[type="text"]').change(function(){
+		var name = $(this).attr('name'),
+		n = /[0-9]/.exec(name),
+		next = name.replace(n,parseInt(n)+1)
+		$('textarea[name='+next+'],input[name='+next+']').closest('.sequential-input-series').show()
+	})
 })
+
+function resetSequentialInputSeries(){
+	$('.sequential-input-series textarea,.sequential-input-series input[type="text"]').each(function(){
+		var name = $(this).attr('name'),
+		n = /[0-9]/.exec(name),
+		next = name.replace(n,parseInt(n)+1)
+		$('textarea[name='+next+'],input[name='+next+']').closest('.sequential-input-series').toggle($(this).val()!="")
+	})
+}

@@ -1,9 +1,9 @@
 #comments{max-width:30em;margin:0 auto;text-align:left}
 .scouter{text-align:right}
 .scouter::before{content:"-- "}
-canvas{height:20em}
+.chart canvas{height:20em}
 .graph{display:inline-block;max-width:100%}
-.chart{padding:0 1em;display:inline-block}
+.chart,.heatmap{padding:0 1em;display:inline-block}
 .comments{white-space:pre-wrap}
 .imagePreview img{width:320px}
 .imagePreview{display:inline}
@@ -16,3 +16,9 @@ canvas{height:20em}
 #stats td.blank{border:none;height:2em}
 #teamButtons{column-width:4.5em}
 #teamButtons button {margin:0.2em;width:4em}
+@media (min-height:800px){
+	.chart canvas{max-height:50vh}
+}
+#topNav ul{display:inline-block}
+#topNav li{display:inline-block}
+#topNav li:not(:last-of-type)::after{content:" | "}

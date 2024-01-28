@@ -14,6 +14,7 @@ $(document).ready(function(){
 		"scouting.csv": ['.dependScouting','Scout&shy;ing CSV'],
 		"alliances.csv": ['.dependAlliances','All&shy;ianc&shy;es CSV'],
 		"pit.csv": ['.dependPit','Pit Scout&shy;ing CSV'],
+		"subjective.csv": ['.dependSubjective','Sub&shy;ject&shy;ive Scout&shy;ing CSV'],
 		"info.json": ['','API Event Info JSON'],
 		"teams.json": ['','API Team List JSON'],
 		"schedule.qualification.json": ['','API Qual&shy;if&shy;ic&shy;a&shy;tion Sched&shy;ule JSON'],
@@ -43,6 +44,11 @@ $(document).ready(function(){
 		showLightBox(da)
 		return false
 	}
+	$('.show-more').click(function(){
+		$('.more').show()
+		$(this).hide()
+
+	})
 	loadEventFiles(function(fileList){
 		fileList.sort((a,b)=>{
 			var aType = a.replace(/.*\./,"")
@@ -57,12 +63,12 @@ $(document).ready(function(){
 			if (extensionMap[extension]){
 				var depend = extensionMap[extension][0]
 				title = extensionMap[extension][1]
-				if (depend) $(depend).show().parents().show()
+				if (depend) $(depend).show().parents('.initHid').show()
 			}
 			title+=fileNum?(" "+fileNum):""
-			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents().show()
+			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents('.initHid').show()
 		})
-		if (uploadCount) $('.dependUploads').show().parents().show()
+		if (uploadCount) $('.dependUploads').show().parents('.initHid').show()
 	})
 	function setName(){
 		title.text(title.text().replace(/EVENT/, eventName))
@@ -192,6 +198,7 @@ $(document).ready(function(){
 
 
 	function escapeExcelCsvField(s){
+		if (Array.isArray(s)) s = s.join(" ")
 		if (/[\",\r\n\t]/.test(s)){
 			s = '"'+s.replace(/"/g,"")+'"'
 		}

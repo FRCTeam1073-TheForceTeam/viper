@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pit Scouting EVENT - Viper</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/scout.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<title>Viper Pit Scouting 2024</title>
+</head>
+<body>
+<h1><span class=team></span> Pit Scouting</h1>
+<div id=select-team class="sequential-input-series init-hide" class=screen>
+	<H2>Select a team</H2>
+	<div id=teamList></div>
+</div>
+
+<form id=pit-scouting class="sequential-input-series init-hide" class=screen>
+
+	<button id=pitTeamButton>Back to Team Selection</button>
+
+	<input type=hidden name=event>
+	<input type=hidden name=team>
+
+	<fieldset class=full>
+		<legend><span class=team></span> Team info</legend>
+		<p>Name: <input name=team_name type=text placeholder="NOT the team number"></p>
+		<p>Location: <input name=team_location type=text placeholder="Anytown, ST, USA"></p>
+		<p>Bot name: <input name=bot_name type=text></p>
+	</fieldset>
+
+	<fieldset class=full>
+		<legend>Describe the auto routines that team <span class=team></span> can perform</legend>
+		<table border=0 width=100% id=autos><tr>
+			<td>Description</td>
+			<td>Has it succeeded?</td>
+		</tr><tr class="sequential-input-series">
+			<td><textarea name=auto_1_description placeholder="Describe the first auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end? After you type, an input for another auto routine will appear."></textarea></td>
+			<td>
+				<label><input type=radio name=auto_1_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_1_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_1_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_2_description placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_2_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_2_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_2_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_3_description placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_3_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_3_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_3_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_4_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_4_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_4_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_4_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_5_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_5_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_5_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_5_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_6_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_6_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_6_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_6_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_7_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_7_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_7_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_7_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_8_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_8_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_8_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_8_testing value=match><span>In a match</span></label>
+			</td>
+		</tr><tr class="sequential-input-series init-hide">
+			<td><textarea name=auto_9_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
+			<td>
+				<label><input type=radio name=auto_9_testing value=no><span>No</span></label><br>
+				<label><input type=radio name=auto_9_testing value=practice><span>Practice only</span></label><br>
+				<label><input type=radio name=auto_9_testing value=match><span>In a match</span></label>
+			</td>
+		</tr></table>
+	</fieldset>
+
+	<fieldset class=full>
+		<legend>Capabilities</legend>
+		<table><tr><td>
+			<label><input type=checkbox name=notes_amp value=1><span>Get notes in the amp</span></label>
+		</td><td>
+			<label><input type=checkbox name=notes_speaker value=1><span>Get notes in the speaker </span></label>
+		</td></tr><tr><td>
+			<label><input type=checkbox name=onstage value=1><span>Get onstage</span></label>
+		</td><td>
+			<label><input type=checkbox name=notes_trap value=1><span>Get notes in the trap</span></label>
+		</td></tr></table>
+	</fieldset>
+
+	<fieldset class=full>
+		<legend>Robot</legend>
+		<p>
+			What are the robot frame dimensions <b>without</b> bumpers?<br>
+			<label>Length: <input type=number min=12 step=1 max=48 name=frame_length> inches</label><br>
+			<label>Width: <input type=number min=12 step=1 max=48 name=frame_width> inches</label><br>
+		</p>
+		<p>
+			What is the weight of the robot?<br>
+			<label><input type=number min=30 step=1 max=200 name=weight> pounds</label><br>
+		</p>
+		<p>
+			What drivetrain is used?<br>
+			<label><input type=radio name=drivetrain value=tank><span>Tank</span></label>
+			<label><input type=radio name=drivetrain value=swerve><span>Swerve</span></label>
+			<label><input type=radio name=drivetrain value=other><span>Other</span></label>
+		</p>
+		<p>
+			If swerve, which modules?<br>
+			<label><input type=radio name=swerve value=swerve-drive-specialties><span>Swerve Drive Specialties</span></label>
+			<label><input type=radio name=swerve value=andymark><span>AndyMark</span></label>
+			<label><input type=radio name=swerve value=rev-robotics><span>REV Robotics</span></label>
+			<label><input type=radio name=swerve value=westcoast-products><span>WestCoast Products</span></label>
+			<label><input type=radio name=swerve value=other><span>Other/Custom</span></label>
+		</p>
+		<p>
+			How many motors power the drive train?<br>
+			<input type=number min=1 step=1 name=motor_count>
+		</p>
+		<p>
+			What type of motors power the drivetrain?<br>
+			<label><input type=radio name=motors value=neo><span>Neo</span></label>
+			<label><input type=radio name=motors value=falcon_500><span>Falcon 500</span></label>
+			<label><input type=radio name=motors value=full_size_cim><span>Full Size CIM</span></label>
+			<label><input type=radio name=motors value=kraken><span>Kraken</span></label>
+			<label><input type=radio name=motors value=other><span>Other</span></label>
+		</p>
+		<p>
+			How many wheels?<br>
+			<input type=number min=4 step=1 name=wheel_count value=4>
+		</p>
+		<p>
+			What type of wheels?<br>
+			<label><input type=radio name=wheels value=traction><span><img src=/wheel-traction.png><br>Traction</span></label>
+			<label><input type=radio name=wheels value=high-traction><span><img src=/wheel-high-traction.png><br>High Traction</span></label>
+			<label><input type=radio name=wheels value=pneumatic><span><img src=/wheel-pneumatic.png><br>Pneumatic</span></label>
+			<label><input type=radio name=wheels value=mechanum><span><img src=/wheel-mechanum.png><br>Mechanum</span></label>
+			<label><input type=radio name=wheels value=omni><span><img src=/wheel-omni.png><br>Omni</span></label>
+			<label><input type=radio name=wheels value=colson><span><img src=/wheel-colson.png><br>Colson</span></label>
+			<label><input type=radio name=wheels value=mixed><span>Mixed</span></label>
+			<label><input type=radio name=wheels value=other><span>Other</span></label>
+		</p>
+		<p>
+			Computer vision can assist the robot with:<br>
+			<label><input type=checkbox name=vision_auto value=yes><span>Auto</span></label>
+			<label><input type=checkbox name=vision_collecting value=yes><span>Collecting</span></label>
+			<label><input type=checkbox name=vision_placing value=yes><span>Placing, shooting or aiming</span></label>
+			<label><input type=checkbox name=vision_localization value=yes><span>Localization</span></label>
+		</p>
+	</fieldset>
+
+	Scouter name and notes:
+	<div class=full><input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q"></div>
+	<p><textarea name=notes placeholder="Notes (Other things that would be good to know)"></textarea></p>
+	<p>If you are also bot photo scouting, don't forget to take a picture!</p>
+
+	<input type=hidden name=created value="">
+	<input type=hidden name=modified value="">
+	<div>
+		<button id=pitScoutNext>Save</button>
+	</div>
+</form>
+</body>
+</html>

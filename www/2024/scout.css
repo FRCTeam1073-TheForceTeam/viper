@@ -1,0 +1,36 @@
+#scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-bottom:3vmin;width:100%;max-width:40em}
+#scouting>div>table>tbody>tr>th{border:1px solid var(--main-border-color);font-size:200%}
+#scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;font-size:125%;vertical-align:top}
+img.count{max-width:7em}
+input.num{text-align:center}
+.teleop img.count{max-width:4em}
+.two-column{column-count:2;column-gap:1em}
+.two-column>div{break-inside:avoid-column}
+#collect-map{width:60vmin;height:60vmin;max-width:20em;max-height:20em;position:relative;display:inline-block}
+.blueTeam #collect-map{background:url(auto-collect-blue.png) no-repeat center center / 100% 100%}
+.redTeam #collect-map{background:url(auto-collect-red.png) no-repeat center center / 100% 100%}
+#collect-map label{position:absolute;display:block}
+#collect-map label span{color:orange;font-weight:bold;min-width:2vw}
+.auto_collect_centerline{top:86%}
+.auto_collect_wing{top:30%}
+.redTeam .auto_collect_amp, .blueTeam .auto_collect_source{left:5.5%}
+.redTeam .auto_collect_mid_amp, .blueTeam .auto_collect_mid_source{left:25.5%}
+.auto_collect_mid{left:45.5%}
+.blueTeam .auto_collect_mid_amp, .redTeam .auto_collect_mid_source{left:65.5%}
+.blueTeam .auto_collect_amp, .redTeam .auto_collect_source{left:85.5%}
+/* hr{height:1px;background-color:var(--main-border-color)} */
+#start-area{width:25em;height:7em;position:relative;margin:0 auto}
+.blueTeam #start-area{background:url(start-area-blue.png) no-repeat center center / 100% 100%}
+.redTeam #start-area{background:url(start-area-red.png) no-repeat center center / 100% 100%}
+#robot-starting-position{position:absolute;top:0;left:0;width:2.5em;height:2.5em;border-radius:.3em;}
+.blueTeam #robot-starting-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
+.redTeam #robot-starting-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
+@media (max-width: 450px){
+	#start-area{width:18em;height:4.5em}
+	#robot-starting-position{width:1.7em;height:1.7em;}
+}
+#speaker-shoot-area{width:25em;height:35em;position:relative;margin:0 auto}
+#speaker-shoot-area{background:url(speaker-shoot-area-blue.png) no-repeat center center / 100% 100%}
+.redTeam #speaker-shoot-area{background:url(speaker-shoot-area-red.png) no-repeat center center / 100% 100%}
+.shot-location{position:absolute;display:inline-block;color:var(--highlight-fg-color)}
+.equalWidth{width:33%;}

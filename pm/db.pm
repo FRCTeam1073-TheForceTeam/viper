@@ -156,7 +156,7 @@ sub upsert {
 			1;
 		} or do {
 			my $error = $@;
-			if ($table =~ /^20[0-9]{2}(pit|scouting)$/ and $error =~ /Unknown column '([^']+)'/i){
+			if ($table =~ /^20[0-9]{2}(pit|scouting|subjective)$/ and $error =~ /Unknown column '([^']+)'/i){
 				my $column = $1;
 				my $type = "VARCHAR(256)";
 				$dbh->do("
@@ -371,6 +371,43 @@ sub schema {
 							"
 								ALTER TABLE
 									${year}pit
+								ADD COLUMN
+									`$name` $type
+							"
+						);
+						1;
+					}
+				}
+			}
+			$dbh->commit();
+		}
+		if ( -e "$wwwDir/$year/subjective-scout.html"){
+			print("Creating table `${year}subjective`\n");
+			$dbh->do(
+				"
+					CREATE TABLE IF NOT EXISTS
+						${year}subjective
+					(
+						`site` VARCHAR(16) NOT NULL,
+						`event` VARCHAR(32) NOT NULL,
+						`team` VARCHAR(8) NOT NULL,
+						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+						INDEX(`site`,`event`),
+						UNIQUE(`site`,`event`,`team`,`scouter`)
+					)  $tableOptions
+				"
+			);
+			my $contents = read_file("$wwwDir/$year/subjective-scout.html");
+			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
+			for my $input (@inputs){
+				my $name = &getInputName($input);
+				if ($name){
+					my $type = &getInputType($input, $name);
+					eval {
+						$dbh->do(
+							"
+								ALTER TABLE
+									${year}subjective
 								ADD COLUMN
 									`$name` $type
 							"

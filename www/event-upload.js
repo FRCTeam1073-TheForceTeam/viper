@@ -4,6 +4,8 @@ $(document).ready(function(){
 	$('#importData').submit(processInput)
 	$('input[type=submit]').click(processInput)
 
+	var eventInfo
+
 	function processInput(){
 		var src=$('#sourceInp').val(),csv=""
 		if (!csv) csv=getBlueAllianceMatchSchedule(src)
