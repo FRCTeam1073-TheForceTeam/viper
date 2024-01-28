@@ -47,11 +47,14 @@ $(document).ready(function(){
 		cycle.lastPlace = place
 	}
 
+	var matchStartTime = 0
+
 	onShowScouting.push(function(){
 		cycleInterrupt()
 		cycles=[]
 		toggleOnstage()
 		setTimeout(initialRobotStartPosition,500)
+		matchStartTime = 0
 		return true
 	})
 	onShowSubjectiveScouting.push(function(){
@@ -71,16 +74,21 @@ $(document).ready(function(){
 		if (!$(this).is('.placement,.collectSource')) cycleInterrupt()
 	})
 
-	$('.auto_collect').click(function(){
-		var input = $(this).find('input'),
-		order = $('#auto_collect_order'),
+	$('.auto label,.teleop label,.auto .count,.teleop .count').click(function(){
+		if (!matchStartTime) matchStartTime = new Date().getTime()
+		var el = $(this),
+		input = findInputInEl(findParentFromButton(el)),
+		order = $('#timeline'),
 		text = order.val(),
-		name = input.attr('name').replace('auto_collect_','')
-		if (input.is(':checked')){
+		name = input.attr('name'),
+		src = el.attr('src') || ""
+		console.log(input)
+		if (/up/.test(src) || input.is(':checked')){
 			if (text) text += " "
-			text += name
+			var seconds = Math.round((new Date().getTime() - matchStartTime)/1000)
+			text += `${seconds}:${name}`
 		} else {
-			text = text.replace(new RegExp(`${name}( |$)`),"").trim()
+			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${name}( |$)`),"$1").trim()
 		}
 		order.val(text)
 	})

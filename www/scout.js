@@ -287,18 +287,28 @@ function showSubjectiveScoutingForm(t){
 	localStorage.setItem("last_scout_type", "subjective-scout")
 }
 
+function findParentFromButton(button){
+	var parent = button
+	for(var i=0;!parent.find('input').length&&i<10;i++) parent = parent.parent()
+	return parent
+}
+
+function findInputInEl(parent){
+	var input = findParentFromButton(parent).find('input')
+	if (!input.length) throw ("No input for counter")
+	return input
+}
+
 var lastClickTimeOnCounter = 0
 function countHandler(e){
 	var count=$(this),
 	clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
-	parent = count,
-	src = count.attr('src')
-	for(var i=0;parent.find('.count,input').length<3&&i<10;i++) parent = parent.parent()
-	var input = parent.find('input'),
+	parent = findParentFromButton(count),
+	input = findInputInEl(parent),
+	src = count.attr('src'),
 	val=parseInt(input.val())||0,
 	max=parseInt(input.attr('max'))||999999,
 	min=parseInt(input.attr('min'))||0
-	if (!input.length) throw ("No input for counter")
 	if (clicked){
 		lastClickTimeOnCounter=e.timeStamp
 		var toAdd = 0
