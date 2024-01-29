@@ -187,7 +187,9 @@ sub getInputName(){
 sub getInputType(){
 	my ($input, $name) = @_;
 	return "TIMESTAMP" if ($name eq 'created' or $name eq 'modified');
-	return "VARCHAR(2048)" if ($input=~/^<textarea/i);
+	return "TEXT" if ($input=~/^<textarea/i or $input =~ /type[ ="]*hidden/);
+	return "VARCHAR(32)" if ($input =~ /type[ ="]*(checkbox|radio)/);
+	return "VARCHAR(16)" if ($input =~ /type[ ="]*number/ or $input =~ /class[ ="]*num/);
 	return "VARCHAR(256)";
 }
 

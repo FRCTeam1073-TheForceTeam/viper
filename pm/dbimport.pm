@@ -21,7 +21,7 @@ sub new {
 sub getEventAndTable(){
 	my($self, $file) = @_;
 	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
-	$table = "$year$table" if ($table =~ /^scouting|pit$/);
+	$table = "$year$table" if ($table =~ /^scouting|pit|subjective$/);
 	$event = "$year$event";
 	return $event, $table;
 }
