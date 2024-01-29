@@ -128,6 +128,7 @@ sub printCsv(){
 
 sub upsert {
 	my($self, $table, $data) = @_;
+	delete($data->{""});
 	my $conn = $self->dbConnection();
 	$data->{'site'} = getSite();
 	my @allFields = keys(%$data);

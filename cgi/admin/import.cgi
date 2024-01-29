@@ -48,7 +48,7 @@ sub writeFileData(){
 	my $lockFile = "$fileName.lock";
 	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
-	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$openmode", $fileName);
+	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$openMode", $fileName);
 	print $fh $fileContents;
 	close $fh;
 	$webutil->commitDataFile($fileName, "import") if ($fileName =~ /\.csv$/);
