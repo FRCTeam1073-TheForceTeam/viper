@@ -45,8 +45,11 @@ sub getSite {
 			$host =~ s/^www\.//gi;
 			$site = lc($1) if ($host =~ /^([A-Za-z0-9\-]+)\./);
 		}
+		if (exists $ENV{'VIPER_DB_SITE'}){
+			$site = lc($ENV{'VIPER_DB_SITE'});
+		}
 	}
-	$site = "webscout" if ($site eq "*");
+	die "Could not determine viper site for db upload.  Consider setting the VIPER_DB_SITE environment variable." if ($site eq "*");
 	return $site;
 }
 
