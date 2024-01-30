@@ -18,7 +18,6 @@ RUN apt-get update \
 		libjson-pp-perl \
 		libmime-base64-perl \
 		libwww-perl \
-		libyaml-perl \
 		perl \
 		simple-revision-control \
 	&& apt-get clean autoclean \

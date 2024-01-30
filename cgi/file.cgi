@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use File::Slurp;
 use Data::Dumper;
-use YAML;
 use CGI qw(-utf8);;
 use lib '../pm';
 use webutil;
