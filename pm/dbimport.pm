@@ -102,4 +102,54 @@ sub importImageFile(){
 	};
 	$dbimport::db->commit();
 }
+
+sub importLocalJsFile(){
+	my ($self, $contents) = @_;
+	my $data = {
+		'local_js' => scalar($contents)
+	};
+	eval {
+		$dbimport::db->upsert('sites', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR "Failed to store local.js\n";
+		print STDERR Dumper($data);
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
+sub importLocalCssFile(){
+	my ($self, $contents) = @_;
+	my $data = {
+		'local_css' => scalar($contents)
+	};
+	eval {
+		$dbimport::db->upsert('sites', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR "Failed to store local.css\n";
+		print STDERR Dumper($data);
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
+sub importLocalBackgroundImageFile(){
+	my ($self, $contents) = @_;
+	my $data = {
+		'background_image' => scalar($contents)
+	};
+	eval {
+		$dbimport::db->upsert('sites', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR "Failed to store local background image\n";
+		die $error;
+	};
+	$dbimport::db->commit();
+}
 1;

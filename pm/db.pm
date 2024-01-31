@@ -63,7 +63,6 @@ sub dbConnection {
 	$db::viper_database_name = $conf->{'MYSQL_DATABASE'};
 	my $user = $conf->{'MYSQL_USER'};
 	my $password = $conf->{'MYSQL_PASSWORD'};
-	my $site = getSite();
 
 	return 0 if (!$host or !$port or !$db::viper_database_name or !$user or !$password);
 
@@ -301,6 +300,28 @@ sub schema {
 				UNIQUE(`site`,`year`,`team`,`view`)
 			)  $tableOptions
 	 	"
+	);
+	$dbh->commit();
+
+	print("Creating table `sites`\n");
+	$dbh->do(
+		"
+			CREATE TABLE IF NOT EXISTS
+				sites
+			(
+				`site` VARCHAR(16) NOT NULL,
+				`viewer_name` VARCHAR(32),
+				`viewer_pass` VARCHAR(512),
+				`scouter_name` VARCHAR(32),
+				`scouter_pass` VARCHAR(512),
+				`admin_name` VARCHAR(32),
+				`admin_pass` VARCHAR(512),
+				`local_js` MEDIUMTEXT,
+				`local_css` MEDIUMTEXT,
+				`background_image` MEDIUMBLOB,
+				UNIQUE(`site`)
+			)  $tableOptions
+		"
 	);
 	$dbh->commit();
 

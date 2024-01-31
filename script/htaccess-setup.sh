@@ -3,10 +3,16 @@
 set -e
 
 mkdir -p www/data
+
+cp script/www-htaccess www/.htaccess
 cp script/data-htaccess www/data/.htaccess
+
 DB_SETTINGS_COUNT=`grep -cE '^MYSQL_(HOST|PORT|DATABASE|USER|PASSWORD)=\".+\"' local.conf`
 if [ $DB_SETTINGS_COUNT -ge 5 ]
 then
+	echo >> www/.htaccess
+	echo 'RewriteRule \/?(local\.(?:js|css|png))$ /file.cgi?file=$1' >> www/.htaccess
+
 	echo >> www/data/.htaccess
 	echo 'RewriteEngine on' >> www/data/.htaccess
 	echo 'RewriteRule \/?(?:data\/)?((?:[0-9]+\/)?[^\/]+\.(?:csv|json|jpg))$ /file.cgi?file=$1' >> www/data/.htaccess

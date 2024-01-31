@@ -2,6 +2,7 @@
 /www/data
 /www/admin
 /www/scout
+/www/.htaccess
 /orig
 local.*
 *.tar.gz
