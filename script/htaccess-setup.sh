@@ -11,7 +11,7 @@ DB_SETTINGS_COUNT=`grep -cE '^MYSQL_(HOST|PORT|DATABASE|USER|PASSWORD)=\".+\"' l
 if [ $DB_SETTINGS_COUNT -ge 5 ]
 then
 	echo >> www/.htaccess
-	echo 'RewriteRule \/?(local\.(?:js|css|png))$ /file.cgi?file=$1' >> www/.htaccess
+	echo 'RewriteRule \/?local(?:\.background)?\.(js|css|png)$ /file.cgi?file=local.$1' >> www/.htaccess
 
 	echo >> www/data/.htaccess
 	echo 'RewriteEngine on' >> www/data/.htaccess
