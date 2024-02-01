@@ -26,7 +26,7 @@ function aggregateStats(scout, aggregate){
 			aggregate[field] = aggregate[field]||""
 		}
 		if(/^int-list$/.test(statInfo[field]['type'])){
-			scout[field] = (scout[field]||"").split(" ").map(num => parseInt(num, 10)).filter(Number)
+			scout[field] = ((scout[field]||"")+"").split(" ").map(num => parseInt(num, 10)).filter(Number)
 		}
 	})
 
