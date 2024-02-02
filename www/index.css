@@ -1,2 +1,5 @@
 #main ul{font-size:150%;font-weight:bold;max-width:16em;list-style-type: none;margin:0 auto;padding:0}
-#main li{margin:.5em 0;border-top:1px solid var(--main-border-color);padding-top:0.2em}
+#main li{margin:.5em 0;border:1px solid var(--main-border-color);padding:0.3em}
+.index-nav{font-size:150%;font-weight:bold;max-width:16em;margin:0.3em auto}
+.index-nav .side-by-side{padding:0; margin:0 0.3em}
+.index-nav .side-by-side a {padding-top:.3em;display:block;}
