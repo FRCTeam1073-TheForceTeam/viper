@@ -49,7 +49,7 @@ function showSelectPitScoutTeam(){
 	$('.location-pointer').remove()
 	for (var i=0; i<showTeams.length;i++){
 		var button = $('<button>').text(showTeams[i]).click(showPitScoutingForm)
-		if (withData.hasOwnProperty(showTeams[i])||eventPitData[showTeams[i]]) button.addClass('stored')
+		if (withData.hasOwnProperty(showTeams[i])||(window.eventPitData&&eventPitData[showTeams[i]])) button.addClass('stored')
 		el.append(button)
 	}
 	$('#select-team').show()
@@ -67,7 +67,7 @@ function showSelectSubjectiveScoutTeam(){
 	$('.location-pointer').remove()
 	for (var i=0; i<showTeams.length;i++){
 		var button = $('<button>').text(showTeams[i]).click(showSubjectiveScoutingForm)
-		if (withData.hasOwnProperty(showTeams[i])||eventSubjectiveData[showTeams[i]]) button.addClass('stored')
+		if (withData.hasOwnProperty(showTeams[i])||(windows.eventSubjectiveData&&eventSubjectiveData[showTeams[i]])) button.addClass('stored')
 		el.append(button)
 	}
 	$('#select-team').show()
