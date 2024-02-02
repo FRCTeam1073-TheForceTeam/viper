@@ -88,6 +88,7 @@ function scheduleSortKey(match){
 	var event = match.event,
 	id = match.Match,
 	m = id.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)([0-9]+)$/)
+	if (!m) return match
 	return event + "---" + MATCH_TYPE_SORT[m[1]] + "---" + m[2].padStart(12,'0')
 }
 

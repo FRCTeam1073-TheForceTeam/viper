@@ -11,6 +11,9 @@ $(document).ready(function(){
 			eventTeams.forEach(addTeam)
 		})
 	}
+	if (eventId){
+		$('#yearInp').val((/^([0-9]{4})/.exec(eventId)||["",$('#yearInp').val()])[1])
+	}
 	$('#add').click(function(e){
 		e.preventDefault()
 		addTeam($('#team').val())
