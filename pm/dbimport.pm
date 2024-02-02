@@ -21,7 +21,7 @@ sub new {
 sub getEventAndTable(){
 	my($self, $file) = @_;
 	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
-	$table = "$year$table" if ($table =~ /^scouting|pit$/);
+	$table = "$year$table" if ($table =~ /^scouting|pit|subjective$/);
 	$event = "$year$event";
 	return $event, $table;
 }
@@ -98,6 +98,56 @@ sub importImageFile(){
 		my $error = $@;
 		$data->{'image'}='---BINARY DATA---';
 		print STDERR Dumper($data);
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
+sub importLocalJsFile(){
+	my ($self, $contents) = @_;
+	my $data = {
+		'local_js' => scalar($contents)
+	};
+	eval {
+		$dbimport::db->upsert('sites', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR "Failed to store local.js\n";
+		print STDERR Dumper($data);
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
+sub importLocalCssFile(){
+	my ($self, $contents) = @_;
+	my $data = {
+		'local_css' => scalar($contents)
+	};
+	eval {
+		$dbimport::db->upsert('sites', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR "Failed to store local.css\n";
+		print STDERR Dumper($data);
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
+sub importLocalBackgroundImageFile(){
+	my ($self, $contents) = @_;
+	my $data = {
+		'background_image' => scalar($contents)
+	};
+	eval {
+		$dbimport::db->upsert('sites', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR "Failed to store local background image\n";
 		die $error;
 	};
 	$dbimport::db->commit();

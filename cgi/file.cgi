@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use File::Slurp;
 use Data::Dumper;
-use YAML;
 use CGI qw(-utf8);;
 use lib '../pm';
 use webutil;
@@ -17,7 +16,13 @@ my $db = db->new();
 
 my $file = $cgi->param('file');
 $webutil->error("No file specified") if (!$file);
-if ($file =~ /\.csv$/){
+if ($file =~ /local\.js$/){
+	&localJs();
+} elsif ($file =~ /local\.css$/){
+	&localCss($file);
+} elsif ($file =~ /local\.png$/){
+	&localPng($file);
+} elsif ($file =~ /\.csv$/){
 	&csv($file);
 } elsif ($file =~ /\.json$/){
 	&json($file);
@@ -25,6 +30,44 @@ if ($file =~ /\.csv$/){
 	&image($file);
 } else {
 	$webutil->notfound();
+}
+
+sub localJs(){
+	my $dbh = $db->dbConnection();
+	my $sth = $dbh->prepare("SELECT `local_js` FROM `sites` WHERE `site`=?");
+	$sth->execute($db->getSite());
+	my $data = $sth->fetchall_arrayref();
+	$webutil->notfound() if (!scalar(@$data));
+
+	print "Cache-Control: max-age=28800, public\n";
+	print "Content-type: text/js; charset=UTF-8\n\n";
+	print $data->[0]->[0];
+}
+
+sub localCss(){
+	my $dbh = $db->dbConnection();
+	my $sth = $dbh->prepare("SELECT `local_css` FROM `sites` WHERE `site`=?");
+	$sth->execute($db->getSite());
+	my $data = $sth->fetchall_arrayref();
+	$webutil->notfound() if (!scalar(@$data));
+
+	print "Cache-Control: max-age=28800, public\n";
+	print "Content-type: text/css; charset=UTF-8\n\n";
+	print $data->[0]->[0];
+}
+
+
+sub localPng(){
+	my $dbh = $db->dbConnection();
+	my $sth = $dbh->prepare("SELECT `background_image` FROM `sites` WHERE `site`=?");
+	$sth->execute($db->getSite());
+	my $data = $sth->fetchall_arrayref();
+	$webutil->notfound() if (!scalar(@$data));
+
+	binmode(STDOUT, ":raw");
+	print "Cache-Control: max-age=28800, public\n";
+	print "Content-type: image/jpg\n\n";
+	print $data->[0]->[0];
 }
 
 sub json(){
@@ -35,7 +78,6 @@ sub json(){
 	my $sth = $dbh->prepare("SELECT `json` FROM `apijson` WHERE `site`=? AND `event`=? AND `file`=?");
 	$sth->execute($db->getSite(), $event, $name);
 	my $data = $sth->fetchall_arrayref();
-
 	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":utf8");

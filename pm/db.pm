@@ -45,8 +45,11 @@ sub getSite {
 			$host =~ s/^www\.//gi;
 			$site = lc($1) if ($host =~ /^([A-Za-z0-9\-]+)\./);
 		}
+		if (exists $ENV{'VIPER_DB_SITE'}){
+			$site = lc($ENV{'VIPER_DB_SITE'});
+		}
 	}
-	$site = "webscout" if ($site eq "*");
+	die "Could not determine viper site for db upload.  Consider setting the VIPER_DB_SITE environment variable." if ($site eq "*");
 	return $site;
 }
 
@@ -60,7 +63,6 @@ sub dbConnection {
 	$db::viper_database_name = $conf->{'MYSQL_DATABASE'};
 	my $user = $conf->{'MYSQL_USER'};
 	my $password = $conf->{'MYSQL_PASSWORD'};
-	my $site = getSite();
 
 	return 0 if (!$host or !$port or !$db::viper_database_name or !$user or !$password);
 
@@ -128,6 +130,7 @@ sub printCsv(){
 
 sub upsert {
 	my($self, $table, $data) = @_;
+	delete($data->{""});
 	my $conn = $self->dbConnection();
 	$data->{'site'} = getSite();
 	my @allFields = keys(%$data);
@@ -186,7 +189,9 @@ sub getInputName(){
 sub getInputType(){
 	my ($input, $name) = @_;
 	return "TIMESTAMP" if ($name eq 'created' or $name eq 'modified');
-	return "VARCHAR(2048)" if ($input=~/^<textarea/i);
+	return "TEXT" if ($input=~/^<textarea/i or $input =~ /type[ ="]*hidden/);
+	return "VARCHAR(32)" if ($input =~ /type[ ="]*(checkbox|radio)/);
+	return "VARCHAR(16)" if ($input =~ /type[ ="]*number/ or $input =~ /class[ ="]*num/);
 	return "VARCHAR(256)";
 }
 
@@ -295,6 +300,28 @@ sub schema {
 				UNIQUE(`site`,`year`,`team`,`view`)
 			)  $tableOptions
 	 	"
+	);
+	$dbh->commit();
+
+	print("Creating table `sites`\n");
+	$dbh->do(
+		"
+			CREATE TABLE IF NOT EXISTS
+				sites
+			(
+				`site` VARCHAR(16) NOT NULL,
+				`viewer_name` VARCHAR(32),
+				`viewer_pass` VARCHAR(512),
+				`scouter_name` VARCHAR(32),
+				`scouter_pass` VARCHAR(512),
+				`admin_name` VARCHAR(32),
+				`admin_pass` VARCHAR(512),
+				`local_js` MEDIUMTEXT,
+				`local_css` MEDIUMTEXT,
+				`background_image` MEDIUMBLOB,
+				UNIQUE(`site`)
+			)  $tableOptions
+		"
 	);
 	$dbh->commit();
 

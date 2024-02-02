@@ -154,12 +154,8 @@ sub writeData(){
 }
 
 my $dbh = $db->dbConnection();
-if ($dbh){
-	$webutil->error("db upload", Dumper($scoutCsv));
-} else {
-	&writeData($scoutCsv,$scoutHeaders,'scouting');
-	&writeData($pitCsv,$pitHeaders,'pit');
-	&writeData($subjectiveCsv,$subjectiveHeaders,'subjective');
-}
+&writeData($scoutCsv,$scoutHeaders,'scouting');
+&writeData($pitCsv,$pitHeaders,'pit');
+&writeData($subjectiveCsv,$subjectiveHeaders,'subjective');
 
 $webutil->redirect("/upload-done.html#$savedKeys");
