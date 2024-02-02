@@ -98,7 +98,6 @@ function loadEventSchedule(callback){
 	}
 	eventAjax(`/data/${eventId}.schedule.csv`,function(text){
 		eventMatches=csvToArrayOfMaps(text)
-		console.log(eventMatches)
 		eventMatches.sort((a,b)=>scheduleSortKey(a).localeCompare(scheduleSortKey(b)))
 		var teams = {}
 		for (var i=0; i<eventMatches.length; i++){

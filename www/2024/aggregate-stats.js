@@ -417,7 +417,6 @@ function toPurpleStandard(scout){
 		return r
 	}
 	function tpsMatch(match){
-		console.log(match)
 		var m = (match||"").match(/^([1-5]?)(qm|p|f)([0-9]+)$/)
 		if (!m) return null
 		return {
@@ -437,7 +436,6 @@ function toPurpleStandard(scout){
 		entries:[]
 	}
 	scout.forEach(function(row){
-		console.log(row)
 		var match = tpsMatch(row['match'])
 		if (match){
 			tps.entries.push({

@@ -82,7 +82,6 @@ $(document).ready(function(){
 		text = order.val(),
 		name = input.attr('name'),
 		src = el.attr('src') || ""
-		console.log(input)
 		if (/up/.test(src) || input.is(':checked')){
 			if (text) text += " "
 			var seconds = Math.round((new Date().getTime() - matchStartTime)/1000)
