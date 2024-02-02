@@ -1,8 +1,6 @@
-# webscout
+# Viper Docker Development environment
 
-## Development environment
-
-The scouting server can be run for development on pretty much any Windows, Mac, or Linux computer.
+The scouting server can be run for development on pretty much any Windows, Mac, or Linux computer using Docker.
 
 1. Install `docker-compose` from [docs.docker.com/compose/install/](https://docs.docker.com/compose/install/)
 1. Use git to clone the code

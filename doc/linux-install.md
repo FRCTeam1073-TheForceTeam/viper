@@ -1,6 +1,4 @@
-# webscout
-
-## Installation on Linux (Raspberry Pi)
+# Viper Installation on Linux (Raspberry Pi)
 
 1. Use git to clone the code
 1. Navigate to the webscout directory on the command line

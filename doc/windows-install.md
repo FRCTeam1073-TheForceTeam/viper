@@ -1,4 +1,4 @@
-# Installing on Windows
+# Installing Viper on Windows
 
 ## Download and install software
 
