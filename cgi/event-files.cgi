@@ -32,6 +32,7 @@ if ($dbh){
 		UNION SELECT '/data/$event.schedule.csv' AS `file` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
 		UNION SELECT '/data/$event.alliances.csv' AS `file` FROM `alliances` WHERE `site`='$site' AND `event`='$event'
 		UNION SELECT '/data/$event.pit.csv' AS `file` FROM `${year}pit` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.subjective.csv' AS `file` FROM `${year}subjective` WHERE `site`='$site' AND `event`='$event'
 		UNION SELECT '/data/$event.scouting.csv' AS `file` FROM `${year}scouting` WHERE `site`='$site' AND `event`='$event'
 		UNION SELECT CONCAT('/data/$year/',`img`,'.jpg') AS `file` FROM (
 			SELECT DISTINCT CONCAT(`team`,'-',`view`) AS img FROM (
