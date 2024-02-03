@@ -27,7 +27,7 @@ my $dbh = $db->dbConnection();
 
 if ($delete){
 	if ($dbh){
-		$dbimport->deleteCsvFile($file);
+		$dbimport->deleteCsvFile($file, 1);
 	} else {
 		unlink $file;
 	}
