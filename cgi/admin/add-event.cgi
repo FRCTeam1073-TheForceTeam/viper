@@ -37,8 +37,6 @@ sub escapeCsv(){
 $webutil->error("Missing event ID") if (!$event);
 $webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
 $webutil->error("Missing schedule") if (!$schedule);
-$webutil->error("Malformed name", $name) if ($name !~ /^[\x20-\x7F]*$/);
-$webutil->error("Malformed location", $location) if ($location !~ /^[\x20-\x7F]*$/);
 $webutil->error("Malformed start", $start) if ($start !~ /^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/);
 $webutil->error("Malformed end", $end) if ($end !~ /^20[0-9]{2}\-[0-9]{2}\-[0-9]{2}$/);
 $name = &escapeCsv($name);
