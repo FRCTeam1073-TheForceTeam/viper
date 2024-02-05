@@ -64,7 +64,7 @@ foreach my $name (glob("data/$event.*")){
 }
 
 if ( -e "data/$event.schedule.csv" ){
-	my $contents = read_file("data/$event.schedule.csv");
+	my $contents = read_file("data/$event.schedule.csv", {binmode=>':encoding(UTF-8)'});
 	my @teams = sort { $a <=> $b } keys(%{{map { $_ => 1 } ($contents =~ /[0-9]+/g)}});
 
 	for my $team (@teams){

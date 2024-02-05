@@ -4,6 +4,7 @@
 
 use strict;
 use warnings;
+use open ':std', ':encoding(UTF-8)';
 use File::Slurp;
 use lib '../pm';
 use db;
@@ -43,7 +44,7 @@ foreach my $name (glob("data/*.schedule.csv")){
 	my $eventFile =  "data/$name.event.csv";
 	if (-e $eventFile){
 		print ",";
-		my $data = read_file($eventFile);
+		my $data = read_file($eventFile, {binmode=>':encoding(UTF-8)'});
 		$data =~ s/^\A.*[\r\n]+//g; # Remove header line
 		chomp $data;
 		print $data;
