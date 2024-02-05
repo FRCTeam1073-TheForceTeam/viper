@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use open ':std', ':encoding(UTF-8)';
 use CGI;
 use Data::Dumper;
 use File::Slurp;
@@ -24,7 +25,7 @@ my $csv;
 print "Content-Type: text/plain; charset=utf-8\n\n";
 
 for my $file (@$files){
-	my $contents = read_file("$file");
+	my $contents = read_file("$file", {binmode => ':encoding(UTF-8)'});
 	my $append = csv->new($contents);
 	if (!$csv){
 		$csv = $append;

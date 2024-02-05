@@ -4,7 +4,6 @@
 
 use strict;
 use warnings;
-use File::Slurp;
 use CGI;
 use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';

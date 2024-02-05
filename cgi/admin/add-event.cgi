@@ -52,7 +52,7 @@ sub writeCsvData(){
 	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 	if ( -e $file){
-		my $oldSchedule = read_file($file);
+		my $oldSchedule = read_file($file, {binmode => ':encoding(UTF-8)'});
 		my ($oldPractice) = $oldSchedule =~ /((?:^pm.*\n)+)/m;
 		my ($oldQuals) = $oldSchedule =~ /((?:^qm.*\n)+)/m;
 		my ($oldPlayoffs) = $oldSchedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
@@ -78,7 +78,7 @@ sub writeCsvData(){
 	my $firstInspiresId = $event;
 	$firstInspiresId =~ s/^([0-9]{4})/$1\//g;
 	if (-e $file){
-		my $oldFile = read_file($file);
+		my $oldFile = read_file($file, {binmode => ':encoding(UTF-8)'});
 		my $oldEvent = csv->new($oldFile);
 		$blueAllianceId = $oldEvent->getByName(1,"blue_alliance_id")||$blueAllianceId;
 		$firstInspiresId = $oldEvent->getByName(1,"first_inspires_id")||$firstInspiresId;

@@ -20,7 +20,7 @@ $webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0
 $event=lc($event);
 my $firstId = $event;
 if (-e "../data/$event.event.csv"){
-	my $eventData = csv->new(scalar(read_file("../data/$event.event.csv")));
+	my $eventData = csv->new(scalar(read_file("../data/$event.event.csv", {binmode => ':encoding(UTF-8)'})));
 	my $id = $eventData->getByName(1,"first_inspires_id");
 	$firstId = $id if ($id);
 }
