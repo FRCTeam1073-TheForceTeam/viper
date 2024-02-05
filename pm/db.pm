@@ -44,8 +44,7 @@ sub getSite {
 			my $host = $ENV{'HTTP_HOST'};
 			$host =~ s/^www\.//gi;
 			$site = lc($1) if ($host =~ /^([A-Za-z0-9\-]+)\./);
-		}
-		if (exists $ENV{'VIPER_DB_SITE'}){
+		} elsif (exists $ENV{'VIPER_DB_SITE'}){
 			$site = lc($ENV{'VIPER_DB_SITE'});
 		}
 	}
@@ -83,14 +82,21 @@ sub dbConnection {
 sub printCsv(){
 	my($self, $sth) = @_;
 
+	binmode(STDOUT, ":utf8");
+	my $headers = "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
+	$headers = $headers."Content-type: text/plain; charset=UTF-8\n\n";
+	return $self->writeCsv($sth, \*STDOUT, $headers);
+}
+
+sub writeCsv(){
+	my($self, $sth, $fh, $headers) = @_;
+
 	my $columns = $sth->{NAME};
 	my $data = $sth->fetchall_arrayref();
 
-	webutil->new()->notfound() if (!scalar(@$data));
+	return 0 if (!scalar(@$data));
 
-	binmode(STDOUT, ":utf8");
-	print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
-	print "Content-type: text/plain; charset=UTF-8\n\n";
+	print $fh $headers if($headers);
 
 	my @withData = map {0} @$columns;
 	for my $row (@$data){
@@ -105,27 +111,28 @@ sub printCsv(){
 	my $first = 1;
 	for my $field (@$columns){
 		if ($field ne 'site' and $withData[$i]){
-			print (",") if (!$first);
-			print("$field");
+			$fh->print(",") if (!$first);
+			$fh->print("$field");
 			$first = 0;
 		}
 		$i++;
 	}
-	print "\n";
+	$fh->print("\n");
 
 	for my $row (@$data){
 		my $i = 0;
 		my $first = 1;
 		for my $field (@$row){
 			if ($columns->[$i] ne 'site' and $withData[$i]){
-				print (",") if (!$first);
-				print($field||"");
+				$fh->print(",") if (!$first);
+				$fh->print($field||"");
 				$first = 0;
 			}
 			$i++;
 		}
-		print "\n";
+		$fh->print("\n");
 	}
+	return 1
 }
 
 sub upsert {

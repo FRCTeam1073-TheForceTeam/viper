@@ -121,5 +121,5 @@ sub csv(){
 		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event`='$event'");
 	}
 	$sth->execute($db->getSite());
-	$db->printCsv($sth)
+	$webutil->notfound() unless $db->printCsv($sth);
 }

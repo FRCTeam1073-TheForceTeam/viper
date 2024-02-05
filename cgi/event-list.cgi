@@ -4,13 +4,16 @@
 
 use strict;
 use warnings;
+use Data::Dumper;
 use File::Slurp;
 use lib '../pm';
 use db;
+use webutil;
 
 binmode(STDOUT, ":utf8");
 
 my $db = db->new();
+my $webutil = webutil->new;
 
 sub isoDate(){
 	my ($time) = @_;
@@ -25,13 +28,14 @@ sub isoDate(){
 }
 
 # print web page beginning
+print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
 print "Content-type: text/csv; charset=UTF-8\n\n";
 
 my $dbh = $db->dbConnection();
 if ($dbh){
 	my $sth = $dbh->prepare("SELECT * FROM `event` WHERE `site`=?");
 	$sth->execute($db->getSite());
-	$db->printCsv($sth);
+	$db->writeCsv($sth, \*STDOUT);
 	exit 0;
 }
 
