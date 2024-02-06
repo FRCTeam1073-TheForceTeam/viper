@@ -36,7 +36,7 @@ my $dbh = $db->dbConnection();
 if ($dbh){
 	my $sth = $dbh->prepare("SELECT * FROM `event` WHERE `site`=?");
 	$sth->execute($db->getSite());
-	$db->writeCsv($sth, \*STDOUT);
+	$db->writeCsv($sth, \*STDOUT, 0, 1);
 	exit 0;
 }
 
