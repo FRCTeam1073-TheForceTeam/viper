@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scout EVENT - Viper</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.js></script>
+<script src=/event-url.js></script>
+<script src=/scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<title>Viper</title>
+</head>
+<body>
+<h1>Viper</h1>
+<div id=select-bot style=display:none class=screen>
+	<H2>Select your robot</H2>
+	<table><tr>
+		<td class=blueTeamBG><button>B1</button></td>
+		<td rowspan=3><img class=bigimg src=full_field_blue_robots.png></td>
+		<td class=redTeamBG><button>R1</button></td>
+	</tr><tr>
+		<td class=blueTeamBG><button>B2</button></td>
+		<td class=redTeamBG><button>R2</button></td>
+	</tr><tr>
+		<td class=blueTeamBG><button>B3</button></td>
+		<td class=redTeamBG><button>R3</button></td>
+	</tr></table>
+</div>
+
+<div id=select-match style=display:none class=screen>
+	<ul id=match-list></ul>
+</div>
+
+<div id=change-team style=display:none class=screen>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn>Cancel</button>
+</div>
+
+<form id=scouting style=display:none class=screen>
+	<input type=hidden name=event>
+	<input type=hidden name=match>
+	<input type=hidden name=team>
+	<table>
+		<tr><th colspan=2>
+			Auto
+		</th><th colspan=2 rowspan=2>
+			Teleop
+		</th></tr><tr><td colspan=2>
+			<label><input type=checkbox name=auto_line value=1><span>Move from Initiation</span></label>
+		</td></tr><tr><td>
+			Inner Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_three2.png>
+				<input type=text class=num value=0 name=auto_inner size=1 disabled>
+			</div></div>
+		</td><td>
+			Missed Shots
+			<div>
+				<input type=text class=num value=0 name=auto_missed size=1 disabled>
+				<div>
+					<img class=count src=/count_up.svg>
+					<img class=count src=/count_down.svg>
+				</div>
+			</div>
+		</td><td>
+			Missed Shots
+			<div>
+				<input type=text class=num value=0 name=teleop_missed size=1 disabled>
+				<div>
+					<img class=count src=/count_up.svg>
+					<img class=count src=/count_down.svg>
+				</div>
+			</div>
+		</td><td>
+			Inner Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_five2.png>
+				<input type=text class=num value=0 name=teleop_inner size=1 disabled>
+			</div></div>
+		</td></tr><tr><td>
+			Outer Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_three2.png>
+				<input type=text class=num value=0 name=auto_outer size=1 disabled>
+			</div></div>
+		</td><td rowspan=2 colspan=2 id=powerPort class=teamColorBG>
+		</td><td>
+			Outer Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_five2.png>
+				<input type=text class=num value=0 name=teleop_outer size=1 disabled>
+			</div></div>
+		</td></tr><tr><td>
+			Bottom Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_three2.png>
+				<input type=text class=num value=0 name=auto_bottom size=1 disabled>
+			</div></div>
+		</td><td>
+			Bottom Port
+			<div><div class="side-by-side left-buttons">
+				<img class=count src=/count_up.svg>
+				<img class=count src=/count_down.svg>
+			</div><div class="side-by-side right-buttons">
+				<img class="count plus" src=plus_five2.png>
+				<input type=text class=num value=0 name=teleop_bottom size=1 disabled>
+			</div></div>
+		</td></tr>
+	</table>
+	<label><input type=checkbox name=rotation_control value=1><span>Rotational Control</span></label>
+	<label><input type=checkbox name=position_control value=1><span>Positional Control</span></label>
+
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>During end game, <span class=team></span>:</legend>
+		<p>
+				<label><input type=checkbox name=parked value=1><span>Parked Under Shield</span></label>
+				<label><input type=checkbox name=climbed value=1><span>Climbed Without Help</span></label>
+				<label><input type=checkbox name=buddylift value=1><span>Lifted Others</span></label>
+				<label><input type=checkbox name=leveled value=1><span>Controlled Leveling</span></label>
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend><span class=team></span> climbed when the bar was:</legend>
+		<p>
+				<label><input type=radio name=bar_position value=3><span>High</span></label>
+				<label><input type=radio name=bar_position value=2><span>Level</span></label>
+				<label><input type=radio name=bar_position value=1><span>Low</span></label>
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Did <span class=team></span> play defense?</legend>
+		<p>
+			<label><input type=radio name=defense value=3><span>Good Defense</span></label>
+			<B>Not many</B> game pieces scored by opponent during defense
+		</p>
+		<p>
+			<label><input type=radio name=defense value=2><span>Average Defense</span></label>
+			Opponent was still able to score <B>some</B> game pieces
+		</p>
+		<p>
+			<label><input type=radio name=defense value=1><span>Below Average Defense</span></label>
+			Opponent was still able to score game pieces <B>without delay</B>
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Was <span class=team></span> defended?</legend>
+		<p>
+			<label><input type=radio name=defended value=3><span>Good Against Defense</span></label>
+			Defended but still scored game pieces with <B>little to no delay</B>
+		</p>
+		<p>
+			<label><input type=radio name=defended value=2><span>Average Against Defense</span></label>
+			Defended but still able to score <B>some</B> game pieces with delay
+		</p>
+		<p>
+			<label><input type=radio name=defended value=1><span>Affected by Defense</span></label>
+			Good defense <B>really affected</B> robot performance
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Did <span class=team></span> receive any fouls?</legend>
+		<p>
+			<label><input type=radio name=fouls value=1><span>1</span></label>
+			<label><input type=radio name=fouls value=2><span>2</span></label>
+			<label><input type=radio name=fouls value=3><span>3 or more</span></label>
+			Fouls
+		</p>
+		<p>
+			<label><input type=radio name=techfouls value=1><span>1</span></label>
+			<label><input type=radio name=techfouls value=2><span>2</span></label>
+			<label><input type=radio name=techfouls value=3><span>3 or more</span></label>
+			Tech fouls
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<legend>Is <span class=team></span> a good robot?</legend>
+		<p>
+			<label><input type=radio name=rank value=3><span>Very good robot</span></label>
+			Could be an alliance captain
+		</p>
+		<p>
+			<label><input type=radio name=rank value=2><span>Decent robot</span></label>
+			A productive and useful robot
+		</p>
+		<p>
+			<label><input type=radio name=rank value=1><span>Struggled to be effective</span></label>
+			Maybe good at one thing, but bad at others
+		</p>
+	</fieldset>
+	<hr class=teamColorBG>
+	<fieldset class="left full">
+		<div class=full><input type=text name=scouter placeholder="Scouter Name"></div>
+		<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+	</fieldset>
+	<div>
+		Save data:
+		<div id=featuredButton>
+			<button id=nextBtn>Next Match</button>
+		</div>
+		<div id=otherButtons>
+			<button id=matchBtn>Choose Match</button>
+			<button id=robotBtn>Change Robot</button>
+			<button id=teamBtn>Change Team</button>
+			<button id=uploadBtn>Upload Data</button>
+		</div>
+	</div>
+
+</form>
+</body>
+</html>
