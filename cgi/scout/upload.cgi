@@ -80,7 +80,7 @@ sub writeCsvData(){
 		$fCsv = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $fCsv) ];
 		my $fHead = shift @{$fCsv};
 		for my $name (@{$fHead}){
-			push(@{$csvHeaders}, $name) if (!defined $uHead->{$name});
+			push(@{$csvHeaders}, $name) if (!defined $uHead->{$name} and $name ne "event");
 		}
 		$fHead = { map { $fHead->[$_] => $_ } 0..(scalar(@{$fHead})-1) };
 		seek $fh, 0, 0;
@@ -105,11 +105,11 @@ sub writeCsvData(){
 			print $fh "\n";
 			$savedKeys .= "," if($savedKeys);
 			if ($type eq 'scouting'){
-				$savedKeys .= $row->[$uHead->{"event"}]."_".$row->[$uHead->{"match"}]."_".$row->[$uHead->{"team"}];
+				$savedKeys .= "${event}_".$row->[$uHead->{"match"}]."_".$row->[$uHead->{"team"}];
 			} elsif ($type eq 'pit'){
-				$savedKeys .= $row->[$uHead->{"event"}]."_".$row->[$uHead->{"team"}];
+				$savedKeys .= "${event}_".$row->[$uHead->{"team"}];
 			} elsif ($type eq 'subjective'){
-				$savedKeys .= $row->[$uHead->{"event"}]."_subjective_".$row->[$uHead->{"team"}];
+				$savedKeys .= "${event}_subjective_".$row->[$uHead->{"team"}];
 			}
 		}
 		close $fh;
@@ -130,14 +130,12 @@ sub writeDbData(){
 			@$data{@$csvHeaders} = @$row;
 			$db->upsert($table, $data);
 			$savedKeys .= "," if($savedKeys);
-			$savedKeys .= $data->{"event"}.(($type eq 'scouting')?("_".$data->{"match"}):"")."_".$data->{"team"};
-			$savedKeys .= "," if($savedKeys);
 			if ($type eq 'scouting'){
-				$savedKeys .= $data->{"event"}."_".$data->{"match"}."_".$data->{"team"};
+				$savedKeys .= "${event}_".$data->{"match"}."_".$data->{"team"};
 			} elsif ($type eq 'pit'){
-				$savedKeys .= $data->{"event"}."_".$data->{"team"};
+				$savedKeys .= "${event}".$data->{"team"};
 			} elsif ($type eq 'subjective'){
-				$savedKeys .= $data->{"event"}."_subjective_".$data->{"team"};
+				$savedKeys .= "${event}_subjective_".$data->{"team"};
 			}
 		}
 		$db->commit();
@@ -153,7 +151,6 @@ sub writeData(){
 	}
 }
 
-my $dbh = $db->dbConnection();
 &writeData($scoutCsv,$scoutHeaders,'scouting');
 &writeData($pitCsv,$pitHeaders,'pit');
 &writeData($subjectiveCsv,$subjectiveHeaders,'subjective');
