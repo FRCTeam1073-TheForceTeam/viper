@@ -13,6 +13,7 @@
 <script src=scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
+<script src=/qrcode.min.js></script>
 <title>Viper</title>
 </head>
 
@@ -225,12 +226,14 @@
 			<input type=hidden name=created value="">
 			<input type=hidden name=modified value="">
 			<fieldset class=full id=nextButtons>
+				<div id="qrcode"></div>
 				<legend>Save data:</legend>
 				<div id=featuredButton>
 					<button id=nextBtn>Next Match</button>
 				</div>
 				<div id=otherButtons>
 					<button id=uploadBtn>Upload Data</button>
+					<button id=qrcodeBtn>Generate Qr Code</button>
 				</div>
 			</fieldset>
 		</td></tr></table>

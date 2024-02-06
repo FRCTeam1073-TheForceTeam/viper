@@ -1,7 +1,12 @@
 "use strict"
 
 $(document).ready(function(){
+	$('#qrcodeBtn').click(function(){
+		$('#uploadBtn, #nextBtn, #qrcodeBtn').hide()
+		new QRCode(document.getElementById("qrcode"), "http:apple.com");
+	})
 
+	console.log("hi")
 	$('.onstage-state').click(toggleOnstage)
 
 	function toggleOnstage(){
