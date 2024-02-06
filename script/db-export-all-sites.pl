@@ -7,7 +7,7 @@ use lib './pm';
 use db;
 
 
-my $conf = read_file("local.conf");
+my $conf = read_file("local.conf", {binmode=>':encoding(UTF-8)'});
 if ($conf !~ /^DB_SITE_NAME\s*=\s*\"?\*\"?$/gm){
 	die 'DB_SITE_NAME="*" not present in local.conf';
 }
