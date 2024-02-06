@@ -85,11 +85,11 @@ sub printCsv(){
 	binmode(STDOUT, ":utf8");
 	my $headers = "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
 	$headers = $headers."Content-type: text/plain; charset=UTF-8\n\n";
-	return $self->writeCsv($sth, \*STDOUT, $headers);
+	return $self->writeCsv($sth, \*STDOUT, $headers, 0);
 }
 
 sub writeCsv(){
-	my($self, $sth, $fh, $headers) = @_;
+	my($self, $sth, $fh, $headers, $includeEvent) = @_;
 
 	my $columns = $sth->{NAME};
 	my $data = $sth->fetchall_arrayref();
@@ -110,9 +110,9 @@ sub writeCsv(){
 	my $i = 0;
 	my $first = 1;
 	for my $field (@$columns){
-		if ($field ne 'site' and $withData[$i]){
+		if ($field ne 'site' and ($includeEvent or $field ne 'event') and $withData[$i]){
 			$fh->print(",") if (!$first);
-			$fh->print("$field");
+			$fh->print($field);
 			$first = 0;
 		}
 		$i++;
@@ -123,9 +123,9 @@ sub writeCsv(){
 		my $i = 0;
 		my $first = 1;
 		for my $field (@$row){
-			if ($columns->[$i] ne 'site' and $withData[$i]){
+			if ($columns->[$i] ne 'site' and ($includeEvent or $columns->[$i] ne 'event') and $withData[$i]){
 				$fh->print(",") if (!$first);
-				$fh->print($field||"");
+				$fh->print(defined $field?$field:"");
 				$first = 0;
 			}
 			$i++;
@@ -378,22 +378,23 @@ sub schema {
 			}
 			$dbh->commit();
 		}
-		if ( -e "$wwwDir/$year/pit-scout.html"){
-			print("Creating table `${year}pit`\n");
-			$dbh->do(
-				"
-					CREATE TABLE IF NOT EXISTS
-						${year}pit
-					(
-						`site` VARCHAR(16) NOT NULL,
-						`event` VARCHAR(32) NOT NULL,
-						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
-						INDEX(`site`,`event`),
-						UNIQUE(`site`,`event`,`team`,`scouter`)
-					)  $tableOptions
-				"
-			);
+
+		print("Creating table `${year}pit`\n");
+		$dbh->do(
+			"
+				CREATE TABLE IF NOT EXISTS
+					${year}pit
+				(
+					`site` VARCHAR(16) NOT NULL,
+					`event` VARCHAR(32) NOT NULL,
+					`team` VARCHAR(8) NOT NULL,
+					`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+					INDEX(`site`,`event`),
+					UNIQUE(`site`,`event`,`team`,`scouter`)
+				)  $tableOptions
+			"
+		);
+		if (-e "$wwwDir/$year/pit-scout.html"){
 			my $contents = read_file("$wwwDir/$year/pit-scout.html");
 			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
 			for my $input (@inputs){
@@ -413,24 +414,25 @@ sub schema {
 					}
 				}
 			}
-			$dbh->commit();
 		}
+		$dbh->commit();
+
+		print("Creating table `${year}subjective`\n");
+		$dbh->do(
+			"
+				CREATE TABLE IF NOT EXISTS
+					${year}subjective
+				(
+					`site` VARCHAR(16) NOT NULL,
+					`event` VARCHAR(32) NOT NULL,
+					`team` VARCHAR(8) NOT NULL,
+					`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+					INDEX(`site`,`event`),
+					UNIQUE(`site`,`event`,`team`,`scouter`)
+				)  $tableOptions
+			"
+		);
 		if ( -e "$wwwDir/$year/subjective-scout.html"){
-			print("Creating table `${year}subjective`\n");
-			$dbh->do(
-				"
-					CREATE TABLE IF NOT EXISTS
-						${year}subjective
-					(
-						`site` VARCHAR(16) NOT NULL,
-						`event` VARCHAR(32) NOT NULL,
-						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
-						INDEX(`site`,`event`),
-						UNIQUE(`site`,`event`,`team`,`scouter`)
-					)  $tableOptions
-				"
-			);
 			my $contents = read_file("$wwwDir/$year/subjective-scout.html");
 			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
 			for my $input (@inputs){
@@ -450,8 +452,8 @@ sub schema {
 					}
 				}
 			}
-			$dbh->commit();
 		}
+		$dbh->commit();
 	}
 }
 
