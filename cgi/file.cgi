@@ -39,6 +39,7 @@ sub localJs(){
 	my $data = $sth->fetchall_arrayref();
 	$webutil->notfound() if (!scalar(@$data));
 
+	binmode(STDOUT, ":utf8");
 	print "Cache-Control: max-age=28800, public\n";
 	print "Content-type: text/js; charset=UTF-8\n\n";
 	print $data->[0]->[0];
@@ -51,6 +52,7 @@ sub localCss(){
 	my $data = $sth->fetchall_arrayref();
 	$webutil->notfound() if (!scalar(@$data));
 
+	binmode(STDOUT, ":utf8");
 	print "Cache-Control: max-age=28800, public\n";
 	print "Content-type: text/css; charset=UTF-8\n\n";
 	print $data->[0]->[0];
