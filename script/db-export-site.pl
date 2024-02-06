@@ -61,8 +61,12 @@ sub queryToCsv(){
 	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", $file);
 	my $hasContents = $db->writeCsv($sth,$fh);
 	close($fh);
-	unlink($file) unless ($hasContents);
-	print "$file\n" if ($hasContents);
+	if (!$hasContents){
+		unlink($file);
+		return;
+	}
+	`./script/sort-csv.pl "$file"`;
+	print "$file\n";
 
 }
 
