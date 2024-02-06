@@ -42,6 +42,8 @@ sub importCsvFile(){
 	for my $row (1..$csv->getRowCount()){
 		my $data = $csv->getRowMap($row);
 		$data->{'event'}=$event;
+		delete $data->{'modified'} if (exists $data->{'modified'} and !$data->{'modified'});
+		delete $data->{'created'} if (exists $data->{'created'} and !$data->{'created'});
 		eval {
 			$dbimport::db->upsert($table, $data);
 			1;
