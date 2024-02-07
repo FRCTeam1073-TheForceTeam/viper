@@ -19,16 +19,15 @@ my $sth = $dbh->prepare("SELECT `local_js`, `local_css`, `background_image` FROM
 $sth->execute($db->getSite());
 my $data = $sth->fetchall_arrayref();
 if (scalar(@$data)){
-	if ($data->[0]->[0]){
-		die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.js");
-		print $fh $data->[0]->[0];
-		close $fh;
-	}
-	if ($data->[0]->[1]){
-		die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.css");
-		print $fh $data->[0]->[1];
-		close $fh;
-	}
+
+	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.js");
+	print $fh $data->[0]->[0];
+	close $fh;
+
+	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.css");
+	print $fh $data->[0]->[1];
+	close $fh;
+
 	if ($data->[0]->[2]){
 		die "Error opening $file for writing: $!" if (!open $fh, ">:raw", "$dir/local.png");
 		print $fh $data->[0]->[2];
