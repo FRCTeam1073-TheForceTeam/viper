@@ -64,7 +64,6 @@ sub queryToCsv(){
 		unlink($file);
 		return;
 	}
-	`./script/sort-csv.pl "$file"`;
 	print "$file\n";
 
 }

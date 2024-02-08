@@ -9,6 +9,7 @@ use DBI;
 use File::Slurp;
 use Data::Dumper;
 use webutil;
+use csv;
 
 our $viper_database_name;
 our $viper_site;
@@ -90,49 +91,14 @@ sub printCsv(){
 
 sub writeCsv(){
 	my($self, $sth, $fh, $headers, $includeEvent) = @_;
-
 	my $columns = $sth->{NAME};
 	my $data = $sth->fetchall_arrayref();
-
 	return 0 if (!scalar(@$data));
-
-	print $fh $headers if($headers);
-
-	my @withData = map {0} @$columns;
-	for my $row (@$data){
-		my $i=0;
-		for my $field (@$row){
-			$withData[$i] = 1 if ($field);
-			$i++;
-		}
-	}
-
-	my $i = 0;
-	my $first = 1;
-	for my $field (@$columns){
-		if ($field ne 'site' and ($includeEvent or $field ne 'event') and $withData[$i]){
-			$fh->print(",") if (!$first);
-			$fh->print($field);
-			$first = 0;
-		}
-		$i++;
-	}
-	$fh->print("\n");
-
-	for my $row (@$data){
-		my $i = 0;
-		my $first = 1;
-		for my $field (@$row){
-			if ($columns->[$i] ne 'site' and ($includeEvent or $columns->[$i] ne 'event') and $withData[$i]){
-				$fh->print(",") if (!$first);
-				$fh->print(defined $field?$field:"");
-				$first = 0;
-			}
-			$i++;
-		}
-		$fh->print("\n");
-	}
-	return 1
+	$fh->print($headers) if ($headers);
+	unshift(@$data, $columns);
+	my $csv = csv->new($data);
+	$fh->print($csv->toString($includeEvent));
+	return 1;
 }
 
 sub upsert {
