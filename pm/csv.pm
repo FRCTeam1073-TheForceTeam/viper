@@ -94,7 +94,7 @@ sub getHeadersWithData(){
 	for my $row (@{$self->{_data}}){
 		my $i=0;
 		for my $field (@$row){
-			$containsData->{$self->{_headers}->[$i]} = 1 if ($field ne "");
+			$containsData->{$self->{_headers}->[$i]} = 1 if (defined $field and $field ne "");
 			$i++;
 		}
 	}
