@@ -7,7 +7,7 @@ use Data::Dumper;
 sub new {
 	my ($class, $data) = @_;
 	$data = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $data) ] if (ref($data) ne 'ARRAY');
-	my $headers = shift @{$data};
+	my $headers = shift @{$data}||[];
 	$headerMap = { map { $headers->[$_] => $_ } 0..(scalar(@{$headers})-1) };
 	my $self = {
 		_data => $data,
@@ -180,13 +180,19 @@ sub toString(){
 	my $rows = [ sort { $self->cmpRows($columns,$a,$b) } @{$self->{_data}} ];
 
 	for my $row (@$rows){
-		my $first = 1;
+		my $row_text = "";
+		my $hasData = 0;
 		for my $column (@$columns){
-			$s = "$s," if (!$first);
-			$s = "$s".$self->getByName($row,$column);
-			$first = 0;
+			my $val = $self->getByName($row,$column);
+			if (defined $val and $val ne ""){
+				$hasData = 1;
+			} else {
+				$val = "";
+			}
+			$row_text = "$row_text," if ($row_text);
+			$row_text = "$row_text$val";
 		}
-		$s = "$s\n"
+		$s = "$s$row_text\n" if $hasData;
 	}
 	return $s;
 }

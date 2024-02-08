@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use CGI;
 use Data::Dumper;
+use File::Slurp;
 use HTML::Escape qw/escape_html/;
 use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
@@ -64,58 +65,35 @@ my $dbh = $db->dbConnection();
 sub writeCsvData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
 	foreach my $event (keys %{$eventCsv}){
+		unshift(@{$eventCsv->{$event}}, $eventHeaders->{$event});
+		my $newCsv = csv->new($eventCsv->{$event});
 		my $fileName = "../data/$event.$type.csv";
-		$csvHeaders = $eventHeaders->{$event};
-
 		my $lockFile = "$fileName.lock";
 		open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
-		if (! -f $fileName){
-			open my $fc, ">", $fileName or $webutil->error("Cannot create $fileName", "$!\n");
-			close $fc;
-		}
-		open my $fh, '+<', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
-		$/ = undef;
-		my $fCsv = <$fh>;
-		$fCsv = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $fCsv) ];
-		my $fHead = shift @{$fCsv};
-		for my $name (@{$fHead}){
-			push(@{$csvHeaders}, $name) if (!defined $uHead->{$name} and $name ne "event");
-		}
-		$fHead = { map { $fHead->[$_] => $_ } 0..(scalar(@{$fHead})-1) };
-		seek $fh, 0, 0;
-		truncate $fh, 0;
-		print $fh join(",", @{$csvHeaders})."\n";
-		foreach my $row (@$fCsv){
-			my $first = 1;
-			foreach my $name (@{$csvHeaders}){
-				print $fh "," if (!$first);
-				print $fh $row->[$fHead->{$name}] if (defined $fHead->{$name});
-				$first = 0;
-			}
-			print $fh "\n";
-		}
-		foreach my $row (@{$eventCsv->{$event}}){
-			my $first = 1;
-			foreach my $name (@{$csvHeaders}){
-				print $fh "," if (!$first);
-				print $fh $row->[$uHead->{$name}] if (defined $uHead->{$name});
-				$first = 0;
-			}
-			print $fh "\n";
-			$savedKeys .= "," if($savedKeys);
-			if ($type eq 'scouting'){
-				$savedKeys .= "${event}_".$row->[$uHead->{"match"}]."_".$row->[$uHead->{"team"}];
-			} elsif ($type eq 'pit'){
-				$savedKeys .= "${event}_".$row->[$uHead->{"team"}];
-			} elsif ($type eq 'subjective'){
-				$savedKeys .= "${event}_subjective_".$row->[$uHead->{"team"}];
-			}
-		}
+		my $csv = csv->new(-f $fileName?scalar(read_file($fileName, {binmode => ':encoding(UTF-8)'})):"");
+		$csv->append($newCsv);
+		open my $fh, '>:encoding(UTF-8)', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
+		$fh->print($csv->toString());
 		close $fh;
 		$webutil->commitDataFile($fileName, "scouting");
 		close $lock;
 		unlink($lockFile);
+		foreach my $row (1..$newCsv->getRowCount()){
+			&appendSavedKey($type, $event, $newCsv->getByName($row,"match"), $newCsv->getByName($row,"team"));
+		}
+	}
+}
+
+sub appendSavedKey(){
+	my ($type, $event, $match, $team) = @_;
+	$savedKeys .= "," if($savedKeys);
+	if ($type eq 'scouting'){
+		$savedKeys .= "${event}_${match}_${team}";
+	} elsif ($type eq 'pit'){
+		$savedKeys .= "${event}_${team}";
+	} elsif ($type eq 'subjective'){
+		$savedKeys .= "${event}_subjective_${team}";
 	}
 }
 
@@ -129,14 +107,7 @@ sub writeDbData(){
 			my $data = {};
 			@$data{@$csvHeaders} = @$row;
 			$db->upsert($table, $data);
-			$savedKeys .= "," if($savedKeys);
-			if ($type eq 'scouting'){
-				$savedKeys .= "${event}_".$data->{"match"}."_".$data->{"team"};
-			} elsif ($type eq 'pit'){
-				$savedKeys .= "${event}".$data->{"team"};
-			} elsif ($type eq 'subjective'){
-				$savedKeys .= "${event}_subjective_".$data->{"team"};
-			}
+			&appendSavedKey($type, $event, $data->{"match"}, $data->{"team"});
 		}
 		$db->commit();
 	}
