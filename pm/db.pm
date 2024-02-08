@@ -77,6 +77,7 @@ sub dbConnection {
 			AutoCommit => 0
 		}
 	);
+	$db::dbh->prepare_cached("SET time_zone = '+00:00';")->execute();
 	return $db::dbh;
 }
 
