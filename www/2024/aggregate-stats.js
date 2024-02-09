@@ -92,7 +92,6 @@ function aggregateStats(scout, aggregate){
 		if(/^int-list$/.test(statInfo[field]['type'])) aggregate[field] = (aggregate[field]||[]).concat(scout[field])
 	})
 	aggregate["count"] = (aggregate["count"]||0)+1
-	aggregate["event"] = scout["event"]
 	aggregate["full_cycle_fastest_seconds"] = (scout["full_cycle_fastest_seconds"]&&(aggregate["full_cycle_fastest_seconds"]||999)>scout["full_cycle_fastest_seconds"])?scout["full_cycle_fastest_seconds"]:(aggregate["full_cycle_fastest_seconds"]||0)
 	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
 	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
@@ -100,10 +99,6 @@ function aggregateStats(scout, aggregate){
 }
 
 var statInfo = {
-	"event": {
-		name: "Event",
-		type: "text"
-	},
 	"match": {
 		name: "Match",
 		type: "text"
