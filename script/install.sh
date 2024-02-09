@@ -4,7 +4,11 @@ set -e
 
 ./script/local-conf.sh
 ./script/software-install.sh
-./script/db-schema.pl
+DB_SETTINGS_COUNT=`grep -cE '^MYSQL_(HOST|PORT|DATABASE|USER|PASSWORD)=\".+\"' local.conf` || true
+if [ $DB_SETTINGS_COUNT -ge 5 ]
+then
+	./script/db-schema.pl
+fi
 ./script/htaccess-setup.sh
 ./script/cgi-setup.sh
 ./script/permissions.sh
