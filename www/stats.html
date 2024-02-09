@@ -14,6 +14,7 @@
 <script src="/chartjs-boxplot.min.js"></script>
 <script src=/graph-colors.js></script>
 <script src=/heatmap.min.js></script>
+<script src=/html5sortable.min.js></script>
 <script src=/heartbeat.js></script>
 </head>
 <body>
@@ -31,4 +32,10 @@
 <div id=sortChooser class=lightBoxFullContent style=display:none></div>
 <div id=clickActions class=lightBoxCenterContent style=display:none></div>
 <iframe id=instructions class=lightBoxFullContent src=/stats-instructions.html></iframe>
+<div id=teamlists>
+	<h4>Pick List</h4>
+	<ol class="picklist-body sortable-list" id=picklist></ol>
+	<h4 class=picklist-body>No Pick</h4>
+	<ol class="picklist-body sortable-list" id=donotpicklist></ol>
+</div>
 </body></html>

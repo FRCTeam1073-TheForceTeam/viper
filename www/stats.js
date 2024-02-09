@@ -10,6 +10,8 @@ $(document).ready(function(){
 			showTeamPicker(showTeamStats, "Show Team Stats")
 		})
 		teamList = Object.keys(eventStatsByTeam)
+		teamList.forEach(x=>teamsPicked[x]=false)
+		parseHash()
 		showStats()
 	})
 	$('h1').text($('h1').text().replace("EVENT", eventName))
@@ -24,6 +26,16 @@ $(document).ready(function(){
 		showLightBox($('#instructions'))
 		return false
 	})
+
+	sortable('#picklist', {
+		acceptFrom: '#picklist, #donotpicklist'
+	})[0].addEventListener('sortupdate', pickListReordered)
+	sortable('#donotpicklist', {
+		acceptFrom: '#picklist, #donotpicklist'
+	})[0].addEventListener('sortupdate', pickListReordered)
+	$('#teamlists h4').click(function(){
+		$('.picklist-body').toggle()
+	})
 })
 
 function getStatInfoName(field){
@@ -34,18 +46,33 @@ function getStatInfoName(field){
 var teamList = []
 var sortStat = 'score'
 var teamsPicked = {}
-parseHash()
 
 function parseHash(){
+	var pl=(location.hash.match(/^\#(?:.*\&)?pl\=([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1].split(',').map(x=>parseInt(x)),
+	dnp=(location.hash.match(/^\#(?:.*\&)?dnp\=([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1].split(',').map(x=>parseInt(x))
+	Object.keys(teamsPicked).forEach(x=>teamsPicked[x]=false)
+	$('#teamlists li').remove()
+	pl.forEach(x=>setTeamPicked(0,x))
+	dnp.forEach(x=>setTeamPicked(0,x,1))
 }
 
+var lastHash = ""
+
 function setHash(){
-	location.hash = `#event=${eventId}`
+	var pl = $.map($('#picklist li'),x=>$(x).text()).join(","),
+	dnp = $.map($('#donotpicklist li'),x=>$(x).text()).join(",")
+	if (pl) pl = `&pl=${pl}`
+	if (dnp) dnp = `&dnp=${dnp}`
+	lastHash=`#event=${eventId}${pl}${dnp}`
+	location.hash = lastHash
 }
 
 $(window).on('hashchange', function(){
-	parseHash()
-	showStats()
+	if(location.hash != lastHash){
+		parseHash()
+		showStats()
+		lastHash=location.hash
+	}
 })
 
 function showStats(){
@@ -247,15 +274,37 @@ function showTeamPicker(callback, heading){
 	showLightBox(picker)
 }
 
-function setTeamPicked(){
-	var y = window.scrollY,
-	team = parseInt($(this).text())
-	closeLightBox()
+function setTeamPicked(e, team, dnp){
+	var y = window.scrollY
+	if (!team) team = parseInt($(this).text())
+	if (!teamsPicked.hasOwnProperty(team)) return
 	teamsPicked[team] = !teamsPicked[team]
-	showStats()
-	setTimeout(function(){
-		window.scrollTo(0,y)
-	},200)
+	if(teamsPicked[team]){
+		var list = (dnp || getLocalTeam() == team)?'#donotpicklist':'#picklist'
+		$(list).append($('<li>').attr('id',`pl${team}`).text(team).click(showStatClickMenu))
+		sortable(list)
+	} else {
+		$(`#pl${team}`).remove()
+	}
+	setDnpStartNumber()
+	$('#teamlists').toggle(Object.values(teamsPicked).filter(t=>t).length>0)
+	if (e){
+		setHash()
+		closeLightBox()
+		showStats()
+		setTimeout(function(){
+			window.scrollTo(0,y)
+		},200)
+	}
+}
+
+function pickListReordered(){
+	setHash()
+	setDnpStartNumber()
+}
+
+function setDnpStartNumber(){
+	$('#donotpicklist').attr('start', $('#picklist li').length + 1)
 }
 
 function showTeamStats(){
