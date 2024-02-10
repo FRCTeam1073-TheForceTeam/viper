@@ -93,6 +93,16 @@ sub writeCsvData(){
 }
 
 sub writeDbData(){
+	my $blueAllianceId = $event;
+	my $firstInspiresId = $event;
+	$firstInspiresId =~ s/^([0-9]{4})/$1\//g;
+	my $sth = $dbh->prepare("SELECT `blue_alliance_id`, `first_inspires_id` FROM `event` WHERE `site`=? and `event`=?");
+	$sth->execute($db->getSite(), $event);
+	my $data = $sth->fetchall_arrayref();
+	if ($data && scalar(@$data)){
+		$blueAllianceId = $data->[0]->[0]||$blueAllianceId;
+		$firstInspiresId = $data->[0]->[1]||$firstInspiresId;
+	}
 	if ($schedule =~ /((?:^pm.*\n)+)/m){
 		$dbh->prepare("DELETE FROM `schedule` WHERE `site`=? AND `event`=? AND `match` like 'pm%'")->execute($db->getSite(), $event);
 	}
@@ -114,6 +124,8 @@ sub writeDbData(){
 		'location' => $location,
 		'start'=> $start,
 		'end'=> $end,
+		'blue_alliance_id'=> $blueAllianceId,
+		'first_inspires_id'=> $firstInspiresId,
 	});
 	$db->commit();
 }
