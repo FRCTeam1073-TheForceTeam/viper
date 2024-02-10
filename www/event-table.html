@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Enter Event Qualification Matches - Viper</title>
-<meta name=viewport content=width=device-width,initial-scale=1.0>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
 <meta charset=UTF-8>
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/event-table.css>
@@ -28,7 +28,7 @@
 		Location: <input name=location type=text id=locationInp placeholder="City, ST, USA">
 	</div>
 	<div class=side-by-side>
-		Event ID: <input id=idInp type=text placeholder="No spaces or symbols" required=1 pattern="^20[0-9]{2}[0-9a-zA-Z-]+$" name=event size=15>
+		Event ID: <input id=idInp type=text placeholder="No spaces or symbols" required=1 pattern="^20[0-9]{2}[0-9a-zA-Z\-]+$" name=event size=15>
 	</div>
 
 	<input type=hidden id=csvInp name=csv>
