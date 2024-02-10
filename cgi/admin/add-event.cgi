@@ -84,8 +84,8 @@ sub writeCsvData(){
 		$firstInspiresId = $oldEvent->getByName(1,"first_inspires_id")||$firstInspiresId;
 	}
 	$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
-	print $fh "name,location,start,end,blue_alliance_id,first_inspires_id\n";
-	print $fh "$name,$location,$start,$end,$blueAllianceId,$firstInspiresId\n";
+	print $fh "name,location,blue_alliance_id,end,first_inspires_id,start\n";
+	print $fh "$name,$location,$blueAllianceId,$end,$firstInspiresId,$start\n";
 	close $fh;
 	$webutil->commitDataFile($file, "add-event");
 	close $lock;
