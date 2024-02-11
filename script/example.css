@@ -26,7 +26,4 @@
 }
 */
 
-/** Your own custom background image (Create the image and uncomment the rule)**/
-/*
-html{background-image:url('/local.background.png');background-size:33vw auto}
-*/
+/** To create your own custom backgound and logo, save them as www/local.logo.png and www/local.background.png **/

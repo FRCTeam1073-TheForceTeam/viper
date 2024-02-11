@@ -297,8 +297,28 @@ sub schema {
 			)  $tableOptions
 		"
 	);
+	$dbh->do(
+		"
+			IF NOT EXISTS(
+				SELECT
+					NULL
+				FROM
+					INFORMATION_SCHEMA.COLUMNS
+				WHERE
+					table_name = 'sites' AND
+					table_schema = '$db::viper_database_name' AND
+					column_name = 'logo_image'
+			)
+			THEN
+				ALTER TABLE
+					`sites`
+				ADD
+					`logo_image` MEDIUMBLOB
+				;
+			END IF;
+		"
+	);
 	$dbh->commit();
-
 
 	my $wwwDir = $INC{"db.pm"};
 	$wwwDir =~ s/pm\/db\.pm/www\//g;
