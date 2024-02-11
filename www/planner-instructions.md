@@ -1,4 +1,5 @@
- ## Planner Instructions
+ Planner Instructions
+========================
 
  ### Teams
 

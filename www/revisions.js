@@ -9,6 +9,7 @@ $(document).ready(function(){
 	}
 	$.getJSON(`/revisions.cgi?file=${file}`, function(json){
 		$('h1').text(`${file} Revisions`)
+		document.title = document.title.replace(/FILE/,file)
 		var revList = $('#revisions').html(''),
 		first=true
 		json.forEach(revision=>{

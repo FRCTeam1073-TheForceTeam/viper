@@ -2,6 +2,7 @@
 
 $(document).ready(function(){
 	$('h1').text(`${eventName} Scouting Stats`)
+	$('title').text($('title').text().replace("EVENT", eventName))
 	loadScoutScoreCompare(function(){
 		var allianceStats = []
 		matchStats.forEach(match=>{

@@ -34,6 +34,7 @@ $(document).ready(function(){
 			return false
 		}
 	})
+	document.title = document.title.replace(/FILE/,file)
 })
 
 function blankTable(){

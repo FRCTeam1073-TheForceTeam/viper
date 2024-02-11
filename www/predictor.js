@@ -16,6 +16,7 @@ $(document).ready(function(){
 		$(window).on('hashchange', loadFromLocationHash)
 	})
 	$('#prediction input').focus(focusInput).change(setPickedTeams)
+	$('title').text($('title').text().replace(/EVENT/g, eventName))
 })
 
 function focusInput(input){
