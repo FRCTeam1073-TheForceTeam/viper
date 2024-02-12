@@ -170,7 +170,6 @@ sub getInputType(){
 }
 
 sub schema {
-	my ($self) = @_;
 	my $dbh = &dbConnection();
 	return if (!$dbh);
 
@@ -298,18 +297,8 @@ sub schema {
 			)  $tableOptions
 		"
 	);
-	eval {
-		$dbh->do(
-			"
-				ALTER TABLE
-					`sites`
-				ADD COLUMN
-					`logo_image` MEDIUMBLOB
-			"
-		);
-		1;
-	};
 	$dbh->commit();
+
 
 	my $wwwDir = $INC{"db.pm"};
 	$wwwDir =~ s/pm\/db\.pm/www\//g;
