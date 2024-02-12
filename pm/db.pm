@@ -170,6 +170,7 @@ sub getInputType(){
 }
 
 sub schema {
+	my ($self) = @_;
 	my $dbh = &dbConnection();
 	return if (!$dbh);
 
@@ -297,27 +298,17 @@ sub schema {
 			)  $tableOptions
 		"
 	);
-	$dbh->do(
-		"
-			IF NOT EXISTS(
-				SELECT
-					NULL
-				FROM
-					INFORMATION_SCHEMA.COLUMNS
-				WHERE
-					table_name = 'sites' AND
-					table_schema = '$db::viper_database_name' AND
-					column_name = 'logo_image'
-			)
-			THEN
+	eval {
+		$dbh->do(
+			"
 				ALTER TABLE
 					`sites`
-				ADD
+				ADD COLUMN
 					`logo_image` MEDIUMBLOB
-				;
-			END IF;
-		"
-	);
+			"
+		);
+		1;
+	};
 	$dbh->commit();
 
 	my $wwwDir = $INC{"db.pm"};
