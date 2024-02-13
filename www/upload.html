@@ -15,10 +15,12 @@
 <form id=upload action=/scout/upload.cgi method=POST>
 	<input type=hidden id=csv name=csv>
 	<input type=hidden id=next name=next>
-	<button id=uploadBtn>Upload All Data</button>
+	<button class=uploads id=upload-all>Upload All Data</button>
 </form>
-<div id=uploads>
-
-</div>
+<div id=upload-description></div>
+<h2 class=uploads>Data to Upload (<span id=upload-count></span>) <button id=show-uploads>Show Data</button></h2>
+<div class=uploads><div class=initHid id=uploads></div></div>
+<h2 class=history>History (<span id=history-count></span>) <button id=show-history>Show Data</button></h2>
+<div class=history><div class=initHid id=history></div></div>
 </body>
 </html>
