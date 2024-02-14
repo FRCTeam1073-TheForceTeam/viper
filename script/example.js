@@ -28,3 +28,6 @@ var transferHosts = [
 //$('title,h1').each(function(){
 //	$(this).text($(this).text().replace(/Viper/g,`${ourTeam}'s Scouting`))
 //})
+
+// Use a custom CSS file
+//$('head').append("<link rel=stylesheet type=text/css href=/local.css>")

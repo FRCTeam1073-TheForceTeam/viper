@@ -43,7 +43,7 @@ h1{padding:0 2.5em}
 #fullscreen{position:fixed;bottom:0.4em;right:0.4em;font-size:200%;cursor:pointer}
 #hamburger{position:fixed;top:0;right:0.4em;font-size:300%;cursor:pointer}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
-#mainMenu .dependUpload{font-weight:bold;color:var(--highlight-fg-color)}
+#mainMenu .hasUploads,#mainMenu .hasUploads a:visited{font-weight:bold;color:var(--highlight-fg-color)}
 #mainMenu h4 {margin:.75em 0 0 0}
 #mainMenu ul {list-style:none;margin:0;padding:0}
 #mainMenu li {margin:.25em 0;padding:0;padding:0.25em;border:1px solid var(--main-border-color)}
