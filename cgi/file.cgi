@@ -64,7 +64,7 @@ sub backgroundPng(){
 	my $sth = $dbh->prepare("SELECT `background_image` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	if (scalar(@$data)){
+	if (scalar(@$data) and $data->[0]->[0]){
 		$data = $data->[0]->[0];
 	} else {
 		$data = read_file('background.png', {binmode=>':raw'})
@@ -80,7 +80,7 @@ sub logoPng(){
 	my $sth = $dbh->prepare("SELECT `logo_image` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	if (scalar(@$data)){
+	if (scalar(@$data) and $data->[0]->[0]){
 		$data = $data->[0]->[0];
 	} else {
 		$data = read_file('background.png', {binmode=>':raw'})
