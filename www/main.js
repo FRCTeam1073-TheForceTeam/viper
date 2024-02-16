@@ -58,13 +58,28 @@ $(document).ready(function(){
 			}
 		})
 	}
+	var site = location.host.replace(/^(www|viper|webscout)\./,"")
+	if (!site || /^[0-9\.\:]*$/.test(site)){
+		site = ""
+	} else {
+		site = site.replace(/\..*/,'')
+		site = site[0].toUpperCase() + site.slice(1)
+	}
+	var t = document.title
+	if (t) t += ' — '
+	t += 'Viper'
+	if (site) t += ` ${site}`
+	document.title = t
 })
+
 function getLocalTeam(){
 	return localStorage.getItem('my-team') || window.ourTeam || 0
 }
+
 function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
 }
+
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').show()

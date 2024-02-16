@@ -584,8 +584,6 @@ function getNextMatch(){
 	return 0
 }
 
-var originalTitle
-
 function showTab(event, tab){
 	var button = (tab||$(this)),
 	name = button.attr('data-content'),
@@ -606,8 +604,7 @@ $(document).ready(function(){
 
 	$('.tab,.tab-button').click(showTab)
 
-	if(!originalTitle) originalTitle = $('title').text()
-	$('title').text(originalTitle.replace(/EVENT/g, eventName))
+	$('title').text($('title').text().replace(/EVENT/g, eventName))
 
 	scouting = $('#scouting')
 

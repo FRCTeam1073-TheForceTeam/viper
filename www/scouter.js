@@ -2,6 +2,7 @@
 
 $(document).ready(function(){
 	loadScoutScoreCompare(showScouters)
+	$('title').text($('title').text().replace("EVENT", eventName))
 })
 
 function showScouters(){
