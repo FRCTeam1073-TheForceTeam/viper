@@ -25,6 +25,8 @@ for my $file (@ARGV){
 		$dbimport->importJsonFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
 	} elsif ($file =~ /\.jpg$/){
 		$dbimport->importImageFile($file, scalar(read_file($file, {binmode=>':raw'})));
+	} elsif ($file =~ /\*/){
+		#ignore wildcard
 	} else {
 		die "Could not import $file";
 	}
