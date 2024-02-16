@@ -62,8 +62,13 @@ $(document).ready(function(){
 	if (!site || /^[0-9\.\:]*$/.test(site)){
 		site = ""
 	} else {
-		site = site.replace(/\..*/,'')
-		site = site[0].toUpperCase() + site.slice(1)
+		var m = site.match(/^viper([^\.]+)\.([^\.]+)/)
+		if (m){
+			site = m[1][0].toUpperCase() + m[1].slice(1) + " " + m[2][0].toUpperCase() + m[2].slice(1)
+		} else {
+			site = site.replace(/\..*/,'')
+			site = site[0].toUpperCase() + site.slice(1)
+		}
 	}
 	var t = document.title
 	if (t) t += ' — '
