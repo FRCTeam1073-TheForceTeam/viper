@@ -20,8 +20,10 @@ if ($file =~ /local\.js$/){
 	&localJs();
 } elsif ($file =~ /local\.css$/){
 	&localCss($file);
-} elsif ($file =~ /local\.png$/){
-	&localPng($file);
+} elsif ($file =~ /(local|background|local\.background)\.png$/){
+	&backgroundPng();
+} elsif ($file =~ /logo\.png$/){
+	&logoPng();
 } elsif ($file =~ /\.csv$/){
 	&csv($file);
 } elsif ($file =~ /\.json$/){
@@ -37,12 +39,11 @@ sub localJs(){
 	my $sth = $dbh->prepare("SELECT `local_js` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":utf8");
 	print "Cache-Control: max-age=28800, public\n";
 	print "Content-type: text/js; charset=UTF-8\n\n";
-	print $data->[0]->[0];
+	print $data->[0]->[0] if scalar(@$data);
 }
 
 sub localCss(){
@@ -50,26 +51,45 @@ sub localCss(){
 	my $sth = $dbh->prepare("SELECT `local_css` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":utf8");
 	print "Cache-Control: max-age=28800, public\n";
 	print "Content-type: text/css; charset=UTF-8\n\n";
-	print $data->[0]->[0];
+	print $data->[0]->[0] if scalar(@$data);
 }
 
 
-sub localPng(){
+sub backgroundPng(){
 	my $dbh = $db->dbConnection();
 	my $sth = $dbh->prepare("SELECT `background_image` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	$webutil->notfound() if (!scalar(@$data));
+	if (scalar(@$data)){
+		$data = $data->[0]->[0];
+	} else {
+		$data = read_file('background.png', {binmode=>':raw'})
+	}
+	binmode(STDOUT, ":raw");
+	print "Cache-Control: max-age=28800, public\n";
+	print "Content-type: image/png\n\n";
+	print $data;
+}
+
+sub logoPng(){
+	my $dbh = $db->dbConnection();
+	my $sth = $dbh->prepare("SELECT `logo_image` FROM `sites` WHERE `site`=?");
+	$sth->execute($db->getSite());
+	my $data = $sth->fetchall_arrayref();
+	if (scalar(@$data)){
+		$data = $data->[0]->[0];
+	} else {
+		$data = read_file('background.png', {binmode=>':raw'})
+	}
 
 	binmode(STDOUT, ":raw");
 	print "Cache-Control: max-age=28800, public\n";
-	print "Content-type: image/jpg\n\n";
-	print $data->[0]->[0];
+	print "Content-type: image/png\n\n";
+	print $data;
 }
 
 sub json(){
