@@ -15,7 +15,7 @@ $dir =~ s/\/+$//g;
 my $site = $db->getSite();
 my $fh;
 
-my $sth = $dbh->prepare("SELECT `local_js`, `local_css`, `background_image` FROM `sites` WHERE `site`=?");
+my $sth = $dbh->prepare("SELECT `local_js`, `local_css`, `background_image`, `logo_image` FROM `sites` WHERE `site`=?");
 $sth->execute($db->getSite());
 my $data = $sth->fetchall_arrayref();
 if (scalar(@$data)){
@@ -29,8 +29,14 @@ if (scalar(@$data)){
 	close $fh;
 
 	if ($data->[0]->[2]){
-		die "Error opening $file for writing: $!" if (!open $fh, ">:raw", "$dir/local.png");
+		die "Error opening $file for writing: $!" if (!open $fh, ">:raw", "$dir/background.png");
 		print $fh $data->[0]->[2];
+		close $fh;
+	}
+
+	if ($data->[0]->[3]){
+		die "Error opening $file for writing: $!" if (!open $fh, ">:raw", "$dir/logo.png");
+		print $fh $data->[0]->[3];
 		close $fh;
 	}
 }
