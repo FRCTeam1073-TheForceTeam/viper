@@ -85,8 +85,7 @@ sub printCsv(){
 	my($self, $sth) = @_;
 
 	binmode(STDOUT, ":utf8");
-	my $headers = "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
-	$headers = $headers."Content-type: text/plain; charset=UTF-8\n\n";
+	my $headers = "Content-type: text/plain; charset=UTF-8\n\n";
 	return $self->writeCsv($sth, \*STDOUT, $headers, 0);
 }
 

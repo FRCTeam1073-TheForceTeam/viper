@@ -41,8 +41,7 @@ sub localJs(){
 	my $data = $sth->fetchall_arrayref();
 
 	binmode(STDOUT, ":utf8");
-	print "Cache-Control: max-age=28800, public\n";
-	print "Content-type: text/js; charset=UTF-8\n\n";
+	print "Content-type: text/javascript; charset=UTF-8\n\n";
 	print $data->[0]->[0] if scalar(@$data);
 }
 
@@ -53,7 +52,6 @@ sub localCss(){
 	my $data = $sth->fetchall_arrayref();
 
 	binmode(STDOUT, ":utf8");
-	print "Cache-Control: max-age=28800, public\n";
 	print "Content-type: text/css; charset=UTF-8\n\n";
 	print $data->[0]->[0] if scalar(@$data);
 }
@@ -70,7 +68,6 @@ sub backgroundPng(){
 		$data = read_file('background.png', {binmode=>':raw'})
 	}
 	binmode(STDOUT, ":raw");
-	print "Cache-Control: max-age=28800, public\n";
 	print "Content-type: image/png\n\n";
 	print $data;
 }
@@ -87,7 +84,6 @@ sub logoPng(){
 	}
 
 	binmode(STDOUT, ":raw");
-	print "Cache-Control: max-age=28800, public\n";
 	print "Content-type: image/png\n\n";
 	print $data;
 }
@@ -103,7 +99,6 @@ sub json(){
 	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":utf8");
-	print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
 	print "Content-type: text/json; charset=UTF-8\n\n";
 	print $data->[0]->[0];
 }
@@ -120,7 +115,6 @@ sub image(){
 	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":raw");
-	print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
 	print "Content-type: image/jpg\n\n";
 	print $data->[0]->[0];
 }
