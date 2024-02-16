@@ -5,7 +5,9 @@ if (location.hash){
 	for (var i=0; i<keys.length; i++){
 		var key = keys[i]
 		if (/^20\d\d/.test(key)){
+			var d = localStorage.getItem(key)
 			localStorage.removeItem(key)
+			if (d) localStorage.setItem(`uploaded_${key}`, d)
 		}
 	}
 }
