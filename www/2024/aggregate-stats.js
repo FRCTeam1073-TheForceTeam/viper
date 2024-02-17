@@ -521,12 +521,22 @@ var plannerSections = {
 	"Percents":["trap_percent","onstage_percent","coopertition"],
 }
 
+// https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
 var fmsMapping = [
-	// TODO once we have example data from API (after week 0)
+	[["autoAmpNotePoints"],["auto_amp_score"]],
+	[["autoSpeakerNotePoints"],["auto_speaker_score"]],
+	[["autoLeavePoints"],["auto_leave_score"]],
+	[["teleopAmpNotePoints"],["tele_amp_score"]],
+	[["teleopSpeakerNotePoints"],["tele_speaker_unamped_score"]],
+	[["teleopSpeakerNoteAmplifiedPoints"],["tele_speaker_amped_score"]],
+	[["endGameNoteInTrapPoints"],["trap_score"]],
+	[["endGameParkPoints"],["parked_score"]],
+	[["endGameOnStagePoints"],["onstage_score"]],
+	[["endGameSpotLightBonusPoints"],["spotlit_score"]],
+	[["endGameHarmonyPoints"],["harmony_score"]]
 ]
 
 function showPitScouting(el,team){
-
 	loadPitScouting(function(pitData){
 		var dat = pitData[team]||{}
 		if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))
