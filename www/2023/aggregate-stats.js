@@ -635,6 +635,7 @@ var plannerSections = {
 	"End":['end_dock_engaged_attempts','end_dock_engaged_reliability']
 }
 
+// https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/request/13920602-58da7b76-4b47-4ee3-903d-1571897e0a09
 var fmsMapping = [
 	[["autoChargeStationPoints"],["auto_dock_score"]],
 	[["autoMobilityPoints"],["auto_mobility_score"]],
