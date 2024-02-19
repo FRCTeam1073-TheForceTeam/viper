@@ -121,12 +121,12 @@ sub image(){
 
 sub csv(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|pit|event|schedule|alliances)\.csv$/);
+	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|pit|subjective|event|schedule|alliances)\.csv$/);
 
 	my ($year, $event, $table) = $file =~ /^(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
 
 	my $combined = (($event eq 'combined') and ($table eq 'scouting'));
-	$table = "$year$table" if ($table =~ /^scouting|pit$/);
+	$table = "$year$table" if ($table =~ /^scouting|pit|subjective$/);
 	$event = "$year$event";
 
 	my $dbh = $db->dbConnection();
