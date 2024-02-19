@@ -419,15 +419,6 @@ function formHasChanges(f){
 		val=getValOrChecked(el),
 		start=el.attr('data-at-scout-start')
 		if (val!==start)changes=true
-
-
-		var name = el.attr('name')||"",
-		type=el.attr('type')||"",
-		checked=el.prop('checked'),
-		load=el.attr('data-at-page-load')||""
-		//if (name == 'auto_collect_wing_mid') console.log(`CHECKBOX: ${name} -- checked=${checked}, val=${val}, load=${load}, start=${start}`)
-		//if (type=='hidden') console.log(`HIDDEN: ${name} -- val=${val}, load=${load}, start=${start}`)
-		if (val!==start) console.log(`CHANGED: ${name} -- val=${val}, load=${load}, start=${start}`)
 	})
 	return changes
 }
