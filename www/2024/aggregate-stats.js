@@ -287,7 +287,8 @@ var statInfo = {
 	},
 	"full_cycles": {
 		name: "Full Cycle Seconds",
-		type: "int-list"
+		type: "int-list",
+		good: "low"
 	},
 	"full_cycle_average_seconds": {
 		name: "Full Cycle Time Average",
