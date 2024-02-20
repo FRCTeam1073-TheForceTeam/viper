@@ -121,6 +121,10 @@ var statInfo = {
 		name: "Score for Exiting the Starting Area During Auto",
 		type: "avg"
 	},
+	"no_show": {
+		name: "No Show",
+		type: "%"
+	},
 	"auto_collect_order": {
 		name: "Order of Auto Collection",
 		type: "text"
