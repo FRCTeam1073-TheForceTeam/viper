@@ -1,7 +1,8 @@
 "use strict"
 
 $(document).ready(function(){
-	loadEventStats(function(){
+	promiseEventStats(true).then(values => {
+		[window.eventStats, window.eventStatsByTeam] = values
 		$('#sortBy').click(showSortOptions)
 		$('#markPicked').click(function(){
 			showTeamPicker(setTeamPicked, "Change Whether Team Has Been Picked")

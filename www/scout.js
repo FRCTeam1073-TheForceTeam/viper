@@ -33,51 +33,65 @@ function showScreen(){
 
 $(window).on('hashchange', function(){
 	if (scouting.is(':visible') && formHasChanges(scouting)){
-		if (confirm("Do you want to save your data?") && !store()) return false
+		if (confirm("Do you want to save your data?")) store()
 	}
 	parseHash()
 	showScreen()
+	window.scrollTo(0,0)
 })
 
 function showSelectPitScoutTeam(){
-	loadTeamsInfo()
-	$('.screen,.init-hide').hide()
-	setHash(null,null,null,null,teamList)
-	window.scrollTo(0,0)
-	$('h1').text("Pit Scouting " + eventName)
-	var el = $('#teamList').html(""),
-	withData = getTeamsWithPitData(),
-	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
-	$('.location-pointer').remove()
-	for (var i=0; i<showTeams.length;i++){
-		var button = $('<button>').text(showTeams[i]).click(showPitScoutingForm)
-		if (withData.hasOwnProperty(showTeams[i])||(window.eventPitData&&eventPitData[showTeams[i]])) button.addClass('stored')
-		el.append(button)
-	}
-	$('#select-team').show()
+	Promise.all([
+		promiseEventTeams(),
+		promisePitScouting()
+	]).then(values=>{
+		var [eventTeams, pitData] = values
+		$('.screen,.init-hide').hide()
+		resetInitialValues(pitScouting)
+		setHash(null,null,null,null,teamList)
+		window.scrollTo(0,0)
+		$('h1').text("Pit Scouting " + eventName)
+		var el = $('#teamList').html(""),
+		withData = getTeamsWithPitData(),
+		showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+		$('.location-pointer').remove()
+		for (var i=0; i<showTeams.length;i++){
+			var button = $('<button>').text(showTeams[i]).click(showPitScoutingForm)
+			if (withData.hasOwnProperty(showTeams[i])||pitData[showTeams[i]]) button.addClass('stored')
+			el.append(button)
+		}
+		$('#select-team').show()
+	})
 }
 
 function showSelectSubjectiveScoutTeam(){
-	loadTeamsInfo()
-	$('.screen,.init-hide').hide()
-	setHash(null,null,null,null,teamList)
-	window.scrollTo(0,0)
-	$('h1').text("Subjective Scouting " + eventName)
-	var el = $('#teamList').html(""),
-	withData = getTeamsWithSubjectiveData(),
-	showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
-	$('.location-pointer').remove()
-	for (var i=0; i<showTeams.length;i++){
-		var button = $('<button>').text(showTeams[i]).click(showSubjectiveScoutingForm)
-		if (withData.hasOwnProperty(showTeams[i])||(window.eventSubjectiveData&&eventSubjectiveData[showTeams[i]])) button.addClass('stored')
-		el.append(button)
-	}
-	$('#select-team').show()
+	Promise.all([
+		promiseEventTeams(),
+		getSubjectiveScouting()
+	]).then(values=>{
+		var [eventTeams, subjectiveData] = values
+		$('.screen,.init-hide').hide()
+		resetInitialValues(subjectiveScouting)
+		setHash(null,null,null,null,teamList)
+		window.scrollTo(0,0)
+		$('h1').text("Subjective Scouting " + eventName)
+		var el = $('#teamList').html(""),
+		withData = getTeamsWithSubjectiveData(),
+		showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+		$('.location-pointer').remove()
+		for (var i=0; i<showTeams.length;i++){
+			var button = $('<button>').text(showTeams[i]).click(showSubjectiveScoutingForm)
+			if (withData.hasOwnProperty(showTeams[i])||subjectiveData[showTeams[i]]) button.addClass('stored')
+			el.append(button)
+		}
+		$('#select-team').show()
+	})
 }
 
 function showTeamChange(){
 	$('.screen,.init-hide').hide()
 	location.hash = `#event=${eventId}&pos=${pos}&match=${match}`
+	resetInitialValues(scouting)
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
 	$('#teamChangeBtn').click(function(){
@@ -115,40 +129,43 @@ function showPosList(){
 }
 
 function showMatchList(){
-	$('.screen,.init-hide').hide()
-	setHash(pos,orient)
-	window.scrollTo(0,0)
-	$('#match-list').html('')
-	$('h1').text(`${eventName} ${pos}`)
-	var alreadyScouted = {}
-	forEachTeamMatch(function(team,match){
-		alreadyScouted[match]=1
+	promiseEventStats().then(resolve=>{
+		var [eventStats] = resolve
+		$('.screen,.init-hide').hide()
+		setHash(pos,orient)
+		window.scrollTo(0,0)
+		$('#match-list').html('')
+		$('h1').text(`${eventName} ${pos}`)
+		var alreadyScouted = {}
+		forEachTeamMatch(eventStats, function(team,match){
+			alreadyScouted[match]=1
+		})
+		alreadyScouted[localStorage.getItem("last_match_"+eventId)||""] = 1
+		var lastDone
+		for (var i=eventMatches.length-1; !lastDone && i>=0; i--){
+			var m = eventMatches[i]['Match']
+			if(alreadyScouted[m])lastDone=m
+		}
+		var seenLastDone = false;
+		eventMatches.forEach(m => {
+			var matchTeam = m[pos],
+			matchId = m['Match'],
+			matchName = getShortMatchName(matchId),
+			completeClass=(lastDone&&!seenLastDone)?"complete":"",
+			storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
+			if (lastDone == matchId) seenLastDone = true;
+			$('#match-list').append(
+				$('<div class=match>')
+				.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
+					team = $(this).attr('data-team')
+					match = $(this).attr('data-match')
+					showScouting()
+				})).append($('<span>').text(' ' + matchName))
+			)
+		})
+		setTeamBG()
+		$('#select-match').show()
 	})
-	alreadyScouted[localStorage.getItem("last_match_"+eventId)||""] = 1
-	var lastDone
-	for (var i=eventMatches.length-1; !lastDone && i>=0; i--){
-		var m = eventMatches[i]['Match']
-		if(alreadyScouted[m])lastDone=m
-	}
-	var seenLastDone = false;
-	eventMatches.forEach(function(m){
-		var matchTeam = m[pos],
-		matchId = m['Match'],
-		matchName = getShortMatchName(matchId),
-		completeClass=(lastDone&&!seenLastDone)?"complete":"",
-		storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
-		if (lastDone == matchId) seenLastDone = true;
-		$('#match-list').append(
-			$('<div class=match>')
-			.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
-				team = $(this).attr('data-team')
-				match = $(this).attr('data-match')
-				showScouting()
-			})).append($('<span>').text(' ' + matchName))
-		)
-	})
-	setTeamBG()
-	$('#select-match').show()
 }
 
 function getScoutKey(t,m,e){
@@ -192,13 +209,14 @@ function fillPreviousFormData(form,data){
 		val = data[name]
 		if (name){
 			if (/^radio|checkbox$/.test(type)){
-				if(input.attr('value')==val) input.attr('checked',"")
+				var checked = input.attr('value')==val
+				if(checked) input.attr('checked',"")
 				else  input.removeAttr('checked')
-				input.prop('checked',input.attr('value')==val)
+				input.prop('checked',checked)
+				input.attr('data-at-scout-start',checked?"checked":"unchecked")
 			} else if (!/^submit$/.test(type) && val){
 				input.attr('data-at-scout-start',val)
 				input.val(val)
-				input.attr('value',val)
 			}
 		}
 	})
@@ -246,54 +264,56 @@ function resetInitialValues(form){
 }
 
 function showPitScoutingForm(t){
-	if (t && typeof t != 'number') t = parseInt($(this).text())
-	if (t) team = t
-	$('.screen,.init-hide').hide()
-	$('h1').text("Pit Scouting " + eventName + " Team " + team)
-	window.scrollTo(0,0)
-	setHash(null,null,team,null,teamList)
-	resetInitialValues(pitScouting)
-	pitScouting[0].reset()
-	$('.location-pointer').remove()
-	fillDefaultFormFields()
-	fillPreviousFormData(pitScouting, localPitScoutingData(team)||eventPitData[team])
-	loadTeamsInfo(function(ti){
-		if (ti[team]){
-			$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
-			var loc = `${ti[team].city}, ${ti[team].stateProv}, ${ti[team].country}`
-			$('input[name="team_location"]').val(loc).attr('value',loc)
+	promisePitScouting().then(pitData=>{
+		if (t && typeof t != 'number') t = parseInt($(this).text())
+		if (t) team = t
+		$('.screen,.init-hide').hide()
+		$('h1').text("Pit Scouting " + eventName + " Team " + team)
+		window.scrollTo(0,0)
+		setHash(null,null,team,null,teamList)
+		resetInitialValues(pitScouting)
+		$('.location-pointer').remove()
+		fillDefaultFormFields()
+		fillPreviousFormData(pitScouting, localPitScoutingData(team)||pitData[team])
+		promiseTeamsInfo().then(ti => {
+			if (ti[team]){
+				$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
+				var loc = `${ti[team].city}, ${ti[team].stateProv}, ${ti[team].country}`
+				$('input[name="team_location"]').val(loc).attr('value',loc)
+			}
+		})
+		resetSequentialInputSeries()
+		$('.count').each(countHandler)
+		for (var i=0; i<onShowPitScouting.length; i++){
+			if(!onShowPitScouting[i]()) return false
 		}
+		pitScouting.show()
+		localStorage.setItem("last_scout_type", "pit-scout")
 	})
-	resetSequentialInputSeries()
-	$('.count').each(countHandler)
-	for (var i=0; i<onShowPitScouting.length; i++){
-		if(!onShowPitScouting[i]()) return false
-	}
-	pitScouting.show()
-	localStorage.setItem("last_scout_type", "pit-scout")
 }
 
 
 function showSubjectiveScoutingForm(t){
-	if (t && typeof t != 'number') t = parseInt($(this).text())
-	if (t) team = t
-	$('.screen,.init-hide').hide()
-	$('h1').text("Subjective Scouting " + eventName + " Team " + team)
-	window.scrollTo(0,0)
-	setHash(null,null,team,null,teamList)
-	var form = $('#subjective-scouting')
-	resetInitialValues(form)
-	form[0].reset()
-	$('.location-pointer').remove()
-	fillDefaultFormFields()
-	fillPreviousFormData(form, localSubjectiveScoutingData(team)||eventSubjectiveData[team])
-	resetSequentialInputSeries()
-	$('.count').each(countHandler)
-	for (var i=0; i<onShowSubjectiveScouting.length; i++){
-		if(!onShowSubjectiveScouting[i]()) return false
-	}
-	form.show()
-	localStorage.setItem("last_scout_type", "subjective-scout")
+	promiseSubjectiveScouting().then(subjectiveData=>{
+		if (t && typeof t != 'number') t = parseInt($(this).text())
+		if (t) team = t
+		$('.screen,.init-hide').hide()
+		$('h1').text("Subjective Scouting " + eventName + " Team " + team)
+		window.scrollTo(0,0)
+		setHash(null,null,team,null,teamList)
+		var form = $('#subjective-scouting')
+		resetInitialValues(form)
+		$('.location-pointer').remove()
+		fillDefaultFormFields()
+		fillPreviousFormData(form, localSubjectiveScoutingData(team)||subjectiveData[team])
+		resetSequentialInputSeries()
+		$('.count').each(countHandler)
+		for (var i=0; i<onShowSubjectiveScouting.length; i++){
+			if(!onShowSubjectiveScouting[i]()) return false
+		}
+		form.show()
+		localStorage.setItem("last_scout_type", "subjective-scout")
+	})
 }
 
 function findParentFromButton(button){
@@ -340,31 +360,33 @@ function countHandler(e){
 }
 
 function showScouting(){
-	$('.screen,.init-hide').hide()
-	setHash(pos,orient,team,match)
-	window.scrollTo(0,0)
-	resetInitialValues(scouting)
-	scouting[0].reset()
-	if (typeof beforeShowScouting == 'function') beforeShowScouting()
-	matchName = getMatchName(match)
-	setupButtons()
-	$('.orientLeft').toggle(orient && orient=='left')
-	$('.orientRight').toggle(orient && orient=='right')
-	$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
-	$('.teamColor').text(pos.startsWith('R')?"red":"blue")
-	$('input[name="match"]').val(match).attr('data-at-scout-start',match)
-	fillDefaultFormFields()
-	$('.match').text(matchName)
-	setTeamBG()
-	fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
-	$('.count').each(countHandler)
-	resetSequentialInputSeries()
-	for (var i=0; i<onShowScouting.length; i++){
-		if(!onShowScouting[i]()) return false
-	}
-	showTab(null, $('.default-tab'))
-	scouting.show()
-	localStorage.setItem("last_scout_type", "scout")
+	promiseEventStats().then(resolve=>{
+		var [eventStats, eventStatsByTeam, eventStatsByMatchTeam] = resolve
+		$('.screen,.init-hide').hide()
+		resetInitialValues(scouting)
+		setHash(pos,orient,team,match)
+		window.scrollTo(0,0)
+		if (typeof beforeShowScouting == 'function') beforeShowScouting()
+		matchName = getMatchName(match)
+		setupButtons()
+		$('.orientLeft').toggle(orient && orient=='left')
+		$('.orientRight').toggle(orient && orient=='right')
+		$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
+		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
+		$('input[name="match"]').val(match).attr('data-at-scout-start',match)
+		fillDefaultFormFields()
+		$('.match').text(matchName)
+		setTeamBG()
+		fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
+		$('.count').each(countHandler)
+		resetSequentialInputSeries()
+		for (var i=0; i<onShowScouting.length; i++){
+			if(!onShowScouting[i]()) return false
+		}
+		showTab(null, $('.default-tab'))
+		scouting.show()
+		localStorage.setItem("last_scout_type", "scout")
+	})
 }
 
 function fillDefaultFormFields(){
@@ -418,7 +440,7 @@ function formHasChanges(f){
 		var el=$(this),
 		val=getValOrChecked(el),
 		start=el.attr('data-at-scout-start')
-		if (val!==start)changes=true
+		if (start !== undefined && val!==start)	changes=true
 	})
 	return changes
 }
@@ -602,6 +624,8 @@ function showTab(event, tab){
 	return false
 }
 
+var eventMatches
+
 $(document).ready(function(){
 	if (!eventYear || !eventVenue){
 		$('h1').text("Event Not Found")
@@ -621,10 +645,11 @@ $(document).ready(function(){
 	$('title').text($('title').text().replace(/EVENT/g, eventName))
 
 
-	loadEventSchedule(function(){
-		if (pitScouting.length) loadPitScouting(showScreen)
-		if (subjectiveScouting.length) loadSubjectiveScouting(showScreen)
-		else loadEventStats(showScreen)
+	promiseEventMatches().then(em => {
+		eventMatches = em
+		if (pitScouting.length) showScreen()
+		if (subjectiveScouting.length) showScreen()
+		else showScreen()
 	})
 
 	$("label").click(function(e){

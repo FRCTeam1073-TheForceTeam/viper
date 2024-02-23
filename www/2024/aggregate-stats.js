@@ -1,6 +1,6 @@
 "use strict"
 
-function aggregateStats(scout, aggregate){
+function aggregateStats(scout, aggregate, apiScores){
 
 	var pointValues = {
 		"auto_leave":2,
@@ -30,6 +30,7 @@ function aggregateStats(scout, aggregate){
 		}
 	})
 
+	scout.coopertition = apiScores.coopertitionCriteriaMet?1:0
 	scout["auto_leave_score"] = pointValues["auto_leave"] * scout["auto_leave"]
 	scout["auto_collect_home"] =
 		scout["auto_collect_wing_mid"]+
@@ -541,7 +542,7 @@ var fmsMapping = [
 ]
 
 function showPitScouting(el,team){
-	loadPitScouting(function(pitData){
+	promisePitScouting().then(pitData => {
 		var dat = pitData[team]||{}
 		if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))
 		if (dat['team_location']) el.append($("<p>").text("Location: " + dat['team_location']))
@@ -594,7 +595,7 @@ function showPitScouting(el,team){
 }
 
 function showSubjectiveScouting(el,team){
-	loadSubjectiveScouting(function(subjectiveData){
+	promiseSubjectiveScouting().then(subjectiveData => {
 		var dat = subjectiveData[team]||{},
 		graph=$('<div class=graph>'),
 		f

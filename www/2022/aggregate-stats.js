@@ -407,7 +407,7 @@ var matchPredictorSections = {
 }
 
 function showPitScouting(el){
-	loadPitScouting(function(pitData){
+	promisePitScouting().then(pitData => {
 		dat = pitData[team]||{}
 		el.append("<p>" + (dat.auto_have?"Has":"Does NOT have") + " auto</p>")
 		if (dat.auto_preload){

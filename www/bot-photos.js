@@ -7,7 +7,7 @@ $(document).ready(function(){
 			addTeam(team);
 		})
 	} else if (eventId){
-		loadEventSchedule(function(){
+		promiseEventTeams().then(eventTeams=>{
 			eventTeams.forEach(addTeam)
 		})
 	}

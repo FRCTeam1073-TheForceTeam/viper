@@ -8,18 +8,7 @@ var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{
 eventYear = eventId.replace(/([0-9]{4}).*/,'$1'),
 eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1'),
 eventName = eventYear+(eventYear?" ":"")+eventVenue,
-eventMatches,
-eventAlliances,
-eventStats,
-eventStatsByTeam={},
-eventStatsByMatchTeam={},
-eventScores,
-eventFiles,
-eventTeams,
-eventInfo,
-eventPitData,
-eventSubjectiveData,
-eventTeamsInfo,
+promiseCache = {},
 BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
 MATCH_TYPE_SORT = {
 	'pm':'00',
@@ -34,27 +23,30 @@ MATCH_TYPE_SORT = {
 	'sf':'09',
 	'f':'10',
 }
-
-if (eventId && eventId != localStorage.getItem("last_event_id")){
+if (eventId){
+	if (localStorage.getItem("last_event_id")==eventId){
+		eventName = localStorage.getItem("last_event_name")||eventName
+	}
 	localStorage.setItem("last_event_id", eventId)
-	localStorage.setItem("last_event_name", eventName)
 	localStorage.setItem("last_event_year", eventYear)
 }
 
-function eventAjax(file,callback){
-	$.ajax({
-		async: true,
-		beforeSend: function(xhr){
-			xhr.overrideMimeType("text/plain;charset=UTF-8");
-		},
-		url: file,
-		timeout: 5000,
-		type: "GET",
-		success: callback,
-		error: function(xhr,status,err){
-			console.error(file,err)
-			callback("")
-		}
+function promiseEventAjax(file){
+	return new Promise(callback=>{
+		$.ajax({
+			async: true,
+			beforeSend: function(xhr){
+				xhr.overrideMimeType("text/plain;charset=UTF-8");
+			},
+			url: file,
+			timeout: 5000,
+			type: "GET",
+			success: callback,
+			error: function(xhr,status,err){
+				console.error(file,err)
+				callback("")
+			}
+		})
 	})
 }
 
@@ -92,106 +84,148 @@ function scheduleSortKey(match){
 	return event + "---" + MATCH_TYPE_SORT[m[1]] + "---" + m[2].padStart(12,'0')
 }
 
-function loadEventSchedule(callback){
-	if (eventMatches){
-		if (callback) callback(eventMatches)
-		return
-	}
-	eventAjax(`/data/${eventId}.schedule.csv`,function(text){
-		eventMatches=csvToArrayOfMaps(text)
+function promiseEventMatches(){
+	if (!promiseCache.eventMatches) promiseCache.eventMatches = promiseEventAjax(`/data/${eventId}.schedule.csv`).then(function(text){
+		var eventMatches=csvToArrayOfMaps(text)
 		eventMatches.sort((a,b)=>scheduleSortKey(a).localeCompare(scheduleSortKey(b)))
+		return eventMatches
+	})
+	return promiseCache.eventMatches
+}
+
+function promiseEventTeams(){
+	if (!promiseCache.eventTeams) promiseCache.eventTeams = promiseEventMatches().then(function(eventMatches){
 		var teams = {}
 		for (var i=0; i<eventMatches.length; i++){
 			for (var j=0; j<BOT_POSITIONS.length; j++){
 				teams[eventMatches[i][BOT_POSITIONS[j]]] = 1
 			}
 		}
-		eventTeams = Object.keys(teams).map(t=>parseInt(t)).sort((a,b)=>{a-b})
-		if (callback) callback(eventMatches)
+		return Object.keys(teams).map(t=>parseInt(t)).sort((a,b)=>{a-b})
+	})
+	return promiseCache.eventTeams
+}
+
+function promiseJson(file){
+	return new Promise(callback=>getJson(file,{teams:[]},callback))
+}
+
+function getJson(file, empty, callback){
+	$.getJSON(file,callback).fail(function(){
+		if (callback) callback(empty)
 	})
 }
 
-function loadTeamsInfo(callback){
-	loadEventSchedule(function(){
-		if (eventTeamsInfo){
-			if (callback) callback(eventTeamsInfo)
-			return
-		}
-		eventTeamsInfo={}
-		$.getJSON(`/data/${eventId}.teams.json`, function(json){
-			json.teams.forEach(function(team){
-				eventTeamsInfo[parseInt(team.teamNumber)] = team
-			})
-		}).always(function(){
-			if (callback) callback(eventTeamsInfo)
+function promiseTeamsInfo(){
+	if (!promiseCache.teamsInfo) promiseCache.teamsInfo = promiseJson(`/data/${eventId}.teams.json`).then(function(json){
+		var eventTeamsInfo={}
+		json.teams.forEach(function(team){
+			eventTeamsInfo[parseInt(team.teamNumber)] = team
 		})
+		return eventTeamsInfo
 	})
+	return promiseCache.teamsInfo
 }
 
-function loadEventScores(callback){
-	loadEventSchedule(function(){
-		if (eventScores){
-			if (callback) callback(eventScores)
-			return
-		}
-		eventScores={}
-		$.getJSON(`/data/${eventId}.scores.qualification.json`, function(json){
-			json.MatchScores.forEach(function(score){
-				eventScores[`qm${score.matchNumber}`] = score
-			})
-		}).always(function(){
-			$.getJSON(`/data/${eventId}.scores.playoff.json`, function(json){
-				eventMatches.forEach(function(match){
-					if (!/^pm|qm/.test(match.Match)){
-						eventScores[match.Match] = json.MatchScores.shift()
-					}
+function promiseEventScores(){
+	if (!promiseCache.eventScores) promiseCache.eventScores = Promise.all([
+		promiseEventMatches(),
+		promiseJson(`/data/${eventId}.scores.qualification.json`,{MatchScores:[]}),
+		promiseJson(`/data/${eventId}.scores.playoff.json`,{MatchScores:[]})
+	]).then(values => {
+		var [matches, quals, playoffs] = values,
+		scores = {}
+		quals.MatchScores.forEach(score => scores[`qm${score.matchNumber}`] = score)
+		matches.forEach(match => {
+			if (!/^pm|qm/.test(match.Match)){
+				scores[match.Match] = playoffs.MatchScores.shift()
+			}
+			var m = scores[match.Match]
+			if (m){
+				BOT_POSITIONS.forEach(pos => {
+					var team = match[pos]
+					m.alliances.forEach(alliance => {
+						if (alliance.alliance.toLowerCase()[0] == pos.toLowerCase()[0]){
+							if (!alliance.hasOwnProperty('teams')) alliance.teams=[]
+							alliance.teams.push(team)
+						}
+					})
 				})
-			}).always(function(){
-				if (callback) callback(eventScores)
-			})
+			}
 		})
+		return scores
 	})
+	return promiseCache.eventScores
 }
 
-function loadAlliances(callback){
-	if (eventAlliances){
-		if (callback) callback(eventAlliances)
-		return
-	}
-	eventAjax(`/data/${eventId}.alliances.csv`,function(text){
-		eventAlliances=csvToArrayOfMaps(text)
-		if (callback) callback(eventAlliances)
+function promiseAlliances(){
+	if (!promiseCache.eventAlliances) promiseCache.eventAlliances = promiseEventAjax(`/data/${eventId}.alliances.csv`).then(text=>{
+		return csvToArrayOfMaps(text)
 	})
+	return promiseCache.eventAlliances
 }
 
-function loadEventStats(callback, includePractice){
-	if (eventStats){
-		if (callback) callback(eventStats, eventStatsByTeam, eventStatsByMatchTeam)
-		return
-	}
-	if (eventYear && eventId){
-		$.getScript(`/${eventYear}/aggregate-stats.js`, function(){
-			eventAjax(`/data/${eventId}.scouting.csv`,function(text){
-				eventStats=csvToArrayOfMaps(text)
-				aggregateAllEventStats(includePractice)
-				if (callback) callback(eventStats, eventStatsByTeam, eventStatsByMatchTeam)
-			})
+function promiseScouting(){
+	if (!promiseCache.scouting) promiseCache.scouting = promiseEventAjax(`/data/${eventId}.scouting.csv`).then(text=>{
+		return csvToArrayOfMaps(text)
+	})
+	return promiseCache.scouting
+}
+
+var statsIncludePractice = true
+function promiseEventStats(includePractice){
+	if (!promiseCache.eventStats) promiseCache.eventStats = Promise.all([
+		promiseScouting(),
+		promiseEventScores(),
+		promiseScript(`/${eventYear}/aggregate-stats.js`),
+	]).then(values => {
+		var [eventStats, eventScores] = values
+		if (typeof includePractice != "boolean"){
+			includePractice=!haveNonPracticeMatchForEachTeam(eventStats)
+		}
+		statsIncludePractice = includePractice
+		$('.aggregationIncludesPractice').text(includePractice?"include":"exclude")
+		var eventStatsByTeam = {},
+		eventStatsByMatchTeam = {}
+		forEachTeamMatch(eventStats, function(team,match,scout){
+			var apiScore = {}
+			if (eventScores[match] && eventScores[match].alliances){
+				eventScores[match].alliances.forEach(alliance=>{
+					if (alliance.teams && alliance.teams.includes(team)) apiScore = alliance
+				})
+			}
+			if (!/^pm[0-9]+$/.test(match) || includePractice){
+				var aggregate = eventStatsByTeam[team] || {}
+				aggregateStats(scout, aggregate, apiScore)
+				eventStatsByTeam[team] = aggregate
+			} else {
+				aggregateStats(scout, {}, apiScore)
+			}
+			var mt=`${match}-${team}`
+			scout.old=eventStatsByMatchTeam[mt]
+			eventStatsByMatchTeam[mt]=scout
 		})
-	}
+		return [eventStats, eventStatsByTeam, eventStatsByMatchTeam]
+	})
+	return promiseCache.eventStats
 }
 
-function haveNonPracticeMatchForEachTeam(){
+function promiseScript(file){
+	return new Promise(callback=>$.getScript(file,callback))
+}
+
+function haveNonPracticeMatchForEachTeam(eventStats){
 	var practiceTeams = {}
-	forEachTeamMatch(function(team,match){
+	forEachTeamMatch(eventStats, function(team,match){
 		if (/^pm[0-9]+$/.test(match))practiceTeams[team]=1
 	})
-	forEachTeamMatch(function(team,match){
+	forEachTeamMatch(eventStats, function(team,match){
 		if (!/^pm[0-9]+$/.test(match))delete practiceTeams[team]
 	})
 	return Object.keys(practiceTeams).length == 0
 }
 
-function forEachTeamMatch(callback){
+function forEachTeamMatch(eventStats, callback){
 	eventStats.forEach(function(scout){
 		callback(scout['team'],scout['match'],scout)
 	})
@@ -202,89 +236,56 @@ function matchHasTeam(m,t){
 	return !!(BOT_POSITIONS.reduce((sum,pos)=>sum+(m[pos]==t?1:0),0))
 }
 
-function matchScoutingDataCount(m){
-	if (!m) return false
-	return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
-}
-
-var statsIncludePractice = true
-
-function aggregateAllEventStats(includePractice){
-	if (typeof includePractice != "boolean"){
-		includePractice=!haveNonPracticeMatchForEachTeam()
-	}
-	statsIncludePractice = includePractice
-	$('.aggregationIncludesPractice').text(includePractice?"include":"exclude")
-	eventStatsByTeam = {}
-	eventStatsByMatchTeam = {}
-	forEachTeamMatch(function(team,match,scout){
-		if (!/^pm[0-9]+$/.test(match) || includePractice){
-			var aggregate = eventStatsByTeam[team] || {}
-			aggregateStats(scout, aggregate)
-			eventStatsByTeam[team] = aggregate
-		} else {
-			aggregateStats(scout, {})
-		}
-		var mt=`${match}-${team}`
-		scout.old=eventStatsByMatchTeam[mt]
-		eventStatsByMatchTeam[mt]=scout
+function promiseEventFiles(){
+	if (!promiseCache.eventFiles) promiseCache.eventFiles = promiseEventAjax(`/event-files.cgi?event=${eventId}`).then(text => {
+		var fileList = text.split(/[\n\r]+/).filter(x=>/\./.test(x))
+		fileList.sort((a,b)=>{
+			var aType = a.replace(/.*\./,"")
+			var bType = b.replace(/.*\./,"")
+			if(aType != bType) return aType.localeCompare(bType)
+			return a.localeCompare(b)
+		})
+		return fileList
 	})
+	return promiseCache.eventFiles
 }
 
-function loadEventFiles(callback){
-	if (eventFiles){
-		if (callback) callback(eventFiles)
-		return
-	}
-	eventAjax(`/event-files.cgi?event=${eventId}`,function(text){
-		eventFiles=text.split(/[\n\r]+/).filter(x=>/\./.test(x))
-		if (callback) callback(eventFiles)
-	})
-}
-
-function loadEventInfo(callback){
-	if (eventInfo){
-		if (callback) callback(eventInfo)
-		return
-	}
-	eventAjax(`/data/${eventId}.event.csv`,function(text){
+function promiseEventInfo(){
+	if (!promiseCache.eventInfo) promiseCache.eventInfo = promiseEventAjax(`/data/${eventId}.event.csv`).then(text => {
 		if (text){
-			eventInfo = csvToArrayOfMaps(text)[0]
-			if (eventInfo.name)	eventName = (eventInfo.name.includes(eventYear)?"":`${eventYear} `)+eventInfo.name
+			var eventInfo = csvToArrayOfMaps(text)[0]
+			if (eventInfo.name)	{
+				eventName = (eventInfo.name.includes(eventYear)?"":`${eventYear} `)+eventInfo.name
+				localStorage.setItem("last_event_name", eventName)
+			}
 		} else {
 			eventInfo = []
 		}
-		localStorage.setItem("last_event_name", eventName)
-		if (callback) callback(eventInfo)
+		return eventInfo
 	})
+	return promiseCache.eventInfo
 }
 
-function loadPitScouting(callback){
-	if (eventPitData){
-		if (callback) callback(eventPitData)
-		return
-	}
-	eventAjax(`/data/${eventId}.pit.csv`,function(text){
-		eventPitData = {}
+function promisePitScouting(){
+	if (!promiseCache.pitScouting) promiseCache.pitScouting = promiseEventAjax(`/data/${eventId}.pit.csv`).then(text=>{
+		var data = {}
 		csvToArrayOfMaps(text).forEach(function(teamData){
-			eventPitData[teamData.team]=teamData
+			data[teamData.team]=teamData
 		})
-		if (callback) callback(eventPitData)
+		return data
 	})
+	return promiseCache.pitScouting
 }
 
-function loadSubjectiveScouting(callback){
-	if (eventSubjectiveData){
-		if (callback) callback(eventSubjectiveData)
-		return
-	}
-	eventAjax(`/data/${eventId}.subjective.csv`,function(text){
-		eventSubjectiveData = {}
+function promiseSubjectiveScouting(){
+	if (!promiseCache.subjectiveScouting) promiseCache.subjectiveScouting = promiseEventAjax(`/data/${eventId}.subjective.csv`).then(text=>{
+		var data = {}
 		csvToArrayOfMaps(text).forEach(function(teamData){
-			eventSubjectiveData[teamData.team]=teamData
+			data[teamData.team]=teamData
 		})
-		if (callback) callback(eventSubjectiveData)
+		return data
 	})
+	return promiseCache.subjectiveScouting
 }
 
 function getUploads(){

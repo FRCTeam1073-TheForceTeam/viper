@@ -1,49 +1,51 @@
 "use strict"
 
-var scouterStats = {}
-var matchStats = []
 
-function loadScoutScoreCompare(callback){
-	loadEventScores(function(){
-		loadEventStats(function(){
-			eventMatches.forEach(match => {
-				var thisMatch
-				;["Red","Blue"].forEach(alliance=>{
-					var scoutData = [],
-					scoreData
-					for (var i=0; i<=3; i++){
-						var team = match[alliance.charAt(0)+""+i],
-						matchTeam = `${match.Match}-${team}`
-						if (eventStatsByMatchTeam[matchTeam])scoutData.push(eventStatsByMatchTeam[matchTeam])
-					}
-					if (eventScores[match.Match]) eventScores[match.Match].alliances.forEach(dat=>{
-						if (dat.alliance.toLowerCase() == alliance.toLowerCase()) scoreData = dat
-					})
-					if (!thisMatch) thisMatch = {}
-					if (scoreData && scoutData.length == 3){
-						thisMatch[alliance]=getScoreDifference(scoutData, scoreData)
-						thisMatch[alliance].alliance=alliance
-						thisMatch.match=match.Match
-						thisMatch[alliance].match=match.Match
-					}
-					scoutData.forEach(scout=>{
-						var scouter = scout.scouter.trim(),
-						key = scouter.toLowerCase().replace(/[^0-9a-z]/g,"")
-						if (!scouter) scouter="Unknown"
-						if (!key) key="unknown"
-						if (!scouterStats[key]) scouterStats[key] = {name:scouter,matches:0,scoredMatches:0,error:0}
-						scouterStats[key].matches++
-						if (thisMatch[alliance]){
-							scouterStats[key].scoredMatches++
-							scouterStats[key].error+=thisMatch[alliance].diff/3
-							scouterStats[key].avgError=Math.round(scouterStats[key].error/scouterStats[key].scoredMatches)
-						}
-					})
+function promiseScoutScoreCompare(callback){
+	return Promise.all([
+		promiseEventScores(),
+		promiseEventStats(),
+		promiseEventMatches()
+	]).then(values =>{
+		var [eventScores, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventMatches] = values,
+		scouterStats = {},
+		matchStats = []
+		eventMatches.forEach(match => {
+			var thisMatch = {}
+			;["Red","Blue"].forEach(alliance=>{
+				var scoutData = [],
+				scoreData
+				for (var i=0; i<=3; i++){
+					var team = match[alliance.charAt(0)+""+i],
+					matchTeam = `${match.Match}-${team}`
+					if (eventStatsByMatchTeam[matchTeam])scoutData.push(eventStatsByMatchTeam[matchTeam])
+				}
+				if (eventScores[match.Match]) eventScores[match.Match].alliances.forEach(dat=>{
+					if (dat.alliance.toLowerCase() == alliance.toLowerCase()) scoreData = dat
 				})
-				if (thisMatch.Red) matchStats.push(thisMatch)
+				if (scoreData && scoutData.length == 3){
+					thisMatch[alliance]=getScoreDifference(scoutData, scoreData)
+					thisMatch[alliance].alliance=alliance
+					thisMatch.match=match.Match
+					thisMatch[alliance].match=match.Match
+				}
+				scoutData.forEach(scout=>{
+					var scouter = scout.scouter.trim(),
+					key = scouter.toLowerCase().replace(/[^0-9a-z]/g,"")
+					if (!scouter) scouter="Unknown"
+					if (!key) key="unknown"
+					if (!scouterStats[key]) scouterStats[key] = {name:scouter,matches:0,scoredMatches:0,error:0}
+					scouterStats[key].matches++
+					if (thisMatch[alliance]){
+						scouterStats[key].scoredMatches++
+						scouterStats[key].error+=thisMatch[alliance].diff/3
+						scouterStats[key].avgError=Math.round(scouterStats[key].error/scouterStats[key].scoredMatches)
+					}
+				})
 			})
-			callback()
+			if (thisMatch.Red) matchStats.push(thisMatch)
 		})
+		return [scouterStats, matchStats]
 	})
 }
 

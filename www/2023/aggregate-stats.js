@@ -646,7 +646,7 @@ var fmsMapping = [
 ]
 
 function showPitScouting(el,team){
-	loadPitScouting(function(pitData){
+	promisePitScouting().then(pitData => {
 		var dat = pitData[team]||{}
 		if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))
 		if (dat['team_location']) el.append($("<p>").text("Location: " + dat['team_location']))

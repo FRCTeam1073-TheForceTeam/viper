@@ -18,14 +18,8 @@ function tableToCsv(table){
 
 function showAllianceSelection(){
 	$('.screen').hide()
-	loadEventSchedule(function(data){
-		var t = {}
-		for (var i=1; i<data.length; i++){
-			for (var j=0; j<BOT_POSITIONS.length; j++){
-				t[data[i][BOT_POSITIONS[j]]] = 1
-			}
-		}
-		eventTeams.forEach(function(team){
+	promiseEventTeams().then(eventTeams => {
+		eventTeams.forEach(team => {
 			$('#teams').append($(`<button class=team id=t${team}>${team}</button>`).click(function(){
 				$(this).addClass('picked')
 				lf().val($(this).text())
@@ -363,7 +357,10 @@ $(document).ready(function(){
 		$('#addAlliances').submit()
 		return false
 	})
-	loadAlliances(showContent)
+	promiseAlliances().then(ea => {
+		window.eventAlliances = ea
+		showContent()
+	})
 	$('#playoff-bracket').click(function(e){
 		var t = $(e.target)
 		if (t.is(".winnerBtn")){
@@ -383,9 +380,10 @@ $(document).ready(function(){
 	focusNext()
 })
 
-function showContent(){
+function showContent(ea){
 	if (!eventAlliances.length) showAllianceSelection()
-	else loadEventStats(function(){
+	else promiseEventStats(true).then(values => {
+		[window.eventStats, window.eventStatsByTeam] = values
 		showBracket(getBrackets())
 	})
 }

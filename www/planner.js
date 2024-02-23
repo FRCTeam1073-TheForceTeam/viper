@@ -54,7 +54,9 @@ $(document).ready(function() {
 	loadFromLocationHash()
 	$(window).on('hashchange', loadFromLocationHash)
 
-	loadEventStats(function(){
+	promiseEventStats().then(values => {
+		var [eventStats, eventStatsByTeam] = values
+		window.eventStatsByTeam = eventStatsByTeam
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
