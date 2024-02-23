@@ -98,10 +98,10 @@ function showStats(){
 			graph=$('<div class=graph>')
 			graphs.append(graph)
 			graph.append($('<h2>').text(section))
-			if (aggregateGraphs[section]['graph']=='heatmap'){
+			if (aggregateGraphs[section].graph=='heatmap'){
 				var statName = aggregateGraphs[section]['data'][0],
 				stat=statInfo[statName],
-				image=stat['image'],
+				image=stat.image,
 				width=Math.min($(document).width(),1000),
 				height=Math.round(width/stat['aspect_ratio']),
 				points=[],
@@ -190,39 +190,40 @@ function showStats(){
 			}
 		}
 	} else {
-		var tableWidth = teamList.length + 1
 		var sections = Object.keys(aggregateGraphs)
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i]
-			table.append($('<tr><td class=blank></td></tr>'))
-			var hr = $('<tr>')
-			hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
-			for (var j=0; j<teamList.length; j++){
-				var t = teamList[j],
-				picked = teamsPicked[t]
-				hr.append($('<th class=team>').text(t).click(showStatClickMenu).toggleClass('picked',picked))
-			}
-			table.append(hr)
-			for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
-				var field = aggregateGraphs[section]['data'][j],
-				info = statInfo[field]||{},
-				highGood = (info['good']||"high")=='high',
-				statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
-				tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").attr('data-field',field).click(reSort)),
-				best = (highGood?-1:1)*99999999
-				for (var k=0; k<teamList.length; k++){
-					var t = teamList[k],
-					picked = teamsPicked[t],
-					value = getTeamValue(field, t)
-					if (!picked && ((highGood && value > best) || (!highGood && value < best))) best = value
+			if (aggregateGraphs[section].graph!='heatmap'){
+				table.append($('<tr><td class=blank></td></tr>'))
+				var hr = $('<tr>')
+				hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
+				for (var j=0; j<teamList.length; j++){
+					var t = teamList[j],
+					picked = teamsPicked[t]
+					hr.append($('<th class=team>').text(t).click(showStatClickMenu).toggleClass('picked',picked))
 				}
-				for (var k=0; k<teamList.length; k++){
-					var t = teamList[k]
-					picked = teamsPicked[t],
-					value = getTeamValue(field, t)
-					tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).click(showStatClickMenu).text(Math.round(value)))
+				table.append(hr)
+				for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
+					var field = aggregateGraphs[section]['data'][j],
+					info = statInfo[field]||{},
+					highGood = (info['good']||"high")=='high',
+					statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
+					tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").attr('data-field',field).click(reSort)),
+					best = (highGood?-1:1)*99999999
+					for (var k=0; k<teamList.length; k++){
+						var t = teamList[k],
+						picked = teamsPicked[t],
+						value = getTeamValue(field, t)
+						if (!picked && ((highGood && value > best) || (!highGood && value < best))) best = value
+					}
+					for (var k=0; k<teamList.length; k++){
+						var t = teamList[k]
+						picked = teamsPicked[t],
+						value = getTeamValue(field, t)
+						tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).click(showStatClickMenu).text(Math.round(value)))
+					}
+					table.append(tr)
 				}
-				table.append(tr)
 			}
 		}
 	}
@@ -357,9 +358,18 @@ function getTeamValue(field, team, percent, boxplot){
 	var stats = eventStatsByTeam[team]
 	if (boxplot && (field+"_set") in stats) field+="_set"
 	var info = statInfo[field]||{}
-	percent = percent || info['type']=='%'
-	if (! field in stats ||! 'count' in stats || !stats['count']) return boxplot?[]:0
+	percent = percent || info.type=='%'
+	if (! field in stats ||! 'count' in stats || !stats.count) return boxplot?[]:0
 	if (boxplot) return stats[field]||[]
-	var divisor = (percent||"avg"==info['type'])?stats['count']:1
-	return (stats[field]||0) / divisor * (percent?100:1)
+	var divisor = (percent||"avg"==info.type)?stats.count:1,
+	value = stats[field]
+	if (info.type=='int-list'){
+		if (value.length){
+			divisor = value.length
+			value = value.reduce((a, b) => a + b)
+		} else {
+			value = info.good=='low'?999:0
+		}
+	}
+	return (value||(info.good=='low'?999:0)) / divisor * (percent?100:1)
 }
