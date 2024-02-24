@@ -514,6 +514,10 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["auto_score","tele_amp_speaker_score","stage_score"]
 	},
+	"Cycles":{
+		graph:"boxplot",
+		data:["tele_place",'full_cycle_count']
+	},
 	"Full Cycle Times":{
 		graph:"boxplot",
 		data:['full_cycle_fastest_seconds','full_cycles']
