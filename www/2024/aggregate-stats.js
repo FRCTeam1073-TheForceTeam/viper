@@ -112,7 +112,10 @@ var statInfo = {
 		name: "Location where the robot starts",
 		type: "heatmap",
 		image: "/2024/start-area-blue.png",
-		aspect_ratio: 4
+		aspect_ratio: 4,
+		whiteboard_start: 0,
+		whiteboard_end: 14,
+		whiteboard_char: "□"
 	},
 	"auto_leave": {
 		name: "Exited the Starting Area During Auto",
@@ -624,3 +627,7 @@ function showSubjectiveScouting(el,team){
 
 // Only one game piece, no stamps needed this year
 var whiteboardStamps = []
+
+var whiteboardOverlays = [
+	"auto_start"
+]
