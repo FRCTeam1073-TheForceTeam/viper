@@ -177,9 +177,10 @@ function promiseEventStats(includePractice){
 	if (!promiseCache.eventStats) promiseCache.eventStats = Promise.all([
 		promiseScouting(),
 		promiseEventScores(),
+		promiseSubjectiveScouting(),
 		promiseScript(`/${eventYear}/aggregate-stats.js`),
 	]).then(values => {
-		var [eventStats, eventScores] = values
+		var [eventStats, eventScores, subjectiveData] = values
 		if (typeof includePractice != "boolean"){
 			includePractice=!haveNonPracticeMatchForEachTeam(eventStats)
 		}
@@ -194,12 +195,13 @@ function promiseEventStats(includePractice){
 					if (alliance.teams && alliance.teams.includes(team)) apiScore = alliance
 				})
 			}
+			var subjective =  subjectiveData[team]||{}
 			if (!/^pm[0-9]+$/.test(match) || includePractice){
 				var aggregate = eventStatsByTeam[team] || {}
-				aggregateStats(scout, aggregate, apiScore)
+				aggregateStats(scout, aggregate, apiScore,subjective)
 				eventStatsByTeam[team] = aggregate
 			} else {
-				aggregateStats(scout, {}, apiScore)
+				aggregateStats(scout, {}, apiScore, subjective)
 			}
 			var mt=`${match}-${team}`
 			scout.old=eventStatsByMatchTeam[mt]

@@ -114,7 +114,7 @@ var statInfo = {
 		image: "/2024/start-area-blue.png",
 		aspect_ratio: 4,
 		whiteboard_start: 0,
-		whiteboard_end: 14,
+		whiteboard_end: 13,
 		whiteboard_char: "□"
 	},
 	"auto_leave": {
@@ -364,6 +364,16 @@ var statInfo = {
 		name: "Harmony Score",
 		type: "avg"
 	},
+	"speaker_shot_locations": {
+		name: "Speaker Shot Locations",
+		type: "heatmap",
+		image: "/2024/speaker-shoot-area-blue.png",
+		aspect_ratio: .75,
+		whiteboard_start: 0,
+		whiteboard_end: 66,
+		whiteboard_char: "X",
+		source: "subjective"
+	},
 	"stage_score": {
 		name: "Stage Score",
 		type: "avg"
@@ -512,6 +522,10 @@ var aggregateGraphs = {
 		graph:"heatmap",
 		data:['auto_start']
 	},
+	"Shooting Location":{
+		graph:"heatmap",
+		data:['speaker_shot_locations']
+	},
 }
 
 
@@ -629,5 +643,6 @@ function showSubjectiveScouting(el,team){
 var whiteboardStamps = []
 
 var whiteboardOverlays = [
-	"auto_start"
+	"auto_start",
+	"speaker_shot_locations"
 ]

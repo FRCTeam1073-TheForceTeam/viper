@@ -55,9 +55,13 @@ $(document).ready(function() {
 	loadFromLocationHash()
 	$(window).on('hashchange', loadFromLocationHash)
 
-	promiseEventStats().then(values => {
-		var [eventStats, eventStatsByTeam] = values
-		window.eventStatsByTeam = eventStatsByTeam
+	Promise.all([
+		promiseEventStats(),
+		promisePitScouting(),
+		promiseSubjectiveScouting()
+	]).then(values => {
+		;[window.eventStatsValues, window.pitData, window.subjectiveData] = values
+		;[window.eventStats, window.eventStatsByTeam] = eventStatsValues
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
@@ -193,9 +197,11 @@ $(document).ready(function() {
 				end = (fieldInfo.whiteboard_end||100)/100,
 				height = end - start,
 				whiteboard = $('#field'),
-				whiteboardBounds = whiteboard[0].getBoundingClientRect()
+				whiteboardBounds = whiteboard[0].getBoundingClientRect(),
+				source = fieldInfo.source,
+				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam)
 				if (enabled){
-					;(eventStatsByTeam[team][field]||"").split(" ").forEach(coordinates=>{
+					;((dataSource[team]||{})[field]||"").split(" ").forEach(coordinates=>{
 						var top=0, left=0,
 						m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
 						if (m && m.length) [left, top] = m.slice(1).map(x=>parseInt(x))

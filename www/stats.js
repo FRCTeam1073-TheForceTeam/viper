@@ -1,8 +1,13 @@
 "use strict"
 
 $(document).ready(function(){
-	promiseEventStats(true).then(values => {
-		[window.eventStats, window.eventStatsByTeam] = values
+	Promise.all([
+		promiseEventStats(),
+		promisePitScouting(),
+		promiseSubjectiveScouting()
+	]).then(values => {
+		;[window.eventStatsValues, window.pitData, window.subjectiveData] = values
+		;[window.eventStats, window.eventStatsByTeam] = eventStatsValues
 		$('#sortBy').click(showSortOptions)
 		$('#markPicked').click(function(){
 			showTeamPicker(setTeamPicked, "Change Whether Team Has Been Picked")
@@ -101,6 +106,8 @@ function showStats(){
 			if (aggregateGraphs[section].graph=='heatmap'){
 				var statName = aggregateGraphs[section]['data'][0],
 				stat=statInfo[statName],
+				source=stat.source||"",
+				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
 				image=stat.image,
 				width=Math.min($(document).width(),1000),
 				height=Math.round(width/stat['aspect_ratio']),
@@ -114,7 +121,7 @@ function showStats(){
 					container: chart[0],
 				})
 				for (var k=0; k<teamList.length; k++){
-					stat = eventStatsByTeam[teamList[k]]
+					stat = dataSource[teamList[k]]
 					if (stat && statName in stat){
 						((stat[statName]||"").match(/[0-9]{1,2}x[0-9]{1,2}/g)||[]).forEach(function(point){
 							var m = point.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
