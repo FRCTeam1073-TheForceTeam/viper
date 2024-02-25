@@ -119,6 +119,7 @@ function getJson(file, empty, callback){
 function promiseTeamsInfo(){
 	if (!promiseCache.teamsInfo) promiseCache.teamsInfo = promiseJson(`/data/${eventId}.teams.json`).then(function(json){
 		var eventTeamsInfo={}
+		json.teams = json.teams||[]
 		json.teams.forEach(function(team){
 			eventTeamsInfo[parseInt(team.teamNumber)] = team
 		})
