@@ -183,4 +183,15 @@ $(document).ready(function(){
 		drawAllShotLocations()
 		return false
 	})
+
+	var currentAuto = 1
+
+	$('#auto-paths').click(function(e){
+		var path = $(`[auto_${currentAuto}_description`),
+		val = path.val()
+		if (val) val += " "
+		val += getPercentCoordinates(e, this)
+		console.log(val)
+		path.val(val)
+	})
 })
