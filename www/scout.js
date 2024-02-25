@@ -67,7 +67,7 @@ function showSelectPitScoutTeam(){
 function showSelectSubjectiveScoutTeam(){
 	Promise.all([
 		promiseEventTeams(),
-		getSubjectiveScouting()
+		promiseSubjectiveScouting()
 	]).then(values=>{
 		var [eventTeams, subjectiveData] = values
 		$('.screen,.init-hide').hide()

@@ -371,7 +371,7 @@ var statInfo = {
 		image: "/2024/speaker-shoot-area-blue.png",
 		aspect_ratio: .75,
 		whiteboard_start: 0,
-		whiteboard_end: 66,
+		whiteboard_end: 64,
 		whiteboard_char: "X",
 		whiteboard_us: false,
 		source: "subjective"
