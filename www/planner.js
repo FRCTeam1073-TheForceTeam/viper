@@ -105,6 +105,7 @@ $(document).ready(function() {
 			teamList.forEach(function(team,i){
 				var color = i<3?"red":"blue"
 				row.append($(`<td class="${color}TeamBG viewTeam" data-team=${team}>`).click(showTeamStats).html('<img src=/graph.svg>'))
+				if (team == getLocalTeam() && i>=3) $('#fieldBG').addClass('rotated')
 			})
 			tbody.append(row)
 			;["","-top"].forEach(function(imageSuffix){
@@ -142,18 +143,18 @@ $(document).ready(function() {
 				}
 			})
 			overlays.forEach(field=>{
-				statInfo[field] = statInfo[field]||{}
-				var statName = statInfo[field]['name']||field
+				var stat = statInfo[field]||{},
+				name = stat.name||field,
+				forUs = !!stat.whiteboard_us
+
 				row = $("<tr>")
 				teamList.forEach(function(team,i){
-					var color = i<3?"red":"blue"
-					row.append(
-						$(`<td class="${color}TeamBG">`).append(
-							$(`<input id="${field}_${team}" type=checkbox checked>`).change(drawOverlays)
-						)
-					)
+					var color = i<3?"red":"blue",
+					checkbox = $(`<input id="${field}_${team}" type=checkbox>`).change(drawOverlays)
+					if ((forUs==!$('#fieldBG').is('.rotated')) == (i<3)) checkbox.attr('checked',"")
+					row.append($(`<td class="${color}TeamBG">`).append(checkbox))
 				})
-				row.append($('<th>').text(statName))
+				row.append($('<th>').text(name))
 				tbody.append(row)
 			})
 			drawOverlays()

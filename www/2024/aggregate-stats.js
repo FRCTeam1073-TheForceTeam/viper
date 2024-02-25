@@ -115,7 +115,8 @@ var statInfo = {
 		aspect_ratio: 4,
 		whiteboard_start: 0,
 		whiteboard_end: 13,
-		whiteboard_char: "□"
+		whiteboard_char: "□",
+		whiteboard_us: true
 	},
 	"auto_leave": {
 		name: "Exited the Starting Area During Auto",
@@ -372,6 +373,7 @@ var statInfo = {
 		whiteboard_start: 0,
 		whiteboard_end: 66,
 		whiteboard_char: "X",
+		whiteboard_us: false,
 		source: "subjective"
 	},
 	"stage_score": {
