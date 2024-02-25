@@ -204,15 +204,16 @@ $(document).ready(function() {
 					;((dataSource[team]||{})[field]||"").split(" ").forEach(coordinates=>{
 						var top=0, left=0,
 						m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
-						if (m && m.length) [left, top] = m.slice(1).map(x=>parseInt(x))
-						if (rotated) left = 100 - left
-						var point = $('<div class=overlay>').html(char).css(...style)
-						whiteboard.append(point)
-						var pointBounds = point[0].getBoundingClientRect()
-						left = Math.round(left * whiteboardBounds.width / 100 - pointBounds.width/2)
-						top = Math.round(top * whiteboardBounds.height * height / 100 + (rotated?-1:1) * start * whiteboardBounds.height / 100 - pointBounds.height/2)
-						if (atBottom) top = whiteboardBounds.height - top
-						point.css('top',`${top}px`).css('left',`${left}px`)
+						if (m && m.length){
+							[left, top] = m.slice(1).map(x=>parseInt(x))
+							if (rotated) left = 100 - left
+							var point = $('<div class=overlay>').html(char).css(...style)
+							whiteboard.append(point)
+							var pointBounds = point[0].getBoundingClientRect()
+							left = Math.round(left * whiteboardBounds.width / 100 - pointBounds.width/2)
+							top = Math.round(top * whiteboardBounds.height * height / 100 + (rotated?-1:1) * start * whiteboardBounds.height / 100 - pointBounds.height/2)
+							point.css(atBottom?"bottom":"top",`${top}px`).css('left',`${left}px`)
+						}
 					})
 				}
 			})
