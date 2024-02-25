@@ -130,11 +130,13 @@ function promiseTeamsInfo(){
 function promiseEventScores(){
 	if (!promiseCache.eventScores) promiseCache.eventScores = Promise.all([
 		promiseEventMatches(),
-		promiseJson(`/data/${eventId}.scores.qualification.json`,{MatchScores:[]}),
-		promiseJson(`/data/${eventId}.scores.playoff.json`,{MatchScores:[]})
+		promiseJson(`/data/${eventId}.scores.qualification.json`,{}),
+		promiseJson(`/data/${eventId}.scores.playoff.json`,{})
 	]).then(values => {
 		var [matches, quals, playoffs] = values,
 		scores = {}
+		quals.MatchScores = quals.MatchScores||[]
+		playoffs.MatchScores = playoffs.MatchScores||[]
 		quals.MatchScores.forEach(score => scores[`qm${score.matchNumber}`] = score)
 		matches.forEach(match => {
 			if (!/^pm|qm/.test(match.Match)){
