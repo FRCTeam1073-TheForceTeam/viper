@@ -101,22 +101,24 @@ $(document).ready(function(){
 		)
 	}
 
-	function moveFloaterToPercentCoordinates(mapImage, isRed, coordinates, floatingImage){
+	function getPixelCoordinates(mapImage, isRed, coordinates, floatingImage){
 		var m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
-		if (!m || !m.length){
-			floatingImage.style.left="0px"
-			floatingImage.style.top="0px"
-			return
-		}
+		if (!m || !m.length) return
 		var px = parseInt(m[1]),
 		py = parseInt(m[2])
 		if (isRed) px = 100 - px
 		var d = mapImage.getBoundingClientRect(),
-		s = floatingImage.getBoundingClientRect(),
+		s = floatingImage?floatingImage.getBoundingClientRect():{width:0,height:0},
 		x = Math.round(px * d.width / 100 - s.width/2),
 		y = Math.round(py * d.height / 100 - s.height/2)
-		floatingImage.style.left=x+"px"
-		floatingImage.style.top=y+"px"
+		return {x:x,y:y}
+	}
+
+	function moveFloaterToPercentCoordinates(mapImage, isRed, coordinates, floatingImage){
+		var c = getPixelCoordinates(mapImage, isRed, coordinates, floatingImage)
+		if (!c) return
+		floatingImage.style.left=c.x+"px"
+		floatingImage.style.top=c.y+"px"
 	}
 
 	function getPercentCoordinates(event, mapImage, isRed){
@@ -187,11 +189,30 @@ $(document).ready(function(){
 	var currentAuto = 1
 
 	$('#auto-paths').click(function(e){
-		var path = $(`[auto_${currentAuto}_description`),
+		var path = $(`[name="auto_${currentAuto}_description"]`),
 		val = path.val()
+		console.log(path)
 		if (val) val += " "
 		val += getPercentCoordinates(e, this)
-		console.log(val)
 		path.val(val)
+		drawAutos()
 	})
+
+	function drawAutos(){
+		var canvas = $('#auto-paths')[0],
+		ctx = canvas.getContext('2d')
+		ctx.textBaseline = 'middle'
+		ctx.textAlign = 'center'
+		console.log(ctx)
+		ctx.clearRect(0, 0, canvas.width, canvas.height)
+		for (var i=1; i<=9; i++){
+			$(`[name="auto_${i}_description"]`).val().split(/ /).forEach((point,j)=>{
+				var c = getPixelCoordinates(canvas, false, point)
+				if (c){
+					console.log(c)
+					ctx.fillText(`${i}-${j}`,c.x,c.y);
+				}
+			})
+		}
+	}
 })
