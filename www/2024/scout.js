@@ -3,7 +3,9 @@
 $(document).ready(function(){
 	$('#qrcodeBtn').click(function(){
 		$('#uploadBtn, #nextBtn, #qrcodeBtn').hide()
-		new QRCode(document.getElementById("qrcode"), "http:apple.com");
+		var url =  "https://demo.viperscout.com/scout/upload.cgi?csv=" + toCSV(scouting)
+		console.log(url)
+		new QRCode(document.getElementById("qrcode"), {text: url, width: 700,height: 700})
 	})
 
 	console.log("hi")
