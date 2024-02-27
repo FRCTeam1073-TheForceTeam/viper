@@ -3,12 +3,18 @@
 $(document).ready(function(){
 	$('#qrcodeBtn').click(function(){
 		$('#uploadBtn, #nextBtn, #qrcodeBtn').hide()
-		var url =  "https://demo.viperscout.com/scout/upload.cgi?csv=" + toCSV(scouting)
-		console.log(url)
-		new QRCode(document.getElementById("qrcode"), {text: url, width: 700,height: 700})
+		var csv = toCSV(scouting)[1]
+		csv=csv.replace(/,0(?=,)/g,",").replace(/,[^,]{30,}(?=,)/g,",")
+		var url =  location.origin+"/qr?"+encodeURIComponent(csv),
+		size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)
+		new QRCode($("#qrcode")[0],{
+			text:url,
+			width:size,
+			height:size
+		})
+		return false
 	})
 
-	console.log("hi")
 	$('.onstage-state').click(toggleOnstage)
 
 	function toggleOnstage(){
