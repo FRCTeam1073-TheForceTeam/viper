@@ -17,6 +17,7 @@ $(document).ready(function(){
 		"subjective.csv": ['.dependSubjective','Sub&shy;ject&shy;ive Scout&shy;ing CSV'],
 		"info.json": ['','API Event Info JSON'],
 		"teams.json": ['','API Team List JSON'],
+		"schedule.practice.json": ['','API Prac&shy;tice Sched&shy;ule JSON'],
 		"schedule.qualification.json": ['','API Qual&shy;if&shy;ic&shy;a&shy;tion Sched&shy;ule JSON'],
 		"schedule.playoff.json": ['','API Play&shy;off Schedule JSON'],
 		"scores.qualification.json": ['.dependScores','API Qual&shy;if&shy;ic&shy;a&shy;tion Scores JSON'],
