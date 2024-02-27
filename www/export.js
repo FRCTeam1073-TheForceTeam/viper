@@ -17,17 +17,17 @@ $(document).ready(function(){
 	dataText = {},
 	fullFileCount = -1,
 	textFileCount = -1
-	loadEventFiles(function(fileList){
+	promiseEventFiles().then(fileList => {
 		fullFileCount = fileList.length
 		var textFiles = 0
 		fileList.forEach(file=>{
 			if (/\.jpg$/.test(file)){
-				toDataURL(file, function(dataUrl) {
+				toDataURL(file, dataUrl => {
 					dataFull[file] = dataUrl
 				})
 			} else {
 				textFiles++
-				eventAjax(file ,function(text){
+				promiseEventAjax(file).then(text => {
 					dataFull[file] = text||""
 					dataText[file] = text||""
 				})

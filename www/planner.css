@@ -2,9 +2,11 @@ button.selected{background:var(--button-selected-bg-color)}
 #field{border:1px solid var(--main-border-color);margin:0;padding:0;position:relative}
 #field,#fieldBG,#fieldDraw{width: 50px;height:100px}
 #fieldBG,#fieldDraw{position:absolute;top:0;left:0;right:0;bottom:0}
-#fieldBG{background-size:contain;background-repeat:no-repeat}
+#fieldBG{background-size:contain;background-repeat:no-repeat;z-index:1}
 #fieldBG.rotated{transform:rotate(180deg)}
-#statsTable input{writing-mode:vertical-rl;text-orientation:upright;background-color:inherit;border:none;display:block;margin:0 auto}
+#field .overlay{position:absolute;z-index:2}
+#field canvas{z-index:3}
+.team-input{writing-mode:vertical-rl;text-orientation:upright;background-color:inherit;border:none;display:block;margin:0 auto}
 #statsTable th {padding:0.1em;min-width:1.5em}
 html,body{margin:0;padding:0;text-align:left}
 #drawingControls{margin:1em 0}

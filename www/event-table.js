@@ -123,7 +123,7 @@ $(document).ready(function(){
 	})
 	if (eventId){
 		$('#idInp').val(eventId)
-		loadEventSchedule(function(){
+		promiseEventMatches().then(eventMatches => {
 			for (var i=1; i<=eventMatches.length; i++){
 				var match = eventMatches[i-1],
 				matchId = match['Match'],
@@ -145,7 +145,7 @@ $(document).ready(function(){
 				}
 			}
 		})
-		loadEventInfo(function(){
+		promiseEventInfo().then(eventInfo => {
 			$('#nameInp').val(eventInfo.name)
 			$('#locationInp').val(eventInfo.location)
 			$('#startInp').val(eventInfo.start)

@@ -1,6 +1,6 @@
 "use strict"
 
-function aggregateStats(scout, aggregate){
+function aggregateStats(scout, aggregate, apiScores){
 
 	var pointValues = {
 		"auto_leave":2,
@@ -30,6 +30,7 @@ function aggregateStats(scout, aggregate){
 		}
 	})
 
+	scout.coopertition = apiScores.coopertitionCriteriaMet?1:0
 	scout["auto_leave_score"] = pointValues["auto_leave"] * scout["auto_leave"]
 	scout["auto_collect_home"] =
 		scout["auto_collect_wing_mid"]+
@@ -111,7 +112,11 @@ var statInfo = {
 		name: "Location where the robot starts",
 		type: "heatmap",
 		image: "/2024/start-area-blue.png",
-		aspect_ratio: 4
+		aspect_ratio: 4,
+		whiteboard_start: 0,
+		whiteboard_end: 13,
+		whiteboard_char: "□",
+		whiteboard_us: true
 	},
 	"auto_leave": {
 		name: "Exited the Starting Area During Auto",
@@ -120,6 +125,10 @@ var statInfo = {
 	"auto_leave_score": {
 		name: "Score for Exiting the Starting Area During Auto",
 		type: "avg"
+	},
+	"no_show": {
+		name: "No Show",
+		type: "%"
 	},
 	"auto_collect_order": {
 		name: "Order of Auto Collection",
@@ -356,6 +365,17 @@ var statInfo = {
 		name: "Harmony Score",
 		type: "avg"
 	},
+	"speaker_shot_locations": {
+		name: "Speaker Shot Locations",
+		type: "heatmap",
+		image: "/2024/speaker-shoot-area-blue.png",
+		aspect_ratio: .75,
+		whiteboard_start: 0,
+		whiteboard_end: 64,
+		whiteboard_char: "X",
+		whiteboard_us: false,
+		source: "subjective"
+	},
 	"stage_score": {
 		name: "Stage Score",
 		type: "avg"
@@ -496,6 +516,10 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["auto_score","tele_amp_speaker_score","stage_score"]
 	},
+	"Cycles":{
+		graph:"boxplot",
+		data:["tele_place",'full_cycle_count']
+	},
 	"Full Cycle Times":{
 		graph:"boxplot",
 		data:['full_cycle_fastest_seconds','full_cycles']
@@ -503,6 +527,10 @@ var aggregateGraphs = {
 	"Start Location":{
 		graph:"heatmap",
 		data:['auto_start']
+	},
+	"Shooting Location":{
+		graph:"heatmap",
+		data:['speaker_shot_locations']
 	},
 }
 
@@ -538,7 +566,7 @@ var fmsMapping = [
 ]
 
 function showPitScouting(el,team){
-	loadPitScouting(function(pitData){
+	promisePitScouting().then(pitData => {
 		var dat = pitData[team]||{}
 		if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))
 		if (dat['team_location']) el.append($("<p>").text("Location: " + dat['team_location']))
@@ -591,7 +619,7 @@ function showPitScouting(el,team){
 }
 
 function showSubjectiveScouting(el,team){
-	loadSubjectiveScouting(function(subjectiveData){
+	promiseSubjectiveScouting().then(subjectiveData => {
 		var dat = subjectiveData[team]||{},
 		graph=$('<div class=graph>'),
 		f
@@ -619,3 +647,8 @@ function showSubjectiveScouting(el,team){
 
 // Only one game piece, no stamps needed this year
 var whiteboardStamps = []
+
+var whiteboardOverlays = [
+	"auto_start",
+	"speaker_shot_locations"
+]

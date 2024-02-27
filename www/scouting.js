@@ -3,8 +3,9 @@
 $(document).ready(function(){
 	$('h1').text(`${eventName} Scouting Stats`)
 	$('title').text($('title').text().replace("EVENT", eventName))
-	loadScoutScoreCompare(function(){
-		var allianceStats = []
+	promiseScoutScoreCompare().then(values=>{
+		var [scouterStats, matchStats] = values,
+		allianceStats = []
 		matchStats.forEach(match=>{
 			if (match.Red) allianceStats.push(match.Red)
 			if (match.Blue) allianceStats.push(match.Blue)

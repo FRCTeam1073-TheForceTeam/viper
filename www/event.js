@@ -17,6 +17,7 @@ $(document).ready(function(){
 		"subjective.csv": ['.dependSubjective','Sub&shy;ject&shy;ive Scout&shy;ing CSV'],
 		"info.json": ['','API Event Info JSON'],
 		"teams.json": ['','API Team List JSON'],
+		"schedule.practice.json": ['','API Prac&shy;tice Sched&shy;ule JSON'],
 		"schedule.qualification.json": ['','API Qual&shy;if&shy;ic&shy;a&shy;tion Sched&shy;ule JSON'],
 		"schedule.playoff.json": ['','API Play&shy;off Schedule JSON'],
 		"scores.qualification.json": ['.dependScores','API Qual&shy;if&shy;ic&shy;a&shy;tion Scores JSON'],
@@ -49,13 +50,7 @@ $(document).ready(function(){
 		$(this).hide()
 
 	})
-	loadEventFiles(function(fileList){
-		fileList.sort((a,b)=>{
-			var aType = a.replace(/.*\./,"")
-			var bType = b.replace(/.*\./,"")
-			if(aType != bType) return aType.localeCompare(bType)
-			return a.localeCompare(b)
-		})
+	promiseEventFiles().then(fileList => {
 		fileList.forEach(file=>{
 			var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
 			title = extension,
@@ -74,7 +69,7 @@ $(document).ready(function(){
 		title.text(title.text().replace(/EVENT/, eventName))
 		$('h1').text(eventName)
 	}
-	loadEventInfo(function(){
+	promiseEventInfo().then(eventInfo => {
 		setName()
 		if (eventInfo['blue_alliance_id']) blueAllianceId = eventInfo['blue_alliance_id']
 		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
@@ -122,75 +117,85 @@ $(document).ready(function(){
 			return ""
 		}
 	}
-	loadEventSchedule(eventData=>{
-		if (!eventData.length) return $('body').html("Match not found")
-		loadEventStats((eventStats,eventStatsByTeam)=>{
-			loadEventScores(eventScores=>{
-				var lastDone,
-				lastFullyDone,
-				ourNext
-				for (var i=eventMatches.length-1; !lastFullyDone && i>=0; i--){
-					var m = eventMatches[i]
-					if (matchScoutingDataCount(m)==6) lastFullyDone = m
-					if (!lastDone && matchScoutingDataCount(m)) lastDone = m
-					if (!lastDone && matchHasTeam(m,getLocalTeam())) ourNext=m
+
+	function matchScoutingDataCount(eventStatsByMatchTeam, m){
+		if (!m) return false
+		return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
+	}
+
+	Promise.all([
+		promiseEventMatches(),
+		promiseEventStats(),
+		promiseEventScores()
+	]).then(values =>{
+		var [eventMatches, eventStatsValues, eventScores] = values,
+		[eventStats, eventStatsByTeam, eventStatsByMatchTeam] = eventStatsValues,
+		lastDone,
+		lastFullyDone,
+		ourNext
+		if (!eventMatches.length) return $('body').html("Match not found")
+		for (var i=eventMatches.length-1; !lastFullyDone && i>=0; i--){
+			var m = eventMatches[i]
+			if (matchScoutingDataCount(eventStatsByMatchTeam, m)==6) lastFullyDone = m
+			if (!lastDone && matchScoutingDataCount(eventStatsByMatchTeam, m)) lastDone = m
+			if (!lastDone && matchHasTeam(m,getLocalTeam())) ourNext=m
+		}
+		var seenOurNext = false,
+		seenLastFullyDone = false
+		eventMatches.forEach(match=>{
+			if(ourNext && ourNext.Match==match.Match) seenOurNext=true
+			if(lastFullyDone && lastFullyDone.Match==match.Match) seenLastFullyDone=true
+			var row = $($('template#matchRow').html()),
+			redPrediction = 0, bluePrediction=0
+			BOT_POSITIONS.forEach(pos=>{
+				if(/^R/.test(pos)){
+					redPrediction += getScore(eventStatsByTeam, match[pos])
+				} else {
+					bluePrediction += getScore(eventStatsByTeam, match[pos])
 				}
-				var seenOurNext = false,
-				seenLastFullyDone = false
-				eventData.forEach(match=>{
-					if(ourNext && ourNext.Match==match.Match) seenOurNext=true
-					if(lastFullyDone && lastFullyDone.Match==match.Match) seenLastFullyDone=true
-					var row = $($('template#matchRow').html()),
-					redPrediction = 0, bluePrediction=0
-					BOT_POSITIONS.forEach(pos=>{
-						if(/^R/.test(pos)){
-							redPrediction += getScore(match[pos])
-						} else {
-							bluePrediction += getScore(match[pos])
-						}
-						var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0
-						row.find(`.${pos}`).text(match[pos])
-							.toggleClass("scouted",!!scouted)
-							.toggleClass("needed",!scouted&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
-							.toggleClass("error",!!scouted.old)
-							.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
-					})
-					redPrediction=Math.round(redPrediction)
-					bluePrediction=Math.round(bluePrediction)
-					if (eventScores[match.Match]){
-						var redScore,blueScore
-						eventScores[match.Match].alliances.forEach(function(alliance){
-							if (alliance.alliance == "Blue"){
-								blueScore = alliance.totalPoints
-							} else {
-								redScore = alliance.totalPoints
-							}
-						})
-						row.find('.redScore').addClass('score').toggleClass('winner',redScore>blueScore).text(redScore).attr('title',"Prediction: " + redPrediction)
-						row.find('.blueScore').addClass('score').toggleClass('winner',redScore<blueScore).text(blueScore).attr('title',"Prediction: " + bluePrediction)
-					} else {
-						row.find('.redScore').addClass('prediction').toggleClass('winner',redPrediction>bluePrediction).text(redPrediction)
-						row.find('.blueScore').addClass('prediction').toggleClass('winner',redPrediction<bluePrediction).text(bluePrediction)
-					}
-					row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
-					row.click(showLinks)
-					$('#matches').append(row)
-				})
-				$('#extendedScoutingData')
-					.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
-					.attr('download',`${eventId}.scouting.extended.csv`)
-					.attr('data-source','eventStats')
-					.click(showDataActions)
-				$('#aggregatedScoutingData')
-					.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
-					.attr('download',`${eventId}.scouting.aggregated.csv`)
-					.attr('data-source','eventStatsByTeam')
-					.click(showDataActions)
+				var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0
+				row.find(`.${pos}`).text(match[pos])
+					.toggleClass("scouted",!!scouted)
+					.toggleClass("needed",!scouted&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
+					.toggleClass("error",!!scouted.old)
+					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
 			})
+			redPrediction=Math.round(redPrediction)
+			bluePrediction=Math.round(bluePrediction)
+			if (eventScores[match.Match]){
+				var redScore,blueScore
+				eventScores[match.Match].alliances.forEach(function(alliance){
+					if (alliance.alliance == "Blue"){
+						blueScore = alliance.totalPoints
+					} else {
+						redScore = alliance.totalPoints
+					}
+				})
+				row.find('.redScore').addClass('score').toggleClass('winner',redScore>blueScore).text(redScore).attr('title',"Prediction: " + redPrediction)
+				row.find('.blueScore').addClass('score').toggleClass('winner',redScore<blueScore).text(blueScore).attr('title',"Prediction: " + bluePrediction)
+			} else {
+				row.find('.redScore').addClass('prediction').toggleClass('winner',redPrediction>bluePrediction).text(redPrediction)
+				row.find('.blueScore').addClass('prediction').toggleClass('winner',redPrediction<bluePrediction).text(bluePrediction)
+			}
+			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
+			row.click(showLinks)
+			$('#matches').append(row)
 		})
+		window.eventStats = eventStats
+		$('#extendedScoutingData')
+			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
+			.attr('download',`${eventId}.scouting.extended.csv`)
+			.attr('data-source','eventStats')
+			.click(showDataActions)
+		window.eventStatsByTeam = eventStats
+		$('#aggregatedScoutingData')
+			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
+			.attr('download',`${eventId}.scouting.aggregated.csv`)
+			.attr('data-source','eventStatsByTeam')
+			.click(showDataActions)
 	})
 
-	function getScore(team){
+	function getScore(eventStatsByTeam, team){
 		var stats = eventStatsByTeam[team]
 		if (!stats) return 0
 		return (stats.score||0)/(stats.count||1)
@@ -257,14 +262,16 @@ $(document).ready(function(){
 		drawPitScoutSetupButtons()
 	})
 	function openPitBotScout(){
-		var squad = parseInt($(this).text())-1
-		var perSquad = Math.floor(eventTeams.length/(pitScoutSetupButtonCount)),
-		extras = eventTeams.length%(pitScoutSetupButtonCount),
-		start = squad*perSquad+Math.min(squad,extras),
-		end = start+perSquad+((squad+1>extras)?0:1),
-		teamList=eventTeams.slice(start,end).join(",")
-		window.open(`/bot-photos.html#event=${eventId}&teams=${teamList}`)
-		location.href=(`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`)
+		promiseEventTeams().then(eventTeams => {
+			var squad = parseInt($(this).text())-1
+			var perSquad = Math.floor(eventTeams.length/(pitScoutSetupButtonCount)),
+			extras = eventTeams.length%(pitScoutSetupButtonCount),
+			start = squad*perSquad+Math.min(squad,extras),
+			end = start+perSquad+((squad+1>extras)?0:1),
+			teamList=eventTeams.slice(start,end).join(",")
+			window.open(`/bot-photos.html#event=${eventId}&teams=${teamList}`)
+			location.href=(`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`)
+		})
 	}
 })
 

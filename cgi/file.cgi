@@ -115,7 +115,7 @@ sub image(){
 	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":raw");
-	print "Content-type: image/jpg\n\n";
+	print "Content-type: image/jpeg\n\n";
 	print $data->[0]->[0];
 }
 

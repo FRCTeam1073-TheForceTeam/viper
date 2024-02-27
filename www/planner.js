@@ -18,6 +18,7 @@ $(document).ready(function() {
 
 	$('.rotate').click(function(evt) {
 		$('#fieldBG').toggleClass('rotated')
+		drawOverlays()
 	})
 
 	$('.undo').click(function(evt) {
@@ -54,7 +55,13 @@ $(document).ready(function() {
 	loadFromLocationHash()
 	$(window).on('hashchange', loadFromLocationHash)
 
-	loadEventStats(function(){
+	Promise.all([
+		promiseEventStats(),
+		promisePitScouting(),
+		promiseSubjectiveScouting()
+	]).then(values => {
+		;[window.eventStatsValues, window.pitData, window.subjectiveData] = values
+		;[window.eventStats, window.eventStatsByTeam] = eventStatsValues
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
@@ -82,7 +89,7 @@ $(document).ready(function() {
 		$('#teamButtons button').removeClass("picked")
 		var teamList=[],
 		tbody = $('#statsTable tbody').html("")
-		$('#statsTable input').each(function(){
+		$('.team-input').each(function(){
 			var val = $(this).val()
 			val = val?parseInt(val):0
 			if (val){
@@ -91,13 +98,14 @@ $(document).ready(function() {
 			}
 		})
 		$('#teamButtons').toggle(teamList.length!=6)
-		var sections = window.plannerSections||window.matchPredictorSections
-		if (!sections) return
+		var sections = window.plannerSections||window.matchPredictorSections||{}
+		var overlays = window.whiteboardOverlays||[]
 		if(teamList.length==6){
 			var row = $("<tr>")
 			teamList.forEach(function(team,i){
 				var color = i<3?"red":"blue"
 				row.append($(`<td class="${color}TeamBG viewTeam" data-team=${team}>`).click(showTeamStats).html('<img src=/graph.svg>'))
+				if (team == getLocalTeam() && i>=3) $('#fieldBG').addClass('rotated')
 			})
 			tbody.append(row)
 			;["","-top"].forEach(function(imageSuffix){
@@ -108,7 +116,7 @@ $(document).ready(function() {
 				})
 				tbody.append(row)
 			})
-			Object.keys(sections).forEach(function(section){
+			Object.keys(sections).forEach(section=>{
 				for (var j=0; j<sections[section].length; j++){
 					var field = sections[section][j]
 					statInfo[field] = statInfo[field]||{}
@@ -134,7 +142,83 @@ $(document).ready(function() {
 					tbody.append(row)
 				}
 			})
+			overlays.forEach(field=>{
+				var stat = statInfo[field]||{},
+				name = stat.name||field,
+				forUs = !!stat.whiteboard_us
+
+				row = $("<tr>")
+				teamList.forEach(function(team,i){
+					var color = i<3?"red":"blue",
+					checkbox = $(`<input id="${field}_${team}" type=checkbox>`).change(drawOverlays)
+					if ((forUs==!$('#fieldBG').is('.rotated')) == (i<3)) checkbox.attr('checked',"")
+					row.append($(`<td class="${color}TeamBG">`).append(checkbox))
+				})
+				row.append($('<th>').text(name))
+				tbody.append(row)
+			})
+			drawOverlays()
 		}
+	}
+
+
+
+	function moveFloaterToPercentCoordinates(mapImage, isRed, coordinates, floatingImage){
+		var m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+		if (!m || !m.length){
+			floatingImage.style.left="0px"
+			floatingImage.style.top="0px"
+			return
+		}
+		var px = parseInt(m[1]),
+		py = parseInt(m[2])
+		if (isRed) px = 100 - px
+		var d = mapImage.getBoundingClientRect(),
+		s = floatingImage.getBoundingClientRect(),
+		x = Math.round(px * d.width / 100 - s.width/2),
+		y = Math.round(py * d.height / 100 - s.height/2)
+		floatingImage.style.left=x+"px"
+		floatingImage.style.top=y+"px"
+	}
+
+	function drawOverlays(){
+		$('.overlay').remove()
+		var teamList = $('.team-input').get().map(inp=>parseInt(inp.value)),
+		overlays = window.whiteboardOverlays||[]
+		overlays.forEach(field=>{
+			teamList.forEach(function(team,i){
+				var enabled = $(`#${field}_${team}`).prop('checked'),
+				style = $(`#bot-${i}-pen`).attr('style').split(/[:;]/),
+				rotated = $('#fieldBG').is('.rotated'),
+				isRed = i<3,
+				atBottom = rotated != isRed,
+				fieldInfo = statInfo[field]||{},
+				char = fieldInfo.whiteboard_char||"&",
+				start = (fieldInfo.whiteboard_start||0)/100,
+				end = (fieldInfo.whiteboard_end||100)/100,
+				height = end - start,
+				whiteboard = $('#field'),
+				whiteboardBounds = whiteboard[0].getBoundingClientRect(),
+				source = fieldInfo.source,
+				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam)
+				if (enabled){
+					;((dataSource[team]||{})[field]||"").split(" ").forEach(coordinates=>{
+						var top=0, left=0,
+						m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+						if (m && m.length){
+							[left, top] = m.slice(1).map(x=>parseInt(x)/100)
+							if (rotated) left = 1 - left
+							var point = $('<div class=overlay>').html(char).css(...style)
+							whiteboard.append(point)
+							var pointBounds = point[0].getBoundingClientRect()
+							left = Math.round(left * whiteboardBounds.width - pointBounds.width/2)
+							top = Math.round(top * whiteboardBounds.height * height + start * whiteboardBounds.height - pointBounds.height/2)
+							point.css(atBottom?"bottom":"top",`${top}px`).css('left',`${left}px`)
+						}
+					})
+				}
+			})
+		})
 	}
 
 	focusNext()

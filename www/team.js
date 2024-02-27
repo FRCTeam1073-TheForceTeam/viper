@@ -2,7 +2,10 @@
 
 var rawTitle="",rawH1=""
 $(document).ready(function(){
-	loadEventStats(fillPage, true)
+	promiseEventStats(true).then(values => {
+		[window.eventStats, window.eventStatsByTeam] = values
+		fillPage()
+	})
 	$('#displayType').change(showStats)
 })
 

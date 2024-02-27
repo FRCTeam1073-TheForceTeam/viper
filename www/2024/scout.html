@@ -81,7 +81,8 @@
 			<div id=start-area><div id=robot-starting-position></div></div>
 			<input id=auto-start-input type=hidden name=auto_start>
 		</td></tr><tr><td colspan=2>
-			<label><input type=checkbox name=auto_leave value=1><span>Robot Left Starting Zone</span></label>
+			<label><input type=checkbox name=no-show value=1><span>No Show</span></label>
+			<label><input type=checkbox name=auto_leave value=1><span>Left Starting Zone</span></label>
 		</td></tr><tr><td class=subheader>
 			Collection
 		</td><td class=subheader>
@@ -111,9 +112,7 @@
 	</div>
 
 	<div class="teleop tab-content">
-		<table><tr><td colspan=4>
-			<div><label><input type=checkbox name=coopertition value=yes><span>Coopertition light activated for <span class=teamColor></span> alliance</span></label></div>
-		</td></tr><tr><td class=subheader colspan=2>
+		<table><tr><td class=subheader colspan=2>
 			Collection
 		</td><td class=subheader colspan=2>
 			Placement
@@ -128,7 +127,7 @@
 			<div><img class="count placement" src=/count_up.svg></div>
 			<div>Unamplified<br><input type=text class=num value=0 name=tele_speaker_unamped size=2 disabled></div>
 			<div><img class=count src=/count_down.svg></div>
-		</td><td class=equalWidth>
+		</td><td class="equalWidth teamColorBG ampcell">
 			<div><img class="count placement" src=/count_up.svg></div>
 			<div>Amplified<br><input type=text class=num value=0 name=tele_speaker_amped size=2 disabled></div>
 			<div><img class=count src=/count_down.svg></div>

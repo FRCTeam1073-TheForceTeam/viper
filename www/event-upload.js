@@ -4,12 +4,10 @@ $(document).ready(function(){
 	$('#importData').submit(processInput)
 	$('input[type=submit]').click(processInput)
 
-	var eventInfo
-
 	function processInput(){
 		var src=$('#sourceInp').val(),csv=""
 		if (!csv) csv=getBlueAllianceMatchSchedule(src)
-		if (!csv) csv=getFirstInpsiresMatchSchedule(src)
+		if (!csv) csv=getFirstInspiresMatchSchedule(src)
 		if (!csv) csv=randomPracticeSchedule(getBlueAllianceTeamList(src))
 		if (!csv) csv=randomPracticeSchedule(getGenericTeamList(src))
 		if (!csv){
@@ -22,11 +20,10 @@ $(document).ready(function(){
 		if (!newEventId || !newEventId.length) newEventId = ["",$('#idInp').val()]
 		newEventId = newEventId[1].replace(/\//g,"").toLowerCase()
 		if (newEventId != eventId){
-			eventInfo=null
 			eventId=newEventId
 			$('#idInp').val(eventId)
-			loadEventInfo(function(){
-				if (srcToField(src)){
+			promiseEventInfo().then(eventInfo => {
+				if (srcToField(src, eventInfo)){
 					$('#importData').submit()
 				}
 			})
@@ -35,7 +32,7 @@ $(document).ready(function(){
 		srcToField(src)
 	}
 
-	function srcToField(src){
+	function srcToField(src, eventInfo){
 		eventInfo=eventInfo||{}
 		$('#startInp').val((src.match(/itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.start||$('#startInp').val()])[1])
 		$('#endInp').val((src.match(/itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.end||$('#endInp').val()])[1])
@@ -68,7 +65,7 @@ $(document).ready(function(){
 		return src.match(/\b([0-9]+)\b/g)
 	}
 
-	function getFirstInpsiresMatchSchedule(src){
+	function getFirstInspiresMatchSchedule(src){
 		var isPractice = /Official practice match schedule/.test(src),
 		re= /\/20[0-9]{2}\/team\/([0-9]+)/g,
 		m, matchNum=1, match=[], schedule = [["Match","R1","R2","R3","B1","B2","B3"]]
