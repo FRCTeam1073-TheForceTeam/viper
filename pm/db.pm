@@ -9,6 +9,7 @@ use DBI;
 use File::Slurp;
 use Data::Dumper;
 use webutil;
+use csv;
 
 our $viper_database_name;
 our $viper_site;
@@ -76,6 +77,7 @@ sub dbConnection {
 			AutoCommit => 0
 		}
 	);
+	$db::dbh->prepare_cached("SET time_zone = '+00:00';")->execute();
 	return $db::dbh;
 }
 
@@ -83,56 +85,20 @@ sub printCsv(){
 	my($self, $sth) = @_;
 
 	binmode(STDOUT, ":utf8");
-	my $headers = "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
-	$headers = $headers."Content-type: text/plain; charset=UTF-8\n\n";
-	return $self->writeCsv($sth, \*STDOUT, $headers);
+	my $headers = "Content-type: text/plain; charset=UTF-8\n\n";
+	return $self->writeCsv($sth, \*STDOUT, $headers, 0);
 }
 
 sub writeCsv(){
-	my($self, $sth, $fh, $headers) = @_;
-
+	my($self, $sth, $fh, $headers, $includeEvent) = @_;
 	my $columns = $sth->{NAME};
 	my $data = $sth->fetchall_arrayref();
-
 	return 0 if (!scalar(@$data));
-
-	print $fh $headers if($headers);
-
-	my @withData = map {0} @$columns;
-	for my $row (@$data){
-		my $i=0;
-		for my $field (@$row){
-			$withData[$i] = 1 if ($field);
-			$i++;
-		}
-	}
-
-	my $i = 0;
-	my $first = 1;
-	for my $field (@$columns){
-		if ($field ne 'site' and $withData[$i]){
-			$fh->print(",") if (!$first);
-			$fh->print("$field");
-			$first = 0;
-		}
-		$i++;
-	}
-	$fh->print("\n");
-
-	for my $row (@$data){
-		my $i = 0;
-		my $first = 1;
-		for my $field (@$row){
-			if ($columns->[$i] ne 'site' and $withData[$i]){
-				$fh->print(",") if (!$first);
-				$fh->print($field||"");
-				$first = 0;
-			}
-			$i++;
-		}
-		$fh->print("\n");
-	}
-	return 1
+	$fh->print($headers) if ($headers);
+	unshift(@$data, $columns);
+	my $csv = csv->new($data);
+	$fh->print($csv->toString($includeEvent));
+	return 1;
 }
 
 sub upsert {
@@ -203,6 +169,7 @@ sub getInputType(){
 }
 
 sub schema {
+	my ($self) = @_;
 	my $dbh = &dbConnection();
 	return if (!$dbh);
 
@@ -330,6 +297,17 @@ sub schema {
 			)  $tableOptions
 		"
 	);
+	eval {
+		$dbh->do(
+			"
+				ALTER TABLE
+					`sites`
+				ADD COLUMN
+					`logo_image` MEDIUMBLOB
+			"
+		);
+		1;
+	};
 	$dbh->commit();
 
 
@@ -378,22 +356,23 @@ sub schema {
 			}
 			$dbh->commit();
 		}
-		if ( -e "$wwwDir/$year/pit-scout.html"){
-			print("Creating table `${year}pit`\n");
-			$dbh->do(
-				"
-					CREATE TABLE IF NOT EXISTS
-						${year}pit
-					(
-						`site` VARCHAR(16) NOT NULL,
-						`event` VARCHAR(32) NOT NULL,
-						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
-						INDEX(`site`,`event`),
-						UNIQUE(`site`,`event`,`team`,`scouter`)
-					)  $tableOptions
-				"
-			);
+
+		print("Creating table `${year}pit`\n");
+		$dbh->do(
+			"
+				CREATE TABLE IF NOT EXISTS
+					${year}pit
+				(
+					`site` VARCHAR(16) NOT NULL,
+					`event` VARCHAR(32) NOT NULL,
+					`team` VARCHAR(8) NOT NULL,
+					`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+					INDEX(`site`,`event`),
+					UNIQUE(`site`,`event`,`team`,`scouter`)
+				)  $tableOptions
+			"
+		);
+		if (-e "$wwwDir/$year/pit-scout.html"){
 			my $contents = read_file("$wwwDir/$year/pit-scout.html");
 			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
 			for my $input (@inputs){
@@ -413,24 +392,25 @@ sub schema {
 					}
 				}
 			}
-			$dbh->commit();
 		}
+		$dbh->commit();
+
+		print("Creating table `${year}subjective`\n");
+		$dbh->do(
+			"
+				CREATE TABLE IF NOT EXISTS
+					${year}subjective
+				(
+					`site` VARCHAR(16) NOT NULL,
+					`event` VARCHAR(32) NOT NULL,
+					`team` VARCHAR(8) NOT NULL,
+					`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+					INDEX(`site`,`event`),
+					UNIQUE(`site`,`event`,`team`,`scouter`)
+				)  $tableOptions
+			"
+		);
 		if ( -e "$wwwDir/$year/subjective-scout.html"){
-			print("Creating table `${year}subjective`\n");
-			$dbh->do(
-				"
-					CREATE TABLE IF NOT EXISTS
-						${year}subjective
-					(
-						`site` VARCHAR(16) NOT NULL,
-						`event` VARCHAR(32) NOT NULL,
-						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
-						INDEX(`site`,`event`),
-						UNIQUE(`site`,`event`,`team`,`scouter`)
-					)  $tableOptions
-				"
-			);
 			my $contents = read_file("$wwwDir/$year/subjective-scout.html");
 			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
 			for my $input (@inputs){
@@ -450,8 +430,8 @@ sub schema {
 					}
 				}
 			}
-			$dbh->commit();
 		}
+		$dbh->commit();
 	}
 }
 

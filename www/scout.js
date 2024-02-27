@@ -7,6 +7,8 @@ orient = "",
 matchName = "",
 teamList=[],
 scouting,
+pitScouting,
+subjectiveScouting,
 storeTime=0
 parseHash()
 
@@ -19,9 +21,9 @@ function parseHash(){
 }
 
 function showScreen(){
-	if (!team && $('#select-team').length && $('#pit-scouting').length) showSelectPitScoutTeam()
+	if (!team && $('#select-team').length && pitScouting.length) showSelectPitScoutTeam()
 	else if (!team && $('#select-team').length && $('#subjective-scouting').length) showSelectSubjectiveScoutTeam()
-	else if (team && $('#pit-scouting').length) showPitScoutingForm()
+	else if (team && $(pitScouting).length) showPitScoutingForm()
 	else if (team && $('#subjective-scouting').length) showSubjectiveScoutingForm()
 	else if (!pos) showPosList()
 	else if (!match) showMatchList()
@@ -194,6 +196,7 @@ function fillPreviousFormData(form,data){
 				else  input.removeAttr('checked')
 				input.prop('checked',input.attr('value')==val)
 			} else if (!/^submit$/.test(type) && val){
+				input.attr('data-at-scout-start',val)
 				input.val(val)
 				input.attr('value',val)
 			}
@@ -201,33 +204,42 @@ function fillPreviousFormData(form,data){
 	})
 }
 
-function storeOrigValues(form){
+function getValueAttrOrChecked(input){
+	if (/^radio|checkbox$/.test(input.attr('type'))){
+		var checked = input.attr('checked')
+		return (typeof checked !== 'undefined' && checked !== false)?"checked":"unchecked"
+	}
+	return input.attr('value')||""
+}
+
+function getValOrChecked(input){
+	if (/^radio|checkbox$/.test(input.attr('type'))) return input.prop('checked')?"checked":"unchecked"
+	return input.val()||""
+}
+
+function storeInitialValues(form){
 	form.find('input,textarea').each(function(){
 		var input = $(this),
-		type = input.attr('type'),
-		orig = input.attr('data-orig-value')
-		if (typeof orig === 'undefined' || orig === false) {
-			if (/^radio|checkbox$/.test(type)){
-				var checked = input.attr('checked')
-				checked = typeof checked !== 'undefined' && checked !== false
-				input.attr('data-orig-value',checked?"checked":"unchecked")
-			} else if (!/^submit$/.test(type)){
-				input.attr('data-orig-value',input.attr('value')||"")
-			}
+		atLoad = input.attr('data-at-page-load')
+		if (typeof atLoad === 'undefined' || atLoad === false){
+			var val = getValueAttrOrChecked(input)
+			input.attr('data-at-page-load', val)
+			input.attr('data-at-scout-start', val)
 		}
 	})
 }
-function resetOrigValues(form){
+function resetInitialValues(form){
 	form.find('input,textarea').each(function(){
 		var input = $(this),
 		type = input.attr('type'),
-		orig = input.attr('data-orig-value')
-		if (typeof orig !== 'undefined' && orig !== false) {
+		atLoad = input.attr('data-at-page-load')
+		if (typeof atLoad !== 'undefined' && atLoad !== false){
 			if (/^radio|checkbox$/.test(type)){
-				if(orig=='checked') input.attr('checked','checked')
-				else input.removeAttr('checked')
+				input.prop('checked',atLoad=='checked')
+				input.attr('data-at-scout-start', atLoad)
 			} else if (!/^submit$/.test(type)){
-				input.attr('value',orig)
+				input.val(atLoad)
+				input.attr('data-at-scout-start', atLoad)
 			}
 		}
 	})
@@ -240,13 +252,11 @@ function showPitScoutingForm(t){
 	$('h1').text("Pit Scouting " + eventName + " Team " + team)
 	window.scrollTo(0,0)
 	setHash(null,null,team,null,teamList)
-	var pit = $('#pit-scouting')
-	resetOrigValues(pit)
-	pit[0].reset()
+	resetInitialValues(pitScouting)
+	pitScouting[0].reset()
 	$('.location-pointer').remove()
-	storeOrigValues(pit)
 	fillDefaultFormFields()
-	fillPreviousFormData(pit, localPitScoutingData(team)||eventPitData[team])
+	fillPreviousFormData(pitScouting, localPitScoutingData(team)||eventPitData[team])
 	loadTeamsInfo(function(ti){
 		if (ti[team]){
 			$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
@@ -259,7 +269,7 @@ function showPitScoutingForm(t){
 	for (var i=0; i<onShowPitScouting.length; i++){
 		if(!onShowPitScouting[i]()) return false
 	}
-	pit.show()
+	pitScouting.show()
 	localStorage.setItem("last_scout_type", "pit-scout")
 }
 
@@ -272,10 +282,9 @@ function showSubjectiveScoutingForm(t){
 	window.scrollTo(0,0)
 	setHash(null,null,team,null,teamList)
 	var form = $('#subjective-scouting')
-	resetOrigValues(form)
+	resetInitialValues(form)
 	form[0].reset()
 	$('.location-pointer').remove()
-	storeOrigValues(form)
 	fillDefaultFormFields()
 	fillPreviousFormData(form, localSubjectiveScoutingData(team)||eventSubjectiveData[team])
 	resetSequentialInputSeries()
@@ -334,17 +343,16 @@ function showScouting(){
 	$('.screen,.init-hide').hide()
 	setHash(pos,orient,team,match)
 	window.scrollTo(0,0)
-	resetOrigValues(scouting)
+	resetInitialValues(scouting)
 	scouting[0].reset()
 	if (typeof beforeShowScouting == 'function') beforeShowScouting()
 	matchName = getMatchName(match)
 	setupButtons()
-	storeOrigValues(scouting)
 	$('.orientLeft').toggle(orient && orient=='left')
 	$('.orientRight').toggle(orient && orient=='right')
 	$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
 	$('.teamColor').text(pos.startsWith('R')?"red":"blue")
-	$('input[name="match"]').val(match).attr('value',match)
+	$('input[name="match"]').val(match).attr('data-at-scout-start',match)
 	fillDefaultFormFields()
 	$('.match').text(matchName)
 	setTeamBG()
@@ -361,10 +369,10 @@ function showScouting(){
 
 function fillDefaultFormFields(){
 	$('.team').text(team)
-	$('input[name="event"]').val(eventId).attr('value',eventId)
-	$('input[name="team"]').val(team).attr('value',team)
+	$('input[name="event"]').val(eventId).attr('data-at-scout-start',eventId)
+	$('input[name="team"]').val(team).attr('data-at-scout-start',team)
 	var lastScouter = localStorage.getItem("last_scouter")||""
-	$('input[name="scouter"]').val(lastScouter).attr('value',lastScouter)
+	$('input[name="scouter"]').val(lastScouter).attr('data-at-scout-start',lastScouter)
 }
 
 function setTeamBG(){
@@ -379,10 +387,10 @@ function toggleChecked(o){
 	})
 }
 
-function toCSV(formId){
+function toCSV(form){
 	var keys = [],
 	values = {}
-	$(`${formId} input,${formId} textarea`).each(function(){
+	form.find("input,textarea").each(function(){
 		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type'),
 		off=(type=='checkbox'||type=='radio')&&!el.prop('checked')
 		if (!values.hasOwnProperty(name)){
@@ -407,12 +415,10 @@ window.addEventListener('beforeunload',(event) =>{
 function formHasChanges(f){
 	var changes = false
 	f.find('input,textarea').each(function(){
-		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type'),init=el.attr('value')||''
-		if (type=='checkbox'||type=='radio'){
-			val=el.prop('checked')
-			init=el.attr('checked')!==undefined
-		}
-		if (val!==init)changes=true
+		var el=$(this),
+		val=getValOrChecked(el),
+		start=el.attr('data-at-scout-start')
+		if (val!==start)changes=true
 	})
 	return changes
 }
@@ -437,7 +443,7 @@ function store(){
 		setTimeStamps(scouting)
 		localStorage.setItem("last_match_"+eventId, match)
 		localStorage.setItem("last_pos", pos)
-		var csv = toCSV('#scouting')
+		var csv = toCSV(scouting)
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getScoutKey(), csv[1])
 		storeTime = new Date().getTime()
@@ -454,7 +460,7 @@ function storePitScouting(){
 	var f=$('#pit-scouting')
 	if (formHasChanges(f)){
 		setTimeStamps(f)
-		var csv = toCSV('#pit-scouting')
+		var csv = toCSV(pitScouting)
 		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
 		localStorage.setItem(getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
@@ -462,10 +468,10 @@ function storePitScouting(){
 	}
 }
 function storeSubjectiveScouting(){
-	var f=$('#subjective-scouting')
+	var f=subjectiveScouting
 	if (formHasChanges(f)){
 		setTimeStamps(f)
-		var csv = toCSV('#subjective-scouting')
+		var csv = toCSV(subjectiveScouting)
 		localStorage.setItem(`${eventYear}_subjectiveheaders`, csv[0])
 		localStorage.setItem(getSubjectiveScoutKey(), csv[1])
 		storeTime = new Date().getTime()
@@ -584,8 +590,6 @@ function getNextMatch(){
 	return 0
 }
 
-var originalTitle
-
 function showTab(event, tab){
 	var button = (tab||$(this)),
 	name = button.attr('data-content'),
@@ -604,16 +608,22 @@ $(document).ready(function(){
 		return
 	}
 
+	scouting = $('#scouting')
+	pitScouting = $('#pit-scouting')
+	subjectiveScouting = $('#subjective-scouting')
+
+	storeInitialValues(scouting)
+	storeInitialValues(pitScouting)
+	storeInitialValues(subjectiveScouting)
+
 	$('.tab,.tab-button').click(showTab)
 
-	if(!originalTitle) originalTitle = $('title').text()
-	$('title').text(originalTitle.replace(/EVENT/g, eventName))
+	$('title').text($('title').text().replace(/EVENT/g, eventName))
 
-	scouting = $('#scouting')
 
 	loadEventSchedule(function(){
-		if ($('#pit-scouting').length) loadPitScouting(showScreen)
-		if ($('#subjective-scouting').length) loadSubjectiveScouting(showScreen)
+		if (pitScouting.length) loadPitScouting(showScreen)
+		if (subjectiveScouting.length) loadSubjectiveScouting(showScreen)
 		else loadEventStats(showScreen)
 	})
 

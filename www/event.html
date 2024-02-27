@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>EVENT - Viper</title>
+<title>EVENT</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/event.css>
 <link rel=stylesheet href=/jquery.json-viewer.css>
 <script src=/jquery.js></script>
 <script src=/event-url.js></script>
 <script src=/event.js></script>
 <script src=/main.js></script>
+<script src=/local.js></script>
 <script src=/jquery.json-viewer.js></script>
+<link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
 	<h1></h1>
@@ -65,7 +68,7 @@
 				<ul>
 					<li><a href="/export.html#event=EVENT">Export to another Viper</a></li>
 					<ul id=dataList class=more>
-						<li class="initHid dependScouting"><a id=extendedScoutingData href="javascript:void(0)">Scouting Data with Comp&shy;uta&shy;ted Scores</a></li>
+						<li class="initHid dependScouting"><a id=extendedScoutingData href="javascript:void(0)">Scouting Data with Comp&shy;uted Scores</a></li>
 						<li class="initHid dependScouting"><a id=aggregatedScoutingData href="javascript:void(0)">Scouting Data Agg&shy;rega&shy;ted by Team</a> *</a></li>
 					</ul>
 				</ul>
@@ -76,7 +79,7 @@
 				<ul>
 					<li><a href="/event-table.html#event=EVENT">Change event details and match schedule</a></li>
 					<li class=initHid><a class=dependScouting href="/playoffs.html#event=EVENT">Input alliance selection results and playoff type</a></li>
-					<li><a href="/admin/frc-api-event.cgi?event=EVENT">Fetch latest schedule and official scores from the FIRST API</a></li>
+					<li class=initHid><a class=dependFirst href="/admin/frc-api-event.cgi?event=EVENT&first=FIID">Fetch latest schedule and official scores from the FIRST API</a></li>
 				</ul>
 			</div>
 
@@ -94,7 +97,7 @@
 							<li><a href="https://www.thebluealliance.com/event/BAID#media">Media</a></li>
 						</ul>
 					</li>
-					<li id=firstInspiresLinks><a href="https://frc-events.firstinspires.org/FIID">First Inspires</a>
+					<li class=initHid id=firstInspiresLinks><a class=dependFirst href="https://frc-events.firstinspires.org/FIID">First Inspires</a>
 						<ul>
 							<li><a href="https://frc-events.firstinspires.org/FIID/practice">Practice Matches</a></li>
 							<li><a href="https://frc-events.firstinspires.org/FIID/qualifications">Qualification Matches</a></li>

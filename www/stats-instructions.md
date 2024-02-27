@@ -1,4 +1,5 @@
-## Stats Instructions
+Stats Instructions
+========================
 
 ### Reading a Boxplot
 

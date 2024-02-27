@@ -79,7 +79,7 @@ $(document).ready(function(){
 		if (eventInfo['blue_alliance_id']) blueAllianceId = eventInfo['blue_alliance_id']
 		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
 		if (!/^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) $('#blueAllianceLinks').hide()
-		if (!/^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('#firstInspiresLinks').hide()
+		if (/^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('.dependFirst').show().parents('.initHid').show()
 		$('a').each(function(){
 			$(this).attr(
 				'href',$(this).attr('href')

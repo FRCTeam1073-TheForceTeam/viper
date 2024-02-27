@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Scout EVENT - Viper</title>
+<title>Scout EVENT</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/scout.css>
 <link rel=stylesheet href=scout.css>
 <script src=/jquery.js></script>
@@ -14,7 +15,12 @@
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
 <script src=/qrcode.min.js></script>
-<title>Viper</title>
+<script src=/local.js></script>
+<link rel=preload as=image href=auto-collect-blue.png>
+<link rel=preload as=image href=auto-collect-red.png>
+<link rel=preload as=image href=start-area-blue.png>
+<link rel=preload as=image href=start-area-red.png>
+<link rel=icon type=image/png href=/logo.png>
 </head>
 
 <body>
@@ -114,17 +120,17 @@
 		</td></tr><tr><td colspan=2 rowspan=2>
 			<div class="colorBar teamColorBG"></div>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Home Wing<br><input type=text class=num value=0 name=tele_collect_home size=1 disabled></div>
+			<div>Alliance Wing<br><input type=text class=num value=0 name=tele_collect_home size=1 disabled></div>
 			<div><img class=count src=/count_down.svg></div>
 		</td><td class=teamColorBG colspan=2>
 			Speaker
 		</td></tr><tr><td class=equalWidth>
 			<div><img class="count placement" src=/count_up.svg></div>
-			<div>Amplified<br><input type=text class=num value=0 name=tele_speaker_amped size=2 disabled></div>
+			<div>Unamplified<br><input type=text class=num value=0 name=tele_speaker_unamped size=2 disabled></div>
 			<div><img class=count src=/count_down.svg></div>
 		</td><td class=equalWidth>
 			<div><img class="count placement" src=/count_up.svg></div>
-			<div>Unamplified<br><input type=text class=num value=0 name=tele_speaker_unamped size=2 disabled></div>
+			<div>Amplified<br><input type=text class=num value=0 name=tele_speaker_amped size=2 disabled></div>
 			<div><img class=count src=/count_down.svg></div>
 		</td></tr><tr><td colspan=2 rowspan=2>
 			<div class="colorBar white"></div>

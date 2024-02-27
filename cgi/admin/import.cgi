@@ -25,7 +25,7 @@ my $upload_fh = $cgi->upload('json');
 my $info = $cgi->uploadInfo($upload_fh);
 if ($info){
 	my $upload_file = $cgi->tmpFileName(scalar $json);
-	$json = read_file($upload_file, {binmode => ':encoding(UTF-8)'})
+	$json = read_file($upload_file, {binmode => ':raw)'})
 }
 my $data = decode_json($json);
 my $event = "";

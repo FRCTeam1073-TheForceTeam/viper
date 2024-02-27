@@ -20,8 +20,10 @@ if ($file =~ /local\.js$/){
 	&localJs();
 } elsif ($file =~ /local\.css$/){
 	&localCss($file);
-} elsif ($file =~ /local\.png$/){
-	&localPng($file);
+} elsif ($file =~ /(local|background|local\.background)\.png$/){
+	&backgroundPng();
+} elsif ($file =~ /logo\.png$/){
+	&logoPng();
 } elsif ($file =~ /\.csv$/){
 	&csv($file);
 } elsif ($file =~ /\.json$/){
@@ -37,11 +39,10 @@ sub localJs(){
 	my $sth = $dbh->prepare("SELECT `local_js` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	$webutil->notfound() if (!scalar(@$data));
 
-	print "Cache-Control: max-age=28800, public\n";
-	print "Content-type: text/js; charset=UTF-8\n\n";
-	print $data->[0]->[0];
+	binmode(STDOUT, ":utf8");
+	print "Content-type: text/javascript; charset=UTF-8\n\n";
+	print $data->[0]->[0] if scalar(@$data);
 }
 
 sub localCss(){
@@ -49,25 +50,42 @@ sub localCss(){
 	my $sth = $dbh->prepare("SELECT `local_css` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	$webutil->notfound() if (!scalar(@$data));
 
-	print "Cache-Control: max-age=28800, public\n";
+	binmode(STDOUT, ":utf8");
 	print "Content-type: text/css; charset=UTF-8\n\n";
-	print $data->[0]->[0];
+	print $data->[0]->[0] if scalar(@$data);
 }
 
 
-sub localPng(){
+sub backgroundPng(){
 	my $dbh = $db->dbConnection();
 	my $sth = $dbh->prepare("SELECT `background_image` FROM `sites` WHERE `site`=?");
 	$sth->execute($db->getSite());
 	my $data = $sth->fetchall_arrayref();
-	$webutil->notfound() if (!scalar(@$data));
+	if (scalar(@$data) and $data->[0]->[0]){
+		$data = $data->[0]->[0];
+	} else {
+		$data = read_file('background.png', {binmode=>':raw'})
+	}
+	binmode(STDOUT, ":raw");
+	print "Content-type: image/png\n\n";
+	print $data;
+}
+
+sub logoPng(){
+	my $dbh = $db->dbConnection();
+	my $sth = $dbh->prepare("SELECT `logo_image` FROM `sites` WHERE `site`=?");
+	$sth->execute($db->getSite());
+	my $data = $sth->fetchall_arrayref();
+	if (scalar(@$data) and $data->[0]->[0]){
+		$data = $data->[0]->[0];
+	} else {
+		$data = read_file('logo.png', {binmode=>':raw'})
+	}
 
 	binmode(STDOUT, ":raw");
-	print "Cache-Control: max-age=28800, public\n";
-	print "Content-type: image/jpg\n\n";
-	print $data->[0]->[0];
+	print "Content-type: image/png\n\n";
+	print $data;
 }
 
 sub json(){
@@ -81,7 +99,6 @@ sub json(){
 	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":utf8");
-	print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
 	print "Content-type: text/json; charset=UTF-8\n\n";
 	print $data->[0]->[0];
 }
@@ -98,19 +115,18 @@ sub image(){
 	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":raw");
-	print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
 	print "Content-type: image/jpg\n\n";
 	print $data->[0]->[0];
 }
 
 sub csv(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|pit|event|schedule|alliances)\.csv$/);
+	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|pit|subjective|event|schedule|alliances)\.csv$/);
 
 	my ($year, $event, $table) = $file =~ /^(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
 
 	my $combined = (($event eq 'combined') and ($table eq 'scouting'));
-	$table = "$year$table" if ($table =~ /^scouting|pit$/);
+	$table = "$year$table" if ($table =~ /^scouting|pit|subjective$/);
 	$event = "$year$event";
 
 	my $dbh = $db->dbConnection();

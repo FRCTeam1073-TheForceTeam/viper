@@ -92,7 +92,6 @@ function aggregateStats(scout, aggregate){
 		if(/^int-list$/.test(statInfo[field]['type'])) aggregate[field] = (aggregate[field]||[]).concat(scout[field])
 	})
 	aggregate["count"] = (aggregate["count"]||0)+1
-	aggregate["event"] = scout["event"]
 	aggregate["full_cycle_fastest_seconds"] = (scout["full_cycle_fastest_seconds"]&&(aggregate["full_cycle_fastest_seconds"]||999)>scout["full_cycle_fastest_seconds"])?scout["full_cycle_fastest_seconds"]:(aggregate["full_cycle_fastest_seconds"]||0)
 	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
 	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
@@ -100,10 +99,6 @@ function aggregateStats(scout, aggregate){
 }
 
 var statInfo = {
-	"event": {
-		name: "Event",
-		type: "text"
-	},
 	"match": {
 		name: "Match",
 		type: "text"
@@ -292,7 +287,8 @@ var statInfo = {
 	},
 	"full_cycles": {
 		name: "Full Cycle Seconds",
-		type: "int-list"
+		type: "int-list",
+		good: "low"
 	},
 	"full_cycle_average_seconds": {
 		name: "Full Cycle Time Average",
@@ -526,12 +522,22 @@ var plannerSections = {
 	"Percents":["trap_percent","onstage_percent","coopertition"],
 }
 
+// https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
 var fmsMapping = [
-	// TODO once we have example data from API (after week 0)
+	[["autoAmpNotePoints"],["auto_amp_score"]],
+	[["autoSpeakerNotePoints"],["auto_speaker_score"]],
+	[["autoLeavePoints"],["auto_leave_score"]],
+	[["teleopAmpNotePoints"],["tele_amp_score"]],
+	[["teleopSpeakerNotePoints"],["tele_speaker_unamped_score"]],
+	[["teleopSpeakerNoteAmplifiedPoints"],["tele_speaker_amped_score"]],
+	[["endGameNoteInTrapPoints"],["trap_score"]],
+	[["endGameParkPoints"],["parked_score"]],
+	[["endGameOnStagePoints"],["onstage_score"]],
+	[["endGameSpotLightBonusPoints"],["spotlit_score"]],
+	[["endGameHarmonyPoints"],["harmony_score"]]
 ]
 
 function showPitScouting(el,team){
-
 	loadPitScouting(function(pitData){
 		var dat = pitData[team]||{}
 		if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))

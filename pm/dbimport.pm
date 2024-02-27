@@ -18,6 +18,11 @@ sub new {
 	return $self;
 }
 
+sub getSite(){
+	my($self) = @_;
+	return $dbimport::db->getSite();
+}
+
 sub getEventAndTable(){
 	my($self, $file) = @_;
 	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
@@ -29,7 +34,7 @@ sub getEventAndTable(){
 sub deleteCsvFile(){
 	my($self, $file, $commit) = @_;
 	my ($event, $table) = $self->getEventAndTable($file);
-	$dbimport::db->dbConnection()->prepare("DELETE FROM `$table` WHERE `site`=? AND `event`=?")->execute($db->getSite(), $event);
+	$dbimport::db->dbConnection()->prepare("DELETE FROM `$table` WHERE `site`=? AND `event`=?")->execute($dbimport::db->getSite(), $event);
 	$dbimport::db->commit() if ($commit);
 }
 
@@ -42,6 +47,8 @@ sub importCsvFile(){
 	for my $row (1..$csv->getRowCount()){
 		my $data = $csv->getRowMap($row);
 		$data->{'event'}=$event;
+		delete $data->{'modified'} if (exists $data->{'modified'} and !$data->{'modified'});
+		delete $data->{'created'} if (exists $data->{'created'} and !$data->{'created'});
 		eval {
 			$dbimport::db->upsert($table, $data);
 			1;
@@ -152,4 +159,21 @@ sub importLocalBackgroundImageFile(){
 	};
 	$dbimport::db->commit();
 }
+
+sub importLocalLogoImageFile(){
+	my ($self, $contents) = @_;
+	my $data = {
+		'logo_image' => scalar($contents)
+	};
+	eval {
+		$dbimport::db->upsert('sites', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR "Failed to store local logo image\n";
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
 1;

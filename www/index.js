@@ -44,6 +44,7 @@ $(document).ready(function(){
 		}
 		if (!yearStatsLinkHtml) yearStatsLinkHtml = $('#yearStatsLink').html()
 		$('#yearStatsLink').html(yearStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}/.test(filter) && eventsShown > 1)
+		window.scrollTo(0,0)
 	}
 	$(window).on('hashchange', showEvents)
 	$('#years').change(function(){

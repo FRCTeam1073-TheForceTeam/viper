@@ -9,11 +9,25 @@ use dbimport;
 my $dbimport = dbimport->new();
 
 for my $file (@ARGV){
-	print "FILE: $file\n";
-	$dbimport->importLocalJsFile(scalar(read_file($file, {binmode=>':encoding(UTF-8)'}))) if ($file =~ /local\.js$/);
-	$dbimport->importLocalCssFile(scalar(read_file($file, {binmode=>':encoding(UTF-8)'}))) if ($file =~ /local\.css$/);
-	$dbimport->importLocalBackgroundImageFile(scalar(read_file($file, {binmode=>':raw'}))) if ($file =~ /local\.png$/);
-	$dbimport->importCsvFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'}))) if ($file =~ /\.csv$/);
-	$dbimport->importJsonFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'}))) if ($file =~ /\.json$/);
-	$dbimport->importImageFile($file, scalar(read_file($file, {binmode=>':raw'}))) if ($file =~ /\.jpg$/);
+	my $site = $dbimport->getSite();
+	print "SITE: $site FILE: $file\n";
+ 	if ($file =~ /local\.js$/){
+		$dbimport->importLocalJsFile(scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
+	} elsif ($file =~ /local\.css$/){
+		$dbimport->importLocalCssFile(scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
+	} elsif ($file =~ /(local|background|local\.background)\.png$/){
+		$dbimport->importLocalBackgroundImageFile(scalar(read_file($file, {binmode=>':raw'})));
+	} elsif ($file =~ /(logo|local\.logo)\.png$/){
+		$dbimport->importLocalLogoImageFile(scalar(read_file($file, {binmode=>':raw'})));
+	} elsif ($file =~ /\.csv$/){
+		$dbimport->importCsvFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
+	} elsif ($file =~ /\.json$/){
+		$dbimport->importJsonFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
+	} elsif ($file =~ /\.jpg$/){
+		$dbimport->importImageFile($file, scalar(read_file($file, {binmode=>':raw'})));
+	} elsif ($file =~ /\*/){
+		#ignore wildcard
+	} else {
+		die "Could not import $file";
+	}
 }

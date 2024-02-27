@@ -2,8 +2,6 @@
 
 var rawTitle="",rawH1=""
 $(document).ready(function(){
-	rawTitle = $('title').text()
-	rawH1 = $('h1').text()
 	loadEventStats(fillPage, true)
 	$('#displayType').change(showStats)
 })
@@ -13,6 +11,10 @@ $(window).on('hashchange',fillPage)
 var team
 
 function fillPage(){
+	if (!rawTitle){
+		rawTitle = $('title').text()
+		rawH1 = $('h1').text()
+	}
 	window.scroll(0,0)
 	team = parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||""
 	$('#teamButtons').toggle(!team)

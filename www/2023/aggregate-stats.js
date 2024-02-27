@@ -152,7 +152,6 @@ function aggregateStats(scout, aggregate){
 		}
 	})
 	aggregate["count"] = (aggregate["count"]||0)+1
-	aggregate["event"] = scout["event"]
 	aggregate["full_cycle_fastest_seconds"] = (scout["full_cycle_fastest_seconds"]&&(aggregate["full_cycle_fastest_seconds"]||999)>scout["full_cycle_fastest_seconds"])?scout["full_cycle_fastest_seconds"]:(aggregate["full_cycle_fastest_seconds"]||0)
 	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
 	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
@@ -166,10 +165,6 @@ function aggregateStats(scout, aggregate){
 }
 
 var statInfo = {
-	"event": {
-		name: "Event",
-		type: "text"
-	},
 	"match": {
 		name: "Match",
 		type: "text"
@@ -640,6 +635,7 @@ var plannerSections = {
 	"End":['end_dock_engaged_attempts','end_dock_engaged_reliability']
 }
 
+// https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/request/13920602-58da7b76-4b47-4ee3-903d-1571897e0a09
 var fmsMapping = [
 	[["autoChargeStationPoints"],["auto_dock_score"]],
 	[["autoMobilityPoints"],["auto_mobility_score"]],

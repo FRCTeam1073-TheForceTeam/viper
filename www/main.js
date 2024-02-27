@@ -16,7 +16,6 @@ function dateCompare(a,b){
 }
 
 $(document).ready(function(){
-	$.getScript("/local.js", window.onLocalJs)
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
 		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')
@@ -48,7 +47,7 @@ $(document).ready(function(){
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
 		function showMainMenuUploads(){
 			hamburger.toggleClass("hasUploads", hasUploads())
-			mainMenu.find('.dependUpload').toggle(hasUploads())
+			mainMenu.find('.dependUpload').toggle(hasUploadsOrHistory()).toggleClass("hasUploads", hasUploads())
 		}
 		$(window).on('hashchange',showMainMenuUploads)
 		$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
@@ -58,13 +57,33 @@ $(document).ready(function(){
 			}
 		})
 	}
+	var site = location.host.replace(/^(www|viper|webscout)\./,"")
+	if (!site || /^[0-9\.\:]*$/.test(site)){
+		site = ""
+	} else {
+		var m = site.match(/^viper([^\.]+)\.([^\.]+)/)
+		if (m){
+			site = m[1][0].toUpperCase() + m[1].slice(1) + " " + m[2][0].toUpperCase() + m[2].slice(1)
+		} else {
+			site = site.replace(/\..*/,'')
+			site = site[0].toUpperCase() + site.slice(1)
+		}
+	}
+	var t = document.title
+	if (t) t += ' — '
+	t += 'Viper'
+	if (site) t += ` ${site}`
+	document.title = t
 })
+
 function getLocalTeam(){
 	return localStorage.getItem('my-team') || window.ourTeam || 0
 }
+
 function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
 }
+
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').show()
@@ -79,8 +98,16 @@ function toggleFullScreen() {
 }
 
 function hasUploads(){
+	if (location.pathname == '/upload.html') return false
 	for (var i in localStorage){
 		if (/^20[0-9]{2}[A-Za-z0-9\-]+_(([0-9]+)|(.*_.*))$/.test(i)) return true
+	}
+	return false
+}
+
+function hasUploadsOrHistory(){
+	for (var i in localStorage){
+		if (/^((deleted|uploaded)_)?20[0-9]{2}[A-Za-z0-9\-]+_(([0-9]+)|(.*_.*))$/.test(i)) return true
 	}
 	return false
 }

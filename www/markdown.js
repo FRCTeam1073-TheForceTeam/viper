@@ -11,10 +11,15 @@ $(document).ready(function(){
 		timeout: 5000,
 		type: "GET",
 		success: function(text){
-			var m
+			var m,
+			title = ""
 			if (m = /^([^\n\r]+)[\n\r]+\=\=\=+[\n\r]+([^]*)/.exec(text)){
-				$('title').text(m[1])
+				title = m[1]
 				text = m[2]
+			}
+			if (title){
+				if (document.title) document.title = `${title} — ${document.title}`
+				else document.title = title
 			}
 			$('#md').html(window.markdownit({html:true}).render(text).replace(/\$URL\$/,url))
 		}

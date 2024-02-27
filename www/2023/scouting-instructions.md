@@ -1,3 +1,6 @@
+Scouting Instructions
+========================
+
 ## Scouting Instructions
 
 Watch your robot and record its actions. Use the upward facing triangles to increase counters and the downward facing triangle to decrease them.

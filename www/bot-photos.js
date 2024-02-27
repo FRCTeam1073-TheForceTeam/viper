@@ -31,6 +31,7 @@ $(document).ready(function(){
 		return false
 	})
 	$('#fullPhoto').click(closeLightBox)
+	$('title').text($('title').text().replace(/EVENT/g, eventName))
 })
 
 function photoChange(url){
