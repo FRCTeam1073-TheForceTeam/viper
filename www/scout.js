@@ -423,7 +423,7 @@ function toCSV(form){
 	})
 	return [
 		keys.map(safeCSV).join(",") + "\n",
-		keys.map(function(v){return values[v]}).map(safeCSV).join(",") + "\n"
+		keys.map(k=>safeCSV(values[k])).join(",") + "\n"
 	]
 }
 
