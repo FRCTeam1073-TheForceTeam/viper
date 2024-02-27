@@ -34,4 +34,5 @@ input.num{text-align:center}
 .redTeam #speaker-shoot-area{background:url(speaker-shoot-area-red.png) no-repeat center center / 100% 100%}
 .shot-location{position:absolute;display:inline-block;color:var(--highlight-fg-color)}
 .equalWidth{width:33%;}
-.ampcell{outline: solid 0.2em var(--main-bg-color);outline-offset: -0.2em;}
+.ampcell{outline: solid 0.2em var(--main-bg-color);outline-offset: -0.2em}
+#qrcode{border:.2em solid white;background:white}
