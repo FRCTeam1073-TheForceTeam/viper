@@ -235,7 +235,9 @@ function getValOrChecked(input){
 	return input.val()||""
 }
 
-function storeInitialValues(form){
+function storeInitialValues(form, type){
+	if (!form.length)return
+	localStorage.setItem(`${eventYear}_${type}headers`, toCSV(form)[0])
 	form.find('input,textarea').each(function(){
 		var input = $(this),
 		atLoad = input.attr('data-at-page-load')
@@ -636,9 +638,9 @@ $(document).ready(function(){
 	pitScouting = $('#pit-scouting')
 	subjectiveScouting = $('#subjective-scouting')
 
-	storeInitialValues(scouting)
-	storeInitialValues(pitScouting)
-	storeInitialValues(subjectiveScouting)
+	storeInitialValues(scouting,"")
+	storeInitialValues(pitScouting,"pit")
+	storeInitialValues(subjectiveScouting,"subjective")
 
 	$('.tab,.tab-button').click(showTab)
 
