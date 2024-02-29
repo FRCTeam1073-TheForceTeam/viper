@@ -5,8 +5,9 @@ $(document).ready(function(){
 		$('#uploadBtn, #nextBtn, #qrcodeBtn').hide()
 		var csv = toCSV(scouting)[1]
 		csv=csv.replace(/,0(?=,)/g,",").replace(/,[^,]{30,}(?=,)/g,",")
-		var url =  location.origin+"/qr?"+encodeURIComponent(csv),
+		var url =  location.origin+"/qr.html?"+encodeURIComponent(csv),
 		size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)
+		console.log(url)
 		new QRCode($("#qrcode")[0],{
 			text:url,
 			width:size,
