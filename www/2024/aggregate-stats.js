@@ -652,3 +652,35 @@ var whiteboardOverlays = [
 	"auto_start",
 	"speaker_shot_locations"
 ]
+
+
+function importScoutingFires(text){
+	function b(v, t, f){
+		t = t===undefined?true:t
+		if (v==1) return t
+		if (v=="TRUE") return t
+		return f===undefined?false:f
+	}
+	text = text.replace(/,/g,"،").replace(/\t/g,",")
+	var m = csvToArrayOfMaps(text),
+	out = []
+	m.forEach(row=>{
+		row.match = "qm" + row["Match Number"]
+		row.team = row["Robot Number"]
+		row.scouter = row["Scouters Name"]||""
+		row.auto_amp = row.Auto_Score_Ring_Amp
+		row.auto_speaker = row.Auto_Score_Ring_Speaker
+		row.no_show = b(row.General_DidNotShow,1,0)
+		row.bricked = (b(row.General_DidNotMove)||b(row.General_StoppedWorking)||b(row.General_TippedOver))?"yes":0
+		row.auto_leave = b(row.Leave_Starting_Zone,1,0)
+		row.end_game_position = b(row.Parked)?"parked":(b(row.Single_Robot_Climb)||b(row.Multi_Robot_Climb)?"onstage":"")
+		row.end_game_harmony = b(row.Multi_Robot_Climb,1,0)
+		row.trap = b(row.Score_In_Trap,1,0)
+		row.tele_amp = row.Tele_Score_Ring_Amp
+		row.tele_speaker_unamped = row.Tele_Score_Ring_Speaker
+		row.end_game_spotlit = b(row.High_Note_Scored,"yes",0)
+		Object.keys(row).forEach(k=>{if (!statInfo[k]) delete row[k]})
+		if (row.match && row.team) out.push(row)
+	})
+	return out
+}
