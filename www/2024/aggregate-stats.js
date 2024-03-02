@@ -1,6 +1,6 @@
 "use strict"
 
-function aggregateStats(scout, aggregate, apiScores){
+function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 
 	var pointValues = {
 		"auto_leave":2,

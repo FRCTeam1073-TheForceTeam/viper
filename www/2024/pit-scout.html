@@ -10,6 +10,7 @@
 <link rel=stylesheet href=/2024/scout.css>
 <script src=/jquery.js></script>
 <script src=/event-url.js></script>
+<script src=/canvas-path.js></script>
 <script src=/scout.js></script>
 <script src=/2024/scout.js></script>
 <script src=/heartbeat.js></script>
@@ -39,78 +40,23 @@
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Describe the auto routines that team <span class=team></span> can perform</legend>
+		<legend>Draw the robot's path for each auto routine that team <span class=team></span> can perform</legend>
 
 		<canvas id=auto-paths></canvas>
+		<div>
+			<button id=auto-path-undo>Undo Last Point</button>
+			<button id=auto-path-next>Next Auto</button>
+		</div>
 
-
-		<table border=0 width=100% id=autos><tr>
-			<td>Description</td>
-			<td>Has it succeeded?</td>
-		</tr><tr class="sequential-input-series">
-			<td><textarea name=auto_1_description placeholder="Describe the first auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end? After you type, an input for another auto routine will appear."></textarea></td>
-			<td>
-				<label><input type=radio name=auto_1_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_1_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_1_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_2_description placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_2_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_2_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_2_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_3_description placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_3_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_3_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_3_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_4_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_4_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_4_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_4_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_5_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_5_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_5_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_5_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_6_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_6_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_6_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_6_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_7_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_7_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_7_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_7_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_8_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_8_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_8_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_8_testing value=match><span>In a match</span></label>
-			</td>
-		</tr><tr class="sequential-input-series init-hide">
-			<td><textarea name=auto_9_description  placeholder="Describe the next auto routine here. Where does it start?  What does it collect?  Where does it score?  Where does it end?"></textarea></td>
-			<td>
-				<label><input type=radio name=auto_9_testing value=no><span>No</span></label><br>
-				<label><input type=radio name=auto_9_testing value=practice><span>Practice only</span></label><br>
-				<label><input type=radio name=auto_9_testing value=match><span>In a match</span></label>
-			</td>
-		</tr></table>
+		<input type=hidden class=auto-path name=auto_1_path data-color=green>
+		<input type=hidden class=auto-path name=auto_2_path data-color=blue>
+		<input type=hidden class=auto-path name=auto_3_path data-color=red>
+		<input type=hidden class=auto-path name=auto_4_path data-color=purple>
+		<input type=hidden class=auto-path name=auto_5_path data-color=yellow>
+		<input type=hidden class=auto-path name=auto_6_path data-color=brown>
+		<input type=hidden class=auto-path name=auto_7_path data-color=orange>
+		<input type=hidden class=auto-path name=auto_8_path data-color=cyan>
+		<input type=hidden class=auto-path name=auto_9_path data-color=white>
 	</fieldset>
 
 	<fieldset class=full>

@@ -18,7 +18,6 @@ input.num{text-align:center}
 .auto_collect_mid{left:45.5%}
 .blueTeam .auto_collect_mid_amp, .redTeam .auto_collect_mid_source{left:65.5%}
 .blueTeam .auto_collect_amp, .redTeam .auto_collect_source{left:85.5%}
-/* hr{height:1px;background-color:var(--main-border-color)} */
 #start-area{width:25em;height:7em;position:relative;margin:0 auto}
 .blueTeam #start-area{background:url(start-area-blue.png) no-repeat center center / 100% 100%}
 .redTeam #start-area{background:url(start-area-red.png) no-repeat center center / 100% 100%}
@@ -35,4 +34,4 @@ input.num{text-align:center}
 .shot-location{position:absolute;display:inline-block;color:var(--highlight-fg-color)}
 .equalWidth{width:33%;}
 .ampcell{outline: solid 0.2em var(--main-bg-color);outline-offset: -0.2em;}
-#auto-paths {border:.5em solid green;width:60%;max-width:40em;height:auto;aspect-ratio:775/1000;background:url('speaker-shoot-area-blue.png');background-size:cover}
+#auto-paths {width:60%;max-width:40em;height:auto;aspect-ratio:775/1000;background:url('speaker-shoot-area-blue.png');background-size:cover}
