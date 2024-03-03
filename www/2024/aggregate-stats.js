@@ -274,6 +274,10 @@ var statInfo = {
 		name: "Speaker and Amp Score During Teleop",
 		type: "avg"
 	},
+	"tele_drop": {
+		name: "Notes Dropped in Teleop",
+		type: "avg"
+	},
 	"amp_score": {
 		name: "Amp Score",
 		type: "avg"
@@ -662,9 +666,8 @@ function importScoutingFires(text){
 		return f===undefined?false:f
 	}
 	text = text.replace(/,/g,"،").replace(/\t/g,",")
-	var m = csvToArrayOfMaps(text),
-	out = []
-	m.forEach(row=>{
+	var rows = csvToArrayOfMaps(text)
+	rows.forEach(row=>{
 		row.match = "qm" + row["Match Number"]
 		row.team = row["Robot Number"]
 		row.scouter = row["Scouters Name"]||""
@@ -679,8 +682,70 @@ function importScoutingFires(text){
 		row.tele_amp = row.Tele_Score_Ring_Amp
 		row.tele_speaker_unamped = row.Tele_Score_Ring_Speaker
 		row.end_game_spotlit = b(row.High_Note_Scored,"yes",0)
-		Object.keys(row).forEach(k=>{if (!statInfo[k]) delete row[k]})
-		if (row.match && row.team) out.push(row)
 	})
-	return out
+	return rows
+}
+
+function importPurpleStandard(text){
+	text = text.trim().replace(/^\s+/gm,"").replace(/,\n}/g,"\n}")
+	var data = JSON.parse(text),
+	rows = []
+	data.entries.forEach(tps=>{
+		var row = {},
+		md = tps.metadata||{},
+		ct = tps.counters||{},
+		ab = tps.abilities||{},
+		dt = tps.data||{}
+		row.scouter = md.scouter.team + " " + md.scouter.name
+		row.team = md.bot
+		row.match = (
+			(md.match.level=='qm'?"":md.match.set) +
+			(md.match.level=='sf'?"p":md.match.level) +
+			md.match.number
+		)
+		row.created = new Date(md.timestamp).toISOString().replace(/\..*/,"+00:00")
+		row.modified = row.created
+		row.auto_amp = ct['auto-scoring-amp-2024']||0
+		row.auto_speaker = ct['auto-scoring-speaker-2024']||0
+		row.tele_amp = ct['teleop-scoring-amp-2024']||0
+		row.tele_speaker_amped = ct['teleop-scoring-amplified-speaker-2024']||0
+		row.tele_speaker_unamped = ct['teleop-scoring-speaker-2024']||0
+		row.trap = ct['teleop-scoring-trap-2024']||0
+		row.tele_drop=0
+		;(dt['auto-scoring-2024']||[]).forEach(x=>{
+			switch(x){
+				case "as":
+					if (!ct['auto-scoring-amp-2024']) row.auto_amp++
+				break
+				case "ss":
+					if (!ct['auto-scoring-speaker-2024']) row.auto_speaker++
+				break
+			}
+		})
+		;(dt['teleop-scoring-2024']||[]).forEach(x=>{
+			switch(x){
+				case "as":
+					if (!ct['teleop-scoring-amp-2024']) row.tele_amp++
+				break
+				case "ss":
+					if (!ct['teleop-scoring-amplified-speaker-2024']) row.tele_speaker_amped++
+				break
+				case "sa":
+					if (!ct['teleop-scoring-speaker-2024']) row.tele_speaker_unamped++
+				break
+				case "ts":
+					if (!ct['teleop-scoring-trap-2024']) row.trap++
+				break
+				case "am": case "sm": case "tm":
+					row.tele_drop++
+				break
+			}
+		})
+		row.auto_leave = ab['auto-leave-starting-zone']?1:0
+		row.bricked = ab.bricked?"yes":0
+		row.floor_pickup = ab['ground-pick-up']?"yes":0
+		row.end_game_spotlit = ab['teleop-spotlight-2024']?"yes":0
+		rows.push(row)
+	})
+	return rows
 }

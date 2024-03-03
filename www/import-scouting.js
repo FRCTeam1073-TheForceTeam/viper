@@ -2,6 +2,7 @@
 
 $(document).ready(function(){
 	function safeCSV(s){
+		if (s===undefined)s=""
 		s = s.toString()
 		return s
 			.replace(/\t/g, " ")
@@ -10,16 +11,23 @@ $(document).ready(function(){
 			.replace(/,/g, "،")
 	}
 	function processData(){
-		var rows = importScoutingFires($('#import-data').val())
-		if (!rows || !rows.length) return
-		var csv = Object.keys(rows[0]).join(",")+"\n"
+		var f =  window[$('#format').val()]
+		if (typeof f != 'function') return
+		var rows = f($('#import-data').val())
+		if (!rows || !rows.length || !rows[0].match || !rows[0].team) return
+		var headers = Object.keys(rows[0]).filter(k=>!!statInfo[k])
+		var csv = headers.join(",")+"\n"
 		rows.forEach(row=>{
-			csv += Object.values(row).map(safeCSV).join(",")+"\n"
+			if (row.match && row.team) csv += headers.map(k=>safeCSV(row[k])).join(",")+"\n"
 		})
-
 		$('#csv').val(csv)
 	}
-	promiseScript(`/${eventYear}/aggregate-stats.js`)
-	$('#import-data').change(processData)
+	promiseScript(`/${eventYear}/aggregate-stats.js`).then(function(){
+		$('#format option').each(function(){
+			if (typeof window[$(this).attr('value')]!='function') $(this).remove()
+		})
+		processData()
+	})
+	$('#import-data,#format').change(processData)
 	$('#file').val(eventId + ".scouting.csv")
 })
