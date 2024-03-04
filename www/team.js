@@ -160,10 +160,12 @@ function showGraphs(matchList, matchNames){
 			}))
 		} else {
 			var chart = $('<canvas>'),
+			boxplot = teamGraphs[section].graph=="boxplot",
 			data=[]
 			graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
 			teamGraphs[section].data.forEach(function(field,j){
 				var info = statInfo[field]||{},
+				color = Array(matchList.length).fill(graphColors[j]),
 				values = []
 				for (var k=0; k<matchList.length; k++){
 					values.push(matchList[k][field]||0)
@@ -171,12 +173,16 @@ function showGraphs(matchList, matchNames){
 				data.push({
 					label: info.name||field,
 					data: values,
-					backgroundColor: Array(matchList.length).fill(graphColors[j])
+					backgroundColor: color,
+					backgroundColor: color,
+					borderColor: color,
+					quantiles: 'nearest',
+					coef: 0
 				})
 			})
 			var stacked = teamGraphs[section].graph=="stacked"
 			new Chart(chart,{
-				type: 'bar',
+				type: boxplot?'boxplot':'bar',
 				data: {
 					labels: matchNames,
 					datasets: data
