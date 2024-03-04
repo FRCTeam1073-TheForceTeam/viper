@@ -41,58 +41,58 @@ function aggregateStats(scout, aggregate, apiScores){
 	scout.floor_pickup = bool_1_0(scout.floor_pickup)
 	scout.source_pickup = bool_1_0(scout.source_pickup)
 	scout.passing = bool_1_0(scout.passing)
-	scout.stashing = bool_1_0	(scout.stashing)
+	scout.stashing = bool_1_0(scout.stashing)
 
 	scout.coopertition = apiScores.coopertitionCriteriaMet?1:0
-	scout["auto_leave_score"] = pointValues["auto_leave"] * scout["auto_leave"]
-	scout["auto_collect_home"] =
-		scout["auto_collect_wing_mid"]+
-		scout["auto_collect_wing_mid_amp"]+
-		scout["auto_collect_wing_amp"]
-	scout["auto_collect_center"] =
-		scout["auto_collect_centerline_source"]+
-		scout["auto_collect_centerline_mid_source"]+
-		scout["auto_collect_centerline_mid"]+
-		scout["auto_collect_centerline_mid_amp"]+
-		scout["auto_collect_centerline_amp"]
-	scout["auto_collect"] = scout["auto_collect_home"] + scout["auto_collect_center"]
-	scout["auto_amp_score"] = pointValues["auto_amp"] * scout["auto_amp"]
-	scout["auto_speaker_score"] = pointValues["auto_speaker"] * scout["auto_speaker"]
-	scout["auto_amp_speaker_score"] = scout["auto_amp_score"] + scout["auto_speaker_score"]
-	scout["auto_place"] = scout["auto_amp"] + scout["auto_speaker"]
-	scout["auto_score"] = scout["auto_leave_score"] + scout["auto_amp_score"] + scout["auto_speaker_score"]
-	scout["tele_collect"] = scout["tele_collect_home"]+
-		scout["tele_collect_center"]+
-		scout["tele_collect_source"]
-	scout["tele_amp_score"] = pointValues["tele_amp"] * scout["tele_amp"]
-	scout["tele_speaker_unamped_score"] = pointValues["tele_speaker_unamped"] * scout["tele_speaker_unamped"]
-	scout["tele_speaker_amped_score"] = pointValues["tele_speaker_amped"] * scout["tele_speaker_amped"]
-	scout["tele_speaker"] = scout["tele_speaker_unamped"] + scout["tele_speaker_amped"]
-	scout["tele_speaker_score"] = scout["tele_speaker_unamped_score"] + scout["tele_speaker_amped_score"]
-	scout["trap_percent"] = scout["trap"]>0?1:0
-	scout["trap_score"] = pointValues["tele_trap"] * scout["trap"]
-	scout["tele_place"] = scout["tele_amp"] + scout["tele_speaker"] + scout["trap"]
-	scout["place"] = scout["auto_place"] + scout["tele_place"]
-	scout["tele_amp_speaker_score"] = scout["tele_amp_score"] + scout["tele_speaker_score"]
-	scout["amp_score"] = scout["auto_amp_score"] + scout["tele_amp_score"]
-	scout["place_amp"] = scout["auto_amp"] + scout["tele_amp"]
-	scout["place_speaker"] = scout["auto_speaker"] + scout["tele_speaker"]
-	scout["speaker_score"] = scout["auto_speaker_score"] + scout["tele_speaker_score"]
-	scout["amp_speaker_score"] = scout["auto_amp_speaker_score"] + scout["tele_amp_speaker_score"]
-	scout["parked_score"] = pointValues["tele_park"] * (scout["end_game_position"]=="parked"?1:0)
-	scout["onstage_percent"] = scout["end_game_position"]=="onstage"?1:0
-	scout["onstage_score"] = pointValues["tele_onstage"] * (scout["end_game_position"]=="onstage"?1:0)
-	if (scout["end_game_position"]!="onstage"){
-		scout["end_game_spotlit"]=""
-		scout["end_game_harmony"]=0
+	scout.auto_leave_score = pointValues.auto_leave * scout.auto_leave
+	scout.auto_collect_home =
+		scout.auto_collect_wing_mid+
+		scout.auto_collect_wing_mid_amp+
+		scout.auto_collect_wing_amp
+	scout.auto_collect_center =
+		scout.auto_collect_centerline_source+
+		scout.auto_collect_centerline_mid_source+
+		scout.auto_collect_centerline_mid+
+		scout.auto_collect_centerline_mid_amp+
+		scout.auto_collect_centerline_amp
+	scout.auto_collect = scout.auto_collect_home + scout.auto_collect_center
+	scout.auto_amp_score = pointValues.auto_amp * scout.auto_amp
+	scout.auto_speaker_score = pointValues.auto_speaker * scout.auto_speaker
+	scout.auto_amp_speaker_score = scout.auto_amp_score + scout.auto_speaker_score
+	scout.auto_place = scout.auto_amp + scout.auto_speaker
+	scout.auto_score = scout.auto_leave_score + scout.auto_amp_score + scout.auto_speaker_score
+	scout.tele_collect = scout.tele_collect_home+
+		scout.tele_collect_center+
+		scout.tele_collect_source
+	scout.tele_amp_score = pointValues.tele_amp * scout.tele_amp
+	scout.tele_speaker_unamped_score = pointValues.tele_speaker_unamped * scout.tele_speaker_unamped
+	scout.tele_speaker_amped_score = pointValues.tele_speaker_amped * scout.tele_speaker_amped
+	scout.tele_speaker = scout.tele_speaker_unamped + scout.tele_speaker_amped
+	scout.tele_speaker_score = scout.tele_speaker_unamped_score + scout.tele_speaker_amped_score
+	scout.trap_percent = scout.trap>0?1:0
+	scout.trap_score = pointValues.tele_trap * scout.trap
+	scout.tele_place = scout.tele_amp + scout.tele_speaker + scout.trap
+	scout.place = scout.auto_place + scout.tele_place
+	scout.tele_amp_speaker_score = scout.tele_amp_score + scout.tele_speaker_score
+	scout.amp_score = scout.auto_amp_score + scout.tele_amp_score
+	scout.place_amp = scout.auto_amp + scout.tele_amp
+	scout.place_speaker = scout.auto_speaker + scout.tele_speaker
+	scout.speaker_score = scout.auto_speaker_score + scout.tele_speaker_score
+	scout.amp_speaker_score = scout.auto_amp_speaker_score + scout.tele_amp_speaker_score
+	scout.parked_score = pointValues.tele_park * (scout.end_game_position=="parked"?1:0)
+	scout.onstage_percent = scout.end_game_position=="onstage"?1:0
+	scout.onstage_score = pointValues.tele_onstage * (scout.end_game_position=="onstage"?1:0)
+	if (scout.end_game_position!="onstage"){
+		scout.end_game_spotlit=""
+		scout.end_game_harmony=0
 	}
-	scout["spotlit_score"] = pointValues["tele_spotlit"] * (scout["end_game_spotlit"]=="spotlit"?1:0)
-	scout["harmony_score"] = Math.round(pointValues["tele_harmony"] * scout["end_game_harmony"] / (scout["end_game_harmony"]+1))
-	scout["stage_score"] = scout["trap_score"] + scout["parked_score"] + scout["onstage_score"] + scout["spotlit_score"] + scout["harmony_score"]
-	scout["score"] = scout["auto_score"] + scout["tele_amp_speaker_score"] + scout["stage_score"]
+	scout.spotlit_score = pointValues.tele_spotlit * (scout.end_game_spotlit=="spotlit"?1:0)
+	scout.harmony_score = Math.round(pointValues.tele_harmony * scout.end_game_harmony / (scout.end_game_harmony+1))
+	scout.stage_score = scout.trap_score + scout.parked_score + scout.onstage_score + scout.spotlit_score + scout.harmony_score
+	scout.score = scout.auto_score + scout.tele_amp_speaker_score + scout.stage_score
 	// TODO
 
-	var cycleSeconds =  scout['full_cycle_count'] * scout["full_cycle_average_seconds"] + aggregate['full_cycle_count'] * aggregate["full_cycle_average_seconds"]
+	var cycleSeconds =  scout['full_cycle_count'] * scout.full_cycle_average_seconds + aggregate['full_cycle_count'] * aggregate.full_cycle_average_seconds
 	var cycles = scout['full_cycle_count'] + aggregate['full_cycle_count']
 
 	Object.keys(statInfo).forEach(function(field){
@@ -107,11 +107,11 @@ function aggregateStats(scout, aggregate, apiScores){
 		if(/^heatmap$/.test(statInfo[field]['type'])) aggregate[field] += ((aggregate[field]&&scout[field])?" ":"")+scout[field]
 		if(/^int-list$/.test(statInfo[field]['type'])) aggregate[field] = (aggregate[field]||[]).concat(scout[field])
 	})
-	aggregate["count"] = (aggregate["count"]||0)+1
-	aggregate["full_cycle_fastest_seconds"] = (scout["full_cycle_fastest_seconds"]&&(aggregate["full_cycle_fastest_seconds"]||999)>scout["full_cycle_fastest_seconds"])?scout["full_cycle_fastest_seconds"]:(aggregate["full_cycle_fastest_seconds"]||0)
-	if (cycles > 0) aggregate["full_cycle_average_seconds"] = Math.round(cycleSeconds / cycles)
-	aggregate["max_score"] = Math.max(aggregate["max_score"]||0,scout["score"])
-	aggregate["min_score"] = Math.min(aggregate["min_score"]===undefined?999:aggregate["min_score"],scout["score"])
+	aggregate.count = (aggregate.count||0)+1
+	aggregate.full_cycle_fastest_seconds = (scout.full_cycle_fastest_seconds&&(aggregate.full_cycle_fastest_seconds||999)>scout.full_cycle_fastest_seconds)?scout.full_cycle_fastest_seconds:(aggregate.full_cycle_fastest_seconds||0)
+	if (cycles > 0) aggregate.full_cycle_average_seconds = Math.round(cycleSeconds / cycles)
+	aggregate.max_score = Math.max(aggregate.max_score||0,scout.score)
+	aggregate.min_score = Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
 }
 
 var statInfo = {
@@ -485,10 +485,10 @@ function toPurpleStandard(scout){
 		}
 	}
 	function tpsStageLevel(scout){
-		if (scout["end_game_position"]=="parked") return 1
-		if (scout["end_game_position"]!="onstage") return 0
-		if (scout["end_game_harmony"]==1) return 3
-		if (scout["end_game_harmony"]==2) return 4
+		if (scout.end_game_position=="parked") return 1
+		if (scout.end_game_position!="onstage") return 0
+		if (scout.end_game_harmony==1) return 3
+		if (scout.end_game_harmony==2) return 4
 		return 2
 	}
 	var tps = {
