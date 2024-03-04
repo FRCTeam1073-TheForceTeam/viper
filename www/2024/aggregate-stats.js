@@ -92,8 +92,8 @@ function aggregateStats(scout, aggregate, apiScores){
 	scout.score = scout.auto_score + scout.tele_amp_speaker_score + scout.stage_score
 	// TODO
 
-	var cycleSeconds =  scout['full_cycle_count'] * scout.full_cycle_average_seconds + aggregate['full_cycle_count'] * aggregate.full_cycle_average_seconds
-	var cycles = scout['full_cycle_count'] + aggregate['full_cycle_count']
+	var cycleSeconds =  scout.full_cycle_count * scout.full_cycle_average_seconds + aggregate.full_cycle_count * aggregate.full_cycle_average_seconds
+	var cycles = scout.full_cycle_count + aggregate.full_cycle_count
 
 	Object.keys(statInfo).forEach(function(field){
 		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
@@ -495,31 +495,31 @@ function toPurpleStandard(scout){
 		entries:[]
 	}
 	scout.forEach(function(row){
-		var match = tpsMatch(row['match'])
+		var match = tpsMatch(row.match)
 		if (match){
 			tps.entries.push({
 				metadata:{
-					scouter: tpsScouter(row['scouter']),
-					event: row['event'],
-					bot: row['team']+"",
+					scouter: tpsScouter(row.scouter),
+					event: row.event,
+					bot: row.team+"",
 					match: match,
-					timestamp: new Date(row['created']).getTime(),
-					modified: new Date(row['created']).getTime()
+					timestamp: new Date(row.created).getTime(),
+					modified: new Date(row.created).getTime()
 				},
 				abilities:{
-					"auto-leave-starting-zone": !!row['auto_leave'],
+					"auto-leave-starting-zone": !!row.auto_leave,
 					"ground-pick-up": !!['floor_pickup'],
 					"auto-center-line-pick-up": !!row[`auto_collect_centerline_amp`] || !!row[`auto_collect_centerline_mid`] || !!row[`auto_collect_centerline_mid_amp`] || !!row[`auto_collect_centerline_mid_source`] || !!row[`auto_collect_centerline_source`],
 					"teleop-spotlight-2024": !!row[`end_game_spotlit`],
 					"teleop-stage-level-2024": tpsStageLevel(scout)
 				},
 				counters: {
-					"auto-scoring-amp-2024": row['auto_amp'],
-					"auto-scoring-speaker-2024": row['auto_speaker'],
-					"teleop-scoring-amp-2024": row['tele_amp'],
-					"teleop-scoring-amplified-speaker-2024": row['tele_speaker_amped'],
-					"teleop-scoring-speaker-2024": row['tele_speaker_unamped'],
-					"teleop-scoring-trap-2024": row['trap']
+					"auto-scoring-amp-2024": row.auto_amp,
+					"auto-scoring-speaker-2024": row.auto_speaker,
+					"teleop-scoring-amp-2024": row.tele_amp,
+					"teleop-scoring-amplified-speaker-2024": row.tele_speaker_amped,
+					"teleop-scoring-speaker-2024": row.tele_speaker_unamped,
+					"teleop-scoring-trap-2024": row.trap
 				}
 			},)
 		}
@@ -641,9 +641,9 @@ var fmsMapping = [
 function showPitScouting(el,team){
 	promisePitScouting().then(pitData => {
 		var dat = pitData[team]||{}
-		if (dat['team_name']) el.append($("<p>").text("Team name: " + dat['team_name']))
-		if (dat['team_location']) el.append($("<p>").text("Location: " + dat['team_location']))
-		if (dat['bot_name']) el.append($("<p>").text("Bot name: " + dat['bot_name']))
+		if (dat.team_name) el.append($("<p>").text("Team name: " + dat.team_name))
+		if (dat.team_location) el.append($("<p>").text("Location: " + dat.team_location))
+		if (dat.bot_name) el.append($("<p>").text("Bot name: " + dat.bot_name))
 		el.append($("<h4>").text("Autos"))
 		var list = $("<ul>")
 		for (var i=1; i<=9; i++){
@@ -658,28 +658,28 @@ function showPitScouting(el,team){
 
 		el.append('<h4>Capabilities</h4>')
 		list = $("<ul>")
-		list.append((dat['notes_amp']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Amp"))
-		list.append((dat['notes_speaker']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Speaker"))
-		list.append((dat['notes_trap']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Trap"))
-		list.append((dat['onstage']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Onstage"))
+		list.append((dat.notes_amp?$('<li>'):$('<li style=text-decoration:line-through>')).text("Amp"))
+		list.append((dat.notes_speaker?$('<li>'):$('<li style=text-decoration:line-through>')).text("Speaker"))
+		list.append((dat.notes_trap?$('<li>'):$('<li style=text-decoration:line-through>')).text("Trap"))
+		list.append((dat.onstage?$('<li>'):$('<li style=text-decoration:line-through>')).text("Onstage"))
 		el.append(list)
 
 		el.append($("<h4>").text("Robot"))
 		list = $("<ul>")
-		list.append($("<li>").text("Dimensions (inches without bumpers): " + format(dat['frame_length']+'x'+dat['frame_width']+'"')))
-		list.append($("<li>").text("Weight (pounds): "+ format(dat['weight'])))
-		list.append($("<li>").text("Drivetrain: " + format(dat['drivetrain'])))
-		list.append($("<li>").text("Swerve: " + format(dat['swerve'])))
-		list.append($("<li>").text("Drivetrain motors: " +  (dat['motor_count']||"")+" "+format(dat['motors'])))
-		list.append($("<li>").text("Wheels: " + (dat['wheel_count']||"")+" "+format(dat['wheels'])))
+		list.append($("<li>").text("Dimensions (inches without bumpers): " + format(dat.frame_length+'x'+dat.frame_width+'"')))
+		list.append($("<li>").text("Weight (pounds): "+ format(dat.weight)))
+		list.append($("<li>").text("Drivetrain: " + format(dat.drivetrain)))
+		list.append($("<li>").text("Swerve: " + format(dat.swerve)))
+		list.append($("<li>").text("Drivetrain motors: " +  (dat.motor_count||"")+" "+format(dat.motors)))
+		list.append($("<li>").text("Wheels: " + (dat.wheel_count||"")+" "+format(dat.wheels)))
 		el.append(list)
 
 		el.append($("<h4>").text("Computer Vision"))
 		list = $("<ul>")
-		list.append((dat['vision_auto']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Auto"))
-		list.append((dat['vision_collecting']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Collecting"))
-		list.append((dat['vision_placing']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Placing, shooting or aiming"))
-		list.append((dat['vision_localization']?$('<li>'):$('<li style=text-decoration:line-through>')).text("Localization"))
+		list.append((dat.vision_auto?$('<li>'):$('<li style=text-decoration:line-through>')).text("Auto"))
+		list.append((dat.vision_collecting?$('<li>'):$('<li style=text-decoration:line-through>')).text("Collecting"))
+		list.append((dat.vision_placing?$('<li>'):$('<li style=text-decoration:line-through>')).text("Placing, shooting or aiming"))
+		list.append((dat.vision_localization?$('<li>'):$('<li style=text-decoration:line-through>')).text("Localization"))
 		el.append(list)
 	})
 
@@ -698,19 +698,19 @@ function showSubjectiveScouting(el,team){
 		f
 		el.append(graph)
 		graph.append($('<h4>').text('Speaker Shot Locations'))
-		displayHeatMap(graph,'/2024/speaker-shoot-area-blue.png',.75,2,[dat['speaker_shot_locations']||""])
+		displayHeatMap(graph,'/2024/speaker-shoot-area-blue.png',.75,2,[dat.speaker_shot_locations||""])
 
-		f = dat['penalties']||""
+		f = dat.penalties||""
 		if (f){
 			el.append('<h4>Penalties</h4>')
 			el.append($('<div style=white-space:pre-wrap>').text(f))
 		}
-		f = dat['defense_tips']||""
+		f = dat.defense_tips||""
 		if (f){
 			el.append('<h4>Defense Tips</h4>')
 			el.append($('<div style=white-space:pre-wrap>').text(f))
 		}
-		f = dat['notes']||""
+		f = dat.notes||""
 		if (f){
 			el.append('<h4>Other</h4>')
 			el.append($('<div style=white-space:pre-wrap>').text(f))
