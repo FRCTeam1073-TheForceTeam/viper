@@ -188,7 +188,7 @@
 			</fieldset>
 			<fieldset id=not-onstage class="full">
 				<legend>If not onstage:</legend>
-				<label><input type=checkbox name=end_game_climb_fail value=yes><span>Robot attempted to climb, but failed</span></label>
+				<label><input type=checkbox name=end_game_climb_fail value=1><span>Robot attempted to climb, but failed</span></label>
 			</fieldset>
 			<fieldset id=is-onstage class="left full">
 				<legend>If onstage:</legend>
@@ -208,18 +208,18 @@
 		</td></tr><tr><td class=subheader>
 			Gameplay
 		</td></tr><tr><td>
-			<fieldset class="left full">
-				<legend>How does <span class=team></span> handle notes?</legend>
-				<div>Collects from: <label><input type=checkbox name=floor_pickup value=yes><span>Floor</span></label>
-				<label><input type=checkbox name=source_pickup value=yes><span>Source chute opening</span></label></div>
-				<div><label><input type=checkbox name=passing value=yes><span>Passes notes to teammates</span></label></div>
-				<div><label><input type=checkbox name=stashing value=yes><span>Stashes notes for later</span></label></div>
+			<fieldset class="full">
+				<legend>How did <span class=team></span> handle notes?</legend>
+				<div><label><input type=checkbox name=floor_pickup value=1><span>Picked up notes from floor</span></label></div>
+				<div><label><input type=checkbox name=source_pickup value=1><span>Fed at source like a baby bird</span></label></div>
+				<div><label><input type=checkbox name=passing value=1><span>Passed notes to teammates</span></label></div>
+				<div><label><input type=checkbox name=stashing value=1><span>Stashed notes for later</span></label></div>
 			</fieldset>
 			<fieldset class="full">
 				<legend>During the match:</legend>
-				<label><input type=checkbox name=defense value=yes><span>Robot played defense</span></label>
-				<label><input type=checkbox name=stuck_note value=yes><span>Note was stuck in the robot</span></label>
-				<label><input type=checkbox name=bricked value=yes><span>Robot broke or was disabled</span></label>
+				<div><label><input type=checkbox name=defense value=1><span>Robot played defense</span></label></div>
+				<div><label><input type=checkbox name=stuck_note value=1><span>Note got stuck in the robot</span></label></div>
+				<div><label><input type=checkbox name=bricked value=1><span>Robot broke or was disabled</span></label></div>
 			</fieldset>
 		</td></tr><tr><td class=subheader>
 			Scouter Info
