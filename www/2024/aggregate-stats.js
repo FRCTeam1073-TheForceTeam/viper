@@ -743,14 +743,14 @@ function importScoutingFires(text){
 		row.auto_amp = row.Auto_Score_Ring_Amp
 		row.auto_speaker = row.Auto_Score_Ring_Speaker
 		row.no_show = b(row.General_DidNotShow,1,0)
-		row.bricked = (b(row.General_DidNotMove)||b(row.General_StoppedWorking)||b(row.General_TippedOver))?"yes":0
+		row.bricked = (b(row.General_DidNotMove)||b(row.General_StoppedWorking)||b(row.General_TippedOver))?1:0
 		row.auto_leave = b(row.Leave_Starting_Zone,1,0)
 		row.end_game_position = b(row.Parked)?"parked":(b(row.Single_Robot_Climb)||b(row.Multi_Robot_Climb)?"onstage":"")
 		row.end_game_harmony = b(row.Multi_Robot_Climb,1,0)
 		row.trap = b(row.Score_In_Trap,1,0)
 		row.tele_amp = row.Tele_Score_Ring_Amp
 		row.tele_speaker_unamped = row.Tele_Score_Ring_Speaker
-		row.end_game_spotlit = b(row.High_Note_Scored,"yes",0)
+		row.end_game_spotlit = b(row.High_Note_Scored,1,0)
 	})
 	return rows
 }
@@ -811,9 +811,9 @@ function importPurpleStandard(text){
 			}
 		})
 		row.auto_leave = ab['auto-leave-starting-zone']?1:0
-		row.bricked = ab.bricked?"yes":0
-		row.floor_pickup = ab['ground-pick-up']?"yes":0
-		row.end_game_spotlit = ab['teleop-spotlight-2024']?"yes":0
+		row.bricked = ab.bricked?1:0
+		row.floor_pickup = ab['ground-pick-up']?1:0
+		row.end_game_spotlit = ab['teleop-spotlight-2024']?1:0
 		rows.push(row)
 	})
 	return rows
