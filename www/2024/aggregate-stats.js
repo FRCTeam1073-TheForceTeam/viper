@@ -2,6 +2,10 @@
 
 function aggregateStats(scout, aggregate, apiScores){
 
+	function bool_1_0(s){
+		return (!s||/^0|no|false$/i.test(""+s))?0:1
+	}
+
 	var pointValues = {
 		"auto_leave":2,
 		"auto_amp":2,
@@ -29,6 +33,15 @@ function aggregateStats(scout, aggregate, apiScores){
 			scout[field] = ((scout[field]||"")+"").split(" ").map(num => parseInt(num, 10)).filter(Number)
 		}
 	})
+
+	scout.bricked = bool_1_0(scout.bricked)
+	scout.defense = bool_1_0(scout.defense)
+	scout.stuck_note = bool_1_0(scout.stuck_note)
+	scout.end_game_climb_fail = bool_1_0(scout.end_game_climb_fail)
+	scout.floor_pickup = bool_1_0(scout.floor_pickup)
+	scout.source_pickup = bool_1_0(scout.source_pickup)
+	scout.passing = bool_1_0(scout.passing)
+	scout.stashing = bool_1_0	(scout.stashing)
 
 	scout.coopertition = apiScores.coopertitionCriteriaMet?1:0
 	scout["auto_leave_score"] = pointValues["auto_leave"] * scout["auto_leave"]
@@ -62,6 +75,8 @@ function aggregateStats(scout, aggregate, apiScores){
 	scout["place"] = scout["auto_place"] + scout["tele_place"]
 	scout["tele_amp_speaker_score"] = scout["tele_amp_score"] + scout["tele_speaker_score"]
 	scout["amp_score"] = scout["auto_amp_score"] + scout["tele_amp_score"]
+	scout["place_amp"] = scout["auto_amp"] + scout["tele_amp"]
+	scout["place_speaker"] = scout["auto_speaker"] + scout["tele_speaker"]
 	scout["speaker_score"] = scout["auto_speaker_score"] + scout["tele_speaker_score"]
 	scout["amp_speaker_score"] = scout["auto_amp_speaker_score"] + scout["tele_amp_speaker_score"]
 	scout["parked_score"] = pointValues["tele_park"] * (scout["end_game_position"]=="parked"?1:0)
@@ -128,6 +143,22 @@ var statInfo = {
 	},
 	"no_show": {
 		name: "No Show",
+		type: "%"
+	},
+	"defense": {
+		name: "Played Defense",
+		type: "%"
+	},
+	"stuck_note": {
+		name: "Note Stuck in Bot",
+		type: "%"
+	},
+	"bricked": {
+		name: "Robot Disabled",
+		type: "%"
+	},
+	"end_game_climb_fail": {
+		name: "Climb Failed",
 		type: "%"
 	},
 	"auto_collect_order": {
@@ -298,6 +329,14 @@ var statInfo = {
 		name: "Notes Placed",
 		type: "avg"
 	},
+	"place_amp": {
+		name: "Notes Place in Amp",
+		type: "avg"
+	},
+	"place_speaker": {
+		name: "Notes Place in Speaker",
+		type: "avg"
+	},
 	"full_cycles": {
 		name: "Full Cycle Seconds",
 		type: "int-list",
@@ -322,7 +361,7 @@ var statInfo = {
 		type: "%"
 	},
 	"source_pickup": {
-		name: "Source Pickup",
+		name: "Source Baby Bird",
 		type: "%"
 	},
 	"passing": {
@@ -497,9 +536,26 @@ var teamGraphs = {
 		graph:"stacked",
 		data:["auto_score","tele_amp_speaker_score","stage_score"]
 	},
+	"Note Place Location":{
+		graph:"stacked",
+		data:["place_speaker","place_amp","trap"]
+	},
+	"Cycles":{
+		graph:"bar",
+		data:["tele_place",'full_cycle_count']
+	},
 	"Full Cycle Times":{
 		graph:"boxplot",
-		data:['full_cycle_fastest_seconds','full_cycles']
+		data:['full_cycles']
+	},
+	"Abilities": {
+		graph:"bar",
+		data:["defense","floor_pickup","source_pickup","passing","stashing"]
+
+	},
+	"Problems": {
+		graph:"bar",
+		data:["no_show", "stuck_note", "bricked", "end_game_climb_fail"]
 	},
 	"Start Location":{
 		graph:"heatmap",
@@ -520,6 +576,10 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["auto_score","tele_amp_speaker_score","stage_score"]
 	},
+	"Note Place Location":{
+		graph:"stacked",
+		data:["place_speaker","place_amp","trap"]
+	},
 	"Cycles":{
 		graph:"boxplot",
 		data:["tele_place",'full_cycle_count']
@@ -527,6 +587,15 @@ var aggregateGraphs = {
 	"Full Cycle Times":{
 		graph:"boxplot",
 		data:['full_cycle_fastest_seconds','full_cycles']
+	},
+	"Abilities (demonstrated in % of matches)": {
+		graph:"bar",
+		data:["defense","floor_pickup","source_pickup","passing","stashing"]
+
+	},
+	"Problems (experienced in % of matches)": {
+		graph:"bar",
+		data:["no_show", "stuck_note", "bricked", "end_game_climb_fail"]
 	},
 	"Start Location":{
 		graph:"heatmap",
