@@ -81,8 +81,8 @@ function showStats(){
 	var matchList = [],
 	matchNames = []
 	eventStats.forEach(function(stat){
-		var match = stat['match']
-		if (stat['team']==team && (statsIncludePractice || !/^pm/.test(match))){
+		var match = stat.match
+		if (stat.team==team && (statsIncludePractice || !/^pm/.test(match))){
 			matchList.push(stat)
 			matchNames.push(getMatchName(match))
 		}
@@ -104,9 +104,9 @@ function showTables(matchList, matchNames){
 			hr.append($('<th class=match>').text(matchNames[j]))
 		}
 		table.append(hr)
-		teamGraphs[section]['data'].forEach(function(field){
+		teamGraphs[section].data.forEach(function(field){
 			var info = statInfo[field]||{},
-			tr = $('<tr class=statRow>').append($('<th>').text(info['name']||field))
+			tr = $('<tr class=statRow>').append($('<th>').text(info.name||field))
 			matchList.forEach(function(match){
 				tr.append($('<td>').text(match[field]||0))
 			})
@@ -152,29 +152,29 @@ function showGraphs(matchList, matchNames){
 		var graph=$('<div class=graph>')
 		graphs.append(graph)
 		graph.append($('<h2>').text(section))
-		if (teamGraphs[section]['graph']=='heatmap'){
-			var statName = teamGraphs[section]['data'][0],
+		if (teamGraphs[section].graph=='heatmap'){
+			var statName = teamGraphs[section].data[0],
 			stat=statInfo[statName]
-			displayHeatMap(graph,stat['image'],stat['aspect_ratio'],2,matchList.map(function(el){
+			displayHeatMap(graph,stat.image,stat.aspect_ratio,2,matchList.map(function(el){
 				return (el[statName]||"")
 			}))
 		} else {
 			var chart = $('<canvas>'),
 			data=[]
 			graph.append($('<div class=chart>').append(chart).css('min-width', (matchList.length*23+100) + 'px'))
-			teamGraphs[section]['data'].forEach(function(field,j){
+			teamGraphs[section].data.forEach(function(field,j){
 				var info = statInfo[field]||{},
 				values = []
 				for (var k=0; k<matchList.length; k++){
 					values.push(matchList[k][field]||0)
 				}
 				data.push({
-					label: info['name']||field,
+					label: info.name||field,
 					data: values,
 					backgroundColor: Array(matchList.length).fill(graphColors[j])
 				})
 			})
-			var stacked = teamGraphs[section]['graph']=="stacked"
+			var stacked = teamGraphs[section].graph=="stacked"
 			new Chart(chart,{
 				type: 'bar',
 				data: {
@@ -197,7 +197,7 @@ function showComments(matchList, matchNames){
 	for (var i=0; i<matchList.length; i++){
 		comments
 			.append($('<h3>').text(matchNames[i]))
-			.append($('<p class=comments>').text(matchList[i]['comments']||""))
-			.append($('<p class=scouter>').text(matchList[i]['scouter']||""))
+			.append($('<p class=comments>').text(matchList[i].comments||""))
+			.append($('<p class=scouter>').text(matchList[i].scouter||""))
 	}
 }
