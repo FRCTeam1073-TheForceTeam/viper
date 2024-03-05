@@ -50,7 +50,42 @@ $(document).ready(function(){
 		$(this).hide()
 
 	})
-	promiseEventFiles().then(fileList => {
+	function setName(){
+		title.text(title.text().replace(/EVENT/, eventName))
+		$('h1').text(eventName)
+	}
+	function toDisplayDate(d){
+		if (!d) return ""
+		try {
+			var b = d.split(/\D/)
+			var date = new Date(b[0], b[1]-1, b[2])
+			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(date)
+		} catch (x){
+			console.error("Could not parse",d,x)
+			return ""
+		}
+	}
+
+	function matchScoutingDataCount(eventStatsByMatchTeam, m){
+		if (!m) return false
+		return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
+	}
+
+	Promise.all([
+		promiseEventMatches(),
+		promiseEventStats(),
+		promiseEventScores(),
+		promiseEventFiles(),
+		promiseEventInfo()
+	]).then(values =>{
+		var [eventMatches, eventStatsValues, eventScores, fileList, eventInfo] = values,
+		[eventStats, eventStatsByTeam, eventStatsByMatchTeam] = eventStatsValues,
+		lastDone,
+		lastFullyDone,
+		ourNext
+
+		if (!fileList.length) return $('body').html("Match not found")
+
 		fileList.forEach(file=>{
 			var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
 			title = extension,
@@ -64,12 +99,7 @@ $(document).ready(function(){
 			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents('.initHid').show()
 		})
 		if (uploadCount) $('.dependUploads').show().parents('.initHid').show()
-	})
-	function setName(){
-		title.text(title.text().replace(/EVENT/, eventName))
-		$('h1').text(eventName)
-	}
-	promiseEventInfo().then(eventInfo => {
+
 		setName()
 		if (eventInfo['blue_alliance_id']) blueAllianceId = eventInfo['blue_alliance_id']
 		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
@@ -105,35 +135,7 @@ $(document).ready(function(){
 				info.append($('<div>').text(`${start}`))
 			}
 		}
-	})
-	function toDisplayDate(d){
-		if (!d) return ""
-		try {
-			var b = d.split(/\D/)
-			var date = new Date(b[0], b[1]-1, b[2])
-			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(date)
-		} catch (x){
-			console.error("Could not parse",d,x)
-			return ""
-		}
-	}
 
-	function matchScoutingDataCount(eventStatsByMatchTeam, m){
-		if (!m) return false
-		return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
-	}
-
-	Promise.all([
-		promiseEventMatches(),
-		promiseEventStats(),
-		promiseEventScores()
-	]).then(values =>{
-		var [eventMatches, eventStatsValues, eventScores] = values,
-		[eventStats, eventStatsByTeam, eventStatsByMatchTeam] = eventStatsValues,
-		lastDone,
-		lastFullyDone,
-		ourNext
-		if (!eventMatches.length) return $('body').html("Match not found")
 		for (var i=eventMatches.length-1; !lastFullyDone && i>=0; i--){
 			var m = eventMatches[i]
 			if (matchScoutingDataCount(eventStatsByMatchTeam, m)==6) lastFullyDone = m
