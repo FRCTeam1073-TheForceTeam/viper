@@ -60,6 +60,8 @@ function aggregateStats(scout, aggregate, apiScores){
 	scout.auto_speaker_score = pointValues.auto_speaker * scout.auto_speaker
 	scout.auto_amp_speaker_score = scout.auto_amp_score + scout.auto_speaker_score
 	scout.auto_place = scout.auto_amp + scout.auto_speaker
+	scout.auto_notes_handled = Math.max(scout.auto_collect+1, scout.place)
+	scout.auto_place_percent = Math.round(100 * scout.auto_place / scout.auto_notes_handled)
 	scout.auto_score = scout.auto_leave_score + scout.auto_amp_score + scout.auto_speaker_score
 	scout.tele_collect = scout.tele_collect_home+
 		scout.tele_collect_center+
@@ -90,7 +92,6 @@ function aggregateStats(scout, aggregate, apiScores){
 	scout.harmony_score = Math.round(pointValues.tele_harmony * scout.end_game_harmony / (scout.end_game_harmony+1))
 	scout.stage_score = scout.trap_score + scout.parked_score + scout.onstage_score + scout.spotlit_score + scout.harmony_score
 	scout.score = scout.auto_score + scout.tele_amp_speaker_score + scout.stage_score
-	// TODO
 
 	var cycleSeconds =  scout.full_cycle_count * scout.full_cycle_average_seconds + aggregate.full_cycle_count * aggregate.full_cycle_average_seconds
 	var cycles = scout.full_cycle_count + aggregate.full_cycle_count
@@ -112,6 +113,8 @@ function aggregateStats(scout, aggregate, apiScores){
 	if (cycles > 0) aggregate.full_cycle_average_seconds = Math.round(cycleSeconds / cycles)
 	aggregate.max_score = Math.max(aggregate.max_score||0,scout.score)
 	aggregate.min_score = Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
+	aggregate.auto_place_percent = Math.round(100 * aggregate.auto_place / aggregate.auto_notes_handled)
+
 }
 
 var statInfo = {
@@ -236,6 +239,14 @@ var statInfo = {
 	"auto_score": {
 		name: "Score During Auto",
 		type: "avg"
+	},
+	"auto_notes_handled": {
+		name: "Notes Handled During Auto",
+		type: "avg"
+	},
+	"auto_place_percent": {
+		name: "Percent of Notes Placed During Auto",
+		type: "ratio"
 	},
 	"coopertition": {
 		name: "Alliance activated coopertition light",
@@ -453,8 +464,6 @@ var statInfo = {
 	}
 }
 
-
-
 $(document).ready(function(){
 	setTimeout(function(){
 		//console.log(JSON.stringify(toPurpleStandard(eventStats).entries[0].metadata))
@@ -565,6 +574,10 @@ var teamGraphs = {
 		graph:"stacked",
 		data:['auto_collect_wing_amp', 'auto_collect_wing_mid_amp', 'auto_collect_wing_mid', 'auto_collect_centerline_amp', 'auto_collect_centerline_mid_amp', 'auto_collect_centerline_mid', 'auto_collect_centerline_mid_source', 'auto_collect_centerline_source']
 	},
+	"Auto Effectiveness":{
+		graph:"bar",
+		data: ["auto_place_percent"]
+	}
 }
 
 var aggregateGraphs = {
@@ -605,6 +618,10 @@ var aggregateGraphs = {
 		graph:"heatmap",
 		data:['speaker_shot_locations']
 	},
+	"Auto Effectiveness":{
+		graph:"bar",
+		data: ["auto_place_percent"]
+	}
 }
 
 
