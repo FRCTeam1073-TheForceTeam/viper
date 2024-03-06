@@ -55,6 +55,16 @@ function aggregateStats(scout, aggregate, apiScores){
 		scout.auto_collect_centerline_mid+
 		scout.auto_collect_centerline_mid_amp+
 		scout.auto_collect_centerline_amp
+	scout.auto_collect_locations = [
+		scout.auto_collect_wing_mid?"50x27":0,
+		scout.auto_collect_wing_mid_amp?"67x27":0,
+		scout.auto_collect_wing_amp?"85x27":0,
+		scout.auto_collect_centerline_source?"10x77":0,
+		scout.auto_collect_centerline_mid_source?"30x77":0,
+		scout.auto_collect_centerline_mid?"50x77":0,
+		scout.auto_collect_centerline_mid_amp?"70x77":0,
+		scout.auto_collect_centerline_am?"90x77":0
+	].filter(x=>!!x).join(" ")
 	scout.auto_collect = scout.auto_collect_home + scout.auto_collect_center
 	scout.auto_amp_score = pointValues.auto_amp * scout.auto_amp
 	scout.auto_speaker_score = pointValues.auto_speaker * scout.auto_speaker
@@ -211,6 +221,16 @@ var statInfo = {
 	"auto_collect": {
 		name: "Notes Collected During Auto",
 		type: "avg"
+	},
+	"auto_collect_locations":{
+		name: "Auto Collect Locations",
+		type: "heatmap",
+		image: "/2024/speaker-shoot-area-blue.png",
+		aspect_ratio: .75,
+		whiteboard_start: 0,
+		whiteboard_end: 64,
+		whiteboard_char: "+",
+		whiteboard_us: false,
 	},
 	"auto_amp": {
 		name: "Notes Placed in the Amp During Auto",
@@ -570,9 +590,9 @@ var teamGraphs = {
 		graph:"heatmap",
 		data:['auto_start']
 	},
-	"Auto Collection":{
-		graph:"stacked",
-		data:['auto_collect_wing_amp', 'auto_collect_wing_mid_amp', 'auto_collect_wing_mid', 'auto_collect_centerline_amp', 'auto_collect_centerline_mid_amp', 'auto_collect_centerline_mid', 'auto_collect_centerline_mid_source', 'auto_collect_centerline_source']
+	"Auto Collect Location":{
+		graph:"heatmap",
+		data:['auto_collect_locations']
 	},
 	"Auto Effectiveness":{
 		graph:"bar",
@@ -617,6 +637,10 @@ var aggregateGraphs = {
 	"Shooting Location":{
 		graph:"heatmap",
 		data:['speaker_shot_locations']
+	},
+	"Auto Collect Location":{
+		graph:"heatmap",
+		data:['auto_collect_locations']
 	},
 	"Auto Effectiveness":{
 		graph:"bar",
