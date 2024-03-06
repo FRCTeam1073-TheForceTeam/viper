@@ -330,9 +330,9 @@ function findInputInEl(parent){
 
 var lastClickTimeOnCounter = 0
 function countHandler(e){
-	var count=$(this),
-	clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
-	parent = findParentFromButton(count),
+	var clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
+	parent = findParentFromButton($(this)),
+	count = $(this).is('.count')?$(this):$(this).find('.count').first(),
 	input = findInputInEl(parent),
 	src = count.attr('src'),
 	val=parseInt(input.val())||0,
@@ -671,7 +671,9 @@ $(document).ready(function(){
 		}).select()
 	})
 
-	$("img.count").click(countHandler)
+	$("img.count").click(countHandler).each(function(){
+		findParentFromButton($(this)).click(countHandler)
+	})
 
 	$("img.robot-location").click(function(e){
 		var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
