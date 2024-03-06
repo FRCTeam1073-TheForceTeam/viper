@@ -586,6 +586,10 @@ var teamGraphs = {
 		graph:"bar",
 		data:["no_show", "stuck_note", "bricked", "end_game_climb_fail"]
 	},
+	"Auto Effectiveness":{
+		graph:"bar",
+		data: ["auto_notes_handled","auto_place"]
+	},
 	"Start Location":{
 		graph:"heatmap",
 		data:['auto_start']
@@ -593,10 +597,6 @@ var teamGraphs = {
 	"Auto Collect Location":{
 		graph:"heatmap",
 		data:['auto_collect_locations']
-	},
-	"Auto Effectiveness":{
-		graph:"bar",
-		data: ["auto_place_percent"]
 	}
 }
 
@@ -630,6 +630,10 @@ var aggregateGraphs = {
 		graph:"bar",
 		data:["no_show", "stuck_note", "bricked", "end_game_climb_fail"]
 	},
+	"Auto Effectiveness":{
+		graph:"bar",
+		data: ["auto_notes_handled","auto_place"]
+	},
 	"Start Location":{
 		graph:"heatmap",
 		data:['auto_start']
@@ -641,10 +645,6 @@ var aggregateGraphs = {
 	"Auto Collect Location":{
 		graph:"heatmap",
 		data:['auto_collect_locations']
-	},
-	"Auto Effectiveness":{
-		graph:"bar",
-		data: ["auto_place_percent"]
 	}
 }
 
