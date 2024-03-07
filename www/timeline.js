@@ -150,7 +150,6 @@ function drawTimeline(canvas, data){
 					var text = displayTime(i) + " " + data.timelines[row].data[i],
 					textW = ctx.measureText(text).width/2,
 					textX = x-textW<0?textW:(x+textW>canvas.width?canvas.width-textW:x)
-					console.log(`x: ${x}    textW: ${textW}    textX:${textX}`)
 					ctx.fillText(text, textX, y+20)
 					y+=rowHeight/2.5
 				}
