@@ -157,10 +157,7 @@ function drawTimeline(canvas, data){
 		}
 	}
 
-
 	redraw()
 	canvas.addEventListener("click",showTooltip)
 	canvas.addEventListener("mousemove",showTooltip)
-
-
 }
