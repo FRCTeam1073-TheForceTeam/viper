@@ -158,6 +158,30 @@ function showGraphs(matchList, matchNames){
 			displayHeatMap(graph,stat.image,stat.aspect_ratio,2,matchList.map(function(el){
 				return (el[statName]||"")
 			}))
+		} else if (teamGraphs[section].graph=='timeline'){
+			var height = (matchList.length+2)*50 + "px",
+			chart = $('<canvas>').css('width', '100%').css('max-height',height).css('height',height),
+			data = {
+				timelines: [],
+				colors: graphColors
+			}
+			graph.append($('<div class=chart>').css('height',height).append(chart))
+			teamGraphs[section].data.forEach(function(field,j){
+				var info = statInfo[field]||{}
+				for (var k=0; k<matchList.length; k++){
+					data.timelines.push({
+						name: matchNames[k],
+						data: Object.fromEntries(matchList[k][field].split(" ").map(t=>{
+							var pair = t.split(/:/),
+							field = pair[1]||"",
+							info = statInfo[field]||{name:field}
+							pair[1] = info.name
+							return pair
+						}))
+					})
+				}
+			})
+			drawTimeline(chart, data)
 		} else {
 			var chart = $('<canvas>'),
 			boxplot = teamGraphs[section].graph=="boxplot",

@@ -439,6 +439,10 @@ var statInfo = {
 		name: "Harmony Score",
 		type: "avg"
 	},
+	"timeline": {
+		name: "Timeline",
+		type: "timeline"
+	},
 	"speaker_shot_locations": {
 		name: "Speaker Shot Locations",
 		type: "heatmap",
@@ -589,6 +593,10 @@ var teamGraphs = {
 	"Auto Effectiveness":{
 		graph:"bar",
 		data: ["auto_notes_handled","auto_place"]
+	},
+	"Match Timeline":{
+		graph:"timeline",
+		data:['timeline']
 	},
 	"Start Location":{
 		graph:"heatmap",
