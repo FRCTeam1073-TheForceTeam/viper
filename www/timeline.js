@@ -4,7 +4,8 @@ function drawTimeline(canvas, data){
 	if (canvas.length) canvas = canvas[0]
 	canvas.width = canvas.clientWidth
 	canvas.height = canvas.clientHeight
-	var ctx = canvas.getContext('2d'),
+	var tick_count = Math.max(3, Math.floor(canvas.width/100)),
+	ctx = canvas.getContext('2d'),
 	rowHeight = canvas.clientHeight / (data.timelines.length + .5),
 	maxTime = Number.MIN_SAFE_INTEGER,
 	minTime = Number.MAX_SAFE_INTEGER
@@ -21,9 +22,9 @@ function drawTimeline(canvas, data){
 
 	function getTicks(){
 		var elapsed = maxTime-minTime,
-		between = Math.floor(elapsed/5),
+		between = Math.floor(elapsed/(tick_count-1)),
 		ticks=[]
-		for (var i=0; i<6; i++){
+		for (var i=0; i<tick_count; i++){
 			ticks.push(minTime + i*between)
 		}
 		return ticks
@@ -72,6 +73,8 @@ function drawTimeline(canvas, data){
 		ctx.textBaseline = "bottom"
 		ctx.textAlign = "end"
 		ctx.fillText(row.name, canvas.width-rowHeight/2, rowMid)
+		ctx.textAlign = "start"
+		ctx.fillText(row.name, rowHeight, rowMid)
 	}
 
 	function displayTime(time){

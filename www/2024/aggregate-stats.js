@@ -63,7 +63,7 @@ function aggregateStats(scout, aggregate, apiScores){
 		scout.auto_collect_centerline_mid_source?"30x77":0,
 		scout.auto_collect_centerline_mid?"50x77":0,
 		scout.auto_collect_centerline_mid_amp?"70x77":0,
-		scout.auto_collect_centerline_am?"90x77":0
+		scout.auto_collect_centerline_amp	?"90x77":0
 	].filter(x=>!!x).join(" ")
 	scout.auto_collect = scout.auto_collect_home + scout.auto_collect_center
 	scout.auto_amp_score = pointValues.auto_amp * scout.auto_amp
