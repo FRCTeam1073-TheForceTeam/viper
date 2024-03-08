@@ -159,8 +159,8 @@ function showGraphs(matchList, matchNames){
 				return (el[statName]||"")
 			}))
 		} else if (teamGraphs[section].graph=='timeline'){
-			var height = (matchList.length)*50 + "px",
-			chart = $('<canvas>').css('width', Math.max($('#stats').width()-100,1500)).css('max-height',height).css('height',height),
+			var height = (matchList.length)*30 + "px",
+			chart = $('<canvas>').css('width', Math.max($('#stats').width()-100,1150)).css('max-height',height).css('height',height),
 			data = {
 				timelines: [],
 				points: {}
