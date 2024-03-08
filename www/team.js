@@ -163,21 +163,30 @@ function showGraphs(matchList, matchNames){
 			chart = $('<canvas>').css('width', '100%').css('max-height',height).css('height',height),
 			data = {
 				timelines: [],
-				colors: graphColors
+				points: {}
 			}
 			graph.append($('<div class=chart>').css('height',height).append(chart))
 			teamGraphs[section].data.forEach(function(field,j){
-				var info = statInfo[field]||{}
 				for (var k=0; k<matchList.length; k++){
+					var events = []
+					matchList[k][field].split(" ").forEach(t=>{
+						var pair = t.split(/:/),
+						time = parseInt(pair[0]),
+						field = pair[1]||"",
+						info = statInfo[field]||{name:field}
+						data.points[info.name] = {
+							stamp: info.timeline_stamp,
+							fill: info.timeline_fill,
+							outline: info.timeline_outline
+						}
+						events.push({
+							time: time,
+							event: info.name
+						})
+					})
 					data.timelines.push({
 						name: matchNames[k],
-						data: Object.fromEntries(matchList[k][field].split(" ").map(t=>{
-							var pair = t.split(/:/),
-							field = pair[1]||"",
-							info = statInfo[field]||{name:field}
-							pair[1] = info.name
-							return pair
-						}))
+						events: events
 					})
 				}
 			})

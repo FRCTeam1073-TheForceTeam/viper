@@ -148,7 +148,10 @@ var statInfo = {
 	},
 	"auto_leave": {
 		name: "Exited the Starting Area During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "L",
+		timeline_fill: "#BB0",
+		timeline_outline: "#888"
 	},
 	"auto_leave_score": {
 		name: "Score for Exiting the Starting Area During Auto",
@@ -156,7 +159,10 @@ var statInfo = {
 	},
 	"no_show": {
 		name: "No Show",
-		type: "%"
+		type: "%",
+		timeline_stamp: "N",
+		timeline_fill: "#F0F",
+		timeline_outline: "#F0F"
 	},
 	"defense": {
 		name: "Played Defense",
@@ -180,35 +186,59 @@ var statInfo = {
 	},
 	"auto_collect_wing_mid": {
 		name: "Collected Wing Note Midfield During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#800",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_wing_mid_amp": {
 		name: "Collected Wing Note Between Midfield and Amp During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#B00",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_wing_amp": {
 		name: "Collected Wing Note Nearest Amp During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#F00",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_centerline_source": {
 		name: "Collected Centerline Note Nearest Source During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#000",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_centerline_mid_source": {
 		name: "Collected Centerline Note Between Midfield and Amp During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#004",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_centerline_mid": {
 		name: "Collected Centerline Note Midfield During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#008",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_centerline_mid_amp": {
 		name: "Collected Centerline Note Between Midfield and Source During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#00B",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_centerline_amp": {
 		name: "Collected Centerline Nearest Amp During Auto",
-		type: "%"
+		type: "%",
+		timeline_stamp: "C",
+		timeline_fill: "#00F",
+		timeline_outline: "#07A"
 	},
 	"auto_collect_home": {
 		name: "Notes Collected from the Home Wing During Auto",
@@ -234,7 +264,10 @@ var statInfo = {
 	},
 	"auto_amp": {
 		name: "Notes Placed in the Amp During Auto",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "A",
+		timeline_fill: "#BB0",
+		timeline_outline: "#888"
 	},
 	"auto_amp_score": {
 		name: "Amp Score During Auto",
@@ -242,7 +275,10 @@ var statInfo = {
 	},
 	"auto_speaker": {
 		name: "Notes Shot in the Speaker During Auto",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "S",
+		timeline_fill: "#BB0",
+		timeline_outline: "#BB0"
 	},
 	"auto_speaker_score": {
 		name: "Speaker Score During Auto",
@@ -274,15 +310,24 @@ var statInfo = {
 	},
 	"tele_collect_home": {
 		name: "Notes Collected from Home Wing During Teleop",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "C",
+		timeline_fill: "#AAA",
+		timeline_outline: "#05F"
 	},
 	"tele_collect_center": {
 		name: "Notes Collected from Center Field During Teleop",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "C",
+		timeline_fill: "#666",
+		timeline_outline: "#05F"
 	},
 	"tele_collect_source": {
 		name: "Notes Collected from Source During Teleop",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "C",
+		timeline_fill: "#000",
+		timeline_outline: "#05F"
 	},
 	"tele_collect": {
 		name: "Notes Collected During Teleop",
@@ -290,7 +335,10 @@ var statInfo = {
 	},
 	"tele_amp": {
 		name: "Notes Placed in the Amp During Teleop",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "A",
+		timeline_fill: "#000",
+		timeline_outline: "#FF0"
 	},
 	"tele_amp_score": {
 		name: "Amp Score During Teleop",
@@ -298,7 +346,10 @@ var statInfo = {
 	},
 	"tele_speaker_unamped": {
 		name: "Notes Shot in the Speaker when Not Amped During Teleop",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "S",
+		timeline_fill: "#000",
+		timeline_outline: "#FF0"
 	},
 	"tele_speaker_unamped_score": {
 		name: "Speaker Score when Not Amped During Teleop",
@@ -306,7 +357,10 @@ var statInfo = {
 	},
 	"tele_speaker_amped": {
 		name: "Notes Shot in the Speaker when Amped During Teleop",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "S",
+		timeline_fill: "#FF0",
+		timeline_outline: "#FF0"
 	},
 	"tele_speaker_amped_score": {
 		name: "Speaker Score when Amped During Teleop",
@@ -322,7 +376,10 @@ var statInfo = {
 	},
 	"trap": {
 		name: "Notes Placed in the Trap",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "T",
+		timeline_fill: "#FF0",
+		timeline_outline: "#FF0"
 	},
 	"trap_percent": {
 		name: "Trap Percent",
@@ -338,7 +395,10 @@ var statInfo = {
 	},
 	"tele_drop": {
 		name: "Notes Dropped in Teleop",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "D",
+		timeline_fill: "#000",
+		timeline_outline: "#808"
 	},
 	"amp_score": {
 		name: "Amp Score",

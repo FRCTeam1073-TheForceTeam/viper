@@ -5,42 +5,18 @@ function drawTimeline(canvas, data){
 	canvas.width = canvas.clientWidth
 	canvas.height = canvas.clientHeight
 	var ctx = canvas.getContext('2d'),
-	rowHeight = canvas.clientHeight / (data.timelines.length + 2),
+	rowHeight = canvas.clientHeight / (data.timelines.length + .5),
 	maxTime = Number.MIN_SAFE_INTEGER,
-	minTime = Number.MAX_SAFE_INTEGER,
-	eventColors = {},
-	eventFirstTimes = {},
-	eventOrder
+	minTime = Number.MAX_SAFE_INTEGER
 	data.timelines.forEach(l=>{
-		Object.keys(l.data).forEach(k=>{
-			k = parseInt(k)
-			if (k<minTime) minTime = k
-			if (k>maxTime) maxTime = k
-			var v = l.data[k]
-			if (!eventFirstTimes.hasOwnProperty(v))	eventFirstTimes[v] = k
-			else eventFirstTimes[v] = Math.min(k,eventFirstTimes[v])
+		l.events.forEach(k=>{
+			if (k.time<minTime) minTime = k.time
+			if (k.time>maxTime) maxTime = k.time
 		})
 	})
-	eventOrder = Object.keys(eventFirstTimes)
-	eventOrder.sort((a,b)=>eventFirstTimes[a]-eventFirstTimes[b])
-	eventOrder.forEach((v,i) => eventColors[v]=data.colors[i%data.colors.length])
 
 	function clearCanvas(){
 		ctx.clearRect(0, 0, canvas.width, canvas.height)
-	}
-
-	function makeTransparent(color){
-		if (/^#[0-9A-Fa-f]{3}$/.test(color)) return color+"9"
-		if (/^#[0-9A-Fa-f]{6}$/.test(color)) return color+"99"
-		return color
-	}
-
-	function drawDot(at, radius){
-		let dot = new Path2D()
-		dot.arc(at.x, at.y, radius, 0, 2*Math.PI, false)
-		ctx.strokeWidth
-		ctx.stroke(dot)
-		ctx.fill(dot)
 	}
 
 	function getTicks(){
@@ -58,17 +34,17 @@ function drawTimeline(canvas, data){
 	}
 
 	function drawTimelineRow(row, i){
-		var rowMid = rowHeight * (i+1.5) + rowHeight/2
+		var rowMid = rowHeight * (i+.5)
+
+		// Horizontal line
 		ctx.strokeStyle = ctx.fillStyle = 'gray'
 		ctx.lineWidth = rowHeight/20
 		ctx.beginPath()
 		ctx.moveTo(rowHeight/2, rowMid)
 		ctx.lineTo(canvas.width-rowHeight/2, rowMid)
 		ctx.stroke()
-		ctx.font = rowHeight/3 +"px sans-serif"
-		ctx.textBaseline = "bottom"
-		ctx.textAlign = "start"
-		ctx.fillText(row.name, rowHeight, rowMid)
+
+		// Ticks on line
 		getTicks().forEach(time=>{
 			var x = getX(time)
 			ctx.beginPath()
@@ -76,17 +52,26 @@ function drawTimeline(canvas, data){
 			ctx.lineTo(x, rowMid + rowHeight/6)
 			ctx.stroke()
 		})
-		Object.keys(row.data).forEach(time=>{
-			var event = row.data[time]
-			ctx.strokeStyle = eventColors[event]
-			ctx.fillStyle = makeTransparent(eventColors[event])
-			drawDot({x:getX(time),y:rowMid},rowHeight/4)
+
+		// Data points
+		ctx.textBaseline = "middle"
+		ctx.textAlign = "center"
+		ctx.font = rowHeight/1.5 +"px sans-serif"
+		ctx.lineWidth = rowHeight/12
+		row.events.forEach(event=>{
+			var conf = data.points[event.event]||{}
+			ctx.strokeStyle = conf.outline||"gray"
+			ctx.fillStyle = conf.fill||"gray"
+			ctx.strokeText(conf.stamp||"?", getX(event.time), rowMid)
+			ctx.fillText(conf.stamp||"?", getX(event.time), rowMid)
 		})
+
+		// Match name
 		ctx.strokeStyle = ctx.fillStyle = 'gray'
 		ctx.font = rowHeight/3 +"px sans-serif"
 		ctx.textBaseline = "bottom"
-		ctx.textAlign = "start"
-		ctx.fillText(row.name, rowHeight, rowMid)
+		ctx.textAlign = "end"
+		ctx.fillText(row.name, canvas.width-rowHeight/2, rowMid)
 	}
 
 	function displayTime(time){
@@ -108,29 +93,9 @@ function drawTimeline(canvas, data){
 		})
 	}
 
-	function drawLegend(){
-		var padding = rowHeight/8,
-		x=padding,
-		rowTop=padding
-		eventOrder.forEach(event=>{
-			ctx.strokeStyle = ctx.fillStyle = eventColors[event]
-			ctx.font = rowHeight/3 +"px sans-serif"
-			ctx.textBaseline = "top"
-			ctx.textAlign = "start"
-			var width = ctx.measureText(event).width
-			if (x>padding && x+width>canvas.width-padding){
-				x = padding
-				rowTop += rowHeight/2.5
-			}
-			ctx.fillText(event, x, rowTop)
-			x += width + rowHeight/4
-		})
-	}
-
 	function redraw(){
 		clearCanvas()
 		drawTimeAxis()
-		drawLegend()
 		data.timelines.forEach(drawTimelineRow)
 	}
 
@@ -138,20 +103,31 @@ function drawTimeline(canvas, data){
 		var r = e.target.getBoundingClientRect(),
 		x = e.clientX - r.left,
 		y = e.clientY - r.top,
-		row = Math.round((y - rowHeight*1.75)/rowHeight),
+
+		/*
+		  y =  rowHeight * (i+.5)
+		  y/rowHeight = i+.5
+		  y/rowHeight-.5 = i
+
+		 */
+		row = Math.round(y/rowHeight-.5),
 		time = Math.round((x - rowHeight/2)*(maxTime-minTime) / (canvas.width-rowHeight))
 		redraw()
 		ctx.textBaseline = "top"
 		ctx.textAlign = "center"
 		ctx.fillStyle = "white"
 		if (data.timelines[row]){
-			for (var i=time-3; i<time+3; i++){
-				if (data.timelines[row].data[i]){
-					var text = displayTime(i) + " " + data.timelines[row].data[i],
+			data.timelines[row].events.forEach(event=>{
+				if (event.time > time-3 && event.time < time+3){
+					var text = displayTime(event.time) + " " + event.event,
 					textW = ctx.measureText(text).width/2,
 					textX = x-textW<0?textW:(x+textW>canvas.width?canvas.width-textW:x)
 					ctx.fillText(text, textX, y+20)
 					y+=rowHeight/2.5
+				}
+			})
+			for (var i=time-3; i<time+3; i++){
+				if (data.timelines[row].events[i]){
 				}
 			}
 		}
