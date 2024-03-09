@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Import Scouting Data</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/import-scouting.css>
+<script src=/jquery.min.js></script>
+<script src=/event-url.js></script>
+<script src=/import-scouting.js></script>
+<script src=/main.js></script>
+<script src=/local.js></script>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+<body>
+<div id=main>
+<h1>Import Scouting Data</h1>
+<form onsubmit="return false">
+<div>
+	<textarea id=import-data placeholder="Paste data here"></textarea>
+</div>
+<div>
+	Format: <select id=format>
+	<option value=importPurpleStandard>Purple Standard</option>
+	<option value=importScoutingFires>Fires</option>
+	</select>
+</div>
+</form>
+
+
+<form id=saver method=POST action=/admin/edit.cgi>
+	<div>
+		<textarea id=csv name=csv readonly required placeholder="Reformatted data will appear here"></textarea>
+	</div>
+	<div>
+		<input id=file type=text readonly name=file>
+		<input type=submit value=Save>
+	</div>
+</form>
+</body></html>

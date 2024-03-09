@@ -46,7 +46,7 @@ $(document).ready(function(){
 
 function getStatInfoName(field){
 	var info = statInfo[field]||{}
-	return info['name']||field
+	return info.name||field
 }
 
 var teamList = []
@@ -104,13 +104,13 @@ function showStats(){
 			graphs.append(graph)
 			graph.append($('<h2>').text(section))
 			if (aggregateGraphs[section].graph=='heatmap'){
-				var statName = aggregateGraphs[section]['data'][0],
+				var statName = aggregateGraphs[section].data[0],
 				stat=statInfo[statName],
 				source=stat.source||"",
 				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
 				image=stat.image,
 				width=Math.min($(document).width(),1000),
-				height=Math.round(width/stat['aspect_ratio']),
+				height=Math.round(width/stat.aspect_ratio),
 				points=[],
 				chart = $('<div class="heatmap">')
 				.css("width",width)
@@ -143,19 +143,19 @@ function showStats(){
 				data=[],
 				percent=false
 				graph.append($('<div class=chart>').append(canvas).css('min-width', (teamList.length*23+100) + 'px'))
-				var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent",
-				boxplot = aggregateGraphs[section]['graph']=='boxplot'
-				for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
-					var field = aggregateGraphs[section]['data'][j],
+				var stackedPercent = aggregateGraphs[section].graph=="stacked_percent",
+				boxplot = aggregateGraphs[section].graph=='boxplot'
+				for (var j=0; j<aggregateGraphs[section].data.length; j++){
+					var field = aggregateGraphs[section].data[j],
 					info = statInfo[field]||{},
 					values = []
-					if (!boxplot || info['type']!='minmax'){
+					if (!boxplot || info.type!='minmax'){
 						for (var k=0; k<teamList.length; k++){
 							values.push(getTeamValue(field, teamList[k],stackedPercent,boxplot))
 						}
 						data.push({
 							field: field,
-							label: (info['type']=='avg'&&!boxplot?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
+							label: (info.type=='avg'&&!boxplot?'Average ':'') + (info.name||field) + (info.type=='%'?' %':''),
 							data: values,
 							backgroundColor: bgArr(graphColors[j]),
 							borderColor: bgArr(graphColors[j]),
@@ -163,12 +163,12 @@ function showStats(){
 							quantiles: 'nearest',
 							coef: 0
 						})
-						if (info['type']=='%'||stackedPercent) percent=true
+						if (info.type=='%'||stackedPercent) percent=true
 					}
 				}
-				var stacked = aggregateGraphs[section]['graph'].includes("stacked")
+				var stacked = aggregateGraphs[section].graph.includes("stacked")
 				var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
-				if (percent)yScale['suggestedMax'] = 100
+				if (percent)yScale.suggestedMax = 100
 				charts[section] = new Chart(canvas,{
 					type: boxplot?'boxplot':'bar',
 					data: {
@@ -210,11 +210,11 @@ function showStats(){
 					hr.append($('<th class=team>').text(t).click(showStatClickMenu).toggleClass('picked',picked))
 				}
 				table.append(hr)
-				for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
-					var field = aggregateGraphs[section]['data'][j],
+				for (var j=0; j<aggregateGraphs[section].data.length; j++){
+					var field = aggregateGraphs[section].data[j],
 					info = statInfo[field]||{},
-					highGood = (info['good']||"high")=='high',
-					statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
+					highGood = (info.good||"high")=='high',
+					statName = (info.type=='avg'?"Average ":"") + (info.name||field) + (info.type=='%'?" %":""),
 					tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").attr('data-field',field).click(reSort)),
 					best = (highGood?-1:1)*99999999
 					for (var k=0; k<teamList.length; k++){
@@ -268,7 +268,7 @@ function showSortOptions(){
 		info = statInfo[field]||{},
 		name = getStatInfoName(field),
 		active = sortStat==field?" active":""
-		if(!/^(text|enum)$/.test(info['type'])) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).text(name).click(reSort))
+		if(!/^(text|enum)$/.test(info.type)) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).text(name).click(reSort))
 	}
 	showLightBox(picker)
 }
@@ -349,7 +349,7 @@ function reSort(){
 }
 
 function darkenColor(color){
-	var m = color.match(/^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/)
+	var m = (color||"").match(/^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/)
 	if(m){
 		return "#" +
 		(Math.round(parseInt(m[1],16)/2)).toString(16).padStart(2,'0') +
