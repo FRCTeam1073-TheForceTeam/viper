@@ -103,6 +103,12 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.stage_score = scout.trap_score + scout.parked_score + scout.onstage_score + scout.spotlit_score + scout.harmony_score
 	scout.score = scout.auto_score + scout.tele_amp_speaker_score + scout.stage_score
 
+	pit.auto_paths = []
+	for (var i=1; i<=9; i++){
+		var path = pit[`auto_${i}_path`]
+		if (path) pit.auto_paths.push(path)
+	}
+
 	var cycleSeconds =  scout.full_cycle_count * scout.full_cycle_average_seconds + aggregate.full_cycle_count * aggregate.full_cycle_average_seconds
 	var cycles = scout.full_cycle_count + aggregate.full_cycle_count
 
@@ -179,6 +185,15 @@ var statInfo = {
 	"end_game_climb_fail": {
 		name: "Climb Failed",
 		type: "%"
+	},
+	"auto_paths": {
+		name: "Auto Paths",
+		type: "pathlist",
+		aspect_ratio: .75,
+		whiteboard_start: 0,
+		whiteboard_end: 64,
+		whiteboard_us: true,
+		source: "pit"
 	},
 	"auto_collect_order": {
 		name: "Order of Auto Collection",
@@ -832,7 +847,8 @@ var whiteboardStamps = []
 
 var whiteboardOverlays = [
 	"auto_start",
-	"speaker_shot_locations"
+	"auto_paths",
+	"speaker_shot_locations",
 ]
 
 

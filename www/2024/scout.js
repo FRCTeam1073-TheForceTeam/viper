@@ -61,6 +61,10 @@ $(document).ready(function(){
 		setTimeout(drawAllShotLocations,500)
 		return true
 	})
+	onShowPitScouting.push(function(){
+		drawAutos()
+		return true
+	})
 
 	function cycleInterrupt(){
 		cycle = {

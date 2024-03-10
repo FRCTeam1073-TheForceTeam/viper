@@ -49,6 +49,7 @@ function sizeAndClearCanvas(canvas){
 }
 
 function drawPath(canvas, color, path){
+	if (canvas.length) canvas = canvas[0]
 	var last, ctx = canvas.getContext('2d')
 	ctx.lineWidth = canvas.width*.005
 	path.split(/ /).forEach((point)=>{

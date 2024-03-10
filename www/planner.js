@@ -200,22 +200,39 @@ $(document).ready(function() {
 				whiteboard = $('#field'),
 				whiteboardBounds = whiteboard[0].getBoundingClientRect(),
 				source = fieldInfo.source,
-				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam)
+				type = fieldInfo.type,
+				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
+				data=(dataSource[team]||{})[field]
 				if (enabled){
-					;((dataSource[team]||{})[field]||"").split(" ").forEach(coordinates=>{
-						var top=0, left=0,
-						m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
-						if (m && m.length){
-							[left, top] = m.slice(1).map(x=>parseInt(x)/100)
-							if (rotated) left = 1 - left
-							var point = $('<div class=overlay>').html(char).css(...style)
-							whiteboard.append(point)
-							var pointBounds = point[0].getBoundingClientRect()
-							left = Math.round(left * whiteboardBounds.width - pointBounds.width/2)
-							top = Math.round(top * whiteboardBounds.height * height + start * whiteboardBounds.height - pointBounds.height/2)
-							point.css(atBottom?"bottom":"top",`${top}px`).css('left',`${left}px`)
+					if (type == 'pathlist'){
+						var canvas = $('<canvas class=overlay>').attr('id',`${team}-${field}`).css({width:'100%',height:whiteboardBounds.height * height + 'px'})
+						if (atBottom){
+							canvas.css({transform:'scaleY(-1)',bottom:start*whiteboardBounds.height})
+						} else {
+							canvas.css({top:start*whiteboardBounds.height})
 						}
-					})
+						$('#field').append(canvas)
+						canvas[0].width = canvas[0].clientWidth
+						canvas[0].height = canvas[0].clientHeight
+						;(data||[]).forEach(path=>{
+							drawPath(canvas, style[1], path)
+						})
+					} else {
+						;(data||"").split(" ").forEach(coordinates=>{
+							var top=0, left=0,
+							m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+							if (m && m.length){
+								[left, top] = m.slice(1).map(x=>parseInt(x)/100)
+								if (rotated) left = 1 - left
+								var point = $('<div class=overlay>').html(char).css(...style)
+								whiteboard.append(point)
+								var pointBounds = point[0].getBoundingClientRect()
+								left = Math.round(left * whiteboardBounds.width - pointBounds.width/2)
+								top = Math.round(top * whiteboardBounds.height * height + start * whiteboardBounds.height - pointBounds.height/2)
+								point.css(atBottom?"bottom":"top",`${top}px`).css('left',`${left}px`)
+							}
+						})
+					}
 				}
 			})
 		})
