@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=UTF-8>
+		<script>
+			'use strict'
+			if (location.hash) localStorage.setItem("tps_auth", atob(location.hash.slice(1)))
+			var auth = localStorage.getItem("tps_auth")
+			if (!auth){
+				location.href="https://thepurplewarehouse.com/scouting/auth/generate/"+btoa(JSON.stringify({
+					site: location.hostname,
+					redirect: location.origin + location.pathname + "#<DATA>",
+					scopes: [
+						'tpw.teamNumber',
+						'tpw.scouting.username',
+						'tpw.scouting.impersonate',
+						'tps.entry.add',
+						'tps.entry.get',
+						'tps.entry.edit',
+						'tps.entry.delete'
+					]
+				}))
+			} else {
+				auth = JSON.parse(auth).body.details
+
+				var matchData = {
+					"metadata": {
+						"event": "2024prac-all",
+						"match": {
+							"level": "qm",
+							"number": 1,
+							"set": 1
+						},
+						"bot": "9999",
+						"timestamp": 1711729092182,
+						"scouter": {
+							"name": auth.scoutingUsername,
+							"team": auth.teamNumber,
+							"app": location.hostname
+						}
+					},
+					"abilities": {
+						"auto-center-line-pick-up": false,
+						"ground-pick-up": true,
+						"auto-leave-starting-zone": true,
+						"teleop-spotlight-2024": false,
+						"teleop-stage-level-2024": 3
+					},
+					"counters": {},
+					"data": {
+						"auto-scoring-2024": [
+							"ss",
+							"sm"
+						],
+						"teleop-scoring-2024": [
+							"ss",
+							"as",
+							"am",
+							"as",
+							"sa",
+							"ts"
+						],
+						"notes": "decent defense and intake always worked smoothly\ncycles were relatively slow though"
+					},
+					"ratings": {
+						"defense-skill": 3,
+						"driver-skill": 3,
+						"intake-consistency": 4,
+						"speed": 2,
+						"stability": 3
+					},
+					"timers": {
+						"brick-time": 1500,
+						"defense-time": 6745,
+						"stage-time-2024": 12815
+					}
+				}
+
+				fetch(
+					`https://api.thepurplestandard.com/v1/entry/add?key=${auth.key}`, {
+						method: "POST",
+						headers: {"Content-Type": "application/json"},
+						body: JSON.stringify({
+							entry: matchData,
+							threshold: 0
+						})
+					}
+				).then(response => {
+					if (!response.ok) throw new Error(`${response.status} ${response.statusText} for ${response.url}`)
+					return response.json()
+				}).then(data => {
+					console.log("Add Match")
+					console.log(data)
+				}).catch(console.error)
+
+				/*fetch(
+					`https://api.thepurplestandard.com/v1/entry/latest/2024prac-all`
+				).then(response => response.json()).then(data => {
+					console.log("Practice match latest")
+					console.log(data.body)
+				}).catch(console.error)
+
+				fetch(
+					`https://api.thepurplestandard.com/v1/entry/list/event/2024prac-all?key=${auth.key}`
+				).then(response => response.json()).then(data => {
+					console.log("Practice match entries")
+					console.log(data.body.entries)
+				}).catch(console.error)*/
+			}
+		</script>
+	</head>
+	<body>
+
+	</body>
+</html>
