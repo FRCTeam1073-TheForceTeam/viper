@@ -161,26 +161,6 @@ $(document).ready(function() {
 		}
 	}
 
-
-
-	function moveFloaterToPercentCoordinates(mapImage, isRed, coordinates, floatingImage){
-		var m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
-		if (!m || !m.length){
-			floatingImage.style.left="0px"
-			floatingImage.style.top="0px"
-			return
-		}
-		var px = parseInt(m[1]),
-		py = parseInt(m[2])
-		if (isRed) px = 100 - px
-		var d = mapImage.getBoundingClientRect(),
-		s = floatingImage.getBoundingClientRect(),
-		x = Math.round(px * d.width / 100 - s.width/2),
-		y = Math.round(py * d.height / 100 - s.height/2)
-		floatingImage.style.left=x+"px"
-		floatingImage.style.top=y+"px"
-	}
-
 	function drawOverlays(){
 		$('.overlay').remove()
 		var teamList = $('.team-input').get().map(inp=>parseInt(inp.value)),
