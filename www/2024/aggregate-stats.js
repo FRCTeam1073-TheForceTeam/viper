@@ -390,7 +390,7 @@ var statInfo = {
 		type: "avg"
 	},
 	"trap": {
-		name: "Notes Placed in the Trap",
+		name: "Notes Placed in a Trap",
 		type: "avg",
 		timeline_stamp: "T",
 		timeline_fill: "#FF0",
@@ -436,11 +436,11 @@ var statInfo = {
 		type: "avg"
 	},
 	"place_amp": {
-		name: "Notes Place in Amp",
+		name: "Notes Placed in Amp",
 		type: "avg"
 	},
 	"place_speaker": {
-		name: "Notes Place in Speaker",
+		name: "Notes Shot into Speaker",
 		type: "avg"
 	},
 	"full_cycles": {
