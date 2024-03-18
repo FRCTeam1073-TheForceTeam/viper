@@ -380,6 +380,7 @@ function showScouting(){
 		fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
 		$('.count').each(countHandler)
 		resetSequentialInputSeries()
+		$('#scouting-comments').toggle(!!window.showScoutingComments)
 		for (var i=0; i<onShowScouting.length; i++){
 			if(!onShowScouting[i]()) return false
 		}

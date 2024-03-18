@@ -3,9 +3,10 @@
 // Enter your team number here
 // to enable team specific features
 // and highlighting
-// To get it from the subdomain, for multiple site hosting, use:
-// var ourTeam=parseInt((location.hostname.match(/[0-9]+/g)||["0"])[0]); // team number from sub-domain
 var ourTeam=0
+
+// Whether or not to collect comments during scouting
+var showScoutingComments=false
 
 // A list of options that will drop down from the host name
 // box on export.html
