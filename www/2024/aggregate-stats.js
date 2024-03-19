@@ -100,6 +100,8 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 		scout.end_game_spotlit=""
 		scout.end_game_harmony=0
 	}
+	scout.end_game_harmony_duo = bool_1_0(scout.end_game_harmony==1)
+	scout.end_game_harmony_trio = bool_1_0(scout.end_game_harmony==2)
 	scout.spotlit_score = pointValues.tele_spotlit * (scout.end_game_spotlit=="spotlit"?1:0)
 	scout.harmony_score = Math.round(pointValues.tele_harmony * scout.end_game_harmony / (scout.end_game_harmony+1))
 	scout.stage_score = scout.trap_score + scout.parked_score + scout.onstage_score + scout.spotlit_score + scout.harmony_score
@@ -508,6 +510,14 @@ var statInfo = {
 		name: "Harmony at End of Game",
 		type: "text"
 	},
+	"end_game_harmony_duo": {
+		name: "Harmony with Another Bot",
+		type: "text"
+	},
+	"end_game_harmony_trio": {
+		name: "Harmony with Two Other Bots",
+		type: "text"
+	},
 	"onstage_percent": {
 		name: "Onstage Percent",
 		type: "%"
@@ -672,7 +682,7 @@ var teamGraphs = {
 	},
 	"Abilities": {
 		graph:"bar",
-		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle"]
+		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle","end_game_harmony_duo","end_game_harmony_trio"]
 
 	},
 	"Problems": {
@@ -720,7 +730,7 @@ var aggregateGraphs = {
 	},
 	"Abilities (demonstrated in % of matches)": {
 		graph:"bar",
-		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle"]
+		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle","end_game_harmony_duo","end_game_harmony_trio"]
 
 	},
 	"Problems (experienced in % of matches)": {
