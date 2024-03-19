@@ -7,17 +7,17 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	}
 
 	var pointValues = {
-		"auto_leave":2,
-		"auto_amp":2,
-		"auto_speaker":5,
-		"tele_amp":1,
-		"tele_speaker_unamped":2,
-		"tele_speaker_amped":5,
-		"tele_trap":5,
-		"tele_park":1,
-		"tele_onstage":3,
-		"tele_spotlit":1,
-		"tele_harmony":2,
+		auto_leave:2,
+		auto_amp:2,
+		auto_speaker:5,
+		tele_amp:1,
+		tele_speaker_unamped:2,
+		tele_speaker_amped:5,
+		tele_trap:5,
+		tele_park:1,
+		tele_onstage:3,
+		tele_spotlit:1,
+		tele_harmony:2,
 	}
 
 	Object.keys(statInfo).forEach(function(field){
@@ -757,18 +757,18 @@ var aggregateGraphs = {
 
 
 var matchPredictorSections = {
-	"Total":["score"],
+	Total:["score"],
 	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	"Auto":["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
-	"Teleop":["tele_amp_score","tele_speaker_score"],
-	"Stage":["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
+	Auto:["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
+	Teleop:["tele_amp_score","tele_speaker_score"],
+	Stage:["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
 }
 
 var plannerSections = {
-	"Total":["score"],
+	Total:["score"],
 	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	"Placement":["speaker_score","amp_score","trap_score","place"],
-	"Percents":["trap_percent","onstage_percent","coopertition"],
+	Placement:["speaker_score","amp_score","trap_score","place"],
+	Percents:["trap_percent","onstage_percent","coopertition"],
 }
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
