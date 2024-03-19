@@ -42,7 +42,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.source_pickup = bool_1_0(scout.source_pickup)
 	scout.passing = bool_1_0(scout.passing)
 	scout.stashing = bool_1_0(scout.stashing)
-
+	scout.end_game_hang_end = bool_1_0(scout.end_game_hang_location=="end")
+	scout.end_game_hang_off_center = bool_1_0(scout.end_game_hang_location=="offcenter")
+	scout.end_game_hang_middle = bool_1_0(scout.end_game_hang_location=="middle")
 	scout.coopertition = apiScores.coopertitionCriteriaMet?1:0
 	scout.auto_leave_score = pointValues.auto_leave * scout.auto_leave
 	scout.auto_collect_home =
@@ -482,6 +484,18 @@ var statInfo = {
 		name: "Hanging location at End Game",
 		type: "text"
 	},
+	"end_game_hang_end": {
+		name: "End Hang",
+		type: "%"
+	},
+	"end_game_hang_off_center": {
+		name: "Off-center Hang",
+		type: "%"
+	},
+	"end_game_hang_middle": {
+		name: "Center Hang",
+		type: "%"
+	},
 	"parked_score": {
 		name: "Parking Score",
 		type: "avg"
@@ -658,7 +672,7 @@ var teamGraphs = {
 	},
 	"Abilities": {
 		graph:"bar",
-		data:["defense","floor_pickup","source_pickup","passing","stashing"]
+		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle"]
 
 	},
 	"Problems": {
@@ -706,7 +720,7 @@ var aggregateGraphs = {
 	},
 	"Abilities (demonstrated in % of matches)": {
 		graph:"bar",
-		data:["defense","floor_pickup","source_pickup","passing","stashing"]
+		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle"]
 
 	},
 	"Problems (experienced in % of matches)": {
