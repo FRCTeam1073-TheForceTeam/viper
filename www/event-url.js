@@ -192,6 +192,12 @@ function promiseEventStats(includePractice){
 		$('.aggregationIncludesPractice').text(includePractice?"include":"exclude")
 		var eventStatsByTeam = {},
 		eventStatsByMatchTeam = {}
+		Object.keys(pitData).forEach(team=>{
+			aggregateStats({},{},{},{},pitData[team]||{})
+		})
+		Object.keys(subjectiveData).forEach(team=>{
+			aggregateStats({},{},{},subjectiveData[team]||{},{})
+		})
 		forEachTeamMatch(eventStats, function(team,match,scout){
 			var apiScore = {}
 			if (eventScores[match] && eventScores[match].alliances){
@@ -206,7 +212,7 @@ function promiseEventStats(includePractice){
 				aggregateStats(scout,aggregate,apiScore,subjective,pit)
 				eventStatsByTeam[team] = aggregate
 			} else {
-				aggregateStats(scout, {}, apiScore, subjective)
+				aggregateStats(scout,{},apiScore,subjective,pit)
 			}
 			var mt=`${match}-${team}`
 			scout.old=eventStatsByMatchTeam[mt]

@@ -100,7 +100,7 @@ $(document).ready(function(){
 		moveFloaterToPercentCoordinates(
 			document.getElementById('start-area'),
 			pos.startsWith('R'),
-			$('#auto-start-input').val(),
+			$('#auto-start-input').val()||"5x17",
 			document.getElementById('robot-starting-position')
 		)
 	}

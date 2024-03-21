@@ -10,6 +10,7 @@
 <link rel=stylesheet href=scout.css>
 <script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
+<script src=/canvas-path.js></script>
 <script src=/scout.js></script>
 <script src=scout.js></script>
 <script src=/heartbeat.js></script>
@@ -227,6 +228,10 @@
 			<fieldset class="left full">
 				<legend>Name:</legend>
 				<input class=full type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
+			</fieldset>
+			<fieldset class="left full" id=scouting-comments>
+				<legend>Comments:</legend>
+				<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
 			</fieldset>
 			<input type=hidden name=created value="">
 			<input type=hidden name=modified value="">

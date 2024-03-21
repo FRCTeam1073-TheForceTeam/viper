@@ -7,17 +7,17 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	}
 
 	var pointValues = {
-		"auto_leave":2,
-		"auto_amp":2,
-		"auto_speaker":5,
-		"tele_amp":1,
-		"tele_speaker_unamped":2,
-		"tele_speaker_amped":5,
-		"tele_trap":5,
-		"tele_park":1,
-		"tele_onstage":3,
-		"tele_spotlit":1,
-		"tele_harmony":2,
+		auto_leave:2,
+		auto_amp:2,
+		auto_speaker:5,
+		tele_amp:1,
+		tele_speaker_unamped:2,
+		tele_speaker_amped:5,
+		tele_trap:5,
+		tele_park:1,
+		tele_onstage:3,
+		tele_spotlit:1,
+		tele_harmony:2,
 	}
 
 	Object.keys(statInfo).forEach(function(field){
@@ -42,7 +42,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.source_pickup = bool_1_0(scout.source_pickup)
 	scout.passing = bool_1_0(scout.passing)
 	scout.stashing = bool_1_0(scout.stashing)
-
+	scout.end_game_hang_end = bool_1_0(scout.end_game_hang_location=="end")
+	scout.end_game_hang_off_center = bool_1_0(scout.end_game_hang_location=="offcenter")
+	scout.end_game_hang_middle = bool_1_0(scout.end_game_hang_location=="middle")
 	scout.coopertition = apiScores.coopertitionCriteriaMet?1:0
 	scout.auto_leave_score = pointValues.auto_leave * scout.auto_leave
 	scout.auto_collect_home =
@@ -98,6 +100,8 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 		scout.end_game_spotlit=""
 		scout.end_game_harmony=0
 	}
+	scout.end_game_harmony_duo = bool_1_0(scout.end_game_harmony==1)
+	scout.end_game_harmony_trio = bool_1_0(scout.end_game_harmony==2)
 	scout.spotlit_score = pointValues.tele_spotlit * (scout.end_game_spotlit=="spotlit"?1:0)
 	scout.harmony_score = Math.round(pointValues.tele_harmony * scout.end_game_harmony / (scout.end_game_harmony+1))
 	scout.stage_score = scout.trap_score + scout.parked_score + scout.onstage_score + scout.spotlit_score + scout.harmony_score
@@ -134,15 +138,15 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 }
 
 var statInfo = {
-	"match": {
+	match:{
 		name: "Match",
 		type: "text"
 	},
-	"team": {
+	team:{
 		name: "Team",
 		type: "text"
 	},
-	"auto_start": {
+	auto_start:{
 		name: "Location where the robot starts",
 		type: "heatmap",
 		image: "/2024/start-area-blue.png",
@@ -152,41 +156,41 @@ var statInfo = {
 		whiteboard_char: "□",
 		whiteboard_us: true
 	},
-	"auto_leave": {
+	auto_leave:{
 		name: "Exited the Starting Area During Auto",
 		type: "%",
 		timeline_stamp: "L",
 		timeline_fill: "#BB0",
 		timeline_outline: "#888"
 	},
-	"auto_leave_score": {
+	auto_leave_score:{
 		name: "Score for Exiting the Starting Area During Auto",
 		type: "avg"
 	},
-	"no_show": {
+	no_show:{
 		name: "No Show",
 		type: "%",
 		timeline_stamp: "N",
 		timeline_fill: "#F0F",
 		timeline_outline: "#F0F"
 	},
-	"defense": {
+	defense:{
 		name: "Played Defense",
 		type: "%"
 	},
-	"stuck_note": {
+	stuck_note:{
 		name: "Note Stuck in Bot",
 		type: "%"
 	},
-	"bricked": {
+	bricked:{
 		name: "Robot Disabled",
 		type: "%"
 	},
-	"end_game_climb_fail": {
+	end_game_climb_fail:{
 		name: "Climb Failed",
 		type: "%"
 	},
-	"auto_paths": {
+	auto_paths:{
 		name: "Auto Paths",
 		type: "pathlist",
 		aspect_ratio: .75,
@@ -195,79 +199,79 @@ var statInfo = {
 		whiteboard_us: true,
 		source: "pit"
 	},
-	"auto_collect_order": {
+	auto_collect_order:{
 		name: "Order of Auto Collection",
 		type: "text"
 	},
-	"auto_collect_wing_mid": {
+	auto_collect_wing_mid:{
 		name: "Collected Wing Note Midfield During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#800",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_wing_mid_amp": {
+	auto_collect_wing_mid_amp:{
 		name: "Collected Wing Note Between Midfield and Amp During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#B00",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_wing_amp": {
+	auto_collect_wing_amp:{
 		name: "Collected Wing Note Nearest Amp During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#F00",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_centerline_source": {
+	auto_collect_centerline_source:{
 		name: "Collected Centerline Note Nearest Source During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#000",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_centerline_mid_source": {
+	auto_collect_centerline_mid_source:{
 		name: "Collected Centerline Note Between Midfield and Amp During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#004",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_centerline_mid": {
+	auto_collect_centerline_mid:{
 		name: "Collected Centerline Note Midfield During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#008",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_centerline_mid_amp": {
+	auto_collect_centerline_mid_amp:{
 		name: "Collected Centerline Note Between Midfield and Source During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#00B",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_centerline_amp": {
+	auto_collect_centerline_amp:{
 		name: "Collected Centerline Nearest Amp During Auto",
 		type: "%",
 		timeline_stamp: "C",
 		timeline_fill: "#00F",
 		timeline_outline: "#07A"
 	},
-	"auto_collect_home": {
+	auto_collect_home:{
 		name: "Notes Collected from the Home Wing During Auto",
 		type: "avg"
 	},
-	"auto_collect_center": {
+	auto_collect_center:{
 		name: "Notes Collected from Center Field During Auto",
 		type: "avg"
 	},
-	"auto_collect": {
+	auto_collect:{
 		name: "Notes Collected During Auto",
 		type: "avg"
 	},
-	"auto_collect_locations":{
+	auto_collect_locations:{
 		name: "Auto Collect Locations",
 		type: "heatmap",
 		image: "/2024/speaker-shoot-area-blue.png",
@@ -277,248 +281,268 @@ var statInfo = {
 		whiteboard_char: "+",
 		whiteboard_us: false,
 	},
-	"auto_amp": {
+	auto_amp:{
 		name: "Notes Placed in the Amp During Auto",
 		type: "avg",
 		timeline_stamp: "A",
 		timeline_fill: "#BB0",
 		timeline_outline: "#888"
 	},
-	"auto_amp_score": {
+	auto_amp_score:{
 		name: "Amp Score During Auto",
 		type: "avg"
 	},
-	"auto_speaker": {
+	auto_speaker:{
 		name: "Notes Shot in the Speaker During Auto",
 		type: "avg",
 		timeline_stamp: "S",
 		timeline_fill: "#BB0",
 		timeline_outline: "#BB0"
 	},
-	"auto_speaker_score": {
+	auto_speaker_score:{
 		name: "Speaker Score During Auto",
 		type: "avg"
 	},
-	"auto_amp_speaker_score": {
+	auto_amp_speaker_score:{
 		name: "Speaker and Amp Score During Auto",
 		type: "avg"
 	},
-	"auto_place": {
+	auto_place:{
 		name: "Notes Placed During Auto",
 		type: "avg"
 	},
-	"auto_score": {
+	auto_score:{
 		name: "Score During Auto",
 		type: "avg"
 	},
-	"auto_notes_handled": {
+	auto_notes_handled:{
 		name: "Notes Handled During Auto",
 		type: "avg"
 	},
-	"auto_place_percent": {
+	auto_place_percent:{
 		name: "Percent of Notes Placed During Auto",
 		type: "ratio"
 	},
-	"coopertition": {
+	coopertition:{
 		name: "Alliance activated coopertition light",
 		type: "%"
 	},
-	"tele_collect_home": {
+	tele_collect_home:{
 		name: "Notes Collected from Home Wing During Teleop",
 		type: "avg",
 		timeline_stamp: "C",
 		timeline_fill: "#AAA",
 		timeline_outline: "#05F"
 	},
-	"tele_collect_center": {
+	tele_collect_center:{
 		name: "Notes Collected from Center Field During Teleop",
 		type: "avg",
 		timeline_stamp: "C",
 		timeline_fill: "#666",
 		timeline_outline: "#05F"
 	},
-	"tele_collect_source": {
+	tele_collect_source:{
 		name: "Notes Collected from Source During Teleop",
 		type: "avg",
 		timeline_stamp: "C",
 		timeline_fill: "#000",
 		timeline_outline: "#05F"
 	},
-	"tele_collect": {
+	tele_collect:{
 		name: "Notes Collected During Teleop",
 		type: "avg"
 	},
-	"tele_amp": {
+	tele_amp:{
 		name: "Notes Placed in the Amp During Teleop",
 		type: "avg",
 		timeline_stamp: "A",
 		timeline_fill: "#000",
 		timeline_outline: "#FF0"
 	},
-	"tele_amp_score": {
+	tele_amp_score:{
 		name: "Amp Score During Teleop",
 		type: "avg"
 	},
-	"tele_speaker_unamped": {
+	tele_speaker_unamped:{
 		name: "Notes Shot in the Speaker when Not Amped During Teleop",
 		type: "avg",
 		timeline_stamp: "S",
 		timeline_fill: "#000",
 		timeline_outline: "#FF0"
 	},
-	"tele_speaker_unamped_score": {
+	tele_speaker_unamped_score:{
 		name: "Speaker Score when Not Amped During Teleop",
 		type: "avg"
 	},
-	"tele_speaker_amped": {
+	tele_speaker_amped:{
 		name: "Notes Shot in the Speaker when Amped During Teleop",
 		type: "avg",
 		timeline_stamp: "S",
 		timeline_fill: "#FF0",
 		timeline_outline: "#FF0"
 	},
-	"tele_speaker_amped_score": {
+	tele_speaker_amped_score:{
 		name: "Speaker Score when Amped During Teleop",
 		type: "avg"
 	},
-	"tele_speaker": {
+	tele_speaker:{
 		name: "Notes Shot in the Speaker During Teleop",
 		type: "avg"
 	},
-	"tele_speaker_score": {
+	tele_speaker_score:{
 		name: "Speaker Score During Teleop",
 		type: "avg"
 	},
-	"trap": {
-		name: "Notes Placed in the Trap",
+	trap:{
+		name: "Notes Placed in a Trap",
 		type: "avg",
 		timeline_stamp: "T",
 		timeline_fill: "#FF0",
 		timeline_outline: "#FF0"
 	},
-	"trap_percent": {
+	trap_percent:{
 		name: "Trap Percent",
 		type: "%"
 	},
-	"trap_score": {
+	trap_score:{
 		name: "Trap Score",
 		type: "avg"
 	},
-	"tele_amp_speaker_score": {
+	tele_amp_speaker_score:{
 		name: "Speaker and Amp Score During Teleop",
 		type: "avg"
 	},
-	"tele_drop": {
+	tele_drop:{
 		name: "Notes Dropped in Teleop",
 		type: "avg",
 		timeline_stamp: "D",
 		timeline_fill: "#000",
 		timeline_outline: "#808"
 	},
-	"amp_score": {
+	amp_score:{
 		name: "Amp Score",
 		type: "avg"
 	},
-	"speaker_score": {
+	speaker_score:{
 		name: "Speaker Score",
 		type: "avg"
 	},
-	"amp_speaker_score": {
+	amp_speaker_score:{
 		name: "Speaker and Amp Score",
 		type: "avg"
 	},
-	"tele_place": {
+	tele_place:{
 		name: "Notes Placed During Teleop",
 		type: "avg"
 	},
-	"place": {
+	place:{
 		name: "Notes Placed",
 		type: "avg"
 	},
-	"place_amp": {
-		name: "Notes Place in Amp",
+	place_amp:{
+		name: "Notes Placed in Amp",
 		type: "avg"
 	},
-	"place_speaker": {
-		name: "Notes Place in Speaker",
+	place_speaker:{
+		name: "Notes Shot into Speaker",
 		type: "avg"
 	},
-	"full_cycles": {
+	full_cycles:{
 		name: "Full Cycle Seconds",
 		type: "int-list",
 		good: "low"
 	},
-	"full_cycle_average_seconds": {
+	full_cycle_average_seconds:{
 		name: "Full Cycle Time Average",
 		type: "num",
 		good: "low"
 	},
-	"full_cycle_count": {
+	full_cycle_count:{
 		name: "Full Cycle Count",
 		type: "avg"
 	},
-	"full_cycle_fastest_seconds": {
+	full_cycle_fastest_seconds:{
 		name: "Full Cycle Time Fastest",
 		type: "minmax",
 		good: "low"
 	},
-	"floor_pickup": {
+	floor_pickup:{
 		name: "Floor Pickup",
 		type: "%"
 	},
-	"source_pickup": {
+	source_pickup:{
 		name: "Source Baby Bird",
 		type: "%"
 	},
-	"passing": {
+	passing:{
 		name: "Passed Notes",
 		type: "%"
 	},
-	"stashing": {
+	stashing:{
 		name: "Stashed Notes",
 		type: "%"
 	},
-	"end_game_hang_location": {
+	end_game_hang_location:{
 		name: "Hanging location at End Game",
 		type: "text"
 	},
-	"parked_score": {
+	end_game_hang_end:{
+		name: "End Hang",
+		type: "%"
+	},
+	end_game_hang_off_center:{
+		name: "Off-center Hang",
+		type: "%"
+	},
+	end_game_hang_middle:{
+		name: "Center Hang",
+		type: "%"
+	},
+	parked_score:{
 		name: "Parking Score",
 		type: "avg"
 	},
-	"end_game_position": {
+	end_game_position:{
 		name: "Position at End of Game",
 		type: "text"
 	},
-	"end_game_harmony": {
+	end_game_harmony:{
 		name: "Harmony at End of Game",
 		type: "text"
 	},
-	"onstage_percent": {
+	end_game_harmony_duo:{
+		name: "Harmony with Another Bot",
+		type: "text"
+	},
+	end_game_harmony_trio:{
+		name: "Harmony with Two Other Bots",
+		type: "text"
+	},
+	onstage_percent:{
 		name: "Onstage Percent",
 		type: "%"
 	},
-	"onstage_score": {
+	onstage_score:{
 		name: "Onstage Score",
 		type: "avg"
 	},
-	"end_game_spotlit": {
+	end_game_spotlit:{
 		name: "Spotlit at End of Game",
 		type: "text"
 	},
-	"spotlit_score": {
+	spotlit_score:{
 		name: "Spotlit Score",
 		type: "avg"
 	},
-	"harmony_score": {
+	harmony_score:{
 		name: "Harmony Score",
 		type: "avg"
 	},
-	"timeline": {
+	timeline:{
 		name: "Timeline",
 		type: "timeline"
 	},
-	"speaker_shot_locations": {
+	speaker_shot_locations:{
 		name: "Speaker Shot Locations",
 		type: "heatmap",
 		image: "/2024/speaker-shoot-area-blue.png",
@@ -529,35 +553,35 @@ var statInfo = {
 		whiteboard_us: false,
 		source: "subjective"
 	},
-	"stage_score": {
+	stage_score:{
 		name: "Stage Score",
 		type: "avg"
 	},
-	"max_score": {
+	max_score:{
 		name: "Maximum Score Contribution",
 		type: "minmax"
 	},
-	"min_score": {
+	min_score:{
 		name: "Minimum Score Contribution",
 		type: "minmax"
 	},
-	"score": {
+	score:{
 		name: "Score Contribution",
 		type: "avg"
 	},
-	"scouter": {
+	scouter:{
 		name: "Scouter",
 		type: "text"
 	},
-	"comments": {
+	comments:{
 		name: "Comments",
 		type: "text"
 	},
-	"created": {
+	created:{
 		name: "Created",
 		type: "datetime"
 	},
-	"modified": {
+	modified:{
 		name: "Modified",
 		type: "datetime"
 	}
@@ -648,7 +672,7 @@ var teamGraphs = {
 		graph:"stacked",
 		data:["place_speaker","place_amp","trap"]
 	},
-	"Cycles":{
+	Cycles:{
 		graph:"bar",
 		data:["tele_place",'full_cycle_count']
 	},
@@ -656,12 +680,12 @@ var teamGraphs = {
 		graph:"boxplot",
 		data:['full_cycles']
 	},
-	"Abilities": {
+	Abilities:{
 		graph:"bar",
-		data:["defense","floor_pickup","source_pickup","passing","stashing"]
+		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle","end_game_harmony_duo","end_game_harmony_trio"]
 
 	},
-	"Problems": {
+	Problems:{
 		graph:"bar",
 		data:["no_show", "stuck_note", "bricked", "end_game_climb_fail"]
 	},
@@ -696,7 +720,7 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["place_speaker","place_amp","trap"]
 	},
-	"Cycles":{
+	Cycles:{
 		graph:"boxplot",
 		data:["tele_place",'full_cycle_count']
 	},
@@ -706,7 +730,7 @@ var aggregateGraphs = {
 	},
 	"Abilities (demonstrated in % of matches)": {
 		graph:"bar",
-		data:["defense","floor_pickup","source_pickup","passing","stashing"]
+		data:["defense","floor_pickup","source_pickup","passing","stashing","end_game_hang_end","end_game_hang_off_center","end_game_hang_middle","end_game_harmony_duo","end_game_harmony_trio"]
 
 	},
 	"Problems (experienced in % of matches)": {
@@ -733,18 +757,18 @@ var aggregateGraphs = {
 
 
 var matchPredictorSections = {
-	"Total":["score"],
+	Total:["score"],
 	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	"Auto":["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
-	"Teleop":["tele_amp_score","tele_speaker_score"],
-	"Stage":["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
+	Auto:["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
+	Teleop:["tele_amp_score","tele_speaker_score"],
+	Stage:["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
 }
 
 var plannerSections = {
-	"Total":["score"],
+	Total:["score"],
 	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	"Placement":["speaker_score","amp_score","trap_score","place"],
-	"Percents":["trap_percent","onstage_percent","coopertition"],
+	Placement:["speaker_score","amp_score","trap_score","place"],
+	Percents:["trap_percent","onstage_percent","coopertition"],
 }
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
