@@ -71,9 +71,9 @@ sub writeCsvData(){
 		my $lockFile = "$fileName.lock";
 		open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
-		my $csv = csv->new(-f $fileName?scalar(read_file($fileName, {binmode => ':encoding(UTF-8)'})):"");
+		my $csv = csv->new(-f $fileName?scalar(read_file($fileName)):"");
 		$csv->append($newCsv);
-		open my $fh, '>:encoding(UTF-8)', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
+		open my $fh, '>', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
 		$fh->print($csv->toString());
 		close $fh;
 		$webutil->commitDataFile($fileName, "scouting");
