@@ -31,10 +31,14 @@ function showScreen(){
 	else showScouting()
 }
 
-$(window).on('hashchange', function(){
-	if (scouting.is(':visible') && formHasChanges(scouting)){
+function maybeSaveFirst(){
+	if (changedNotStored(getActiveForm())){
 		if (confirm("Do you want to save your data?")) store()
 	}
+}
+
+$(window).on('hashchange', function(){
+	maybeSaveFirst()
 	parseHash()
 	showScreen()
 	window.scrollTo(0,0)
@@ -428,8 +432,23 @@ function toCSV(form){
 	]
 }
 
+function getActiveForm(){
+	if (scouting.length && scouting.is(':visible')) return scouting
+	if (pitScouting.length && pitScouting.is(':visible')) return pitScouting
+	if (subjectiveScouting.length && subjectiveScouting.is(':visible')) return subjectiveScouting
+	return null
+}
+
+function changedNotStored(form){
+	if (!form) return false
+	return formHasChanges(form) && new Date().getTime() - storeTime > 1000
+}
+
 window.addEventListener('beforeunload',(event) =>{
-	if (formHasChanges(scouting) && new Date().getTime() - storeTime > 1000){
+	console.log("Active form:")
+	console.log(getActiveForm())
+	console.log("Has changes: " + formHasChanges(getActiveForm()))
+	if (changedNotStored(getActiveForm())){
 		event.preventDefault()
 		return "Leave page without saving?"
 	}
@@ -458,7 +477,18 @@ function setTimeStamps(form){
 	form.find('input[name="modified"]').val(time)
 }
 
+function storeScouter(form){
+	localStorage.setItem('last_scouter',form.find('input[name="scouter"]').val())
+}
+
 function store(){
+	var form = getActiveForm()
+	if (form === scouting) storeScouting()
+	if (form === pitScouting) storePitScouting()
+	if (form === subjectiveScouting) storeSubjectiveScouting()
+}
+
+function storeScouting(){
 	if (formHasChanges(scouting)){
 		for (var i=0; i<onStore.length; i++){
 			if(!onStore[i]()) return false
@@ -475,12 +505,8 @@ function store(){
 	return true
 }
 
-function storeScouter(form){
-	localStorage.setItem('last_scouter',form.find('input[name="scouter"]').val())
-}
-
 function storePitScouting(){
-	var f=$('#pit-scouting')
+	var f=pitScouting
 	if (formHasChanges(f)){
 		setTimeStamps(f)
 		var csv = toCSV(pitScouting)
@@ -687,7 +713,7 @@ $(document).ready(function(){
 	})
 
 	$("#nextBtn").click(function(e){
-		if (!store()) return false
+		if (!storeScouting()) return false
 		var next = getNextMatch()
 		if (!next){
 			alert("Data saved and done. That was the last match!")
@@ -709,17 +735,17 @@ $(document).ready(function(){
 		return false
 	})
 	$("#matchBtn").click(function(e){
-		if (!store()) return false
+		maybeSaveFirst()
 		showMatchList()
 		return false
 	})
 	$(".robotBtn").click(function(e){
-		if (!store()) return false
+		maybeSaveFirst()
 		showPosList()
 		return false
 	})
 	$("#teamBtn").click(function(e){
-		if (!store()) return false
+		maybeSaveFirst()
 		showTeamChange()
 		return false
 	})
@@ -728,7 +754,7 @@ $(document).ready(function(){
 		return false
 	})
 	$("#uploadBtn").click(function(e){
-		if (!store()) return false
+		if (!storeScouting()) return false
 		location.href="/upload.html"
 		return false
 	})
