@@ -589,23 +589,17 @@ var statInfo = {
 
 $(document).ready(function(){
 	setTimeout(function(){
-		//console.log(JSON.stringify(toPurpleStandard(eventStats).entries[0].metadata))
+		console.log(JSON.stringify(toPurpleStandard(eventStats).entries[150]))
 	},500)
 })
 
 function toPurpleStandard(scout){
 	function tpsScouter(scouter){
-		var r = {
+		return {
 			name: scouter,
-			app: "Viper"
-		},
-		m = (scouter||"").match(/^([0-9]+),? (.*)/)
-		if (window.ourTeam) r.team = window.ourTeam+""
-		if (m){
-			r.name = m[2]
-			r.team = m[1]
+			app: location.host,
+			team: window.ourTeam
 		}
-		return r
 	}
 	function tpsMatch(match){
 		var m = (match||"").match(/^([1-5]?)(qm|p|f)([0-9]+)$/)
@@ -629,6 +623,32 @@ function toPurpleStandard(scout){
 	scout.forEach(function(row){
 		var match = tpsMatch(row.match)
 		if (match){
+			var auto_scoring = []
+			var tele_scoring = []
+			row.timeline.split(" ").forEach(e => {
+				e = e.replace(/.*:/,"")
+				switch(e){
+					case "auto_speaker":
+						auto_scoring.push("ss")
+						break
+					case "auto_amp":
+						auto_scoring.push("as")
+						break
+					case "tele_amp":
+						tele_scoring.push("as")
+						break
+					case "tele_speaker_unamped":
+						tele_scoring.push("ss")
+						break
+					case "tele_speaker_amped":
+						tele_scoring.push("sa")
+						break
+					case "trap":
+						tele_scoring.push("ts")
+						break
+				}
+
+			})
 			tps.entries.push({
 				metadata:{
 					scouter: tpsScouter(row.scouter),
@@ -639,9 +659,12 @@ function toPurpleStandard(scout){
 					modified: new Date(row.created).getTime()
 				},
 				abilities:{
-					"auto-leave-starting-zone": !!row.auto_leave,
-					"ground-pick-up": !!['floor_pickup'],
 					"auto-center-line-pick-up": !!row[`auto_collect_centerline_amp`] || !!row[`auto_collect_centerline_mid`] || !!row[`auto_collect_centerline_mid_amp`] || !!row[`auto_collect_centerline_mid_source`] || !!row[`auto_collect_centerline_source`],
+					"auto-leave-starting-zone": !!row.auto_leave,
+					bricked: !!row.bricked,
+					coopertition: !!row.coopertition,
+					defense: !!row.defense,
+					"ground-pick-up": !!['floor_pickup'],
 					"teleop-spotlight-2024": !!row[`end_game_spotlit`],
 					"teleop-stage-level-2024": tpsStageLevel(scout)
 				},
@@ -652,6 +675,12 @@ function toPurpleStandard(scout){
 					"teleop-scoring-amplified-speaker-2024": row.tele_speaker_amped,
 					"teleop-scoring-speaker-2024": row.tele_speaker_unamped,
 					"teleop-scoring-trap-2024": row.trap
+				},
+				data: {
+					"auto-scoring-2024": auto_scoring,
+					"auto-starting-position-2024": row.auto_start,
+					"teleop-scoring-2024": tele_scoring,
+					notes: row.comments
 				}
 			},)
 		}
