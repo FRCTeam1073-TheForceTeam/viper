@@ -412,6 +412,13 @@ var statInfo = {
 		name: "Speaker and Amp Score During Teleop",
 		type: "avg"
 	},
+	tele_pass:{
+		name: "Notes Passed in Teleop",
+		type: "avg",
+		timeline_stamp: "P",
+		timeline_fill: "#00F",
+		timeline_outline: "#00F"
+	},
 	tele_drop:{
 		name: "Notes Dropped in Teleop",
 		type: "avg",
@@ -672,6 +679,10 @@ var teamGraphs = {
 		graph:"stacked",
 		data:["place_speaker","place_amp","trap"]
 	},
+	"Not Scored":{
+		graph:"stacked",
+		data:["tele_pass","tele_drop"]
+	},
 	Cycles:{
 		graph:"bar",
 		data:["tele_place",'full_cycle_count']
@@ -719,6 +730,10 @@ var aggregateGraphs = {
 	"Note Place Location":{
 		graph:"stacked",
 		data:["place_speaker","place_amp","trap"]
+	},
+	"Not Scored":{
+		graph:"boxplot",
+		data:["tele_pass","tele_drop"]
 	},
 	Cycles:{
 		graph:"boxplot",
