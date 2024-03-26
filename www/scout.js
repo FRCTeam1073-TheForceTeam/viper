@@ -445,9 +445,6 @@ function changedNotStored(form){
 }
 
 window.addEventListener('beforeunload',(event) =>{
-	console.log("Active form:")
-	console.log(getActiveForm())
-	console.log("Has changes: " + formHasChanges(getActiveForm()))
 	if (changedNotStored(getActiveForm())){
 		event.preventDefault()
 		return "Leave page without saving?"
