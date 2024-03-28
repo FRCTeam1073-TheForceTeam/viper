@@ -321,9 +321,13 @@ function showSubjectiveScoutingForm(t){
 }
 
 function findParentFromButton(button){
-	var parent = button
-	for(var i=0;!parent.find('input').length&&i<10;i++) parent = parent.parent()
-	return parent
+	var parent = button,
+	found = parent
+	for(var i=0;i<10;i++){
+		if (parent.find('input').length == 1) found = parent
+		parent = parent.parent()
+	}
+	return found
 }
 
 function findInputInEl(parent){
