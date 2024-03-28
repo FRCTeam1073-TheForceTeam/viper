@@ -332,6 +332,8 @@ function findInputInEl(parent){
 	return input
 }
 
+var changeFloater = $('<div id=change-floater>')
+
 var lastClickTimeOnCounter = 0
 function countHandler(e){
 	var clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
@@ -349,6 +351,8 @@ function countHandler(e){
 		else if(/down/.test(src))toAdd = -1
 		else if(/three/.test(src))toAdd = 3
 		else if(/five/.test(src))toAdd = 5
+		changeFloater.text(toAdd<0?toAdd:"+"+toAdd).css({top:e.pageY,left:e.pageX}).show()
+		$('body').append(changeFloater)
 		val+=toAdd
 		val = val<min?min:val
 		val = val>max?max:val
