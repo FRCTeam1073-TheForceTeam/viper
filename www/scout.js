@@ -346,16 +346,20 @@ function countHandler(e){
 	min=parseInt(input.attr('min'))||0
 	if (clicked){
 		lastClickTimeOnCounter=e.timeStamp
-		var toAdd = 0
+		var toAdd=0,
+		oldVal=val
 		if(/up/.test(src))toAdd = 1
 		else if(/down/.test(src))toAdd = -1
 		else if(/three/.test(src))toAdd = 3
 		else if(/five/.test(src))toAdd = 5
-		changeFloater.text(toAdd<0?toAdd:"+"+toAdd).css({top:e.pageY,left:e.pageX}).show()
-		$('body').append(changeFloater)
 		val+=toAdd
 		val = val<min?min:val
 		val = val>max?max:val
+		var change = val-oldVal
+		if (change!=0){
+			changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:e.pageY,left:e.pageX}).show()
+			$('body').append(changeFloater)
+		}
 		input.val(val)
 		parent.find('.count').each(countHandler)
 	} else {

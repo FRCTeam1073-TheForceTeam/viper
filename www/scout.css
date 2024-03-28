@@ -29,5 +29,7 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 .subheader{background:var(--section-bg-color)}
 .colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px}
 .colorBar.white{background-color:var(--main-fg-color)}
-#change-floater{position:absolute;color:var(--highlight-fg-color);font-size:300%;pointer-events:none;animation:float-fade ease 5s;animation-fill-mode:forwards}
+#change-floater{position:absolute;color:var(--highlight-fg-color);
+	-webkit-text-stroke: .03em var(--main-bg-color);font-weight:bold;font-size:300%;pointer-events:none;animation:float-fade ease 5s;animation-fill-mode:forwards}
+#change-floater.negative{color:var(--button-disabled-decoration-color)}
 @keyframes float-fade{0%{opacity:1}100%{opacity:0;transform:translateX(1em) translateY(-1em)}}
