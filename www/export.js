@@ -17,8 +17,10 @@ $(document).ready(function(){
 	dataText = {},
 	fullFileCount = -1,
 	textFileCount = -1
+	if (!eventId) return $('#contents').text('No event ID')
 	promiseEventFiles().then(fileList => {
 		fullFileCount = fileList.length
+		if (!fullFileCount) return $('#contents').text(`No ${eventId} files`)
 		var textFiles = 0
 		fileList.forEach(file=>{
 			if (/\.jpg$/.test(file)){
