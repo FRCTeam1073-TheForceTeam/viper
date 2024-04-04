@@ -1,18 +1,36 @@
 var year=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:year)\=))?(20[0-9]{2})(?:\&.*)?$/)||["",""])[1]
-var eventFilters={
-	all:[],
-	upcoming:[]
-}
+var eventFilters
 
 $(document).ready(function(){
-	if (!year){
-		$('h1').text("No year specified")
-		return
+	if (!year) year = "" + new Date().getFullYear()
+	var yearSelect = $('#year')
+	for (var y = new Date().getFullYear(); y>=2019; y--){
+		yearSelect.append($('<option>').attr('value',y).text(y))
 	}
-	$('h1').text(`${year} FRC Events`)
+	yearSelect.val(year)
+	yearSelect.change(function(){
+		year=yearSelect.val()
+		location.hash=year
+		showYear(year)
+	})
+	showYear(year)
+	$('#filter').change(function(){
+		showEvents(eventFilters[$(this).val()])
+	})
+})
+
+function showYear(year){
+	$('#events').html("")
+	eventFilters={
+		all:[],
+		upcoming:[]
+	}
 	$('a').each(function(){
-		href=$(this).attr('href')
-		if (/YEAR/.test(href)) $(this).attr('href', href.replace(/YEAR/g,year))
+		$(this).attr('href', $(this).attr('href').replace(/YEAR|(20[0-9]{2})/g,year))
+	})
+	$('h1').text(`${year} FRC Events`)
+	$.ajaxSetup({
+		cache: false
 	})
 	$.getJSON(`/data/${year}.events.json`, function(json){
 		var events = json.Events.sort((a,b)=>a.dateStart.localeCompare(b.dateStart))
@@ -24,15 +42,14 @@ $(document).ready(function(){
 		if (eventFilters.upcoming.length){
 			toShow=eventFilters.upcoming
 			$('#filter').val('upcoming')
+		} else {
+			$('#filter').val('all')
 		}
 		showEvents(toShow)
 	}).fail(function(){
 		location.href=`/admin/frc-api-season.cgi?year=${year}`
 	})
-	$('#filter').change(function(){
-		showEvents(eventFilters[$(this).val()])
-	})
-})
+}
 
 function showEvents(events){
 	var div = $('#events').html("")
