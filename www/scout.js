@@ -288,8 +288,8 @@ function showPitScoutingForm(t){
 		})
 		resetSequentialInputSeries()
 		$('.count').each(countHandler)
-		for (var i=0; i<onShowPitScouting.length; i++){
-			if(!onShowPitScouting[i]()) return false
+		for (var i=0; i<window.onShowPitScouting.length; i++){
+			if(!window.onShowPitScouting[i]()) return false
 		}
 		pitScouting.show()
 		localStorage.setItem("last_scout_type", "pit-scout")
@@ -312,8 +312,8 @@ function showSubjectiveScoutingForm(t){
 		fillPreviousFormData(form, localSubjectiveScoutingData(team)||subjectiveData[team])
 		resetSequentialInputSeries()
 		$('.count').each(countHandler)
-		for (var i=0; i<onShowSubjectiveScouting.length; i++){
-			if(!onShowSubjectiveScouting[i]()) return false
+		for (var i=0; i<window.onShowSubjectiveScouting.length; i++){
+			if(!window.onShowSubjectiveScouting[i]()) return false
 		}
 		form.show()
 		localStorage.setItem("last_scout_type", "subjective-scout")
@@ -397,8 +397,8 @@ function showScouting(){
 		$('.count').each(countHandler)
 		resetSequentialInputSeries()
 		$('#scouting-comments').toggle(!!window.showScoutingComments)
-		for (var i=0; i<onShowScouting.length; i++){
-			if(!onShowScouting[i]()) return false
+		for (var i=0; i<window.onShowScouting.length; i++){
+			if(!window.onShowScouting[i]()) return false
 		}
 		showTab(null, $('.default-tab'))
 		scouting.show()
@@ -474,10 +474,10 @@ function formHasChanges(f){
 	return changes
 }
 
-var onStore = []
-var onShowScouting = []
-var onShowPitScouting = []
-var onShowSubjectiveScouting = []
+window.onStore = window.onStore || []
+window.onShowScouting = window.onShowScouting || []
+window.onShowPitScouting = window.onShowPitScouting || []
+window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
 
 function setTimeStamps(form){
 	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
@@ -499,8 +499,8 @@ function store(){
 
 function storeScouting(){
 	if (formHasChanges(scouting)){
-		for (var i=0; i<onStore.length; i++){
-			if(!onStore[i]()) return false
+		for (var i=0; i<window.onStore.length; i++){
+			if(!window.onStore[i]()) return false
 		}
 		setTimeStamps(scouting)
 		localStorage.setItem("last_match_"+eventId, match)
