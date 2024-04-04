@@ -22,7 +22,7 @@ for my $file (@ARGV){
 	} elsif ($file =~ /\.csv$/){
 		$dbimport->importCsvFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
 	} elsif ($file =~ /\.json$/){
-		$dbimport->importJsonFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
+		# json files ignored
 	} elsif ($file =~ /\.jpg$/){
 		$dbimport->importImageFile($file, scalar(read_file($file, {binmode=>':raw'})));
 	} elsif ($file =~ /\*/){
