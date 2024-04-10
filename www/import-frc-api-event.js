@@ -21,13 +21,15 @@ $(document).ready(function(){
 		fetchJson(`/data/${eventId}.teams.json`)
 	]).then(values => {
 		var [info,prac,qual,teamsJson] = values,
-		ev = info.Events[0],
 		csv = ""
+		if (info.Events && info.Events.length){
+			var ev = info.Events[0]
+			$('#nameInp').val(ev.name)
+			$('#locationInp').val(`${ev.venue} in ${ev.city}, ${ev.stateprov}, ${ev.country}`)
+			$('#startInp').val(ev.dateStart.substring(0,10))
+			$('#endInp').val(ev.dateEnd.substring(0,10))
+		}
 		$('#importData').toggle(backForward)
-		$('#nameInp').val(ev.name)
-		$('#locationInp').val(`${ev.venue} in ${ev.city}, ${ev.stateprov}, ${ev.country}`)
-		$('#startInp').val(ev.dateStart.substring(0,10))
-		$('#endInp').val(ev.dateEnd.substring(0,10))
 		$('#idInp').val(eventId)
 
 		if (prac && prac.Schedule){
