@@ -51,11 +51,30 @@ function showYear(year){
 	})
 }
 
+function clickOnEvent(){
+	var href = $(this).attr('href'),
+	eventId = href.replace(/^.*[\?\&]event=([^\&]+).*$/, "$1").toLowerCase()
+	console.log(eventId)
+	Promise.all([
+		fetch(`/data/${eventId}.teams.json`),
+		fetch(`/data/${eventId}.schedule.csv`)
+	]).then(responses=>{
+		var [teams, schedule] = responses
+		if (!teams.ok) return location.href=href
+		$('#fetchLink').attr('href', href)
+		$('#importLink').attr('href',schedule.ok?`/frc-event-downloaded.html#event=${eventId}`:`/import-frc-api-event.html#event=${eventId}`)
+		showLightBox($('#importOptions'))
+	}).catch(()=>{
+		location.href=href
+	})
+	return false
+}
+
 function showEvents(events){
 	var div = $('#events').html("")
 	events.forEach(function(event){
 		$(div)
-		.append($('<h2>').append($(`<a href="/admin/frc-api-event.cgi?event=${year}${event.code}">`).text(event.name)))
+		.append($('<h2>').append($(`<a href="/admin/frc-api-event.cgi?event=${year}${event.code}">`).click(clickOnEvent).text(event.name)))
 		.append($('<span>').text(toDisplayDate(event.dateStart))).append("<br>")
 		.append($('<span>').text(event.venue)).append("<br>")
 		.append($('<span>').text(event.address)).append("<br>")
