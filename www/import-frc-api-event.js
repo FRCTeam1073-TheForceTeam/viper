@@ -4,6 +4,10 @@ window.addEventListener('pageshow', function (event){
 	backForward = event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward'
 })
 
+function fetchJson(url){
+	return fetch(url,{cache:'reload'}).then(x=>x.ok?x.json():{})
+}
+
 $(document).ready(function(){
 	if (!eventId){
 		$('body').prepend("<h1>No event specified</h1>")
@@ -11,13 +15,15 @@ $(document).ready(function(){
 	}
 	var csv="Match,R1,R2,R3,B1,B2,B3\n"
 	Promise.all([
-		promiseJson(`/data/${eventId}.info.json`),
-		promiseJson(`/data/${eventId}.schedule.practice.json`),
-		promiseJson(`/data/${eventId}.schedule.qualification.json`)
+		fetchJson(`/data/${eventId}.info.json`),
+		fetchJson(`/data/${eventId}.schedule.practice.json`),
+		fetchJson(`/data/${eventId}.schedule.qualification.json`),
+		fetchJson(`/data/${eventId}.teams.json`)
 	]).then(values => {
-		var [info,prac,qual,teams] = values,
+		var [info,prac,qual,teamsJson] = values,
 		ev = info.Events[0],
 		csv = ""
+		$('#importData').toggle(backForward)
 		$('#nameInp').val(ev.name)
 		$('#locationInp').val(`${ev.venue} in ${ev.city}, ${ev.stateprov}, ${ev.country}`)
 		$('#startInp').val(ev.dateStart.substring(0,10))
@@ -48,30 +54,25 @@ $(document).ready(function(){
 			if (!backForward) $('#importData').submit()
 			return
 		}
-		$.getJSON(`/data/${eventId}.teams.json`, function(json){
-			var teams = []
-			if (json.teams){
-				json.teams.forEach(function(team){
-					teams.push(team.teamNumber)
+		var teams = []
+		if (teamsJson.teams){
+			teamsJson.teams.forEach(function(team){
+				teams.push(team.teamNumber)
+			})
+			$('#csvInp').val(randomPracticeSchedule(teams))
+			if (!backForward) $('#importData').submit()
+		} else if (teamsJson.pageTotal){
+			Promise.all(
+				Array.from({length: teamsJson.pageTotal}, (_,i) => fetchJson(`/data/${eventId}.teams.${i+1}.json`))
+			).then(function(results){
+				results.forEach(teamsJson=>{
+					teamsJson.teams.forEach(function(team){
+						teams.push(team.teamNumber)
+					})
 				})
 				$('#csvInp').val(randomPracticeSchedule(teams))
 				if (!backForward) $('#importData').submit()
-			} else if (json.pageTotal){
-				var waitFor = []
-				for (var i=1; i<=json.pageTotal; i++){
-					waitFor.push($.getJSON(`/data/${eventId}.teams.${i}.json`, function(json){
-						if (json.teams){
-							json.teams.forEach(function(team){
-								teams.push(team.teamNumber)
-							})
-						}
-					}))
-				}
-				$.when(...waitFor).then(function() {
-					$('#csvInp').val(randomPracticeSchedule(teams))
-					if (!backForward) $('#importData').submit()
-				})
-			}
-		})
+			})
+		}
 	})
 })

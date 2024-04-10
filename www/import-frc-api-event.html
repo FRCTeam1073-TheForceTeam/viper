@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/import-frc-api-event.css>
 <script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
 <script src=/import-frc-api-event.js></script>
@@ -17,13 +18,23 @@
 
 <h1>Importing API Event</h1>
 
-<form id=importData method=POST action=/admin/add-event.cgi>
-	<input id=nameInp name=name type=hidden>
-	<input name=start type=hidden id=startInp>
-	<input name=end type=hidden id=endInp>
-	<input name=location type=hidden id=locationInp>
-	<input id=idInp type=hidden name=event>
-	<input type=hidden id=csvInp name=csv>
+<form id=importData method=POST action=/admin/add-event.cgi style=display:none>
+	<h3>Event name</h3>
+	<input id=nameInp name=name type=text>
+
+	<h3>Dates</h3>
+	<input name=start type=date id=startInp> <input name=end type=date id=endInp>
+
+	<h3>Location</h3>
+	<input name=location type=text id=locationInp>
+
+	<h3>Event ID</h3>
+	<input id=idInp type=text name=event>
+
+	<h3>Schedule</h3>
+	<textarea id=csvInp name=csv></textarea>
+
+	<div><input id=submit-button type=submit value=Submit></div>
 </form>
 </body>
 </html>
