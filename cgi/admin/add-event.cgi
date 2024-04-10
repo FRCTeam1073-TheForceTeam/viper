@@ -17,7 +17,7 @@ my $cgi = CGI->new;
 my $db = db->new();
 
 my $today = strftime("%Y-%m-%d", localtime);
-my $schedule = $cgi->param('csv') or "";
+my $schedule = $cgi->param('csv')||"";
 my $event = $cgi->param('event');
 my $name = $event;
 $name =~ s/^20[0-9]{2}//g;
