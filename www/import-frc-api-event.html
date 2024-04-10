@@ -15,13 +15,15 @@
 </head>
 <body>
 
+<h1>Importing API Event</h1>
+
 <form id=importData method=POST action=/admin/add-event.cgi>
-	<input id=nameInp name=name type=text>
-	<input name=start type=date id=startInp>
-	<input name=end type=date id=endInp>
-	<input name=location type=text id=locationInp>
-	<input id=idInp type=text name=event>
-	<textarea id=csvInp name=csv></textarea>
+	<input id=nameInp name=name type=hidden>
+	<input name=start type=hidden id=startInp>
+	<input name=end type=hidden id=endInp>
+	<input name=location type=hidden id=locationInp>
+	<input id=idInp type=hidden name=event>
+	<input type=hidden id=csvInp name=csv>
 </form>
 </body>
 </html>
