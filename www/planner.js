@@ -26,6 +26,10 @@ $(document).ready(function() {
 		drawOverlays()
 	})
 
+	$('.printer').click(function(evt) {
+		window.print()
+	})
+
 	$('.undo').click(function(evt) {
 		evt.preventDefault()
 		sketcher.sketchable('memento.undo')
