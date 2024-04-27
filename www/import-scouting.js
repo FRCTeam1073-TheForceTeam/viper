@@ -11,16 +11,27 @@ $(document).ready(function(){
 			.replace(/,/g, "،")
 	}
 	function processData(){
-		var f =  window[$('#format').val()]
-		if (typeof f != 'function') return
-		var rows = f($('#import-data').val())
-		if (!rows || !rows.length || !rows[0].match || !rows[0].team) return
-		var headers = Object.keys(rows[0]).filter(k=>!!statInfo[k])
-		var csv = headers.join(",")+"\n"
-		rows.forEach(row=>{
-			if (row.match && row.team) csv += headers.map(k=>safeCSV(row[k])).join(",")+"\n"
-		})
-		$('#csv').val(csv)
+		var error = $('#error').text("")
+		try {
+			var f =  window[$('#format').val()]
+			if (typeof f != 'function') return
+			var input = $('#import-data').val()
+			if (!input) return
+			var rows = f(input)
+			if (!rows || !rows.length || !rows[0].match || !rows[0].team) return
+			var headers = Object.keys(rows[0]).filter(k=>!!statInfo[k])
+			var csv = headers.join(",")+"\n"
+			rows.forEach(row=>{
+				if (row.match && row.team) csv += headers.map(k=>safeCSV(row[k])).join(",")+"\n"
+			})
+			$('#csv').val(csv)
+		} catch(e){
+			error.text(e.message)
+			throw e
+		}
+	}
+	function setPlaceholder(){
+		$('#import-data').attr('placeholder',$('#format').find(':selected').attr('data-placeholder'))
 	}
 	promiseScript(`/${eventYear}/aggregate-stats.js`).then(function(){
 		$('#format option').each(function(){
@@ -28,6 +39,10 @@ $(document).ready(function(){
 		})
 		processData()
 	})
-	$('#import-data,#format').change(processData)
+	$('#import-data,#format').change(function(){
+		setPlaceholder()
+		processData()
+	})
 	$('#file').val(eventId + ".scouting.csv")
+	setPlaceholder()
 })

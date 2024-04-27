@@ -594,11 +594,11 @@ var statInfo = {
 	}
 }
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	setTimeout(function(){
 		console.log(JSON.stringify(toPurpleStandard(eventStats).entries[150]))
 	},500)
-})
+})*/
 
 function toPurpleStandard(scout){
 	function tpsScouter(scouter){
@@ -953,8 +953,9 @@ function importPurpleStandard(text){
 	var data = JSON.parse(text),
 	rows = []
 	data.entries.forEach(tps=>{
+		if (tps.entry) tps = tps.entry
 		var row = {},
-		md = tps.metadata||{},
+		md = tps.metadata,
 		ct = tps.counters||{},
 		ab = tps.abilities||{},
 		dt = tps.data||{}
