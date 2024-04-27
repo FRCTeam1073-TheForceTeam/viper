@@ -63,28 +63,6 @@ sub importCsvFile(){
 	$dbimport::db->commit();
 }
 
-sub importJsonFile(){
-	my ($self, $f, $contents) = @_;
-
-	my ($event, $fileType) = $f =~ /^(?:.*\/)?(20[0-9]+[^\.]+)\.(.+)\.json$/;
-	my $json = scalar($contents);
-
-	my $data = {
-		'event' => $event,
-		'file' => $fileType,
-		'json' => $json
-	};
-	eval {
-		$dbimport::db->upsert('apijson', $data);
-		1;
-	} or do {
-		my $error = $@;
-		print STDERR Dumper($data);
-		die $error;
-	};
-	$dbimport::db->commit();
-}
-
 sub importImageFile(){
 	my ($self, $f, $contents) = @_;
 

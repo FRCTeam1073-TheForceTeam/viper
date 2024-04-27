@@ -1,18 +1,36 @@
 var year=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:year)\=))?(20[0-9]{2})(?:\&.*)?$/)||["",""])[1]
-var eventFilters={
-	all:[],
-	upcoming:[]
-}
+var eventFilters
 
 $(document).ready(function(){
-	if (!year){
-		$('h1').text("No year specified")
-		return
+	if (!year) year = "" + new Date().getFullYear()
+	var yearSelect = $('#year')
+	for (var y = new Date().getFullYear(); y>=2019; y--){
+		yearSelect.append($('<option>').attr('value',y).text(y))
 	}
-	$('h1').text(`${year} FRC Events`)
+	yearSelect.val(year)
+	yearSelect.change(function(){
+		year=yearSelect.val()
+		location.hash=year
+		showYear(year)
+	})
+	showYear(year)
+	$('#filter').change(function(){
+		showEvents(eventFilters[$(this).val()])
+	})
+})
+
+function showYear(year){
+	$('#events').html("")
+	eventFilters={
+		all:[],
+		upcoming:[]
+	}
 	$('a').each(function(){
-		href=$(this).attr('href')
-		if (/YEAR/.test(href)) $(this).attr('href', href.replace(/YEAR/g,year))
+		$(this).attr('href', $(this).attr('href').replace(/YEAR|(20[0-9]{2})/g,year))
+	})
+	$('h1').text(`${year} FRC Events`)
+	$.ajaxSetup({
+		cache: false
 	})
 	$.getJSON(`/data/${year}.events.json`, function(json){
 		var events = json.Events.sort((a,b)=>a.dateStart.localeCompare(b.dateStart))
@@ -24,21 +42,39 @@ $(document).ready(function(){
 		if (eventFilters.upcoming.length){
 			toShow=eventFilters.upcoming
 			$('#filter').val('upcoming')
+		} else {
+			$('#filter').val('all')
 		}
 		showEvents(toShow)
 	}).fail(function(){
 		location.href=`/admin/frc-api-season.cgi?year=${year}`
 	})
-	$('#filter').change(function(){
-		showEvents(eventFilters[$(this).val()])
+}
+
+function clickOnEvent(){
+	var href = $(this).attr('href'),
+	eventId = href.replace(/^.*[\?\&]event=([^\&]+).*$/, "$1").toLowerCase()
+	console.log(eventId)
+	Promise.all([
+		fetch(`/data/${eventId}.teams.json`),
+		fetch(`/data/${eventId}.schedule.csv`)
+	]).then(responses=>{
+		var [teams, schedule] = responses
+		if (!teams.ok) return location.href=href
+		$('#fetchLink').attr('href', href)
+		$('#importLink').attr('href',schedule.ok?`/frc-event-downloaded.html#event=${eventId}`:`/import-frc-api-event.html#event=${eventId}`)
+		showLightBox($('#importOptions'))
+	}).catch(()=>{
+		location.href=href
 	})
-})
+	return false
+}
 
 function showEvents(events){
 	var div = $('#events').html("")
 	events.forEach(function(event){
 		$(div)
-		.append($('<h2>').append($(`<a href="/admin/frc-api-event.cgi?event=${year}${event.code}">`).text(event.name)))
+		.append($('<h2>').append($(`<a href="/admin/frc-api-event.cgi?event=${year}${event.code}">`).click(clickOnEvent).text(event.name)))
 		.append($('<span>').text(toDisplayDate(event.dateStart))).append("<br>")
 		.append($('<span>').text(event.venue)).append("<br>")
 		.append($('<span>').text(event.address)).append("<br>")

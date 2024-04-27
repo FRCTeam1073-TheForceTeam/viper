@@ -84,20 +84,6 @@ for $event (@$events){
 	&queryToCsv("${year}subjective", "subjective", $site, $event, "'team' + 0");
 }
 
-my $sth = $dbh->prepare("SELECT `event`, `file`, `json` FROM `apijson` WHERE `site`=?");
-$sth->execute($db->getSite());
-my $data = $sth->fetchall_arrayref();
-for $row (@$data){
-	my $event = $row->[0];
-	my $file = $row->[1];
-	my $json = $row->[2];
-	my $file = "$dir/$event.$file.json";
-	print "$file\n";
-	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", $file);
-	print $fh $json;
-	close $fh;
-}
-
 my $sth = $dbh->prepare("SELECT `year`, `team`, `view`, `image` FROM `images` WHERE `site`=?");
 $sth->execute($db->getSite());
 my $data = $sth->fetchall_arrayref();

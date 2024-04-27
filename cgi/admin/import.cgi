@@ -59,7 +59,6 @@ sub writeFileData(){
 sub writeDbData(){
 	my ($fileName, $fileContents) = @_;
 	$dbimport->importCsvFile($fileName, $fileContents) if ($fileName =~ /\.csv$/);
-	$dbimport->importJsonFile($fileName, $fileContents) if ($fileName =~ /\.json$/);
 	$dbimport->importImageFile($fileName, $fileContents) if ($fileName =~ /\.jpg$/);
 }
 

@@ -15,12 +15,23 @@
 <h1>YEAR FRC Events</h1>
 <p>Click on an event to download the official data for it.</p>
 <p><a href="/admin/frc-api-season.cgi?year=YEAR">Refresh event list</a></p>
-<p>Show:
+<p>
+	Year:
+	<select id=year>
+	</select>
+	Show:
 	<select id=filter>
 		<option value=all>All</option>
 		<option value=upcoming>Upcoming</option>
 	</select>
 </p>
 <div id=events></div>
+<div id=importOptions class=lightBoxCenterContent style=display:none>
+	<h3>Cached API Data Found</h3>
+	<ul>
+		<li><a id=importLink href=#>Create event from cached data</a></li>
+		<li><a id=fetchLink href=#>Fetch latest from API first</a></li>
+	</ul>
+</div>
 </body>
 </html>

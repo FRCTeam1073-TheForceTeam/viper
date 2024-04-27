@@ -66,6 +66,22 @@ $(document).ready(function(){
 		}
 	}
 
+	$('a').each(function(){
+		$(this).attr(
+			'href',$(this).attr('href')
+			.replace('YEAR', eventYear)
+			.replace('EVENT', eventId)
+			.replace('UPLOAD_COUNT', uploadCount)
+		)
+		$(this).text(
+			$(this).text()
+			.replace('YEAR', eventYear)
+			.replace('EVENT', eventId)
+			.replace('UPLOAD_COUNT', uploadCount)
+		)
+	})
+	if (uploadCount) $('.dependUploads').show().parents('.initHid').show()
+
 	function matchScoutingDataCount(eventStatsByMatchTeam, m){
 		if (!m) return false
 		return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
@@ -98,7 +114,6 @@ $(document).ready(function(){
 			title+=fileNum?(" "+fileNum):""
 			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents('.initHid').show()
 		})
-		if (uploadCount) $('.dependUploads').show().parents('.initHid').show()
 
 		setName()
 		if (eventInfo['blue_alliance_id']) blueAllianceId = eventInfo['blue_alliance_id']
@@ -108,17 +123,8 @@ $(document).ready(function(){
 		$('a').each(function(){
 			$(this).attr(
 				'href',$(this).attr('href')
-				.replace('YEAR', eventYear)
-				.replace('EVENT', eventId)
 				.replace('FIID', firstInspiresId)
 				.replace('BAID', blueAllianceId)
-				.replace('UPLOAD_COUNT', uploadCount)
-			)
-			$(this).text(
-				$(this).text()
-				.replace('YEAR', eventYear)
-				.replace('EVENT', eventId)
-				.replace('UPLOAD_COUNT', uploadCount)
 			)
 		})
 		var info = $('#eventInfo').html('')

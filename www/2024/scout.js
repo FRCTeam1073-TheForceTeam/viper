@@ -49,7 +49,8 @@ $(document).ready(function(){
 
 	var matchStartTime = 0
 
-	onShowScouting.push(function(){
+	window.onShowScouting = window.onShowScouting || []
+	window.onShowScouting.push(function(){
 		cycleInterrupt()
 		cycles=[]
 		toggleOnstage()
@@ -57,11 +58,13 @@ $(document).ready(function(){
 		matchStartTime = 0
 		return true
 	})
-	onShowSubjectiveScouting.push(function(){
+	window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
+	window.onShowSubjectiveScouting.push(function(){
 		setTimeout(drawAllShotLocations,500)
 		return true
 	})
-	onShowPitScouting.push(function(){
+	window.onShowPitScouting = window.onShowPitScouting || []
+	window.onShowPitScouting.push(function(){
 		drawAutos()
 		return true
 	})

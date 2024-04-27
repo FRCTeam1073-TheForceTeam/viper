@@ -106,6 +106,7 @@ sub upsert {
 	delete($data->{""});
 	my $conn = $self->dbConnection();
 	$data->{'site'} = getSite();
+	$data->{'site'} = "" if ($table eq 'apijson');
 	my @allFields = keys(%$data);
 	my $fields = join("`,`", @allFields);
 	my $placeholders = join(",", map {"?"} @allFields);

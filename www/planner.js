@@ -1,9 +1,14 @@
 "use strict"
+
+var matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1]
+
 $(document).ready(function() {
 
 	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
 	$('button.pen').click(penButtonClicked)
+
+	$('h3').text(eventName + " " + getShortMatchName(matchId))
 
 	function penButtonClicked(){
 		$('button.pen').removeClass('selected')
@@ -21,6 +26,10 @@ $(document).ready(function() {
 		drawOverlays()
 	})
 
+	$('.printer').click(function(evt) {
+		window.print()
+	})
+
 	$('.undo').click(function(evt) {
 		evt.preventDefault()
 		sketcher.sketchable('memento.undo')
@@ -33,6 +42,7 @@ $(document).ready(function() {
 
 	function setLocationHash(){
 		var hash = `event=${eventId}`
+		if (matchId) hash += `&match=${matchId}`
 		$('#statsTable input').each(function(){
 			var val = $(this).val()
 			if (/^[0-9]+$/.test(val)){

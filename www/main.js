@@ -1,9 +1,5 @@
 "use strict"
 
-$.ajaxSetup({
-	cache: true
-})
-
 function getDate(s){
 	if (!s) return ""
 	var m = /[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(s)

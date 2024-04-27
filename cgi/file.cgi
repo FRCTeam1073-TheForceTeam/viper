@@ -93,8 +93,8 @@ sub json(){
 	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]*\.[a-z0-9\.]+\.json$/);
 	my ($event, $name) = $file =~ /^(20[0-9]+[^\.]*)\.([a-z0-9\.]+)\.json$/;
 	my $dbh = $db->dbConnection();
-	my $sth = $dbh->prepare("SELECT `json` FROM `apijson` WHERE `site`=? AND `event`=? AND `file`=?");
-	$sth->execute($db->getSite(), $event, $name);
+	my $sth = $dbh->prepare("SELECT `json` FROM `apijson` WHERE `site`='' AND `event`=? AND `file`=?");
+	$sth->execute($event, $name);
 	my $data = $sth->fetchall_arrayref();
 	$webutil->notfound() if (!scalar(@$data));
 

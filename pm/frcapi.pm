@@ -36,7 +36,7 @@ sub fetchFromAPI(){
 	);
 	$req->authorization_basic($apiUser, $apiToken);
 	my $response = $ua->request($req);
-	$webutil->error("Error fetching $url", $response->message()) if ($response->is_error());
+	$webutil->error("FRC API Error", "Error fetching $url: ".$response->message()."\n\n\n\nRefresh this page to try fetching from the API again.") if ($response->is_error());
 	sleep(1);
 	return $response->content;
 }
