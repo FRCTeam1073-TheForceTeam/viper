@@ -2,7 +2,8 @@
 
 function tpsRedirectToLogin(site, redirect, scopes){
 	if (!site) site = location.hostname
-	if (!redirect) redirect = location.origin + location.pathname + "#<DATA>"
+	var hash = location.hash?location.hash+'&':'#'
+	if (!redirect) redirect = location.origin + location.pathname + hash + "tps_auth=<DATA>"
 	if (!scopes) scopes = [
 		'tpw.teamNumber',
 		'tpw.scouting.username',
@@ -21,8 +22,11 @@ function tpsRedirectToLogin(site, redirect, scopes){
 }
 
 function tpsGetAuth(){
-	if (location.hash) localStorage.setItem("tps_auth", atob(location.hash.slice(1)))
-	history.replaceState(null, null, ' ')
+	var auth=(location.hash.match(/^\#(?:.*\&)?tps_auth\=([A-Za-z0-9\+\/\=]+)(?:\&.*)?$/)||["",""])[1]
+	if (auth) {
+		localStorage.setItem("tps_auth", atob(auth))
+		history.replaceState(null, "", location.href.replace(/[\#\&]tps_auth=.*/,""))
+	}
 	var auth = localStorage.getItem("tps_auth")
 	if (!auth) return false
 	return JSON.parse(auth).body.details

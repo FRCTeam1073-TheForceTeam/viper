@@ -1,0 +1,94 @@
+'use strict'
+
+var auth = tpsGetAuth()
+if (!auth) tpsRedirectToLogin()
+
+$(document).ready(function(){
+	if (!auth) return
+	if (!eventId) return showErr("No event specified")
+
+
+	tpsListEvent(eventId).then(entries=>{
+		addText(`All ${eventName} matches`, JSON.stringify(entries,null,2))
+	}).catch(showErr)
+
+
+/*	tpsEntryAdd(
+		{
+			"metadata": {
+				"event": "2024prac-all",
+				"match": {
+					"level": "qm",
+					"number": 1,
+					"set": 1
+				},
+				"bot": "9999",
+				"timestamp": 1711729092182,
+				"scouter": {
+					"name": auth.scoutingUsername,
+					"team": auth.teamNumber,
+					"app": location.hostname
+				}
+			},
+			"abilities": {
+				"auto-center-line-pick-up": false,
+				"ground-pick-up": true,
+				"auto-leave-starting-zone": true,
+				"teleop-spotlight-2024": false,
+				"teleop-stage-level-2024": 3
+			},
+			"counters": {},
+			"data": {
+				"auto-scoring-2024": ["ss","sm"],
+				"teleop-scoring-2024": ["ss","as","am","as","sa","ts"],
+				"notes": "decent defense and intake always worked smoothly\ncycles were relatively slow though"
+			},
+			"ratings": {
+				"defense-skill": 3,
+				"driver-skill": 3,
+				"intake-consistency": 4,
+				"speed": 2,
+				"stability": 3
+			},
+			"timers": {
+				"brick-time": 1500,
+				"defense-time": 6745,
+				"stage-time-2024": 12815
+			}
+		},
+		null,
+		0
+	).then(hash => {
+		addText('Add scouted match', hash)
+
+		tpsEntryVerify(hash).then(verified=>{
+			addText('Verify scouted match by hash',""+verified)
+		}).catch(showErr)
+
+		tpsEntryGet(hash).then(entry=>{
+			addText('Get scouted match by hash', JSON.stringify(entry,null,2))
+		}).catch(showErr)
+
+		tpsLatest('2024prac-all').then(latest=>{
+			addText('Latest 2024prac-all match scouted', JSON.stringify(latest,null,2))
+		}).catch(showErr)
+
+		tpsListEvent('2024prac-all').then(entries=>{
+			addText('All 2024prac-all matches', JSON.stringify(entries,null,2))
+		}).catch(showErr)
+
+	}).catch(showErr)*/
+})
+
+function showErr(text){
+	addText('ERROR', text+"\n")
+}
+
+function addText(title, text){
+	var h2 = document.createElement('h2')
+	h2.innerText = title
+	document.body.appendChild(h2)
+	var pre = document.createElement('pre')
+	pre.innerText = text
+	document.body.appendChild(pre)
+}
