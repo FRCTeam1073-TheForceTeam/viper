@@ -38,6 +38,15 @@ $(document).ready(function(){
 					location.reload()
 				})
 				showMainMenuUploads()
+				$('#logout-link').click(function(){
+					var req = new XMLHttpRequest()
+					req.open("GET", "/logout", true, 'logout')
+					req.onload = _ => {
+						if (req.readyState === 4) console.log(req.status)
+					}
+					req.send()
+					return false
+				})
 			})
 		}
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
