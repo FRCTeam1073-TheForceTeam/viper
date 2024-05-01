@@ -42,7 +42,7 @@ $(document).ready(function(){
 					var req = new XMLHttpRequest()
 					req.open("GET", "/logout", true, 'logout')
 					req.onload = _ => {
-						if (req.readyState === 4) console.log(req.status)
+						if (req.readyState === 4) location.reload()
 					}
 					req.send()
 					return false
