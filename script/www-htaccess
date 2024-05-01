@@ -1,4 +1,5 @@
 Options +ExecCGI
+CGIPassAuth On
 AddHandler cgi-script .cgi .pl
 <FilesMatch "\.(json|csv)$">
 	Header set Content-Disposition attachment
