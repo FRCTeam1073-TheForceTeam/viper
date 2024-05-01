@@ -21,13 +21,17 @@ $(document).ready(function(){
 		populateMainMenu()
 
 		function populateMainMenu(){
-			$.get("/main-menu.html",function(data){
+			Promise.all([
+				fetch('/main-menu.html').then(response=>response.text()),
+				fetch('/user.cgi').then(response=>response.text())
+			]).then(values =>{
+				var [menuHtml, userName] = values
 				var eName = window.eventName||localStorage.getItem('last_event_name')||"",
 				eId = window.eventId||localStorage.getItem('last_event_id')||"",
 				eYear = window.eventName||localStorage.getItem('last_event_year')||""
 				if (localStorage.getItem('last_event_id')==eId)eName = localStorage.getItem('last_event_name')||window.eventName||""
 				mainMenu.html(
-					data
+					menuHtml
 						.replace(/EVENT_NAME/g,eName)
 						.replace(/EVENT_ID/g,eId)
 						.replace(/YEAR/g,eYear)
@@ -46,7 +50,7 @@ $(document).ready(function(){
 					}
 					req.send()
 					return false
-				})
+				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
 			})
 		}
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
