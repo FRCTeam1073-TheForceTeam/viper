@@ -1,2 +1,4 @@
 form input {margin: 0.5em}
 .side-by-side{max-width:20em;border:1px solid var(--main-fg-color);padding:0.5em}
+.loading-spinner{width:1em;animation:spin 4s linear infinite}
+@keyframes spin {100% {transform:rotate(360deg)}}

@@ -33,7 +33,7 @@
 			<form method=POST action=https://webscout.example.com/admin/import.cgi>
 				<input class=siteInput list=hostOptions placeholder=webscout.example.com>
 				<input name=json id=transferJsonImages type=hidden>
-				<input type=submit value="Transfer Full Event">
+				<button id=submitImages disabled><img id=loadingImages class=loading-spinner src=/loading.svg> Transfer Full Event</button>
 			</form>
 		</div>
 
@@ -49,7 +49,7 @@
 			<form method=POST action=https://webscout.example.com/admin/import.cgi>
 				<input class=siteInput list=hostOptions placeholder=webscout.example.com>
 				<input name=json id=transferJsonData type=hidden>
-				<input type=submit value="Transfer Data">
+				<button id=submitData disabled><img id=loadingData class=loading-spinner src=/loading.svg> Transfer Data</button>
 			</form>
 		</div>
 
