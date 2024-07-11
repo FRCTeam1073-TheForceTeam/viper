@@ -100,15 +100,26 @@ function showStats(){
 		var charts = {}
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i],
+			statName = aggregateGraphs[section].data[0],
+			stat=statInfo[statName],
+			graphType=aggregateGraphs[section].graph,
+			source=stat.source||"",
+			dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
 			graph=$('<div class=graph>')
 			graphs.append(graph)
-			graph.append($('<h2>').text(section))
-			if (aggregateGraphs[section].graph=='heatmap'){
-				var statName = aggregateGraphs[section].data[0],
-				stat=statInfo[statName],
-				source=stat.source||"",
-				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
-				image=stat.image,
+			var csv = [["team", ...teamList]]
+			for (var j=0; j<aggregateGraphs[section].data.length; j++){
+				var field = aggregateGraphs[section].data[j]
+				csv.push([field,...teamList.map(team=>getTeamValue(field, team, graphType=='boxplot'?"":graphType, dataSource))])
+			}
+			csv = csv[0].map((_, colIndex) => csv.map(row => row[colIndex]))
+			csv = csv.map(row=>row.map(String).join(',')).join('\n')
+			var sectionFile = section.toLowerCase().replace(/ ?\(.*/,"").replace(" ","_")
+			graph.append($('<h2>').text(section).append(" ").append($('<a>☁</a>').attr('href',
+				window.URL.createObjectURL(new Blob([csv], {type: 'text/csv;charset=utf-8'}))
+			).attr('download',`${eventId}.${sectionFile}.csv`)))
+			if (graphType=='heatmap'){
+				var image=stat.image,
 				width=Math.min($(document).width(),1000),
 				height=Math.round(width/stat.aspect_ratio),
 				points=[],
@@ -143,15 +154,15 @@ function showStats(){
 				data=[],
 				percent=false
 				graph.append($('<div class=chart>').append(canvas).css('min-width', (teamList.length*23+100) + 'px'))
-				var stackedPercent = aggregateGraphs[section].graph=="stacked_percent",
-				boxplot = aggregateGraphs[section].graph=='boxplot'
+				var stackedPercent = graphType=="stacked_percent",
+				boxplot = graphType=='boxplot'
 				for (var j=0; j<aggregateGraphs[section].data.length; j++){
 					var field = aggregateGraphs[section].data[j],
 					info = statInfo[field]||{},
 					values = []
 					if (!boxplot || info.type!='minmax'){
 						for (var k=0; k<teamList.length; k++){
-							values.push(getTeamValue(field, teamList[k],stackedPercent,boxplot))
+							values.push(getTeamValue(field, teamList[k],graphType))
 						}
 						data.push({
 							field: field,
@@ -166,7 +177,7 @@ function showStats(){
 						if (info.type=='%'||stackedPercent) percent=true
 					}
 				}
-				var stacked = aggregateGraphs[section].graph.includes("stacked")
+				var stacked = graphType.includes("stacked")
 				var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
 				if (percent)yScale.suggestedMax = 100
 				charts[section] = new Chart(canvas,{
@@ -200,7 +211,7 @@ function showStats(){
 		var sections = Object.keys(aggregateGraphs)
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i]
-			if (aggregateGraphs[section].graph!='heatmap'){
+			if (graphType!='heatmap'){
 				table.append($('<tr><td class=blank></td></tr>'))
 				var hr = $('<tr>')
 				hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
@@ -360,16 +371,22 @@ function darkenColor(color){
 
 }
 
-function getTeamValue(field, team, percent, boxplot){
-	if (! team in eventStatsByTeam) return 0
-	var stats = eventStatsByTeam[team]
+function getTeamValue(field, team, graphType, source){
+	if (!source) source = eventStatsByTeam
+	var heatmap = graphType=='heatmap',
+	percent = graphType=="stacked_percent",
+	boxplot = graphType=='boxplot',
+	defaultVal = heatmap?"":(boxplot?[]:0)
+	if (! team in source) return defaultVal
+	var stats = source[team] || {}
 	if (boxplot && (field+"_set") in stats) field+="_set"
 	var info = statInfo[field]||{}
 	percent = percent || info.type=='%'
-	if (! field in stats ||! 'count' in stats || !stats.count) return boxplot?[]:0
-	if (boxplot) return stats[field]||[]
-	var divisor = (percent||"avg"==info.type)?stats.count:1,
-	value = stats[field]
+	if (! field in stats) return defaultVal
+	var value = stats[field]
+	if (heatmap||boxplot) return value||defaultVal
+	if (! 'count' in stats || !stats.count) return defaultVal
+	var divisor = (percent||"avg"==info.type)?stats.count:1
 	if (info.type=='int-list'){
 		if (value.length){
 			divisor = value.length
