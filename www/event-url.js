@@ -4,9 +4,9 @@ $.ajaxSetup({
 	cache: true
 });
 
-var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1],
-eventYear = eventId.replace(/([0-9]{4}).*/,'$1'),
-eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1'),
+var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}(?:-[0-9]{2})?[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1],
+eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1'),
+eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
 eventName = eventYear+(eventYear?" ":"")+eventVenue,
 promiseCache = {},
 BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
