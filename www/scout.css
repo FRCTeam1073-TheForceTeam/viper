@@ -33,3 +33,5 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 	-webkit-text-stroke: .03em var(--main-bg-color);font-weight:bold;font-size:300%;pointer-events:none;animation:float-fade ease 5s;animation-fill-mode:forwards}
 #change-floater.negative{color:var(--button-disabled-decoration-color)}
 @keyframes float-fade{0%{opacity:1}100%{opacity:0;transform:translateX(1em) translateY(-1em)}}
+.pulse-bg{animation:pulse 2s infinite;color:white}
+@keyframes pulse{0%{background-color:var(--red-team-color);border-color:var(--red-team-color)}50%{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}100%{background-color:var(--red-team-color);border-color:var(--red-team-color)}}

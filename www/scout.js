@@ -389,6 +389,7 @@ function showScouting(){
 		$('.orientRight').toggle(orient && orient=='right')
 		$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
 		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
+		$('.teamColorCaps').text(pos.startsWith('R')?"Red":"Blue")
 		$('input[name="match"]').val(match).attr('data-at-scout-start',match)
 		fillDefaultFormFields()
 		$('.match').text(matchName)

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scout EVENT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.min.js></script>
+<script src=/event-url.js></script>
+<script src=/canvas-path.js></script>
+<script src=/scout.js></script>
+<script src=scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<script src=/local.js></script>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+
+<body>
+<h1>Viper</h1>
+<div id=select-bot class=screen style=display:none>
+	<H2>Select your robot</H2>
+	<div class=blueTeamBG>
+		<button>B1</button>
+		<button>B2</button>
+	</div>
+	<div class=redTeamBG>
+		<button>R1</button>
+		<button>R2</button>
+	</div>
+	<button class=showInstructions>Instructions</button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
+</div>
+
+<div id=select-match class=screen style=display:none>
+	<button class=showInstructions>Instructions</button>
+	<button class=robotBtn>Change Robot</button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
+	<div id=match-list></div>
+</div>
+
+<div id=change-team class=screen style=display:none>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn>Cancel</button>
+</div>
+
+<form id=scouting class=screen style=display:none>
+	<div>
+		<button class=showInstructions>Instructions</button>
+		<button id=teamBtn>Team # Correction</button>
+		<button id=matchBtn>Choose Match</button>
+		<button class=robotBtn>Change Robot</button>
+		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+	</div>
+	<input type=hidden name=event>
+	<input type=hidden name=match>
+	<input type=hidden name=team>
+	<input type=hidden name=timeline id=timeline>
+
+	<div class=tabs>
+		<div class="tab default-tab" data-content=auto>Auto</div>
+		<div class=tab data-content=teleop>Teleop</div>
+		<div class=tab data-content=end>End</div>
+	</div>
+
+	<div class="auto tab-content">
+		<table><tr><td class=subheader colspan=4>
+			<span class=team></span> <label><input type=checkbox name=no_show value=1><span>No Show</span></label>
+		</td></tr><tr><td class=subheader>
+			Collection
+		</td><td class=subheader colspan=2>
+			Placement
+		</td><td class=subheader>
+			Fouls
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div style=background:yellow;color:black>Yellow<br><input type=text class=num value=0 name=auto_collect_yellow size=1 disabled max=40></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>High Basket<br><input type=text class=num value=0 name=auto_place_high_basket size=1 disabled max=60></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>High Chamber<br><input type=text class=num value=0 name=auto_place_high_chamber size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Minor Foul<br><input type=text class=num value=0 name=auto_foul_minor size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG><span class=teamColorCaps></span><br><input type=text class=num value=0 name=auto_collect_alliance size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Low Basket<br><input type=text class=num value=0 name=auto_place_low_basket size=1 disabled max=60></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>Low Chamber<br><input type=text class=num value=0 name=auto_place_low_chamber size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Major Foul<br><input type=text class=num value=0 name=auto_foul_major size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>Sample<br><input type=text class=num value=0 name=auto_collect_sample size=1 disabled max=40></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Net Zone<br><input type=text class=num value=0 name=auto_place_net_zone size=1 disabled max=60></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>Observation<br><input type=text class=num value=0 name=auto_place_observation size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><label><input type=checkbox name=auto_yellow_card value=1><span>Yellow Card</span></label></div>
+			<div><label><input type=checkbox name=auto_red_card value=1><span>Red Card</span></label></div>
+			<div><label><input type=checkbox name=auto_disabled value=1><span>Disabled</span></label></div>
+		<tr><td class=subheader colspan=4>
+			<label><input type=checkbox name=auto_park value=1><span>Park</span></label>
+			<label><input type=checkbox name=auto_ascent value=1><span>Ascent</span></label>
+		</td></tr></table>
+		<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
+	</div>
+
+	<div class="teleop tab-content">
+		<table><tr><td class=subheader>
+			Collection
+		</td><td class=subheader colspan=2>
+			Placement
+		</td><td class=subheader>
+			Fouls
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div style=background:yellow;color:black>Yellow<br><input type=text class=num value=0 name=tele_collect_yellow size=1 disabled max=40></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>High Basket<br><input type=text class=num value=0 name=tele_place_high_basket size=1 disabled max=60></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>High Chamber<br><input type=text class=num value=0 name=tele_place_high_chamber size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Minor Foul<br><input type=text class=num value=0 name=tele_foul_minor size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG><span class=teamColor></span><br><input type=text class=num value=0 name=tele_collect_alliance size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Low Basket<br><input type=text class=num value=0 name=tele_place_low_basket size=1 disabled max=60></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>Low Chamber<br><input type=text class=num value=0 name=tele_place_low_chamber size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Major Foul<br><input type=text class=num value=0 name=tele_foul_major size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>Sample<br><input type=text class=num value=0 name=tele_collect_Sample size=1 disabled max=40></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Net Zone<br><input type=text class=num value=0 name=tele_place_net_zone size=1 disabled max=60></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>Observation<br><input type=text class=num value=0 name=tele_place_observation size=1 disabled max=20></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
+			<div><label><input type=checkbox name=tele_yellow_card value=1><span>Yellow Card</span></label></div>
+			<div><label><input type=checkbox name=tele_red_card value=1><span>Red Card</span></label></div>
+			<div><label><input type=checkbox name=tele_disabled value=1><span>Disabled</span></label></div>
+		<tr><td class=subheader colspan=4>
+			<label><input type=checkbox name=tele_park value=1><span>Park</span></label>
+			<label><input type=checkbox name=tele_ascent_1 value=1><span>Ascent 1</span></label>
+			<label><input type=checkbox name=tele_ascent_2 value=1><span>Ascent 2</span></label>
+			<label><input type=checkbox name=tele_ascent_3 value=1><span>Ascent 3</span></label>
+		</td></tr></table>
+		<button class=tab-button data-content=end>Proceed to End Game</button>
+
+	</div>
+
+	<div class="end tab-content">
+		<table><tr><td class=subheader>
+			Scouter Info
+		</td></tr><tr><td>
+			<fieldset class="left full">
+				<legend>Name:</legend>
+				<input class=full type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
+			</fieldset>
+			<fieldset class="left full" id=scouting-comments>
+				<legend>Comments:</legend>
+				<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+			</fieldset>
+			<input type=hidden name=created value="">
+			<input type=hidden name=modified value="">
+			<fieldset class=full id=nextButtons>
+				<legend>Save data:</legend>
+				<div id=featuredButton>
+					<button id=nextBtn>Next Match</button>
+				</div>
+				<div id=otherButtons>
+					<button id=uploadBtn>Upload Data</button>
+				</div>
+			</fieldset>
+		</td></tr></table>
+	</div>
+</form>
+</body>
+</html>

@@ -79,7 +79,7 @@
 				<ul>
 					<li><a href="/event-table.html#event=EVENT">Change event details and match schedule</a></li>
 					<li class=initHid><a class=dependScouting href="/playoffs.html#event=EVENT">Input alliance selection results and playoff type</a></li>
-					<li class=initHid><a class=dependFirst href="/admin/frc-api-event.cgi?event=EVENT&first=FIID">Fetch latest schedule and official scores from the FIRST API</a></li>
+					<li class=initHid><a class=dependFirstFrc href="/admin/frc-api-event.cgi?event=EVENT&first=FIID">Fetch latest schedule and official scores from the FIRST API</a></li>
 					<li><a href="/import-scouting.html#event=EVENT">Import data from another app</a></li>
 				</ul>
 			</div>
@@ -98,13 +98,22 @@
 							<li><a href="https://www.thebluealliance.com/event/BAID#media">Media</a></li>
 						</ul>
 					</li>
-					<li class=initHid id=firstInspiresLinks><a class=dependFirst href="https://frc-events.firstinspires.org/FIID">First Inspires</a>
+					<li id=orangeAllianceLinks><a href="https://theorangealliance.org/events/OAID">The Orange Alliance</a></li>
+					<li class=initHid id=firstInspiresFrcLinks><a class=dependFirstFrc href="https://frc-events.firstinspires.org/FIID">First Inspires</a>
 						<ul>
 							<li><a href="https://frc-events.firstinspires.org/FIID/practice">Practice Matches</a></li>
 							<li><a href="https://frc-events.firstinspires.org/FIID/qualifications">Qualification Matches</a></li>
 							<li><a href="https://frc-events.firstinspires.org/FIID/rankings">Qualification Rankings</a></li>
 							<li><a href="https://frc-events.firstinspires.org/FIID/playoffs">Playoff Matches</a></li>
 							<li><a href="https://frc-events.firstinspires.org/FIID/awards">Awards</a></li>
+						</ul>
+					</li>
+					<li class=initHid id=firstInspiresFtcLinks><a class=dependFirstFtc href="https://ftc-events.firstinspires.org/FIID">First Inspires</a>
+						<ul>
+							<li><a href="https://ftc-events.firstinspires.org/FIID/qualifications">Qualification Matches</a></li>
+							<li><a href="https://ftc-events.firstinspires.org/FIID/rankings">Qualification Rankings</a></li>
+							<li><a href="https://ftc-events.firstinspires.org/FIID/playoffs">Playoff Matches</a></li>
+							<li><a href="https://ftc-events.firstinspires.org/FIID/awards">Awards</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -117,7 +126,7 @@
 	</div>
 
 	<table id=matchTable class=side-by-side>
-		<thead><tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>Scr</th><th>Scr</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
+		<thead><tr><th>Match</th><th>R1</th><th>R2</th><th class= noftc>R3</th><th>Scr</th><th>Scr</th><th>B1</th><th>B2</th><th class= noftc>B3</th></tr></thead>
 		<tbody id=matches></tbody>
 	</table>
 
@@ -126,12 +135,12 @@
 			<th class=match-id></th>
 			<td class="R1 redTeamBG"></td>
 			<td class="R2 redTeamBG"></td>
-			<td class="R3 redTeamBG"></td>
+			<td class="R3 redTeamBG noftc"></td>
 			<td class="redScore redTeamBG"></td>
 			<td class="blueScore blueTeamBG"></td>
 			<td class="B1 blueTeamBG"></td>
 			<td class="B2 blueTeamBG"></td>
-			<td class="B3 blueTeamBG"></td>
+			<td class="B3 blueTeamBG noftc"></td>
 		</tr>
 	</template>
 	<template id=matchActionsTemplate>

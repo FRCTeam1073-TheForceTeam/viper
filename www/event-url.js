@@ -8,6 +8,7 @@ var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{
 eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1'),
 eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
 eventName = eventYear+(eventYear?" ":"")+eventVenue,
+eventCompetition = /^20[0-9]{2}$/.test(eventYear)?"frc":"ftc",
 promiseCache = {},
 BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
 MATCH_TYPE_SORT = {
@@ -21,7 +22,9 @@ MATCH_TYPE_SORT = {
 	'4p':'07',
 	'5p':'08',
 	'sf':'09',
-	'f':'10',
+	'1sf':'10',
+	'2sf':'11',
+	'f':'12',
 }
 if (eventId){
 	if (localStorage.getItem("last_event_id")==eventId){
@@ -79,7 +82,7 @@ function unescapeField(s){
 function scheduleSortKey(match){
 	var event = match.event,
 	id = match.Match,
-	m = id.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)([0-9]+)$/)
+	m = id.match(/^(pm|qm|qf|(?:[1-2]?sf)|(?:[1-5]p)|f)([0-9]+)$/)
 	if (!m) return match
 	return event + "---" + MATCH_TYPE_SORT[m[1]] + "---" + m[2].padStart(12,'0')
 }

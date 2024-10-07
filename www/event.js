@@ -5,6 +5,7 @@ $(document).ready(function(){
 		$('h1').text("Event Not Found")
 		return
 	}
+	if ("ftc"==eventCompetition) $('.noftc').hide()
 	var title = $('title')
 	var uploadCount = getUploads().length
 	$('.initHid').hide()
@@ -86,7 +87,6 @@ $(document).ready(function(){
 		if (!m) return false
 		return BOT_POSITIONS.reduce((sum,pos)=>sum+(eventStatsByMatchTeam[`${m.Match}-${m[pos]}`]?1:0),0)
 	}
-
 	Promise.all([
 		promiseEventMatches(),
 		promiseEventStats(),
@@ -94,8 +94,7 @@ $(document).ready(function(){
 		promiseEventFiles(),
 		promiseEventInfo()
 	]).then(values =>{
-		var [eventMatches, eventStatsValues, eventScores, fileList, eventInfo] = values,
-		[eventStats, eventStatsByTeam, eventStatsByMatchTeam] = eventStatsValues,
+		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo] = values,
 		lastDone,
 		lastFullyDone,
 		ourNext
@@ -117,14 +116,18 @@ $(document).ready(function(){
 
 		setName()
 		if (eventInfo['blue_alliance_id']) blueAllianceId = eventInfo['blue_alliance_id']
+		if (eventInfo['orange_alliance_id']) orangeAllianceId = eventInfo['orange_alliance_id']
 		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
-		if (!/^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) $('#blueAllianceLinks').hide()
-		if (/^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('.dependFirst').show().parents('.initHid').show()
+		if ("frc"!=eventCompetition || !/^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) $('#blueAllianceLinks').hide()
+		if ("ftc"!=eventCompetition || !/^[0-9]{4}[A-Za-z0-9\-]+/.test(orangeAllianceId)) $('#orangeAllianceLinks').hide()
+		if ("frc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('.dependFirstFrc').show().parents('.initHid').show()
+		if ("ftc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('.dependFirstFtc').show().parents('.initHid').show()
 		$('a').each(function(){
 			$(this).attr(
 				'href',$(this).attr('href')
 				.replace('FIID', firstInspiresId)
 				.replace('BAID', blueAllianceId)
+				.replace('OAID', orangeAllianceId)
 			)
 		})
 		var info = $('#eventInfo').html('')
@@ -155,6 +158,7 @@ $(document).ready(function(){
 			if(lastFullyDone && lastFullyDone.Match==match.Match) seenLastFullyDone=true
 			var row = $($('template#matchRow').html()),
 			redPrediction = 0, bluePrediction=0
+			if ("ftc"==eventCompetition) row.find('.noftc').hide()
 			BOT_POSITIONS.forEach(pos=>{
 				if(/^R/.test(pos)){
 					redPrediction += getScore(eventStatsByTeam, match[pos])
@@ -284,6 +288,7 @@ $(document).ready(function(){
 })
 
 var blueAllianceId = eventId
+var orangeAllianceId = eventId.replace(/^20([0-9]){2}-([0-9]){2}-(.*)/,"$1$2$3/")
 var firstInspiresId = eventId.replace(/^(20[0-9]{2})/,"$1/")
 
 function viewJson(){
