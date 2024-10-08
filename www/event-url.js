@@ -10,7 +10,9 @@ eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
 eventName = eventYear+(eventYear?" ":"")+eventVenue,
 eventCompetition = /^20[0-9]{2}$/.test(eventYear)?"frc":"ftc",
 promiseCache = {},
-BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
+FRC_BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
+FTC_BOT_POSITIONS = ['R1','R2','B1','B2'],
+BOT_POSITIONS = eventCompetition=='frc'?FRC_BOT_POSITIONS:FTC_BOT_POSITIONS,
 MATCH_TYPE_SORT = {
 	'pm':'00',
 	'qm':'01',
@@ -82,7 +84,7 @@ function unescapeField(s){
 function scheduleSortKey(match){
 	var event = match.event,
 	id = match.Match,
-	m = id.match(/^(pm|qm|qf|(?:[1-2]?sf)|(?:[1-5]p)|f)([0-9]+)$/)
+	m = id.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)([0-9]+)$/)
 	if (!m) return match
 	return event + "---" + MATCH_TYPE_SORT[m[1]] + "---" + m[2].padStart(12,'0')
 }
@@ -306,9 +308,8 @@ function promiseSubjectiveScouting(){
 
 function getUploads(){
 	var uploads = []
-	var year = eventId.substring(0,4)
 	for (var i in localStorage){
-		if (new RegExp(`^${year}.*_.*_`).test(i)) {
+		if (new RegExp(`^${eventYear}.*_.*_`).test(i)) {
 			uploads.push(localStorage.getItem(i))
 		}
 	}

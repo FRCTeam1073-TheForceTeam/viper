@@ -1,3 +1,7 @@
 .count{width:4em}
 .tab-content table td {padding:0 0.3em}
 html{padding:0}
+@media (max-width: 450px){
+	h1{font-size:115%}
+	.tab{font-size:70%}
+}

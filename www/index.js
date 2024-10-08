@@ -30,7 +30,7 @@ $(document).ready(function(){
 		list.html('');
 		var filter = location.hash.replace(/^\#/,""),
 		eventsShown = 0
-		if (!filter) filter = $('#years option:last').attr('value')
+		if (!filter) filter = $('#seasons option:nth-child(2)').attr('value')
 		for (var i=0; i<events.length; i++){
 			var season = ((events[i].match(/^[0-9]{4}(-[0-9]{2})?/))||[""])[0]
 			if (season == filter){
@@ -41,7 +41,7 @@ $(document).ready(function(){
 			}
 		}
 		if (!seasonStatsLinkHtml) seasonStatsLinkHtml = $('#seasonStatsLink').html()
-		$('#seasonStatsLink').html(seasonStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}/.test(filter) && eventsShown > 1)
+		$('#seasonStatsLink').html(seasonStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1)
 		window.scrollTo(0,0)
 	}
 	$(window).on('hashchange', showEvents)

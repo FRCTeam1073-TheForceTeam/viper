@@ -52,7 +52,7 @@ $(document).ready(function(){
 	}
 
 	function venueNameToId(){
-		$('#idInp').val($('#startInp').val().substr(0,4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
+		$('#idInp').val($('#startInp').val().slice(4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
 	}
 
 	$('#nameInp').change(venueNameToId).keyup(venueNameToId)

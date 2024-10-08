@@ -4,6 +4,7 @@ function addRow(table){
 	if (!table) table = "qm"
 	var rowNum = $(`#${table} tr`).length+1;
 	$(`#${table}`).append($('template#scheduleRow').html().replace(/\$\#/g, rowNum).replace(/\$TYPE/g, table))
+	setComp()
 	var rowInputs = $(`#${table} tr:last-child input`)
 	rowInputs.change(teamEntered).focus(function(){
 		focusInput($(this))
@@ -29,7 +30,8 @@ function teamEntered(){
 	checkTeams(table)
 	focusFirst(table)
 }
-var teams = {}
+var teams = {},
+comp = 'frc'
 function addTeamButton(team){
 	if (!team) team = lf().val()
 	if (teams[team]) return
@@ -82,9 +84,68 @@ function lf(){
 	return $('#schedule input.lastFocus')
 }
 function venueNameToId(){
-	$('#idInp').val($('#startInp').val().substr(0,4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
+	var safeName = $('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,"")
+	var year = parseInt($('#startInp').val().slice(0,4))||new Date().getFullYear()
+	if (comp == 'ftc'){
+		var month = parseInt($('#startInp').val().slice(5,7),10)||(new Date().getMonth()+1)
+		if (month >= 9) year = year + "-" + (""+(year+1)).slice(-2)
+		else year = (year-1) + "-" + (""+year).slice(-2)
+	}
+	$('#idInp').val(year+safeName)
+}
+function setComp(){
+	comp = $('#comp').val()
+	location.hash=comp
+	if (comp == 'ftc'){
+		BOT_POSITIONS = FTC_BOT_POSITIONS
+		$('#idInp').attr('pattern',"^20[0-9]{2}-[0-9]{2}[0-9a-zA-Z\\-]+$")
+		$('table thead th').each(function(){
+			if ($(this).text().endsWith(3)) $(this).remove()
+		})
+		$('table tbody td').each(function(){
+			if ($(this).find('input').attr('name').endsWith(3)) $(this).remove()
+		})
+	}
+	if (comp == 'frc'){
+		BOT_POSITIONS = FRC_BOT_POSITIONS
+		$('#idInp').attr('pattern',"^20[0-9]{2}[0-9a-zA-Z\\-]+$")
+		$('table thead').each(function(){
+			var has3 = false
+			$(this).find('th').each(function(){
+				if ($(this).text().endsWith(3)) has3 = true
+			})
+			if (!has3){
+				$(this).find('th').each(function(){
+					if ($(this).text().endsWith(2)){
+						var n =$(this).clone()
+						n.text(n.text().replace(/2/,3))
+						n.insertAfter($(this))
+					}
+				})
+			}
+		})
+		$('table tbody').each(function(){
+			var has3 = false
+			$(this).find('input').each(function(){
+				if ($(this).attr('name').endsWith(3)) has3 = true
+			})
+			if (!has3){
+				$(this).find('td').each(function(){
+					if ($(this).find('input').attr('name').endsWith(2)){
+						var n =$(this).clone(),
+						i = n.find('input')
+						i.attr('name', i.attr('name').replace(/2/,3)).val('')
+						n.insertAfter($(this))
+					}
+				})
+			}
+		})
+	}
 }
 $(document).ready(function(){
+	var hash = location.hash.replace(/^#/,"")
+	$(`#comp option[value="${hash}"]`).attr('selected', 'selected')
+	setComp()
 	addRow('qm')
 	addRow('pm')
 	$('#nameInp').change(venueNameToId).keyup(venueNameToId)
@@ -101,7 +162,7 @@ $(document).ready(function(){
 		return false
 	})
 	$('#tableForm').submit(function(){
-		var csv = "Match,R1,R2,R3,B1,B2,B3\n",
+		var csv = "Match,"+(BOT_POSITIONS.join(","))+"\n",
 		tables = ['pm','qm']
 		for (var k=0; k<tables.length; k++){
 			var table = tables[k],
@@ -152,5 +213,6 @@ $(document).ready(function(){
 			$('#endInp').val(eventInfo.end)
 		})
 	}
+	$('#comp').change(setComp)
 	setTimeout(focusFirst,100)
 })

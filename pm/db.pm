@@ -243,6 +243,17 @@ sub schema {
 			)  $tableOptions
 	 	"
 	);
+	eval {
+		$dbh->do(
+			"
+				ALTER TABLE
+					`event`
+				ADD COLUMN
+					`orange_alliance_id` VARCHAR(32)
+			"
+		);
+		1;
+	};
 	$dbh->commit();
 
 	print("Creating table `apijson`\n");

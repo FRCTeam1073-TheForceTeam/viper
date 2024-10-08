@@ -26,8 +26,8 @@ $(document).ready(function(){
 			var ev = info.Events[0]
 			$('#nameInp').val(ev.name)
 			$('#locationInp').val(`${ev.venue} in ${ev.city}, ${ev.stateprov}, ${ev.country}`)
-			$('#startInp').val(ev.dateStart.substring(0,10))
-			$('#endInp').val(ev.dateEnd.substring(0,10))
+			$('#startInp').val(ev.dateStart.slice(0,10))
+			$('#endInp').val(ev.dateEnd.slice(0,10))
 		}
 		$('#importData').toggle(backForward)
 		$('#idInp').val(eventId)
