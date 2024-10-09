@@ -82,12 +82,15 @@ sub writeCsvData(){
 	my $blueAllianceId = $event;
 	my $orangeAllianceId = $event;
 	my $firstInspiresId = $event;
-	$firstInspiresId =~ s/^([0-9]{4})/$1\//g;
+	$firstInspiresId =~ s/^([0-9]{4})(-[0-9]{2})/$1\//g;
+	$orangeAllianceId =~ s/^20([0-9]{2})-([0-9]{2})/$1$2-/g;
+	$orangeAllianceId = uc($orangeAllianceId);
+	$orangeAllianceId =~ s/-US([A-Z]{2})/-$1-/g;
 	if (-e $file){
 		my $oldFile = read_file($file, {binmode => ':encoding(UTF-8)'});
 		my $oldEvent = csv->new($oldFile);
 		$blueAllianceId = $oldEvent->getByName(1,"blue_alliance_id")||$blueAllianceId;
-		$orangeAllianceId = $oldEvent->getByName(1,"blue_alliance_id")||$orangeAllianceId;
+		$orangeAllianceId = $oldEvent->getByName(1,"orange_alliance_id")||$orangeAllianceId;
 		$firstInspiresId = $oldEvent->getByName(1,"first_inspires_id")||$firstInspiresId;
 	}
 	$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);

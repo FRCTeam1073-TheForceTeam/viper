@@ -141,8 +141,8 @@ function promiseEventScores(){
 	]).then(values => {
 		var [matches, quals, playoffs] = values,
 		scores = {}
-		quals.MatchScores = quals.MatchScores||[]
-		playoffs.MatchScores = playoffs.MatchScores||[]
+		quals.MatchScores = quals.MatchScores||quals.matchScores||[]
+		playoffs.MatchScores = playoffs.MatchScores||playoffs.matchScores||[]
 		quals.MatchScores.forEach(score => scores[`qm${score.matchNumber}`] = score)
 		matches.forEach(match => {
 			if (!/^pm|qm/.test(match.Match)){

@@ -42,6 +42,8 @@ $(document).ready(function(){
 		}
 		if (!seasonStatsLinkHtml) seasonStatsLinkHtml = $('#seasonStatsLink').html()
 		$('#seasonStatsLink').html(seasonStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1)
+		var ael = $('#add-event-link')
+		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
 		window.scrollTo(0,0)
 	}
 	$(window).on('hashchange', showEvents)

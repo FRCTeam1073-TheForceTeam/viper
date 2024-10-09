@@ -98,7 +98,6 @@ $(document).ready(function(){
 		lastDone,
 		lastFullyDone,
 		ourNext
-
 		if (!fileList.length) return $('body').html("Match not found")
 
 		fileList.forEach(file=>{
