@@ -5,11 +5,13 @@ $(document).ready(function(){
 	$('input[type=submit]').click(processInput)
 
 	function processInput(){
-		var src=$('#sourceInp').val(),csv=""
-		if (!csv) csv=getBlueAllianceMatchSchedule(src)
-		if (!csv) csv=getFirstInspiresMatchSchedule(src)
-		if (!csv) csv=randomPracticeSchedule(getBlueAllianceTeamList(src))
-		if (!csv) csv=randomPracticeSchedule(getGenericTeamList(src))
+		var src=$('#sourceInp').val(),csv=(
+			getBlueAllianceMatchSchedule(src)||
+			getOrangeAllianceMatchSchedule(src)||
+			getFirstInspiresMatchSchedule(src)||
+			randomPracticeSchedule(getBlueAllianceTeamList(src))||
+			randomPracticeSchedule(getGenericTeamList(src))
+		)
 		if (!csv){
 			alert("No data found!")
 			return false
@@ -18,6 +20,7 @@ $(document).ready(function(){
 		var newEventId = (
 			src.match(/event_key(?:=|\":\")([0-9]{4}[A-Za-z0-9\-]+)/)||
 			src.match(/href\=\"\/(20[0-9]{2}\/[A-Z0-9]+)\"(?: [^\>]*)?\>Event Info/)||
+			src.match(/\<link rel\=\"canonical\" href=\"https:\/\/theorangealliance\.org\/events\/([0-9A-Z\-]+)\"\>/)|
 			["",$('#idInp').val()]
 		)[1].replace(/\//g,"").toLowerCase()
 		newEventId = newEventId.replace(/-/g,"")
@@ -76,6 +79,7 @@ $(document).ready(function(){
 			$('#sourceInp').hide()
 			return false
 		}
+		return true
 	}
 
 	function venueNameToId(){
@@ -139,5 +143,31 @@ $(document).ready(function(){
 			csv += row.join(",") + "\n"
 		}
 		return csv
+	}
+	function getOrangeAllianceMatchSchedule(src){
+		var trRe = /<tr[\s\S]*?<\/tr>/gm,
+		m, qual, schedule = [["Match","R1","R2","B1","B2"]]
+		do {
+			m = trRe.exec(src)
+			if (m) {
+				var teamM, row = m[0],
+				qM = />Q-([0-9]+)</g.exec(row),
+				teamRe= /\/teams\/([0-9]+)/g
+				if (qM){
+					var match = [`qm${qM[1]}`]
+					do {
+						teamM = teamRe.exec(row)
+						if (teamM){
+							match.push(teamM[1])
+						}
+					} while (teamM)
+					if (match.length == 5) schedule.push(match)
+				}
+			}
+		} while (m)
+		if (schedule.length == 1){
+			return ""
+		}
+		return schedule.map(function(d){return d.join(',')}).join('\n') + "\n"
 	}
 })
