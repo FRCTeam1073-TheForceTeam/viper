@@ -100,8 +100,9 @@ sub appendSavedKey(){
 sub writeDbData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
 	foreach my $event (keys %{$eventCsv}){
-		my ($year) = $event =~ /^(20[0-9]{2})/;
-		my $table = "$year$type";
+		my ($season) = $event =~ /^(20[0-9]{2}(?:-[0-9]{2})?)/;
+		$season =~ s/-/_/g;
+		my $table = "$season$type";
 		$csvHeaders = $eventHeaders->{$event};
 		foreach my $row (@{$eventCsv->{$event}}){
 			my $data = {};

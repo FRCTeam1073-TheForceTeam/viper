@@ -1,10 +1,11 @@
 "use strict"
 
+function show404(){
+	$('body').html("<h1>404 - Event Not Found</h1>")
+}
+
 $(document).ready(function(){
-	if (!eventYear || !eventVenue){
-		$('h1').text("Event Not Found")
-		return
-	}
+	if (!eventYear || !eventVenue) return show404()
 	if ("ftc"==eventCompetition) $('.noftc').hide()
 	var title = $('title')
 	var uploadCount = getUploads().length
@@ -98,7 +99,7 @@ $(document).ready(function(){
 		lastDone,
 		lastFullyDone,
 		ourNext
-		if (!fileList.length) return $('body').html("Match not found")
+		if (!fileList.length) return show404()
 
 		fileList.forEach(file=>{
 			var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
