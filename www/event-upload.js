@@ -15,10 +15,18 @@ $(document).ready(function(){
 			return false
 		}
 		$('#csvInp').val(csv)
-		var newEventId = src.match(/event_key=(20[0-9]+[a-z0-9]+)/)
-		if (!newEventId || !newEventId.length) newEventId = src.match(/href\=\"\/(20[0-9]{2}\/[A-Z0-9]+)\"\>Event Info/)
-		if (!newEventId || !newEventId.length) newEventId = ["",$('#idInp').val()]
-		newEventId = newEventId[1].replace(/\//g,"").toLowerCase()
+		var newEventId = (
+			src.match(/event_key(?:=|\":\")([0-9]{4}[A-Za-z0-9\-]+)/)||
+			src.match(/href\=\"\/(20[0-9]{2}\/[A-Z0-9]+)\"(?: [^\>]*)?\>Event Info/)||
+			["",$('#idInp').val()]
+		)[1].replace(/\//g,"").toLowerCase()
+		newEventId = newEventId.replace(/-/g,"")
+		var m = newEventId.match(/^([0-9]{2})([0-9]{2})(.*)/)
+		if (m && /FTC Event Web/.test(src)){
+			newEventId = `20${m[2]}-${parseInt(m[2])+1}${m[3]}`
+		} else if (m && !/^20/.test(newEventId)){
+			newEventId = `20${m[1]}-${m[2]}${m[3]}`
+		}
 		if (newEventId != eventId){
 			eventId=newEventId
 			$('#idInp').val(eventId)
@@ -34,10 +42,30 @@ $(document).ready(function(){
 
 	function srcToField(src, eventInfo){
 		eventInfo=eventInfo||{}
-		$('#startInp').val((src.match(/itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.start||$('#startInp').val()])[1])
-		$('#endInp').val((src.match(/itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.end||$('#endInp').val()])[1])
-		$('#nameInp').val((src.match(/id\=\"event-name\"\>([^\<]+)\</)||src.match(/\<span class\=\"hidden-xs hidden-sm align-middle\"\> - ([^\<]+)\</)||["",eventInfo.name||$('#nameInp').val()])[1].replace(/ Event$/,""))
-		$('#locationInp').val((src.match(/\<span itemprop\=\"location\"\>(.|[\r\n])*?\<\/span\>/m)||["",eventInfo.location||$('#locationInp').val()])[1])
+		$('#startInp').val((
+			src.match(/itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||
+			["",eventInfo.start||
+			$('#startInp').val()]
+		)[1])
+		$('#endInp').val((
+			src.match(/itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||
+			["",eventInfo.end||
+			$('#endInp').val()]
+		)[1])
+		$('#nameInp').val((
+			src.match(/id\=\"event-name\"\>([^\<]+)\</)||
+			src.match(/\<span class\=\"hidden-xs hidden-sm align-middle\"\> - ([^\<]+)\</)||
+			src.match(/\<title\>([^\>\<\|]+) \|/m)||
+			src.match(/\<h1(?: [^\>]*)?\>([\s\S]*?)\<\/h1\>/m)||
+			["",eventInfo.name||
+			$('#nameInp').val()]
+		)[1].replace(/\<[^\>]*\>/g,"").replace(/\s+/gm," ").trim().replace(/ Event$/,"").replace(/.*Matches /,""))
+		$('#locationInp').val((
+			src.match(/\<span itemprop\=\"location\"\>(.|[\r\n])*?\<\/span\>/m)||
+			src.match(/(\<svg[^\>]+LocationOnIcon.*?\<\/p\>)/m)||
+			["",eventInfo.location||
+			$('#locationInp').val()]
+		)[1].replace(/\<[^\>]*\>/g,""))
 		var empty = false
 		$('#autoFields input:empty').each(function(){
 			if (!$(this).val()) empty = true
@@ -48,7 +76,6 @@ $(document).ready(function(){
 			$('#sourceInp').hide()
 			return false
 		}
-		return true
 	}
 
 	function venueNameToId(){
@@ -68,14 +95,15 @@ $(document).ready(function(){
 	function getFirstInspiresMatchSchedule(src){
 		var isPractice = /Official practice match schedule/.test(src),
 		re= /\/20[0-9]{2}\/team\/([0-9]+)/g,
-		m, matchNum=1, match=[], schedule = [["Match","R1","R2","R3","B1","B2","B3"]]
+		ftc=/FTC Event Web/.test(src),
+		m, matchNum=1, match=[], schedule = ftc?[["Match","R1","R2","B1","B2"]]:[["Match","R1","R2","R3","B1","B2","B3"]]
 		while(m = re.exec(src)){
 			if(!match.length){
 				match.push((isPractice?"pm":"qm")+matchNum)
 				matchNum++
 			}
 			match.push(m[1])
-			if (match.length==7){
+			if (match.length==(ftc?5:7)){
 				schedule.push(match)
 				match=[]
 			}
