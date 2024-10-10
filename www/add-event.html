@@ -16,12 +16,12 @@
 </head>
 <body>
 <h1>Add an Event</h1>
-<div>
+<label>
 	Competition type: <select id=comp>
 		<option value=frc>FRC</option>
 		<option value=ftc>FTC</option>
 	</select>
-</div>
+</label>
 
 <div class="option side-by-side">
 	<h3><a href="/event-table.html#COMP">Data entry</a></h3>
@@ -40,7 +40,7 @@
 	<h3>Import from Viper</h3>
 	Import data exported from another Viper instance.
 	<form method=POST action=/admin/import.cgi enctype=multipart/form-data>
-		.json file: <input type=file name=json accept=application/json>
+		<label>.json file: <input type=file name=json accept=application/json></label>
 		<input type=submit value=Upload>
 	</form>
 </div>

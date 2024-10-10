@@ -1,1 +1,2 @@
-.option{border:1px solid black;max-width:20em;min-height:10em;margin:1em;padding:1em;}
+.option{border:1px solid var(--main-border-color);max-width:16em;min-height:15em;margin:0.4em;padding:0.8em}
+label{border:1px solid var(--main-border-color);max-width:20em;margin:0.4em auto;padding:0.8em;display:block}
