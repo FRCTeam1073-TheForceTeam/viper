@@ -125,8 +125,8 @@
 			<div><label><input type=checkbox name=auto_red_card value=1><span>Red Card</span></label></div>
 			<div><label><input type=checkbox name=auto_disabled value=1><span>Disabled</span></label></div>
 		<tr><td class=subheader colspan=4>
-			<label><input type=checkbox name=auto_park value=1><span>Park</span></label>
-			<label><input type=checkbox name=auto_ascent value=1><span>Ascent</span></label>
+			<label><input type=radio name=auto_end value=park><span>Park</span></label>
+			<label><input type=radio name=auto_end value=ascent><span>Ascent</span></label>
 		</td></tr></table>
 		<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
 	</div>
@@ -187,10 +187,10 @@
 			<div><label><input type=checkbox name=tele_red_card value=1><span>Red Card</span></label></div>
 			<div><label><input type=checkbox name=tele_disabled value=1><span>Disabled</span></label></div>
 		<tr><td class=subheader colspan=4>
-			<label><input type=checkbox name=tele_park value=1><span>Park</span></label>
-			<label><input type=checkbox name=tele_ascent_1 value=1><span>Ascent 1</span></label>
-			<label><input type=checkbox name=tele_ascent_2 value=1><span>Ascent 2</span></label>
-			<label><input type=checkbox name=tele_ascent_3 value=1><span>Ascent 3</span></label>
+			<label><input type=radio name=tele_end value=park><span>Park</span></label>
+			<label><input type=radio name=tele_end value=ascent_1><span>Ascent 1</span></label>
+			<label><input type=radio name=tele_end value=ascent_2><span>Ascent 2</span></label>
+			<label><input type=radio name=tele_end value=ascent_3><span>Ascent 3</span></label>
 		</td></tr></table>
 		<button class=tab-button data-content=end>Proceed to End Game</button>
 
