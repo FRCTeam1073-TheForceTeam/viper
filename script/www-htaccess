@@ -37,7 +37,7 @@ Header set Cache-Control "max-age=28800, public"
 </IfDefine>
 
 RewriteEngine On
-RewriteRule ^\/?data\/(20[0-9]+)combined\.scouting\.csv$ /season-scouting.cgi?year=$1
+RewriteRule ^\/?data\/(20[0-9]{2}(?:-[0-9]{2})?)combined\.scouting\.csv$ /season-scouting.cgi?season=$1
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} ^(.*)\.html$
