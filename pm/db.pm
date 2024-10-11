@@ -360,7 +360,7 @@ sub schema {
 		$dbh->do(
 			"
 				CREATE TABLE IF NOT EXISTS
-					${seasonTableName}scouting
+					`${seasonTableName}scouting`
 				(
 					`site` VARCHAR(16) NOT NULL,
 					`event` VARCHAR(32) NOT NULL,
@@ -399,7 +399,7 @@ sub schema {
 		$dbh->do(
 			"
 				CREATE TABLE IF NOT EXISTS
-					${seasonTableName}pit
+					`${seasonTableName}pit`
 				(
 					`site` VARCHAR(16) NOT NULL,
 					`event` VARCHAR(32) NOT NULL,
@@ -437,7 +437,7 @@ sub schema {
 		$dbh->do(
 			"
 				CREATE TABLE IF NOT EXISTS
-					${seasonTableName}subjective
+					`${seasonTableName}subjective`
 				(
 					`site` VARCHAR(16) NOT NULL,
 					`event` VARCHAR(32) NOT NULL,
