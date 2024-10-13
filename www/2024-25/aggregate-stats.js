@@ -428,6 +428,7 @@ var plannerSections = {
 	Total:["score"],
 }
 
+// Whiteboard image from https://www.reddit.com/r/FTC/comments/1fbhxka/into_the_deep_meepmeep_custom_field_images/
 var whiteboardStamps = []
 
 var whiteboardOverlays = []

@@ -314,12 +314,12 @@ function showLinks(e){
 	match=row.find('.match-id'),
 	matchId=match.attr('data-match-id'),
 	matchName=match.text(),
-	r1=row.find('.R1').text(),
-	r2=row.find('.R2').text(),
-	r3=row.find('.R3').text(),
-	b1=row.find('.B1').text(),
-	b2=row.find('.B2').text(),
-	b3=row.find('.B3').text()
+	positions=""
+	BOT_POSITIONS.forEach(function(pos){
+		var t = row.find(`.${pos}`).text()
+		if (positions) positions+="&"
+		positions += `${pos}=${t}`
+	})
 	if (/^[0-9]+$/.test(el.text())){
 		if (el.attr('class') && /\b[RB][1-3]\b/.test(el.attr('class'))){
 			pos=el.attr('class').match(/\b[RB][1-3]\b/)[0]
@@ -331,12 +331,7 @@ function showLinks(e){
 		.replace(/\$POS/g, pos)
 		.replace(/\$MATCH_ID/g, matchId)
 		.replace(/\$MATCH_NAME/g, matchName)
-		.replace(/\$R1/g, r1)
-		.replace(/\$R2/g, r2)
-		.replace(/\$R3/g, r3)
-		.replace(/\$B1/g, b1)
-		.replace(/\$B2/g, b2)
-		.replace(/\$B3/g, b3)
+		.replace(/\$BOTS/g, positions)
 		.replace(/\$EVENT/g, eventId)
 		.replace(/\$YEAR/g, eventYear),
 	ma = $('#matchActions')
