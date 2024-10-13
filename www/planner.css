@@ -1,6 +1,6 @@
 button.selected{background:var(--button-selected-bg-color)}
 #field{border:1px solid var(--main-border-color);margin:0;padding:0;position:relative}
-#field,#fieldBG,#fieldDraw{width: 50px;height:100px}
+#field,#fieldBG,#fieldDraw{width:50px;height:100px}
 #fieldBG,#fieldDraw{position:absolute;top:0;left:0;right:0;bottom:0}
 #fieldBG{background-size:contain;background-repeat:no-repeat;z-index:1}
 #fieldBG.rotated{transform:rotate(180deg)}
