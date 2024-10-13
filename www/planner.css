@@ -14,7 +14,7 @@ html,body{margin:0;padding:0;text-align:left}
 .f table {margin:0;font-size:75%}
 iframe{width:100%;height:100%}
 .viewTeam{text-align:center;font-size:200%}
-.rightColumn{max-width:24em}
+.rightColumn{max-width:400px}
 button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 button.team{width:3em;height:1.5em;margin:0.25em}
 #statsTable img{max-width:40px;max-height:40px;display:block;margin:0 auto;padding:0;border:none;cursor:pointer}
