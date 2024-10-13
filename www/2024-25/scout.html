@@ -68,63 +68,58 @@
 	</div>
 
 	<div class="auto tab-content">
-		<table><tr><td class=subheader colspan=4>
-			Team <span class=team></span>: <label><input type=checkbox name=no_show value=1><span>No Show</span></label>
+		<table><tr><td class=subheader colspan=2>
+			<label><input type=checkbox name=no_show value=1><span>No Show</span></label>
+		<td class=subheader colspan=2>
+			<button class=undo>Undo</button>
 		</td></tr><tr><td class=subheader>
 			Collection
 		</td><td class=subheader colspan=2>
 			Placement
 		</td><td class=subheader>
-			Fouls
+			Problems
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div style=background:yellow;color:black>Yellow<br><input type=text class=num value=0 name=auto_collect_yellow size=1 disabled max=40></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div style=background:yellow;color:black>Yellow<br><input data-provides=yellow type=text class=num value=0 name=auto_collect_yellow size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>High Basket<br><input type=text class=num value=0 name=auto_place_high_basket size=1 disabled max=60></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>High Basket<br><input data-accepts=sample type=text class=num value=0 name=auto_place_high_basket size=1 disabled max=60></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>High Chamber<br><input type=text class=num value=0 name=auto_place_high_chamber size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG>High Chamber<br><input data-accepts=specimen type=text class=num value=0 name=auto_place_high_chamber size=1 disabled max=20></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Minor Foul<br><input type=text class=num value=0 name=auto_foul_minor size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Minor Foul<br><input type=text class=num value=0 name=auto_foul_minor size=1 disabled></div>
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG><span class=teamColorCaps></span><br><input type=text class=num value=0 name=auto_collect_alliance size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG><span class=teamColorCaps></span><br><input data-provides=alliance type=text class=num value=0 name=auto_collect_alliance size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Low Basket<br><input type=text class=num value=0 name=auto_place_low_basket size=1 disabled max=60></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Low Basket<br><input data-accepts=sample type=text class=num value=0 name=auto_place_low_basket size=1 disabled max=60></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>Low Chamber<br><input type=text class=num value=0 name=auto_place_low_chamber size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG>Low Chamber<br><input data-accepts=specimen type=text class=num value=0 name=auto_place_low_chamber size=1 disabled max=20></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Major Foul<br><input type=text class=num value=0 name=auto_foul_major size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Major Foul<br><input type=text class=num value=0 name=auto_foul_major size=1 disabled></div>
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>Specimen<br><input type=text class=num value=0 name=auto_collect_specimen size=1 disabled max=40></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG>Specimen<br><input data-provides=specimen type=text class=num value=0 name=auto_collect_specimen size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Net Zone<br><input type=text class=num value=0 name=auto_place_net_zone size=1 disabled max=60></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Net Zone<br><input data-accepts=sample type=text class=num value=0 name=auto_place_net_zone size=1 disabled max=60></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>Observation<br><input type=text class=num value=0 name=auto_place_observation size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
-		</td><td>
+			<div class=teamColorBG>Observation<br><input data-accepts=alliance type=text class=num value=0 name=auto_place_observation size=1 disabled max=20></div>
+		</td><td rowspan=2>
 			<div><label><input type=checkbox name=auto_yellow_card value=1><span>Yellow Card</span></label></div>
 			<div><label><input type=checkbox name=auto_red_card value=1><span>Red Card</span></label></div>
 			<div><label><input type=checkbox name=auto_disabled value=1><span>Disabled</span></label></div>
-		<tr><td class=subheader colspan=4>
+		</td></tr><tr><td>
+		</td><td colspan=2>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Dropped<br><input data-accepts=any type=text class=num value=0 name=auto_place_drop size=1 disabled></div>
+		</td></tr><tr><td class=subheader colspan=4>
 			<label><input type=radio name=auto_end value=park><span>Park</span></label>
 			<label><input type=radio name=auto_end value=ascent><span>Ascent</span></label>
 		</td></tr></table>
@@ -132,68 +127,63 @@
 	</div>
 
 	<div class="teleop tab-content">
-		<table><tr><td class=subheader>
+		<table><tr><td class=subheader colspan=2>
+		<td class=subheader colspan=2>
+			<button class=undo>Undo</button>
+		</td></tr><tr><td class=subheader>
 			Collection
 		</td><td class=subheader colspan=2>
 			Placement
 		</td><td class=subheader>
-			Fouls
+			Problems
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div style=background:yellow;color:black>Yellow<br><input type=text class=num value=0 name=tele_collect_yellow size=1 disabled max=40></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div style=background:yellow;color:black>Yellow<br><input data-provides=yellow type=text class=num value=0 name=tele_collect_yellow size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>High Basket<br><input type=text class=num value=0 name=tele_place_high_basket size=1 disabled max=60></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>High Basket<br><input data-accepts=sample type=text class=num value=0 name=tele_place_high_basket size=1 disabled max=60></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>High Chamber<br><input type=text class=num value=0 name=tele_place_high_chamber size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG>High Chamber<br><input data-accepts=specimen type=text class=num value=0 name=tele_place_high_chamber size=1 disabled max=20></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Minor Foul<br><input type=text class=num value=0 name=tele_foul_minor size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Minor Foul<br><input type=text class=num value=0 name=tele_foul_minor size=1 disabled></div>
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG><span class=teamColor></span><br><input type=text class=num value=0 name=tele_collect_alliance size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG><span class=teamColor></span><br><input data-provides=alliance type=text class=num value=0 name=tele_collect_alliance size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Low Basket<br><input type=text class=num value=0 name=tele_place_low_basket size=1 disabled max=60></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Low Basket<br><input data-accepts=sample type=text class=num value=0 name=tele_place_low_basket size=1 disabled max=60></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>Low Chamber<br><input type=text class=num value=0 name=tele_place_low_chamber size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG>Low Chamber<br><input data-accepts=specimen type=text class=num value=0 name=tele_place_low_chamber size=1 disabled max=20></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Major Foul<br><input type=text class=num value=0 name=tele_foul_major size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Major Foul<br><input type=text class=num value=0 name=tele_foul_major size=1 disabled></div>
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>Specimen<br><input type=text class=num value=0 name=tele_collect_specimen size=1 disabled max=40></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div class=teamColorBG>Specimen<br><input data-provides=specimen type=text class=num value=0 name=tele_collect_specimen size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div>Net Zone<br><input type=text class=num value=0 name=tele_place_net_zone size=1 disabled max=60></div>
-			<div><img class=count src=/count_down.svg></div>
+			<div>Net Zone<br><input data-accepts=sample type=text class=num value=0 name=tele_place_net_zone size=1 disabled max=60></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>Observation<br><input type=text class=num value=0 name=tele_place_observation size=1 disabled max=20></div>
-			<div><img class=count src=/count_down.svg></div>
-		</td><td>
+			<div class=teamColorBG>Observation<br><input data-accepts=alliance type=text class=num value=0 name=tele_place_observation size=1 disabled max=20></div>
+		</td><td rowspan=2>
 			<div><label><input type=checkbox name=tele_yellow_card value=1><span>Yellow Card</span></label></div>
 			<div><label><input type=checkbox name=tele_red_card value=1><span>Red Card</span></label></div>
 			<div><label><input type=checkbox name=tele_disabled value=1><span>Disabled</span></label></div>
-		<tr><td class=subheader colspan=4>
+		</td></tr><tr><td>
+		</td><td colspan=2>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Dropped<br><input data-accepts=any type=text class=num value=0 name=tele_place_drop size=1 disabled></div>
+		</td></tr><tr><td class=subheader colspan=4>
 			<label><input type=radio name=tele_end value=park><span>Park</span></label>
 			<label><input type=radio name=tele_end value=ascent_1><span>Ascent 1</span></label>
 			<label><input type=radio name=tele_end value=ascent_2><span>Ascent 2</span></label>
 			<label><input type=radio name=tele_end value=ascent_3><span>Ascent 3</span></label>
 		</td></tr></table>
 		<button class=tab-button data-content=end>Proceed to End Game</button>
-
 	</div>
 
 	<div class="end tab-content">

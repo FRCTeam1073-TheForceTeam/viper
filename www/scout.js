@@ -281,9 +281,9 @@ function showPitScoutingForm(t){
 		fillPreviousFormData(pitScouting, localPitScoutingData(team)||pitData[team])
 		promiseTeamsInfo().then(ti => {
 			if (ti[team]){
-				$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
+				inputChanged($('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort))
 				var loc = `${ti[team].city}, ${ti[team].stateProv}, ${ti[team].country}`
-				$('input[name="team_location"]').val(loc).attr('value',loc)
+				inputChanged($('input[name="team_location"]').val(loc).attr('value',loc))
 			}
 		})
 		resetSequentialInputSeries()
@@ -348,6 +348,7 @@ function countHandler(e){
 	val=parseInt(input.val())||0,
 	max=parseInt(input.attr('max'))||999999,
 	min=parseInt(input.attr('min'))||0
+	if (parent.find('.disabledOverlay').is(':visible')) return
 	if (clicked){
 		lastClickTimeOnCounter=e.timeStamp
 		var toAdd=0,
@@ -364,7 +365,7 @@ function countHandler(e){
 			changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:e.pageY,left:e.pageX}).show()
 			$('body').append(changeFloater)
 		}
-		input.val(val)
+		inputChanged(input.val(val))
 		parent.find('.count').each(countHandler)
 	} else {
 		if(/down/.test(count.attr('src'))){
@@ -423,7 +424,7 @@ function setTeamBG(){
 
 function toggleChecked(o){
 	o.each(function(){
-		$(this).prop('checked', !$(this).prop('checked'))
+		inputChanged($(this).prop('checked', !$(this).prop('checked')))
 	})
 }
 
@@ -479,12 +480,19 @@ window.onStore = window.onStore || []
 window.onShowScouting = window.onShowScouting || []
 window.onShowPitScouting = window.onShowPitScouting || []
 window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
+window.onInputChanged = window.onInputChanged || []
 
 function setTimeStamps(form){
 	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
 	created = form.find('input[name="created"]')
 	if (created.length && !created.val()) created.val(time)
 	form.find('input[name="modified"]').val(time)
+}
+
+function inputChanged(input){
+	for (var i=0; i<window.onInputChanged.length; i++){
+		if(!window.onInputChanged[i](input)) return false
+	}
 }
 
 function storeScouter(form){
@@ -719,7 +727,7 @@ $(document).ready(function(){
 		name = inp.attr('name')
 		$(`.${name}`).remove()
 		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
-		inp.val(`${x}%x${y}%`)
+		inputChanged(inp.val(`${x}%x${y}%`))
 	})
 
 	$("#nextBtn").click(function(e){
