@@ -16,7 +16,7 @@ then
 
 	echo >> www/data/.htaccess
 	echo 'RewriteEngine on' >> www/data/.htaccess
-	echo 'RewriteRule ^\/?(?:data\/)?((?:[0-9]+\/)?[^\/]+\.(?:csv|json|jpg))$ /file.cgi?file=$1 [L]' >> www/data/.htaccess
+	echo 'RewriteRule ^\/?(?:data\/)?((?:[0-9\-]+\/)?[^\/]+\.(?:csv|json|jpg))$ /file.cgi?file=$1 [L]' >> www/data/.htaccess
 else
 	echo >> www/.htaccess
 	echo 'RewriteCond %{DOCUMENT_ROOT}/local.background.png -f' >> www/.htaccess

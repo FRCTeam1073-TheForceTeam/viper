@@ -105,8 +105,8 @@ sub json(){
 
 sub image(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}\/[0-9]+(?:\-[a-z]+)?\.jpg$/);
-	my ($year, $team, $view) = $file =~ /^(20[0-9]{2})\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
+	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}(?:-[0-9]{2})?\/[0-9]+(?:\-[a-z]+)?\.jpg$/);
+	my ($year, $team, $view) = $file =~ /^(20[0-9]{2}(?:-[0-9]{2})?)\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
 	$view = $view||"";
 	my $dbh = $db->dbConnection();
 	my $sth = $dbh->prepare("SELECT `image` FROM `images` WHERE `site`=? AND `year`=? AND `team`=? AND `view`=?");
