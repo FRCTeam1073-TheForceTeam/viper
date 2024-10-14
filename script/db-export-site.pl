@@ -75,13 +75,13 @@ sub queryToCsv(){
 }
 
 for $event (@$events){
-	my ($year) = $event =~ /^(20[0-9]{2})/;
+	my ($season) = $event =~ /^(20[0-9]{2}(?:[0-9]{2})?)/;
 	&queryToCsv("event", "event", $site, $event, "'event'");
 	&queryToCsv("schedule", "schedule", $site, $event, "'Match'");
 	&queryToCsv("alliances", "alliances", $site, $event, "'alliance'");
-	&queryToCsv("${year}scouting", "scouting", $site, $event, "'match', 'team' + 0");
-	&queryToCsv("${year}pit", "pit", $site, $event, "'team' + 0");
-	&queryToCsv("${year}subjective", "subjective", $site, $event, "'team' + 0");
+	&queryToCsv("${season}scouting", "scouting", $site, $event, "'match', 'team' + 0");
+	&queryToCsv("${season}pit", "pit", $site, $event, "'team' + 0");
+	&queryToCsv("${season}subjective", "subjective", $site, $event, "'team' + 0");
 }
 
 my $sth = $dbh->prepare("SELECT `year`, `team`, `view`, `image` FROM `images` WHERE `site`=?");
