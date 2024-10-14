@@ -11,19 +11,19 @@ $(document).ready(function(){
 	var uploadCount = getUploads().length
 	$('.initHid').hide()
 	var extensionMap = {
-		"event.csv": ['.dependInfo','Event Info CSV'],
-		"schedule.csv": ['.dependSchedule','Sched&shy;ule CSV'],
-		"scouting.csv": ['.dependScouting','Scout&shy;ing CSV'],
-		"alliances.csv": ['.dependAlliances','All&shy;ianc&shy;es CSV'],
-		"pit.csv": ['.dependPit','Pit Scout&shy;ing CSV'],
-		"subjective.csv": ['.dependSubjective','Sub&shy;ject&shy;ive Scout&shy;ing CSV'],
+		"event.csv": ['dependInfo','Event Info CSV'],
+		"schedule.csv": ['dependSchedule','Sched&shy;ule CSV'],
+		"scouting.csv": ['dependScouting','Scout&shy;ing CSV'],
+		"alliances.csv": ['dependAlliances','All&shy;ianc&shy;es CSV'],
+		"pit.csv": ['dependPit','Pit Scout&shy;ing CSV'],
+		"subjective.csv": ['dependSubjective','Sub&shy;ject&shy;ive Scout&shy;ing CSV'],
 		"info.json": ['','API Event Info JSON'],
 		"teams.json": ['','API Team List JSON'],
 		"schedule.practice.json": ['','API Prac&shy;tice Sched&shy;ule JSON'],
 		"schedule.qualification.json": ['','API Qual&shy;if&shy;ic&shy;a&shy;tion Sched&shy;ule JSON'],
 		"schedule.playoff.json": ['','API Play&shy;off Schedule JSON'],
-		"scores.qualification.json": ['.dependScores','API Qual&shy;if&shy;ic&shy;a&shy;tion Scores JSON'],
-		"scores.playoff.json": ['.dependScores','API Play&shy;off Scores JSON'],
+		"scores.qualification.json": ['dependScores','API Qual&shy;if&shy;ic&shy;a&shy;tion Scores JSON'],
+		"scores.playoff.json": ['dependScores','API Play&shy;off Scores JSON'],
 	}
 	function showDataActions(){
 		var url = $(this).attr('href'),
@@ -82,7 +82,20 @@ $(document).ready(function(){
 			.replace('UPLOAD_COUNT', uploadCount)
 		)
 	})
-	if (uploadCount) $('.dependUploads').show().parents('.initHid').show()
+	if (uploadCount) dependencySatisfied('dependUploads')
+
+	function dependencySatisfied(depend){
+		$(`.${depend}`).each(function(){
+			$(this).removeClass(depend)
+			var dependCount = 0
+			$(this).attr('class').split(/ /).forEach(c=> {
+				if (/^depend/.test(c)) dependCount++
+			})
+			if (dependCount == 0){
+				$(this).show().removeClass('initHid').parents('.initHid').show().removeClass('initHid')
+			}
+		})
+	}
 
 	function matchScoutingDataCount(eventStatsByMatchTeam, m){
 		if (!m) return false
@@ -93,9 +106,10 @@ $(document).ready(function(){
 		promiseEventStats(),
 		promiseEventScores(),
 		promiseEventFiles(),
-		promiseEventInfo()
+		promiseEventInfo(),
+		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
 	]).then(values =>{
-		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo] = values,
+		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo, seasonFiles] = values,
 		lastDone,
 		lastFullyDone,
 		ourNext
@@ -108,10 +122,15 @@ $(document).ready(function(){
 			if (extensionMap[extension]){
 				var depend = extensionMap[extension][0]
 				title = extensionMap[extension][1]
-				if (depend) $(depend).show().parents('.initHid').show()
+				if (depend) dependencySatisfied(depend)
 			}
 			title+=fileNum?(" "+fileNum):""
 			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents('.initHid').show()
+		})
+		seasonFiles.split(/[\r\n]+/).forEach(file=>{
+			if (/\/subjective-scout\.html$/.test(file)) dependencySatisfied('dependSubjective')
+			if (/\/pit-scout\.html$/.test(file)) dependencySatisfied('dependPit')
+			if (/\/field-whiteboard\.png$/.test(file))dependencySatisfied('dependWhiteboard')
 		})
 
 		setName()
@@ -120,8 +139,8 @@ $(document).ready(function(){
 		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
 		if ("frc"!=eventCompetition || !/^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) $('#blueAllianceLinks').hide()
 		if ("ftc"!=eventCompetition || !/^[0-9]{4}[A-Za-z0-9\-]+/.test(orangeAllianceId)) $('#orangeAllianceLinks').hide()
-		if ("frc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('.dependFirstFrc').show().parents('.initHid').show()
-		if ("ftc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) $('.dependFirstFtc').show().parents('.initHid').show()
+		if ("frc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFrc')
+		if ("ftc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFtc')
 		$('a').each(function(){
 			$(this).attr(
 				'href',$(this).attr('href')
@@ -327,13 +346,11 @@ function showLinks(e){
 		}
 	}
 	var html = $('#matchActionsTemplate').html()
-		.replace(/\$TEAM/g, team)
-		.replace(/\$POS/g, pos)
-		.replace(/\$MATCH_ID/g, matchId)
-		.replace(/\$MATCH_NAME/g, matchName)
-		.replace(/\$BOTS/g, positions)
-		.replace(/\$EVENT/g, eventId)
-		.replace(/\$YEAR/g, eventYear),
+		.replace(/TEAM/g, team)
+		.replace(/POS/g, pos)
+		.replace(/MATCH_ID/g, matchId)
+		.replace(/MATCH_NAME/g, matchName)
+		.replace(/BOTS/g, positions),
 	ma = $('#matchActions')
 	ma.html(html).find('.dependTeam').toggle(!!team)
 	showLightBox(ma)

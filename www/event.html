@@ -32,9 +32,9 @@
 					<li class=initHid><a class=dependSchedule href="/YEAR/scout.html#event=EVENT">Scout a match</a></li>
 					<ul class=more>
 						<li><a href="/bot-photos.html#event=EVENT">Upload bot photos for all teams</a></li>
-						<li><a href="/YEAR/pit-scout.html#event=EVENT">Open pit scouting for all teams</a></li>
-						<li id=pitScoutSetup>
-							<div>Open pit and photo scouting squads:</div>
+						<li class=initHid><a class=dependPit href="/YEAR/pit-scout.html#event=EVENT">Open pit scouting for all teams</a></li>
+						<li class=initHid id=pitScoutSetup>
+							<div class=dependPit>Open pit and photo scouting squads:</div>
 							<div class=side-by-side>
 								<img src=/count_up.svg>
 								<img src=/count_down.svg>
@@ -43,7 +43,7 @@
 
 							</div>
 						</li>
-						<li class=initHid><a class=dependSchedule href="/YEAR/subjective-scout.html#event=EVENT">Subjective scouting</a></li>
+						<li class=initHid><a class="dependSchedule dependSubjective" href="/YEAR/subjective-scout.html#event=EVENT">Subjective scouting</a></li>
 						<li class=initHid><a class=dependScouting href="/scouter.html#event=EVENT">Top scouters</a></li>
 						<li class=initHid><a class=dependScores href="/scouting.html#event=EVENT">Compare scouting to official scores</a></li>
 					</ul>
@@ -55,7 +55,7 @@
 				<ul>
 					<li class=initHid><a class=dependScouting href="/stats.html#event=EVENT">View stats for alliance selection</a></li>
 					<li class=initHid><a class=dependScouting href="/predictor.html#event=EVENT">Predict a match outcome</a></li>
-					<li class=initHid><a class=dependScouting href="/planner.html#event=EVENT">View match planner with whiteboard</a></li>
+					<li class=initHid><a class="dependScouting dependWhiteboard" href="/planner.html#event=EVENT">View match planner with whiteboard</a></li>
 					<ul class=more>
 						<li class=initHid><a class=dependScouting href="/team.html#event=EVENT">View individual team stats and pit scouting data</a></li>
 					</ul>
@@ -143,23 +143,23 @@
 			<td class="B3 blueTeamBG noftc"></td>
 		</tr>
 	</template>
-	<template id=matchActionsTemplate>
+	<div style="display:none" id=matchActionsTemplate>
 		<div class="dependTeam">
-			<h3>Team $TEAM</h3>
+			<h3>Team TEAM</h3>
 			<ul>
-				<li>$MATCH_NAME: <a href="/$YEAR/scout.html#event=$EVENT&pos=$POS&team=$TEAM&match=$MATCH_ID">Scout</a></li>
-				<li>Team stats: <a href="/team.html#event=$EVENT&team=$TEAM">View</a></li>
-				<li>Pit scouting: <a href="/team.html#event=$EVENT&team=$TEAM&pit-scouting">View</a> | <a href="/$YEAR/pit-scout.html#event=$EVENT&team=$TEAM">Collect data</a></li>
-				<li>Subjective scouting: <a href="/team.html#event=$EVENT&team=$TEAM&subjective-scouting">View</a> | <a href="/$YEAR/subjective-scout.html#event=$EVENT&team=$TEAM">Collect data</a></li>
+				<li>MATCH_NAME: <a href="/YEAR/scout.html#event=EVENT&pos=POS&team=TEAM&match=MATCH_ID">Scout</a></li>
+				<li>Team stats: <a href="/team.html#event=EVENT&team=TEAM">View</a></li>
+				<li class="initHid dependPit">Pit scouting: <a href="/team.html#event=EVENT&team=TEAM&pit-scouting">View</a> | <a href="/YEAR/pit-scout.html#event=EVENT&team=TEAM">Collect data</a></li>
+				<li class="initHid dependSubjective">Subjective scouting: <a href="/team.html#event=EVENT&team=TEAM&subjective-scouting">View</a> | <a href="/YEAR/subjective-scout.html#event=EVENT&team=TEAM">Collect data</a></li>
 			</ul>
 		</div>
 
-		<h3>$MATCH_NAME</h3>
+		<h3>MATCH_NAME</h3>
 		<ul>
-			<li><a href="/predictor.html#event=$EVENT&match=$MATCH_ID&$BOTS">Predict match outcome</a></li>
-			<li><a href="/planner.html#event=$EVENT&match=$MATCH_ID&$BOTS">View planner and whiteboard</a></li>
+			<li><a href="/predictor.html#event=EVENT&match=MATCH_ID&BOTS">Predict match outcome</a></li>
+			<li class="initHid dependWhiteboard"><a href="/planner.html#event=EVENT&match=MATCH_ID&BOTS">View planner and whiteboard</a></li>
 		</ul>
-	</template>
+	</div>
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
 	<div id=dataActions class=lightBoxCenterContent style=display:none><h2></h2><ul></ul></div>
 	<iframe id=instructions class=lightBoxFullContent src=/event-instructions.html></iframe>

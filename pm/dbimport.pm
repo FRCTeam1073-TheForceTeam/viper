@@ -25,7 +25,7 @@ sub getSite(){
 
 sub getEventAndTable(){
 	my($self, $file) = @_;
-	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
+	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)([^\.]+)\.([^\.]+)\.csv$/;
 	$table = "$year$table" if ($table =~ /^scouting|pit|subjective$/);
 	$event = "$year$event";
 	return $event, $table;
@@ -66,7 +66,7 @@ sub importCsvFile(){
 sub importImageFile(){
 	my ($self, $f, $contents) = @_;
 
-	my ($year, $team, $view) = $f =~ /^(?:.*\/)?(20[0-9]+)\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
+	my ($year, $team, $view) = $f =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
 	my $img = scalar($contents);
 	$view = $view||"";
 

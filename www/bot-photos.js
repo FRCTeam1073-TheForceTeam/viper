@@ -1,7 +1,12 @@
 "use strict"
 
 $(document).ready(function(){
-	var teams = (/(?:(?:^\#)|(?:\&teams\=))([0-9]+(?:,[0-9]+)*)$/g.exec(location.hash)||["",""])[1].split(/,/)
+	var teams = (/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)/g.exec(location.hash)||["",""])[1].split(/,/)
+	$('#seasonInp').val(
+		((/^\#(?:.*\&)?(?:season\=)(20[0-9]{2}(?:-[0-9]{2})?)/g.exec(location.hash)||["",""])[1])||
+		((/^([0-9]{4}(?:-[0-9]{2})+)/.exec(eventId)||["",""])[1])||
+		$('#seasonInp').val()
+	)
 	if(teams[0]){
 		teams.forEach(function(team){
 			addTeam(team);
@@ -10,9 +15,6 @@ $(document).ready(function(){
 		promiseEventTeams().then(eventTeams=>{
 			eventTeams.forEach(addTeam)
 		})
-	}
-	if (eventId){
-		$('#yearInp').val((/^([0-9]{4})/.exec(eventId)||["",$('#yearInp').val()])[1])
 	}
 	$('#add').click(function(e){
 		e.preventDefault()
@@ -65,10 +67,10 @@ function photoEditLightBox(){
 }
 
 function imageCell(imgName){
-	var year = $('#yearInp').val(),
+	var season = $('#seasonInp').val(),
 	td = $('<td>')
-	td.append($(`<a class=show-only-when-connected href=/photo-edit.html#${year}/${imgName}.jpg>Edit</a>`).click(photoEditLightBox))
-	.append($(`<img class=photoPreview src=/data/${year}/${imgName}.jpg>`).click(showFullPhoto).on('error',function(){
+	td.append($(`<a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg>Edit</a>`).click(photoEditLightBox))
+	.append($(`<img class=photoPreview src=/data/${season}/${imgName}.jpg>`).click(showFullPhoto).on('error',function(){
 		$(this).parent().find('a,img').remove()
 	}).each(function(){
 		if(this.error) $(this).error()
