@@ -66,7 +66,7 @@ function clickOnEvent(){
 		var [teams, schedule] = responses
 		if (!teams.ok) return location.href=href
 		$('#fetchLink').attr('href', href)
-		$('#importLink').attr('href',schedule.ok?`/${comp}-event-downloaded.html#event=${eventId}`:`/import-${comp}-api-event.html#event=${eventId}`)
+		$('#importLink').attr('href',schedule.ok?`/event-downloaded.html#event=${eventId}`:`/import-${comp}-api-event.html#event=${eventId}`)
 		showLightBox($('#importOptions'))
 	}).catch(()=>{
 		location.href=href
