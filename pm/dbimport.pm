@@ -25,9 +25,10 @@ sub getSite(){
 
 sub getEventAndTable(){
 	my($self, $file) = @_;
-	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)([^\.]+)\.([^\.]+)\.csv$/;
-	$table = "$year$table" if ($table =~ /^scouting|pit|subjective$/);
-	$event = "$year$event";
+	my ($season, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)([^\.]+)\.([^\.]+)\.csv$/;
+	$event = "$season$event";
+	$season =~ s/\-/_/g;
+	$table = "$season$table" if ($table =~ /^scouting|pit|subjective$/);
 	return $event, $table;
 }
 

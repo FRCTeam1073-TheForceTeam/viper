@@ -133,7 +133,7 @@ sub upsert {
 			1;
 		} or do {
 			my $error = $@;
-			if ($table =~ /^20[0-9]{2}(-[0-9]{2})?(pit|scouting|subjective)$/ and $error =~ /Unknown column '([^']+)'/i){
+			if ($table =~ /^20[0-9]{2}(_[0-9]{2})?(pit|scouting|subjective)$/ and $error =~ /Unknown column '([^']+)'/i){
 				my $column = $1;
 				my $type = "VARCHAR(256)";
 				$dbh->do("
