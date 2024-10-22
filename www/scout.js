@@ -281,9 +281,9 @@ function showPitScoutingForm(t){
 		fillPreviousFormData(pitScouting, localPitScoutingData(team)||pitData[team])
 		promiseTeamsInfo().then(ti => {
 			if (ti[team]){
-				inputChanged($('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort))
+				$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
 				var loc = `${ti[team].city}, ${ti[team].stateProv}, ${ti[team].country}`
-				inputChanged($('input[name="team_location"]').val(loc).attr('value',loc))
+				$('input[name="team_location"]').val(loc).attr('value',loc)
 			}
 		})
 		resetSequentialInputSeries()
@@ -361,11 +361,8 @@ function countHandler(e){
 		val = val<min?min:val
 		val = val>max?max:val
 		var change = val-oldVal
-		if (change!=0){
-			changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:e.pageY,left:e.pageX}).show()
-			$('body').append(changeFloater)
-		}
-		inputChanged(input.val(val))
+		animateChangeFloater(change, e)
+		inputChanged(input.val(val),change)
 		parent.find('.count').each(countHandler)
 	} else {
 		if(/down/.test(count.attr('src'))){
@@ -373,6 +370,15 @@ function countHandler(e){
 		} else {
 			count.css('visibility', val>=max?'hidden':'visible');
 		}
+	}
+}
+
+function animateChangeFloater(change, relative){
+	if (change!=0){
+		var x = relative.pageX?relative.pageX:(relative.offset().left+relative.width()/2),
+		y = relative.pageY?relative.pageY:(relative.offset().top+relative.height()/2)
+		changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:y-changeFloater.height()/2,left:x-changeFloater.width()/2}).show()
+		$('body').append(changeFloater)
 	}
 }
 
@@ -489,9 +495,9 @@ function setTimeStamps(form){
 	form.find('input[name="modified"]').val(time)
 }
 
-function inputChanged(input){
+function inputChanged(input, change){
 	for (var i=0; i<window.onInputChanged.length; i++){
-		if(!window.onInputChanged[i](input)) return false
+		if(!window.onInputChanged[i](input, change)) return false
 	}
 }
 
@@ -727,7 +733,7 @@ $(document).ready(function(){
 		name = inp.attr('name')
 		$(`.${name}`).remove()
 		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
-		inputChanged(inp.val(`${x}%x${y}%`))
+		inputChanged(inp.val(val), `${x}%x${y}%`)
 	})
 
 	$("#nextBtn").click(function(e){

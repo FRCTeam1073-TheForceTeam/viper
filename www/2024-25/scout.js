@@ -44,7 +44,10 @@ $(document).ready(function(){
 		text = m[1].trim()
 		var field = m[2],
 		input = $(`input[name="${field}"]`)
-		if (input.is(".num")) input.val(parseInt(input.val())-1)
+		if (input.is(".num")){
+			input.val(parseInt(input.val())-1)
+			animateChangeFloater(-1, input)
+		}
 		if (input.is(":checked")) input.prop('checked',false)
 		if (!text) {
 			matchStartTime = 0
