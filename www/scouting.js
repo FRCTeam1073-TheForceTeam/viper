@@ -16,7 +16,7 @@ $(document).ready(function(){
 			dh1 = $('<tr>'),
 			dh2 = $('<tr>')
 			dh1.append($('<td rowspan=2>').text("Diff"))
-			dh1.append($('<td colspan=2>').text("FMS"))
+			dh1.append($('<td colspan=2>').text("API"))
 			dh1.append($('<td colspan=5>').text("Scouting"))
 			dh2.append($('<td>').text("Name"))
 			dh2.append($('<td>').text("Value"))

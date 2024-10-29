@@ -1,6 +1,5 @@
 "use strict"
 
-
 function promiseScoutScoreCompare(callback){
 	return Promise.all([
 		promiseEventScores(),
