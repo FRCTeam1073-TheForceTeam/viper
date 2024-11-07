@@ -17,6 +17,13 @@ var transferHosts = [
 	//"http://insecure-webscout.example.com",
 ]
 
+// stats.viperscout.com tracks your server's host name, your team number,
+// events, count of things scouted, and count of scouters. It does NOT
+// collect your scouting data, scouters' names, or other personally
+// identifiable information. To opt out of this analytics collection
+// from your server, set the following variable to true.
+var analyticsOptOut=false
+
 // Any code here gets run on every page.
 
 // Inject a site wide message

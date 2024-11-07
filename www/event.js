@@ -107,9 +107,11 @@ $(document).ready(function(){
 		promiseEventScores(),
 		promiseEventFiles(),
 		promiseEventInfo(),
+		promiseSubjectiveScouting(),
+		promisePitScouting(),
 		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
 	]).then(values =>{
-		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo, seasonFiles] = values,
+		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo, subjectiveData, pitData, seasonFiles] = values,
 		lastDone,
 		lastFullyDone,
 		ourNext
@@ -224,6 +226,27 @@ $(document).ready(function(){
 			.attr('download',`${eventId}.scouting.aggregated.csv`)
 			.attr('data-source','eventStatsByTeam')
 			.click(showDataActions)
+		if (!window.analyticsOptOut){
+			fetch('https://stats.viperscout.com/collect',{
+				method:'POST',
+				headers:{'Content-Type': 'application/x-www-form-urlencoded'},
+				body: new URLSearchParams({
+					pitscouted:Object.keys(pitData).length,
+					subjectivescouted:Object.keys(subjectiveData).length,
+					scouters:new Set([...eventStats, ...Object.values(subjectiveData), ...Object.values(pitData)].map(x=>(((x.scouter||"")+"").toLowerCase().trim().replace(/\s+/,' '))).filter(x=>x!="")).size,
+					scouted:eventStats.length,
+					team:window.ourTeam||"",
+					viewerteam:localStorage.getItem('my-team')||"",
+					host:location.hostname,
+					event:eventId
+				})
+			}).then(response => {
+				return response.text()
+			}).then(body => {
+				body=body.trim()
+				if (body!='OK') console.error("Error sending stats: " + body)
+			})
+		}
 	})
 
 	function getScore(eventStatsByTeam, team){
