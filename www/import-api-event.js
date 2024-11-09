@@ -37,7 +37,7 @@ $(document).ready(function(){
 		practice.Schedule.forEach(function(match){
 			csv+="pm"+match.matchNumber
 			match.teams.forEach(function(team){
-				csv+=","+team.teamNumber
+				csv+=","+(team.teamNumber||0)
 			})
 			csv+="\n"
 		})
@@ -46,7 +46,7 @@ $(document).ready(function(){
 		qual.Schedule.forEach(function(match){
 			csv+="qm"+match.matchNumber
 			match.teams.forEach(function(team){
-				csv+=","+team.teamNumber
+				csv+=","+(team.teamNumber||0)
 			})
 			csv+="\n"
 		})
