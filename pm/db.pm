@@ -180,7 +180,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				schedule
+				`schedule`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
@@ -215,7 +215,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				alliances
+				`alliances`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
@@ -242,7 +242,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				event
+				`event`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,

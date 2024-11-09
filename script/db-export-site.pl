@@ -12,6 +12,11 @@ my $dir = @ARGV[0];
 die "'$dir' does not exist" if (! -e $dir);
 die "'$dir' is not a directory" if (! -d $dir);
 $dir =~ s/\/+$//g;
+
+if (!exists $ENV{'VIPER_DB_SITE'}){
+	($ENV{'VIPER_DB_SITE'}) = $dir =~ /([^\/]+)$/;
+}
+
 my $site = $db->getSite();
 my $fh;
 
