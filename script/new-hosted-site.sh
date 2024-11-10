@@ -4,9 +4,12 @@ set -e
 
 team=$1
 
-case $team in
-    ''|*[!0-9]*) echo "Expected team number as first argument";	exit 1;;
-esac
+
+if [[ ! "$team" =~ ^(ftc)?[0-9]+$ ]]
+then
+    echo "Expected team number as first argument";
+	exit 1;
+fi
 
 if [ ! -e local.data/viper$team ]
 then
