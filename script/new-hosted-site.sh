@@ -4,7 +4,6 @@ set -e
 
 team=$1
 
-
 if [[ ! "$team" =~ ^(ftc)?[0-9]+$ ]]
 then
     echo "Expected team number as first argument";
