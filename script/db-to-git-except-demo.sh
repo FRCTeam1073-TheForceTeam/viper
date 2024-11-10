@@ -7,24 +7,24 @@ QUIET=""
 
 for arg in "$@"
 do
-    case $arg in
-        "-q" )
-           VERBOSE=0
+	case $arg in
+		"-q" )
+		   VERBOSE=0
 		   QUIET="--quiet";;
-        "--quiet" )
-           VERBOSE=0
+		"--quiet" )
+		   VERBOSE=0
 		   QUIET="--quiet";;
-        * )
-           echo "Unknown argument $arg"
+		* )
+		   echo "Unknown argument $arg"
 		   exit 1;;
    esac
 done
 
 verboseCommand(){
-    if [ $VERBOSE -eq 1 ]
+	if [ $VERBOSE -eq 1 ]
 	then
-        "$@"
-    else
+		"$@"
+	else
 		"$@" > /dev/null
 	fi
 }
