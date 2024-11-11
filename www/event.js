@@ -139,8 +139,8 @@ $(document).ready(function(){
 		if (eventInfo['blue_alliance_id']) blueAllianceId = eventInfo['blue_alliance_id']
 		if (eventInfo['orange_alliance_id']) orangeAllianceId = eventInfo['orange_alliance_id']
 		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
-		if ("frc"!=eventCompetition || !/^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) $('#blueAllianceLinks').hide()
-		if ("ftc"!=eventCompetition || !/^[0-9]{4}[A-Za-z0-9\-]+/.test(orangeAllianceId)) $('#orangeAllianceLinks').hide()
+		if ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) dependencySatisfied('dependBlueAlliance')
+		if ("ftc"==eventCompetition && /^[0-9]{4}[A-Za-z0-9\-]+/.test(orangeAllianceId)) dependencySatisfied('dependOrangeAlliance')
 		if ("frc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFrc')
 		if ("ftc"==eventCompetition && /^20[0-9]{2}\/[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFtc')
 		$('a').each(function(){
