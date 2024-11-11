@@ -19,7 +19,9 @@ my $event = $cgi->param('event');
 
 $webutil->error("No event specified") if (!$event);
 $webutil->error("Bad event format") if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
-my ($year) = $event =~ /^(20[0-9]{2})/;
+my ($season) = $event =~ /^(20[0-9]{2}(?:-[0-9]{2})?)/;
+my $seasonTable = $season;
+$seasonTable =~ s/-/_/g;
 
 # print web page beginning
 print "Content-type: text/csv; charset=UTF-8\n\n";
@@ -31,11 +33,11 @@ if ($dbh){
 		SELECT '/data/$event.event.csv' AS `file` FROM `event` WHERE `site`='$site' AND `event`='$event'
 		UNION SELECT '/data/$event.schedule.csv' AS `file` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
 		UNION SELECT '/data/$event.alliances.csv' AS `file` FROM `alliances` WHERE `site`='$site' AND `event`='$event'
-		UNION SELECT '/data/$event.pit.csv' AS `file` FROM `${year}pit` WHERE `site`='$site' AND `event`='$event'
-		UNION SELECT '/data/$event.subjective.csv' AS `file` FROM `${year}subjective` WHERE `site`='$site' AND `event`='$event'
-		UNION SELECT '/data/$event.scouting.csv' AS `file` FROM `${year}scouting` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.pit.csv' AS `file` FROM `${seasonTable}pit` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.subjective.csv' AS `file` FROM `${seasonTable}subjective` WHERE `site`='$site' AND `event`='$event'
+		UNION SELECT '/data/$event.scouting.csv' AS `file` FROM `${seasonTable}scouting` WHERE `site`='$site' AND `event`='$event'
 		UNION SELECT CONCAT('/data/$event.',file,'.json') FROM `apijson` WHERE `site`='' AND `event`='$event'
-		UNION SELECT CONCAT('/data/$year/',`img`,'.jpg') AS `file` FROM (
+		UNION SELECT CONCAT('/data/$season/',`img`,'.jpg') AS `file` FROM (
 			SELECT DISTINCT CONCAT(`team`,'-',`view`) AS img FROM (
 				SELECT DISTINCT `R1` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
 				UNION SELECT DISTINCT `R2` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
@@ -45,7 +47,7 @@ if ($dbh){
 				UNION SELECT DISTINCT `B3` AS `t` FROM `schedule` WHERE `site`='$site' AND `event`='$event'
 			) AS teams
 			JOIN `images` ON teams.t=images.team
-			WHERE `site`='$site' AND `year`='$year'
+			WHERE `site`='$site' AND `year`='$season'
 
 		) AS imgs
 		ORDER BY `file`
@@ -69,11 +71,11 @@ if ( -e "data/$event.schedule.csv" ){
 	my @teams = sort { $a <=> $b } keys(%{{map { $_ => 1 } ($contents =~ /[0-9]+/g)}});
 
 	for my $team (@teams){
-		if ( -e "data/$year/$team.jpg"){
-			print "data/$year/$team.jpg\n";
+		if ( -e "data/$season/$team.jpg"){
+			print "data/$season/$team.jpg\n";
 		}
-		if ( -e "data/$year/$team-top.jpg"){
-			print "data/$year/$team-top.jpg\n";
+		if ( -e "data/$season/$team-top.jpg"){
+			print "data/$season/$team-top.jpg\n";
 		}
 	}
 }

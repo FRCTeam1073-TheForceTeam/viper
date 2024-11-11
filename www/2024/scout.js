@@ -1,6 +1,7 @@
 "use strict"
 
 $(document).ready(function(){
+	const AUTO_MS=15000
 
 	$('.onstage-state').click(toggleOnstage)
 
@@ -81,23 +82,35 @@ $(document).ready(function(){
 		if (!$(this).is('.placement,.collectSource')) cycleInterrupt()
 	})
 
-	$('.auto label,.teleop label,.auto .count,.teleop .count').click(function(){
-		if (!matchStartTime) matchStartTime = new Date().getTime()
-		var el = $(this),
-		input = findInputInEl(findParentFromButton(el)),
-		order = $('#timeline'),
+
+	window.onInputChanged = window.onInputChanged || []
+	window.onInputChanged.push(function(input, change){
+		if(!input.closest('.auto,.teleop').length) return
+		var order = $('#timeline'),
 		text = order.val(),
 		name = input.attr('name'),
-		src = el.attr('src') || ""
-		if (/up/.test(src) || input.is(':checked')){
+		re = name
+		if (name=='no_show') return
+		setTimeout(proceedToTeleBlink, AUTO_MS)
+		if (matchStartTime==0) matchStartTime = new Date().getTime()
+		if ('radio'==input.attr('type')){
+			name += `:${input.val()}`
+			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
+		}
+		if ((input.is('.num') && change>0) || input.is(':checked')){
 			if (text) text += " "
 			var seconds = Math.round((new Date().getTime() - matchStartTime)/1000)
 			text += `${seconds}:${name}`
 		} else {
-			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${name}( |$)`),"$1").trim()
+			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
+		}
+		if (!text){
+			matchStartTime = 0
+			proceedToTeleBlink()
 		}
 		order.val(text)
 	})
+
 
 	function initialRobotStartPosition(){
 		moveFloaterToPercentCoordinates(
@@ -221,5 +234,9 @@ $(document).ready(function(){
 		$('.auto-path').each(function(){
 			drawPath(canvas,$(this).attr('data-color'),$(this).val())
 		})
+	}
+
+	function proceedToTeleBlink(){
+		$('#to-tele-button').toggleClass('pulse-bg', matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS)
 	}
 })

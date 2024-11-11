@@ -348,6 +348,7 @@ function countHandler(e){
 	val=parseInt(input.val())||0,
 	max=parseInt(input.attr('max'))||999999,
 	min=parseInt(input.attr('min'))||0
+	if (parent.find('.disabledOverlay').is(':visible')) return
 	if (clicked){
 		lastClickTimeOnCounter=e.timeStamp
 		var toAdd=0,
@@ -360,11 +361,8 @@ function countHandler(e){
 		val = val<min?min:val
 		val = val>max?max:val
 		var change = val-oldVal
-		if (change!=0){
-			changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:e.pageY,left:e.pageX}).show()
-			$('body').append(changeFloater)
-		}
-		input.val(val)
+		animateChangeFloater(change, e)
+		inputChanged(input.val(val),change)
 		parent.find('.count').each(countHandler)
 	} else {
 		if(/down/.test(count.attr('src'))){
@@ -372,6 +370,15 @@ function countHandler(e){
 		} else {
 			count.css('visibility', val>=max?'hidden':'visible');
 		}
+	}
+}
+
+function animateChangeFloater(change, relative){
+	if (change!=0){
+		var x = relative.pageX?relative.pageX:(relative.offset().left+relative.width()/2),
+		y = relative.pageY?relative.pageY:(relative.offset().top+relative.height()/2)
+		changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:y-changeFloater.height()/2,left:x-changeFloater.width()/2}).show()
+		$('body').append(changeFloater)
 	}
 }
 
@@ -389,6 +396,7 @@ function showScouting(){
 		$('.orientRight').toggle(orient && orient=='right')
 		$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
 		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
+		$('.teamColorCaps').text(pos.startsWith('R')?"Red":"Blue")
 		$('input[name="match"]').val(match).attr('data-at-scout-start',match)
 		fillDefaultFormFields()
 		$('.match').text(matchName)
@@ -422,7 +430,7 @@ function setTeamBG(){
 
 function toggleChecked(o){
 	o.each(function(){
-		$(this).prop('checked', !$(this).prop('checked'))
+		inputChanged($(this).prop('checked', !$(this).prop('checked')))
 	})
 }
 
@@ -478,12 +486,19 @@ window.onStore = window.onStore || []
 window.onShowScouting = window.onShowScouting || []
 window.onShowPitScouting = window.onShowPitScouting || []
 window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
+window.onInputChanged = window.onInputChanged || []
 
 function setTimeStamps(form){
 	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
 	created = form.find('input[name="created"]')
 	if (created.length && !created.val()) created.val(time)
 	form.find('input[name="modified"]').val(time)
+}
+
+function inputChanged(input, change){
+	for (var i=0; i<window.onInputChanged.length; i++){
+		if(!window.onInputChanged[i](input, change)) return false
+	}
 }
 
 function storeScouter(form){
@@ -718,7 +733,7 @@ $(document).ready(function(){
 		name = inp.attr('name')
 		$(`.${name}`).remove()
 		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
-		inp.val(`${x}%x${y}%`)
+		inputChanged(inp.val(val), `${x}%x${y}%`)
 	})
 
 	$("#nextBtn").click(function(e){

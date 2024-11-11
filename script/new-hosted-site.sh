@@ -4,9 +4,13 @@ set -e
 
 team=$1
 
-case $team in
-    ''|*[!0-9]*) echo "Expected team number as first argument";	exit 1;;
-esac
+if [[ ! "$team" =~ ^(ftc)?[0-9]+$ ]]
+then
+    echo "Expected team number as first argument";
+	exit 1;
+fi
+
+teamNum="${team#ftc}"
 
 if [ ! -e local.data/viper$team ]
 then
@@ -14,7 +18,9 @@ then
 	git clone source.ostermiller.org:/git/viper${team}data.git local.data/viper$team
 fi
 
-sed -i "s/TEAM/$team/g" local.data/viper$team/.*ht* local.data/viper$team/local.css local.data/viper$team/local.js
+sed -i "s/TEAM/$team/g" local.data/viper$team/.*ht*
+sed -i "s/TEAM/$teamNum/g" local.data/viper$team/local.css local.data/viper$team/local.js
+
 cd local.data/viper$team
 git pull
 if ! grep -q admin .htpasswd

@@ -6,6 +6,8 @@ $(document).ready(function() {
 
 	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
 
+	if (eventCompetition=='ftc') $('.noftc').hide()
+
 	$('button.pen').click(penButtonClicked)
 
 	$('h3').text(eventName + " " + getShortMatchName(matchId))
@@ -107,21 +109,21 @@ $(document).ready(function() {
 				teamList.push(val)
 			}
 		})
-		$('#teamButtons').toggle(teamList.length!=6)
+		$('#teamButtons').toggle(teamList.length!=BOT_POSITIONS.length)
 		var sections = window.plannerSections||window.matchPredictorSections||{}
 		var overlays = window.whiteboardOverlays||[]
-		if(teamList.length==6){
+		if(teamList.length==BOT_POSITIONS.length){
 			var row = $("<tr>")
 			teamList.forEach(function(team,i){
-				var color = i<3?"red":"blue"
+				var color = (i<BOT_POSITIONS.length/2)?"red":"blue"
 				row.append($(`<td class="${color}TeamBG viewTeam" data-team=${team}>`).click(showTeamStats).html('<img src=/graph.svg>'))
-				if (team == getLocalTeam() && i>=3) $('#fieldBG').addClass('rotated')
+				if (team == getLocalTeam() && (i<BOT_POSITIONS.length/2)) $('#fieldBG').addClass('rotated')
 			})
 			tbody.append(row)
 			;["","-top"].forEach(function(imageSuffix){
 				row = $("<tr>")
 				teamList.forEach(function(team,i){
-					var color = i<3?"red":"blue"
+					var color = (i<BOT_POSITIONS.length/2)?"red":"blue"
 					row.append($(`<td class="${color}TeamBG">`).click(showImg).html(`<img src=/data/${eventYear}/${team}${imageSuffix}.jpg>`))
 				})
 				tbody.append(row)
@@ -142,7 +144,7 @@ $(document).ready(function() {
 						}
 					})
 					teamList.forEach(function(team,i){
-						var color = i<3?"red":"blue",
+						var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
 						val = getTeamValue(field,team),
 						dispVal = val
 						if(statInfo[field].type == '%') dispVal += "%"
@@ -159,9 +161,9 @@ $(document).ready(function() {
 
 				row = $("<tr>")
 				teamList.forEach(function(team,i){
-					var color = i<3?"red":"blue",
+					var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
 					checkbox = $(`<input id="${field}_${team}" type=checkbox>`).change(drawOverlays)
-					if ((forUs==!$('#fieldBG').is('.rotated')) == (i<3)) checkbox.attr('checked',"")
+					if ((forUs==!$('#fieldBG').is('.rotated')) == (i<BOT_POSITIONS.length/2)) checkbox.attr('checked',"")
 					row.append($(`<td class="${color}TeamBG">`).append(checkbox))
 				})
 				row.append($('<th>').text(name))
@@ -180,7 +182,7 @@ $(document).ready(function() {
 				var enabled = $(`#${field}_${team}`).prop('checked'),
 				style = $(`#bot-${i}-pen`).attr('style').split(/[:;]/),
 				rotated = $('#fieldBG').is('.rotated'),
-				isRed = i<3,
+				isRed = i<BOT_POSITIONS.length/2,
 				atBottom = rotated != isRed,
 				fieldInfo = statInfo[field]||{},
 				char = fieldInfo.whiteboard_char||"&",
@@ -247,7 +249,7 @@ $(document).ready(function() {
 	}
 
 	function withoutValues(i,el){
-		return $(el).val() == ''
+		return $(el).val() == '' && (eventCompetition!='ftc'||!$(el).closest('th').is('.noftc'))
 	}
 
 	function focusInput(input){
@@ -294,12 +296,12 @@ $(document).ready(function() {
 	function sizeWhiteboard(){
 		var winH = $(window).height(),
 		winW = $(window).width(),
-		tableW=Math.max(400,$('#statsTable').width()+10),
+		tableW=Math.max(400,$('.rightColumn').width()+10),
 		w = winW<750?winW:winW-tableW,
-		h=2*w
+		h = (eventCompetition=='ftc'?1:2)*w
 		if (h>winH){
 			h=winH
-			w=winH/2
+			w=winH/(eventCompetition=='ftc'?1:2)
 		}
 		$('#field,#fieldBG,#fieldDraw').css('width',`${w}px`).css('height',`${h}px`)
 	}

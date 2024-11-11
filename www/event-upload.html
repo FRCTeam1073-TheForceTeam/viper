@@ -23,11 +23,20 @@ Paste data from another source into the text area below.
 
 <h2>Event Schedule</h2>
 <ol>
-<li>Go to <a href="https://www.thebluealliance.com/">The Blue Alliance</a> or <a href="https://frc-events.firstinspires.org/">First Inspires</a></li>
+<li>Go to <a href="https://www.thebluealliance.com/">The Blue Alliance</a> or
+<a href="https://frc-events.firstinspires.org/">First Inspires FRC</a> or
+<a href="https://ftc-events.firstinspires.org/">First Inspires FTC</a></li>
 <li>Navigate to a page that shows the schedule for the event you want to import.</li>
 <li>Use <code>Ctrl-u</code> to view the web page source for that event page.</li>
 <li>Use <code>Ctrl-a</code> to select the entire source code.</li>
 <li>Use <code>Ctrl-c</code> to copy all the selected source code.</li>
+</ol>
+or
+<ol>
+<li>Go to <a href="https://www.theorangealliance.com/">The Orange Alliance</a></li>
+<li>Navigate to a page that shows the schedule for the event you want to import.</li>
+<li>Right click anywhere on the page and choose "Inspect"</li>
+<li>Right click on <code>&lt;html</code> and choose "Copy Outer HTML"</li>
 </ol>
 
 <h2>Team list</h2>
@@ -51,7 +60,7 @@ match schedule for the event is known.
 			Location: <input name=location type=text id=locationInp placeholder="City, ST, USA">
 		</div>
 		<div class=side-by-side>
-			Event ID: <input id=idInp type=text placeholder="No spaces or symbols" required=1 pattern="^20[0-9]{2}[0-9a-zA-Z-]+$" name=event size=15>
+			Event ID: <input id=idInp type=text placeholder="No spaces or symbols" required=1 pattern="^20[0-9]{2}[0-9a-zA-Z\-]+$" name=event size=15>
 		</div>
 	</div>
 

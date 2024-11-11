@@ -13,45 +13,45 @@ $(document).ready(function(){
 		$('body').prepend("<h1>No event specified</h1>")
 		return
 	}
-	var csv="Match,R1,R2,R3,B1,B2,B3\n"
 	Promise.all([
 		fetchJson(`/data/${eventId}.info.json`),
 		fetchJson(`/data/${eventId}.schedule.practice.json`),
 		fetchJson(`/data/${eventId}.schedule.qualification.json`),
 		fetchJson(`/data/${eventId}.teams.json`)
 	]).then(values => {
-		var [info,prac,qual,teamsJson] = values,
+		var [info,practice,qual,teamsJson] = values,
 		csv = ""
-		if (info.Events && info.Events.length){
+		info.Events = info.Events||info.events||[]
+		if (info.Events.length){
 			var ev = info.Events[0]
 			$('#nameInp').val(ev.name)
 			$('#locationInp').val(`${ev.venue} in ${ev.city}, ${ev.stateprov}, ${ev.country}`)
-			$('#startInp').val(ev.dateStart.substring(0,10))
-			$('#endInp').val(ev.dateEnd.substring(0,10))
+			$('#startInp').val(ev.dateStart.slice(0,10))
+			$('#endInp').val(ev.dateEnd.slice(0,10))
 		}
 		$('#importData').toggle(backForward)
 		$('#idInp').val(eventId)
 
-		if (prac && prac.Schedule){
-			prac.Schedule.forEach(function(match){
-				csv+="pm"+match.matchNumber
-				match.teams.forEach(function(team){
-					csv+=","+team.teamNumber
-				})
-				csv+="\n"
+		practice = practice||{}
+		practice.Schedule = practice.Schedule||practice.schedule||[]
+		practice.Schedule.forEach(function(match){
+			csv+="pm"+match.matchNumber
+			match.teams.forEach(function(team){
+				csv+=","+(team.teamNumber||0)
 			})
-		}
-		if (qual && qual.Schedule){
-			qual.Schedule.forEach(function(match){
-				csv+="qm"+match.matchNumber
-				match.teams.forEach(function(team){
-					csv+=","+team.teamNumber
-				})
-				csv+="\n"
+			csv+="\n"
+		})
+		qual = qual||{}
+		qual.Schedule = qual.Schedule||qual.schedule||[]
+		qual.Schedule.forEach(function(match){
+			csv+="qm"+match.matchNumber
+			match.teams.forEach(function(team){
+				csv+=","+(team.teamNumber||0)
 			})
-		}
+			csv+="\n"
+		})
 		if (csv.length){
-			csv = "Match,R1,R2,R3,B1,B2,B3\n" + csv
+			csv = "Match," + BOT_POSITIONS.join(",") + "\n" + csv
 			$('#csvInp').val(csv)
 			if (!backForward) $('#importData').submit()
 			return

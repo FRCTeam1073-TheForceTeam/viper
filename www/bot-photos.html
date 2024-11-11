@@ -8,7 +8,6 @@
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/bot-photos.css>
 <script src=/jquery.min.js></script>
-<script src=/auto-year.js></script>
 <script src=/bot-photos.js></script>
 <script src=/event-url.js></script>
 <script src=/main.js></script>
@@ -20,7 +19,7 @@
 <h1>Bot Photos</h1>
 <form method=POST action=/scout/photos.cgi enctype=multipart/form-data>
 <button id=showInstructions>Instructions</button>
-<div>Year: <input inputmode=numeric id=yearInp type=text placeholder=20xx required=1 pattern="^20[0-9]{2}$" name=year size=5></div>
+<div>Season: <input inputmode=numeric id=seasonInp type=text placeholder=20xx required=1 pattern="^20[0-9]{2}(-[0-9]{2})?$" name=season size=7></div>
 <table id=teams border=1>
 	<tr><th>Team</th><th>Side View</th><th>Top View</th></tr>
 </table>

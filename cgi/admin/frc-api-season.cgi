@@ -10,7 +10,7 @@ use frcapi;
 my $webutil = webutil->new;
 my $frcapi = frcapi->new;
 my $cgi = CGI->new;
-my $year = $cgi->param('year');
+my $year = $cgi->param('year') || $cgi->param('season');
 
 $webutil->error("Missing year") if (!$year);
 $webutil->error("Malformed year", $year) if ($year !~ /^20[0-9]{2}$/);

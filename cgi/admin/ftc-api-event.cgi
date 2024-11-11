@@ -7,20 +7,23 @@ use File::Slurp;
 use Data::Dumper;
 use lib '../../pm';
 use webutil;
-use frcapi;
+use ftcapi;
 use csv;
 use db;
 
 my $webutil = webutil->new;
-my $frcapi = frcapi->new;
+my $ftcapi = ftcapi->new;
 my $db = db->new();
 my $cgi = CGI->new;
 my $event = $cgi->param('event');
 my $first = $cgi->param('first');
 
 $webutil->error("Missing event ID") if (!$event);
-$webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
-$first = $event if (!$first);
+$webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}-[0-9]{2}[a-zA-Z0-9\-]+$/);
+if (!$first){
+	$first = $event;
+	$first =~ s/^(20[0-9]{2})-[0-9]{2}([a-zA-Z0-9\-]+)$/$1\/$2/g;
+}
 $webutil->error("Malformed first event ID", $first) if ($first !~ /^20[0-9]{2}\/?[a-zA-Z0-9\-]+$/);
 $event=lc($event);
 $first=lc($first);
@@ -29,13 +32,12 @@ my ($eventYear,$eventId) = $first =~/^(20[0-9]{2})\/?([a-zA-Z0-9\-]+)$/;
 my $dbh = $db->dbConnection();
 
 my $filesWritten = 0;
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/events?eventCode=$eventId","../data/$event.info.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=practice","../data/$event.schedule.practice.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=qualification","../data/$event.schedule.qualification.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=playoff","../data/$event.schedule.playoff.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/qualification","../data/$event.scores.qualification.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json");
+$filesWritten += $ftcapi->writeFileFromAPI("$eventYear/events?eventCode=$eventId","../data/$event.info.json");
+$filesWritten += $ftcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=qual","../data/$event.schedule.qualification.json");
+$filesWritten += $ftcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=playoff","../data/$event.schedule.playoff.json");
+$filesWritten += $ftcapi->writeFileFromAPI("$eventYear/scores/$eventId/qual","../data/$event.scores.qualification.json");
+$filesWritten += $ftcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json");
+$filesWritten += $ftcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json");
 $webutil->error("API returned no data") if ($filesWritten==0);
 
 my $scheduleExists = 0;

@@ -20,10 +20,10 @@ my $rotateClockwise = $cgi->param('rotate-clockwise');
 my $rotateCounterClockwise = $cgi->param('rotate-counter-clockwise');
 my $delete = $cgi->param('delete');
 $webutil->error("Missing file name") if (!$file);
-$webutil->error("Malformed file name", $file) if ($file !~ /^20[0-9]{2}\/[0-9]+(\-[a-z]+)?\.jpg$/);
+$webutil->error("Malformed file name", $file) if ($file !~ /^20[0-9]{2}(-[0-9]{2})?\/[0-9]+(\-[a-z]+)?\.jpg$/);
 my $filePath = "../data/${file}";
 my $dbh = $db->dbConnection();
-my ($year, $team, $view) = $file =~ /^(20[0-9]{2})\/([0-9]+)(?:\-([a-z]+))?/;
+my ($year, $team, $view) = $file =~ /^(20[0-9]{2}(?:-[0-9]{2})?)\/([0-9]+)(?:\-([a-z]+))?/;
 $view = "" if (!$view);
 
 if ($delete){

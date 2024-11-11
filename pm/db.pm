@@ -133,7 +133,7 @@ sub upsert {
 			1;
 		} or do {
 			my $error = $@;
-			if ($table =~ /^20[0-9]{2}(pit|scouting|subjective)$/ and $error =~ /Unknown column '([^']+)'/i){
+			if ($table =~ /^20[0-9]{2}(_[0-9]{2})?(pit|scouting|subjective)$/ and $error =~ /Unknown column '([^']+)'/i){
 				my $column = $1;
 				my $type = "VARCHAR(256)";
 				$dbh->do("
@@ -180,7 +180,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				schedule
+				`schedule`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
@@ -196,13 +196,26 @@ sub schema {
 			)  $tableOptions
 	 	"
 	);
+	eval {
+		$dbh->do(
+			"
+				ALTER TABLE
+					`schedule`
+				MODIFY COLUMN
+					`R3` VARCHAR(8) DEFAULT NULL,
+				MODIFY COLUMN
+					`B3` VARCHAR(8) DEFAULT NULL
+			"
+		);
+		1;
+	};
 	$dbh->commit();
 
 	print("Creating table `alliances`\n");
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				alliances
+				`alliances`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
@@ -229,7 +242,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				event
+				`event`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
@@ -243,6 +256,17 @@ sub schema {
 			)  $tableOptions
 	 	"
 	);
+	eval {
+		$dbh->do(
+			"
+				ALTER TABLE
+					`event`
+				ADD COLUMN
+					`orange_alliance_id` VARCHAR(32)
+			"
+		);
+		1;
+	};
 	$dbh->commit();
 
 	print("Creating table `apijson`\n");
@@ -276,6 +300,17 @@ sub schema {
 			)  $tableOptions
 	 	"
 	);
+	eval {
+		$dbh->do(
+			"
+				ALTER TABLE
+					`images`
+				MODIFY COLUMN
+					`year` VARCHAR(7) NOT NULL
+			"
+		);
+		1;
+	};
 	$dbh->commit();
 
 	print("Creating table `sites`\n");
@@ -315,28 +350,30 @@ sub schema {
 	my $wwwDir = $INC{"db.pm"};
 	$wwwDir =~ s/pm\/db\.pm/www\//g;
 	opendir(DIR, $wwwDir) || die "can't opendir $wwwDir: $!";
-	my @years = grep { /^20[0-9]{2}$/ && -d "$wwwDir/$_" } readdir(DIR);
+	my @seasons = grep { /^20[0-9]{2}(-[0-9]{2})?$/ && -d "$wwwDir/$_" } readdir(DIR);
 	closedir DIR;
-	@years = sort @years;
-	for my $year (@years){
-		if ( -e "$wwwDir/$year/scout.html"){
-		print("Creating table `${year}scouting`\n");
-			$dbh->do(
-				"
-					CREATE TABLE IF NOT EXISTS
-						${year}scouting
-					(
-						`site` VARCHAR(16) NOT NULL,
-						`event` VARCHAR(32) NOT NULL,
-						`match` VARCHAR(8) NOT NULL,
-						`team` VARCHAR(8) NOT NULL,
-						`scouter` VARCHAR(32) NOT NULL DEFAULT '',
-						INDEX(`site`,`event`),
-						UNIQUE(`site`,`event`,`match`,`team`,`scouter`)
-					)  $tableOptions
-				"
-			);
-			my $contents = read_file("$wwwDir/$year/scout.html");
+	@seasons = sort @seasons;
+	for my $season (@seasons){
+		my $seasonTableName = $season;
+		$seasonTableName =~ s/-/_/g;
+		print("Creating table `${seasonTableName}scouting`\n");
+		$dbh->do(
+			"
+				CREATE TABLE IF NOT EXISTS
+					`${seasonTableName}scouting`
+				(
+					`site` VARCHAR(16) NOT NULL,
+					`event` VARCHAR(32) NOT NULL,
+					`match` VARCHAR(8) NOT NULL,
+					`team` VARCHAR(8) NOT NULL,
+					`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+					INDEX(`site`,`event`),
+					UNIQUE(`site`,`event`,`match`,`team`,`scouter`)
+				)  $tableOptions
+			"
+		);
+		if ( -e "$wwwDir/$season/scout.html"){
+			my $contents = read_file("$wwwDir/$season/scout.html");
 			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
 			for my $input (@inputs){
 				my $name = &getInputName($input);
@@ -346,7 +383,7 @@ sub schema {
 						$dbh->do(
 							"
 								ALTER TABLE
-									${year}scouting
+									${seasonTableName}scouting
 								ADD COLUMN
 									`$name` $type
 							"
@@ -358,11 +395,11 @@ sub schema {
 			$dbh->commit();
 		}
 
-		print("Creating table `${year}pit`\n");
+		print("Creating table `${seasonTableName}pit`\n");
 		$dbh->do(
 			"
 				CREATE TABLE IF NOT EXISTS
-					${year}pit
+					`${seasonTableName}pit`
 				(
 					`site` VARCHAR(16) NOT NULL,
 					`event` VARCHAR(32) NOT NULL,
@@ -373,8 +410,8 @@ sub schema {
 				)  $tableOptions
 			"
 		);
-		if (-e "$wwwDir/$year/pit-scout.html"){
-			my $contents = read_file("$wwwDir/$year/pit-scout.html");
+		if (-e "$wwwDir/$season/pit-scout.html"){
+			my $contents = read_file("$wwwDir/$season/pit-scout.html");
 			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
 			for my $input (@inputs){
 				my $name = &getInputName($input);
@@ -384,7 +421,7 @@ sub schema {
 						$dbh->do(
 							"
 								ALTER TABLE
-									${year}pit
+									${seasonTableName}pit
 								ADD COLUMN
 									`$name` $type
 							"
@@ -396,11 +433,11 @@ sub schema {
 		}
 		$dbh->commit();
 
-		print("Creating table `${year}subjective`\n");
+		print("Creating table `${seasonTableName}subjective`\n");
 		$dbh->do(
 			"
 				CREATE TABLE IF NOT EXISTS
-					${year}subjective
+					`${seasonTableName}subjective`
 				(
 					`site` VARCHAR(16) NOT NULL,
 					`event` VARCHAR(32) NOT NULL,
@@ -411,8 +448,8 @@ sub schema {
 				)  $tableOptions
 			"
 		);
-		if ( -e "$wwwDir/$year/subjective-scout.html"){
-			my $contents = read_file("$wwwDir/$year/subjective-scout.html");
+		if ( -e "$wwwDir/$season/subjective-scout.html"){
+			my $contents = read_file("$wwwDir/$season/subjective-scout.html");
 			my @inputs = $contents =~ /\<(?:input|textarea)[^\>]+\>/gmi;
 			for my $input (@inputs){
 				my $name = &getInputName($input);
@@ -422,7 +459,7 @@ sub schema {
 						$dbh->do(
 							"
 								ALTER TABLE
-									${year}subjective
+									${$seasonTableName}subjective
 								ADD COLUMN
 									`$name` $type
 							"

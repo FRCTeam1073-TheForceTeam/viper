@@ -27,6 +27,8 @@ input.num{text-align:center}
 @media (max-width: 450px){
 	#start-area{width:18em;height:4.5em}
 	#robot-starting-position{width:1.7em;height:1.7em;}
+	h1{font-size:115%}
+	.tab{font-size:70%}
 }
 #speaker-shoot-area{width:25em;height:35em;position:relative;margin:0 auto}
 #speaker-shoot-area{background:url(speaker-shoot-area-blue.png) no-repeat center center / 100% 100%}

@@ -12,13 +12,16 @@ use csv;
 
 my $webutil = webutil->new;
 my $cgi = CGI->new;
-my $year = $cgi->param('year');
+my $season = $cgi->param('season') || $cgi->param('year');
 
-$webutil->error("Missing year") if (!$year);
-$webutil->error("Malformed year", $year) if ($year !~ /^20[0-9]{2}$/);
+$webutil->error("Missing season") if (!$season);
+$webutil->error("Malformed season", $season) if ($season !~ /^20[0-9]{2}(-[0-9]{2})?$/);
 
-my $files = [glob("data/${year}*.scouting.csv")];
-$webutil->error("No scouting CSV files for year", $year) if (scalar @$files == 0);
+my $files = [glob("data/${season}*.scouting.csv")];
+if ($season =~ /^20[0-9]{2}$/){
+	$files = [grep {$_ !~ /^20[0-9]{2}-[0-9]{2}$/} @$files];
+}
+$webutil->error("No scouting CSV files for season", $season) if (scalar @$files == 0);
 
 my $csv;
 

@@ -4,12 +4,15 @@ $.ajaxSetup({
 	cache: true
 });
 
-var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1],
-eventYear = eventId.replace(/([0-9]{4}).*/,'$1'),
-eventVenue = eventId.replace(/[0-9]{4}(.*)/,'$1'),
+var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}(?:-[0-9]{2})?[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1],
+eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1'),
+eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
 eventName = eventYear+(eventYear?" ":"")+eventVenue,
+eventCompetition = /^20[0-9]{2}$/.test(eventYear)?"frc":"ftc",
 promiseCache = {},
-BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
+FRC_BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
+FTC_BOT_POSITIONS = ['R1','R2','B1','B2'],
+BOT_POSITIONS = eventCompetition=='frc'?FRC_BOT_POSITIONS:FTC_BOT_POSITIONS,
 MATCH_TYPE_SORT = {
 	'pm':'00',
 	'qm':'01',
@@ -21,7 +24,9 @@ MATCH_TYPE_SORT = {
 	'4p':'07',
 	'5p':'08',
 	'sf':'09',
-	'f':'10',
+	'1sf':'10',
+	'2sf':'11',
+	'f':'12',
 }
 if (eventId){
 	if (localStorage.getItem("last_event_id")==eventId){
@@ -136,8 +141,8 @@ function promiseEventScores(){
 	]).then(values => {
 		var [matches, quals, playoffs] = values,
 		scores = {}
-		quals.MatchScores = quals.MatchScores||[]
-		playoffs.MatchScores = playoffs.MatchScores||[]
+		quals.MatchScores = quals.MatchScores||quals.matchScores||[]
+		playoffs.MatchScores = playoffs.MatchScores||playoffs.matchScores||[]
 		quals.MatchScores.forEach(score => scores[`qm${score.matchNumber}`] = score)
 		matches.forEach(match => {
 			if (!/^pm|qm/.test(match.Match)){
@@ -303,9 +308,8 @@ function promiseSubjectiveScouting(){
 
 function getUploads(){
 	var uploads = []
-	var year = eventId.substring(0,4)
 	for (var i in localStorage){
-		if (new RegExp(`^${year}.*_.*_`).test(i)) {
+		if (new RegExp(`^${eventYear}.*_.*_`).test(i)) {
 			uploads.push(localStorage.getItem(i))
 		}
 	}
