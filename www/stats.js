@@ -157,7 +157,7 @@ function showGraphConfig(name){
 			graphList = getGraphList()
 			if (!fields.length) return alert("Error: No fields for graph")
 			if (!newName) return alert("Error: Name not specified")
-			if (oldName != newName) graphList[oldName]
+			if (oldName != newName) delete graphList[oldName]
 			graphList[newName]={
 				graph: $('#graph-builder-type').val(),
 				data: fields
