@@ -58,20 +58,126 @@ function getGraphListKey(){
 	return eventYear + "AggregateGraphs"
 }
 
+var myTeamsGraphs
+fetch(`/data/${eventYear}/stats.json`).then(response=>response.json()).then(json=>myTeamsGraphs=json)
+
 function getGraphList(){
 	var s = localStorage.getItem(getGraphListKey())
-	if (s){
-		return JSON.parse(s)
-	}
+	if (s) return JSON.parse(s)
+	if (myTeamsGraphs) return myTeamsGraphs
 	return aggregateGraphs
+}
+
+var gTypes = {
+	"bar":{
+		name: "Bar chart",
+		types: ['%','avg','count','capability','fraction','minmax','num','ratio']
+	},
+	"boxplot":{
+		name: "Box plot",
+		types: ['%','avg','count','capability','fraction','minmax','num','ratio']
+	},
+	"heatmap":{
+		name: "Heatmap",
+		types: ['heatmap']
+	},
+	"stacked":{
+		name: "Stacked bars",
+		types: ['%','avg','count','capability','fraction','minmax','num','ratio']
+	},
+	"stacked_percent":{
+		name: "Stacked percents",
+		types: ['%','avg','count','capability','fraction','minmax','num','ratio']
+	},
+	"timeline":{
+		name: "Timeline",
+		types: ['timeline']
+	},
+}
+
+function populateAddFields(){
+	var s = $('#graph-builder-add-field'),
+	types = new Set(gTypes[$('#graph-builder-type').val()].types),
+	statNames = Object.keys(statInfo)
+	statNames.sort((a,b)=>statInfo[a].name.localeCompare(statInfo[b].name))
+	s.html("")
+	s.append($('<option>').attr('value',"").attr('selected','true'))
+	statNames.forEach(function(stat){
+		if (types.has(statInfo[stat].type)){
+			s.append($('<option>').attr('value',stat).text(`${statInfo[stat].name} (${statInfo[stat].type})`))
+		}
+	})
+}
+
+function addFieldToGraphBuilder(field){
+	$('#graph-builder-fields').append(
+		$('<li>')
+		.attr('data-field',field)
+		.text(" " + statInfo[field].name).prepend(
+			$('<button style=color:red>').text('✘').click(function(){
+				$(this).closest('li').remove()
+			})
+		)
+	)
+}
+
+function showGraphConfig(name){
+	var g = getGraphList()[name]||{graph:'bar',data:[]},
+	d = $('#graph-builder')
+	if (!d.length){
+		var type = $('<select id=graph-builder-type>').change(function(){
+			var types = new Set(gTypes[$('#graph-builder-type').val()].types)
+			$('#graph-builder-fields li').each(function(){
+				var field = $(this).attr('data-field')
+				if (!types.has(statInfo[field].type)) $(this).remove()
+			})
+			populateAddFields()
+		})
+		d = $('<div id=graph-builder class=lightBoxCenterContent style=display:none>')
+		.append($('<p><input id=graph-builder-name type=text placeholder="Name of graph"></p>'))
+		.append($('<p>').append(type))
+		Object.keys(gTypes).forEach(function(gType){
+			type.append($('<option>').attr('value',gType).text(gTypes[gType].name))
+		})
+		type.val(g.graph)
+		d.append($('<ul id=graph-builder-fields>'))
+		.append('Add stat: ').append($('<select id=graph-builder-add-field>').change(function(){
+			var field = $(this).val()
+			if (field) addFieldToGraphBuilder(field)
+			$(this).val('')
+		}))
+		.append($('<p>').append($('<button>Save</button>').click(function(){
+			var nameField = $('#graph-builder-name'),
+			oldName = nameField.attr('old-name'),
+			newName = nameField.val(),
+			fields = $("#graph-builder-fields li").map(function(){return $(this).attr("data-field")}).get(),
+			graphList = getGraphList()
+			if (!fields.length) return alert("Error: No fields for graph")
+			if (!newName) return alert("Error: Name not specified")
+			if (oldName != newName) graphList[oldName]
+			graphList[newName]={
+				graph: $('#graph-builder-type').val(),
+				data: fields
+			}
+			localStorage.setItem(getGraphListKey(), JSON.stringify(graphList))
+			closeLightBox()
+			showStats()
+		})).append(" ").append($('<button>Cancel</button>').click(closeLightBox)))
+		$('body').append(d)
+	}
+	$('#graph-builder-name').attr('old-name',name).val(name)
+	$('#graph-builder-fields').html("")
+	g.data.forEach(function(field){
+		addFieldToGraphBuilder(field)
+	})
+	populateAddFields()
+	showLightBox(d)
 }
 
 function removeGraph(name){
 	var g = getGraphList()
-	console.log(name)
 	delete g[name]
 	localStorage.setItem(getGraphListKey(), JSON.stringify(g))
-	console.log(localStorage.getItem(getGraphListKey()))
 	closeLightBox()
 	showStats()
 }
@@ -138,8 +244,8 @@ function showStats(){
 			}
 			csv = csv[0].map((_, colIndex) => csv.map(row => row[colIndex]))
 			csv = csv.map(row=>row.map(String).join(',')).join('\n')
-			var sectionFile = section.toLowerCase().replace(/ ?\(.*/,"").replace(" ","_"),
-			graphConfig = $('<div class=lightBoxCenterContent style=display:none></div>').append(
+			var sectionFile = section.toLowerCase().replace(/ ?\(.*/,"").replace(" ","_")
+			const graphConfig = $('<div class=lightBoxCenterContent style=display:none>').append(
 				$('<h2>').text(section)
 			).append(
 				$('<ul>').append(
@@ -150,7 +256,14 @@ function showStats(){
 					)
 				).append(
 					$('<li>').append(
-						$('<a href=#>Remove Graph</a>').attr('data-name',section).click(function(){
+						$('<a href=#>Edit</a>').attr('data-name',section).click(function(){
+							showGraphConfig($(this).attr('data-name'))
+							return false
+						})
+					)
+				).append(
+					$('<li>').append(
+						$('<a href=#>Remove</a>').attr('data-name',section).click(function(){
 							if (confirm("Are you sure you want to remove this graph?")){
 								removeGraph($(this).attr('data-name'))
 							}
@@ -158,8 +271,92 @@ function showStats(){
 						})
 					)
 				)
+			).append(
+				$('<h2>').text("Manage Graphs")
+			).append(
+				$('<ul>').append(
+					$('<li>').append(
+						$('<a href=#>Add Another</a>').attr('data-name',section).click(function(){
+							showGraphConfig()
+							return false
+						})
+					)
+				).append(
+					$('<li>').append(
+						$('<a href=#>Edit JSON</a>').click(function(){
+							var g = getGraphList(),
+							d = $('#graph-export')
+							if (!d.length){
+								d = $('<div id=graph-export class=lightBoxCenterContent>')
+								.append(
+									$('<textarea id=graph-export-json style=width:98vw;max-width:30em;height:90vh;max-height:60em>')
+								).append($('<button>Save</button>').click(function(){
+									try{
+										var json = JSON.parse($('#graph-export-json ').val())
+										Object.keys(json).forEach(function(graph){
+											var graphConf = json[graph]
+											if (typeof graphConf !== 'object') throw (`Expected :{ following "${graph}"`)
+											if (typeof graphConf.graph !== 'string') throw (`${graph}.graph is not a string`)
+											if (typeof graphConf.data !== 'object' || (!(graphConf.data instanceof Array))) throw (`${graph}.data is not an array`)
+											if (graphConf.data.length==0) throw (`${graph}.data is empty`)
+											graphConf.data.forEach(function(graphField){
+												if (typeof graphField !== 'string') throw (`${graph}.data is not all strings`)
+												if (!statInfo[graphField]) throw (`Unknown data: ${graphField}`)
+											})
+											if (Object.keys(graphConf).length != 2) throw (`Expected only graph and data in "${graph}"`)
+										})
+										localStorage.setItem(getGraphListKey(), JSON.stringify(json))
+										closeLightBox()
+										showStats()
+									} catch(e){
+										alert(e)
+									}
+									return false
+								})).append($('<button>Cancel</button>').click(function(){
+									closeLightBox()
+									return false
+								}))
+								$('body').append(d)
+							}
+							$('#graph-export-json').val(JSON.stringify(g,null,2))
+							showLightBox(d)
+							return false
+						})
+					)
+				).append(
+					$('<li>').append(
+						$('<a href=#>Save to Server</a>').click(function(){
+							var g = getGraphList(),
+							d = $('#graph-save')
+							if (!d.length){
+								d = $('<form method=POST action=/admin/graph-save.cgi id=graph-save>')
+								.append($('<input type=hidden name=return id=graph-save-return>'))
+								.append($('<input type=hidden name=season id=graph-save-season>'))
+								.append($('<input type=hidden name=type value=stats>'))
+								.append($('<input type=hidden name=conf id=graph-save-conf>'))
+								$('body').append(d)
+							}
+							$('#graph-save-season').val(eventYear)
+							$('#graph-save-conf').val(JSON.stringify(g))
+							$('#graph-save-return').val(location.pathname+location.search+location.hash)
+							$('#graph-save').submit()
+							return false
+						})
+					)
+				).append(
+					$('<li>').append(
+						$('<a href=#>Revert All Customizations</a>').click(function(){
+							if (confirm("Are you sure you want delete ALL your custom graph configuration?")){
+								localStorage.removeItem(getGraphListKey())
+								closeLightBox()
+								showStats()
+							}
+							return false
+						})
+					)
+				)
 			)
-			graph.append(graphConfig).append($('<h2>').text(section).append(" ").append($('<button>🛠️</button>').click(function(){
+			graph.append(graphConfig).append($('<h2>').text(section).append(" ").append($('<button>🛠️</button>').attr('data-section',section).click(function(){
 				showLightBox(graphConfig)
 			})))
 			if (graphType=='heatmap'){

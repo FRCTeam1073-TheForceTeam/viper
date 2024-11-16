@@ -285,6 +285,22 @@ sub schema {
 	);
 	$dbh->commit();
 
+	print("Creating table `siteconf`\n");
+	$dbh->do(
+		"
+			CREATE TABLE IF NOT EXISTS
+				siteconf
+			(
+				`site` VARCHAR(16) NOT NULL,
+				`season` VARCHAR(7)) NOT NULL,
+				`type` VARCHAR(16) NOT NULL,
+				`conf` MEDIUMTEXT NOT NULL,
+				UNIQUE(`site`,`season`,`type`)
+			)  $tableOptions
+	 	"
+	);
+	$dbh->commit();
+
 	print("Creating table `images`\n");
 	$dbh->do(
 		"
