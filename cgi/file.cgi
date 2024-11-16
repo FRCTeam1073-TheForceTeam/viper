@@ -27,7 +27,11 @@ if ($file =~ /local\.js$/){
 } elsif ($file =~ /\.csv$/){
 	&csv($file);
 } elsif ($file =~ /\.json$/){
-	&json($file);
+	if ($file =~ /^20[0-9]{2}(-[0-9]{2})?\//){
+		&siteConfJson($file);
+	} else {
+		&apiJson($file);
+	}
 } elsif ($file =~ /\.jpg$/){
 	&image($file);
 } else {
@@ -88,7 +92,22 @@ sub logoPng(){
 	print $data;
 }
 
-sub json(){
+sub siteConfJson(){
+	my ($file) = @_;
+	$webutil->error("Unexpected file name", $file) if ($file !~ /^(20[0-9]{2}(?:[0-9]{2})?)\/([a-z\-]+)\.json$/);
+	my ($season, $type) = $file =~ /^(20[0-9]{2}(?:[0-9]{2})?)\/([a-z\-]+)\.json$/;
+	my $dbh = $db->dbConnection();
+	my $sth = $dbh->prepare("SELECT `conf` FROM `siteconf` WHERE `site`=? AND `season`=? AND `type`=?");
+	$sth->execute($db->getSite(), $season, $type);
+	my $data = $sth->fetchall_arrayref();
+	$webutil->notfound() if (!scalar(@$data));
+
+	binmode(STDOUT, ":utf8");
+	print "Content-type: text/json; charset=UTF-8\n\n";
+	print $data->[0]->[0];
+}
+
+sub apiJson(){
 	my ($file) = @_;
 	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]*\.[a-z0-9\.]+\.json$/);
 	my ($event, $name) = $file =~ /^(20[0-9]+[^\.]*)\.([a-z0-9\.]+)\.json$/;

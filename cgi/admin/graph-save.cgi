@@ -15,7 +15,6 @@ my $webutil = webutil->new;
 my $cgi = CGI->new;
 my $db = db->new();
 
-
 my $return = $cgi->param('return') || "/";
 $webutil->error("Malformed return", $return) if ($return !~ /^\/([a-z]+\.html([\#\?][\#\?a-zA-Z0-9\-\_\=\&]+)?)?$/);
 
@@ -48,7 +47,7 @@ for my $graph (keys %{$parsed}){
 
 my $dbh = $db->dbConnection();
 if ($dbh){
-	$frcapi::db->upsert('siteconf', {
+	$db->upsert('siteconf', {
 		'season'=>$season,
 		'type'=>$type,
 		'conf'=>$conf,

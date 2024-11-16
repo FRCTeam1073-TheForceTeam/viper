@@ -89,6 +89,28 @@ sub importImageFile(){
 	$dbimport::db->commit();
 }
 
+sub importSiteConfFile(){
+	my ($self, $f, $contents) = @_;
+
+	my ($season, $type) = $f =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)\/([a-z0-9\-]+)\.json$/;
+	my $conf = scalar($contents);
+
+	my $data = {
+		'season' => $season,
+		'type' => $type,
+		'conf' => $conf
+	};
+	eval {
+		$dbimport::db->upsert('siteconf', $data);
+		1;
+	} or do {
+		my $error = $@;
+		print STDERR Dumper($data);
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
 sub importLocalJsFile(){
 	my ($self, $contents) = @_;
 	my $data = {

@@ -119,7 +119,7 @@ sub upsert {
 
 	while (!$done){
 		my $sth = $conn->prepare_cached("
-			INSERT INTO $table
+			INSERT INTO `$table`
 				(`$fields`)
 			VALUES
 				($placeholders)
@@ -273,7 +273,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				apijson
+				`apijson`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
@@ -289,10 +289,10 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				siteconf
+				`siteconf`
 			(
 				`site` VARCHAR(16) NOT NULL,
-				`season` VARCHAR(7)) NOT NULL,
+				`season` VARCHAR(7) NOT NULL,
 				`type` VARCHAR(16) NOT NULL,
 				`conf` MEDIUMTEXT NOT NULL,
 				UNIQUE(`site`,`season`,`type`)
@@ -305,7 +305,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				images
+				`images`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`year` VARCHAR(4) NOT NULL,
@@ -333,7 +333,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				sites
+				`sites`
 			(
 				`site` VARCHAR(16) NOT NULL,
 				`viewer_name` VARCHAR(32),

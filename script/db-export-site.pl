@@ -105,3 +105,18 @@ for $row (@$data){
 	print $fh $image;
 	close $fh;
 }
+
+my $sth = $dbh->prepare("SELECT `season`, `type`, `conf` FROM `siteconf` WHERE `site`=?");
+$sth->execute($db->getSite());
+my $data = $sth->fetchall_arrayref();
+for $row (@$data){
+	my $season = $row->[0];
+	my $type = $row->[1];
+	my $conf = $row->[2];
+	mkdir "$dir/$season" if (! -e "$dir/$season");
+	my $file = "$dir/$season/$type.json";
+	print "$file\n";
+	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", $file);
+	print $fh $conf;
+	close $fh;
+}
