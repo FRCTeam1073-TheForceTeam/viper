@@ -63,8 +63,11 @@ fetch(`/data/${eventYear}/stats.json`).then(response=>response.json()).then(json
 
 function getGraphList(){
 	var s = localStorage.getItem(getGraphListKey())
-	if (s) return JSON.parse(s)
-	if (myTeamsGraphs) return myTeamsGraphs
+	if (s){
+		s = JSON.parse(s)
+		if (Object.keys(s).length) return s
+	}
+	if (myTeamsGraphs && Object.keys(myTeamsGraphs).length) return myTeamsGraphs
 	return aggregateGraphs
 }
 
@@ -167,6 +170,7 @@ function showGraphConfig(name){
 	}
 	$('#graph-builder-name').attr('old-name',name).val(name)
 	$('#graph-builder-fields').html("")
+	$('#graph-builder-type').val(g.graph)
 	g.data.forEach(function(field){
 		addFieldToGraphBuilder(field)
 	})
@@ -345,9 +349,20 @@ function showStats(){
 					)
 				).append(
 					$('<li>').append(
-						$('<a href=#>Revert All Customizations</a>').click(function(){
-							if (confirm("Are you sure you want delete ALL your custom graph configuration?")){
+						$('<a href=#>Revert Personal Customizations</a>').click(function(){
+							if (confirm("Are you sure you want delete ALL your personal custom graph configuration?")){
 								localStorage.removeItem(getGraphListKey())
+								closeLightBox()
+								showStats()
+							}
+							return false
+						})
+					)
+				).append(
+					$('<li>').append(
+						$('<a href=#>Revert All Customizations</a>').click(function(){
+							if (confirm("Are you sure you want delete ALL your personal AND team's custom graph configuration?")){
+								localStorage.setItem(getGraphListKey(), JSON.stringify(aggregateGraphs))
 								closeLightBox()
 								showStats()
 							}
