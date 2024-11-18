@@ -312,7 +312,7 @@ $(document).ready(function() {
 	function sizeWhiteboard(){
 		var winH = $(window).height(),
 		winW = $(window).width(),
-		tableW=Math.max(400,$('.rightColumn').width()+10),
+		tableW=Math.min(400,$('.rightColumn').width()+10),
 		w = winW<750?winW:winW-tableW,
 		h = (eventCompetition=='ftc'?1:2)*w
 		if (h>winH){
