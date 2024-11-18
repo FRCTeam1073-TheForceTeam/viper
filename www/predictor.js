@@ -5,14 +5,26 @@ function lf(){
 }
 
 $(document).ready(function(){
-	promiseEventStats().then(resolve=>{
-		var [eventStats, eventStatsByTeam, eventStatsByMatchTeam] = resolve
-		var teamList = Object.keys(eventStatsByTeam)
+	Promise.all([
+		promiseEventMatches(),
+		promiseEventStats()
+	]).then(values =>{
+		var [eventMatches, [{}, eventStatsByTeam, {}]] = values,
+		teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
 			var team = teamList[i]
 			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
 		}
+		$('#matchList').append($('<option selected=1>')).change(function(){
+			$(this).val().split(",").forEach((bot,i)=>{
+				$(`#${BOT_POSITIONS[i]}`).val(bot)
+			})
+			setPickedTeams()
+		})
+		eventMatches.forEach(match=>{
+			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',BOT_POSITIONS.map(pos=>match[pos]).join(",")))
+		})
 		loadFromLocationHash()
 		$(window).on('hashchange', loadFromLocationHash)
 		var title = "Match Predictor"
@@ -48,7 +60,7 @@ function focusNext(){
 
 function setPickedTeams(){
 	promiseEventStats().then(resolve=>{
-		var [eventStats, eventStatsByTeam, eventStatsByMatchTeam] = resolve
+		var [{}, eventStatsByTeam, {}] = resolve
 		$('#teamButtons button').removeClass("picked")
 		var teamCount = 0
 		$('#prediction input').each(function(){
@@ -60,7 +72,7 @@ function setPickedTeams(){
 		})
 		if (teamCount == BOT_POSITIONS.length){
 			$('input').removeClass('lastFocus')
-			$('#teamButtons').hide()
+			$('.teamDataEntry').hide()
 			var table = $('#prediction tbody'),
 			red = [parseInt($('#R1').val()),parseInt($('#R2').val()),parseInt($('#R3').val())],
 			blue = [parseInt($('#B1').val()),parseInt($('#B2').val()),parseInt($('#B3').val())],
@@ -101,7 +113,7 @@ function setPickedTeams(){
 				})
 			})
 		} else {
-			$('#teamButtons').show()
+			$('.teamDataEntry').show()
 		}
 		setLocationHash()
 	})

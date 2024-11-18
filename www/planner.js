@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 	$('button.pen').click(penButtonClicked)
 
-	$('h3').text(eventName + " " + getShortMatchName(matchId))
+	displayMatchName()
 
 	function penButtonClicked(){
 		$('button.pen').removeClass('selected')
@@ -42,6 +42,10 @@ $(document).ready(function() {
 		return false
 	})
 
+	function displayMatchName(){
+		$('h3').text(eventName + " " + getShortMatchName(matchId))
+	}
+
 	function setLocationHash(){
 		var hash = `event=${eventId}`
 		if (matchId) hash += `&match=${matchId}`
@@ -70,16 +74,28 @@ $(document).ready(function() {
 	Promise.all([
 		promiseEventStats(),
 		promisePitScouting(),
-		promiseSubjectiveScouting()
+		promiseSubjectiveScouting(),
+		promiseEventMatches()
 	]).then(values => {
-		;[window.eventStatsValues, window.pitData, window.subjectiveData] = values
-		;[window.eventStats, window.eventStatsByTeam] = eventStatsValues
+		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches] = values
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
 			var team = teamList[i]
 			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
 		}
+		$('#matchList').append($('<option selected=1>')).change(function(){
+			matchId = $(this).val()
+			var match = (eventMatches.filter(m=>m.Match==matchId))[0]
+			BOT_POSITIONS.forEach(function(pos){
+				$(`#${pos}`).val(match[pos])
+			})
+			displayMatchName()
+			fillStats()
+		})
+		eventMatches.forEach(match=>{
+			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',match.Match))
+		})
 		fillStats()
 
 		if (window.whiteboardStamps){
@@ -91,7 +107,7 @@ $(document).ready(function() {
 
 	$('#statsTable input').change(fillStats).focus(function(){
 		focusInput($(this))
-		$('#teamButtons').show()
+		$('.teamDataEntry').show()
 	}).blur(function(e){
 		if (!$(e.relatedTarget).is('button.team'))$('#teamButtons').toggle(focusNext())
 	})
@@ -109,7 +125,7 @@ $(document).ready(function() {
 				teamList.push(val)
 			}
 		})
-		$('#teamButtons').toggle(teamList.length!=BOT_POSITIONS.length)
+		$('.teamDataEntry').toggle(teamList.length!=BOT_POSITIONS.length)
 		var sections = window.plannerSections||window.matchPredictorSections||{}
 		var overlays = window.whiteboardOverlays||[]
 		if(teamList.length==BOT_POSITIONS.length){
