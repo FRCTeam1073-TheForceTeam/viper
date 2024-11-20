@@ -34,6 +34,10 @@ $(document).ready(function(){
 	})
 	$('#prediction input').focus(focusInput).change(setPickedTeams)
 	if (eventCompetition=='ftc') $('.noftc').hide()
+	$('#change-teams').click(function(){
+		$('#prediction input').val("")
+		setPickedTeams()
+	})
 })
 
 function focusInput(input){
@@ -71,6 +75,7 @@ function setPickedTeams(){
 			}
 		})
 		if (teamCount == BOT_POSITIONS.length){
+			$('#change-teams').show()
 			$('input').removeClass('lastFocus')
 			$('.teamDataEntry').hide()
 			var table = $('#prediction tbody'),
@@ -114,6 +119,8 @@ function setPickedTeams(){
 			})
 		} else {
 			$('.teamDataEntry').show()
+			$('#prediction tbody').html("")
+			$('#change-teams').hide()
 		}
 		setLocationHash()
 	})
