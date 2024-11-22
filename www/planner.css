@@ -7,26 +7,21 @@ button.selected{background:var(--button-selected-bg-color)}
 #field .overlay{position:absolute;z-index:2}
 #field canvas{z-index:3}
 .team-input{writing-mode:vertical-rl;text-orientation:upright;background-color:inherit;border:none;display:block;margin:0 auto}
-#statsTable th {padding:0.1em;min-width:1.5em}
-html,body{margin:0;padding:0;text-align:left}
+.team-input.lastFocus{background-color:var(--focus-bg-color)}
+#statsTable{margin:0}
+#statsTable th{padding:0.1em;min-width:1.5em}
 #drawingControls{margin:1em 0}
-.f{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-around;align-items:center}
-.f table {margin:0;font-size:75%}
 iframe{width:100%;height:100%}
 .viewTeam{text-align:center;font-size:200%}
-.rightColumn{max-width:400px}
 button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 button.team{width:3em;height:1.5em;margin:0.25em}
 #statsTable img{max-width:40px;max-height:40px;display:block;margin:0 auto;padding:0;border:none;cursor:pointer}
 #statsTable td{text-align:center}
 #statsTable td.best{color:var(--highlight-fg-color);font-weight:bold}
-#statsTable th{max-width:8em}
 #imageLightBox img{object-fit:contain;width:100%;height:100%}
-#stamps img{height:.8em}
+#stamps img{height:1em}
 #fullPhoto{object-fit:contain;background:#0000;border:none}
-@media only screen and (max-width: 1150px) and (min-width: 750px){
-	.f{display:table;width:100%}
-	canvas,.rightColumn{display:table-cell;vertical-align:middle}
-	.rightColumn>*{margin:0 auto;width:auto}
-	html{overflow-y:hidden}
-}
+.footnote{font-size:75%}
+.icon-button{width:2em;height:2em}
+#field,#stats{position:absolute;left:0;top:0}
+body{text-align:left}

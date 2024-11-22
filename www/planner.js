@@ -18,21 +18,27 @@ $(document).ready(function() {
 		setCursorImage()
 	}
 
-	$('.clear').click(function(evt) {
+	$('.clear').click(function(evt){
 		evt.preventDefault()
 		sketcher.sketchable('clear')
 	})
 
-	$('.rotate').click(function(evt) {
+	$('.rotate').click(function(){
 		$('#fieldBG').toggleClass('rotated')
 		drawOverlays()
 	})
 
-	$('.printer').click(function(evt) {
+	$('.printer').click(function(){
 		window.print()
 	})
 
-	$('.undo').click(function(evt) {
+	$('.clear-teams').click(function(){
+		$('.team-input').val("")
+		focusNext()
+		fillStats()
+	})
+
+	$('.undo').click(function(evt){
 		evt.preventDefault()
 		sketcher.sketchable('memento.undo')
 	})
@@ -92,6 +98,7 @@ $(document).ready(function() {
 			})
 			displayMatchName()
 			fillStats()
+			focusNext()
 		})
 		eventMatches.forEach(match=>{
 			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',match.Match))
@@ -100,14 +107,13 @@ $(document).ready(function() {
 
 		if (window.whiteboardStamps){
 			window.whiteboardStamps.forEach(function(stamp){
-				$('#stamps').append(" ").append($(`<button class=pen><img src=${stamp}></button>`).click(penButtonClicked))
+				$('#stamps').append(" ").append($(`<button class="pen icon-button"><img src=${stamp}></button>`).click(penButtonClicked))
 			})
 		}
 	})
 
 	$('#statsTable input').change(fillStats).focus(function(){
 		focusInput($(this))
-		$('.teamDataEntry').show()
 	}).blur(function(e){
 		if (!$(e.relatedTarget).is('button.team'))$('#teamButtons').toggle(focusNext())
 	})
@@ -260,6 +266,7 @@ $(document).ready(function() {
 
 	function focusNext(){
 		var next = $('#statsTable input').filter(withoutValues).first()
+		$('.team-input').removeClass('lastFocus')
 		if (next.length) focusInput(next)
 		return next.length > 0
 	}
@@ -271,7 +278,7 @@ $(document).ready(function() {
 	function focusInput(input){
 		if ('target' in input) input = $(input.target)
 		if (input[0]==lf()[0]) return
-		$('#statsTable input').removeClass('lastFocus')
+		$('.team-input').removeClass('lastFocus')
 		input.addClass('lastFocus')
 	}
 
@@ -311,15 +318,24 @@ $(document).ready(function() {
 
 	function sizeWhiteboard(){
 		var winH = $(window).height(),
-		winW = $(window).width(),
-		tableW=Math.min(400,$('.rightColumn').width()+10),
-		w = winW<750?winW:winW-tableW,
-		h = (eventCompetition=='ftc'?1:2)*w
-		if (h>winH){
-			h=winH
-			w=winH/(eventCompetition=='ftc'?1:2)
+		fieldR=eventCompetition=='ftc'?1:2,
+		winW=$(window).width(),
+		vert=winW<750,
+		statsW=400,
+		fieldW=vert?winW:winW-statsW,
+		fieldH=fieldR*fieldW
+		if (fieldH>winH){
+			fieldH=winH
+			fieldW=winH/fieldR
 		}
-		$('#field,#fieldBG,#fieldDraw').css('width',`${w}px`).css('height',`${h}px`)
+		statsW=vert?winW:Math.max(400,winW-fieldW-10)
+		var h3W=statsW-70,
+		statsP=vert?'top':'left',
+		statsO=vert?fieldH+10:fieldW+10
+		$('#field,#fieldBG,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
+		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css(statsP, statsO)
+		$('h3').css('width',`${h3W}px`)
+		$('body').css('overflow-y',vert?'visible':'hidden')
 	}
 	sizeWhiteboard()
 
