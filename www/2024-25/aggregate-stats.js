@@ -419,14 +419,13 @@ var aggregateGraphs = {
 	},
 }
 
-
 var matchPredictorSections = {
 	Total:["score"],
 }
 
-var plannerSections = {
-	Total:["score"],
-}
+var whiteboardStats = [
+	"score",
+]
 
 // Whiteboard image from https://www.reddit.com/r/FTC/comments/1fbhxka/into_the_deep_meepmeep_custom_field_images/
 var whiteboardStamps = []

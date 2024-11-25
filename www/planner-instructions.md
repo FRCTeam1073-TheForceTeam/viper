@@ -21,6 +21,7 @@ Stats will show up when all six team numbers have been entered.
   - 🗘 — Rotate the field
   - 🖶 — Print the whiteboard to save it (use "print to PDF")
   - ▦ — Clear the teams and select new ones
+  - ⚙ — Configure which stats are shown
 
 The current brush (color or eraser) is highlighted with a green background on its button.
 

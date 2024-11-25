@@ -770,7 +770,6 @@ var aggregateGraphs = {
 	}
 }
 
-
 var matchPredictorSections = {
 	Total:["score"],
 	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
@@ -779,12 +778,25 @@ var matchPredictorSections = {
 	Stage:["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
 }
 
-var plannerSections = {
-	Total:["score"],
-	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	Placement:["speaker_score","amp_score","trap_score","place"],
-	Percents:["trap_percent","onstage_percent","coopertition"],
-}
+// Only one game piece, no stamps needed this year
+var whiteboardStamps = []
+
+var whiteboardStats = [
+	"score",
+	"auto_score",
+	"tele_amp_speaker_score",
+	"stage_score",
+	"speaker_score",
+	"amp_score",
+	"trap_score",
+	"place",
+	"trap_percent",
+	"onstage_percent",
+	"coopertition",
+	"auto_start",
+	"auto_paths",
+	"speaker_shot_locations",
+]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
 var fmsMapping = [
@@ -880,16 +892,6 @@ function showSubjectiveScouting(el,team){
 		}
 	})
 }
-
-// Only one game piece, no stamps needed this year
-var whiteboardStamps = []
-
-var whiteboardOverlays = [
-	"auto_start",
-	"auto_paths",
-	"speaker_shot_locations",
-]
-
 
 function importScoutingFires(text){
 	function b(v, t, f){

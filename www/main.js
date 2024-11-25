@@ -91,12 +91,14 @@ function getLocalTeam(){
 
 function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
+	return false
 }
 
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').show()
 	content.show()
+	return false
 }
 
 function toggleFullScreen() {

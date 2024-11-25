@@ -24,7 +24,7 @@ $webutil->error("Malformed season", $season) if ($season !~ /^20[0-9]{2}(-[0-9]{
 
 my $type = $cgi->param('type');
 $webutil->error("Missing type") if (!$type);
-$webutil->error("Type should be team or stats") if ($type !~ /^team|stats$/);
+$webutil->error("Type should be team or stats") if ($type !~ /^(team|stats|whiteboard|predictor)$/);
 
 my $conf = $cgi->param('conf');
 $webutil->error("Missing conf") if (!$conf);
@@ -32,16 +32,34 @@ my $parsed = eval{decode_json($conf)};
 if ($@){
     $webutil->error("conf not in json format","$@");
 }
-for my $graph (keys %{$parsed}){
-	my $graphConf = $parsed->{$graph};
-	$webutil->error("Empty graph name") if ($graph =~ /^$/);
-	$webutil->error("Expected :{ following '${graph}'") if (ref $graphConf ne ref {});
-	$webutil->error("Expected only graph and data fields", $graph) if (scalar keys %{$graphConf} != 2);
-	$webutil->error("${graph}.graph should be one of bar|boxplot|heatmap|stacked|stacked_percent|timeline", $graphConf->{"graph"}) if ($graphConf->{"graph"} !~ /^(bar|boxplot|heatmap|stacked|stacked_percent|timeline)$/);
-	$webutil->error("Expected [ following data:") if (ref $graphConf->{"data"} ne ref []);
-	$webutil->error("Empty data array") if (scalar @{$graphConf->{"data"}} == 0);
-	for my $field (@{$graphConf->{"data"}}){
-		$webutil->error("Unexpected graph field", $field) if ($field !~ /^[a-zA-Z_\-]+$/);
+if ($type =~ /^(whiteboard)$/){
+	$webutil->error("Expected outer array") if (ref $parsed ne ref []);
+	for my $field (@{$parsed}){
+		$webutil->error("Unexpected stat", $field) if ($field !~ /^[a-zA-Z0-9_\-]+$/);
+	}
+} elsif ($type =~ /^(predictor)$/){
+	$webutil->error("Expected outer map") if (ref $parsed ne ref {});
+	for my $sectionName (keys %{$parsed}){
+		my $section = $parsed->{$sectionName};
+		$webutil->error("Expected array in each section:") if (ref $section ne ref []);
+		$webutil->error("Empty section array") if (scalar @{$section} == 0);
+		for my $field (@{$section}){
+			$webutil->error("Unexpected stat", $field) if ($field !~ /^[a-zA-Z0-9_\-]+$/);
+		}
+	}
+} else {
+	$webutil->error("Expected outer map") if (ref $parsed ne ref {});
+	for my $graph (keys %{$parsed}){
+		my $graphConf = $parsed->{$graph};
+		$webutil->error("Empty graph name") if ($graph =~ /^$/);
+		$webutil->error("Expected :{ following '${graph}'") if (ref $graphConf ne ref {});
+		$webutil->error("Expected only graph and data fields", $graph) if (scalar keys %{$graphConf} != 2);
+		$webutil->error("${graph}.graph should be one of bar|boxplot|heatmap|stacked|stacked_percent|timeline", $graphConf->{"graph"}) if ($graphConf->{"graph"} !~ /^(bar|boxplot|heatmap|stacked|stacked_percent|timeline)$/);
+		$webutil->error("Expected [ following data:") if (ref $graphConf->{"data"} ne ref []);
+		$webutil->error("Empty data array") if (scalar @{$graphConf->{"data"}} == 0);
+		for my $field (@{$graphConf->{"data"}}){
+			$webutil->error("Unexpected graph field", $field) if ($field !~ /^[a-zA-Z0-9_\-]+$/);
+		}
 	}
 }
 

@@ -1,15 +1,28 @@
 "use strict"
 
-var matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1]
+var matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1],
+myTeamsStats
 
 $(document).ready(function() {
-
+	var statsConfig = new StatsConfig({
+		statsConfigKey:`${eventYear}WhiteboardStats`,
+		getStatsConfig:function(){
+			var s = statsConfig.getLocalStatsConfig()
+			if (s) return s
+			if (myTeamsStats && myTeamsStats.length) return myTeamsStats
+			if (window.whiteboardStats && window.whiteboardStats.length) return window.whiteboardStats
+			if (window.matchPredictorSections) return Object.keys(window.matchPredictorSections).map(k=>window.matchPredictorSections[k]).flat(1)
+			return []
+		},
+		hasWhiteboard:true,
+		drawFunction:fillStats,
+		fileName:"whiteboard",
+		defaultConfig:window.whiteboardStats,
+		mode:"aggregate"
+	})
 	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
-
 	if (eventCompetition=='ftc') $('.noftc').hide()
-
 	$('button.pen').click(penButtonClicked)
-
 	displayMatchName()
 
 	function penButtonClicked(){
@@ -37,6 +50,8 @@ $(document).ready(function() {
 		focusNext()
 		fillStats()
 	})
+
+	$('.configure-stats').click(statsConfig.showConfigDialog.bind(statsConfig))
 
 	$('.undo').click(function(evt){
 		evt.preventDefault()
@@ -81,9 +96,10 @@ $(document).ready(function() {
 		promiseEventStats(),
 		promisePitScouting(),
 		promiseSubjectiveScouting(),
-		promiseEventMatches()
+		promiseEventMatches(),
+		fetch(`/data/${eventYear}/whiteboard.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values => {
-		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches] = values
+		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.myTeamsStats] = values
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
@@ -119,6 +135,7 @@ $(document).ready(function() {
 	})
 
 	function fillStats(){
+		if (!window.statInfo) return
 		setLocationHash()
 		$('#teamButtons button').removeClass("picked")
 		var teamList=[],
@@ -132,8 +149,6 @@ $(document).ready(function() {
 			}
 		})
 		$('.teamDataEntry').toggle(teamList.length!=BOT_POSITIONS.length)
-		var sections = window.plannerSections||window.matchPredictorSections||{}
-		var overlays = window.whiteboardOverlays||[]
 		if(teamList.length==BOT_POSITIONS.length){
 			var row = $("<tr>")
 			teamList.forEach(function(team,i){
@@ -150,16 +165,15 @@ $(document).ready(function() {
 				})
 				tbody.append(row)
 			})
-			Object.keys(sections).forEach(section=>{
-				for (var j=0; j<sections[section].length; j++){
-					var field = sections[section][j]
-					statInfo[field] = statInfo[field]||{}
-					var statName = statInfo[field]['name']||field
+			statsConfig.getStatsConfig().forEach(field=>{
+				var info = statInfo[field]||{},
+				name = info.name||field
+				if (!info.whiteboard_end){
 					row = $("<tr>")
-					var best = statInfo[field].good=='low'?99999999:0
+					var best=info.good=='low'?99999999:0
 					teamList.forEach(function(team,i){
 						var val = getTeamValue(field,team)
-						if (statInfo[field].good=='low'){
+						if (info.good=='low'){
 							if (val<best&&val>0)best=val
 						} else {
 							if (val>best)best=val
@@ -169,27 +183,23 @@ $(document).ready(function() {
 						var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
 						val = getTeamValue(field,team),
 						dispVal = val
-						if(statInfo[field].type == '%') dispVal += "%"
+						if(/^(%|fraction)$/.test(info.type)) dispVal += "%"
 						row.append($(`<td class="${color}TeamBG">`).addClass(val==best?"best":"").text(dispVal))
 					})
-					row.append($('<th>').text(statName))
+					row.append($('<th>').text(name))
+					tbody.append(row)
+				} else {
+					var forUs = !!info.whiteboard_us
+					row = $("<tr>")
+					teamList.forEach(function(team,i){
+						var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
+						checkbox = $(`<input id="${field}_${team}" type=checkbox>`).change(drawOverlays)
+						if ((forUs==!$('#fieldBG').is('.rotated')) == (i<BOT_POSITIONS.length/2)) checkbox.attr('checked',"")
+						row.append($(`<td class="${color}TeamBG">`).append(checkbox))
+					})
+					row.append($('<th>').text(name))
 					tbody.append(row)
 				}
-			})
-			overlays.forEach(field=>{
-				var stat = statInfo[field]||{},
-				name = stat.name||field,
-				forUs = !!stat.whiteboard_us
-
-				row = $("<tr>")
-				teamList.forEach(function(team,i){
-					var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
-					checkbox = $(`<input id="${field}_${team}" type=checkbox>`).change(drawOverlays)
-					if ((forUs==!$('#fieldBG').is('.rotated')) == (i<BOT_POSITIONS.length/2)) checkbox.attr('checked',"")
-					row.append($(`<td class="${color}TeamBG">`).append(checkbox))
-				})
-				row.append($('<th>').text(name))
-				tbody.append(row)
 			})
 			drawOverlays()
 		}
@@ -197,58 +207,59 @@ $(document).ready(function() {
 
 	function drawOverlays(){
 		$('.overlay').remove()
-		var teamList = $('.team-input').get().map(inp=>parseInt(inp.value)),
-		overlays = window.whiteboardOverlays||[]
-		overlays.forEach(field=>{
-			teamList.forEach(function(team,i){
-				var enabled = $(`#${field}_${team}`).prop('checked'),
-				style = $(`#bot-${i}-pen`).attr('style').split(/[:;]/),
-				rotated = $('#fieldBG').is('.rotated'),
-				isRed = i<BOT_POSITIONS.length/2,
-				atBottom = rotated != isRed,
-				fieldInfo = statInfo[field]||{},
-				char = fieldInfo.whiteboard_char||"&",
-				start = (fieldInfo.whiteboard_start||0)/100,
-				end = (fieldInfo.whiteboard_end||100)/100,
-				height = end - start,
-				whiteboard = $('#field'),
-				whiteboardBounds = whiteboard[0].getBoundingClientRect(),
-				source = fieldInfo.source,
-				type = fieldInfo.type,
-				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
-				data=(dataSource[team]||{})[field]
-				if (enabled){
-					if (type == 'pathlist'){
-						var canvas = $('<canvas class=overlay>').attr('id',`${team}-${field}`).css({width:'100%',height:whiteboardBounds.height * height + 'px'})
-						if (atBottom){
-							canvas.css({transform:'scaleY(-1)',bottom:start*whiteboardBounds.height})
-						} else {
-							canvas.css({top:start*whiteboardBounds.height})
-						}
-						$('#field').append(canvas)
-						canvas[0].width = canvas[0].clientWidth
-						canvas[0].height = canvas[0].clientHeight
-						;(data||[]).forEach(path=>{
-							drawPath(canvas, style[1], path)
-						})
-					} else {
-						;(data||"").split(" ").forEach(coordinates=>{
-							var top=0, left=0,
-							m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
-							if (m && m.length){
-								[left, top] = m.slice(1).map(x=>parseInt(x)/100)
-								if (rotated) left = 1 - left
-								var point = $('<div class=overlay>').html(char).css(...style)
-								whiteboard.append(point)
-								var pointBounds = point[0].getBoundingClientRect()
-								left = Math.round(left * whiteboardBounds.width - pointBounds.width/2)
-								top = Math.round(top * whiteboardBounds.height * height + start * whiteboardBounds.height - pointBounds.height/2)
-								point.css(atBottom?"bottom":"top",`${top}px`).css('left',`${left}px`)
+		var teamList = $('.team-input').get().map(inp=>parseInt(inp.value))
+		statsConfig.getStatsConfig().forEach(field=>{
+			var	fieldInfo = statInfo[field]||{}
+			if (fieldInfo.whiteboard_end){
+				teamList.forEach(function(team,i){
+					var enabled = $(`#${field}_${team}`).prop('checked'),
+					style = $(`#bot-${i}-pen`).attr('style').split(/[:;]/),
+					rotated = $('#fieldBG').is('.rotated'),
+					isRed = i<BOT_POSITIONS.length/2,
+					atBottom = rotated != isRed,
+					char = fieldInfo.whiteboard_char||"&",
+					start = (fieldInfo.whiteboard_start||0)/100,
+					end = (fieldInfo.whiteboard_end||100)/100,
+					height = end - start,
+					whiteboard = $('#field'),
+					whiteboardBounds = whiteboard[0].getBoundingClientRect(),
+					source = fieldInfo.source,
+					type = fieldInfo.type,
+					dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
+					data=(dataSource[team]||{})[field]
+					if (enabled){
+						if (type == 'pathlist'){
+							var canvas = $('<canvas class=overlay>').attr('id',`${team}-${field}`).css({width:'100%',height:whiteboardBounds.height * height + 'px'})
+							if (atBottom){
+								canvas.css({transform:'scaleY(-1)',bottom:start*whiteboardBounds.height})
+							} else {
+								canvas.css({top:start*whiteboardBounds.height})
 							}
-						})
+							$('#field').append(canvas)
+							canvas[0].width = canvas[0].clientWidth
+							canvas[0].height = canvas[0].clientHeight
+							;(data||[]).forEach(path=>{
+								drawPath(canvas, style[1], path)
+							})
+						} else {
+							;(data||"").split(" ").forEach(coordinates=>{
+								var top=0, left=0,
+								m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+								if (m && m.length){
+									[left, top] = m.slice(1).map(x=>parseInt(x)/100)
+									if (rotated) left = 1 - left
+									var point = $('<div class=overlay>').html(char).css(...style)
+									whiteboard.append(point)
+									var pointBounds = point[0].getBoundingClientRect()
+									left = Math.round(left * whiteboardBounds.width - pointBounds.width/2)
+									top = Math.round(top * whiteboardBounds.height * height + start * whiteboardBounds.height - pointBounds.height/2)
+									point.css(atBottom?"bottom":"top",`${top}px`).css('left',`${left}px`)
+								}
+							})
+						}
 					}
-				}
-			})
+				})
+			}
 		})
 	}
 
