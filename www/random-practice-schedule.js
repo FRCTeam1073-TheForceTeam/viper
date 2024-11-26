@@ -2,10 +2,10 @@ function randomPracticeSchedule(teams){
 	if (!teams || !teams.length) return ""
 	var match=0,
 	matchTeams=0,
-	csv="Match,R1,R2,R3,B1,B2,B3"
+	csv="Match,"+BOT_POSITIONS.join(",")
 	teams = shuffleArray([...new Set(teams)])
 	teams.forEach(function(team){
-		if (matchTeams >= 6) matchTeams = 0
+		if (matchTeams >= BOT_POSITIONS.length) matchTeams = 0
 		if (matchTeams == 0){
 			match++
 			csv+="\npm"+match
@@ -13,7 +13,7 @@ function randomPracticeSchedule(teams){
 		csv+=","+team
 		matchTeams++
 	})
-	while (matchTeams < 6){
+	while (matchTeams < BOT_POSITIONS.length){
 		teams = shuffleArray(teams)
 		csv+=","+teams[0]
 		matchTeams++

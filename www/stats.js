@@ -1,13 +1,37 @@
 "use strict"
 
+var teamList = [],
+sortStat = 'score',
+teamsPicked = {},
+graphList = {},
+myTeamsGraphs,
+downloadBlobs={},
+statsConfig = new StatsConfig({
+	statsConfigKey:`${eventYear}AggregateGraphs`,
+	getStatsConfig:function(){
+		var s = statsConfig.getLocalStatsConfig()
+		if (s) return s
+		if (myTeamsGraphs && Object.keys(myTeamsGraphs).length) return myTeamsGraphs
+		if (window.aggregateGraphs && Object.keys(window.aggregateGraphs).length) return window.aggregateGraphs
+		return {}
+	},
+	hasSections:true,
+	hasGraphs:true,
+	drawFunction:showStats,
+	fileName:"stats",
+	defaultConfig:window.aggregateGraphs,
+	downloadBlobs:downloadBlobs,
+	mode:"aggregate"
+})
+
 $(document).ready(function(){
 	Promise.all([
 		promiseEventStats(),
 		promisePitScouting(),
-		promiseSubjectiveScouting()
+		promiseSubjectiveScouting(),
+		fetch(`/data/${eventYear}/stats.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values => {
-		;[window.eventStatsValues, window.pitData, window.subjectiveData] = values
-		;[window.eventStats, window.eventStatsByTeam] = eventStatsValues
+		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.myTeamsGraphs] = values
 		$('#sortBy').click(showSortOptions)
 		$('#markPicked').click(function(){
 			showTeamPicker(setTeamPicked, "Change Whether Team Has Been Picked")
@@ -46,12 +70,8 @@ $(document).ready(function(){
 
 function getStatInfoName(field){
 	var info = statInfo[field]||{}
-	return info['name']||field
+	return info.name||field
 }
-
-var teamList = []
-var sortStat = 'score'
-var teamsPicked = {}
 
 function parseHash(){
 	var pl=(location.hash.match(/^\#(?:.*\&)?pl\=([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1].split(',').map(x=>parseInt(x)),
@@ -82,6 +102,7 @@ $(window).on('hashchange', function(){
 })
 
 function showStats(){
+	graphList = statsConfig.getStatsConfig()
 	for (var i=0; i<teamList.length; i++){
 		var t = teamList[i]
 		teamsPicked[t] = teamsPicked[t]||false
@@ -93,24 +114,35 @@ function showStats(){
 	})
 	var graphs = $('#statGraphs').html(''),
 	table = $('#statsTable').html('')
-	var sections = Object.keys(aggregateGraphs)
+	var sections = Object.keys(graphList)
 
 	if ($('#displayType').val() == 'graph'){
 		Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
 		var charts = {}
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i],
+			statName = graphList[section].data[0],
+			stat=statInfo[statName],
+			graphType=graphList[section].graph,
+			source=stat.source||"",
+			dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
 			graph=$('<div class=graph>')
 			graphs.append(graph)
-			graph.append($('<h2>').text(section))
-			if (aggregateGraphs[section].graph=='heatmap'){
-				var statName = aggregateGraphs[section]['data'][0],
-				stat=statInfo[statName],
-				source=stat.source||"",
-				dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
-				image=stat.image,
+			var csv = [["team", ...teamList]]
+			for (var j=0; j<graphList[section].data.length; j++){
+				var field = graphList[section].data[j]
+				csv.push([field,...teamList.map(team=>getTeamValue(field, team, graphType=='boxplot'?"":graphType, dataSource))])
+			}
+			csv = csv[0].map((_, colIndex) => csv.map(row => row[colIndex]))
+			csv = csv.map(row=>row.map(String).join(',')).join('\n')
+			downloadBlobs[section]=new Blob([csv], {type: 'text/csv;charset=utf-8'})
+
+			graph.append($('<h2>').text(section)
+			.append(" ").append($('<button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig))))
+			if (graphType=='heatmap'){
+				var image=stat.image,
 				width=Math.min($(document).width(),1000),
-				height=Math.round(width/stat['aspect_ratio']),
+				height=Math.round(width/stat.aspect_ratio),
 				points=[],
 				chart = $('<div class="heatmap">')
 				.css("width",width)
@@ -143,19 +175,19 @@ function showStats(){
 				data=[],
 				percent=false
 				graph.append($('<div class=chart>').append(canvas).css('min-width', (teamList.length*23+100) + 'px'))
-				var stackedPercent = aggregateGraphs[section]['graph']=="stacked_percent",
-				boxplot = aggregateGraphs[section]['graph']=='boxplot'
-				for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
-					var field = aggregateGraphs[section]['data'][j],
+				var stackedPercent = graphType=="stacked_percent",
+				boxplot = graphType=='boxplot'
+				for (var j=0; j<graphList[section].data.length; j++){
+					var field = graphList[section].data[j],
 					info = statInfo[field]||{},
 					values = []
-					if (!boxplot || info['type']!='minmax'){
+					if (!boxplot || info.type!='minmax'){
 						for (var k=0; k<teamList.length; k++){
-							values.push(getTeamValue(field, teamList[k],stackedPercent,boxplot))
+							values.push(getTeamValue(field, teamList[k],graphType))
 						}
 						data.push({
 							field: field,
-							label: (info['type']=='avg'&&!boxplot?'Average ':'') + (info['name']||field) + (info['type']=='%'?' %':''),
+							label: (info.type=='avg'&&!boxplot?'Average ':'') + (info.name||field) + (info.type=='%'?' %':''),
 							data: values,
 							backgroundColor: bgArr(graphColors[j]),
 							borderColor: bgArr(graphColors[j]),
@@ -163,12 +195,12 @@ function showStats(){
 							quantiles: 'nearest',
 							coef: 0
 						})
-						if (info['type']=='%'||stackedPercent) percent=true
+						if (info.type=='%'||stackedPercent) percent=true
 					}
 				}
-				var stacked = aggregateGraphs[section]['graph'].includes("stacked")
+				var stacked = graphType.includes("stacked")
 				var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
-				if (percent)yScale['suggestedMax'] = 100
+				if (percent)yScale.suggestedMax = 100
 				charts[section] = new Chart(canvas,{
 					type: boxplot?'boxplot':'bar',
 					data: {
@@ -190,31 +222,31 @@ function showStats(){
 						showStatClickMenu(
 							evt,
 							myChart.data.labels[points[0].index],
-							aggregateGraphs[section].data
+							graphList[section].data
 						)
 					}
 				})
 			}
 		}
 	} else {
-		var sections = Object.keys(aggregateGraphs)
+		var sections = Object.keys(graphList)
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i]
-			if (aggregateGraphs[section].graph!='heatmap'){
+			if (graphType!='heatmap'){
 				table.append($('<tr><td class=blank></td></tr>'))
 				var hr = $('<tr>')
-				hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
+				hr.append($('<th class=borderless>').append($('<h4>').text(section)))
 				for (var j=0; j<teamList.length; j++){
 					var t = teamList[j],
 					picked = teamsPicked[t]
 					hr.append($('<th class=team>').text(t).click(showStatClickMenu).toggleClass('picked',picked))
 				}
 				table.append(hr)
-				for (var j=0; j<aggregateGraphs[section]['data'].length; j++){
-					var field = aggregateGraphs[section]['data'][j],
+				for (var j=0; j<graphList[section].data.length; j++){
+					var field = graphList[section].data[j],
 					info = statInfo[field]||{},
-					highGood = (info['good']||"high")=='high',
-					statName = (info['type']=='avg'?"Average ":"") + (info['name']||field) + (info['type']=='%'?" %":""),
+					highGood = (info.good||"high")=='high',
+					statName = (info.type=='avg'?"Average ":"") + (info.name||field) + (info.type=='%'?" %":""),
 					tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").attr('data-field',field).click(reSort)),
 					best = (highGood?-1:1)*99999999
 					for (var k=0; k<teamList.length; k++){
@@ -259,8 +291,9 @@ function showStatClickMenu(e, team, fields){
 function showSortOptions(){
 	var picker = $('#sortChooser').html(`<h2>Choose Sorting</h2>`)
 	var allStats = []
-	Object.keys(aggregateGraphs).forEach(x=>{
-		aggregateGraphs[x].data.forEach(y=>allStats.push(y))
+	graphList=statsConfig.getStatsConfig()
+	Object.keys(graphList).forEach(x=>{
+		graphList[x].data.forEach(y=>allStats.push(y))
 	})
 	allStats.sort((a,b)=>{return getStatInfoName(a).localeCompare(getStatInfoName(b))})
 	for (var i=0; i<allStats.length; i++){
@@ -268,7 +301,7 @@ function showSortOptions(){
 		info = statInfo[field]||{},
 		name = getStatInfoName(field),
 		active = sortStat==field?" active":""
-		if(!/^(text|enum)$/.test(info['type'])) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).text(name).click(reSort))
+		if(!/^(text|enum)$/.test(info.type)) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).text(name).click(reSort))
 	}
 	showLightBox(picker)
 }
@@ -349,7 +382,7 @@ function reSort(){
 }
 
 function darkenColor(color){
-	var m = color.match(/^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/)
+	var m = (color||"").match(/^\#([0-9a-fA-F]{2})([0-9a-fA-F]{2})([0-9a-fA-F]{2})$/)
 	if(m){
 		return "#" +
 		(Math.round(parseInt(m[1],16)/2)).toString(16).padStart(2,'0') +
@@ -360,16 +393,22 @@ function darkenColor(color){
 
 }
 
-function getTeamValue(field, team, percent, boxplot){
-	if (! team in eventStatsByTeam) return 0
-	var stats = eventStatsByTeam[team]
+function getTeamValue(field, team, graphType, source){
+	if (!source) source = eventStatsByTeam
+	var heatmap = graphType=='heatmap',
+	percent = graphType=="stacked_percent",
+	boxplot = graphType=='boxplot',
+	defaultVal = heatmap?"":(boxplot?[]:0)
+	if (! team in source) return defaultVal
+	var stats = source[team] || {}
 	if (boxplot && (field+"_set") in stats) field+="_set"
 	var info = statInfo[field]||{}
 	percent = percent || info.type=='%'
-	if (! field in stats ||! 'count' in stats || !stats.count) return boxplot?[]:0
-	if (boxplot) return stats[field]||[]
-	var divisor = (percent||"avg"==info.type)?stats.count:1,
-	value = stats[field]
+	if (! field in stats) return defaultVal
+	var value = stats[field]
+	if (heatmap||boxplot) return value||defaultVal
+	if (! 'count' in stats || !stats.count) return defaultVal
+	var divisor = (percent||"avg"==info.type)?stats.count:1
 	if (info.type=='int-list'){
 		if (value.length){
 			divisor = value.length

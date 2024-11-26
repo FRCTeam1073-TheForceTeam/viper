@@ -1,4 +1,4 @@
-# Hardware for Viper FRC Scouting System
+# Hardware for Viper Scouting System
 
 The total cost of all the recommend hardware is around $1200 (as of 2024), three quarters of which is the clients. The system is flexible and will run on a wide variety of hardware, so feel free to make substitutions or reuse hardware you may already own.
 

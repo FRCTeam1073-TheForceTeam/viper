@@ -6,66 +6,75 @@
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/planner.css>
-<script src=/jquery.js></script>
+<script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
 <script src=/main.js></script>
 <script src=/local.js></script>
+<script src=/canvas-path.js></script>
 <script src=/jquery.sketchable.full.min.js></script>
+<script src=/canvas-path.js></script>
+<script src=/stats-config.js></script>
 <script src=/planner.js></script>
 <script src=/heartbeat.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<div class=f>
-  <div id=field><div id=fieldBG></div><canvas id=fieldDraw></canvas></div>
-  <div class=rightColumn>
-	<div id=drawingControls>
-	  <button class="pen selected" data-type=pencil style=color:black>⬤</button>
-	  <span id=stamps>
-	  </span>
-	  <button class=pen data-type=eraser>◍</button>
-	  <button class=undo>↶</button>
-	  <button class=clear>✘</button>
-	  <button class=rotate>🗘</button>
-	  <button class=showInstructions>Instructions</button>
-	</div>
-	<table id=statsTable>
-	  <thead>
-		<tr>
-		<th class=redTeamBG>
-		  <input type=text size=4 maxlength=5 id=R1 placeholder="Team#" inputmode=none class=team-input>
-		</th>
-		<th class=redTeamBG>
-		  <input type=text size=4 maxlength=5 id=R2 placeholder="Team#" inputmode=none class=team-input>
-		</th>
-		<th class=redTeamBG>
-		  <input type=text size=4 maxlength=5 id=R3 placeholder="Team#" inputmode=none class=team-input>
-		</th>
-		<th class=blueTeamBG>
-		  <input type=text size=4 maxlength=5 id=B1 placeholder="Team#" inputmode=none class=team-input>
-		</th>
-		<th class=blueTeamBG>
-		  <input type=text size=4 maxlength=5 id=B2 placeholder="Team#" inputmode=none class=team-input>
-		</th>
-		<th class=blueTeamBG>
-		  <input type=text size=4 maxlength=5 id=B3 placeholder="Team#" inputmode=none class=team-input>
-		</th>
-		<th></th>
-		</tr>
-		<tr>
-		  <td class=redTeamBG><button id=bot-0-pen class=pen data-type=pencil style=color:#C30072>⬤</button></td>
-		  <td class=redTeamBG><button id=bot-1-pen class=pen data-type=pencil style=color:#F50000>⬤</button></td>
-		  <td class=redTeamBG><button id=bot-2-pen class=pen data-type=pencil style=color:#F57100>⬤</button></td>
-		  <td class=blueTeamBG><button id=bot-3-pen class=pen data-type=pencil style=color:#002FA4>⬤</button></td>
-		  <td class=blueTeamBG><button id=bot-4-pen class=pen data-type=pencil style=color:#009393>⬤</button></td>
-		  <td class=blueTeamBG><button id=bot-5-pen class=pen data-type=pencil style=color:#0AC600>⬤</button></td>
-		</tr>
-	  </thead>
-	  <tbody></tbody>
-	</table>
-	<p>Stats <span class=aggregationIncludesPractice>(include/exclude)</span> practice matches</p>
+<div id=field><div id=fieldBG></div><canvas id=fieldDraw></canvas></div>
+<div id=stats>
+<h3></h3>
+<div id=drawingControls>
+	<button class="pen selected icon-button" data-type=pencil style=color:black title="Whiteboard pen, black">⬤</button>
+	<span id=stamps>
+	</span>
+	<button class="pen icon-button" data-type=eraser title="Whiteboard eraser">◍</button>
+	<button class="undo icon-button" title="Whiteboard undo">↶</button>
+	<button class="clear icon-button" title="Whiteboard clear">✘</button>
+	<button class="rotate icon-button" title="Whiteboard rotate">🗘</button>
+	<button class="printer icon-button" title="Print, save page">🖶</button>
+	<button class="clear-teams icon-button" title="Choose teams">▦</button>
+	<button class="configure-stats icon-button" title="Configure stats">⚙</button>
+	<button class="showInstructions icon-button" title="Show instructions">?</button>
+</div>
+<table id=statsTable>
+	<thead>
+	<tr>
+	<th class=redTeamBG>
+		<input type=text size=4 maxlength=5 id=R1 placeholder="Team#" inputmode=none class=team-input>
+	</th>
+	<th class=redTeamBG>
+		<input type=text size=4 maxlength=5 id=R2 placeholder="Team#" inputmode=none class=team-input>
+	</th>
+	<th class="redTeamBG noftc">
+		<input type=text size=4 maxlength=5 id=R3 placeholder="Team#" inputmode=none class=team-input>
+	</th>
+	<th class=blueTeamBG>
+		<input type=text size=4 maxlength=5 id=B1 placeholder="Team#" inputmode=none class=team-input>
+	</th>
+	<th class=blueTeamBG>
+		<input type=text size=4 maxlength=5 id=B2 placeholder="Team#" inputmode=none class=team-input>
+	</th>
+	<th class="blueTeamBG noftc">
+		<input type=text size=4 maxlength=5 id=B3 placeholder="Team#" inputmode=none class=team-input>
+	</th>
+	<th></th>
+	</tr>
+	<tr>
+		<td class=redTeamBG><button id=bot-0-pen class="pen icon-button" data-type=pencil style=color:#C30072>⬤</button></td>
+		<td class=redTeamBG><button id=bot-1-pen class="pen icon-button" data-type=pencil style=color:#F50000>⬤</button></td>
+		<td class="redTeamBG noftc"><button id=bot-2-pen class="pen icon-button" data-type=pencil style=color:#F57100>⬤</button></td>
+		<td class=blueTeamBG><button id=bot-3-pen class="pen icon-button" data-type=pencil style=color:#002FA4>⬤</button></td>
+		<td class=blueTeamBG><button id=bot-4-pen class="pen icon-button" data-type=pencil style=color:#009393>⬤</button></td>
+		<td class="blueTeamBG noftc"><button id=bot-5-pen class="pen icon-button" data-type=pencil style=color:#0AC600>⬤</button></td>
+	</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+<div class=footnote>Stats <span class=aggregationIncludesPractice>(include/exclude)</span> practice matches</div>
+<div class=teamDataEntry>
+	<div>Match: <select id=matchList></select></div>
+	- OR -
 	<div id=teamButtons></div>
-  </div>
+</div>
 </div>
 <div id=statsLightBox class=lightBoxFullContent style=display:none><iframe></iframe></div>
 <img id=fullPhoto class=lightBoxFullContent>

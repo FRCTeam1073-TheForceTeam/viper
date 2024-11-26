@@ -12,6 +12,11 @@ my $dir = @ARGV[0];
 die "'$dir' does not exist" if (! -e $dir);
 die "'$dir' is not a directory" if (! -d $dir);
 $dir =~ s/\/+$//g;
+
+if (!exists $ENV{'VIPER_DB_SITE'}){
+	($ENV{'VIPER_DB_SITE'}) = $dir =~ /([^\/]+)$/;
+}
+
 my $site = $db->getSite();
 my $fh;
 
@@ -75,27 +80,13 @@ sub queryToCsv(){
 }
 
 for $event (@$events){
-	my ($year) = $event =~ /^(20[0-9]{2})/;
+	my ($season) = $event =~ /^(20[0-9]{2}(?:[0-9]{2})?)/;
 	&queryToCsv("event", "event", $site, $event, "'event'");
 	&queryToCsv("schedule", "schedule", $site, $event, "'Match'");
 	&queryToCsv("alliances", "alliances", $site, $event, "'alliance'");
-	&queryToCsv("${year}scouting", "scouting", $site, $event, "'match', 'team' + 0");
-	&queryToCsv("${year}pit", "pit", $site, $event, "'team' + 0");
-	&queryToCsv("${year}subjective", "subjective", $site, $event, "'team' + 0");
-}
-
-my $sth = $dbh->prepare("SELECT `event`, `file`, `json` FROM `apijson` WHERE `site`=?");
-$sth->execute($db->getSite());
-my $data = $sth->fetchall_arrayref();
-for $row (@$data){
-	my $event = $row->[0];
-	my $file = $row->[1];
-	my $json = $row->[2];
-	my $file = "$dir/$event.$file.json";
-	print "$file\n";
-	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", $file);
-	print $fh $json;
-	close $fh;
+	&queryToCsv("${season}scouting", "scouting", $site, $event, "'match', 'team' + 0");
+	&queryToCsv("${season}pit", "pit", $site, $event, "'team' + 0");
+	&queryToCsv("${season}subjective", "subjective", $site, $event, "'team' + 0");
 }
 
 my $sth = $dbh->prepare("SELECT `year`, `team`, `view`, `image` FROM `images` WHERE `site`=?");
@@ -112,5 +103,20 @@ for $row (@$data){
 	print "$file\n";
 	die "Error opening $file for writing: $!" if (!open $fh, ">:raw", $file);
 	print $fh $image;
+	close $fh;
+}
+
+my $sth = $dbh->prepare("SELECT `season`, `type`, `conf` FROM `siteconf` WHERE `site`=?");
+$sth->execute($db->getSite());
+my $data = $sth->fetchall_arrayref();
+for $row (@$data){
+	my $season = $row->[0];
+	my $type = $row->[1];
+	my $conf = $row->[2];
+	mkdir "$dir/$season" if (! -e "$dir/$season");
+	my $file = "$dir/$season/$type.json";
+	print "$file\n";
+	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", $file);
+	print $fh $conf;
 	close $fh;
 }

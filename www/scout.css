@@ -14,7 +14,7 @@ label :disabled+span{text-decoration:var(--button-disabled-decoration-color) wav
 input[type='checkbox'],input[type='radio'], .init-hide{display:none}
 .full{width:calc(100% - 1em);margin:.5em auto;max-width:50em;display:block}
 label,fieldset{display:inline-block}
-input[type="text"]:disabled{background-color:inherit;border:none;color:inherit}
+input[type="text"]:disabled{background-color:inherit;border:none;color:inherit;pointer-events:none}
 input.num{text-align:right}
 fieldset{margin:0.5em;font-weight:normal}
 hr{height:0.5em;border:none}
@@ -29,3 +29,9 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 .subheader{background:var(--section-bg-color)}
 .colorBar{height:.5em;margin:0em 0em .25em 0em;border-radius:5px}
 .colorBar.white{background-color:var(--main-fg-color)}
+#change-floater{position:absolute;color:var(--highlight-fg-color);
+	-webkit-text-stroke: .03em var(--main-bg-color);font-weight:bold;font-size:300%;pointer-events:none;animation:float-fade ease 5s;animation-fill-mode:forwards}
+#change-floater.negative{color:var(--button-disabled-decoration-color)}
+@keyframes float-fade{0%{opacity:1}100%{opacity:0;transform:translateX(1em) translateY(-1em)}}
+.pulse-bg{animation:pulse 2s infinite;color:white}
+@keyframes pulse{0%{background-color:var(--red-team-color);border-color:var(--red-team-color)}50%{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}100%{background-color:var(--red-team-color);border-color:var(--red-team-color)}}

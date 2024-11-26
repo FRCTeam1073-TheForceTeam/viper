@@ -7,7 +7,7 @@
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/event-table.css>
-<script src=/jquery.js></script>
+<script src=/jquery.min.js></script>
 <script src=/auto-year.js></script>
 <script src=/event-table.js></script>
 <script src=/event-url.js></script>
@@ -18,6 +18,12 @@
 <body>
 <h1>Enter Event Practice and Qualification Matches</h1>
 <form id=tableForm method=POST action=/admin/add-event.cgi>
+	<div class=side-by-side>
+		Competition type: <select id=comp>
+			<option value=frc>FRC</option>
+			<option value=ftc>FTC</option>
+		</select>
+	</div>
 	<div class=side-by-side>
 		Event name: <input id=nameInp name=name type=text placeholder="Name of event" required=1 size=20>
 	</div>
@@ -31,7 +37,7 @@
 		Location: <input name=location type=text id=locationInp placeholder="City, ST, USA">
 	</div>
 	<div class=side-by-side>
-		Event ID: <input id=idInp type=text placeholder="No spaces or symbols" required=1 pattern="^20[0-9]{2}[0-9a-zA-Z\-]+$" name=event size=15>
+		Event ID: <input id=idInp type=text placeholder="No spaces or symbols" required=1 name=event size=15>
 	</div>
 
 	<input type=hidden id=csvInp name=csv>

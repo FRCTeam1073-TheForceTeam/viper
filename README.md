@@ -1,4 +1,4 @@
-# Viper - FRC Scouting
+# Viper - FRC/FTC Scouting
 
 This is a scouting app designed and used by FRC 1073, The Force Team from Hollis and Brookline, New Hampshire.
 It is designed to collect data about each of the robots as they compete in the tournament.

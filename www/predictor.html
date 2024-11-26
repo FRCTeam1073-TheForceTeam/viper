@@ -7,8 +7,9 @@
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/predictor.css>
-<script src=/jquery.js></script>
+<script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
+<script src=/stats-config.js></script>
 <script src=/predictor.js></script>
 <script src=/main.js></script>
 <script src=/local.js></script>
@@ -16,17 +17,22 @@
 </head>
 <body>
 <h1>Match Predictor</h1>
-<div id=teamButtons></div>
-<table id=prediction><tr>
-	<th class="vertical redTeamBG"><input type=text id=R1 size=4 placeholder="Team #" class=lastFocus></th>
-	<th class="vertical redTeamBG"><input type=text id=R2 size=4 placeholder="Team #"></th>
-	<th class="vertical redTeamBG"><input type=text id=R3 size=4 placeholder="Team #"></th>
+<div class=teamDataEntry>
+	<div>Match: <select id=matchList></select></div>
+	- OR -
+	<div id=teamButtons></div>
+</div>
+<table id=prediction><thead><tr>
+	<th class="vertical redTeamBG"><input type=text id=R1 size=5 placeholder="Team #" class=lastFocus></th>
+	<th class="vertical redTeamBG"><input type=text id=R2 size=5 placeholder="Team #"></th>
+	<th class="vertical redTeamBG noftc"><input type=text id=R3 size=5 placeholder="Team #"></th>
 	<th class=redTeamBG><div>Red</div></th>
-	<th></th>
+	<th><button id=change-teams style=display:none>Change Teams</button></th>
 	<th class=blueTeamBG><div>Blue</div></th>
-	<th class="vertical blueTeamBG"><input type=text id=B1 size=4 placeholder="Team #"></th>
-	<th class="vertical blueTeamBG"><input type=text id=B2 size=4 placeholder="Team #"></th>
-	<th class="vertical blueTeamBG"><input type=text id=B3 size=4 placeholder="Team #"></th>
-</tr></table>
+	<th class="vertical blueTeamBG"><input type=text id=B1 size=5 placeholder="Team #"></th>
+	<th class="vertical blueTeamBG"><input type=text id=B2 size=5 placeholder="Team #"></th>
+	<th class="vertical blueTeamBG noftc"><input type=text id=B3 size=5 placeholder="Team #"></th>
+</tr></thead><tbody>
+</tbody></table>
 <p>Stats <span class=aggregationIncludesPractice>(include/exclude)</span> practice matches</p>
 </body></html>

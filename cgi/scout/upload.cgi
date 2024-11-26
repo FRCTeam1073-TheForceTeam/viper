@@ -71,9 +71,9 @@ sub writeCsvData(){
 		my $lockFile = "$fileName.lock";
 		open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
-		my $csv = csv->new(-f $fileName?scalar(read_file($fileName, {binmode => ':encoding(UTF-8)'})):"");
+		my $csv = csv->new(-f $fileName?scalar(read_file($fileName)):"");
 		$csv->append($newCsv);
-		open my $fh, '>:encoding(UTF-8)', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
+		open my $fh, '>', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
 		$fh->print($csv->toString());
 		close $fh;
 		$webutil->commitDataFile($fileName, "scouting");
@@ -100,8 +100,9 @@ sub appendSavedKey(){
 sub writeDbData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
 	foreach my $event (keys %{$eventCsv}){
-		my ($year) = $event =~ /^(20[0-9]{2})/;
-		my $table = "$year$type";
+		my ($season) = $event =~ /^(20[0-9]{2}(?:-[0-9]{2})?)/;
+		$season =~ s/-/_/g;
+		my $table = "$season$type";
 		$csvHeaders = $eventHeaders->{$event};
 		foreach my $row (@{$eventCsv->{$event}}){
 			my $data = {};

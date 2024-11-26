@@ -17,8 +17,10 @@ $(document).ready(function(){
 	dataText = {},
 	fullFileCount = -1,
 	textFileCount = -1
+	if (!eventId) return $('#contents').text('No event ID')
 	promiseEventFiles().then(fileList => {
 		fullFileCount = fileList.length
+		if (!fullFileCount) return $('#contents').text(`No ${eventId} files`)
 		var textFiles = 0
 		fileList.forEach(file=>{
 			if (/\.jpg$/.test(file)){
@@ -75,6 +77,8 @@ $(document).ready(function(){
 			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
 			.attr('download',`${eventId}.full.json`)
 		$('#transferJsonImages').val(json)
+		$('#loadingImages').hide()
+		$('#submitImages').removeAttr('disabled')
 	}
 	fullDataLoaded()
 	function textDataLoaded(){
@@ -87,6 +91,8 @@ $(document).ready(function(){
 			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
 			.attr('download',`${eventId}.dat.json`)
 		$('#transferJsonData').val(json)
+		$('#loadingData').hide()
+		$('#submitData').removeAttr('disabled')
 	}
 	textDataLoaded()
 })

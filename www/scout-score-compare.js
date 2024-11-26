@@ -1,6 +1,5 @@
 "use strict"
 
-
 function promiseScoutScoreCompare(callback){
 	return Promise.all([
 		promiseEventScores(),
@@ -30,10 +29,8 @@ function promiseScoutScoreCompare(callback){
 					thisMatch[alliance].match=match.Match
 				}
 				scoutData.forEach(scout=>{
-					var scouter = scout.scouter.trim(),
+					var scouter = ((scout.scouter||"Unknown")+"").trim(),
 					key = scouter.toLowerCase().replace(/[^0-9a-z]/g,"")
-					if (!scouter) scouter="Unknown"
-					if (!key) key="unknown"
 					if (!scouterStats[key]) scouterStats[key] = {name:scouter,matches:0,scoredMatches:0,error:0}
 					scouterStats[key].matches++
 					if (thisMatch[alliance]){

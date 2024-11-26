@@ -1,15 +1,15 @@
 Printable Instructions — Viper
 =========================================
 
-# FRC Scouting
+# Viper Instructions
 
-## Connecting a device
+## Connecting a wired device
 
-The scouting app works with wired networking. (Wireless is not allowed near the field.)
+A local Viper server that you bring with you to events works with wired networking. (WiFi is not allowed near the field.)
 
 1. Plug a laptop or Android device into a compatible cable. Ethernet, USB-C, and Micro USB connections are available. iPhones and iPads are **not** capable of connecting to wired networks.
 1. To connect to the wired network on Android devices, wireless networks (WiFi and cell tower) need to be disabled. Use airplane mode or turn off the networks individually.
-1. Open a browser (Chrome works great.)
+1. Open a browser (Chrome works well, Firefox works even better.)
 1. Visit **`$URL$`**
 
 ## Scouting

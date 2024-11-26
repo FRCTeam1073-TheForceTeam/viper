@@ -31,10 +31,14 @@ function showScreen(){
 	else showScouting()
 }
 
-$(window).on('hashchange', function(){
-	if (scouting.is(':visible') && formHasChanges(scouting)){
+function maybeSaveFirst(){
+	if (changedNotStored(getActiveForm())){
 		if (confirm("Do you want to save your data?")) store()
 	}
+}
+
+$(window).on('hashchange', function(){
+	maybeSaveFirst()
 	parseHash()
 	showScreen()
 	window.scrollTo(0,0)
@@ -286,8 +290,8 @@ function showPitScoutingForm(t){
 		})
 		resetSequentialInputSeries()
 		$('.count').each(countHandler)
-		for (var i=0; i<onShowPitScouting.length; i++){
-			if(!onShowPitScouting[i]()) return false
+		for (var i=0; i<window.onShowPitScouting.length; i++){
+			if(!window.onShowPitScouting[i]()) return false
 		}
 		pitScouting.show()
 		localStorage.setItem("last_scout_type", "pit-scout")
@@ -310,8 +314,8 @@ function showSubjectiveScoutingForm(t){
 		fillPreviousFormData(form, localSubjectiveScoutingData(team)||subjectiveData[team])
 		resetSequentialInputSeries()
 		$('.count').each(countHandler)
-		for (var i=0; i<onShowSubjectiveScouting.length; i++){
-			if(!onShowSubjectiveScouting[i]()) return false
+		for (var i=0; i<window.onShowSubjectiveScouting.length; i++){
+			if(!window.onShowSubjectiveScouting[i]()) return false
 		}
 		form.show()
 		localStorage.setItem("last_scout_type", "subjective-scout")
@@ -319,9 +323,13 @@ function showSubjectiveScoutingForm(t){
 }
 
 function findParentFromButton(button){
-	var parent = button
-	for(var i=0;!parent.find('input').length&&i<10;i++) parent = parent.parent()
-	return parent
+	var parent = button,
+	found = parent
+	for(var i=0;i<10;i++){
+		if (parent.find('input').length == 1) found = parent
+		parent = parent.parent()
+	}
+	return found
 }
 
 function findInputInEl(parent){
@@ -330,19 +338,23 @@ function findInputInEl(parent){
 	return input
 }
 
+var changeFloater = $('<div id=change-floater>')
+
 var lastClickTimeOnCounter = 0
 function countHandler(e){
-	var count=$(this),
-	clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
-	parent = findParentFromButton(count),
+	var clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
+	parent = findParentFromButton($(this)),
+	count = $(this).is('.count')?$(this):$(this).find('.count').first(),
 	input = findInputInEl(parent),
 	src = count.attr('src'),
 	val=parseInt(input.val())||0,
 	max=parseInt(input.attr('max'))||999999,
 	min=parseInt(input.attr('min'))||0
+	if (parent.find('.disabledOverlay').is(':visible')) return
 	if (clicked){
 		lastClickTimeOnCounter=e.timeStamp
-		var toAdd = 0
+		var toAdd=0,
+		oldVal=val
 		if(/up/.test(src))toAdd = 1
 		else if(/down/.test(src))toAdd = -1
 		else if(/three/.test(src))toAdd = 3
@@ -350,7 +362,9 @@ function countHandler(e){
 		val+=toAdd
 		val = val<min?min:val
 		val = val>max?max:val
-		input.val(val)
+		var change = val-oldVal
+		animateChangeFloater(change, e)
+		inputChanged(input.val(val),change)
 		parent.find('.count').each(countHandler)
 	} else {
 		if(/down/.test(count.attr('src'))){
@@ -358,6 +372,15 @@ function countHandler(e){
 		} else {
 			count.css('visibility', val>=max?'hidden':'visible');
 		}
+	}
+}
+
+function animateChangeFloater(change, relative){
+	if (change!=0){
+		var x = relative.pageX?relative.pageX:(relative.offset().left+relative.width()/2),
+		y = relative.pageY?relative.pageY:(relative.offset().top+relative.height()/2)
+		changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:y-changeFloater.height()/2,left:x-changeFloater.width()/2}).show()
+		$('body').append(changeFloater)
 	}
 }
 
@@ -375,6 +398,7 @@ function showScouting(){
 		$('.orientRight').toggle(orient && orient=='right')
 		$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
 		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
+		$('.teamColorCaps').text(pos.startsWith('R')?"Red":"Blue")
 		$('input[name="match"]').val(match).attr('data-at-scout-start',match)
 		fillDefaultFormFields()
 		$('.match').text(matchName)
@@ -382,8 +406,9 @@ function showScouting(){
 		fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
 		$('.count').each(countHandler)
 		resetSequentialInputSeries()
-		for (var i=0; i<onShowScouting.length; i++){
-			if(!onShowScouting[i]()) return false
+		$('#scouting-comments').toggle(!!window.showScoutingComments)
+		for (var i=0; i<window.onShowScouting.length; i++){
+			if(!window.onShowScouting[i]()) return false
 		}
 		showTab(null, $('.default-tab'))
 		scouting.show()
@@ -407,7 +432,7 @@ function setTeamBG(){
 
 function toggleChecked(o){
 	o.each(function(){
-		$(this).prop('checked', !$(this).prop('checked'))
+		inputChanged($(this).prop('checked', !$(this).prop('checked')))
 	})
 }
 
@@ -429,8 +454,20 @@ function toCSV(form){
 	]
 }
 
+function getActiveForm(){
+	if (scouting.length && scouting.is(':visible')) return scouting
+	if (pitScouting.length && pitScouting.is(':visible')) return pitScouting
+	if (subjectiveScouting.length && subjectiveScouting.is(':visible')) return subjectiveScouting
+	return null
+}
+
+function changedNotStored(form){
+	if (!form) return false
+	return formHasChanges(form) && new Date().getTime() - storeTime > 1000
+}
+
 window.addEventListener('beforeunload',(event) =>{
-	if (formHasChanges(scouting) && new Date().getTime() - storeTime > 1000){
+	if (changedNotStored(getActiveForm())){
 		event.preventDefault()
 		return "Leave page without saving?"
 	}
@@ -447,10 +484,11 @@ function formHasChanges(f){
 	return changes
 }
 
-var onStore = []
-var onShowScouting = []
-var onShowPitScouting = []
-var onShowSubjectiveScouting = []
+window.onStore = window.onStore || []
+window.onShowScouting = window.onShowScouting || []
+window.onShowPitScouting = window.onShowPitScouting || []
+window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
+window.onInputChanged = window.onInputChanged || []
 
 function setTimeStamps(form){
 	var time = new Date().toISOString().replace(/\..*/,"+00:00"),
@@ -459,10 +497,27 @@ function setTimeStamps(form){
 	form.find('input[name="modified"]').val(time)
 }
 
+function inputChanged(input, change){
+	for (var i=0; i<window.onInputChanged.length; i++){
+		if(!window.onInputChanged[i](input, change)) return false
+	}
+}
+
+function storeScouter(form){
+	localStorage.setItem('last_scouter',form.find('input[name="scouter"]').val())
+}
+
 function store(){
+	var form = getActiveForm()
+	if (form === scouting) storeScouting()
+	if (form === pitScouting) storePitScouting()
+	if (form === subjectiveScouting) storeSubjectiveScouting()
+}
+
+function storeScouting(){
 	if (formHasChanges(scouting)){
-		for (var i=0; i<onStore.length; i++){
-			if(!onStore[i]()) return false
+		for (var i=0; i<window.onStore.length; i++){
+			if(!window.onStore[i]()) return false
 		}
 		setTimeStamps(scouting)
 		localStorage.setItem("last_match_"+eventId, match)
@@ -476,12 +531,8 @@ function store(){
 	return true
 }
 
-function storeScouter(form){
-	localStorage.setItem('last_scouter',form.find('input[name="scouter"]').val())
-}
-
 function storePitScouting(){
-	var f=$('#pit-scouting')
+	var f=pitScouting
 	if (formHasChanges(f)){
 		setTimeStamps(f)
 		var csv = toCSV(pitScouting)
@@ -673,7 +724,9 @@ $(document).ready(function(){
 		}).select()
 	})
 
-	$("img.count").click(countHandler)
+	$("img.count").click(countHandler).each(function(){
+		findParentFromButton($(this)).click(countHandler)
+	})
 
 	$("img.robot-location").click(function(e){
 		var x = Math.round(1000 * (e.pageX - this.offsetLeft) / this.width)/10,
@@ -682,11 +735,11 @@ $(document).ready(function(){
 		name = inp.attr('name')
 		$(`.${name}`).remove()
 		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
-		inp.val(`${x}%x${y}%`)
+		inputChanged(inp.val(val), `${x}%x${y}%`)
 	})
 
 	$("#nextBtn").click(function(e){
-		if (!store()) return false
+		if (!storeScouting()) return false
 		var next = getNextMatch()
 		if (!next){
 			alert("Data saved and done. That was the last match!")
@@ -708,17 +761,17 @@ $(document).ready(function(){
 		return false
 	})
 	$("#matchBtn").click(function(e){
-		if (!store()) return false
+		maybeSaveFirst()
 		showMatchList()
 		return false
 	})
 	$(".robotBtn").click(function(e){
-		if (!store()) return false
+		maybeSaveFirst()
 		showPosList()
 		return false
 	})
 	$("#teamBtn").click(function(e){
-		if (!store()) return false
+		maybeSaveFirst()
 		showTeamChange()
 		return false
 	})
@@ -727,7 +780,7 @@ $(document).ready(function(){
 		return false
 	})
 	$("#uploadBtn").click(function(e){
-		if (!store()) return false
+		if (!storeScouting()) return false
 		location.href="/upload.html"
 		return false
 	})

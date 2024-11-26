@@ -25,9 +25,10 @@ sub getSite(){
 
 sub getEventAndTable(){
 	my($self, $file) = @_;
-	my ($year, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+)([^\.]+)\.([^\.]+)\.csv$/;
-	$table = "$year$table" if ($table =~ /^scouting|pit|subjective$/);
-	$event = "$year$event";
+	my ($season, $event, $table) = $file =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)([^\.]+)\.([^\.]+)\.csv$/;
+	$event = "$season$event";
+	$season =~ s/\-/_/g;
+	$table = "$season$table" if ($table =~ /^scouting|pit|subjective$/);
 	return $event, $table;
 }
 
@@ -63,32 +64,10 @@ sub importCsvFile(){
 	$dbimport::db->commit();
 }
 
-sub importJsonFile(){
-	my ($self, $f, $contents) = @_;
-
-	my ($event, $fileType) = $f =~ /^(?:.*\/)?(20[0-9]+[^\.]+)\.(.+)\.json$/;
-	my $json = scalar($contents);
-
-	my $data = {
-		'event' => $event,
-		'file' => $fileType,
-		'json' => $json
-	};
-	eval {
-		$dbimport::db->upsert('apijson', $data);
-		1;
-	} or do {
-		my $error = $@;
-		print STDERR Dumper($data);
-		die $error;
-	};
-	$dbimport::db->commit();
-}
-
 sub importImageFile(){
 	my ($self, $f, $contents) = @_;
 
-	my ($year, $team, $view) = $f =~ /^(?:.*\/)?(20[0-9]+)\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
+	my ($year, $team, $view) = $f =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
 	my $img = scalar($contents);
 	$view = $view||"";
 
@@ -104,6 +83,28 @@ sub importImageFile(){
 	} or do {
 		my $error = $@;
 		$data->{'image'}='---BINARY DATA---';
+		print STDERR Dumper($data);
+		die $error;
+	};
+	$dbimport::db->commit();
+}
+
+sub importSiteConfFile(){
+	my ($self, $f, $contents) = @_;
+
+	my ($season, $type) = $f =~ /^(?:.*\/)?(20[0-9]+(?:-[0-9]{2})?)\/([a-z0-9\-]+)\.json$/;
+	my $conf = scalar($contents);
+
+	my $data = {
+		'season' => $season,
+		'type' => $type,
+		'conf' => $conf
+	};
+	eval {
+		$dbimport::db->upsert('siteconf', $data);
+		1;
+	} or do {
+		my $error = $@;
 		print STDERR Dumper($data);
 		die $error;
 	};

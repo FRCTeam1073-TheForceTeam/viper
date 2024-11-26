@@ -8,13 +8,14 @@ $(document).ready(function(){
 		var url =  location.origin+"/qr.html?"+encodeURIComponent(csv).replace(/%2C/ig, ","),
 		size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)
 		console.log(url)
-		new QRCode($("#qrcode")[0],{
+		new QRCode($("#qrcode").show()[0],{
 			text:url,
 			width:size,
 			height:size
 		})
 		return false
 	})
+	const AUTO_MS=15000
 
 	$('.onstage-state').click(toggleOnstage)
 
@@ -63,7 +64,8 @@ $(document).ready(function(){
 
 	var matchStartTime = 0
 
-	onShowScouting.push(function(){
+	window.onShowScouting = window.onShowScouting || []
+	window.onShowScouting.push(function(){
 		cycleInterrupt()
 		cycles=[]
 		toggleOnstage()
@@ -71,8 +73,14 @@ $(document).ready(function(){
 		matchStartTime = 0
 		return true
 	})
-	onShowSubjectiveScouting.push(function(){
+	window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
+	window.onShowSubjectiveScouting.push(function(){
 		setTimeout(drawAllShotLocations,500)
+		return true
+	})
+	window.onShowPitScouting = window.onShowPitScouting || []
+	window.onShowPitScouting.push(function(){
+		drawAutos()
 		return true
 	})
 
@@ -88,49 +96,50 @@ $(document).ready(function(){
 		if (!$(this).is('.placement,.collectSource')) cycleInterrupt()
 	})
 
-	$('.auto label,.teleop label,.auto .count,.teleop .count').click(function(){
-		if (!matchStartTime) matchStartTime = new Date().getTime()
-		var el = $(this),
-		input = findInputInEl(findParentFromButton(el)),
-		order = $('#timeline'),
+
+	window.onInputChanged = window.onInputChanged || []
+	window.onInputChanged.push(function(input, change){
+		if(!input.closest('.auto,.teleop').length) return
+		var order = $('#timeline'),
 		text = order.val(),
 		name = input.attr('name'),
-		src = el.attr('src') || ""
-		if (/up/.test(src) || input.is(':checked')){
+		re = name
+		if (name=='no_show') return
+		setTimeout(proceedToTeleBlink, AUTO_MS)
+		if (matchStartTime==0) matchStartTime = new Date().getTime()
+		if ('radio'==input.attr('type')){
+			name += `:${input.val()}`
+			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
+		}
+		if ((input.is('.num') && change>0) || input.is(':checked')){
 			if (text) text += " "
 			var seconds = Math.round((new Date().getTime() - matchStartTime)/1000)
 			text += `${seconds}:${name}`
 		} else {
-			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${name}( |$)`),"$1").trim()
+			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
+		}
+		if (!text){
+			matchStartTime = 0
+			proceedToTeleBlink()
 		}
 		order.val(text)
 	})
+
 
 	function initialRobotStartPosition(){
 		moveFloaterToPercentCoordinates(
 			document.getElementById('start-area'),
 			pos.startsWith('R'),
-			$('#auto-start-input').val(),
+			$('#auto-start-input').val()||"5x17",
 			document.getElementById('robot-starting-position')
 		)
 	}
 
 	function moveFloaterToPercentCoordinates(mapImage, isRed, coordinates, floatingImage){
-		var m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
-		if (!m || !m.length){
-			floatingImage.style.left="0px"
-			floatingImage.style.top="0px"
-			return
-		}
-		var px = parseInt(m[1]),
-		py = parseInt(m[2])
-		if (isRed) px = 100 - px
-		var d = mapImage.getBoundingClientRect(),
-		s = floatingImage.getBoundingClientRect(),
-		x = Math.round(px * d.width / 100 - s.width/2),
-		y = Math.round(py * d.height / 100 - s.height/2)
-		floatingImage.style.left=x+"px"
-		floatingImage.style.top=y+"px"
+		var c = getPixelCoordinates(mapImage, isRed, coordinates, floatingImage)
+		if (!c) return
+		floatingImage.style.left=c.x+"px"
+		floatingImage.style.top=c.y+"px"
 	}
 
 	function getPercentCoordinates(event, mapImage, isRed){
@@ -197,4 +206,51 @@ $(document).ready(function(){
 		drawAllShotLocations()
 		return false
 	})
+
+	function getAutoPath(startNew){
+		var chosen
+		$('.auto-path').each(function(p){
+			var p = $(this)
+			if (!chosen) chosen = p
+			if (p.val()) chosen = p
+			if (startNew && chosen.val() && !p.val()) chosen = p
+		})
+		return chosen
+	}
+
+	var startNewAutoPath = false
+
+	$('#auto-paths').click(function(e){
+		var path = getAutoPath(startNewAutoPath),
+		val = path.val()
+		if (val) val += " "
+		val += getPercentCoordinates(e, this)
+		path.val(val)
+		drawAutos()
+		startNewAutoPath = false
+	})
+
+	$('#auto-path-next').click(function(){
+		startNewAutoPath = true
+		return false
+	})
+
+	$('#auto-path-undo').click(function(){
+		var path = getAutoPath()
+		path.val(path.val().replace(/ ?[^ ]+$/,""))
+		drawAutos()
+		return false
+	})
+
+	function drawAutos(){
+		var canvas = $('#auto-paths')[0]
+		sizeAndClearCanvas(canvas)
+		$('.auto-path').each(function(){
+			drawPath(canvas,$(this).attr('data-color'),$(this).val())
+		})
+	}
+
+	function proceedToTeleBlink(){
+		$('#to-tele-button').toggleClass('pulse-bg', matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS)
+	}
 })

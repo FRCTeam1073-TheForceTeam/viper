@@ -21,8 +21,10 @@ for my $file (@ARGV){
 		$dbimport->importLocalLogoImageFile(scalar(read_file($file, {binmode=>':raw'})));
 	} elsif ($file =~ /\.csv$/){
 		$dbimport->importCsvFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
+	} elsif ($file =~ /^(?:.*\/)?[0-9]{4}(-[0-9]{2})?\/[a-z0-9\-]+\.json$/){
+		$dbimport->importSiteConfFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
 	} elsif ($file =~ /\.json$/){
-		$dbimport->importJsonFile($file, scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
+		# Other json files (from API) ignored
 	} elsif ($file =~ /\.jpg$/){
 		$dbimport->importImageFile($file, scalar(read_file($file, {binmode=>':raw'})));
 	} elsif ($file =~ /\*/){

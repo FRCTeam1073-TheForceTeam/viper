@@ -8,8 +8,9 @@
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/scout.css>
 <link rel=stylesheet href=scout.css>
-<script src=/jquery.js></script>
+<script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
+<script src=/canvas-path.js></script>
 <script src=/scout.js></script>
 <script src=scout.js></script>
 <script src=/heartbeat.js></script>
@@ -81,10 +82,10 @@
 			<div id=start-area><div id=robot-starting-position></div></div>
 			<input id=auto-start-input type=hidden name=auto_start>
 		</td></tr><tr><td colspan=2>
-			<label><input type=checkbox name=no-show value=1><span>No Show</span></label>
+			<label><input type=checkbox name=no_show value=1><span>No Show</span></label>
 			<label><input type=checkbox name=auto_leave value=1><span>Left Starting Zone</span></label>
 		</td></tr><tr><td class=subheader>
-			Collection
+			ATTEMPTED Collection
 		</td><td class=subheader>
 			Placement
 		</td></tr><tr><td rowspan=2>
@@ -108,12 +109,12 @@
 			<div>Speaker<br><input type=text class=num value=0 name=auto_speaker size=1 disabled max=9></div>
 			<div><img class=count src=/count_down.svg></div>
 		</td><tr></table>
-		<button class=tab-button data-content=teleop>Proceed to Teleop</button>
+		<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
 	</div>
 
 	<div class="teleop tab-content">
 		<table><tr><td class=subheader colspan=2>
-			Collection
+			SUCCESSFUL Collection
 		</td><td class=subheader colspan=2>
 			Placement
 		</td></tr><tr><td colspan=2 rowspan=2>
@@ -152,8 +153,12 @@
 			<div>Far Wing<br>or Source<br><input type=text class=num value=0 name=tele_collect_source size=1 disabled></div>
 			<div><img class=count src=/count_down.svg></div>
 		</td><td class=teamColorBG colspan=2>
-			Failure
-		</td></tr><tr><td colspan=2>
+			Not Scored
+		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div>Passed or Stashed<br><input type=text class=num value=0 name=tele_pass size=2 disabled></div>
+			<div><img class=count src=/count_down.svg></div>
+		</td><td>
 			<div><img class=count src=/count_up.svg></div>
 			<div>Missed or Dropped<br><input type=text class=num value=0 name=tele_drop size=2 disabled></div>
 			<div><img class=count src=/count_down.svg></div>
@@ -189,7 +194,7 @@
 			</fieldset>
 			<fieldset id=not-onstage class="full">
 				<legend>If not onstage:</legend>
-				<label><input type=checkbox name=end_game_climb_fail value=yes><span>Robot attempted to climb, but failed</span></label>
+				<label><input type=checkbox name=end_game_climb_fail value=1><span>Robot attempted to climb, but failed</span></label>
 			</fieldset>
 			<fieldset id=is-onstage class="left full">
 				<legend>If onstage:</legend>
@@ -201,7 +206,7 @@
 				</div>
 				<div>
 					<span class=team></span>'s chain location:
-					<label><input type=radio name=end_game_hang_location value=middle><span>Middle</span></label>
+					<label><input type=radio name=end_game_hang_location value=middle><span>Centered</span></label>
 					<label><input type=radio name=end_game_hang_location value=offcenter><span>Off-center</span></label>
 					<label><input type=radio name=end_game_hang_location value=end><span>Near an end</span></label>
 				</div>
@@ -209,17 +214,18 @@
 		</td></tr><tr><td class=subheader>
 			Gameplay
 		</td></tr><tr><td>
-			<fieldset class="left full">
-				<legend>How does <span class=team></span> handle notes?</legend>
-				<div>Collects from: <label><input type=checkbox name=floor_pickup value=yes><span>Floor</span></label>
-				<label><input type=checkbox name=source_pickup value=yes><span>Source chute opening</span></label></div>
-				<div><label><input type=checkbox name=passing value=yes><span>Passes notes to teammates</span></label></div>
-				<div><label><input type=checkbox name=stashing value=yes><span>Stashes notes for later</span></label></div>
+			<fieldset class="full">
+				<legend>How did <span class=team></span> handle notes?</legend>
+				<div><label><input type=checkbox name=floor_pickup value=1><span>Picked up notes from floor</span></label></div>
+				<div><label><input type=checkbox name=source_pickup value=1><span>Fed at source like a baby bird</span></label></div>
+				<div><label><input type=checkbox name=passing value=1><span>Passed notes to teammates</span></label></div>
+				<div><label><input type=checkbox name=stashing value=1><span>Stashed notes for later</span></label></div>
 			</fieldset>
 			<fieldset class="full">
-				<legend>Other info:</legend>
-				<label><input type=checkbox name=bricked value=yes><span>Robot broke or was disabled during match</span></label>
-
+				<legend>During the match:</legend>
+				<div><label><input type=checkbox name=defense value=1><span>Robot played defense</span></label></div>
+				<div><label><input type=checkbox name=stuck_note value=1><span>Note got stuck in the robot</span></label></div>
+				<div><label><input type=checkbox name=bricked value=1><span>Robot broke or was disabled</span></label></div>
 			</fieldset>
 		</td></tr><tr><td class=subheader>
 			Scouter Info
@@ -228,10 +234,14 @@
 				<legend>Name:</legend>
 				<input class=full type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
 			</fieldset>
+			<fieldset class="left full" id=scouting-comments>
+				<legend>Comments:</legend>
+				<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+			</fieldset>
 			<input type=hidden name=created value="">
 			<input type=hidden name=modified value="">
 			<fieldset class=full id=nextButtons>
-				<div id="qrcode"></div>
+				<div id=qrcode style=display:none></div>
 				<legend>Save data:</legend>
 				<div id=featuredButton>
 					<button id=nextBtn>Next Match</button>

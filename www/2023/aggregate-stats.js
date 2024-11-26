@@ -627,13 +627,21 @@ var matchPredictorSections = {
 	"Teleop Cargo":['tele_cone_score','tele_cube_score','tele_top_score','tele_middle_score','tele_bottom_score','full_cycle_average_seconds']
 }
 
-var plannerSections = {
-	"Total":["score"],
-	"Game Stages":["auto_nondock_score","auto_dock_score","tele_score","super_charge_score","end_score"],
-	"Auto":['auto_place','auto_dock_engaged_attempts','auto_dock_engaged_reliability'],
-	"Teleop":['tele_place','full_cycle_average_seconds'],
-	"End":['end_dock_engaged_attempts','end_dock_engaged_reliability']
-}
+var whiteboardStats = [
+	"score",
+	"auto_nondock_score",
+	"auto_dock_score",
+	"tele_score",
+	"super_charge_score",
+	"end_score",
+	'auto_place',
+	'auto_dock_engaged_attempts',
+	'auto_dock_engaged_reliability',
+	'tele_place',
+	'full_cycle_average_seconds',
+	'end_dock_engaged_attempts',
+	'end_dock_engaged_reliability'
+]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/request/13920602-58da7b76-4b47-4ee3-903d-1571897e0a09
 var fmsMapping = [

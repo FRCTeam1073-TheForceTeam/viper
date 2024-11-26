@@ -3,9 +3,10 @@
 // Enter your team number here
 // to enable team specific features
 // and highlighting
-// To get it from the subdomain, for multiple site hosting, use:
-// var ourTeam=parseInt((location.hostname.match(/[0-9]+/g)||["0"])[0]); // team number from sub-domain
 var ourTeam=0
+
+// Whether or not to collect comments during scouting
+var showScoutingComments=false
 
 // A list of options that will drop down from the host name
 // box on export.html
@@ -15,6 +16,13 @@ var transferHosts = [
 	//"localhost:1234",
 	//"http://insecure-webscout.example.com",
 ]
+
+// stats.viperscout.com tracks your server's host name, your team number,
+// events, count of things scouted, and count of scouters. It does NOT
+// collect your scouting data, scouters' names, or other personally
+// identifiable information. To opt out of this analytics collection
+// from your server, set the following variable to true.
+var analyticsOptOut=false
 
 // Any code here gets run on every page.
 

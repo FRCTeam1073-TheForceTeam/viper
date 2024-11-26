@@ -1,9 +1,5 @@
 "use strict"
 
-$.ajaxSetup({
-	cache: true
-})
-
 function getDate(s){
 	if (!s) return ""
 	var m = /[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(s)
@@ -25,13 +21,17 @@ $(document).ready(function(){
 		populateMainMenu()
 
 		function populateMainMenu(){
-			$.get("/main-menu.html",function(data){
+			Promise.all([
+				fetch('/main-menu.html').then(response=>response.text()),
+				fetch('/user.cgi').then(response=>response.text())
+			]).then(values =>{
+				var [menuHtml, userName] = values
 				var eName = window.eventName||localStorage.getItem('last_event_name')||"",
 				eId = window.eventId||localStorage.getItem('last_event_id')||"",
 				eYear = window.eventName||localStorage.getItem('last_event_year')||""
 				if (localStorage.getItem('last_event_id')==eId)eName = localStorage.getItem('last_event_name')||window.eventName||""
 				mainMenu.html(
-					data
+					menuHtml
 						.replace(/EVENT_NAME/g,eName)
 						.replace(/EVENT_ID/g,eId)
 						.replace(/YEAR/g,eYear)
@@ -42,6 +42,15 @@ $(document).ready(function(){
 					location.reload()
 				})
 				showMainMenuUploads()
+				$('#logout-link').click(function(){
+					var req = new XMLHttpRequest()
+					req.open("GET", "/logout", true, 'logout')
+					req.onload = _ => {
+						if (req.readyState === 4) location.reload()
+					}
+					req.send()
+					return false
+				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
 			})
 		}
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
@@ -82,12 +91,14 @@ function getLocalTeam(){
 
 function closeLightBox(){
 	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
+	return false
 }
 
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').show()
 	content.show()
+	return false
 }
 
 function toggleFullScreen() {

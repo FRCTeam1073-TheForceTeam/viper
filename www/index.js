@@ -1,25 +1,26 @@
 "use strict"
 
 $(document).ready(function(){
-	var yearStatsLinkHtml,
+	var seasonStatsLinkHtml,
 	events = []
 	$.ajax({
 		url:"/event-list.cgi",
 		dataType:"text",
 		success:function(data){
 			events = data.split(/[\r\n]/)
-			var years = {}
+			var seasons = {}
 			for (var i=0; i<events.length; i++){
-				var m = events[i].match(/^[0-9]{4}/)
-				if(m) years[m[0]] = 1
+				var m = events[i].match(/^[0-9]{4}(-[0-9]{2})?/)
+				if(m) seasons[m[0]] = 1
 			}
-			years = Object.keys(years)
-			years.sort((a,b) => {return a-b})
-			for (var i=0; i<years.length; i++){
-				var year = years[i]
-				$('#years').append($(`<option value=${year}>${year}</option>`))
+			seasons = Object.keys(seasons)
+			seasons.sort((a,b) => {return b.localeCompare(a)})
+			for (var i=0; i<seasons.length; i++){
+				var season = seasons[i],
+				comp = /-/.test(season)?"FTC":"FRC"
+				$('#seasons').append($(`<option value=${season}>${season} ${comp}</option>`))
 			}
-			$('#years').toggle(years.length > 1)
+			$('#seasons').toggle(seasons.length > 1)
 			events = events.sort(dateCompare)
 			showEvents()
 		}
@@ -29,29 +30,28 @@ $(document).ready(function(){
 		list.html('');
 		var filter = location.hash.replace(/^\#/,""),
 		eventsShown = 0
-		if (!filter) filter = $('#years option:last').attr('value')
+		if (!filter) filter = $('#seasons option:nth-child(2)').attr('value')
 		for (var i=0; i<events.length; i++){
-			if (events[i] && events[i].startsWith(filter)){
-				var event = events[i],
-				fields = event.split(/,/),
-				id = fields[0],
-				year = id.substring(0,4),
-				venue = (fields.length>1&&fields[1])?fields[1]:id.substring(4),
-				name=venue.includes(year)?venue:`${year} ${venue}`
+			var season = ((events[i].match(/^[0-9]{4}(-[0-9]{2})?/))||[""])[0]
+			if (season == filter){
+				var [id, name] = events[i].split(/,/)
+				if (!name) name = id
 				list.append($(`<li><a href=/event.html#${id}>${name}</a></li>`))
 				eventsShown++
 			}
 		}
-		if (!yearStatsLinkHtml) yearStatsLinkHtml = $('#yearStatsLink').html()
-		$('#yearStatsLink').html(yearStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}/.test(filter) && eventsShown > 1)
+		if (!seasonStatsLinkHtml) seasonStatsLinkHtml = $('#seasonStatsLink').html()
+		$('#seasonStatsLink').html(seasonStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1)
+		var ael = $('#add-event-link')
+		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
 		window.scrollTo(0,0)
 	}
 	$(window).on('hashchange', showEvents)
-	$('#years').change(function(){
-		var year = $('#years').val()
-		if (/^[0-9]{4}$/.test(year)){
-			location.hash = `#${year}`
+	$('#seasons').change(function(){
+		var season = $('#seasons').val()
+		if (/^[0-9]{4}(-[0-9]{2})?$/.test(season)){
+			location.hash = `#${season}`
 		}
-		$('#years').val('-')
+		$('#seasons').val('-')
 	})
 })

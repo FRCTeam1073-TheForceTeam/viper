@@ -5,20 +5,31 @@ $(document).ready(function(){
 	$('input[type=submit]').click(processInput)
 
 	function processInput(){
-		var src=$('#sourceInp').val(),csv=""
-		if (!csv) csv=getBlueAllianceMatchSchedule(src)
-		if (!csv) csv=getFirstInspiresMatchSchedule(src)
-		if (!csv) csv=randomPracticeSchedule(getBlueAllianceTeamList(src))
-		if (!csv) csv=randomPracticeSchedule(getGenericTeamList(src))
+		var src=$('#sourceInp').val(),csv=(
+			getBlueAllianceMatchSchedule(src)||
+			getOrangeAllianceMatchSchedule(src)||
+			getFirstInspiresMatchSchedule(src)||
+			randomPracticeSchedule(getBlueAllianceTeamList(src))||
+			randomPracticeSchedule(getGenericTeamList(src))
+		)
 		if (!csv){
 			alert("No data found!")
 			return false
 		}
 		$('#csvInp').val(csv)
-		var newEventId = src.match(/event_key=(20[0-9]+[a-z0-9]+)/)
-		if (!newEventId || !newEventId.length) newEventId = src.match(/href\=\"\/(20[0-9]{2}\/[A-Z0-9]+)\"\>Event Info/)
-		if (!newEventId || !newEventId.length) newEventId = ["",$('#idInp').val()]
-		newEventId = newEventId[1].replace(/\//g,"").toLowerCase()
+		var newEventId = (
+			src.match(/event_key(?:=|\":\")([0-9]{4}[A-Za-z0-9\-]+)/)||
+			src.match(/href\=\"\/(20[0-9]{2}\/[A-Z0-9]+)\"(?: [^\>]*)?\>Event Info/)||
+			src.match(/\<link rel\=\"canonical\" href=\"https:\/\/theorangealliance\.org\/events\/([0-9A-Z\-]+)\"\>/)|
+			["",$('#idInp').val()]
+		)[1].replace(/\//g,"").toLowerCase()
+		newEventId = newEventId.replace(/-/g,"")
+		var m = newEventId.match(/^([0-9]{2})([0-9]{2})(.*)/)
+		if (m && /FTC Event Web/.test(src)){
+			newEventId = `20${m[2]}-${parseInt(m[2])+1}${m[3]}`
+		} else if (m && !/^20/.test(newEventId)){
+			newEventId = `20${m[1]}-${m[2]}${m[3]}`
+		}
 		if (newEventId != eventId){
 			eventId=newEventId
 			$('#idInp').val(eventId)
@@ -34,10 +45,30 @@ $(document).ready(function(){
 
 	function srcToField(src, eventInfo){
 		eventInfo=eventInfo||{}
-		$('#startInp').val((src.match(/itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.start||$('#startInp').val()])[1])
-		$('#endInp').val((src.match(/itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||["",eventInfo.end||$('#endInp').val()])[1])
-		$('#nameInp').val((src.match(/id\=\"event-name\"\>([^\<]+)\</)||src.match(/\<span class\=\"hidden-xs hidden-sm align-middle\"\> - ([^\<]+)\</)||["",eventInfo.name||$('#nameInp').val()])[1].replace(/ Event$/,""))
-		$('#locationInp').val((src.match(/\<span itemprop\=\"location\"\>(.|[\r\n])*?\<\/span\>/m)||["",eventInfo.location||$('#locationInp').val()])[1])
+		$('#startInp').val((
+			src.match(/itemprop\=\"startDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||
+			["",eventInfo.start||
+			$('#startInp').val()]
+		)[1])
+		$('#endInp').val((
+			src.match(/itemprop\=\"endDate\" datetime\=\"(20[0-9]{2}-[0-9]{2}-[0-9]{2})/)||
+			["",eventInfo.end||
+			$('#endInp').val()]
+		)[1])
+		$('#nameInp').val((
+			src.match(/id\=\"event-name\"\>([^\<]+)\</)||
+			src.match(/\<span class\=\"hidden-xs hidden-sm align-middle\"\> - ([^\<]+)\</)||
+			src.match(/\<title\>([^\>\<\|]+) \|/m)||
+			src.match(/\<h1(?: [^\>]*)?\>([\s\S]*?)\<\/h1\>/m)||
+			["",eventInfo.name||
+			$('#nameInp').val()]
+		)[1].replace(/\<[^\>]*\>/g,"").replace(/\s+/gm," ").trim().replace(/ Event$/,"").replace(/.*Matches /,""))
+		$('#locationInp').val((
+			src.match(/\<span itemprop\=\"location\"\>(.|[\r\n])*?\<\/span\>/m)||
+			src.match(/(\<svg[^\>]+LocationOnIcon.*?\<\/p\>)/m)||
+			["",eventInfo.location||
+			$('#locationInp').val()]
+		)[1].replace(/\<[^\>]*\>/g,""))
 		var empty = false
 		$('#autoFields input:empty').each(function(){
 			if (!$(this).val()) empty = true
@@ -52,7 +83,7 @@ $(document).ready(function(){
 	}
 
 	function venueNameToId(){
-		$('#idInp').val($('#startInp').val().substr(0,4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
+		$('#idInp').val($('#startInp').val().slice(4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
 	}
 
 	$('#nameInp').change(venueNameToId).keyup(venueNameToId)
@@ -68,14 +99,15 @@ $(document).ready(function(){
 	function getFirstInspiresMatchSchedule(src){
 		var isPractice = /Official practice match schedule/.test(src),
 		re= /\/20[0-9]{2}\/team\/([0-9]+)/g,
-		m, matchNum=1, match=[], schedule = [["Match","R1","R2","R3","B1","B2","B3"]]
+		ftc=/FTC Event Web/.test(src),
+		m, matchNum=1, match=[], schedule = ftc?[["Match","R1","R2","B1","B2"]]:[["Match","R1","R2","R3","B1","B2","B3"]]
 		while(m = re.exec(src)){
 			if(!match.length){
 				match.push((isPractice?"pm":"qm")+matchNum)
 				matchNum++
 			}
 			match.push(m[1])
-			if (match.length==7){
+			if (match.length==(ftc?5:7)){
 				schedule.push(match)
 				match=[]
 			}
@@ -111,5 +143,31 @@ $(document).ready(function(){
 			csv += row.join(",") + "\n"
 		}
 		return csv
+	}
+	function getOrangeAllianceMatchSchedule(src){
+		var trRe = /<tr[\s\S]*?<\/tr>/gm,
+		m, qual, schedule = [["Match","R1","R2","B1","B2"]]
+		do {
+			m = trRe.exec(src)
+			if (m) {
+				var teamM, row = m[0],
+				qM = />Q-([0-9]+)</g.exec(row),
+				teamRe= /\/teams\/([0-9]+)/g
+				if (qM){
+					var match = [`qm${qM[1]}`]
+					do {
+						teamM = teamRe.exec(row)
+						if (teamM){
+							match.push(teamM[1])
+						}
+					} while (teamM)
+					if (match.length == 5) schedule.push(match)
+				}
+			}
+		} while (m)
+		if (schedule.length == 1){
+			return ""
+		}
+		return schedule.map(function(d){return d.join(',')}).join('\n') + "\n"
 	}
 })

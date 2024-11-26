@@ -18,7 +18,6 @@ input.num{text-align:center}
 .auto_collect_mid{left:45.5%}
 .blueTeam .auto_collect_mid_amp, .redTeam .auto_collect_mid_source{left:65.5%}
 .blueTeam .auto_collect_amp, .redTeam .auto_collect_source{left:85.5%}
-/* hr{height:1px;background-color:var(--main-border-color)} */
 #start-area{width:25em;height:7em;position:relative;margin:0 auto}
 .blueTeam #start-area{background:url(start-area-blue.png) no-repeat center center / 100% 100%}
 .redTeam #start-area{background:url(start-area-red.png) no-repeat center center / 100% 100%}
@@ -28,6 +27,8 @@ input.num{text-align:center}
 @media (max-width: 450px){
 	#start-area{width:18em;height:4.5em}
 	#robot-starting-position{width:1.7em;height:1.7em;}
+	h1{font-size:115%}
+	.tab{font-size:70%}
 }
 #speaker-shoot-area{width:25em;height:35em;position:relative;margin:0 auto}
 #speaker-shoot-area{background:url(speaker-shoot-area-blue.png) no-repeat center center / 100% 100%}
@@ -36,3 +37,6 @@ input.num{text-align:center}
 .equalWidth{width:33%;}
 .ampcell{outline: solid 0.2em var(--main-bg-color);outline-offset: -0.2em}
 #qrcode{border:.2em solid white;background:white}
+#auto-paths {width:60%;max-width:40em;height:auto;aspect-ratio:775/1000;background:url('speaker-shoot-area-blue.png');background-size:cover}
+html{padding:0}
+.end-game{margin-bottom:50vh}

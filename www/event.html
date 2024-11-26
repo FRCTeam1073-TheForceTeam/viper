@@ -7,7 +7,7 @@
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/event.css>
 <link rel=stylesheet href=/jquery.json-viewer.css>
-<script src=/jquery.js></script>
+<script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
 <script src=/event.js></script>
 <script src=/main.js></script>
@@ -32,9 +32,9 @@
 					<li class=initHid><a class=dependSchedule href="/YEAR/scout.html#event=EVENT">Scout a match</a></li>
 					<ul class=more>
 						<li><a href="/bot-photos.html#event=EVENT">Upload bot photos for all teams</a></li>
-						<li><a href="/YEAR/pit-scout.html#event=EVENT">Open pit scouting for all teams</a></li>
-						<li id=pitScoutSetup>
-							<div>Open pit and photo scouting squads:</div>
+						<li class=initHid><a class=dependPit href="/YEAR/pit-scout.html#event=EVENT">Open pit scouting for all teams</a></li>
+						<li class=initHid id=pitScoutSetup>
+							<div class=dependPit>Open pit and photo scouting squads:</div>
 							<div class=side-by-side>
 								<img src=/count_up.svg>
 								<img src=/count_down.svg>
@@ -43,7 +43,7 @@
 
 							</div>
 						</li>
-						<li class=initHid><a class=dependSchedule href="/YEAR/subjective-scout.html#event=EVENT">Subjective scouting</a></li>
+						<li class=initHid><a class="dependSchedule dependSubjective" href="/YEAR/subjective-scout.html#event=EVENT">Subjective scouting</a></li>
 						<li class=initHid><a class=dependScouting href="/scouter.html#event=EVENT">Top scouters</a></li>
 						<li class=initHid><a class=dependScores href="/scouting.html#event=EVENT">Compare scouting to official scores</a></li>
 					</ul>
@@ -55,7 +55,7 @@
 				<ul>
 					<li class=initHid><a class=dependScouting href="/stats.html#event=EVENT">View stats for alliance selection</a></li>
 					<li class=initHid><a class=dependScouting href="/predictor.html#event=EVENT">Predict a match outcome</a></li>
-					<li class=initHid><a class=dependScouting href="/planner.html#event=EVENT">View match planner with whiteboard</a></li>
+					<li class=initHid><a class="dependScouting dependWhiteboard" href="/planner.html#event=EVENT">View match planner with whiteboard</a></li>
 					<ul class=more>
 						<li class=initHid><a class=dependScouting href="/team.html#event=EVENT">View individual team stats and pit scouting data</a></li>
 					</ul>
@@ -79,34 +79,46 @@
 				<ul>
 					<li><a href="/event-table.html#event=EVENT">Change event details and match schedule</a></li>
 					<li class=initHid><a class=dependScouting href="/playoffs.html#event=EVENT">Input alliance selection results and playoff type</a></li>
-					<li class=initHid><a class=dependFirst href="/admin/frc-api-event.cgi?event=EVENT&first=FIID">Fetch latest schedule and official scores from the FIRST API</a></li>
+					<li class=initHid><a class=dependFirstFrc href="/admin/frc-api-event.cgi?event=EVENT&first=FIID">Fetch latest schedule and official scores from the FIRST API</a></li>
+					<li><a href="/import-scouting.html#event=EVENT">Import data from another app</a></li>
 				</ul>
 			</div>
 
 			<div class=more>
-				<h2>External Links</h2>
-				<ul>
-					<li id=blueAllianceLinks><a href="https://www.thebluealliance.com/event/BAID">The Blue Alliance</a>
-						<ul>
-							<li><a href="https://www.thebluealliance.com/event/BAID#results">Results</a></li>
-							<li><a href="https://www.thebluealliance.com/event/BAID#rankings">Rankings</a></li>
-							<li><a href="https://www.thebluealliance.com/event/BAID#awards">Awards</a></li>
-							<li><a href="https://www.thebluealliance.com/event/BAID#district-points">District Points</a></li>
-							<li><a href="https://www.thebluealliance.com/event/BAID#teams">Teams</a></li>
-							<li><a href="https://www.thebluealliance.com/event/BAID#event-insights">Insights</a></li>
-							<li><a href="https://www.thebluealliance.com/event/BAID#media">Media</a></li>
-						</ul>
-					</li>
-					<li class=initHid id=firstInspiresLinks><a class=dependFirst href="https://frc-events.firstinspires.org/FIID">First Inspires</a>
-						<ul>
-							<li><a href="https://frc-events.firstinspires.org/FIID/practice">Practice Matches</a></li>
-							<li><a href="https://frc-events.firstinspires.org/FIID/qualifications">Qualification Matches</a></li>
-							<li><a href="https://frc-events.firstinspires.org/FIID/rankings">Qualification Rankings</a></li>
-							<li><a href="https://frc-events.firstinspires.org/FIID/playoffs">Playoff Matches</a></li>
-							<li><a href="https://frc-events.firstinspires.org/FIID/awards">Awards</a></li>
-						</ul>
-					</li>
-				</ul>
+				<div class=initHid>
+					<h2>External Links</h2>
+					<ul class=initHid>
+						<li class=initHid id=blueAllianceLinks><a class=dependBlueAlliance href="https://www.thebluealliance.com/event/BAID">The Blue Alliance</a>
+							<ul>
+								<li><a href="https://www.thebluealliance.com/event/BAID#results">Results</a></li>
+								<li><a href="https://www.thebluealliance.com/event/BAID#rankings">Rankings</a></li>
+								<li><a href="https://www.thebluealliance.com/event/BAID#awards">Awards</a></li>
+								<li><a href="https://www.thebluealliance.com/event/BAID#district-points">District Points</a></li>
+								<li><a href="https://www.thebluealliance.com/event/BAID#teams">Teams</a></li>
+								<li><a href="https://www.thebluealliance.com/event/BAID#event-insights">Insights</a></li>
+								<li><a href="https://www.thebluealliance.com/event/BAID#media">Media</a></li>
+							</ul>
+						</li>
+						<li class=initHid id=orangeAllianceLinks><a class=dependOrangeAlliance href="https://theorangealliance.org/events/OAID">The Orange Alliance</a></li>
+						<li class=initHid id=firstInspiresFrcLinks><a class=dependFirstFrc href="https://frc-events.firstinspires.org/FIID">First Inspires</a>
+							<ul>
+								<li><a href="https://frc-events.firstinspires.org/FIID/practice">Practice Matches</a></li>
+								<li><a href="https://frc-events.firstinspires.org/FIID/qualifications">Qualification Matches</a></li>
+								<li><a href="https://frc-events.firstinspires.org/FIID/rankings">Qualification Rankings</a></li>
+								<li><a href="https://frc-events.firstinspires.org/FIID/playoffs">Playoff Matches</a></li>
+								<li><a href="https://frc-events.firstinspires.org/FIID/awards">Awards</a></li>
+							</ul>
+						</li>
+						<li class=initHid id=firstInspiresFtcLinks><a class=dependFirstFtc href="https://ftc-events.firstinspires.org/FIID">First Inspires</a>
+							<ul>
+								<li><a href="https://ftc-events.firstinspires.org/FIID/qualifications">Qualification Matches</a></li>
+								<li><a href="https://ftc-events.firstinspires.org/FIID/rankings">Qualification Rankings</a></li>
+								<li><a href="https://ftc-events.firstinspires.org/FIID/playoffs">Playoff Matches</a></li>
+								<li><a href="https://ftc-events.firstinspires.org/FIID/awards">Awards</a></li>
+							</ul>
+						</li>
+					</ul>
+				</div>
 			</div>
 			<div class=more>
 				<p class="initHid dependScouting">* Aggregation <span class=aggregationIncludesPractice>(include/exclude)</span>s practice matches</p>
@@ -116,7 +128,7 @@
 	</div>
 
 	<table id=matchTable class=side-by-side>
-		<thead><tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>Scr</th><th>Scr</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
+		<thead><tr><th>Match</th><th>R1</th><th>R2</th><th class= noftc>R3</th><th>Scr</th><th>Scr</th><th>B1</th><th>B2</th><th class= noftc>B3</th></tr></thead>
 		<tbody id=matches></tbody>
 	</table>
 
@@ -125,31 +137,31 @@
 			<th class=match-id></th>
 			<td class="R1 redTeamBG"></td>
 			<td class="R2 redTeamBG"></td>
-			<td class="R3 redTeamBG"></td>
+			<td class="R3 redTeamBG noftc"></td>
 			<td class="redScore redTeamBG"></td>
 			<td class="blueScore blueTeamBG"></td>
 			<td class="B1 blueTeamBG"></td>
 			<td class="B2 blueTeamBG"></td>
-			<td class="B3 blueTeamBG"></td>
+			<td class="B3 blueTeamBG noftc"></td>
 		</tr>
 	</template>
-	<template id=matchActionsTemplate>
+	<div style="display:none" id=matchActionsTemplate>
 		<div class="dependTeam">
-			<h3>Team $TEAM</h3>
+			<h3>Team TEAM</h3>
 			<ul>
-				<li>$MATCH_NAME: <a href="/$YEAR/scout.html#event=$EVENT&pos=$POS&team=$TEAM&match=$MATCH_ID">Scout</a></li>
-				<li>Team stats: <a href="/team.html#event=$EVENT&team=$TEAM">View</a></li>
-				<li>Pit scouting: <a href="/team.html#event=$EVENT&team=$TEAM&pit-scouting">View</a> | <a href="/$YEAR/pit-scout.html#event=$EVENT&team=$TEAM">Collect data</a></li>
-				<li>Subjective scouting: <a href="/team.html#event=$EVENT&team=$TEAM&subjective-scouting">View</a> | <a href="/$YEAR/subjective-scout.html#event=$EVENT&team=$TEAM">Collect data</a></li>
+				<li>MATCH_NAME: <a href="/YEAR/scout.html#event=EVENT&pos=POS&team=TEAM&match=MATCH_ID">Scout</a></li>
+				<li>Team stats: <a href="/team.html#event=EVENT&team=TEAM">View</a></li>
+				<li class="initHid dependPit">Pit scouting: <a href="/team.html#event=EVENT&team=TEAM&pit-scouting">View</a> | <a href="/YEAR/pit-scout.html#event=EVENT&team=TEAM">Collect data</a></li>
+				<li class="initHid dependSubjective">Subjective scouting: <a href="/team.html#event=EVENT&team=TEAM&subjective-scouting">View</a> | <a href="/YEAR/subjective-scout.html#event=EVENT&team=TEAM">Collect data</a></li>
 			</ul>
 		</div>
 
-		<h3>$MATCH_NAME</h3>
+		<h3>MATCH_NAME</h3>
 		<ul>
-			<li><a href="/predictor.html#event=$EVENT&R1=$R1&R2=$R2&R3=$R3&B1=$B1&B2=$B2&B3=$B3">Predict match outcome</a></li>
-			<li><a href="/planner.html#event=$EVENT&R1=$R1&R2=$R2&R3=$R3&B1=$B1&B2=$B2&B3=$B3">View planner and whiteboard</a></li>
+			<li><a href="/predictor.html#event=EVENT&match=MATCH_ID&BOTS">Predict match outcome</a></li>
+			<li class="initHid dependWhiteboard"><a href="/planner.html#event=EVENT&match=MATCH_ID&BOTS">View planner and whiteboard</a></li>
 		</ul>
-	</template>
+	</div>
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
 	<div id=dataActions class=lightBoxCenterContent style=display:none><h2></h2><ul></ul></div>
 	<iframe id=instructions class=lightBoxFullContent src=/event-instructions.html></iframe>
