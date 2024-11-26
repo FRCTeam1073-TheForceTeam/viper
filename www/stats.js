@@ -235,7 +235,7 @@ function showStats(){
 			if (graphType!='heatmap'){
 				table.append($('<tr><td class=blank></td></tr>'))
 				var hr = $('<tr>')
-				hr.append($(`<th class=borderless><h4>${section}</h4></th>`))
+				hr.append($('<th class=borderless>').append($('<h4>').text(section)))
 				for (var j=0; j<teamList.length; j++){
 					var t = teamList[j],
 					picked = teamsPicked[t]
@@ -291,6 +291,7 @@ function showStatClickMenu(e, team, fields){
 function showSortOptions(){
 	var picker = $('#sortChooser').html(`<h2>Choose Sorting</h2>`)
 	var allStats = []
+	graphList=statsConfig.getStatsConfig()
 	Object.keys(graphList).forEach(x=>{
 		graphList[x].data.forEach(y=>allStats.push(y))
 	})

@@ -59,6 +59,7 @@ class StatsConfig {
 		this.defaultConfig=conf.defaultConfig
 		this.downloadBlobs=conf.downloadBlobs
 		this.mode=conf.mode
+		this.team=team
 	}
 
 	validateJson(json){
@@ -72,17 +73,23 @@ class StatsConfig {
 	}
 
 	validateItem(item, name){
-		if (!this.hasGraphs){
+		if (!this.hasSections){
 			if (!isString(item)) throw (`${item} is not a string`)
 			if (!statInfo[item]) throw (`Unknown data: ${item}`)
+		} else if (!this.hasGraphs){
+			if (!isArray(item)) throw (`Expected :[ following "${name}"`)
+			item.forEach(function(field){
+				if (!isString(field)) throw (`${name} is not all strings`)
+				if (!statInfo[field]) throw (`Unknown data: ${field}`)
+			})
 		} else {
 			if (!isMap(item)) throw (`Expected :{ following "${name}"`)
 			if (!isString(item.graph)) throw (`${name}.graph is not a string`)
 			if (!isArray(item.data)) throw (`${name}.data is not an array`)
 			if (item.data.length==0) throw (`${name}.data is empty`)
-				item.data.forEach(function(graphField){
-				if (!isString(graphField)) throw (`${name}.data is not all strings`)
-				if (!statInfo[graphField]) throw (`Unknown data: ${graphField}`)
+			item.data.forEach(function(field){
+				if (!isString(field)) throw (`${name}.data is not all strings`)
+				if (!statInfo[field]) throw (`Unknown data: ${field}`)
 			})
 			if (Object.keys(item).length != 2) throw (`Expected only graph and data in "${name}"`)
 		}
@@ -90,7 +97,7 @@ class StatsConfig {
 
 	getLocalStatsConfig(){
 		var s=localStorage.getItem(this.statsConfigKey)
-		if (s){
+		if (s && s != 'undefined'){
 			try {
 				s=JSON.parse(s)
 				if (Object.keys(s).length) return s
@@ -139,7 +146,7 @@ class StatsConfig {
 			oldSectionName=sectionName.attr('old-name'),
 			newSectionName=sectionName.val()
 			if (!newSectionName) return alert("Error: Name not specified")
-			if (oldSectionName != newSectionName) delete graphList[oldSectionName]
+			if (oldSectionName != newSectionName) delete stats[oldSectionName]
 			if (this.hasGraphs){
 				stats[newSectionName]={
 					graph: $('#stats-config-graph-type').val(),
@@ -197,7 +204,7 @@ class StatsConfig {
 
 	revertAllCustomizations(){
 		if (confirm("Are you sure you want delete ALL your personal AND team's custom graph configuration?")){
-			localStorage.setItem(this.statsConfigKey, JSON.stringify(whiteboardStats))
+			localStorage.setItem(this.statsConfigKey, JSON.stringify(this.defaultConfig))
 			closeLightBox()
 			this.drawFunction()
 		}
@@ -217,14 +224,9 @@ class StatsConfig {
 	graphTypeOk(field,types){
 		var modes = new Set()
 		if (typeof types == 'string'){
-			console.log(types)
-			console.log(this.mode)
 			types=graphTypes[types]
 			modes=types.modes
 			types=types.types
-			console.log(field)
-			console.log(modes)
-			console.log(types)
 		}
 		return statInfo[field] && statInfo[field].type && types.has(statInfo[field].type) && (!this.mode || modes.has(this.mode))
 	}
@@ -307,6 +309,10 @@ class StatsConfig {
 		})
 	}
 
+	setTeam(team){
+		this.team=team
+	}
+
 	showConfigDialog(e){
 		var section=$(e.target).attr('data-section'),
 		dialog=$('#stats-config')
@@ -346,7 +352,7 @@ class StatsConfig {
 			$('#download-data-link').attr('href',
 				window.URL.createObjectURL(this.downloadBlobs[section])
 			).attr('download',
-				`${eventId}.${section.toLowerCase().replace(/[^a-zA-Z0-9 ]/,"").replace(" ","_")}.csv`
+				`${eventId}.${this.team?this.team+".":""}${section.toLowerCase().replace(/[^a-zA-Z0-9 ]/,"").replace(" ","_")}.csv`
 			)
 		}
 		showLightBox(dialog)

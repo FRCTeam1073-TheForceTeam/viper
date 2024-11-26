@@ -4,13 +4,30 @@ function lf(){
 	return $('#prediction .lastFocus')
 }
 
+var statsConfig = new StatsConfig({
+	statsConfigKey:`${eventYear}PredictorStats`,
+	getStatsConfig:function(){
+		var s = statsConfig.getLocalStatsConfig()
+		if (s) return s
+		if (window.myTeamsStats && window.myTeamsStats.length) return window.myTeamsStats
+		if (window.matchPredictorSections) return window.matchPredictorSections
+		return {}
+	},
+	drawFunction:setPickedTeams,
+	fileName:"predictor",
+	defaultConfig:window.matchPredictorSections,
+	mode:"aggregate",
+	hasSections:true,
+})
+
 $(document).ready(function(){
 	Promise.all([
 		promiseEventMatches(),
-		promiseEventStats()
+		promiseEventStats(),
+		fetch(`/data/${eventYear}/predictor.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values =>{
-		var [eventMatches, [{}, eventStatsByTeam, {}]] = values,
-		teamList = Object.keys(eventStatsByTeam)
+		[window.eventMatches, [{}, window.eventStatsByTeam, {}], window.myTeamsStats] = values
+		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
 			var team = teamList[i]
@@ -63,67 +80,71 @@ function focusNext(){
 }
 
 function setPickedTeams(){
-	promiseEventStats().then(resolve=>{
-		var [{}, eventStatsByTeam, {}] = resolve
-		$('#teamButtons button').removeClass("picked")
-		var teamCount = 0
-		$('#prediction input').each(function(){
-			var val = $(this).val()
-			if (val){
-				$(`#team-${val}`).addClass("picked")
-				teamCount++
-			}
-		})
-		if (teamCount == BOT_POSITIONS.length){
-			$('#change-teams').show()
-			$('input').removeClass('lastFocus')
-			$('.teamDataEntry').hide()
-			var table = $('#prediction tbody'),
-			red = [parseInt($('#R1').val()),parseInt($('#R2').val()),parseInt($('#R3').val())],
-			blue = [parseInt($('#B1').val()),parseInt($('#B2').val()),parseInt($('#B3').val())],
-			first=true
-			table.html("")
-			Object.keys(matchPredictorSections).forEach(function(section){
-				table.append($('<tr>').append($(`<th colspan=${BOT_POSITIONS.length+3}>`).append($('<h4>').text(section))))
-				matchPredictorSections[section].forEach(function(field){
-					statInfo[field] = statInfo[field]||{}
-					var statName = statInfo[field]['name']||field,
-					statType = statInfo[field]['type']||""
-					if (statType=='avg'){
-						var teamNumbers = [],
-						teamScores = [],
-						allianceScores = [0,0]
-						BOT_POSITIONS.forEach(function(pos, i){
-							teamNumbers[i]=parseInt($(`#${pos}`).val())
-							teamScores[i]=getTeamValue(eventStatsByTeam, field,teamNumbers[i])
-							allianceScores[Math.floor(i/(BOT_POSITIONS.length/2))]+=teamScores[i]
-						})
-						teamScores=teamScores.map(Math.round)
-						allianceScores=allianceScores.map(Math.round)
-						var compare=statInfo[field].good=='low'?Math.min:Math.max,
-						teamBest=compare(...teamScores),
-						allianceBest=compare(...allianceScores),
-						tr=$('<tr>').addClass(first?"first":"")
-						BOT_POSITIONS.forEach(function(pos, i){
-							tr.append($('<td>').addClass(i<(BOT_POSITIONS.length/2)?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamBest?"winner":"")))
-							if(i==(BOT_POSITIONS.length/2-1)){
-								tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceBest?("winner"):"")))
-								tr.append($('<td>').append($('<div>').text(statName)))
-								tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceBest?"winner":"")))
-							}
-						})
-						table.append(tr)
-						first=false
-					}
-				})
-			})
-		} else {
-			$('.teamDataEntry').show()
-			$('#prediction tbody').html("")
-			$('#change-teams').hide()
+	$('#teamButtons button').removeClass("picked")
+	var teamCount = 0
+	$('#prediction input').each(function(){
+		var val = $(this).val()
+		if (val){
+			$(`#team-${val}`).addClass("picked")
+			teamCount++
 		}
-		setLocationHash()
 	})
+	if (teamCount == BOT_POSITIONS.length){
+		$('#change-teams').show()
+		$('input').removeClass('lastFocus')
+		$('.teamDataEntry').hide()
+		var table = $('#prediction tbody'),
+		stats = statsConfig.getStatsConfig(),
+		first=true
+		table.html("")
+		Object.keys(stats).forEach(function(section){
+			table.append(
+				$('<tr>').append(
+					$(`<th colspan=${BOT_POSITIONS.length+3}>`)
+					.append(
+						$('<h4>').text(section)
+						.append(" ").append($('<button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig)))
+					)
+				)
+			)
+			stats[section].forEach(function(field){
+				statInfo[field] = statInfo[field]||{}
+				var statName = statInfo[field]['name']||field,
+				statType = statInfo[field]['type']||""
+				if (statType=='avg'){
+					var teamNumbers = [],
+					teamScores = [],
+					allianceScores = [0,0]
+					BOT_POSITIONS.forEach(function(pos, i){
+						teamNumbers[i]=parseInt($(`#${pos}`).val())
+						teamScores[i]=getTeamValue(window.eventStatsByTeam, field,teamNumbers[i])
+						allianceScores[Math.floor(i/(BOT_POSITIONS.length/2))]+=teamScores[i]
+					})
+					teamScores=teamScores.map(Math.round)
+					allianceScores=allianceScores.map(Math.round)
+					var compare=statInfo[field].good=='low'?Math.min:Math.max,
+					teamBest=compare(...teamScores),
+					allianceBest=compare(...allianceScores),
+					tr=$('<tr>').addClass(first?"first":"")
+					BOT_POSITIONS.forEach(function(pos, i){
+						tr.append($('<td>').addClass(i<(BOT_POSITIONS.length/2)?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamBest?"winner":"")))
+						if(i==(BOT_POSITIONS.length/2-1)){
+							tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceBest?("winner"):"")))
+							tr.append($('<td>').append($('<div>').text(statName)))
+							tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceBest?"winner":"")))
+						}
+					})
+					table.append(tr)
+					first=false
+				}
+			})
+		})
+	} else {
+		$('.teamDataEntry').show()
+		$('#prediction tbody').html("")
+		$('#change-teams').hide()
+	}
+	setLocationHash()
 }
 
 var match = ""
