@@ -39,7 +39,7 @@ $(document).ready(function(){
 			})
 			setPickedTeams()
 		})
-		eventMatches.forEach(match=>{
+		window.eventMatches.forEach(match=>{
 			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',BOT_POSITIONS.map(pos=>match[pos]).join(",")))
 		})
 		loadFromLocationHash()

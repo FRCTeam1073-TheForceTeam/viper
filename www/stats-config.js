@@ -59,7 +59,7 @@ class StatsConfig {
 		this.defaultConfig=conf.defaultConfig
 		this.downloadBlobs=conf.downloadBlobs
 		this.mode=conf.mode
-		this.team=team
+		this.team=conf.team
 	}
 
 	validateJson(json){
