@@ -2,12 +2,12 @@
 
 $(document).ready(function(){
 	function error(msg){
-		$('body').append($('<p style=color:red>').text(msg))
+		$('#messages').append($('<p style=color:red>').text(msg))
 		return false
 	}
 
 	function message(msg){
-		$('body').append($('<p>').text(msg))
+		$('#messages').append($('<p>').text(msg))
 		return false
 	}
 
@@ -58,4 +58,22 @@ $(document).ready(function(){
 	}
 
 	getDataFromUrl()
+
+	function deletePartial(){
+		var partial = $(this).attr('data-partial')
+		if (confirm("Are you sure you want to delete this partial scan?")){
+			localStorage.removeItem(partial)
+			$(this).closest('p').remove()
+		}
+	}
+
+	for(var i in localStorage){
+		if (/^partial_.*/.test(i)){
+			var name = i.replace(/^partial_/,"")
+			$('#partials').append(
+				$('<p>').append($('<button>').text("Delete").attr('data-partial',i).click(deletePartial))
+				.append(` or scan another QR code for ${name}`)
+			)
+		}
+	}
 })
