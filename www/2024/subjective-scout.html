@@ -11,6 +11,7 @@
 <script src=/jquery.min.js></script>
 <script src=/canvas-path.js></script>
 <script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
 <script src=/scout.js></script>
 <script src=scout.js></script>
 <script src=/heartbeat.js></script>
@@ -71,8 +72,9 @@
 
 	<input type=hidden name=created value="">
 	<input type=hidden name=modified value="">
-	<div>
-		<button id=subjectiveScoutNext>Save</button>
-	</div>
+	<fieldset class=full id=nextButtons>
+		<legend>Save data:</legend>
+		<div id=doneButtons></div>
+	</fieldset>
 </form>
 </html>

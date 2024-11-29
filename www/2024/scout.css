@@ -35,7 +35,7 @@ input.num{text-align:center}
 .redTeam #speaker-shoot-area{background:url(speaker-shoot-area-red.png) no-repeat center center / 100% 100%}
 .shot-location{position:absolute;display:inline-block;color:var(--highlight-fg-color)}
 .equalWidth{width:33%;}
-.ampcell{outline: solid 0.2em var(--main-bg-color);outline-offset: -0.2em;}
+.ampcell{outline: solid 0.2em var(--main-bg-color);outline-offset: -0.2em}
 #auto-paths {width:60%;max-width:40em;height:auto;aspect-ratio:775/1000;background:url('speaker-shoot-area-blue.png');background-size:cover}
 html{padding:0}
 .end-game{margin-bottom:50vh}

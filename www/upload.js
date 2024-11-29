@@ -25,6 +25,7 @@ function showUploads(){
 			up.append($('<h4>').text(i))
 			up.append($('<pre>').text(header + localStorage.getItem(i)))
 			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
+			up.append($('<button>QR Code</button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?.*_.*_/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
@@ -37,6 +38,7 @@ function showUploads(){
 			up.append($('<h4>').text(i))
 			up.append($('<pre>').text(header + localStorage.getItem(i)))
 			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
+			up.append($('<button>QR Code</button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
@@ -49,6 +51,7 @@ function showUploads(){
 			up.append($('<h4>').text(i))
 			up.append($('<pre>').text(header + localStorage.getItem(i)))
 			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
+			up.append($('<button>QR Code</button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^deleted_20/.test(i)){
 			his.append($('<hr>'))
@@ -139,4 +142,77 @@ function undeleteMatch(){
 	localStorage.removeItem(match)
 	localStorage.setItem(match.replace(/^(deleted|uploaded)_/,''), d)
 	showUploads()
+}
+
+function getQrUrls(key,csv){
+	var csvIndex=0,
+	urls=[]
+	csv=csv.replace(/,0(?=,)/g,",")
+	for (var i=1;csvIndex<csv.length;i++){
+		var parts=[location.origin,"/qr.html?"]
+		if(i>1)parts.push(`${i}...`)
+		parts.push(key,",")
+		var len=parts.reduce((sum,v)=>sum+v.length,0)
+		while(csvIndex<csv.length && len<1000){
+			var next=encodeURIComponent(csv[csvIndex])
+			len+=next.length
+			parts.push(next)
+			csvIndex++
+		}
+		if (csvIndex<csv.length) parts.push(`...${i+1}`)
+		urls.push(parts.join(''))
+	}
+	return urls
+}
+
+var qrNum=0,
+qrMatch,
+qrUrls=[]
+function nextQrCode(){
+	showQrCode(qrNum+1)
+}
+
+function showQrCode(num){
+	if (typeof num == 'object'){
+		qrMatch = $(this).attr("data-match")
+		qrUrls = getQrUrls(qrMatch,localStorage.getItem(qrMatch))
+		num=1
+	}
+	qrNum=num
+	if (num>qrUrls.length){
+		closeLightBox()
+		var d = localStorage.getItem(qrMatch)
+		localStorage.removeItem(qrMatch)
+		localStorage.setItem(`uploaded_${qrMatch}`, d)
+		showUploads()
+		$('#show-uploads').hide()
+		$('#uploads').show()
+		return false
+	}
+	var dialog=$('#qr-code-dialog')
+	if (!dialog.length){
+		dialog=$('<div id=qr-code-dialog class=lightBoxCenterContent>')
+		.append($('<h2 id=qr-code-title>'))
+		.append($('<div id=qr-code style="border:.5em solid white">'))
+		.append($('<p>')
+			.append($('<button>').text("Cancel").click(closeLightBox))
+			.append(" ")
+			.append($('<button id=qr-code-next style=float:right>').text('Next').click(nextQrCode))
+		)
+        $('body').append(dialog)
+	}
+	$('#qr-code-title').text(`QR Code ${qrNum} of ${qrUrls.length}`)
+	var size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)
+	new QRCode($("#qr-code").html("").click(copyTitleAttr)[0],{
+		text:qrUrls[num-1],
+		width:size,
+		height:size,
+		correctLevel:QRCode.CorrectLevel.L,
+	})
+	showLightBox(dialog)
+	return false
+}
+
+function copyTitleAttr(){
+	navigator.clipboard.writeText($(this).attr('title'))
 }

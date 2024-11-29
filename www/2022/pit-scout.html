@@ -9,6 +9,7 @@
 <link rel=stylesheet href=/scout.css>
 <script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
 <script src=/scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
@@ -104,9 +105,10 @@
 		<p>If you are also bot photo scouting, don't forget to take a picture!</p>
 	</fieldset>
 
-	<div>
-		<button id=pitScoutNext>Save</button>
-	</div>
+	<fieldset class=full id=nextButtons>
+		<legend>Save data:</legend>
+		<div id=doneButtons></div>
+	</fieldset>
 
 	<img src=/pointer.png style=display:none>
 </form>

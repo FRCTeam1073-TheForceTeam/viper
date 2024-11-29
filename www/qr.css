@@ -1,0 +1,3 @@
+p{white-space:pre-wrap;overflow-wrap:break-word}
+#messages{border:1px solid var(--main-border-color);max-width:30em;margin:1em auto;padding:0.5em}
+#partials{max-width:30em;margin:1em auto}
