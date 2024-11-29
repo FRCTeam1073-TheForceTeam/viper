@@ -9,6 +9,7 @@
 <link rel=stylesheet href=/scout.css>
 <script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
 <script src=/scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
@@ -164,9 +165,10 @@
 
 	<input type=hidden name=created value="">
 	<input type=hidden name=modified value="">
-	<div>
-		<button id=pitScoutNext>Save</button>
-	</div>
+	<fieldset class=full id=nextButtons>
+		<legend>Save data:</legend>
+		<div id=doneButtons></div>
+	</fieldset>
 </form>
 </body>
 </html>

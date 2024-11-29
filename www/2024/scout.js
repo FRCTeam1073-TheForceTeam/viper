@@ -1,20 +1,6 @@
 "use strict"
 
 $(document).ready(function(){
-	$('#qrcodeBtn').click(function(){
-		$('#uploadBtn, #nextBtn, #qrcodeBtn').hide()
-		var csv = toCSV(scouting)[1].trim()
-		csv=csv.replace(/,0(?=,)/g,",").replace(/,[^,]{30,}(?=,)/g,",")
-		var url =  location.origin+"/qr.html?"+encodeURIComponent(csv).replace(/%2C/ig, ","),
-		size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)
-		console.log(url)
-		new QRCode($("#qrcode").show()[0],{
-			text:url,
-			width:size,
-			height:size
-		})
-		return false
-	})
 	const AUTO_MS=15000
 
 	$('.onstage-state').click(toggleOnstage)

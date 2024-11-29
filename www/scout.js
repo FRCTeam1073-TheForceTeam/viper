@@ -3,7 +3,7 @@
 var pos = "",
 team = "",
 match = "",
-orient = "",
+orient = "right",
 matchName = "",
 teamList=[],
 scouting,
@@ -15,7 +15,7 @@ parseHash()
 function parseHash(){
 	pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
-	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",""])[1]
+	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["","right"])[1]
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
 	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1]
 }
@@ -172,6 +172,13 @@ function showMatchList(){
 	})
 }
 
+function getKey(t,m,e){
+	var form=getActiveForm()
+	if (form === scouting) return getScoutKey(t,m,e)
+	if (form === pitScouting) return getPitScoutKey(t,e)
+	if (form === subjectiveScouting) return getSubjectiveScoutKey(t,e)
+}
+
 function getScoutKey(t,m,e){
 	if (!t) t = team
 	if (!m) m = match
@@ -198,7 +205,7 @@ function setHash(pos,orient,team,match,teamList){
 function buildHash(pos,orient,team,match){
 	return `#event=${eventId}`+
 		(pos?`&pos=${pos}`:"")+
-		(orient?`&orient=${orient}`:"")+
+		(orient&&$('.orientLeft').length?`&orient=${orient}`:"")+
 		(team?`&team=${team}`:"")+
 		(match?`&match=${match}`:"")+
 		(teamList?`&teams=${teamList}`:"")
@@ -294,6 +301,7 @@ function showPitScoutingForm(t){
 			if(!window.onShowPitScouting[i]()) return false
 		}
 		pitScouting.show()
+		setupButtons()
 		localStorage.setItem("last_scout_type", "pit-scout")
 	})
 }
@@ -318,6 +326,7 @@ function showSubjectiveScoutingForm(t){
 			if(!window.onShowSubjectiveScouting[i]()) return false
 		}
 		form.show()
+		setupButtons()
 		localStorage.setItem("last_scout_type", "subjective-scout")
 	})
 }
@@ -393,7 +402,6 @@ function showScouting(){
 		window.scrollTo(0,0)
 		if (typeof beforeShowScouting == 'function') beforeShowScouting()
 		matchName = getMatchName(match)
-		setupButtons()
 		$('.orientLeft').toggle(orient && orient=='left')
 		$('.orientRight').toggle(orient && orient=='right')
 		$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
@@ -412,6 +420,7 @@ function showScouting(){
 		}
 		showTab(null, $('.default-tab'))
 		scouting.show()
+		setupButtons()
 		localStorage.setItem("last_scout_type", "scout")
 	})
 }
@@ -507,14 +516,18 @@ function storeScouter(form){
 	localStorage.setItem('last_scouter',form.find('input[name="scouter"]').val())
 }
 
-function store(){
+function store(uploaded){
 	var form = getActiveForm()
-	if (form === scouting) storeScouting()
-	if (form === pitScouting) storePitScouting()
-	if (form === subjectiveScouting) storeSubjectiveScouting()
+	if (form === scouting) return storeScouting(uploaded)
+	if (form === pitScouting) return storePitScouting(uploaded)
+	if (form === subjectiveScouting) return storeSubjectiveScouting(uploaded)
 }
 
-function storeScouting(){
+function getUploadedPrefix(uploaded){
+	return uploaded=="uploaded"?"uploaded_":""
+}
+
+function storeScouting(uploaded){
 	if (formHasChanges(scouting)){
 		for (var i=0; i<window.onStore.length; i++){
 			if(!window.onStore[i]()) return false
@@ -524,31 +537,31 @@ function storeScouting(){
 		localStorage.setItem("last_pos", pos)
 		var csv = toCSV(scouting)
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
-		localStorage.setItem(getScoutKey(), csv[1])
+		localStorage.setItem(getUploadedPrefix(uploaded)+getScoutKey(), csv[1])
 		storeTime = new Date().getTime()
 		storeScouter(scouting)
 	}
 	return true
 }
 
-function storePitScouting(){
+function storePitScouting(uploaded){
 	var f=pitScouting
 	if (formHasChanges(f)){
 		setTimeStamps(f)
 		var csv = toCSV(pitScouting)
 		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
-		localStorage.setItem(getPitScoutKey(), csv[1])
+		localStorage.setItem(getUploadedPrefix(uploaded)+getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
 		storeScouter(f)
 	}
 }
-function storeSubjectiveScouting(){
+function storeSubjectiveScouting(uploaded){
 	var f=subjectiveScouting
 	if (formHasChanges(f)){
 		setTimeStamps(f)
 		var csv = toCSV(subjectiveScouting)
 		localStorage.setItem(`${eventYear}_subjectiveheaders`, csv[0])
-		localStorage.setItem(getSubjectiveScoutKey(), csv[1])
+		localStorage.setItem(getUploadedPrefix(uploaded)+getSubjectiveScoutKey(), csv[1])
 		storeTime = new Date().getTime()
 		storeScouter(f)
 	}
@@ -615,13 +628,163 @@ function getTeamsWithSubjectiveData(){
 	return teams
 }
 
-function setupButtons(){
+function pitScoutNext(uploaded){
+	if (uploaded!="uploaded") localStorage.setItem("last_scout_action","next")
+	storePitScouting(uploaded)
+	showSelectPitScoutTeam()
+	return false
+}
+
+function subjectiveScoutNext(uploaded){
+	if (uploaded!="uploaded") localStorage.setItem("last_scout_action","next")
+	storeSubjectiveScouting(uploaded)
+	showSelectSubjectiveScoutTeam()
+	return false
+}
+
+function goChooseMatch(){
+	localStorage.setItem("last_scout_action","match")
+	maybeSaveFirst()
+	showMatchList()
+	return false
+}
+
+function goChooseRobot(){
+	localStorage.setItem("last_scout_action","robot")
+	maybeSaveFirst()
+	showPosList()
+	return false
+}
+
+function goChangeTeam(){
+	localStorage.setItem("last_scout_action","team")
+	maybeSaveFirst()
+	showTeamChange()
+	return false
+}
+
+function goNext(uploaded){
+	if (uploaded!="uploaded") localStorage.setItem("last_scout_action","next")
+	var form=getActiveForm()
+	if (form===scouting)return goNextMatch(uploaded)
+	if (form===pitScouting)return pitScoutNext(uploaded)
+	if (form===subjectiveScouting)return subjectiveScoutNext(uploaded)
+}
+
+function goNextMatch(uploaded){
+	if (!store(uploaded)) return false
 	var next = getNextMatch()
-	if (!next || haveDataForMatch(next) || haveAllDataForOurNextMatch()){
-		setFeaturedButton($('#uploadBtn'))
-		return
+	if (!next){
+		alert("Data saved and done. That was the last match!")
+	} else {
+		team = next[pos]
+		match = next['Match']
+		showScouting()
 	}
-	setFeaturedButton($('#nextBtn'))
+	return false
+}
+
+function goUploadData(){
+	localStorage.setItem("last_scout_action","upload")
+	if (!store()) return false
+	location.href="/upload.html"
+	return false
+}
+
+var qrNum=0,
+qrUrls=[]
+function nextQrCode(){
+	showQrCode(qrNum+1)
+}
+
+function getQrUrls(){
+	var csv=toCSV(getActiveForm())[1].trim(),
+	csvIndex=0,
+	urls=[]
+	csv=csv.replace(/,0(?=,)/g,",")
+	for (var i=1;csvIndex<csv.length;i++){
+		var parts=[location.origin,"/qr.html?"]
+		if(i>1)parts.push(`${i}...`)
+		parts.push(getKey(),",")
+		var len=parts.reduce((sum,v)=>sum+v.length,0)
+		while(csvIndex<csv.length && len<1000){
+			var next=encodeURIComponent(csv[csvIndex])
+			len+=next.length
+			parts.push(next)
+			csvIndex++
+		}
+		if (csvIndex<csv.length) parts.push(`...${i+1}`)
+		urls.push(parts.join(''))
+	}
+	return urls
+}
+
+function showQrCode(num){
+	localStorage.setItem("last_scout_action","qr")
+	if (typeof num == 'object'){
+		qrUrls = getQrUrls()
+		num=1
+	}
+	qrNum=num
+	if (num>qrUrls.length){
+		closeLightBox()
+		goNext("uploaded")
+		return false
+	}
+	var dialog=$('#qr-code-dialog')
+	if (!dialog.length){
+		dialog=$('<div id=qr-code-dialog class=lightBoxCenterContent>')
+		.append($('<h2 id=qr-code-title>'))
+		.append($('<div id=qr-code style="border:.5em solid white">'))
+		.append($('<p>')
+			.append($('<button>').text("Cancel").click(closeLightBox))
+			.append(" ")
+			.append($('<button style=float:right>').text('Next').click(nextQrCode))
+		)
+        $('body').append(dialog)
+	}
+	$('#qr-code-title').text(`QR Code ${qrNum} of ${qrUrls.length}`)
+	var size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)
+	new QRCode($("#qr-code").html("").click(copyTitleAttr)[0],{
+		text:qrUrls[num-1],
+		width:size,
+		height:size,
+		correctLevel:QRCode.CorrectLevel.L,
+	})
+	showLightBox(dialog)
+	return false
+}
+
+function copyTitleAttr(){
+	navigator.clipboard.writeText($(this).attr('title'))
+}
+
+function setupButtons(){
+	var featured='next',
+	doneButtons=$('#doneButtons'),
+	featuredButton=$('<div id=featuredButton>'),
+	otherButtons=$('<div id=otherButtons>')
+	if("qr"==localStorage.getItem("last_scout_action")) featured="qr"
+	else if(getActiveForm()===scouting){
+		var next = getNextMatch()
+		if(!next || haveDataForMatch(next) || haveAllDataForOurNextMatch()) featured='upload'
+	}
+	addButtons(featuredButton,featured,true)
+	addButtons(otherButtons,featured,false)
+	doneButtons.html("").append(featuredButton).append(otherButtons)
+}
+
+function addButtons(div, featured, isFeatured){
+	if (getActiveForm()===scouting){
+		if((featured=='next')==isFeatured) div.append($('<button>').text('Next Match').click(goNext)).append(" ")
+		if((featured=='upload')==isFeatured) div.append($('<button>').text('Upload Data').click(goUploadData)).append(" ")
+		if((featured=='qr')==isFeatured) div.append($('<button>').text('QR Code').click(showQrCode)).append(" ")
+		if($('#matchBtn').length==0 && !isFeatured) div.append($('<button>').text('Choose Match').click(goChooseMatch)).append(" ")
+		if($('.robotBtn').length==0 && !isFeatured) div.append($('<button>').text('Change Robot').click(goChooseRobot)).append(" ")
+	} else {
+		if((featured=='next')==isFeatured) div.append($('<button>').text('Save').click(goNext)).append(" ")
+		if((featured=='qr')==isFeatured) div.append($('<button>').text('QR Code').click(showQrCode)).append(" ")
+	}
 }
 
 function haveDataForMatch(m){
@@ -646,13 +809,6 @@ function haveAllDataForOurNextMatch(){
 		}
 	}
 	return 0
-}
-
-function setFeaturedButton(btn){
-	var featured = $('#featuredButton')
-	var other = $('#otherButtons')
-	other.append(featured.find('button').detach())
-	featured.append(btn.detach())
 }
 
 function getNextMatch(){
@@ -737,53 +893,15 @@ $(document).ready(function(){
 		$('body').append($('<img class=location-pointer src=/pointer.png style="position:absolute;width:3em">').css('top',e.pageY).css('left',e.pageX).addClass(name))
 		inputChanged(inp.val(val), `${x}%x${y}%`)
 	})
-
-	$("#nextBtn").click(function(e){
-		if (!storeScouting()) return false
-		var next = getNextMatch()
-		if (!next){
-			alert("Data saved and done. That was the last match!")
-		} else {
-			team = next[pos]
-			match = next['Match']
-			showScouting()
-		}
-		return false
-	})
-	$("#pitScoutNext,#pitTeamButton").click(function(e){
-		storePitScouting()
-		showSelectPitScoutTeam()
-		return false
-	})
-	$("#subjectiveScoutNext,#subjectiveTeamButton").click(function(e){
-		storeSubjectiveScouting()
-		showSelectSubjectiveScoutTeam()
-		return false
-	})
-	$("#matchBtn").click(function(e){
-		maybeSaveFirst()
-		showMatchList()
-		return false
-	})
-	$(".robotBtn").click(function(e){
-		maybeSaveFirst()
-		showPosList()
-		return false
-	})
-	$("#teamBtn").click(function(e){
-		maybeSaveFirst()
-		showTeamChange()
-		return false
-	})
+	$("#nextBtn,#pitScoutNext,#pitTeamButton,#subjectiveScoutNext,#subjectiveTeamButton").click(goNext)
+	$("#matchBtn").click(goChooseMatch)
+	$(".robotBtn").click(goChooseRobot)
+	$("#teamBtn").click(goChangeTeam)
 	$('.showInstructions').click(function(){
 		showLightBox($(this).parent().find('.instructions'))
 		return false
 	})
-	$("#uploadBtn").click(function(e){
-		if (!storeScouting()) return false
-		location.href="/upload.html"
-		return false
-	})
+	$("#uploadBtn").click(goUploadData)
 
 	$('img.expandable-image').click(function(){
 		showLightBox($('#lightBoxImage').html("").append($('<img>').attr('src',$(this).attr('src')).addClass('full-image')))

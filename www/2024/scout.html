@@ -10,12 +10,12 @@
 <link rel=stylesheet href=scout.css>
 <script src=/jquery.min.js></script>
 <script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
 <script src=/canvas-path.js></script>
 <script src=/scout.js></script>
 <script src=scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/main.js></script>
-<script src=/qrcode.min.js></script>
 <script src=/local.js></script>
 <link rel=preload as=image href=auto-collect-blue.png>
 <link rel=preload as=image href=auto-collect-red.png>
@@ -241,15 +241,8 @@
 			<input type=hidden name=created value="">
 			<input type=hidden name=modified value="">
 			<fieldset class=full id=nextButtons>
-				<div id=qrcode style=display:none></div>
 				<legend>Save data:</legend>
-				<div id=featuredButton>
-					<button id=nextBtn>Next Match</button>
-				</div>
-				<div id=otherButtons>
-					<button id=uploadBtn>Upload Data</button>
-					<button id=qrcodeBtn>Generate Qr Code</button>
-				</div>
+				<div id=doneButtons></div>
 			</fieldset>
 		</td></tr></table>
 	</div>
