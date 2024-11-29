@@ -6,6 +6,7 @@ match = "",
 orient = "right",
 matchName = "",
 teamList=[],
+go,
 scouting,
 pitScouting,
 subjectiveScouting,
@@ -18,6 +19,7 @@ function parseHash(){
 	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["","right"])[1]
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
 	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1]
+	go = (location.hash.match(/^\#(?:.*\&)?(?:go\=)(back)(?:\&.*)?$/)||["",""])[1]
 }
 
 function showScreen(){
@@ -29,6 +31,7 @@ function showScreen(){
 	else if (!match) showMatchList()
 	else if (!team) showTeamChange()
 	else showScouting()
+	if(go=='back')history.back()
 }
 
 function maybeSaveFirst(){
@@ -199,6 +202,7 @@ function getSubjectiveScoutKey(t,e){
 }
 
 function setHash(pos,orient,team,match,teamList){
+	if(go=='back')return
 	location.hash = buildHash(pos,orient,team,match,teamList)
 }
 

@@ -22,13 +22,13 @@ $(document).ready(function(){
 		var [{},key,event,season,type,data] = m
 		if (/subjective/.test(type)){
 			header = localStorage.getItem(`${season}_subjectiveheaders`)
-			if (!header) location.href = `/${season}/subjective-scout.html#event=${event}`
+			if (!header) location.href = `/${season}/subjective-scout.html#event=${event}&go=back`
 		} else if (/_.*_/.test(type)){
 			header = localStorage.getItem(`${season}_headers`)
-			if (!header) location.href = `/${season}/scout.html#event=${event}`
+			if (!header) location.href = `/${season}/scout.html#event=${event}&go=back`
 		} else {
 			header = localStorage.getItem(`${season}_pitheaders`)
-			if (!header) location.href = `/${season}/pit-scout.html#event=${event}`
+			if (!header) location.href = `/${season}/pit-scout.html#event=${event}&go=back`
 		}
 		var partialKey = `partial_${key}`
 		if (fragment != 1){
