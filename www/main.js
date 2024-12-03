@@ -25,11 +25,11 @@ $(document).ready(function(){
 				fetch('/main-menu.html').then(response=>response.text()),
 				fetch('/user.cgi').then(response=>response.text())
 			]).then(values =>{
-				var [menuHtml, userName] = values
-				var eName = window.eventName||localStorage.getItem('last_event_name')||"",
-				eId = window.eventId||localStorage.getItem('last_event_id')||"",
-				eYear = window.eventName||localStorage.getItem('last_event_year')||""
-				if (localStorage.getItem('last_event_id')==eId)eName = localStorage.getItem('last_event_name')||window.eventName||""
+				var [menuHtml, userName] = values,
+				lastEventId=localStorage.getItem('last_event_id'),
+				eId = window.eventId||lastEventId||"",
+				eName = window.eventName||(eId==lastEventId?localStorage.getItem('last_event_name'):"")||"",
+				eYear = window.eventYear||(eId==lastEventId?localStorage.getItem('last_event_year'):"")||""
 				mainMenu.html(
 					menuHtml
 						.replace(/EVENT_NAME/g,eName)
