@@ -109,9 +109,10 @@ $(document).ready(function(){
 		promiseEventInfo(),
 		promiseSubjectiveScouting(),
 		promisePitScouting(),
+		promiseTeamsInfo(),
 		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
 	]).then(values =>{
-		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo, subjectiveData, pitData, seasonFiles] = values,
+		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo, subjectiveData, pitData, eventTeamsInfo, seasonFiles] = values,
 		lastDone,
 		lastFullyDone,
 		ourNext
@@ -172,6 +173,15 @@ $(document).ready(function(){
 			if (!lastDone && matchScoutingDataCount(eventStatsByMatchTeam, m)) lastDone = m
 			if (!lastDone && matchHasTeam(m,getLocalTeam())) ourNext=m
 		}
+		function getTeamInfo(teamNum){
+			var info=eventTeamsInfo[teamNum]
+			if (!info)return""
+			var name=info.nameShort||""
+			if (info.city)name+=`, ${info.city}`
+			if (info.stateProv)name+=`, ${info.stateProv}`
+			if (info.country)name+=`, ${info.country}`
+			return name
+		}
 		var seenOurNext = false,
 		seenLastFullyDone = false
 		eventMatches.forEach(match=>{
@@ -192,6 +202,7 @@ $(document).ready(function(){
 					.toggleClass("needed",!scouted&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
 					.toggleClass("error",!!scouted.old)
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
+					.attr('title',getTeamInfo(match[pos]))
 			})
 			redPrediction=Math.round(redPrediction)
 			bluePrediction=Math.round(bluePrediction)
