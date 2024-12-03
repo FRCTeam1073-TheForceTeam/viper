@@ -368,6 +368,7 @@ function showLinks(e){
 	matchId=match.attr('data-match-id'),
 	matchName=match.text(),
 	positions=""
+	console.log(el)
 	BOT_POSITIONS.forEach(function(pos){
 		var t = row.find(`.${pos}`).text()
 		if (positions) positions+="&"
@@ -382,11 +383,11 @@ function showLinks(e){
 	}
 	var html = $('#matchActionsTemplate').html()
 		.replace(/TEAM_ID/g, team)
-		.replace(/TEAM_NAME/g, teamName)
 		.replace(/POS/g, pos)
 		.replace(/MATCH_ID/g, matchId)
+		.replace(/BOTS/g, positions)
 		.replace(/MATCH_NAME/g, matchName)
-		.replace(/BOTS/g, positions),
+		.replace(/TEAM_NAME/g, teamName),
 	ma = $('#matchActions')
 	ma.html(html).find('.dependTeam').toggle(!!team)
 	showLightBox(ma)
