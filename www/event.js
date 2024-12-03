@@ -362,7 +362,7 @@ function viewJson(){
 }
 function showLinks(e){
 	var el = $(e.target),
-	team,pos,
+	team,teamName="",pos,
 	row=el.closest('tr'),
 	match=row.find('.match-id'),
 	matchId=match.attr('data-match-id'),
@@ -377,10 +377,12 @@ function showLinks(e){
 		if (el.attr('class') && /\b[RB][1-3]\b/.test(el.attr('class'))){
 			pos=el.attr('class').match(/\b[RB][1-3]\b/)[0]
 			team=el.text()
+			teamName=el.attr('title')
 		}
 	}
 	var html = $('#matchActionsTemplate').html()
-		.replace(/TEAM/g, team)
+		.replace(/TEAM_ID/g, team)
+		.replace(/TEAM_NAME/g, teamName)
 		.replace(/POS/g, pos)
 		.replace(/MATCH_ID/g, matchId)
 		.replace(/MATCH_NAME/g, matchName)
