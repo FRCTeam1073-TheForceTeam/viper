@@ -6,7 +6,7 @@ $(document).ready(function(){
 	if (!season) season = "" + new Date().getFullYear()
 	var seasonSelect = $('#season')
 	for (var y=new Date().getFullYear(); y>=2019; y--){
-		if (y >= 2024 && (y<=new Date().getFullYear() || new Date().geMonth()>=8)){
+		if (y >= 2024 && (y<new Date().getFullYear() || new Date().getMonth()>=8)){
 			var v = y+"-"+(y+1+"").slice(-2)
 			seasonSelect.append($("<option>").attr('value',v).text(v + " FTC"))
 		}
