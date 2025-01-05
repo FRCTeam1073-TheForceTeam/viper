@@ -45,3 +45,15 @@ git push || true
 foreachserver live "cd sites/viper/local.data; if [ ! -e $team ]; then git clone source.ostermiller.org:/git/viper${team}data.git $team; fi; cd $team; git pull; sudo cp .htsite /etc/apache2/sites-available/viper$team.conf; sudo a2ensite viper$team; sudo service apache2 reload"
 ssh web1 "cd sites/viper/; ./script/db-import-site.sh local.data/$team"
 cd ../..
+echo "Your team's cloud hosted viper site is ready:
+
+https://$team.viperscout.com/
+
+You can use these user names to access the site
+using the passwords you chose:
+
+admin - Full access: create events and edit data
+
+scouter - Can upload scouting data
+
+guest - Read-only access"
