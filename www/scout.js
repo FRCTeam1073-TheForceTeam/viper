@@ -41,6 +41,8 @@ function maybeSaveFirst(){
 }
 
 $(window).on('hashchange', function(){
+	var current = buildHash(pos,orient,team,match,teamList)
+	if (location.hash==current) return
 	maybeSaveFirst()
 	parseHash()
 	showScreen()
@@ -97,7 +99,7 @@ function showSelectSubjectiveScoutTeam(){
 
 function showTeamChange(){
 	$('.screen,.init-hide').hide()
-	location.hash = `#event=${eventId}&pos=${pos}&match=${match}`
+	location.hash=buildHash(pos,orient,null,match)
 	resetInitialValues(scouting)
 	window.scrollTo(0,0)
 	$('h1').text(eventName)
@@ -204,9 +206,10 @@ function getSubjectiveScoutKey(t,e){
 function setHash(pos,orient,team,match,teamList){
 	if(go=='back')return
 	location.hash = buildHash(pos,orient,team,match,teamList)
+	return false
 }
 
-function buildHash(pos,orient,team,match){
+function buildHash(pos,orient,team,match,teamList){
 	return `#event=${eventId}`+
 		(pos?`&pos=${pos}`:"")+
 		(orient&&$('.orientLeft').length?`&orient=${orient}`:"")+
@@ -336,18 +339,23 @@ function showSubjectiveScoutingForm(t){
 }
 
 function findParentFromButton(button){
-	var parent = button,
+	var name=button.attr('data-input'),
+	parent = button,
 	found = parent
-	for(var i=0;i<10;i++){
-		if (parent.find('input').length == 1) found = parent
-		parent = parent.parent()
+	if (name){
+		found = $(`input[name=${name}]`).parent('td')
+	} else {
+		for(var i=0;i<10;i++){
+			if (parent.find('input').length == 1) found = parent
+			parent = parent.parent()
+		}
 	}
 	return found
 }
 
 function findInputInEl(parent){
 	var input = findParentFromButton(parent).find('input')
-	if (!input.length) throw ("No input for counter")
+	//if (!input.length) throw ("No input for counter")
 	return input
 }
 
@@ -366,10 +374,9 @@ function countHandler(e){
 	if (parent.find('.disabledOverlay').is(':visible')) return
 	if (clicked){
 		lastClickTimeOnCounter=e.timeStamp
-		var toAdd=0,
+		var toAdd=1,
 		oldVal=val
-		if(/up/.test(src))toAdd = 1
-		else if(/down/.test(src))toAdd = -1
+		if(/down/.test(src))toAdd = -1
 		else if(/three/.test(src))toAdd = 3
 		else if(/five/.test(src))toAdd = 5
 		val+=toAdd
@@ -386,6 +393,7 @@ function countHandler(e){
 			count.css('visibility', val>=max?'hidden':'visible');
 		}
 	}
+	return false
 }
 
 function animateChangeFloater(change, relative){
@@ -406,8 +414,6 @@ function showScouting(){
 		window.scrollTo(0,0)
 		if (typeof beforeShowScouting == 'function') beforeShowScouting()
 		matchName = getMatchName(match)
-		$('.orientLeft').toggle(orient && orient=='left')
-		$('.orientRight').toggle(orient && orient=='right')
 		$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
 		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
 		$('.teamColorCaps').text(pos.startsWith('R')?"Red":"Blue")
@@ -438,9 +444,11 @@ function fillDefaultFormFields(){
 }
 
 function setTeamBG(){
+	$('.orientLeft').toggle(orient && orient=='left')
+	$('.orientRight').toggle(orient && orient=='right')
 	$('.teamColorBG').toggleClass('redTeamBG', pos.startsWith('R')).toggleClass('blueTeamBG', pos.startsWith('B'))
 	$('.otherTeamBG').toggleClass('blueTeamBG', pos.startsWith('R')).toggleClass('redTeamBG', pos.startsWith('B'))
-	$('body').toggleClass('redTeam', pos.startsWith('R')).toggleClass('blueTeam', pos.startsWith('B'))
+	$('body').toggleClass('redTeam', pos.startsWith('R')).toggleClass('blueTeam', pos.startsWith('B')).toggleClass('leftField', orient=='left').toggleClass('rightField', orient=='right')
 }
 
 function toggleChecked(o){
@@ -660,6 +668,13 @@ function goChooseRobot(){
 	return false
 }
 
+function rotateField(){
+	orient=orient=='right'?"left":"right"
+	setTeamBG()
+	setHash(pos,orient,team,match)
+	return false
+}
+
 function goChangeTeam(){
 	localStorage.setItem("last_scout_action","team")
 	maybeSaveFirst()
@@ -837,6 +852,13 @@ function showTab(event, tab){
 	return false
 }
 
+function toggleCollapse(_,c){
+	c = c||$(this)
+	var content=$(`#${c.attr('data-content')}`)
+	content.toggle()
+	c.attr('data-before',content.is(':visible')?'🞃':'🞂')
+}
+
 var eventMatches
 
 $(document).ready(function(){
@@ -854,6 +876,7 @@ $(document).ready(function(){
 	storeInitialValues(subjectiveScouting,"subjective")
 
 	$('.tab,.tab-button').click(showTab)
+	$('.collapse').attr('data-before','🞂').click(toggleCollapse)
 
 	$('title').text($('title').text().replace(/EVENT/g, eventName))
 
@@ -884,7 +907,7 @@ $(document).ready(function(){
 		}).select()
 	})
 
-	$("img.count").click(countHandler).each(function(){
+	$("img.count,button.count").click(countHandler).each(function(){
 		findParentFromButton($(this)).click(countHandler)
 	})
 
@@ -900,6 +923,7 @@ $(document).ready(function(){
 	$("#nextBtn,#pitScoutNext,#pitTeamButton,#subjectiveScoutNext,#subjectiveTeamButton").click(goNext)
 	$("#matchBtn").click(goChooseMatch)
 	$(".robotBtn").click(goChooseRobot)
+	$(".fieldRotateBtn").click(rotateField)
 	$("#teamBtn").click(goChangeTeam)
 	$('.showInstructions').click(function(){
 		showLightBox($(this).parent().find('.instructions'))
