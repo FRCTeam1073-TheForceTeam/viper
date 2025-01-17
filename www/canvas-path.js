@@ -1,10 +1,11 @@
 
-function getPixelCoordinates(mapImage, isRed, coordinates, floatingImage){
+function getPixelCoordinates(mapImage, isReversedX, coordinates, floatingImage, isReversedY){
 	var m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
 	if (!m || !m.length) return
 	var px = parseInt(m[1]),
 	py = parseInt(m[2])
-	if (isRed) px = 100 - px
+	if (isReversedX) px = 100 - px
+	if (isReversedY) py = 100 - py
 	var d = mapImage.getBoundingClientRect(),
 	s = floatingImage?floatingImage.getBoundingClientRect():{width:0,height:0},
 	x = Math.round(px * d.width / 100 - s.width/2),
