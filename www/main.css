@@ -34,8 +34,8 @@ ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
 *+ul,*+ol,*+p{margin:1em auto}
 .right{text-align:right}
 .left{text-align:left}
-.redTeamBG{background-color:var(--red-team-color);border-color:var(--red-team-color)}
-.blueTeamBG{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}
+.redTeamBG,.subheader.redTeamBG{background-color:var(--red-team-color);border-color:var(--red-team-color)}
+.blueTeamBG,.subheader.blueTeamBG{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}
 .lastFocus{background-color:var(--focus-bg-color)}
 .side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box}
 .winner{border-left-color:var(--winner-color);border-right-color:var(--winner-color)}
