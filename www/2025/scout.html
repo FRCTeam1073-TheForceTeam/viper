@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scout EVENT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.min.js></script>
+<script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
+<script src=/canvas-path.js></script>
+<script src=/scout.js></script>
+<script src=scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/main.js></script>
+<script src=/local.js></script>
+<link rel=preload as=image href=start-area-blue.png>
+<link rel=preload as=image href=start-area-red.png>
+<link rel=preload as=image href=scout-red.png>
+<link rel=preload as=image href=scout-blue.png>
+<link rel=preload as=image href=algae-collect-disabled.svg>
+<link rel=preload as=image href=algae-collect.svg>
+<link rel=preload as=image href=algae-drop-disabled.svg>
+<link rel=preload as=image href=algae-drop.svg>
+<link rel=preload as=image href=algae-place-disabled.svg>
+<link rel=preload as=image href=algae-place.svg>
+<link rel=preload as=image href=algae-remove-disabled.svg>
+<link rel=preload as=image href=algae-remove.svg>
+<link rel=preload as=image href=coral-collect-disabled.svg>
+<link rel=preload as=image href=coral-collect.svg>
+<link rel=preload as=image href=coral-drop-disabled.svg>
+<link rel=preload as=image href=coral-drop.svg>
+<link rel=preload as=image href=coral-place-disabled.svg>
+<link rel=preload as=image href=coral-place.svg>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+
+<body>
+<h1>Viper</h1>
+<div id=select-bot class=screen style=display:none>
+	<h2>Pick your field orientation and robot position</h2>
+	<div class=side-by-side>
+		<table class=orientLeft><tr>
+			<td class=redTeamBG><button>R1</button></td>
+			<td rowspan=3><img class=bigimg src=field.png></td>
+			<td class=blueTeamBG><button>B3</button></td>
+		</tr><tr>
+			<td class=redTeamBG><button>R2</button></td>
+			<td class=blueTeamBG><button>B2</button></td>
+		</tr><tr>
+			<td class=redTeamBG><button>R3</button></td>
+			<td class=blueTeamBG><button>B1</button></td>
+		</tr></table>
+	</div>
+	<div class=side-by-side>
+		OR
+	</div>
+	<div class=side-by-side>
+		<table class=orientRight><tr>
+			<td class=blueTeamBG><button>B1</button></td>
+			<td rowspan=3><img class=bigimg src=field.png></td>
+			<td class=redTeamBG><button>R3</button></td>
+		</tr><tr>
+			<td class=blueTeamBG><button>B2</button></td>
+			<td class=redTeamBG><button>R2</button></td>
+		</tr><tr>
+			<td class=blueTeamBG><button>B3</button></td>
+			<td class=redTeamBG><button>R1</button></td>
+		</tr></table>
+	</div>
+	<button class=showInstructions>Instructions</button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
+</div>
+
+<div id=select-match class=screen style=display:none>
+	<button class=showInstructions>Instructions</button>
+	<button class=robotBtn>Change Robot</button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
+	<div id=match-list></div>
+</div>
+
+<div id=change-team class=screen style=display:none>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn>Cancel</button>
+</div>
+
+<form id=scouting class=screen style=display:none>
+	<div>
+		<button class=showInstructions>Instructions</button>
+		<button id=teamBtn>Team # Correction</button>
+		<button id=matchBtn>Choose Match</button>
+		<button class=robotBtn>Change Robot</button>
+		<button class=fieldRotateBtn>Rotate Field</button>
+		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+	</div>
+	<input type=hidden name=event>
+	<input type=hidden name=match>
+	<input type=hidden name=team>
+	<input type=hidden name=timeline id=timeline>
+
+	<div class=tabs>
+		<div class="tab default-tab" data-content=prematch>Pre</div>
+		<div class=tab data-content=auto>Auto</div>
+		<div class=tab data-content=teleop>Tele</div>
+		<div class=tab data-content=end-game>End</div>
+	</div>
+
+	<div class="prematch tab-content">
+		<table><tr><td class=subheader>
+			Click team <span class=team></span>'s starting position.
+		</td><td class="subheader teamColorBG" style=height:3%>
+			Team <span class=team></span>
+		</td></tr><tr><td rowspan=4>
+			<div id=start-area><div id=robot-starting-position></div></div>
+			<input id=auto-start-input type=hidden name=auto_start>
+		</td><td>
+			<label><input type=checkbox data-element=coral data-provides=1 name=coral_preload value=1><span>Preloaded Coral</span></label>
+		</td></tr><tr><td>
+			<label><input type=checkbox name=no_show value=1><span>No Show</span></label>
+		</td></tr><tr><td class="subheader otherTeamBG">
+			What is the team number of the OPPONENT's human player?
+		</td></tr><tr><td>
+			<input type=text name=opponent_human_player_team placeholder=99999 size=5 style=width:4em>
+		</td></tr></table>
+		<button class=tab-button data-content=auto>Proceed to Auto</button>
+	</div>
+	<div class="auto tab-content">
+		<table><tr><td class=subheader>
+			<label style=float:left><input type=checkbox name=auto_leave value=1><span>Left Starting Line</span></label>
+			<button style=float:right class=undo>Undo</button>
+		</td></tr><tr><td colspan>
+			<div class=scout-locations>
+				<button class=count data-input=auto_coral_drop style=left:10%;top:15%><img src=coral-drop.svg></button>
+				<button class=count data-input=auto_algae_drop style="left:10%;top:30%"><img src=algae-drop.svg></button>
+				<button class=count data-input=auto_coral_station_1 style="right:7%;top:5%"><img src=coral-collect.svg></button>
+				<button class=count data-input=auto_coral_station_2 style="right:7%;bottom:5%"><img src=coral-collect.svg></button>
+				<button class=count data-input=auto_algae_processor style="left:45.5%;top:2%"><img src=algae-place.svg></button>
+				<button class=count data-input=auto_algae_opponent_processor style="left:8%;bottom:2%"><img src=algae-place.svg></button>
+				<button class=count data-input=auto_algae_net style="left:25.5%;bottom:20%"><img src=algae-place.svg></button>
+				<button class=count data-input=auto_algae_opponent_net style="left:25.5%;top:20%"><img src=algae-place.svg></button>
+				<button class=count data-input=auto_algae_mark_1 style="right:7.5%;bottom:65%"><img src=algae-collect.svg></button>
+				<button class=count data-input=auto_coral_mark_1 style="right:14.5%;bottom:65%"><img src=coral-collect.svg></button>
+				<button class=count data-input=auto_algae_mark_2 style="right:7.5%;bottom:45%"><img src=algae-collect.svg></button>
+				<button class=count data-input=auto_coral_mark_2 style="right:14.5%;bottom:45%"><img src=coral-collect.svg></button>
+				<button class=count data-input=auto_algae_mark_3 style="right:7.5%;bottom:25%"><img src=algae-collect.svg></button>
+				<button class=count data-input=auto_coral_mark_3 style="right:14.5%;bottom:25%"><img src=coral-collect.svg></button>
+				<div class=reef-scout style="right:28%;top:30%">
+					<span class=label style="left:0;bottom:77%">L4</span>
+					<span class=label style="left:0;bottom:52%">L3</span>
+					<span class=label style="left:0;bottom:27%">L2</span>
+					<span class=label style="left:0;bottom:2%">L1</span>
+					<button class=count data-input=auto_coral_level_4 style="left:25%;bottom:75%"><img src=coral-place.svg></button>
+					<button class=count data-input=auto_coral_level_3 style="left:25%;bottom:50%"><img src=coral-place.svg></button>
+					<button class=count data-input=auto_coral_level_2 style="left:25%;bottom:25%"><img src=coral-place.svg></button>
+					<button class=count data-input=auto_coral_level_1 style="left:25%;bottom:0"><img src=coral-place.svg></button>
+					<button class=count data-input=auto_algae_upper_removed style="left:75%;bottom:62.5%"><img src=algae-remove.svg></button>
+					<button class=count data-input=auto_algae_upper style="left:50%;bottom:62.5%"><img src=algae-collect.svg></button>
+					<button class=count data-input=auto_algae_lower_removed style="left:75%;bottom:37.5%"><img src=algae-remove.svg></button>
+					<button class=count data-input=auto_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.svg></button>
+				</div>
+			</div>
+		</td></tr></table>
+
+		<h3 class=collapse data-content=auto-values>Values</h3>
+		<table id=auto-values class=collapsable><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=0 value=0 name=auto_algae_upper_removed size=1 disabled max=3>
+			Algae knocked off upper reef
+		</td><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_1 size=1 disabled max=1>
+			Algae from mark 1
+		</td><td class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_processor size=1 disabled>
+			Algae into processor
+		</td><td class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_net size=1 disabled>
+			Algae into net (shot by robot)
+		</td></tr><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=0 value=0 name=auto_algae_lower_removed size=1 disabled max=3>
+			Algae knocked off lower reef
+		</td><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_2 size=1 disabled max=1>
+			Algae from mark 2
+		</td><td rowspan=2 class="algae placement">
+			<input type=text class=num value=0 data-element=opponent-algae data-accepts=1 name=auto_algae_opponent_net size=1 disabled>
+			Algae into opponent's net (by opponent's human player after team <span class=team></span> placed it into their processor)
+		</td><td rowspan=2 class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_opponent_processor size=1 disabled>
+			Algae into opponent's processor
+		</td></tr><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_upper size=1 disabled max=3>
+			Algae from upper reef
+		</td><td rowspan=2 class="algae collection">
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_3 size=1 disabled max=1>
+			Algae from mark 3
+		</td></tr><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_lower size=1 disabled max=3>
+			Algae from lower reef
+		</td><td colspan=2 class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_drop size=1 disabled>
+			Algae dropped or missed
+		</td></tr><tr><td rowspan=2 class="coral collection">
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_station_1 size=1 disabled>
+			Coral from station 1
+		</td><td class="coral collection">
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_mark_1 size=1 disabled max=1>
+			Coral from mark 1
+		</td><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_4 size=1 disabled>
+			Coral onto L4
+		</td><td rowspan=4 class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_drop size=1 disabled>
+			Coral dropped or missed
+		</td></tr><tr><td class="coral collection">
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_mark_2 size=1 disabled max=1>
+			Coral from mark 2
+		</td><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_3 size=1 disabled>
+			Coral onto L3
+		</td></tr><tr><td rowspan=2 class="coral collection">
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_station_2 size=1 disabled>
+			Coral from station 2
+		</td><td rowspan=2 class="coral collection">
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_mark_3 size=1 disabled max=1>
+			Coral from mark 3
+		</td><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_2 size=1 disabled>
+			Coral onto L2
+		</td></tr><tr><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_1 size=1 disabled>
+			Coral onto L1
+		</td></tr></table>
+
+		<h3 class=collapse data-content=auto-timeline>Timeline</h3>
+		<table id=auto-timeline class=collapsable>
+			<thead><tr><td class=subheader>
+				Time
+			</td><td class=subheader>
+				Event
+			</td></tr></thead>
+			<tbody class=timeline></tbody>
+		</table>
+
+		<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
+	</div>
+
+	<div class="teleop tab-content">
+		<table><tr><td class=subheader>
+			<button style=float:right class=undo>Undo</button>
+		</td></tr><tr><td colspan>
+			<div class=scout-locations>
+				<button class=count data-input=tele_coral_drop style=left:10%;top:15%><img src=coral-drop.svg></button>
+				<button class=count data-input=tele_algae_drop style="left:10%;top:30%"><img src=algae-drop.svg></button>
+				<button class=count data-input=tele_coral_station_1 style="right:7%;top:5%"><img src=coral-collect.svg></button>
+				<button class=count data-input=tele_coral_station_2 style="right:7%;bottom:5%"><img src=coral-collect.svg></button>
+				<button class=count data-input=tele_algae_processor style="left:45.5%;top:2%"><img src=algae-place.svg></button>
+				<button class=count data-input=tele_algae_opponent_processor style="left:8%;bottom:2%"><img src=algae-place.svg></button>
+				<button class=count data-input=tele_algae_net style="left:25.5%;bottom:20%"><img src=algae-place.svg></button>
+				<button class=count data-input=tele_algae_opponent_net style="left:25.5%;top:20%"><img src=algae-place.svg></button>
+				<button class=count data-input=tele_algae_ground style="right:12%;bottom:35%"><img src=algae-collect.svg></button>
+				<button class=count data-input=tele_coral_ground style="right:12%;bottom:55%"><img src=coral-collect.svg></button>
+				<div class=reef-scout style="right:28%;top:30%">
+					<span class=label style="left:0;bottom:77%">L4</span>
+					<span class=label style="left:0;bottom:52%">L3</span>
+					<span class=label style="left:0;bottom:27%">L2</span>
+					<span class=label style="left:0;bottom:2%">L1</span>
+					<button class=count data-input=tele_coral_level_4 style="left:25%;bottom:75%"><img src=coral-place.svg></button>
+					<button class=count data-input=tele_coral_level_3 style="left:25%;bottom:50%"><img src=coral-place.svg></button>
+					<button class=count data-input=tele_coral_level_2 style="left:25%;bottom:25%"><img src=coral-place.svg></button>
+					<button class=count data-input=tele_coral_level_1 style="left:25%;bottom:0"><img src=coral-place.svg></button>
+					<button class=count data-input=tele_algae_upper_removed style="left:75%;bottom:62.5%"><img src=algae-remove.svg></button>
+					<button class=count data-input=tele_algae_upper style="left:50%;bottom:62.5%"><img src=algae-collect.svg></button>
+					<button class=count data-input=tele_algae_lower_removed style="left:75%;bottom:37.5%"><img src=algae-remove.svg></button>
+					<button class=count data-input=tele_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.svg></button>
+				</div>
+			</div>
+		</td></tr></table>
+
+		<h3 class=collapse data-content=tele-values>Values</h3>
+		<table id=tele-values class=collapsable><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=0 value=0 name=tele_algae_upper_removed size=1 disabled max=3>
+			Algae knocked off upper reef
+		</td><td class="algae collection" rowspan=4>
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_ground size=1 disabled max=1>
+			Algae from ground
+		</td><td class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_processor size=1 disabled>
+			Algae into processor
+		</td><td class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_net size=1 disabled>
+			Algae into net (shot by robot)
+		</td></tr><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=0 value=0 name=tele_algae_lower_removed size=1 disabled max=3>
+			Algae knocked off lower reef
+		</td><td rowspan=2 class="algae placement">
+			<input type=text class=num value=0 data-element=opponent-algae data-accepts=1 name=tele_algae_opponent_net size=1 disabled>
+			Algae into opponent's net (by opponent's human player after team <span class=team></span> placed it into their processor)
+		</td><td rowspan=2 class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_opponent_processor size=1 disabled>
+			Algae into opponent's processor
+		</td></tr><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_upper size=1 disabled max=3>
+			Algae from upper reef
+		</td></tr><tr><td class="algae collection">
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_lower size=1 disabled max=3>
+			Algae from lower reef
+		</td><td colspan=2 class="algae placement">
+			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_drop size=1 disabled>
+			Algae dropped or missed
+		</td></tr><tr><td rowspan=2 class="coral collection">
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_station_1 size=1 disabled>
+			Coral from station 1
+		</td><td class="coral collection" rowspan=4>
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_ground size=1 disabled max=1>
+			Coral from ground
+		</td><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_4 size=1 disabled>
+			Coral onto L4
+		</td><td rowspan=4 class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_drop size=1 disabled>
+			Coral dropped or missed
+		</td></tr><tr><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_3 size=1 disabled>
+			Coral onto L3
+		</td></tr><tr><td rowspan=2 class="coral collection">
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_station_2 size=1 disabled>
+			Coral from station 2
+		</td><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_2 size=1 disabled>
+			Coral onto L2
+		</td></tr><tr><td class="coral placement">
+			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_1 size=1 disabled>
+			Coral onto L1
+		</td></tr></table>
+
+		<h3 class=collapse data-content=tele-timeline>Timeline</h3>
+		<table id=tele-timeline class=collapsable>
+			<thead><tr><td class=subheader>
+				Time
+			</td><td class=subheader>
+				Event
+			</td></tr></thead>
+			<tbody class=timeline></tbody>
+		</table>
+
+		<button class=tab-button data-content=end-game>Proceed to End Game</button>
+
+	</div>
+
+	<div class="end-game tab-content">
+		<table><tr><td class=subheader>
+			Barge
+		</td></tr><tr><td>
+
+			<fieldset class="full">
+				<legend>Is the robot in the <span class=teamColor></span> barge zone?</legend>
+				<label><input type=radio name=end_game_position value=parked><span>Parked</span></label>
+				<label><input type=radio name=end_game_position value=shallow><span>Hanging from a shallow cage</span></label>
+				<label><input type=radio name=end_game_position value=deep><span>Hanging from a deep cage</span></label>
+			</fieldset>
+			<fieldset class="full">
+				<legend>If not off the ground on a cage:</legend>
+				<label><input type=checkbox name=end_game_climb_fail value=1><span>Robot attempted to climb, but failed</span></label>
+			</fieldset>
+
+		</td></tr><tr><td class=subheader>
+			Gameplay
+		</td></tr><tr><td>
+			<fieldset class="full">
+				<legend>During the match:</legend>
+				<div><label><input type=checkbox name=defense value=1><span>Robot played defense</span></label></div>
+				<div><label><input type=checkbox name=bricked value=1><span>Robot broke or was disabled</span></label></div>
+			</fieldset>
+		</td></tr><tr><td class=subheader>
+			Scouter Info
+		</td></tr><tr><td>
+			<fieldset class="left full">
+				<legend>Name:</legend>
+				<input class=full type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
+			</fieldset>
+			<fieldset class="left full" id=scouting-comments>
+				<legend>Comments:</legend>
+				<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+			</fieldset>
+			<input type=hidden name=created value="">
+			<input type=hidden name=modified value="">
+			<fieldset class=full id=nextButtons>
+				<legend>Save data:</legend>
+				<div id=doneButtons></div>
+			</fieldset>
+		</td></tr></table>
+	</div>
+</form>
+</body>
+</html>
