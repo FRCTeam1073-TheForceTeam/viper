@@ -93,6 +93,5 @@ $(document).ready(function(){
 			)
 			$(this).closest('td').find('.disabledOverlay').toggle(!show)
 		})
-
 	}
 })
