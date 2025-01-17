@@ -1,4 +1,5 @@
 #select-bot table, #scouting table{margin: 0 auto}
+#select-bot img{display:block}
 #select-bot td{width:20vw}
 #select-bot button{font-size:150%}
 #select-bot button.highlighted{background-color:var(--highlight-bg-color);border-color:var(--highlight-bg-color);color:var(--main-fg-color)}
@@ -35,3 +36,5 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 @keyframes float-fade{0%{opacity:1}100%{opacity:0;transform:translateX(1em) translateY(-1em)}}
 .pulse-bg{animation:pulse 2s infinite;color:white}
 @keyframes pulse{0%{background-color:var(--red-team-color);border-color:var(--red-team-color)}50%{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}100%{background-color:var(--red-team-color);border-color:var(--red-team-color)}}
+.collapsable{display:none}
+.collapse::before{content:attr(data-before);padding-right:0.5em}
