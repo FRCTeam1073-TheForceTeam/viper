@@ -4,8 +4,8 @@ Watch your robot and record its actions by clicking on the corresponding buttons
 
 | | Collect | Remove<br>(without<br>collecting) | Drop<br>or Miss | Place<br>or Score |
 | :---: | :---: | :---: | :---: | :---: |
-| **Coral** | <img src=coral-collect.svg style=height:5em> | | <img src=coral-drop.svg style=height:5em> | <img src=coral-place.svg style=height:5em> |
-| **Algae** | <img src=algae-collect.svg style=height:5em> | <img src=algae-remove.svg style=height:5em> | <img src=algae-drop.svg style=height:5em> | <img src=algae-place.svg style=height:5em> |
+| **Coral** | <img src=coral-collect.png style=height:5em> | | <img src=coral-drop.png style=height:5em> | <img src=coral-place.png style=height:5em> |
+| **Algae** | <img src=algae-collect.png style=height:5em> | <img src=algae-remove.png style=height:5em> | <img src=algae-drop.png style=height:5em> | <img src=algae-place.png style=height:5em> |
 
 After your bot places algae into the processor, you are responsible for recording if the **opponent's human player** throws that algae into their barge net.
 
