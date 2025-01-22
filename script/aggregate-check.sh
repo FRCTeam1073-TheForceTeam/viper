@@ -22,6 +22,8 @@ then
 	exit 1
 fi
 
+ tc() { set ${*,,} ; echo ${*^} ; }
+
 ( grep -oE '(scout|aggregate)\.[a-z_]+\b' www/$season/aggregate-stats.js | sed -E 's/(scout|aggregate)\.//g'; ack -i '\<(?:input|textarea)[^\>]+\>' www/$season/scout.html | grep -oE "name\\s*=\\s*[\\'\\\"]?([A-Za-z0-9\\-_]+)[\\'\\\"]?\\b" | sed 's/name=//g') | sort | uniq | while read var
 do
 	if ! grep -Eq "^\s*$var\s*\:\s*\{" www/$season/aggregate-stats.js
@@ -30,7 +32,7 @@ do
 		if echo $var | grep -qE '(min|max|fastest|slowest|most|least|best|worst)'
 		then
 			type="minmax"
-		elif echo $var | grep -qE '(score|place|shot|shoot|foul|count)'
+		elif echo $var | grep -qE '(collect|score|place|shot|shoot|foul|count)'
 		then
 			type="avg"
 		elif echo $var | grep -qE '(created|modified)'
@@ -40,7 +42,7 @@ do
 		then
 			type="text"
 		fi
-		name=`echo "$var" | sed 's/_/ /g' | sed 's/.*/\u&/'`
+		name=`echo "$var" | sed -E 's/_/ /g;s/.*/\L&/; s/[a-z]*/\u&/g;s/^Tele (.*)/\1 in Teleop/g;s/^Auto (.*)/\1 in Auto/;s/Place\b/Placed/g;s/Drop\b/Dropped/g;s/Collect\b/Collected/g;'`
 		echo -e "$var:{\n    name: '$name',\n    type: '$type'\n},"
 	fi
 done
