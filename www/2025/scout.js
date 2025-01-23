@@ -12,11 +12,20 @@ $(document).ready(function(){
 	})
 
 	window.onInputChanged = window.onInputChanged || []
-	window.onInputChanged.push(function(input, change){
+	window.onInputChanged.push(inputChanged)
+
+	function inputChanged(input, change){
 
 		toggleScoringElements()
 
 		if(!input.closest('.auto,.teleop').length) return
+
+		var leave=$('[name="auto_leave"]')
+		if (input.closest('.auto')&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
+			console.log(input)
+			leave.prop('checked',true)
+			inputChanged(leave,0)
+		}
 		var order = $('#timeline'),
 		text = order.val(),
 		name = input.attr('name'),
@@ -40,7 +49,7 @@ $(document).ready(function(){
 		}
 		order.val(text)
 		renderTimeline()
-	})
+	}
 
 	$('.undo').click(function(){
 		var order = $('#timeline'),
