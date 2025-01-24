@@ -6,6 +6,16 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 		return (!s||/^0|no|false$/i.test(""+s))?0:1
 	}
 
+	function getPreferredCoralLevel(l1,l2,l3,l4){
+		var m=Math.max(l1,l2,l3,l4)
+		if (m==0)return"-"
+		if(m==l1)return"L1"
+		if(m==l2)return"L2"
+		if(m==l3)return"L3"
+		if(m==l4)return"L4"
+		return"-"
+	}
+
 	var pointValues={
 		auto_leave:3,
 		auto_l1:3,
@@ -47,6 +57,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.auto_algae_place=scout.auto_algae_net+scout.auto_algae_processor
 	scout.auto_coral_place=scout.auto_coral_level_1+scout.auto_coral_level_2+scout.auto_coral_level_3+scout.auto_coral_level_4
 	scout.auto_place=scout.auto_algae_place+scout.auto_coral_place
+	scout.tele_algae_place=scout.tele_algae_net+scout.tele_algae_processor
+	scout.tele_coral_place=scout.tele_coral_level_1+scout.tele_coral_level_2+scout.tele_coral_level_3+scout.tele_coral_level_4
+	scout.tele_place=scout.tele_algae_place+scout.tele_coral_place
 	scout.algae_drop=scout.auto_algae_drop+scout.tele_algae_drop
 	scout.algae_lower=scout.auto_algae_lower+scout.tele_algae_lower
 	scout.algae_lower_removed=scout.auto_algae_lower_removed+scout.tele_algae_lower_removed
@@ -61,11 +74,11 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.coral_drop=scout.auto_coral_drop+scout.tele_coral_drop
 	scout.auto_coral_ground=scout.auto_coral_mark_1+scout.auto_coral_mark_2+scout.auto_coral_mark_3
 	scout.coral_ground=scout.tele_coral_ground+scout.tele_coral_ground
-	scout.tele_coral_place=scout.tele_coral_level_1+scout.tele_coral_level_2+scout.tele_coral_level_3+scout.tele_coral_level_4
 	scout.coral_level_1=scout.auto_coral_level_1+scout.tele_coral_level_1
 	scout.coral_level_2=scout.auto_coral_level_2+scout.tele_coral_level_2
 	scout.coral_level_3=scout.auto_coral_level_3+scout.tele_coral_level_3
 	scout.coral_level_4=scout.auto_coral_level_4+scout.tele_coral_level_4
+	scout.preferred_coral_level=getPreferredCoralLevel(scout.coral_level_1,scout.coral_level_2,scout.coral_level_3,scout.coral_level_4)
 	scout.coral_station_1=scout.auto_coral_station_1+scout.tele_coral_station_1
 	scout.coral_station_2=scout.auto_coral_station_2+scout.tele_coral_station_2
 	scout.auto_coral_station=scout.auto_coral_station_1+scout.auto_coral_station_2
@@ -95,6 +108,8 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.park=bool_1_0(scout.end_game_position=='park')
 	scout.shallow=bool_1_0(scout.end_game_position=='shallow')
 	scout.deep=bool_1_0(scout.end_game_position=='deep')
+	scout.algae_place=scout.auto_algae_place+scout.tele_algae_place
+	scout.coral_place=scout.auto_coral_place+scout.tele_coral_place
 	scout.place=scout.auto_place+scout.tele_place
 
 	scout.auto_leave_score=pointValues.auto_leave*scout.auto_leave
@@ -156,6 +171,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	aggregate.count=(aggregate.count||0)+1
 	aggregate.max_score=Math.max(aggregate.max_score||0,scout.score)
 	aggregate.min_score=Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
+	aggregate.preferred_coral_level=getPreferredCoralLevel(aggregate.coral_level_1,aggregate.coral_level_2,aggregate.coral_level_3,aggregate.coral_level_4)
 }
 
 var statInfo={
@@ -730,6 +746,94 @@ var statInfo={
 		name: 'Score in Teleop',
 		type: 'avg'
 	},
+	algae_place:{
+		name: 'Algae Placed',
+		type: 'avg'
+	},
+	coral_place:{
+		name: 'Coral Placed',
+		type: 'avg'
+	},
+	tele_algae_place:{
+		name: 'Algae Placed in Teleop',
+		type: 'avg'
+	},
+	auto_coral_level_1_score:{
+		name: 'Coral Level 1 Score in Auto',
+		type: 'avg'
+	},
+	auto_coral_level_2_score:{
+		name: 'Coral Level 2 Score in Auto',
+		type: 'avg'
+	},
+	auto_coral_level_3_score:{
+		name: 'Coral Level 3 Score in Auto',
+		type: 'avg'
+	},
+	auto_coral_level_4_score:{
+		name: 'Coral Level 4 Score in Auto',
+		type: 'avg'
+	},
+	coral_level_1:{
+		name: 'Coral Placed on Level 1',
+		type: 'avg'
+	},
+	coral_level_1_score:{
+		name: 'Coral Level 1 Score',
+		type: 'avg'
+	},
+	coral_level_2:{
+		name: 'Coral Placed on Level 2',
+		type: 'avg'
+	},
+	coral_level_2_score:{
+		name: 'Coral Level 2 Score',
+		type: 'avg'
+	},
+	coral_level_3:{
+		name: 'Coral Placed on Level 3',
+		type: 'avg'
+	},
+	coral_level_3_score:{
+		name: 'Coral Level 3 Score',
+		type: 'avg'
+	},
+	coral_level_4:{
+		name: 'Coral Placed on Level 4',
+		type: 'avg'
+	},
+	coral_level_4_score:{
+		name: 'Coral Level 4 Score',
+		type: 'avg'
+	},
+	coral_station_1:{
+		name: 'Coral Collected from Station 1',
+		type: 'avg'
+	},
+	coral_station_2:{
+		name: 'Coral Collected from Station 2',
+		type: 'avg'
+	},
+	tele_coral_level_1_score:{
+		name: 'Coral Level 1 Score in Teleop',
+		type: 'avg'
+	},
+	tele_coral_level_2_score:{
+		name: 'Coral Level 2 Score in Teleop',
+		type: 'avg'
+	},
+	tele_coral_level_3_score:{
+		name: 'Coral Level 3 Score in Teleop',
+		type: 'avg'
+	},
+	tele_coral_level_4_score:{
+		name: 'Coral Level 4 Score in Teleop',
+		type: 'avg'
+	},
+	preferred_coral_level:{
+		name: 'Preferred Coral Level',
+		type: 'text'
+	},
 }
 
 
@@ -740,19 +844,27 @@ var teamGraphs={
 	},
 }
 
-var aggregateGraphs={
+var aggregateGraphs = {
 	"Match Score":{
 		graph:"boxplot",
-		data:["max_score","score","min_score"]
+		data:["max_score","score","min_score"],
+	},
+	"Game Stage":{
+		graph:"stacked",
+		data:["auto_score","tele_score","end_game_score"],
+	},
+	"Scoring Element Cycles":{
+		graph:"stacked",
+		data:["algae_place","coral_place"],
+	},
+	"Coral Levels":{
+		graph:"stacked",
+		data:["coral_level_1","coral_level_2","coral_level_3","coral_level_4"],
 	},
 }
 
 var matchPredictorSections={
 	Total:["score"],
-	"Game Stages":["auto_score","tele_amp_speaker_score","stage_score"],
-	Auto:["auto_leave_score", "auto_amp_score", "auto_speaker_score"],
-	Teleop:["tele_amp_score","tele_speaker_score"],
-	Stage:["trap_score","parked_score","onstage_score","spotlit_score","harmony_score"]
 }
 
 var whiteboardStamps=[]
@@ -760,6 +872,9 @@ var whiteboardStamps=[]
 var whiteboardStats=[
 	"score",
 	"auto_score",
+	"algae_place",
+	"coral_place",
+	"preferred_coral_level",
 ]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
