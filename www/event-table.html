@@ -58,22 +58,11 @@
 	<div id=buttons>
 		<span id=team-list></span>
 		<button class=showInstructions>Instructions</button>
+		<button id=swap-red-blue>Red ↔ Blue</button>
 		<button class=clearRow>Clear Row</button>
 		<input type=submit value="Save Event">
 	</div>
 </form>
-
-<template id=scheduleRow>
-	<tr>
-		<th>$#</th>
-		<td class=blueTeamBG><input inputmode=numeric type=text name="$TYPE$#B1" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=blueTeamBG><input inputmode=numeric type=text name="$TYPE$#B2" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=blueTeamBG><input inputmode=numeric type=text name="$TYPE$#B3" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R1" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R2" placeholder="team#" pattern="^[0-9]+$"></td>
-		<td class=redTeamBG><input inputmode=numeric type=text name="$TYPE$#R3" placeholder="team#" pattern="^[0-9]+$"></td>
-	</tr>
-</template>
 <iframe id=instructions class=lightBoxFullContent src=/event-table-instructions.html></iframe>
 </body>
 </html>

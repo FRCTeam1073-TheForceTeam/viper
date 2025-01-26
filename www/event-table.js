@@ -2,8 +2,17 @@
 
 function addRow(table){
 	if (!table) table = "qm"
-	var rowNum = $(`#${table} tr`).length+1;
-	$(`#${table}`).append($('template#scheduleRow').html().replace(/\$\#/g, rowNum).replace(/\$TYPE/g, table))
+	var rowNum = $(`#${table} tr`).length+1,
+	row=$('<tr>').append($('<th>').text(rowNum))
+	for(var j=0; j<BOT_POSITIONS.length; j++){
+		row.append(
+			$('<td>').attr('class',BOT_POSITIONS[j][0]=='R'?'redTeamBG':'blueTeamBG').append(
+				$('<input inputmode=numeric type=text placeholder="team#" pattern="^[0-9]+$">').attr('name',table+rowNum+BOT_POSITIONS[j])
+			)
+		)
+	}
+	if(!redBlueSwapped)swapRedBlue(null,row)
+	$(`#${table}`).append(row)
 	setComp()
 	var rowInputs = $(`#${table} tr:last-child input`)
 	rowInputs.change(teamEntered).focus(function(){
@@ -94,7 +103,9 @@ function venueNameToId(){
 	$('#idInp').val(year+safeName)
 }
 function setComp(){
-	comp = $('#comp').val()
+	var newComp = $('#comp').val()
+	if (comp!=newComp) swapRedBlue()
+	comp = newComp
 	location.hash=comp
 	if (comp == 'ftc'){
 		BOT_POSITIONS = FTC_BOT_POSITIONS
@@ -141,6 +152,20 @@ function setComp(){
 			}
 		})
 	}
+}
+var redBlueSwapped=false
+function swapRedBlue(e, rows){
+	if (e)e.preventDefault()
+	if (!rows){
+		rows=$('#schedule tr')
+		redBlueSwapped=!redBlueSwapped
+	}
+	rows.each(function(){
+		var perColor=BOT_POSITIONS.length/2
+		for(var j=0; j<perColor; j++){
+			$(this).children(':last-child').after($(this).children(":eq(1)"));
+		}
+	})
 }
 $(document).ready(function(){
 	var hash = location.hash.replace(/^#/,"")
@@ -215,4 +240,5 @@ $(document).ready(function(){
 	}
 	$('#comp').change(setComp)
 	setTimeout(focusFirst,100)
+	$('#swap-red-blue').click(swapRedBlue)
 })
