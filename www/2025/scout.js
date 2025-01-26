@@ -96,7 +96,7 @@ $(document).ready(function(){
 	}
 
 	function moveFloaterToPercentCoordinates(mapImage, isRotated, coordinates, floatingImage){
-		var c = getPixelCoordinates(mapImage, false, coordinates, floatingImage, false)
+		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, false)
 		if (!c) return
 		floatingImage.style.left=c.x+"px"
 		floatingImage.style.top=c.y+"px"
@@ -108,7 +108,7 @@ $(document).ready(function(){
 		y = event.clientY - d.top,
 		px = Math.min(99,Math.max(1,Math.round(100 * x / d.width))),
 		py =  Math.min(99,Math.max(1,Math.round(100 * y / d.height)))
-		if (isRotated) py = 100 - py
+		if (!isRotated) py = 100 - py
 		if (isRotated) px = 100 - px
 		return px+"x"+py
 	}
@@ -116,8 +116,8 @@ $(document).ready(function(){
 	function setRobotStartPosition(e){
 		var mi = document.getElementById('start-area'),
 		fi = document.getElementById('robot-starting-position'),
-		ir = "none"!=(""+getComputedStyle($('#start-area')[0]).transform),
-		co = getPercentCoordinates(e, mi, ir)
+		ir = "none"==(""+getComputedStyle($('#start-area')[0]).transform),
+		co = getPercentCoordinates(e,mi,ir)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#auto-start-input').val(co)
 	}
