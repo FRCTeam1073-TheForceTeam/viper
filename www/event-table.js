@@ -145,7 +145,7 @@ function setComp(){
 					if ($(this).find('input').attr('name').endsWith(2)){
 						var n =$(this).clone(),
 						i = n.find('input')
-						i.attr('name', i.attr('name').replace(/2/,3)).val('')
+						i.attr('name', i.attr('name').replace(/2$/,3)).val('')
 						n.insertAfter($(this))
 					}
 				})
