@@ -92,6 +92,28 @@ $(document).ready(function() {
 	loadFromLocationHash()
 	$(window).on('hashchange', loadFromLocationHash)
 
+	function sizeWhiteboard(){
+		var winH = $(window).height(),
+		fieldR=window.whiteboard_aspect_ratio||(eventCompetition=='ftc'?1:2),
+		winW=$(window).width(),
+		vert=winW<750,
+		statsW=400,
+		fieldW=vert?winW:winW-statsW,
+		fieldH=fieldR*fieldW
+		if (fieldH>winH){
+			fieldH=winH
+			fieldW=winH/fieldR
+		}
+		statsW=vert?winW:Math.max(400,winW-fieldW-10)
+		var h3W=statsW-70,
+		statsP=vert?'top':'left',
+		statsO=vert?fieldH+10:fieldW+10
+		$('#field,#fieldBG,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
+		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css(statsP, statsO)
+		$('h3').css('width',`${h3W}px`)
+		$('body').css('overflow-y',vert?'visible':'hidden')
+	}
+
 	Promise.all([
 		promiseEventStats(),
 		promisePitScouting(),
@@ -99,7 +121,8 @@ $(document).ready(function() {
 		promiseEventMatches(),
 		fetch(`/data/${eventYear}/whiteboard.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values => {
-		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.myTeamsStats] = values
+		sizeWhiteboard()
+		;[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.myTeamsStats] = values
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
@@ -220,6 +243,7 @@ $(document).ready(function() {
 					char = fieldInfo.whiteboard_char||"&",
 					start = (fieldInfo.whiteboard_start||0)/100,
 					end = (fieldInfo.whiteboard_end||100)/100,
+					invert = !!fieldInfo.whiteboard_invert,
 					height = end - start,
 					whiteboard = $('#field'),
 					whiteboardBounds = whiteboard[0].getBoundingClientRect(),
@@ -247,6 +271,7 @@ $(document).ready(function() {
 								m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
 								if (m && m.length){
 									[left, top] = m.slice(1).map(x=>parseInt(x)/100)
+									if (invert)[left, top] = [top, left]
 									if (rotated) left = 1 - left
 									var point = $('<div class=overlay>').html(char).css(...style)
 									whiteboard.append(point)
@@ -326,29 +351,6 @@ $(document).ready(function() {
 	$('#lightBoxBG').click(function(){
 		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	})
-
-	function sizeWhiteboard(){
-		var winH = $(window).height(),
-		fieldR=eventCompetition=='ftc'?1:2,
-		winW=$(window).width(),
-		vert=winW<750,
-		statsW=400,
-		fieldW=vert?winW:winW-statsW,
-		fieldH=fieldR*fieldW
-		if (fieldH>winH){
-			fieldH=winH
-			fieldW=winH/fieldR
-		}
-		statsW=vert?winW:Math.max(400,winW-fieldW-10)
-		var h3W=statsW-70,
-		statsP=vert?'top':'left',
-		statsO=vert?fieldH+10:fieldW+10
-		$('#field,#fieldBG,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
-		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css(statsP, statsO)
-		$('h3').css('width',`${h3W}px`)
-		$('body').css('overflow-y',vert?'visible':'hidden')
-	}
-	sizeWhiteboard()
 
 	var sketcher = $("#fieldDraw").sketchable({
 		events: {
