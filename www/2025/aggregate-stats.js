@@ -196,10 +196,11 @@ var statInfo={
 		type: "heatmap",
 		image: "/2025/start-area-blue.png",
 		aspect_ratio: 3.375,
-		whiteboard_start: 35,
+		whiteboard_start: 35.8,
 		whiteboard_end: 50,
 		whiteboard_char: "□",
-		whiteboard_us: true
+		whiteboard_us: true,
+		whiteboard_invert: true
 	},
 	auto_leave:{
 		name: "Left the Start Line During Auto",
@@ -857,9 +858,9 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["algae_place","coral_place"],
 	},
-	"Coral Levels":{
+	"Scoring Locations":{
 		graph:"stacked",
-		data:["coral_level_1","coral_level_2","coral_level_3","coral_level_4"],
+		data:["algae_processor","algae_net","coral_level_1","coral_level_2","coral_level_3","coral_level_4"],
 	},
 }
 
@@ -869,12 +870,15 @@ var matchPredictorSections={
 
 var whiteboardStamps=[]
 
+window.whiteboard_aspect_ratio=2.18
+
 var whiteboardStats=[
 	"score",
 	"auto_score",
 	"algae_place",
 	"coral_place",
 	"preferred_coral_level",
+	"auto_start",
 ]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
