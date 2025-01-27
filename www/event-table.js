@@ -129,7 +129,7 @@ function setComp(){
 				$(this).find('th').each(function(){
 					if ($(this).text().endsWith(2)){
 						var n =$(this).clone()
-						n.text(n.text().replace(/2/,3))
+						n.text(n.text().replace(/2$/,3))
 						n.insertAfter($(this))
 					}
 				})
