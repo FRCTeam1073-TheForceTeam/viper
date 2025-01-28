@@ -196,11 +196,12 @@ $(document).ready(function(){
 				} else {
 					bluePrediction += getScore(eventStatsByTeam, match[pos])
 				}
-				var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0
+				var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0,
+				isScouted=((typeof scouted.score)!=='undefined')
 				row.find(`.${pos}`).text(match[pos])
-					.toggleClass("scouted",!!scouted)
-					.toggleClass("needed",!scouted&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
-					.toggleClass("error",!!scouted.old)
+					.toggleClass("scouted",isScouted)
+					.toggleClass("needed",(!isScouted)&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
+					.toggleClass("error",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
 					.attr('title',getTeamInfo(match[pos]))
 			})

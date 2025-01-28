@@ -186,6 +186,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 		hpScout.human_player_accuracy=hpScout.human_player_algae_received>0?hpScout.human_player_net/hpScout.human_player_algae_received:0
 		hpAggregate.human_player_accuracy=hpAggregate.human_player_algae_received>0?hpAggregate.human_player_net/hpAggregate.human_player_algae_received:0
 	}
+	if (scout.old &&(typeof scout.old.score=='undefined'))scout.old=null
 }
 
 var statInfo={

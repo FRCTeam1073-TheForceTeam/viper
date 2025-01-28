@@ -210,8 +210,10 @@ function promiseEventStats(includePractice){
 					if (alliance.teams && alliance.teams.includes(team)) apiScore = alliance
 				})
 			}
-			var subjective =  subjectiveData[team]||{}
-			var pit = pitData[team]||{}
+			var subjective =  subjectiveData[team]||{},
+			pit = pitData[team]||{},
+			mt=`${match}-${team}`
+			scout.old=eventStatsByMatchTeam[mt]
 			if (!/^pm[0-9]+$/.test(match) || includePractice){
 				var aggregate = eventStatsByTeam[team] || {}
 				aggregateStats(scout,aggregate,apiScore,subjective,pit,eventStatsByMatchTeam,eventStatsByTeam,match)
@@ -219,8 +221,6 @@ function promiseEventStats(includePractice){
 			} else {
 				aggregateStats(scout,{},apiScore,subjective,pit,{},{},match)
 			}
-			var mt=`${match}-${team}`
-			scout.old=eventStatsByMatchTeam[mt]
 			eventStatsByMatchTeam[mt]=scout
 		})
 		return [eventStats, eventStatsByTeam, eventStatsByMatchTeam]
