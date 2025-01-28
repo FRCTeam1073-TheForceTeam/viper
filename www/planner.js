@@ -324,10 +324,11 @@ $(document).ready(function() {
 		var stats = eventStatsByTeam[team]
 		if (! stats || ! field in stats) return ""
 		if ('count' in stats && stats['count'] && statInfo[field]){
-			if (statInfo[field].type == 'avg')	return Math.round((stats[field]||0) / stats['count'])
-			if (statInfo[field].type == '%')	return Math.round(100 * (stats[field]||0) / stats['count'])
+			if (statInfo[field].type == 'avg') return Math.round((stats[field]||0) / stats['count'])
+			if (statInfo[field].type == '%') return Math.round(100 * (stats[field]||0) / stats['count'])
 		}
 		if (stats[field] == null) return ""
+		if (statInfo[field].type == 'ratio') return Math.round(100 * (stats[field]))+"%"
 		return stats[field]
 	}
 

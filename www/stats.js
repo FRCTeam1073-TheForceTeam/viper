@@ -407,8 +407,7 @@ function getTeamValue(field, team, graphType, source){
 	if (! field in stats) return defaultVal
 	var value = stats[field]
 	if (heatmap||boxplot) return value||defaultVal
-	if (! 'count' in stats || !stats.count) return defaultVal
-	var divisor = (percent||"avg"==info.type)?stats.count:1
+	var divisor = (percent||"avg"==info.type)?stats.count||1:1
 	if (info.type=='int-list'){
 		if (value.length){
 			divisor = value.length

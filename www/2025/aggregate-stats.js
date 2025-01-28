@@ -1,6 +1,6 @@
 "use strict"
 
-function aggregateStats(scout, aggregate, apiScores, subjective, pit){
+function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStatsByMatchTeam, eventStatsByTeam, match){
 
 	function bool_1_0(s){
 		return (!s||/^0|no|false$/i.test(""+s))?0:1
@@ -157,21 +157,35 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.score=scout.auto_score+scout.tele_score+scout.end_game_score
 
 	Object.keys(statInfo).forEach(function(field){
-		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
-			aggregate[field]=(aggregate[field]||0)+scout[field]
-			var set=`${field}_set`
-			aggregate[set]=aggregate[set]||[]
-			aggregate[set].push(scout[field])
+		if (!/human.player/i.test(statInfo.name)){
+			if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
+				aggregate[field]=(aggregate[field]||0)+scout[field]
+				var set=`${field}_set`
+				aggregate[set]=aggregate[set]||[]
+				aggregate[set].push(scout[field])
+			}
+			if(/^capability$/.test(statInfo[field]['type'])) aggregate[field]=aggregate[field]||scout[field]||0
+			if(/^text$/.test(statInfo[field]['type'])) aggregate[field]=(!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
+			if(/^heatmap$/.test(statInfo[field]['type'])) aggregate[field] += ((aggregate[field]&&scout[field])?" ":"")+scout[field]
+			if(/^int-list$/.test(statInfo[field]['type'])) aggregate[field]=(aggregate[field]||[]).concat(scout[field])
 		}
-		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field]=aggregate[field]||scout[field]||0
-		if(/^text$/.test(statInfo[field]['type'])) aggregate[field]=(!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
-		if(/^heatmap$/.test(statInfo[field]['type'])) aggregate[field] += ((aggregate[field]&&scout[field])?" ":"")+scout[field]
-		if(/^int-list$/.test(statInfo[field]['type'])) aggregate[field]=(aggregate[field]||[]).concat(scout[field])
 	})
 	aggregate.count=(aggregate.count||0)+1
 	aggregate.max_score=Math.max(aggregate.max_score||0,scout.score)
 	aggregate.min_score=Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
 	aggregate.preferred_coral_level=getPreferredCoralLevel(aggregate.coral_level_1,aggregate.coral_level_2,aggregate.coral_level_3,aggregate.coral_level_4)
+
+	if(/^[1-9][0-9]*$/.test(scout.opponent_human_player_team)){
+		var hpTeam = parseInt(scout.opponent_human_player_team),
+		hpScout = eventStatsByMatchTeam[`${match}-${hpTeam}`]||={},
+		hpAggregate = eventStatsByTeam[hpTeam]||={}
+		hpScout.human_player_algae_received=(hpScout.human_player_algae_received||0)+scout.algae_processor+(((scout.old||{}).human_player_algae_received)||0)
+		hpAggregate.human_player_algae_received=(hpAggregate.human_player_algae_received||0)+scout.algae_processor
+		hpScout.human_player_net=(hpScout.human_player_net||0)+scout.algae_opponent_net+(((scout.old||{}).human_player_net)||0)
+		hpAggregate.human_player_net=(hpAggregate.human_player_net||0)+scout.algae_opponent_net
+		hpScout.human_player_accuracy=hpScout.human_player_algae_received>0?hpScout.human_player_net/hpScout.human_player_algae_received:0
+		hpAggregate.human_player_accuracy=hpAggregate.human_player_algae_received>0?hpAggregate.human_player_net/hpAggregate.human_player_algae_received:0
+	}
 }
 
 var statInfo={
@@ -835,6 +849,18 @@ var statInfo={
 		name: 'Preferred Coral Level',
 		type: 'text'
 	},
+	human_player_algae_received:{
+		name: 'Human Player Shots',
+		type: 'total'
+	},
+	human_player_net:{
+		name: 'Human Player Shots Made',
+		type: 'total'
+	},
+	human_player_accuracy:{
+		name: 'Human Player Accuracy',
+		type: 'ratio'
+	}
 }
 
 
@@ -862,6 +888,14 @@ var aggregateGraphs = {
 		graph:"stacked",
 		data:["algae_processor","algae_net","coral_level_1","coral_level_2","coral_level_3","coral_level_4"],
 	},
+	"Human Player":{
+		graph:"bar",
+		data:["human_player_algae_received","human_player_net"],
+	},
+	"Human Player Accuracy":{
+		graph:"bar",
+		data:["human_player_accuracy"],
+	}
 }
 
 var matchPredictorSections={
@@ -878,6 +912,8 @@ var whiteboardStats=[
 	"algae_place",
 	"coral_place",
 	"preferred_coral_level",
+	"human_player_accuracy",
+	"human_player_algae_received",
 	"auto_start",
 ]
 

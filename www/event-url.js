@@ -198,10 +198,10 @@ function promiseEventStats(includePractice){
 		var eventStatsByTeam = {},
 		eventStatsByMatchTeam = {}
 		Object.keys(pitData).forEach(team=>{
-			aggregateStats({},{},{},{},pitData[team]||{})
+			aggregateStats({},{},{},{},pitData[team]||{},{},{},match)
 		})
 		Object.keys(subjectiveData).forEach(team=>{
-			aggregateStats({},{},{},subjectiveData[team]||{},{})
+			aggregateStats({},{},{},subjectiveData[team]||{},{},{},{},match)
 		})
 		forEachTeamMatch(eventStats, function(team,match,scout){
 			var apiScore = {}
@@ -214,10 +214,10 @@ function promiseEventStats(includePractice){
 			var pit = pitData[team]||{}
 			if (!/^pm[0-9]+$/.test(match) || includePractice){
 				var aggregate = eventStatsByTeam[team] || {}
-				aggregateStats(scout,aggregate,apiScore,subjective,pit)
+				aggregateStats(scout,aggregate,apiScore,subjective,pit,eventStatsByMatchTeam,eventStatsByTeam,match)
 				eventStatsByTeam[team] = aggregate
 			} else {
-				aggregateStats(scout,{},apiScore,subjective,pit)
+				aggregateStats(scout,{},apiScore,subjective,pit,{},{},match)
 			}
 			var mt=`${match}-${team}`
 			scout.old=eventStatsByMatchTeam[mt]
