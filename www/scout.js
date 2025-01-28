@@ -861,6 +861,13 @@ function toggleCollapse(_,c){
 
 var eventMatches
 
+function labelClicked(e){
+	e.preventDefault()
+	var check=$(this).find(':checkbox,:radio')
+	if (check.attr('disabled') && !check.prop('checked')) return
+	toggleChecked(check)
+}
+
 $(document).ready(function(){
 	if (!eventYear || !eventVenue){
 		$('h1').text("Event Not Found")
@@ -888,12 +895,7 @@ $(document).ready(function(){
 		else showScreen()
 	})
 
-	$("label").click(function(e){
-		e.preventDefault()
-		var check=$(this).find(':checkbox,:radio')
-		if (check.attr('disabled') && !check.prop('checked')) return
-		toggleChecked(check)
-	})
+	$("label").click(labelClicked)
 
 	$("input,textarea").focus(function(){
 		// Select pre-filled input values
