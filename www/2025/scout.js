@@ -6,6 +6,10 @@ $(document).ready(function(){
 
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
+		var chooseOpp=$('#choose-opponent').html("")
+		Object.entries(eventMatches.filter(x=>x.Match==match)[0]).map(([k,v],i)=>i!=0&&!k.startsWith(pos[0])?v:null).filter(x=>x!=null).forEach(opp=>{
+			chooseOpp.append($(`<label><input type=radio name=opponent_human_player_team value=${opp}><span>${opp}</span></label>`)).append(' ')
+		})
 		setTimeout(initialRobotStartPosition,500)
 		matchStartTime = 0
 		return true
