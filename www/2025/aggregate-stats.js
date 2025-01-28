@@ -175,7 +175,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.min_score=Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
 	aggregate.preferred_coral_level=getPreferredCoralLevel(aggregate.coral_level_1,aggregate.coral_level_2,aggregate.coral_level_3,aggregate.coral_level_4)
 
-	if(/^[1-9][0-9]*$/.test(scout.opponent_human_player_team)){
+	if(scout.algae_processor&&/^[1-9][0-9]*$/.test(scout.opponent_human_player_team)){
 		var hpTeam = parseInt(scout.opponent_human_player_team),
 		hpScout = eventStatsByMatchTeam[`${match}-${hpTeam}`]||={},
 		hpAggregate = eventStatsByTeam[hpTeam]||={}
