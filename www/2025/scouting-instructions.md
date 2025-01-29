@@ -9,6 +9,11 @@ Watch your robot and record its actions by clicking on the corresponding buttons
 
 After your bot places algae into the processor, you are responsible for recording if the **opponent's human player** throws that algae into their barge net.
 
+Most buttons on the image of the field are placed where that action takes place, but there are exceptions:
+
+- Drop button (<img src=coral-drop.png style=height:1em> and <img src=algae-drop.png style=height:1em>) appear **on the other side of the field** but are meant to be used whenever a game piece is **dropped anywhere**.
+- In telop, collection buttons (<img src=coral-collect.png style=height:1em> and <img src=algae-collect.png style=height:1em>) **on the carpet** are also meant to be used for **any ground pickup**.
+
 ### Match Structure
 Scouting each match is divided into four periods:
  - **Pre-match** — Before the match has started.
