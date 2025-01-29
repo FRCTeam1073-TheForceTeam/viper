@@ -14,10 +14,10 @@
 .blueTeam #robot-starting-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
 .redTeam #robot-starting-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
 
-.scout-locations{position:relative;aspect-ratio:1.5;max-height:90vh;margin:0 auto}
+.scout-locations{position:relative;aspect-ratio:1.5;max-height:84vh;margin:0 auto}
 @media (max-height:400px){.scout-locations{max-height:60vh}}
 @media (min-height:401px) and (max-height:600px){.scout-locations{max-height:70vh}}
-@media (min-height:601px) and (max-height:800px){.scout-locations{max-height:80vh}}
+@media (min-height:601px) and (max-height:800px){.scout-locations{max-height:77vh}}
 .scout-locations button{background-color:#0008;border-color:#0008}
 .redTeam .scout-locations{background:url(scout-red.png) no-repeat center center / 100% 100%}
 .blueTeam .scout-locations{background:url(scout-blue.png) no-repeat center center / 100% 100%}
