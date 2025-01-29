@@ -33,8 +33,8 @@
 </head>
 
 <body>
-<h1>Viper</h1>
 <div id=select-bot class=screen style=display:none>
+	<h1>Viper</h1>
 	<h2>Pick your field orientation and robot position</h2>
 	<div class=side-by-side>
 		<table class=orientLeft><tr>
@@ -70,6 +70,7 @@
 </div>
 
 <div id=select-match class=screen style=display:none>
+	<h1>Viper</h1>
 	<button class=showInstructions>Instructions</button>
 	<button class=robotBtn>Change Robot</button>
 	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
@@ -77,24 +78,13 @@
 </div>
 
 <div id=change-team class=screen style=display:none>
+	<h1>Viper</h1>
 	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
 	<button id=teamChangeBtn>Change</button>
 	<button id=teamCancelBtn>Cancel</button>
 </div>
 
 <form id=scouting class=screen style=display:none>
-	<div>
-		<button class=showInstructions>Instructions</button>
-		<button id=teamBtn>Team # Correction</button>
-		<button id=matchBtn>Choose Match</button>
-		<button class=robotBtn>Change Robot</button>
-		<button class=fieldRotateBtn>Rotate Field</button>
-		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
-	</div>
-	<input type=hidden name=event>
-	<input type=hidden name=match>
-	<input type=hidden name=team>
-	<input type=hidden name=timeline id=timeline>
 
 	<div class=tabs>
 		<div class="tab default-tab" data-content=prematch>Pre</div>
@@ -104,7 +94,21 @@
 	</div>
 
 	<div class="prematch tab-content">
-		<table><tr><td class=subheader>
+		<table><tr><td colspan=2>
+			<h1>Viper</h1>
+			<div>
+				<button class=showInstructions>Instructions</button>
+				<button id=teamBtn>Team # Correction</button>
+				<button id=matchBtn>Choose Match</button>
+				<button class=robotBtn>Change Robot</button>
+				<button class=fieldRotateBtn>Rotate Field</button>
+				<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+			</div>
+			<input type=hidden name=event>
+			<input type=hidden name=match>
+			<input type=hidden name=team>
+			<input type=hidden name=timeline id=timeline>
+		</td></tr><tr><td class=subheader>
 			Click team <span class=team></span>'s starting position.
 		</td><td class="subheader teamColorBG" style=height:3%>
 			Team <span class=team></span>
@@ -119,14 +123,14 @@
 			What is the team number of the OPPONENT's human player at the processor?
 		</td></tr><tr><td id=choose-opponent>
 			<input type=text name=opponent_human_player_team placeholder=99999 size=5 style=width:4em>
+		</td></tr><tr><td colspan=2>
+			<button style=float:right class=tab-button data-content=auto>Proceed to Auto</button>
 		</td></tr></table>
-		<button class=tab-button data-content=auto>Proceed to Auto</button>
+
 	</div>
+
 	<div class="auto tab-content">
-		<table><tr><td class=subheader>
-			<label style=float:left><input type=checkbox name=auto_leave value=1><span>Left Starting Line</span></label>
-			<button style=float:right class=undo>Undo</button>
-		</td></tr><tr><td colspan>
+		<table><tr><td colspan=4>
 			<div class=scout-locations>
 				<button class=count data-input=auto_coral_drop style=left:9%;top:12%><img src=coral-drop.png></button>
 				<button class=count data-input=auto_algae_drop style="left:9%;top:35%"><img src=algae-drop.png></button>
@@ -157,9 +161,17 @@
 					<button class=count data-input=auto_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.png></button>
 				</div>
 			</div>
-		</td></tr></table>
+		</td></tr><tr><td>
+			<label style=float:left><input type=checkbox name=auto_leave value=1><span>Left Starting Line</span></label>
+		</td><td>
+			<button class=undo>Undo</button>
+		</td><td>
+			<div class=collapse data-content=auto-values>Values</div>
+			<div class=collapse data-content=auto-timeline>Timeline</div>
+		</td><td>
+			<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
+		</td></tr>
 
-		<h3 class=collapse data-content=auto-values>Values</h3>
 		<table id=auto-values class=collapsable><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=auto_algae_upper_removed size=1 disabled max=3>
 			Algae knocked off upper reef
@@ -228,7 +240,6 @@
 			Coral onto L1
 		</td></tr></table>
 
-		<h3 class=collapse data-content=auto-timeline>Timeline</h3>
 		<table id=auto-timeline class=collapsable>
 			<thead><tr><td class=subheader>
 				Time
@@ -237,14 +248,10 @@
 			</td></tr></thead>
 			<tbody class=timeline></tbody>
 		</table>
-
-		<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
 	</div>
 
 	<div class="teleop tab-content">
-		<table><tr><td class=subheader>
-			<button style=float:right class=undo>Undo</button>
-		</td></tr><tr><td colspan>
+		<table><tr><td colspan=3>
 			<div class=scout-locations>
 				<button class=count data-input=tele_coral_drop style=left:9%;top:12%><img src=coral-drop.png></button>
 				<button class=count data-input=tele_algae_drop style="left:9%;top:35%"><img src=algae-drop.png></button>
@@ -271,9 +278,15 @@
 					<button class=count data-input=tele_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.png></button>
 				</div>
 			</div>
+		</td></tr><tr><td>
+			<button class=undo>Undo</button>
+		</td><td>
+			<div class=collapse data-content=tele-values>Values</div>
+			<div class=collapse data-content=tele-timeline>Timeline</div>
+		</td><td>
+			<button class=tab-button data-content=end-game>Proceed to End Game</button>
 		</td></tr></table>
 
-		<h3 class=collapse data-content=tele-values>Values</h3>
 		<table id=tele-values class=collapsable><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=tele_algae_upper_removed size=1 disabled max=3>
 			Algae knocked off upper reef
@@ -330,7 +343,6 @@
 			Coral onto L1
 		</td></tr></table>
 
-		<h3 class=collapse data-content=tele-timeline>Timeline</h3>
 		<table id=tele-timeline class=collapsable>
 			<thead><tr><td class=subheader>
 				Time
@@ -339,9 +351,6 @@
 			</td></tr></thead>
 			<tbody class=timeline></tbody>
 		</table>
-
-		<button class=tab-button data-content=end-game>Proceed to End Game</button>
-
 	</div>
 
 	<div class="end-game tab-content">
@@ -349,13 +358,13 @@
 			Barge
 		</td></tr><tr><td>
 
-			<fieldset class="full">
+			<fieldset>
 				<legend>Is the robot in the <span class=teamColor></span> barge zone?</legend>
 				<label><input type=radio name=end_game_position value=parked><span>Parked</span></label>
 				<label><input type=radio name=end_game_position value=shallow><span>Hanging from a shallow cage</span></label>
 				<label><input type=radio name=end_game_position value=deep><span>Hanging from a deep cage</span></label>
 			</fieldset>
-			<fieldset class="full">
+			<fieldset>
 				<legend>If not off the ground on a cage:</legend>
 				<label><input type=checkbox name=end_game_climb_fail value=1><span>Robot attempted to climb, but failed</span></label>
 			</fieldset>
@@ -363,7 +372,7 @@
 		</td></tr><tr><td class=subheader>
 			Gameplay
 		</td></tr><tr><td>
-			<fieldset class="full">
+			<fieldset class=full>
 				<legend>During the match:</legend>
 				<div><label><input type=checkbox name=defense value=1><span>Robot played defense</span></label></div>
 				<div><label><input type=checkbox name=bricked value=1><span>Robot broke or was disabled</span></label></div>

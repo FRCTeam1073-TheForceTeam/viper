@@ -1,4 +1,5 @@
-#scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-bottom:3vmin;width:100%;max-width:60em}
+#scouting{max-width:60em;margin:0 auto}
+#scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-bottom:3vmin;width:100%}
 #scouting>div>table>tbody>tr>th{border:1px solid var(--main-border-color);font-size:200%}
 #scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;vertical-align:top;width:25%;vertical-align:middle}
 #scouting .num {display:block;font-size:125%;margin:0 auto;font-weight:bold}
@@ -13,7 +14,10 @@
 .blueTeam #robot-starting-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
 .redTeam #robot-starting-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
 
-.scout-locations{position:relative;aspect-ratio:1.5}
+.scout-locations{position:relative;aspect-ratio:1.5;max-height:90vh;margin:0 auto}
+@media (max-height:400px){.scout-locations{max-height:60vh}}
+@media (min-height:401px) and (max-height:600px){.scout-locations{max-height:70vh}}
+@media (min-height:601px) and (max-height:800px){.scout-locations{max-height:80vh}}
 .scout-locations button{background-color:#0008;border-color:#0008}
 .redTeam .scout-locations{background:url(scout-red.png) no-repeat center center / 100% 100%}
 .blueTeam .scout-locations{background:url(scout-blue.png) no-repeat center center / 100% 100%}
@@ -28,7 +32,6 @@
 html{padding:0}
 .end-game{margin-bottom:50vh}
 #select-bot button{font-size:100%}
-
 
 .algae{background:#99ddd5;font-size:80%}
 .coral{background:white;font-size:80%}
