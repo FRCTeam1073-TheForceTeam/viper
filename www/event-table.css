@@ -1,7 +1,7 @@
 #schedule td,#schedule th{padding:1vmin;font-size:120%}
-#schedule input{width:3em}
-button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
-#team-list{min-width:320px;column-width:3.5em;display:block;margin:0 auto}
+#schedule input{width:3.5em}
+button.team{width:3.5em;height:1.5em;font-size:140%;margin:0.25em}
+#team-list{min-width:320px;column-width:4em;display:block;margin:0 auto}
 #schedule{overflow-x:auto;max-width:100%}
 table{margin:1em auto}
 .side-by-side{max-width:500px}
