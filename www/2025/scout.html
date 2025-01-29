@@ -124,13 +124,13 @@
 		</td></tr><tr><td id=choose-opponent>
 			<input type=text name=opponent_human_player_team placeholder=99999 size=5 style=width:4em>
 		</td></tr><tr><td colspan=2>
-			<button style=float:right class=tab-button data-content=auto>Proceed to Auto</button>
+			<button style=float:right class=tab-button data-content=auto>Auto »</button>
 		</td></tr></table>
 
 	</div>
 
 	<div class="auto tab-content">
-		<table class=field-table><tr><td colspan=4>
+		<table class=field-table><tr><td colspan=5>
 			<div class=scout-locations>
 				<button class=count data-input=auto_coral_drop style=left:9%;top:12%><img src=coral-drop.png></button>
 				<button class=count data-input=auto_algae_drop style="left:9%;top:35%"><img src=algae-drop.png></button>
@@ -161,7 +161,8 @@
 					<button class=count data-input=auto_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.png></button>
 				</div>
 			</div>
-		</td></tr><tr><td>
+		</td></tr><tr><td class="team teamColorBG">
+		</td><td>
 			<label><input type=checkbox name=auto_leave value=1><span>Left Starting Line</span></label>
 		</td><td>
 			<button class=undo>Undo</button>
@@ -169,7 +170,7 @@
 			<div class=collapse data-content=auto-values>Values</div>
 			<div class=collapse data-content=auto-timeline>Timeline</div>
 		</td><td>
-			<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
+			<button id=to-tele-button class=tab-button data-content=teleop>Teleop »</button>
 		</td></tr>
 
 		<table id=auto-values class=collapsable><tr><td class="algae collection">
@@ -251,7 +252,7 @@
 	</div>
 
 	<div class="teleop tab-content">
-		<table class=field-table><tr><td colspan=3>
+		<table class=field-table><tr><td colspan=4>
 			<div class=scout-locations>
 				<button class=count data-input=tele_coral_drop style=left:9%;top:12%><img src=coral-drop.png></button>
 				<button class=count data-input=tele_algae_drop style="left:9%;top:35%"><img src=algae-drop.png></button>
@@ -278,13 +279,14 @@
 					<button class=count data-input=tele_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.png></button>
 				</div>
 			</div>
-		</td></tr><tr><td>
+		</td></tr><tr><td class="team teamColorBG">
+		</td><td>
 			<button class=undo>Undo</button>
 		</td><td>
 			<div class=collapse data-content=tele-values>Values</div>
 			<div class=collapse data-content=tele-timeline>Timeline</div>
 		</td><td>
-			<button class=tab-button data-content=end-game>Proceed to End Game</button>
+			<button class=tab-button data-content=end-game>End Game »</button>
 		</td></tr></table>
 
 		<table id=tele-values class=collapsable><tr><td class="algae collection">
@@ -359,7 +361,7 @@
 		</td></tr><tr><td>
 
 			<fieldset>
-				<legend>Is the robot in the <span class=teamColor></span> barge zone?</legend>
+				<legend>Is <span class=team></span>'s robot in the <span class=teamColor></span> barge zone?</legend>
 				<label><input type=radio name=end_game_position value=parked><span>Parked</span></label>
 				<label><input type=radio name=end_game_position value=shallow><span>Hanging from a shallow cage</span></label>
 				<label><input type=radio name=end_game_position value=deep><span>Hanging from a deep cage</span></label>

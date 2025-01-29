@@ -45,10 +45,12 @@ html{padding:0}
 	#scouting > div > table.field-table > tbody > tr {display:table-cell}
 	#scouting > div > table.field-table > tbody > tr > td {display:block;width:100%;height:100%}
 	#scouting > div > table.field-table > tbody > tr{width:20vw}
-	#scouting > div > table.field-table > tbody > tr:first-child {width:80vw;height:85vh}
-	.scout-locations{max-height:84vh}
+	#scouting > div > table.field-table > tbody > tr:first-child {width:80vw;height:90vh}
+	.scout-locations{max-height:89vh;height:89vh}
+	.tabs{font-size:100%}
+	.tab{padding:.2em 1em}
 }
-@media (orientation: landscape) and (max-height:455px){
-	.scout-locations{max-height:78vh}
-	#scouting > div > table.field-table > tbody > tr:first-child {height:80vh}
+@media (orientation: landscape) and (max-height:390px){
+	.scout-locations{height:83vh;max-height:83vh}
+	#scouting > div > table.field-table > tbody > tr:first-child {height:85vh}
 }
