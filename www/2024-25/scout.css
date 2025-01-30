@@ -2,7 +2,7 @@
 .tab-content table td {padding:0 0.3em}
 html{padding:0}
 .auto td, .teleop td{position:relative}
-.disabledOverlay {position:absolute;display:inline-block;width:100%;height:100%;background:#000d;top:0;left:0}
+.disabledOverlay {position:absolute;display:inline-block;width:100%;height:100%;background:#000A;top:0;left:0}
 @media (max-width: 450px){
 	h1{font-size:115%}
 	.tab{font-size:70%}

@@ -80,8 +80,9 @@
 		</td><td class=subheader>
 			Problems
 		</td></tr><tr><td>
-			<div><img class=count src=/count_up.svg></div>
-			<div style=background:yellow;color:black>Yellow<br><input data-provides=yellow type=text class=num value=0 name=auto_collect_yellow size=1 disabled></div>
+			Preload<br>
+			<label><input data-provides=sample type=radio name=auto_preload value=sample><span>Sample</span></label><br>
+			<label><input data-provides=specimen type=radio name=auto_preload value=sample><span>Specimen</span></label>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
 			<div>High Basket<br><input data-accepts=sample type=text class=num value=0 name=auto_place_high_basket size=1 disabled max=60></div>
@@ -93,7 +94,7 @@
 			<div>Minor Foul<br><input type=text class=num value=0 name=auto_foul_minor size=1 disabled></div>
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG><span class=teamColorCaps></span><br><input data-provides=alliance type=text class=num value=0 name=auto_collect_alliance size=1 disabled></div>
+			<div style=background:yellow;color:black>Yellow<br><input data-provides=yellow type=text class=num value=0 name=auto_collect_yellow size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
 			<div>Low Basket<br><input data-accepts=sample type=text class=num value=0 name=auto_place_low_basket size=1 disabled max=60></div>
@@ -105,7 +106,7 @@
 			<div>Major Foul<br><input type=text class=num value=0 name=auto_foul_major size=1 disabled></div>
 		</td></tr><tr><td>
 			<div><img class=count src=/count_up.svg></div>
-			<div class=teamColorBG>Specimen<br><input data-provides=specimen type=text class=num value=0 name=auto_collect_specimen size=1 disabled></div>
+			<div class=teamColorBG><span class=teamColorCaps></span><br><input data-provides=alliance type=text class=num value=0 name=auto_collect_alliance size=1 disabled></div>
 		</td><td>
 			<div><img class=count src=/count_up.svg></div>
 			<div>Net Zone<br><input data-accepts=sample type=text class=num value=0 name=auto_place_net_zone size=1 disabled max=60></div>
@@ -117,6 +118,8 @@
 			<div><label><input type=checkbox name=auto_red_card value=1><span>Red Card</span></label></div>
 			<div><label><input type=checkbox name=auto_disabled value=1><span>Disabled</span></label></div>
 		</td></tr><tr><td>
+			<div><img class=count src=/count_up.svg></div>
+			<div class=teamColorBG>Specimen<br><input data-provides=specimen type=text class=num value=0 name=auto_collect_specimen size=1 disabled></div>
 		</td><td colspan=2>
 			<div><img class=count src=/count_up.svg></div>
 			<div>Dropped<br><input data-accepts=any type=text class=num value=0 name=auto_place_drop size=1 disabled></div>
