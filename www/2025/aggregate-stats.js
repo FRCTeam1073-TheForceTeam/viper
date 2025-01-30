@@ -511,7 +511,7 @@ var statInfo={
 		type: 'avg'
 	},
 	algae_lower_removed:{
-		name: 'Algae Removed from Lower Reef',
+		name: 'Algae Knocked Off Lower Reef',
 		type: 'avg'
 	},
 	algae_net:{
@@ -551,7 +551,7 @@ var statInfo={
 		type: 'avg'
 	},
 	algae_removed_reef:{
-		name: 'Algae Removed from Reef',
+		name: 'Algae Knocked Off Reef',
 		type: 'avg'
 	},
 	algae_score:{
@@ -563,7 +563,7 @@ var statInfo={
 		type: 'avg'
 	},
 	algae_upper_removed:{
-		name: 'Algae Removed from Upper Reef',
+		name: 'Algae Knocked Off Upper Reef',
 		type: 'avg'
 	},
 	auto_algae_collect:{
@@ -607,7 +607,7 @@ var statInfo={
 		type: 'avg'
 	},
 	auto_algae_removed_reef:{
-		name: 'Algae Removed from Reef in Auto',
+		name: 'Algae Knocked Off Reef in Auto',
 		type: 'avg'
 	},
 	auto_algae_score:{
@@ -731,7 +731,7 @@ var statInfo={
 		type: 'avg'
 	},
 	tele_algae_removed_reef:{
-		name: 'Algae Removed from Reef in Teleop',
+		name: 'Algae Knocked Off Reef in Teleop',
 		type: 'avg'
 	},
 	tele_algae_score:{
@@ -915,6 +915,7 @@ var whiteboardStats=[
 	"preferred_coral_level",
 	"human_player_accuracy",
 	"human_player_algae_received",
+	"algae_removed_reef",
 	"auto_start",
 ]
 
