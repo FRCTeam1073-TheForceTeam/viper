@@ -8,7 +8,7 @@ $(document).ready(function(){
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
 		matchStartTime = 0
-		setCargo('sample')
+		setCargo('')
 		return true
 	})
 	window.onInputChanged = window.onInputChanged || []
@@ -44,15 +44,15 @@ $(document).ready(function(){
 		text = m[1].trim()
 		var field = m[2],
 		input = $(`input[name="${field}"]`)
-		if (input.is(".num")){
+		if (input.is(".nu m")){
 			input.val(parseInt(input.val())-1)
 			animateChangeFloater(-1, input)
 		}
 		if (input.is(":checked")) input.prop('checked',false)
+		setCargo('')
 		if (!text) {
 			matchStartTime = 0
 			proceedToTeleBlink()
-			setCargo('sample')
 		} else {
 			var history = text.split(/ /)
 			for (var i=history.length-1; i>=0; i--){
@@ -76,14 +76,14 @@ $(document).ready(function(){
 		return false
 	})
 
-	$('.num').each(function(){
+	$('[data-accepts],[data-provides]').each(function(){
 		if ($(this).attr('data-provides')||$(this).attr('data-accepts')){
 			$(this).closest('td').prepend('<div class=disabledOverlay>')
 		}
 	})
 
 	function setCargo(cargo){
-		$('.num').each(function(){
+		$('[data-accepts],[data-provides]').each(function(){
 			var accepts = $(this).attr('data-accepts')||""
 			var show = (
 				cargo==accepts ||
