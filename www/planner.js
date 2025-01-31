@@ -193,11 +193,11 @@ $(document).ready(function() {
 				name = info.name||field
 				if (!info.whiteboard_end){
 					row = $("<tr>")
-					var best=info.good=='low'?99999999:0
+					var best=info.good=='low'?99999999:-99999999
 					teamList.forEach(function(team,i){
 						var val = getTeamValue(field,team)
 						if (info.good=='low'){
-							if (val<best&&val>0)best=val
+							if (val<best&&val!=0)best=val
 						} else {
 							if (val>best)best=val
 						}

@@ -867,15 +867,18 @@ var statInfo={
 	},
 	algae_litter:{
 		name: 'Algae Litter',
-		type: 'avg'
+		type: 'avg',
+		good: 'low',
 	},
 	coral_litter:{
 		name: 'Coral Litter',
-		type: 'avg'
+		type: 'avg',
+		good: 'low',
 	},
 	litter:{
 		name: 'Litter',
-		type: 'avg'
+		type: 'avg',
+		good: 'low',
 	},
 }
 
