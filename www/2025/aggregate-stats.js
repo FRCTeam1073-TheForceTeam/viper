@@ -111,6 +111,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.algae_place=scout.auto_algae_place+scout.tele_algae_place
 	scout.coral_place=scout.auto_coral_place+scout.tele_coral_place
 	scout.place=scout.auto_place+scout.tele_place
+	scout.algae_litter=scout.algae_removed_reef+scout.algae_drop-scout.algae_ground
+	scout.coral_litter=scout.coral_drop-scout.coral_ground
+	scout.litter=scout.algae_litter+scout.coral_litter
 
 	scout.auto_leave_score=pointValues.auto_leave*scout.auto_leave
 	scout.auto_coral_level_1_score=pointValues.auto_l1*scout.auto_coral_level_1
@@ -861,7 +864,19 @@ var statInfo={
 	human_player_accuracy:{
 		name: 'Human Player Accuracy',
 		type: 'ratio'
-	}
+	},
+	algae_litter:{
+		name: 'Algae Litter',
+		type: 'avg'
+	},
+	coral_litter:{
+		name: 'Coral Litter',
+		type: 'avg'
+	},
+	litter:{
+		name: 'Litter',
+		type: 'avg'
+	},
 }
 
 
@@ -915,7 +930,8 @@ var whiteboardStats=[
 	"preferred_coral_level",
 	"human_player_accuracy",
 	"human_player_algae_received",
-	"algae_removed_reef",
+	"algae_litter",
+	"coral_litter",
 	"auto_start",
 ]
 
