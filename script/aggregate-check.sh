@@ -24,7 +24,7 @@ fi
 
  tc() { set ${*,,} ; echo ${*^} ; }
 
-( grep -oE '(scout|aggregate)\.[a-z0-9_]+\b' www/$season/aggregate-stats.js | sed -E 's/(scout|aggregate)\.//g'; ack -i '\<(?:input|textarea)[^\>]+\>' www/$season/scout.html | grep -oE "name\\s*=\\s*[\\'\\\"]?([A-Za-z0-9\\-_]+)[\\'\\\"]?\\b" | sed 's/name=//g') | sort | uniq | while read var
+( grep -oE '(scout|aggregate)\.[a-z0-9_]+\b' www/$season/aggregate-stats.js | sed -E 's/(scout|aggregate)\.//g'; ack -i '\<(?:input|textarea)[^\>]+\>' www/$season/scout.html | grep -oE "name\\s*=\\s*[\\'\\\"]?([A-Za-z0-9\\-_]+)[\\'\\\"]?\\b" | sed 's/name=//g') | grep -vE '^old$'| sort | uniq | while read var
 do
 	if ! grep -Eq "^\s*$var\s*\:\s*\{" www/$season/aggregate-stats.js
 	then
