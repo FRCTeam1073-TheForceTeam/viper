@@ -201,6 +201,12 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 		hpAggregate.human_player_accuracy=hpAggregate.human_player_algae_received>0?hpAggregate.human_player_net/hpAggregate.human_player_algae_received:0
 	}
 	if (scout.old &&(typeof scout.old.score=='undefined'))scout.old=null
+
+	pit.auto_paths = []
+	for (var i=1; i<=9; i++){
+		var path = pit[`auto_${i}_path`]
+		if (path) pit.auto_paths.push(path)
+	}
 }
 
 var statInfo={
@@ -895,6 +901,15 @@ var statInfo={
 		type: 'avg',
 		good: 'low',
 	},
+	auto_paths:{
+		name: "Auto Paths",
+		type: "pathlist",
+		aspect_ratio: .916,
+		whiteboard_start: 0,
+		whiteboard_end: 50,
+		whiteboard_us: true,
+		source: "pit"
+	},
 }
 
 
@@ -954,6 +969,7 @@ var whiteboardStats=[
 	"human_player_accuracy",
 	"human_player_algae_received",
 	"auto_start",
+	"auto_paths",
 ]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1

@@ -55,7 +55,7 @@ function drawPath(canvas, color, path){
 	ctx.lineWidth = canvas.width*.005
 	path.split(/ /).forEach((point)=>{
 		ctx.fillStyle = ctx.strokeStyle = color
-		var c = getPixelCoordinates(canvas,false,point)
+		var c = getPixelCoordinates(canvas,false,point	)
 		if (c){
 			if (last) drawArrow(ctx,last,c,canvas.width*.015)
 			else drawDot(ctx,c,canvas.width*.01)

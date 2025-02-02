@@ -198,10 +198,10 @@ function promiseEventStats(includePractice){
 		var eventStatsByTeam = {},
 		eventStatsByMatchTeam = {}
 		Object.keys(pitData).forEach(team=>{
-			aggregateStats({},{},{},{},pitData[team]||{},{},{},match)
+			aggregateStats({},{},{},{},pitData[team]||{},{},{},"")
 		})
 		Object.keys(subjectiveData).forEach(team=>{
-			aggregateStats({},{},{},subjectiveData[team]||{},{},{},{},match)
+			aggregateStats({},{},{},subjectiveData[team]||{},{},{},{},"")
 		})
 		forEachTeamMatch(eventStats, function(team,match,scout){
 			var apiScore = {}

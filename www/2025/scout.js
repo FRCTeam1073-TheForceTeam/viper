@@ -14,6 +14,11 @@ $(document).ready(function(){
 		matchStartTime = 0
 		return true
 	})
+	window.onShowPitScouting = window.onShowPitScouting || []
+	window.onShowPitScouting.push(function(){
+		drawAutos()
+		return true
+	})
 
 	window.onInputChanged = window.onInputChanged || []
 	window.onInputChanged.push(inputChanged)
@@ -106,14 +111,14 @@ $(document).ready(function(){
 		floatingImage.style.top=c.y+"px"
 	}
 
-	function getPercentCoordinates(event, mapImage, isRotated){
+	function getPercentCoordinates(event, mapImage, isRotated180, isRotated90){
 		var d = mapImage.getBoundingClientRect(),
 		x = event.clientX - d.left,
 		y = event.clientY - d.top,
 		px = Math.min(99,Math.max(1,Math.round(100 * x / d.width))),
 		py =  Math.min(99,Math.max(1,Math.round(100 * y / d.height)))
-		if (!isRotated) py = 100 - py
-		if (isRotated) px = 100 - px
+		if (!isRotated180 && !isRotated90) py = 100 - py
+		if (isRotated180) px = 100 - px
 		return px+"x"+py
 	}
 
@@ -182,6 +187,48 @@ $(document).ready(function(){
 	})
 	toggleScoringElements()
 
+	function getAutoPath(startNew){
+		var chosen
+		$('.auto-path').each(function(p){
+			var p = $(this)
+			if (!chosen) chosen = p
+			if (p.val()) chosen = p
+			if (startNew && chosen.val() && !p.val()) chosen = p
+		})
+		return chosen
+	}
+
+	var startNewAutoPath = false
+
+	$('#auto-paths').click(function(e){
+		var path = getAutoPath(startNewAutoPath),
+		val = path.val()
+		if (val) val += " "
+		val += getPercentCoordinates(e, this, false, true)
+		path.val(val)
+		drawAutos()
+		startNewAutoPath = false
+	})
+
+	$('#auto-path-next').click(function(){
+		startNewAutoPath = true
+		return false
+	})
+
+	$('#auto-path-undo').click(function(){
+		var path = getAutoPath()
+		path.val(path.val().replace(/ ?[^ ]+$/,""))
+		drawAutos()
+		return false
+	})
+
+	function drawAutos(){
+		var canvas = $('#auto-paths')[0]
+		sizeAndClearCanvas(canvas)
+		$('.auto-path').each(function(){
+			drawPath(canvas,$(this).attr('data-color'),$(this).val())
+		})
+	}
 
 	function proceedToTeleBlink(){
 		$('#to-tele-button').toggleClass('pulse-bg', matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS)
