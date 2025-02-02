@@ -3,6 +3,8 @@
 var matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1],
 myTeamsStats
 
+var maxWhiteboardDimension=0
+
 $(document).ready(function() {
 	var statsConfig = new StatsConfig({
 		statsConfigKey:`${eventYear}WhiteboardStats`,
@@ -108,6 +110,7 @@ $(document).ready(function() {
 		var h3W=statsW-70,
 		statsP=vert?'top':'left',
 		statsO=vert?fieldH+10:fieldW+10
+		maxWhiteboardDimension=Math.max(fieldW,fieldH)
 		$('#field,#fieldBG,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
 		sketcher.sketchable('handler', function(node, data){
 			data.sketch.size(fieldW,fieldH)
@@ -369,20 +372,21 @@ $(document).ready(function() {
 				if (img.length){
 					data.options.graphics.fillStyle = '#fff0' // transparent
 					data.options.graphics.strokeStyle = '#fff0'
-					data.options.graphics.lineWidth = 3
+					data.options.graphics.lineWidth = maxWhiteboardDimension/400
+					data.options.graphics.firstPointSize = 0
 					data.sketch.pencil()
 					var bounds = $('#fieldDraw')[0].getBoundingClientRect()
 					data.sketch.drawImage(img.attr('src'), evt.clientX - bounds.left, evt.clientY - bounds.top)
 				} else if (pen.attr('data-type') == 'eraser'){
 					// Set the brush in eraser mode.
-					data.options.graphics.lineWidth = 20
+					data.options.graphics.lineWidth = maxWhiteboardDimension/40
 					data.options.graphics.fillStyle = '#ffff'
 					data.options.graphics.strokeStyle = '#ffff'
 					data.sketch.eraser()
 				} else {
 					// Set the brush in pencil mode.
-					data.options.graphics.lineWidth = 3
-					data.options.graphics.firstPointSize = 3
+					data.options.graphics.lineWidth = maxWhiteboardDimension/400
+					data.options.graphics.firstPointSize = 0
 					var color = pen.css('color')
 					data.options.graphics.fillStyle = color
 					data.options.graphics.strokeStyle = color
