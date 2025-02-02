@@ -16,6 +16,15 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 		return"-"
 	}
 
+
+	function getPreferredAlgaePlace(processor,net){
+		var m=Math.max(processor,net)
+		if (m==0)return"-"
+		if(m==net)return"Net"
+		if(m==processor)return"Pro"
+		return"-"
+	}
+
 	var pointValues={
 		auto_leave:3,
 		auto_l1:3,
@@ -79,6 +88,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.coral_level_3=scout.auto_coral_level_3+scout.tele_coral_level_3
 	scout.coral_level_4=scout.auto_coral_level_4+scout.tele_coral_level_4
 	scout.preferred_coral_level=getPreferredCoralLevel(scout.coral_level_1,scout.coral_level_2,scout.coral_level_3,scout.coral_level_4)
+	scout.preferred_algae_place=getPreferredAlgaePlace(scout.algae_processor,scout.algae_net)
 	scout.coral_station_1=scout.auto_coral_station_1+scout.tele_coral_station_1
 	scout.coral_station_2=scout.auto_coral_station_2+scout.tele_coral_station_2
 	scout.auto_coral_station=scout.auto_coral_station_1+scout.auto_coral_station_2
@@ -177,6 +187,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.max_score=Math.max(aggregate.max_score||0,scout.score)
 	aggregate.min_score=Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
 	aggregate.preferred_coral_level=getPreferredCoralLevel(aggregate.coral_level_1,aggregate.coral_level_2,aggregate.coral_level_3,aggregate.coral_level_4)
+	aggregate.preferred_algae_place=getPreferredAlgaePlace(aggregate.algae_processor,aggregate.algae_net)
 
 	if(scout.algae_processor&&/^[1-9][0-9]*$/.test(scout.opponent_human_player_team)){
 		var hpTeam = parseInt(scout.opponent_human_player_team),
@@ -853,6 +864,10 @@ var statInfo={
 		name: 'Preferred Coral Level',
 		type: 'text'
 	},
+	preferred_algae_place:{
+		name: 'Preferred Algae Placement',
+		type: 'text'
+	},
 	human_player_algae_received:{
 		name: 'Human Player Shots',
 		type: 'total'
@@ -928,13 +943,16 @@ window.whiteboard_aspect_ratio=2.18
 var whiteboardStats=[
 	"score",
 	"auto_score",
+	"tele_score",
+	"end_game_score",
 	"algae_place",
+	"preferred_algae_place",
+	"algae_litter",
 	"coral_place",
 	"preferred_coral_level",
+	"coral_litter",
 	"human_player_accuracy",
 	"human_player_algae_received",
-	"algae_litter",
-	"coral_litter",
 	"auto_start",
 ]
 

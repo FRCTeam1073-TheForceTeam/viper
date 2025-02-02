@@ -193,20 +193,24 @@ $(document).ready(function() {
 				name = info.name||field
 				if (!info.whiteboard_end){
 					row = $("<tr>")
-					var best=info.good=='low'?99999999:-99999999
+					var best=info.good=='low'?99999999:-99999999,
+					worst=-best
 					teamList.forEach(function(team,i){
 						var val = getTeamValue(field,team)
 						if (info.good=='low'){
-							if (val<best&&val!=0)best=val
+							if (val<best)best=val
+							if (val>worst)worst=val
 						} else {
 							if (val>best)best=val
+							if (val<worst)worst=val
 						}
 					})
+					if (worst==best)best=99999999
 					teamList.forEach(function(team,i){
 						var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
 						val = getTeamValue(field,team),
 						dispVal = val
-						if(/^(%|fraction)$/.test(info.type)) dispVal += "%"
+						if(/^(%|fraction|ratio)$/.test(info.type)&&(typeof dispVal==='number')) dispVal += "%"
 						row.append($(`<td class="${color}TeamBG">`).addClass(val==best?"best":"").text(dispVal))
 					})
 					row.append($('<th>').text(name))
@@ -328,7 +332,7 @@ $(document).ready(function() {
 			if (statInfo[field].type == '%') return Math.round(100 * (stats[field]||0) / stats['count'])
 		}
 		if (stats[field] == null) return ""
-		if (statInfo[field].type == 'ratio') return Math.round(100 * (stats[field]))+"%"
+		if (statInfo[field].type == 'ratio') return Math.round(100 * (stats[field]))
 		return stats[field]
 	}
 
