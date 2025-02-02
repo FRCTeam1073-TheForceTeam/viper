@@ -109,6 +109,9 @@ $(document).ready(function() {
 		statsP=vert?'top':'left',
 		statsO=vert?fieldH+10:fieldW+10
 		$('#field,#fieldBG,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
+		sketcher.sketchable('handler', function(node, data){
+			data.sketch.size(fieldW,fieldH)
+		})
 		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css(statsP, statsO)
 		$('h3').css('width',`${h3W}px`)
 		$('body').css('overflow-y',vert?'visible':'hidden')
@@ -388,10 +391,6 @@ $(document).ready(function() {
 			}
 		}
 	})
-	sketcher.sketchable('handler', function(node, data){
-		data.sketch.size(Math.floor(node.innerWidth()), Math.floor(node.innerHeight()))
-	})
-
 	function setCursorImage() {
 		var pen = $('button.pen.selected'),
 		img = pen.find('img'),
