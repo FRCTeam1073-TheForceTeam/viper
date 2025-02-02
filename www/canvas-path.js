@@ -49,13 +49,13 @@ function sizeAndClearCanvas(canvas){
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
 }
 
-function drawPath(canvas, color, path){
+function drawPath(canvas, color, path, isReversedX, isReversedY){
 	if (canvas.length) canvas = canvas[0]
 	var last, ctx = canvas.getContext('2d')
 	ctx.lineWidth = canvas.width*.005
 	path.split(/ /).forEach((point)=>{
 		ctx.fillStyle = ctx.strokeStyle = color
-		var c = getPixelCoordinates(canvas,false,point	)
+		var c = getPixelCoordinates(canvas,isReversedX,point,null,isReversedY)
 		if (c){
 			if (last) drawArrow(ctx,last,c,canvas.width*.015)
 			else drawDot(ctx,c,canvas.width*.01)

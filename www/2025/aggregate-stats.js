@@ -953,6 +953,8 @@ var matchPredictorSections={
 
 var whiteboardStamps=[]
 
+var fieldRotationalSymmetry=true
+
 window.whiteboard_aspect_ratio=2.18
 
 var whiteboardStats=[

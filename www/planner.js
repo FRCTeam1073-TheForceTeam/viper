@@ -267,7 +267,7 @@ $(document).ready(function() {
 							canvas[0].width = canvas[0].clientWidth
 							canvas[0].height = canvas[0].clientHeight
 							;(data||[]).forEach(path=>{
-								drawPath(canvas, style[1], path)
+								drawPath(canvas, style[1], path, !!window.fieldRotationalSymmetry)
 							})
 						} else {
 							;(data||"").split(" ").forEach(coordinates=>{
@@ -276,7 +276,7 @@ $(document).ready(function() {
 								if (m && m.length){
 									[left, top] = m.slice(1).map(x=>parseInt(x)/100)
 									if (invert)[left, top] = [top, left]
-									if (rotated) left = 1 - left
+									if (rotated && window.fieldRotationalSymmetry) left = 1 - left
 									var point = $('<div class=overlay>').html(char).css(...style)
 									whiteboard.append(point)
 									var pointBounds = point[0].getBoundingClientRect()

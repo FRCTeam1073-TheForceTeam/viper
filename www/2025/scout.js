@@ -117,7 +117,7 @@ $(document).ready(function(){
 		px = Math.min(99,Math.max(1,Math.round(100 * x / d.width))),
 		py =  Math.min(99,Math.max(1,Math.round(100 * y / d.height)))
 		if (!isRotated180 && !isRotated90) py = 100 - py
-		if (isRotated180) px = 100 - px
+		if (isRotated180 || isRotated90) px = 100 - px
 		return px+"x"+py
 	}
 
