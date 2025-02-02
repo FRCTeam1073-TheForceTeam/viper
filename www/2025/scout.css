@@ -55,4 +55,4 @@ html{padding:0}
 	#scouting > div > table.field-table > tbody > tr:first-child {height:85vh}
 }
 
-#auto-paths {width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('auto-area-blue.png');background-size:cover}
+#auto-paths {min-width:10em;width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('auto-area-blue.png');background-size:cover}

@@ -16,7 +16,7 @@ $(document).ready(function(){
 	})
 	window.onShowPitScouting = window.onShowPitScouting || []
 	window.onShowPitScouting.push(function(){
-		drawAutos()
+		setTimeout(drawAutos,0)
 		return true
 	})
 
@@ -31,7 +31,6 @@ $(document).ready(function(){
 
 		var leave=$('[name="auto_leave"]')
 		if (input.closest('.auto')&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
-			console.log(input)
 			leave.prop('checked',true)
 			inputChanged(leave,0)
 		}

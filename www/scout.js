@@ -890,9 +890,7 @@ $(document).ready(function(){
 
 	promiseEventMatches().then(em => {
 		eventMatches = em
-		if (pitScouting.length) showScreen()
-		if (subjectiveScouting.length) showScreen()
-		else showScreen()
+		showScreen()
 	})
 
 	$("label").click(labelClicked)
