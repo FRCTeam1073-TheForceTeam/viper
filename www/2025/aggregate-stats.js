@@ -75,7 +75,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.auto_algae_ground=scout.auto_algae_mark_1+scout.auto_algae_mark_2+scout.auto_algae_mark_3
 	scout.algae_ground=scout.auto_algae_ground+scout.tele_algae_ground
 	scout.algae_net=scout.auto_algae_net+scout.tele_algae_net
-	scout.algae_opponent_net=scout.auto_algae_opponent_net+scout.tele_algae_opponent_net
+	scout.algae_opponent_net=scout.tele_algae_opponent_net
 	scout.algae_opponent_processor=scout.auto_algae_opponent_processor+scout.tele_algae_opponent_processor
 	scout.algae_processor=scout.auto_algae_processor+scout.tele_algae_processor
 	scout.algae_upper=scout.auto_algae_upper+scout.tele_algae_upper
@@ -131,7 +131,6 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.auto_coral_level_3_score=pointValues.auto_l3*scout.auto_coral_level_3
 	scout.auto_coral_level_4_score=pointValues.auto_l4*scout.auto_coral_level_4
 	scout.auto_algae_processor_score=pointValues.processor*scout.auto_algae_processor
-	scout.auto_algae_opponent_net_score=-pointValues.net*scout.auto_algae_processor
 	scout.auto_algae_net_score=pointValues.net*scout.auto_algae_net
 	scout.auto_algae_opponent_processor_score=(pointValues
 	.net-pointValues.processor)*scout.auto_algae_opponent_processor
@@ -149,7 +148,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.deep_score=pointValues.deep*scout.deep
 	scout.cage_score=scout.shallow_score+scout.deep_score
 	scout.end_game_score=scout.park_score+scout.cage_score
-	scout.auto_algae_processor_net_score=scout.auto_algae_processor_score + scout.auto_algae_opponent_net_score
+	scout.auto_algae_processor_net_score=scout.auto_algae_processor_score
 	scout.auto_algae_score=scout.auto_algae_processor_net_score+scout.auto_algae_opponent_processor_score+scout.auto_algae_net_score
 	scout.auto_coral_score=scout.auto_coral_level_1_score+scout.auto_coral_level_2_score+scout.auto_coral_level_3_score+scout.auto_coral_level_4_score
 	scout.tele_algae_processor_net_score=scout.tele_algae_processor_score + scout.tele_algae_opponent_net_score
@@ -160,7 +159,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.coral_level_3_score=scout.auto_coral_level_3_score+scout.tele_coral_level_3_score
 	scout.coral_level_4_score=scout.auto_coral_level_4_score+scout.tele_coral_level_4_score
 	scout.algae_processor_score=scout.auto_algae_processor_score+scout.tele_algae_processor_score
-	scout.algae_opponent_net_score=scout.auto_algae_opponent_net_score+scout.tele_algae_opponent_net_score
+	scout.algae_opponent_net_score=scout.tele_algae_opponent_net_score
 	scout.algae_net_score=scout.auto_algae_net_score+scout.tele_algae_net_score
 	scout.algae_opponent_processor_score=scout.auto_algae_opponent_processor_score+scout.tele_algae_opponent_processor_score
 	scout.algae_score=scout.auto_algae_score+scout.tele_algae_score
@@ -289,10 +288,6 @@ var statInfo={
 	},
 	auto_algae_net:{
 		name: "Algae Placed in Net by Robot in Auto",
-		type: "avg",
-	},
-	auto_algae_opponent_net:{
-		name: "Algae Thrown in Net by Opponent Human Player in Auto",
 		type: "avg",
 	},
 	auto_algae_opponent_processor:{
@@ -602,10 +597,6 @@ var statInfo={
 		name: 'Algae Net Score in Auto',
 		type: 'avg'
 	},
-	auto_algae_opponent_net_score:{
-		name: 'Algae Opponent Net Score in Auto',
-		type: 'avg'
-	},
 	auto_algae_opponent_processor_score:{
 		name: 'Algae Opponent Processor Score in Auto',
 		type: 'avg'
@@ -911,7 +902,6 @@ var statInfo={
 		source: "pit"
 	},
 }
-
 
 var teamGraphs={
 	"Match Score":{

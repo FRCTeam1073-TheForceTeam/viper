@@ -139,7 +139,6 @@
 				<button class=count data-input=auto_algae_processor style="left:43%;top:0.5%"><img src=algae-place.png></button>
 				<button class=count data-input=auto_algae_opponent_processor style="left:5%;bottom:0.5%"><img src=algae-place.png></button>
 				<button class=count data-input=auto_algae_net style="left:24%;bottom:20%"><img src=algae-place.png></button>
-				<button class=count data-input=auto_algae_opponent_net style="left:24%;top:20%"><img src=algae-place.png></button>
 				<button class=count data-input=auto_algae_mark_1 style="right:5%;top:25%"><img src=algae-collect.png></button>
 				<button class=count data-input=auto_coral_mark_1 style="right:14.5%;top:25%"><img src=coral-collect.png></button>
 				<button class=count data-input=auto_algae_mark_2 style="right:5%;bottom:42%"><img src=algae-collect.png></button>
@@ -179,7 +178,7 @@
 		</td><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_1 size=1 disabled max=1>
 			Algae from mark 1
-		</td><td class="algae placement">
+		</td><td class="algae placement" rowspan=3>
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_processor size=1 disabled>
 			Algae into processor
 		</td><td class="algae placement">
@@ -191,9 +190,6 @@
 		</td><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_2 size=1 disabled max=1>
 			Algae from mark 2
-		</td><td rowspan=2 class="algae placement">
-			<input type=text class=num value=0 data-element=opponent-algae data-accepts=1 name=auto_algae_opponent_net size=1 disabled>
-			Algae into opponent's net (by opponent's human player after team <span class=team></span> placed it into their processor)
 		</td><td rowspan=2 class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_opponent_processor size=1 disabled>
 			Algae into opponent's processor
