@@ -986,14 +986,6 @@ function showPitScouting(el,team){
 		}
 		el.append(list)
 
-		el.append('<h4>Capabilities</h4>')
-		list=$("<ul>")
-		list.append((dat.notes_amp?$('<li>'):$('<li style=text-decoration:line-through>')).text("Amp"))
-		list.append((dat.notes_speaker?$('<li>'):$('<li style=text-decoration:line-through>')).text("Speaker"))
-		list.append((dat.notes_trap?$('<li>'):$('<li style=text-decoration:line-through>')).text("Trap"))
-		list.append((dat.onstage?$('<li>'):$('<li style=text-decoration:line-through>')).text("Onstage"))
-		el.append(list)
-
 		el.append($("<h4>").text("Robot"))
 		list=$("<ul>")
 		list.append($("<li>").text("Dimensions (inches without bumpers): " + format(dat.frame_length+'x'+dat.frame_width+'"')))
