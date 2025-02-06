@@ -1018,11 +1018,17 @@ var statInfo={
 	},
 	tele_algae_theft:{
 		name: 'Algae Theft in Teleop',
-		type: '%'
+		type: '%',
+		timeline_stamp: "T",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	tele_coral_theft:{
 		name: 'Coral Theft in Teleop',
-		type: '%'
+		type: '%',
+		timeline_stamp: "T",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	tele_theft:{
 		name: 'Theft in Teleop',
