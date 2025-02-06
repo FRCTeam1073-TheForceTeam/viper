@@ -132,8 +132,8 @@
 	<div class="auto tab-content">
 		<table class=field-table><tr><td colspan=5>
 			<div class=scout-locations>
-				<button class=count data-input=auto_coral_drop style=left:9%;top:12%><img src=coral-drop.png></button>
-				<button class=count data-input=auto_algae_drop style="left:9%;top:35%"><img src=algae-drop.png></button>
+				<button class=count data-input=auto_coral_drop style=right:30%;bottom:1%><img src=coral-drop.png></button>
+				<button class=count data-input=auto_algae_drop style="right:45%;bottom:1%"><img src=algae-drop.png></button>
 				<button class=count data-input=auto_coral_station_1 style="right:5%;top:3%"><img src=coral-collect.png></button>
 				<button class=count data-input=auto_coral_station_2 style="right:5%;bottom:3%"><img src=coral-collect.png></button>
 				<button class=count data-input=auto_algae_processor style="left:43%;top:0.5%"><img src=algae-place.png></button>
@@ -249,9 +249,11 @@
 
 	<div class="teleop tab-content">
 		<table class=field-table><tr><td colspan=4>
-			<div class=scout-locations>
-				<button class=count data-input=tele_coral_drop style=left:9%;top:12%><img src=coral-drop.png></button>
-				<button class=count data-input=tele_algae_drop style="left:9%;top:35%"><img src=algae-drop.png></button>
+			<div class=scout-locations>style=>
+				<button class=count data-input=tele_coral_drop style=right:30%;bottom:1%><img src=coral-drop.png></button>
+				<button class=count data-input=tele_algae_drop style="right:45%;bottom:1%"><img src=algae-drop.png></button>
+				<button class=count data-input=tele_algae_theft style="left:9%;bottom:30%"><img src=algae-collect.png></button>
+				<button class=count data-input=tele_coral_theft style=left:9%;top:30%><img src=coral-collect.png></button>
 				<button class=count data-input=tele_coral_station_1 style="right:5%;top:3%"><img src=coral-collect.png></button>
 				<button class=count data-input=tele_coral_station_2 style="right:5%;bottom:3%"><img src=coral-collect.png></button>
 				<button class=count data-input=tele_algae_processor style="left:43%;top:0.5%"><img src=algae-place.png></button>
@@ -288,7 +290,7 @@
 		<table id=tele-values class=collapsable><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=tele_algae_upper_removed size=1 disabled max=3>
 			Algae knocked off upper reef
-		</td><td class="algae collection" rowspan=4>
+		</td><td class="algae collection" rowspan=2>
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_ground size=1 disabled>
 			Algae from ground
 		</td><td class="algae placement">
@@ -309,6 +311,9 @@
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_upper size=1 disabled max=3>
 			Algae from upper reef
+		</td><td class="algae collection" rowspan=2>
+			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_theft size=1 disabled>
+			Algae from opponents' side
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_lower size=1 disabled max=3>
 			Algae from lower reef
@@ -318,7 +323,7 @@
 		</td></tr><tr><td rowspan=2 class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_station_1 size=1 disabled>
 			Coral from station 1
-		</td><td class="coral collection" rowspan=4>
+		</td><td class="coral collection" rowspan=2>
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_ground size=1 disabled>
 			Coral from ground
 		</td><td class="coral placement">
@@ -333,6 +338,9 @@
 		</td></tr><tr><td rowspan=2 class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_station_2 size=1 disabled>
 			Coral from station 2
+		</td><td class="coral collection" rowspan=2>
+			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_theft size=1 disabled>
+			Coral from opponents's side
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_2 size=1 disabled>
 			Coral onto L2

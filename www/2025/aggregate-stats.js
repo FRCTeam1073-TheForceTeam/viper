@@ -95,7 +95,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.tele_coral_station=scout.tele_coral_station_1+scout.tele_coral_station_2
 	scout.coral_station=scout.auto_coral_station+scout.tele_coral_station
 	scout.auto_coral_collect=scout.auto_coral_ground+scout.auto_coral_station
-	scout.tele_coral_collect=scout.tele_coral_ground+scout.tele_coral_station
+	scout.tele_coral_collect=scout.tele_coral_ground+scout.tele_coral_station+scout.tele_coral_theft
 	scout.coral_collect=scout.auto_coral_collect+scout.tele_coral_collect
 	scout.auto_algae_collect_reef=scout.auto_algae_upper+scout.auto_algae_lower
 	scout.auto_algae_removed_reef=scout.auto_algae_lower_removed+scout.auto_algae_upper_removed
@@ -105,7 +105,8 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.tele_algae_collect_reef=scout.tele_algae_upper+scout.tele_algae_lower
 	scout.tele_algae_removed_reef=scout.tele_algae_lower_removed+scout.tele_algae_upper_removed
 	scout.tele_algae_reef=scout.tele_algae_collect_reef+scout.tele_algae_removed_reef
-	scout.tele_algae_collect=scout.tele_algae_reef+scout.tele_algae_ground
+	scout.tele_algae_collect=scout.tele_algae_reef+scout.tele_algae_ground+scout.tele_algae_theft
+	scout.tele_theft=scout.tele_coral_theft+scout.tele_algae_theft
 	scout.tele_collect=scout.tele_coral_collect+scout.tele_algae_collect
 	scout.algae_collect_reef=scout.auto_algae_collect_reef+scout.tele_algae_collect_reef
 	scout.algae_removed_reef=scout.auto_algae_removed_reef+scout.tele_algae_removed_reef
@@ -901,6 +902,18 @@ var statInfo={
 		whiteboard_us: true,
 		source: "pit"
 	},
+	tele_algae_theft:{
+		name: 'Algae Theft in Teleop',
+		type: '%'
+	},
+	tele_coral_theft:{
+		name: 'Coral Theft in Teleop',
+		type: '%'
+	},
+	tele_theft:{
+		name: 'Theft in Teleop',
+		type: '%'
+	},
 }
 
 var teamGraphs={
@@ -974,17 +987,6 @@ function showPitScouting(el,team){
 		if (dat.team_name) el.append($("<p>").text("Team name: " + dat.team_name))
 		if (dat.team_location) el.append($("<p>").text("Location: " + dat.team_location))
 		if (dat.bot_name) el.append($("<p>").text("Bot name: " + dat.bot_name))
-		el.append($("<h4>").text("Autos"))
-		var list=$("<ul>")
-		for (var i=1; i<=9; i++){
-			var desc=dat[`auto_${i}_description`]||""
-			var tested=dat[`auto_${i}_testing`]||'no'
-			if (tested == 'no') tested=($('<span style=color:red>').text("Not tested"))
-			if (tested == 'practice') tested=($('<span style=color:yellow>').text("Tested in practice only"))
-			if (tested == 'match') tested=($('<span style=color:green>').text("Test in a match"))
-			if (desc.length) list.append($('<li style=white-space:pre-wrap>').append(tested).append(": ").append(desc))
-		}
-		el.append(list)
 
 		el.append($("<h4>").text("Robot"))
 		list=$("<ul>")
