@@ -241,7 +241,7 @@ var statInfo={
 		name: "Left the Start Line During Auto",
 		type: "%",
 		timeline_stamp: "L",
-		timeline_fill: "#BB0",
+		timeline_fill: "#888",
 		timeline_outline: "#888"
 	},
 	auto_leave_score:{
@@ -266,86 +266,149 @@ var statInfo={
 	auto_algae_drop:{
 		name: "Algae Dropped in Auto",
 		type: "avg",
+		timeline_stamp: "X",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	auto_algae_lower:{
 		name: "Algae Collected from Lower Reef in Auto",
 		type: "avg",
+		timeline_stamp: "R",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	auto_algae_lower_removed:{
 		name: "Algae Knocked Off Lower Reef in Auto",
 		type: "avg",
+		timeline_stamp: "↓",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	auto_algae_mark_1:{
 		name: "Algae Collected from Mark 1 in Auto",
 		type: "%",
+		timeline_stamp: "G",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	auto_algae_mark_2:{
 		name: "Algae Collected from Mark 2 in Auto",
 		type: "%",
+		timeline_stamp: "G",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	auto_algae_mark_3:{
 		name: "Algae Collected from Mark 3 in Auto",
 		type: "%",
+		timeline_stamp: "G",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	auto_algae_net:{
 		name: "Algae Placed in Net by Robot in Auto",
 		type: "avg",
+		timeline_stamp: "N",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	auto_algae_opponent_processor:{
 		name: "Algae Placed in the Opponent's Processor in Auto",
 		type: "avg",
+		timeline_stamp: "O",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	auto_algae_processor:{
 		name: "Algae Placed in the Processor in Auto",
 		type: "avg",
+		timeline_stamp: "P",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	auto_algae_upper:{
 		name: "Algae Collected from Upper Reef in Auto",
 		type: "avg",
+		timeline_stamp: "R",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	auto_algae_upper_removed:{
 		name: "Algae Knocked Off Upper Reef in Auto",
 		type: "avg",
+		timeline_stamp: "↓",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	auto_coral_drop:{
 		name: "Coral Dropped in Auto",
 		type: "avg",
+		timeline_stamp: "X",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	auto_coral_mark_1:{
 		name: "Coral Collected from Mark 1 in Auto",
 		type: "%",
+		timeline_stamp: "G",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	auto_coral_mark_2:{
 		name: "Coral Collected from Mark 2 in Auto",
 		type: "%",
+		timeline_stamp: "G",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	auto_coral_mark_3:{
 		name: "Coral Collected from Mark 3 in Auto",
 		type: "%",
+		timeline_stamp: "G",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	auto_coral_level_1:{
 		name: "Level 1 Coral Placed During Auto",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "1",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	auto_coral_level_2:{
 		name: "Level 2 Coral Placed During Auto",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "2",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	auto_coral_level_3:{
 		name: "Level 3 Coral Placed During Auto",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "3",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	auto_coral_level_4:{
 		name: "Level 4 Coral Placed During Auto",
-		type: "avg"
+		type: "avg",
+		timeline_stamp: "4",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	auto_coral_station_1:{
 		name: "Coral Collected from Station 1 in Auto",
 		type: "avg",
+		timeline_stamp: "S",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	auto_coral_station_2:{
 		name: "Coral Collected from Station 1 in Auto",
 		type: "avg",
+		timeline_stamp: "S",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	auto_coral_place:{
 		name: "Coral Placed During Auto",
@@ -378,9 +441,6 @@ var statInfo={
 	tele_drop:{
 		name: "Scoring Elements Dropped in Teleop",
 		type: "avg",
-		timeline_stamp: "D",
-		timeline_fill: "#000",
-		timeline_outline: "#808"
 	},
 	tele_place:{
 		name: "Scoring Elements Placed During Teleop",
@@ -437,74 +497,128 @@ var statInfo={
 	tele_algae_drop:{
 		name: "Algae Dropped in Teleop",
 		type: "avg",
+		timeline_stamp: "X",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	tele_algae_ground:{
 		name: "Algae Collected from Ground in Teleop",
 		type: "avg",
+		timeline_stamp: "G",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	tele_algae_lower:{
 		name: "Algae Collected from Lower Reef in Teleop",
 		type: "",
+		timeline_stamp: "R",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	tele_algae_lower_removed:{
 		name: "Algae Knocked Off Lower Reef in Teleop",
 		type: "avg",
+		timeline_stamp: "↓",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	tele_algae_net:{
 		name: "Algae Placed in Net by Robot in Teleop",
 		type: "avg",
+		timeline_stamp: "N",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	tele_algae_opponent_net:{
 		name: "Algae Thrown in Net by Opponent Human Player in Teleop",
 		type: "avg",
+		timeline_stamp: "H",
+		timeline_fill: "#888",
+		timeline_outline: "#888"
 	},
 	tele_algae_opponent_processor:{
 		name: "Algae Placed in the Opponent's Processor in Teleop",
 		type: "avg",
+		timeline_stamp: "O",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	tele_algae_processor:{
 		name: "Algae Placed in the Processor in Teleop",
 		type: "avg",
+		timeline_stamp: "P",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#4eb0a4"
 	},
 	tele_algae_upper:{
 		name: "Algae Collected from Upper Reef in Teleop",
 		type: "avg",
+		timeline_stamp: "R",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	tele_algae_upper_removed:{
 		name: "Algae Knocked Off Upper Reef in Teleop",
 		type: "avg",
+		timeline_stamp: "↓",
+		timeline_fill: "#4eb0a4",
+		timeline_outline: "#222"
 	},
 	tele_coral_drop:{
 		name: "Coral Dropped in Teleop",
 		type: "avg",
+		timeline_stamp: "X",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	tele_coral_ground:{
 		name: "Coral Collected from Ground in Teleop",
 		type: "avg",
+		timeline_stamp: "G",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	tele_coral_level_1:{
 		name: "Level 1 Coral Placed During Teleop",
 		type: "avg",
+		timeline_stamp: "1",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	tele_coral_level_2:{
 		name: "Level 2 Coral Placed During Teleop",
 		type: "avg",
+		timeline_stamp: "2",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	tele_coral_level_3:{
 		name: "Level 3 Coral Placed During Teleop",
 		type: "avg",
+		timeline_stamp: "3",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	tele_coral_level_4:{
 		name: "Level 4 Coral Placed During Teleop",
 		type: "avg",
+		timeline_stamp: "4",
+		timeline_fill: "#FFF",
+		timeline_outline: "#AAA"
 	},
 	tele_coral_station_1:{
 		name: "Coral Collected from Station 1 in Teleop",
 		type: "avg",
+		timeline_stamp: "S",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	tele_coral_station_2:{
 		name: "Coral Collected from Station 2 in Teleop",
 		type: "avg",
+		timeline_stamp: "S",
+		timeline_fill: "#FFF",
+		timeline_outline: "#222"
 	},
 	algae_collect:{
 		name: 'Algae Collected',
@@ -920,6 +1034,10 @@ var teamGraphs={
 	"Match Score":{
 		graph:"bar",
 		data:["score"]
+	},
+	"Match Timeline":{
+		graph:"timeline",
+		data:['timeline']
 	},
 }
 
