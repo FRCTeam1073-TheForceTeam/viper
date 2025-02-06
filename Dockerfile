@@ -35,10 +35,10 @@ RUN sed -E -i '\
 	&& mkdir -p /usr/local/apache2/htdocs/www \
 	;
 
-# docker build -t webscout-image .
-# docker run -d -p 1073:80 --name webscout-container -v `pwd`:/usr/local/apache2/htdocs webscout-image
+# docker build -t viper-image .
+# docker run -d -p 1073:80 --name viper-container -v `pwd`:/usr/local/apache2/htdocs viper-image
 # Visit: http://localhost:1073/
-# docker exec -it webscout-container bash
-# docker logs webscout-container --follow
-# docker container stop webscout-container
-# docker container rm webscout-container
+# docker exec -it viper-container bash
+# docker logs viper-container --follow
+# docker container stop viper-container
+# docker container rm viper-container
