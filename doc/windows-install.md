@@ -8,9 +8,9 @@
 
 ## Instructions
 
-1. Use GitHub Desktop to clone `https://github.com/FRCTeam1073-TheForceTeam/webscout.git`. By default it goes in `Documents\GitHub\webscout`, which is a fine location.
+1. Use GitHub Desktop to clone `https://github.com/FRCTeam1073-TheForceTeam/viper.git`. By default it goes in `Documents\GitHub\viper`, which is a fine location.
 2. Open Git Bash to get a bash command line.
-   1. Change to the webscout directory: `cd Documents/GitHub/webscout`
+   1. Change to the viper directory: `cd Documents/GitHub/viper`
    1. Run the installation script: `./script/install.sh`
       - It will start by installing software dependencies (like Apache).
       - Then it will create a configuration file: `local.conf`.
