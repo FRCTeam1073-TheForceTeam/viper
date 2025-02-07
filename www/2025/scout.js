@@ -27,10 +27,10 @@ $(document).ready(function(){
 
 		toggleScoringElements()
 
-		if(!input.closest('.auto,.teleop').length) return
+		if(!input.closest('.auto,.teleop,#no-show-area').length) return
 
 		var leave=$('[name="auto_leave"]')
-		if (input.closest('.auto')&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
+		if (input.closest('.auto').length&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
 			leave.prop('checked',true)
 			inputChanged(leave,0)
 		}
