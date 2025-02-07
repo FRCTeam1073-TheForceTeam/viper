@@ -8,7 +8,7 @@ var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{
 eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1'),
 eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
 eventName = eventYear+(eventYear?" ":"")+eventVenue,
-eventCompetition = /^20[0-9]{2}$/.test(eventYear)?"frc":"ftc",
+eventCompetition = (/^20[0-9]{2}$/.test(eventYear)||location.hash=='#frc')?"frc":"ftc",
 promiseCache = {},
 FRC_BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
 FTC_BOT_POSITIONS = ['R1','R2','B1','B2'],
