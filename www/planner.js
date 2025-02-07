@@ -273,7 +273,7 @@ $(document).ready(function() {
 							canvas[0].width = canvas[0].clientWidth
 							canvas[0].height = canvas[0].clientHeight
 							;(data||[]).forEach(path=>{
-								drawPath(canvas, style[1], path, !!window.fieldRotationalSymmetry)
+								drawPath(canvas, style[1], path, rotated && !!window.fieldRotationalSymmetry)
 							})
 						} else {
 							;(data||"").split(" ").forEach(coordinates=>{
