@@ -369,7 +369,6 @@ function showLinks(e){
 	matchId=match.attr('data-match-id'),
 	matchName=match.text(),
 	positions=""
-	console.log(el)
 	BOT_POSITIONS.forEach(function(pos){
 		var t = row.find(`.${pos}`).text()
 		if (positions) positions+="&"
