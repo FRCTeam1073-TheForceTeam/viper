@@ -4,7 +4,7 @@ $(document).ready(function(){
 	var teams = (/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)/g.exec(location.hash)||["",""])[1].split(/,/)
 	$('#seasonInp').val(
 		((/^\#(?:.*\&)?(?:season\=)(20[0-9]{2}(?:-[0-9]{2})?)/g.exec(location.hash)||["",""])[1])||
-		((/^([0-9]{4}(?:-[0-9]{2})+)/.exec(eventId)||["",""])[1])||
+		((/^([0-9]{4}(?:-[0-9]{2})?)/.exec(eventId)||["",""])[1])||
 		$('#seasonInp').val()
 	)
 	if(teams[0]){
