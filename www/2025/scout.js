@@ -225,7 +225,7 @@ $(document).ready(function(){
 		var canvas = $('#auto-paths')[0]
 		sizeAndClearCanvas(canvas)
 		$('.auto-path').each(function(){
-			drawPath(canvas,$(this).attr('data-color'),$(this).val())
+			drawPath(canvas,$(this).attr('data-color'),$(this).val(),true,false)
 		})
 	}
 
