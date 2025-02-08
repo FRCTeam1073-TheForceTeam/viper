@@ -234,8 +234,7 @@ var statInfo={
 		whiteboard_start: 35.8,
 		whiteboard_end: 50,
 		whiteboard_char: "□",
-		whiteboard_us: true,
-		whiteboard_invert: true
+		whiteboard_us: true
 	},
 	auto_leave:{
 		name: "Left the Start Line During Auto",

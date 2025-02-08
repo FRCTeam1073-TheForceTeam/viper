@@ -104,20 +104,21 @@ $(document).ready(function(){
 	}
 
 	function moveFloaterToPercentCoordinates(mapImage, isRotated, coordinates, floatingImage){
-		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, false)
+		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, true, true)
 		if (!c) return
 		floatingImage.style.left=c.x+"px"
 		floatingImage.style.top=c.y+"px"
 	}
 
-	function getPercentCoordinates(event, mapImage, isRotated180, isRotated90){
+	function getPercentCoordinates(event, mapImage, flipX, flipY, rotated){
 		var d = mapImage.getBoundingClientRect(),
 		x = event.clientX - d.left,
 		y = event.clientY - d.top,
 		px = Math.min(99,Math.max(1,Math.round(100 * x / d.width))),
 		py =  Math.min(99,Math.max(1,Math.round(100 * y / d.height)))
-		if (!isRotated180 && !isRotated90) py = 100 - py
-		if (isRotated180 || isRotated90) px = 100 - px
+		if (flipY) py = 100 - py
+		if (flipX) px = 100 - px
+		if (rotated) [py,px] = [px,py]
 		return px+"x"+py
 	}
 
@@ -125,7 +126,7 @@ $(document).ready(function(){
 		var mi = document.getElementById('start-area'),
 		fi = document.getElementById('robot-starting-position'),
 		ir = "none"==(""+getComputedStyle($('#start-area')[0]).transform),
-		co = getPercentCoordinates(e,mi,ir)
+		co = getPercentCoordinates(e,mi,ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#auto-start-input').val(co)
 	}
@@ -203,7 +204,7 @@ $(document).ready(function(){
 		var path = getAutoPath(startNewAutoPath),
 		val = path.val()
 		if (val) val += " "
-		val += getPercentCoordinates(e, this, false, true)
+		val += getPercentCoordinates(e, this, true, false)
 		path.val(val)
 		drawAutos()
 		startNewAutoPath = false
