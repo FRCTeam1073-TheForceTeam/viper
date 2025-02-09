@@ -228,8 +228,16 @@ function promiseEventStats(includePractice){
 	return promiseCache.eventStats
 }
 
-function promiseScript(file){
-	return new Promise(callback=>$.getScript(file,callback))
+function promiseScript(file) {
+    return new Promise((resolve,reject)=>{
+        const script=document.createElement("script")
+        script.onload=resolve
+        script.onerror=reject
+        script.setAttribute("src",file)
+        document.head.appendChild(script)
+    }).catch(error=>{
+		$('body').html(`Error: <code>${file}</code> not found. Maybe the season isn't implemented?</p>`)
+	})
 }
 
 function haveNonPracticeMatchForEachTeam(eventStats){
