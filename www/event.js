@@ -232,7 +232,7 @@ $(document).ready(function(){
 			.attr('download',`${eventId}.scouting.extended.csv`)
 			.attr('data-source','eventStats')
 			.click(showDataActions)
-		window.eventStatsByTeam = eventStats
+		window.eventStatsByTeam = eventStatsByTeam
 		$('#aggregatedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
 			.attr('download',`${eventId}.scouting.aggregated.csv`)

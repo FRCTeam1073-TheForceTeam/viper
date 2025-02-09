@@ -188,11 +188,16 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.min_score=Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
 	aggregate.preferred_coral_level=getPreferredCoralLevel(aggregate.coral_level_1,aggregate.coral_level_2,aggregate.coral_level_3,aggregate.coral_level_4)
 	aggregate.preferred_algae_place=getPreferredAlgaePlace(aggregate.algae_processor,aggregate.algae_net)
+	aggregate.event=eventId
 
 	if(scout.algae_processor&&/^[1-9][0-9]*$/.test(scout.opponent_human_player_team)){
 		var hpTeam = parseInt(scout.opponent_human_player_team),
 		hpScout = eventStatsByMatchTeam[`${match}-${hpTeam}`]||={},
 		hpAggregate = eventStatsByTeam[hpTeam]||={}
+		hpScout.team=hpTeam
+		hpAggregate.team=hpTeam
+		hpScout.event=eventId
+		hpAggregate.event=eventId
 		hpScout.human_player_algae_received=(hpScout.human_player_algae_received||0)+scout.algae_processor+(((scout.old||{}).human_player_algae_received)||0)
 		hpAggregate.human_player_algae_received=(hpAggregate.human_player_algae_received||0)+scout.algae_processor
 		hpScout.human_player_net=(hpScout.human_player_net||0)+scout.algae_opponent_net+(((scout.old||{}).human_player_net)||0)
