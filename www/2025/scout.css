@@ -30,7 +30,7 @@
 .blueTeam .scout-locations .label{background-color:var(--blue-team-color)}
 
 html{padding:0}
-.end-game{margin-bottom:50vh}
+#nextButtons{margin-bottom:50vh}
 #select-bot button{font-size:100%}
 
 .algae{background:#99ddd5;font-size:80%}
