@@ -26,7 +26,11 @@ $(document).ready(function(){
 		$('#format option').each(function(){
 			if (typeof window[$(this).attr('value')]!='function') $(this).remove()
 		})
-		processData()
+		if($('#format option').length==0){
+			$('#main').html("<h1>Import Scouting Data</h1><p>Sorry, no import options are available yet this season.</p>")
+		} else {
+			processData()
+		}
 	})
 	$('#import-data,#format').change(processData)
 	$('#file').val(eventId + ".scouting.csv")
