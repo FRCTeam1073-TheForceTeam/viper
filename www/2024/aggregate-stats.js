@@ -893,6 +893,17 @@ function showSubjectiveScouting(el,team){
 	})
 }
 
+var importFunctions={
+	Fires:{
+		example:"/2025/fires.tsv",
+		convert:importScoutingFires,
+	},
+	"Purple Standard":{
+		example:'/2025/purple-standard.json',
+		convert:importPurpleStandard,
+	},
+}
+
 function importScoutingFires(text){
 	function b(v, t, f){
 		t = t===undefined?true:t
@@ -923,6 +934,7 @@ function importScoutingFires(text){
 
 function importPurpleStandard(text){
 	text = text.trim().replace(/^\s+/gm,"").replace(/,\n}/g,"\n}")
+	if (!text) return []
 	var data = JSON.parse(text),
 	rows = []
 	data.entries.forEach(tps=>{

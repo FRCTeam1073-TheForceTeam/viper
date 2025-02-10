@@ -113,6 +113,7 @@ $(document).ready(function(){
 		lastFullyDone,
 		ourNext
 		if (!fileList.length) return showError('Event Not Found')
+		if (window.importFunctions&&Object.keys(window.importFunctions).length) dependencySatisfied('dependImport')
 		fileList.forEach(file=>{
 			var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
 			title = extension,

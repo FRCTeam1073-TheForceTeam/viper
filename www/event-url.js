@@ -242,7 +242,7 @@ function promiseScript(file) {
 }
 
 function showError(title, detail){
-	if ($('body.error').length)return
+	if ($('body.error').length)return false
 	$('body').addClass('error').html('')
 	.append($('<h2>').text('Error: '+ title))
 	.append($('<p>').text(detail))
