@@ -1,11 +1,7 @@
 "use strict"
 
-function show404(){
-	$('body').html("<h1>404 - Event Not Found</h1>")
-}
-
 $(document).ready(function(){
-	if (!eventYear || !eventVenue) return show404()
+	if (!eventYear || !eventVenue) return showError('Event Not Specified')
 	if ("ftc"==eventCompetition) $('.noftc').hide()
 	var title = $('title')
 	var uploadCount = getUploads().length
@@ -116,8 +112,7 @@ $(document).ready(function(){
 		lastDone,
 		lastFullyDone,
 		ourNext
-		if (!fileList.length) return show404()
-
+		if (!fileList.length) return showError('Event Not Found')
 		fileList.forEach(file=>{
 			var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
 			title = extension,
@@ -259,6 +254,7 @@ $(document).ready(function(){
 				if (body!='OK') console.error("Error sending stats: " + body)
 			})
 		}
+	}).catch(error=>{
 	})
 
 	function getScore(eventStatsByTeam, team){

@@ -236,8 +236,17 @@ function promiseScript(file) {
         script.setAttribute("src",file)
         document.head.appendChild(script)
     }).catch(error=>{
-		$('body').html(`Error: <code>${file}</code> not found. Maybe the season isn't implemented?</p>`)
+		console.error(error)
+		showError(`${file} Not Loaded`, `Maybe the season isn't implemented?`)
 	})
+}
+
+function showError(title, detail){
+	if ($('body.error').length)return
+	$('body').addClass('error').html('')
+	.append($('<h2>').text('Error: '+ title))
+	.append($('<p>').text(detail))
+	return false
 }
 
 function haveNonPracticeMatchForEachTeam(eventStats){
