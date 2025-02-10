@@ -12,6 +12,7 @@ $(document).ready(function(){
 		})
 		setTimeout(initialRobotStartPosition,500)
 		matchStartTime = 0
+		renderTimeline()
 		return true
 	})
 	window.onShowPitScouting = window.onShowPitScouting || []
