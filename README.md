@@ -16,7 +16,7 @@ The demo and public data can be found on the official Viper website: [ViperScout
 1. Team members can go interview other teams and collect pit scouting data.\
    [<img src=doc/pit-scout.png width=200>](doc/pit-scout.png) [<img src=doc/bot-photos.png width=200>](doc/bot-photos.png)
 1. Six team members connect wired devices (Android tablets, Android phones, or laptops) and load the scouting page. Once the app is loaded, devices can be disconnected for watching and scouting matches. Data is stored in persistent storage on the client devices as it is collected. As scouting data is needed, devices plug back into the server and upload their data.\
-   [<img src=doc/scouting-auto.png width=200>](doc/scouting-auto.png) [<img src=doc/scouting-tele.png width=200>](doc/scouting-tele.png) [<img src=doc/scouting-end.png width=200>](doc/scouting-end.png)
+   [<img src=doc/scouting-pre.png width=200>](doc/scouting-auto.png) [<img src=doc/scouting-auto.png width=200>](doc/scouting-auto.png) [<img src=doc/scouting-tele.png width=200>](doc/scouting-tele.png) [<img src=doc/scouting-end.png width=200>](doc/scouting-end.png)
 1. An additional scouter can be used to collect subjective data.\
    [<img src=doc/scouting-subjective.png width=200>](doc/scouting-subjective.png)
 1. Scouting data can be used to plan for playing an upcoming match. It can give you insight into the strengths of the teams playing with you and the strengths and weaknesses of the teams playing against you. There is a specific page in the app that supports this use case with a fields whiteboard and stats for the teams playing.\
