@@ -8,7 +8,7 @@ var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{
 eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1'),
 eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
 eventName = eventYear+(eventYear?" ":"")+eventVenue,
-eventCompetition = /^20[0-9]{2}$/.test(eventYear)?"frc":"ftc",
+eventCompetition = (/^20[0-9]{2}$/.test(eventYear)||location.hash=='#frc')?"frc":"ftc",
 promiseCache = {},
 FRC_BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
 FTC_BOT_POSITIONS = ['R1','R2','B1','B2'],
@@ -228,8 +228,25 @@ function promiseEventStats(includePractice){
 	return promiseCache.eventStats
 }
 
-function promiseScript(file){
-	return new Promise(callback=>$.getScript(file,callback))
+function promiseScript(file) {
+    return new Promise((resolve,reject)=>{
+        const script=document.createElement("script")
+        script.onload=resolve
+        script.onerror=reject
+        script.setAttribute("src",file)
+        document.head.appendChild(script)
+    }).catch(error=>{
+		console.error(error)
+		showError(`${file} Not Loaded`, `Maybe the season isn't implemented?`)
+	})
+}
+
+function showError(title, detail){
+	if ($('body.error').length)return false
+	$('body').addClass('error').html('')
+	.append($('<h2>').text('Error: '+ title))
+	.append($('<p>').text(detail))
+	return false
 }
 
 function haveNonPracticeMatchForEachTeam(eventStats){

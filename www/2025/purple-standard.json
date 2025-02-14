@@ -1,0 +1,169 @@
+{
+ "entries": [
+  {
+   "metadata": {
+    "scouter": {
+     "name": "omkar",
+     "team": "1072",
+     "app": "tpw"
+    },
+    "event": "2024camb",
+    "bot": "9999",
+    "match": {
+     "level": "qm",
+     "number": 1,
+     "set": 1
+    },
+    "timestamp": 1704604894
+   },
+   "abilities": {
+    "auto-leave-starting-zone": true,
+    "ground-pick-up": false,
+    "auto-center-line-pick-up": false,
+    "teleop-spotlight-2024": false,
+    "teleop-stage-level-2024": 2
+   },
+   "counters": {},
+   "data": {
+    "auto-scoring-2024": [
+     "as",
+     "sm"
+    ],
+    "teleop-scoring-2024": [
+     "ss",
+     "as",
+     "am",
+     "as",
+     "sa",
+     "sm",
+     "tm",
+     "ts"
+    ],
+    "notes": "Overall bot was good and had cool RGB :)"
+   },
+   "ratings": {
+    "driver-skill": 4,
+    "defense-skill": 0,
+    "speed": 3,
+    "stability": 2,
+    "intake-consistency": 5
+   },
+   "timers": {
+    "stage-time-2024": 6023,
+    "brick-time": 0,
+    "defense-time": 0
+   }
+  },
+  {
+   "metadata": {
+    "scouter": {
+     "name": "kabir",
+     "team": "1072",
+     "app": "tpw"
+    },
+    "event": "2024camb",
+    "bot": "9998",
+    "match": {
+     "level": "qm",
+     "number": 1,
+     "set": 1
+    },
+    "timestamp": 1704605632
+   },
+   "abilities": {
+    "auto-leave-starting-zone": true,
+    "ground-pick-up": true,
+    "auto-center-line-pick-up": true,
+    "teleop-spotlight-2024": true,
+    "teleop-stage-level-2024": 3
+   },
+   "counters": {},
+   "data": {
+    "auto-scoring-2024": [
+     "as",
+     "ss",
+     "as"
+    ],
+    "teleop-scoring-2024": [
+     "as",
+     "as",
+     "as",
+     "sa",
+     "sm",
+     "ss",
+     "as",
+     "am",
+     "as",
+     "sa",
+     "ts",
+     "ts"
+    ],
+    "notes": "fast, scored consistently, low cycle times, good alliance partner strategies"
+   },
+   "ratings": {
+    "driver-skill": 5,
+    "defense-skill": 0,
+    "speed": 4,
+    "stability": 3,
+    "intake-consistency": 5
+   },
+   "timers": {
+    "stage-time-2024": 2864,
+    "brick-time": 0,
+    "defense-time": 0
+   }
+  },
+  {
+   "metadata": {
+    "event": "2024camb",
+    "match": {
+     "level": "qm",
+     "number": 3,
+     "set": 1
+    },
+    "bot": "9999",
+    "timestamp": 1711729092182,
+    "scouter": {
+     "name": "kabir",
+     "team": "1072",
+     "app": "tpw"
+    }
+   },
+   "abilities": {
+    "auto-center-line-pick-up": false,
+    "ground-pick-up": true,
+    "auto-leave-starting-zone": true,
+    "teleop-spotlight-2024": false,
+    "teleop-stage-level-2024": 3
+   },
+   "counters": {},
+   "data": {
+    "auto-scoring-2024": [
+     "ss",
+     "sm"
+    ],
+    "teleop-scoring-2024": [
+     "ss",
+     "as",
+     "am",
+     "as",
+     "sa",
+     "ts"
+    ],
+    "notes": "decent defense and intake always worked smoothly\ncycles were relatively slow though"
+   },
+   "ratings": {
+    "defense-skill": 3,
+    "driver-skill": 3,
+    "intake-consistency": 4,
+    "speed": 2,
+    "stability": 3
+   },
+   "timers": {
+    "brick-time": 1500,
+    "defense-time": 6745,
+    "stage-time-2024": 12815
+   }
+  }
+ ]
+}

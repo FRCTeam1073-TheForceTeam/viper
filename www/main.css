@@ -28,7 +28,7 @@ a:link:hover{text-decoration:underline}
 a:visited{color:var(--link-visited-color)}
 table,tr,td,th,button,input,select,option,input,textarea,form{font-size:inherit;color:inherit;background:inherit}
 button,input[type="submit"],select{border-radius:0.3em;background:var(--button-bg-color);border-color:var(--button-bg-color);color:var(--button-fg-color)}
-body{text-align:center}
+body{text-align:center;overscroll-behavior:contain}
 table,ul{margin:0 auto;}
 ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
 *+ul,*+ol,*+p{margin:1em auto}

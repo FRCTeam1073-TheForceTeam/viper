@@ -1,11 +1,7 @@
 "use strict"
 
-function show404(){
-	$('body').html("<h1>404 - Event Not Found</h1>")
-}
-
 $(document).ready(function(){
-	if (!eventYear || !eventVenue) return show404()
+	if (!eventYear || !eventVenue) return showError('Event Not Specified')
 	if ("ftc"==eventCompetition) $('.noftc').hide()
 	var title = $('title')
 	var uploadCount = getUploads().length
@@ -116,8 +112,8 @@ $(document).ready(function(){
 		lastDone,
 		lastFullyDone,
 		ourNext
-		if (!fileList.length) return show404()
-
+		if (!fileList.length) return showError('Event Not Found')
+		if (window.importFunctions&&Object.keys(window.importFunctions).length) dependencySatisfied('dependImport')
 		fileList.forEach(file=>{
 			var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
 			title = extension,
@@ -232,7 +228,7 @@ $(document).ready(function(){
 			.attr('download',`${eventId}.scouting.extended.csv`)
 			.attr('data-source','eventStats')
 			.click(showDataActions)
-		window.eventStatsByTeam = eventStats
+		window.eventStatsByTeam = eventStatsByTeam
 		$('#aggregatedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStatsByTeam)], {type: 'text/csv;charset=utf-8'})))
 			.attr('download',`${eventId}.scouting.aggregated.csv`)
@@ -259,6 +255,7 @@ $(document).ready(function(){
 				if (body!='OK') console.error("Error sending stats: " + body)
 			})
 		}
+	}).catch(error=>{
 	})
 
 	function getScore(eventStatsByTeam, team){
@@ -369,7 +366,6 @@ function showLinks(e){
 	matchId=match.attr('data-match-id'),
 	matchName=match.text(),
 	positions=""
-	console.log(el)
 	BOT_POSITIONS.forEach(function(pos){
 		var t = row.find(`.${pos}`).text()
 		if (positions) positions+="&"

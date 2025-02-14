@@ -12,6 +12,7 @@ $(document).ready(function(){
 		})
 		setTimeout(initialRobotStartPosition,500)
 		matchStartTime = 0
+		renderTimeline()
 		return true
 	})
 	window.onShowPitScouting = window.onShowPitScouting || []
@@ -27,10 +28,10 @@ $(document).ready(function(){
 
 		toggleScoringElements()
 
-		if(!input.closest('.auto,.teleop').length) return
+		if(!input.closest('.auto,.teleop,#no-show-area').length) return
 
 		var leave=$('[name="auto_leave"]')
-		if (input.closest('.auto')&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
+		if (input.closest('.auto').length&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
 			leave.prop('checked',true)
 			inputChanged(leave,0)
 		}
@@ -98,26 +99,27 @@ $(document).ready(function(){
 		moveFloaterToPercentCoordinates(
 			document.getElementById('start-area'),
 			pos.startsWith('R'),
-			$('#auto-start-input').val()||"16x6",
+			$('#auto-start-input').val()||"6x16",
 			document.getElementById('robot-starting-position')
 		)
 	}
 
 	function moveFloaterToPercentCoordinates(mapImage, isRotated, coordinates, floatingImage){
-		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, false)
+		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, true, true)
 		if (!c) return
 		floatingImage.style.left=c.x+"px"
 		floatingImage.style.top=c.y+"px"
 	}
 
-	function getPercentCoordinates(event, mapImage, isRotated180, isRotated90){
+	function getPercentCoordinates(event, mapImage, flipX, flipY, rotated){
 		var d = mapImage.getBoundingClientRect(),
 		x = event.clientX - d.left,
 		y = event.clientY - d.top,
 		px = Math.min(99,Math.max(1,Math.round(100 * x / d.width))),
 		py =  Math.min(99,Math.max(1,Math.round(100 * y / d.height)))
-		if (!isRotated180 && !isRotated90) py = 100 - py
-		if (isRotated180 || isRotated90) px = 100 - px
+		if (flipY) py = 100 - py
+		if (flipX) px = 100 - px
+		if (rotated) [py,px] = [px,py]
 		return px+"x"+py
 	}
 
@@ -125,7 +127,7 @@ $(document).ready(function(){
 		var mi = document.getElementById('start-area'),
 		fi = document.getElementById('robot-starting-position'),
 		ir = "none"==(""+getComputedStyle($('#start-area')[0]).transform),
-		co = getPercentCoordinates(e,mi,ir)
+		co = getPercentCoordinates(e,mi,ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#auto-start-input').val(co)
 	}
@@ -203,7 +205,7 @@ $(document).ready(function(){
 		var path = getAutoPath(startNewAutoPath),
 		val = path.val()
 		if (val) val += " "
-		val += getPercentCoordinates(e, this, false, true)
+		val += getPercentCoordinates(e, this, true, false)
 		path.val(val)
 		drawAutos()
 		startNewAutoPath = false
@@ -225,7 +227,7 @@ $(document).ready(function(){
 		var canvas = $('#auto-paths')[0]
 		sizeAndClearCanvas(canvas)
 		$('.auto-path').each(function(){
-			drawPath(canvas,$(this).attr('data-color'),$(this).val())
+			drawPath(canvas,$(this).attr('data-color'),$(this).val(),true,false)
 		})
 	}
 

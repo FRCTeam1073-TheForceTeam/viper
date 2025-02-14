@@ -17,26 +17,26 @@
 <body>
 <div id=main>
 <h1>Import Scouting Data</h1>
+<div>
+	Format: <select id=format></select>
+	<button id=example-button>Show Example</button>
+</div>
 <form onsubmit="return false">
 <div>
 	<textarea id=import-data placeholder="Paste data here"></textarea>
 </div>
-<div>
-	Format: <select id=format>
-	<option value=importPurpleStandard>Purple Standard</option>
-	<option value=importScoutingFires>Fires</option>
-	</select>
-</div>
 </form>
-
-
+<button id=convert>Convert ↓</button>
 <form id=saver method=POST action=/admin/edit.cgi>
 	<div>
 		<textarea id=csv name=csv readonly required placeholder="Reformatted data will appear here"></textarea>
 	</div>
-	<div>
+	<div id=save-container>
 		<input id=file type=text readonly name=file>
 		<input type=submit value=Save>
 	</div>
 </form>
+
+<div id=example-lightbox class=lightBoxFullContent style=display:none><pre id=example-content></pre></div>
+
 </body></html>

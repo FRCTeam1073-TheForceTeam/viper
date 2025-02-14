@@ -1,5 +1,6 @@
 "use strict"
 
+
 $(document).ready(function(){
 	$('#importData').submit(processInput)
 	$('input[type=submit]').click(processInput)
@@ -20,7 +21,7 @@ $(document).ready(function(){
 		var newEventId = (
 			src.match(/event_key(?:=|\":\")([0-9]{4}[A-Za-z0-9\-]+)/)||
 			src.match(/href\=\"\/(20[0-9]{2}\/[A-Z0-9]+)\"(?: [^\>]*)?\>Event Info/)||
-			src.match(/\<link rel\=\"canonical\" href=\"https:\/\/theorangealliance\.org\/events\/([0-9A-Z\-]+)\"\>/)|
+			src.match(/\<link rel\=\"canonical\" href=\"https:\/\/theorangealliance\.org\/events\/([0-9A-Z\-]+)\"\>/)||
 			["",$('#idInp').val()]
 		)[1].replace(/\//g,"").toLowerCase()
 		newEventId = newEventId.replace(/-/g,"")
@@ -83,7 +84,7 @@ $(document).ready(function(){
 	}
 
 	function venueNameToId(){
-		$('#idInp').val($('#startInp').val().slice(4)+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
+		$('#idInp').val(new Date($('#startInp').val()).getFullYear()+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
 	}
 
 	$('#nameInp').change(venueNameToId).keyup(venueNameToId)

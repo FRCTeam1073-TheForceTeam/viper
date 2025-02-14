@@ -403,7 +403,7 @@ function getTeamValue(field, team, graphType, source){
 	var stats = source[team] || {}
 	if (boxplot && (field+"_set") in stats) field+="_set"
 	var info = statInfo[field]||{}
-	percent = percent || info.type=='%'
+	percent = percent || info.type=='%' || info.type=='ratio'
 	if (! field in stats) return defaultVal
 	var value = stats[field]
 	if (heatmap||boxplot) return value||defaultVal
