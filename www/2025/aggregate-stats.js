@@ -116,7 +116,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.auto_drop=scout.auto_algae_drop+scout.auto_coral_drop
 	scout.tele_drop=scout.tele_algae_drop+scout.tele_coral_drop
 	scout.drop=scout.auto_drop+scout.tele_drop
-	scout.park=bool_1_0(scout.end_game_position=='park')
+	scout.park=bool_1_0(scout.end_game_position=='parked')
 	scout.shallow=bool_1_0(scout.end_game_position=='shallow')
 	scout.deep=bool_1_0(scout.end_game_position=='deep')
 	scout.algae_place=scout.auto_algae_place+scout.tele_algae_place
@@ -164,8 +164,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.algae_net_score=scout.auto_algae_net_score+scout.tele_algae_net_score
 	scout.algae_opponent_processor_score=scout.auto_algae_opponent_processor_score+scout.tele_algae_opponent_processor_score
 	scout.algae_score=scout.auto_algae_score+scout.tele_algae_score
+	scout.algae_score_total+=pointValues.processor*scout.algae_processor+pointValues.net*scout.algae_net
 	scout.coral_score=scout.auto_coral_score+scout.tele_coral_score
-	scout.auto_score=scout.auto_coral_score+scout.auto_algae_score
+	scout.auto_score=scout.auto_leave_score+scout.auto_coral_score+scout.auto_algae_score
 	scout.tele_score=scout.tele_coral_score+scout.tele_algae_score
 	scout.score=scout.auto_score+scout.tele_score+scout.end_game_score
 
@@ -190,8 +191,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.preferred_algae_place=getPreferredAlgaePlace(aggregate.algae_processor,aggregate.algae_net)
 	aggregate.event=eventId
 
-	if(scout.algae_processor&&/^[1-9][0-9]*$/.test(scout.opponent_human_player_team)){
-		var hpTeam = parseInt(scout.opponent_human_player_team),
+
+	if(scout.algae_processor&&/^[1-9][0-9]*$/.test(""+scout.opponent_human_player_team)){
+		var hpTeam = parseInt(""+scout.opponent_human_player_team),
 		hpScout = eventStatsByMatchTeam[`${match}-${hpTeam}`]||={},
 		hpAggregate = eventStatsByTeam[hpTeam]||={}
 		hpScout.team=hpTeam
@@ -204,6 +206,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 		hpAggregate.human_player_net=(hpAggregate.human_player_net||0)+scout.algae_opponent_net
 		hpScout.human_player_accuracy=hpScout.human_player_algae_received>0?hpScout.human_player_net/hpScout.human_player_algae_received:0
 		hpAggregate.human_player_accuracy=hpAggregate.human_player_algae_received>0?hpAggregate.human_player_net/hpAggregate.human_player_algae_received:0
+
+		hpScout.algae_score_total=(hpScout.algae_score_total||0)+pointValues.net*hpScout.human_player_net
+		hpAggregate.algae_score_total=(hpAggregate.algae_score_total||0)+pointValues.net*hpScout.human_player_net
 	}
 	if (scout.old &&(typeof scout.old.score=='undefined'))scout.old=null
 
@@ -692,6 +697,10 @@ var statInfo={
 		name: 'Algae Score',
 		type: 'avg'
 	},
+	algae_score_total:{
+		name: 'Algae Score for FMS Comparison',
+		type: 'avg'
+	},
 	algae_upper:{
 		name: 'Algae Collected from Upper Reef',
 		type: 'avg'
@@ -1115,6 +1124,11 @@ var whiteboardStats=[
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
 var fmsMapping=[
+	[["autoMobilityPoints"],["auto_leave_score"]],
+	[["autoCoralPoints"],["auto_coral_score"]],
+	[["teleopCoralPoints"],["tele_coral_score"]],
+	[["algaePoints"],["algae_score_total"]],
+	[["endGameBargePoints"],["end_game_score"]],
 ]
 
 function showPitScouting(el,team){
