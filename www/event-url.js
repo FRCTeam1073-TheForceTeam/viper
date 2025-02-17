@@ -44,7 +44,7 @@ function promiseEventAjax(file){
 				xhr.overrideMimeType("text/plain;charset=UTF-8");
 			},
 			url: file,
-			timeout: 5000,
+			timeout: 30000,
 			type: "GET",
 			success: callback,
 			error: function(xhr,status,err){
