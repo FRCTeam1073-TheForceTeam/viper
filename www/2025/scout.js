@@ -4,12 +4,16 @@ $(document).ready(function(){
 	const AUTO_MS=15000
 	var matchStartTime = 0
 
-	window.onShowScouting = window.onShowScouting || []
-	window.onShowScouting.push(function(){
+	window.onBeforeShowScouting = window.onBeforeShowScouting || []
+	window.onBeforeShowScouting.push(function(){
 		var chooseOpp=$('#choose-opponent').html("")
 		Object.entries(eventMatches.filter(x=>x.Match==match)[0]).map(([k,v],i)=>i!=0&&!k.startsWith(pos[0])?v:null).filter(x=>x!=null).forEach(opp=>{
-			chooseOpp.append($(`<label><input type=radio name=opponent_human_player_team value=${opp}><span>${opp}</span></label>`).click(labelClicked)).append(' ')
+			chooseOpp.append($(`<label><input type=radio name=opponent_human_player_team data-at-page-load=unchecked data-at-scout-start=unchecked value=${opp}><span>${opp}</span></label>`).click(labelClicked)).append(' ')
 		})
+		return true
+	})
+	window.onShowScouting = window.onShowScouting || []
+	window.onShowScouting.push(function(){
 		setTimeout(initialRobotStartPosition,500)
 		matchStartTime = 0
 		renderTimeline()
