@@ -17,10 +17,11 @@ function redirect(){
 	var eId = localStorage.getItem('last_event_id'),
 	eYear = localStorage.getItem('last_event_year'),
 	ePos = localStorage.getItem('last_pos'),
+	eOrient = localStorage.getItem('last_orient'),
 	eType = localStorage.getItem("last_scout_type")
 	if (!eId) return delayRedirect(`/`)
 	if (!eYear || !eType) return delayRedirect(`/event.html#event=${eId}`)
-	if (eType=='scout' && ePos) return delayRedirect(`/${eYear}/scout.html#event=${eId}&pos=${ePos}`)
+	if (eType=='scout' && ePos) return delayRedirect(`/${eYear}/scout.html#event=${eId}&pos=${ePos}`+(eOrient?`&orient=${eOrient}`:""))
 	delayRedirect(`/${eYear}/${eType}.html#event=${eId}`)
 }
 

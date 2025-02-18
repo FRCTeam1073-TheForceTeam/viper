@@ -3,7 +3,7 @@
 var pos = "",
 team = "",
 match = "",
-orient = "right",
+orient = localStorage.getItem("last_orient")||"right",
 matchName = "",
 teamList=[],
 go,
@@ -16,7 +16,7 @@ parseHash()
 function parseHash(){
 	pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
-	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["","right"])[1]
+	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",orient])[1]
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
 	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1]
 	go = (location.hash.match(/^\#(?:.*\&)?(?:go\=)(back)(?:\&.*)?$/)||["",""])[1]
@@ -408,6 +408,9 @@ function animateChangeFloater(change, relative){
 function showScouting(){
 	promiseEventStats().then(resolve=>{
 		var [eventStats, eventStatsByTeam, eventStatsByMatchTeam] = resolve
+		for (var i=0; i<window.onBeforeShowScouting.length; i++){
+			if(!window.onBeforeShowScouting[i]()) return false
+		}
 		$('.screen,.init-hide').hide()
 		resetInitialValues(scouting)
 		setHash(pos,orient,team,match)
@@ -507,6 +510,7 @@ function formHasChanges(f){
 
 window.onStore = window.onStore || []
 window.onShowScouting = window.onShowScouting || []
+window.onBeforeShowScouting = window.onBeforeShowScouting || []
 window.onShowPitScouting = window.onShowPitScouting || []
 window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
 window.onInputChanged = window.onInputChanged || []
@@ -547,6 +551,7 @@ function storeScouting(uploaded){
 		setTimeStamps(scouting)
 		localStorage.setItem("last_match_"+eventId, match)
 		localStorage.setItem("last_pos", pos)
+		localStorage.setItem("last_orient", orient)
 		var csv = toCSV(scouting)
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getUploadedPrefix(uploaded)+getScoutKey(), csv[1])
