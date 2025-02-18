@@ -428,7 +428,7 @@ var statInfo={
 		type: "avg"
 	},
 	auto_score:{
-		name: "Score During Auto",
+		name: "Score in Auto",
 		type: "avg"
 	},
 	auto_place_percent:{
@@ -1097,6 +1097,9 @@ var aggregateGraphs = {
 
 var matchPredictorSections={
 	Total:["score"],
+	"Game Stage":["auto_score","tele_score","end_game_score"],
+	"Scoring Element":["coral_score","algae_score"],
+	"Placement":["coral_level_1_score","coral_level_2_score","coral_level_3_score","coral_level_4_score","algae_processor_score","algae_net_score"]
 }
 
 var whiteboardStamps=[]
