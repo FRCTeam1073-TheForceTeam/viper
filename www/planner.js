@@ -3,8 +3,6 @@
 var matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1],
 myTeamsStats
 
-var maxWhiteboardDimension=0
-
 $(document).ready(function() {
 	var statsConfig = new StatsConfig({
 		statsConfigKey:`${eventYear}WhiteboardStats`,
@@ -22,21 +20,10 @@ $(document).ready(function() {
 		defaultConfig:window.whiteboardStats,
 		mode:"aggregate"
 	})
-	if (typeof eventYear !== 'undefined') $('#fieldBG').css("background-image",`url('/${eventYear}/field-whiteboard.png')`)
+	if (typeof eventYear !== 'undefined') $('#field').prepend($('<img id=fieldBG>').attr('src',`/${eventYear}/field-whiteboard.png`))
 	if (eventCompetition=='ftc') $('.noftc').hide()
-	$('button.pen').click(penButtonClicked)
 	displayMatchName()
 
-	function penButtonClicked(){
-		$('button.pen').removeClass('selected')
-		$(this).addClass('selected')
-		setCursorImage()
-	}
-
-	$('.clear').click(function(evt){
-		evt.preventDefault()
-		sketcher.sketchable('clear')
-	})
 
 	$('.rotate').click(function(){
 		$('#fieldBG').toggleClass('rotated')
@@ -54,11 +41,6 @@ $(document).ready(function() {
 	})
 
 	$('.configure-stats').click(statsConfig.showConfigDialog.bind(statsConfig))
-
-	$('.undo').click(function(evt){
-		evt.preventDefault()
-		sketcher.sketchable('memento.undo')
-	})
 
 	$('button.showInstructions').click(function(){
 		showLightBox($('#instructions'))
@@ -94,30 +76,34 @@ $(document).ready(function() {
 	loadFromLocationHash()
 	$(window).on('hashchange', loadFromLocationHash)
 
+
+	window.addEventListener("resize",sizeWhiteboard)
+
 	function sizeWhiteboard(){
 		var winH = $(window).height(),
 		fieldR=window.whiteboard_aspect_ratio||(eventCompetition=='ftc'?1:2),
 		winW=$(window).width(),
+		margin=winW<500?0:winW/150,
+		spacing=winW/100,
 		vert=winW<750,
-		statsW=400,
-		fieldW=vert?winW:winW-statsW,
+		statsW=vert?winW-margin-margin:Math.max(400,winW/3),
+		fieldW=vert?winW-margin-margin:winW-statsW-spacing-margin-margin,
 		fieldH=fieldR*fieldW
-		if (fieldH>winH){
-			fieldH=winH
-			fieldW=winH/fieldR
+		if (fieldH>winH-margin-margin){
+			fieldH=winH-margin-margin
+			fieldW=fieldH/fieldR
 		}
-		statsW=vert?winW:Math.max(400,winW-fieldW-10)
+		if(!vert)statsW=Math.max(statsW,winW-fieldW-margin-margin-spacing)
 		var h3W=statsW-70,
-		statsP=vert?'top':'left',
-		statsO=vert?fieldH+10:fieldW+10
-		maxWhiteboardDimension=Math.max(fieldW,fieldH)
+		statsL=vert?0:fieldW+spacing+margin,
+		statsT=vert?fieldH+spacing+margin:0
 		$('#field,#fieldBG,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
-		sketcher.sketchable('handler', function(node, data){
-			data.sketch.size(fieldW,fieldH)
-		})
-		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css(statsP, statsO)
+		$('#field').css('top',margin).css('left',margin)
+		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css('left',statsL).css('top',statsT)
 		$('h3').css('width',`${h3W}px`)
 		$('body').css('overflow-y',vert?'visible':'hidden')
+		if(!whiteboard) whiteboard = new Whiteboard($('#fieldDraw')[0])
+		drawOverlays()
 	}
 
 	Promise.all([
@@ -127,7 +113,6 @@ $(document).ready(function() {
 		promiseEventMatches(),
 		fetch(`/data/${eventYear}/whiteboard.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values => {
-		sizeWhiteboard()
 		;[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.myTeamsStats] = values
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
@@ -152,9 +137,10 @@ $(document).ready(function() {
 
 		if (window.whiteboardStamps){
 			window.whiteboardStamps.forEach(function(stamp){
-				$('#stamps').append(" ").append($(`<button class="pen icon-button"><img src=${stamp}></button>`).click(penButtonClicked))
+				$('#stamps').append(" ").append($(`<button class="stamp icon-button draw-mode"><img src=${stamp}></button>`).click(stampWhiteboard).click(showDrawMode))
 			})
 		}
+		sizeWhiteboard()
 	})
 
 	$('#statsTable input').change(fillStats).focus(function(){
@@ -234,7 +220,6 @@ $(document).ready(function() {
 					tbody.append(row)
 				}
 			})
-			drawOverlays()
 		}
 	}
 
@@ -363,43 +348,238 @@ $(document).ready(function() {
 		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
 	})
 
-	var sketcher = $("#fieldDraw").sketchable({
-		events: {
-			// We use the "before" event hook to update brush type right before drawing starts.
-			mousedownBefore: function(elem, data, evt){
-				var pen = $('button.pen.selected'),
-				img = pen.find('img')
-				if (img.length){
-					data.options.graphics.fillStyle = '#fff0' // transparent
-					data.options.graphics.strokeStyle = '#fff0'
-					data.options.graphics.lineWidth = maxWhiteboardDimension/400
-					data.options.graphics.firstPointSize = 0
-					data.sketch.pencil()
-					var bounds = $('#fieldDraw')[0].getBoundingClientRect()
-					data.sketch.drawImage(img.attr('src'), evt.clientX - bounds.left, evt.clientY - bounds.top)
-				} else if (pen.attr('data-type') == 'eraser'){
-					// Set the brush in eraser mode.
-					data.options.graphics.lineWidth = maxWhiteboardDimension/40
-					data.options.graphics.fillStyle = '#ffff'
-					data.options.graphics.strokeStyle = '#ffff'
-					data.sketch.eraser()
-				} else {
-					// Set the brush in pencil mode.
-					data.options.graphics.lineWidth = maxWhiteboardDimension/400
-					data.options.graphics.firstPointSize = 0
-					var color = pen.css('color')
-					data.options.graphics.fillStyle = color
-					data.options.graphics.strokeStyle = color
-					data.sketch.pencil()
+
+	var whiteboard
+
+	$('.clear').click(()=>whiteboard.clear.call(whiteboard))
+	$('.eraser').click(()=>whiteboard.eraserMode.call(whiteboard))
+	$('.pen').click(function(){whiteboard.penMode.call(whiteboard,this.style.color)})
+	$('.undo').click(()=>whiteboard.undo.call(whiteboard))
+
+	function stampWhiteboard(){
+		whiteboard.stampMode.call(whiteboard,this.querySelector('img'))
+	}
+
+	function showDrawMode(){
+		$('.draw-mode').removeClass('selected')
+		$(this).addClass('selected')
+	}
+
+	$('.draw-mode').click(showDrawMode)
+})
+
+
+class Whiteboard {
+	constructor(canvas){
+		this.canvas = canvas
+		if(this.canvas.clientWidth>this.canvas.clientHeight){
+			this.maxDimension=this.canvas.width=Math.max(window.screen.width,window.screen.height,2000)
+			this.canvas.height=this.canvas.width/this.canvas.clientWidth*this.canvas.clientHeight
+		} else {
+			this.maxDimension=this.canvas.height=Math.max(window.screen.width,window.screen.height,2000)
+			this.canvas.width=this.canvas.height/this.canvas.clientHeight*this.canvas.clientWidth
+		}
+		this.ctx = canvas.getContext('2d')
+		document.addEventListener("mousemove",e=>this.moused.call(this,e),{passive:false})
+		document.addEventListener("mousedown",e=>this.moused.call(this,e),{passive:false})
+		document.addEventListener("mouseup",e=>this.moused.call(this,e),{passive:false})
+		document.addEventListener("touchstart",e=>this.moused.call(this,e),{passive:false})
+		document.addEventListener("touchend",e=>this.moused.call(this,e),{passive:false})
+		document.addEventListener("touchcancel",e=>this.moused.call(this,e),{passive:false})
+		document.addEventListener("touchmove",e=>this.moused.call(this,e),{passive:false})
+		window.addEventListener("resize",e=>this.size.call(this),{passive:true})
+		this.size()
+		this.drawClear()
+		this.penMode('#000')
+		this.history=[]
+	}
+
+	stampMode(image){
+		this.mode='stamp'
+		this.canvas.style.cursor=`url('${image.src}'),cell`
+		this.stampImage=image
+	}
+
+	penMode(color){
+		this.color=color
+		this.mode='pen'
+		this.canvas.style.cursor="url('/pencil.svg'),crosshair"
+	}
+
+	eraserMode(){
+		this.mode='eraser'
+		this.canvas.style.cursor="url('/eraser.svg'),grab"
+	}
+
+	size(){
+		this.width=this.canvas.clientWidth
+		this.height=this.canvas.clientHeight
+		this.left=this.canvas.getBoundingClientRect().left
+		this.right=this.canvas.getBoundingClientRect().right
+		this.top=this.canvas.getBoundingClientRect().top
+		this.bottom=this.canvas.getBoundingClientRect().bottom
+	}
+
+	clear(){
+		this.current=new ClearStroke()
+		this.history.push(this.current)
+		this.current.draw(this)
+	}
+
+	drawClear(){
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+	}
+
+	undo(){
+		this.history.pop()
+		this.redraw()
+	}
+
+	redraw(){
+		this.drawClear()
+		for (var i=0; i<this.history.length; i++){
+			this.history[i].draw(this)
+		}
+	}
+
+	moused(e){
+		var drawing = (e.buttons&1)==1||/^touchstart|touchmove$/.test(e.type)
+		if ((this.current && this.current.mode != this.mode) || !drawing){
+			this.current=null
+			this.lastPoint=null
+		}
+		var touch=e.touches&&e.touches.length?e.touches[0]:{pageX:e.clientX||-1,pageY:e.clientY||[-1]},
+		x=touch.pageX,
+		y=touch.pageY,
+		point=[
+			Math.max(0,Math.min((x-this.left)*(this.canvas.width/this.width),this.canvas.width)),
+			Math.max(0,Math.min((y-this.top)*(this.canvas.height/this.height),this.canvas.height))
+		]
+		if (x<this.left||y<this.top||x>this.right||y>this.bottom){
+			if (x>=0&&y>=0&&!/^mouseup|mousedown$/.test(e.type)){
+				if (this.current){
+					this.current.addPoint(point)
+					this.current.draw(this)
+					this.current=null
 				}
+				this.lastPoint=point
+			}
+			return
+		}
+		if(e.target!=this.canvas)return
+		e.preventDefault()
+		if(!drawing)return
+		if (!this.current){
+			switch(this.mode){
+				case "pen":
+					this.current=new PenStroke(this.color)
+					break
+				case "eraser":
+					this.current=new EraserStroke()
+					break
+				case "stamp":
+					this.current=new StampStroke(this.stampImage)
+					break
+			}
+			this.history.push(this.current)
+		}
+		this.current.addPoint(point,this.lastPoint)
+		this.lastPoint=null
+		this.current.draw(this)
+	}
+}
+
+class WhiteboardStroke {
+	constructor(){
+		this.points=[]
+		this.composite="source-over"
+		this.lineScale=0.003
+		this.maxPoints=99999
+	}
+
+	addPoint(point,prePoint){
+		if (this.points.length>=this.maxPoints)return
+		if (this.points.length&&(this.points[this.points.length-1][0]==point[0]&&this.points[this.points.length-1][1]==point[1]))return
+		if (this.maxPoints>1&&prePoint)this.points.push(prePoint)
+		this.points.push(point)
+	}
+
+	drawStart(whiteboard){
+		whiteboard.ctx.beginPath()
+		whiteboard.ctx.strokeStyle=this.color
+		whiteboard.ctx.fillStyle=this.color
+		whiteboard.ctx.globalCompositeOperation=this.composite
+		whiteboard.ctx.lineWidth=whiteboard.maxDimension*this.lineScale
+	}
+
+	drawEnd(whiteboard){
+		whiteboard.ctx.closePath()
+	}
+}
+
+class PenStroke extends WhiteboardStroke {
+	constructor(color){
+		super()
+		this.color=color
+		this.mode="pen"
+	}
+
+	draw(whiteboard){
+		this.drawStart(whiteboard)
+		if(this.points.length){
+			if(this.points.length==1){
+				whiteboard.ctx.arc(this.points[0][0],this.points[0][1],whiteboard.ctx.lineWidth/2,0,2*Math.PI)
+				whiteboard.ctx.fill()
+			} else {
+				whiteboard.ctx.moveTo(this.points[0][0],this.points[0][1])
+				for(var i=1;i<this.points.length;i++){
+					whiteboard.ctx.lineTo(this.points[i][0],this.points[i][1])
+				}
+				whiteboard.ctx.stroke()
 			}
 		}
-	})
-	function setCursorImage() {
-		var pen = $('button.pen.selected'),
-		img = pen.find('img'),
-		cursor = img.length?img.attr('src'):pen.attr('data-type') + '.svg'
-		sketcher.css('cursor', `url(${cursor}), auto`);
+		this.drawEnd(whiteboard)
 	}
-	setCursorImage()
-})
+}
+
+class EraserStroke extends PenStroke {
+	constructor(color){
+		super('#999')
+		this.composite="destination-out"
+		this.lineScale=0.03
+		this.mode="eraser"
+	}
+}
+
+class ClearStroke extends WhiteboardStroke {
+	constructor(color){
+		super()
+		this.mode="clear"
+		this.maxPoints=0
+	}
+
+	draw(whiteboard){
+		this.drawStart(whiteboard)
+		whiteboard.drawClear()
+		this.drawEnd(whiteboard)
+	}
+}
+
+class StampStroke extends WhiteboardStroke {
+	constructor(image){
+		super()
+		this.mode="stamp"
+		this.image=image
+		this.maxPoints=1
+	}
+
+	draw(whiteboard){
+		var width=this.image.naturalWidth,
+		height=this.image.naturalHeight,
+		imageMax=Math.max(width,height),
+		scale=whiteboard.maxDimension/imageMax*0.025
+		this.drawStart(whiteboard)
+		whiteboard.ctx.drawImage(this.image,0,0,width,height,this.points[0][0],this.points[0][1],width*scale,height*scale)
+		this.drawEnd(whiteboard)
+	}
+}
