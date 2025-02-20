@@ -4,13 +4,15 @@ li{margin:.5em 0;}
 .show-more{cursor:pointer; color:var(--link-color);font-size:80%;margin:1em 0}
 .show-more:hover{text-decoration:underline}
 #dataTable td,#dataTable th{padding:0.5em}
+.scoreTable td,.scoreTable th{padding:0.15em}
 #matchTable td, #matchTable th {padding:0.15em;border:1px solid var(--main-border-color);cursor:pointer}
 #matchTable{margin:1em auto;max-width:27em}
 h3{margin:0 0 .25em 0;padding:0}
 .narrow{max-width:18em}
 .match-id{max-width:7.5em;hyphens:auto}
 #eventInfo{margin:1em 0}
-#matchTable .scouted,#matchTable .score{color:var(--highlight-fg-color)}
+#matchTable .scouted{color:var(--highlight-fg-color)}
+#matchTable .score{color:var(--highlight2-fg-color)}
 #matchTable .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color)}
 #matchTable .error{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 #pitScoutSetup img{width:2em;display:block}

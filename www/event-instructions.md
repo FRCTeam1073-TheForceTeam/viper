@@ -14,13 +14,23 @@ Click on the match schedule to get deep links relevant for that team and match:
 
 The colors in the match table provide extra information:
 
+#### Background colors
+
  - Red background: red alliance
  - Blue background: blue alliance
+
+#### Team numbers
  - White text: not scouted
  - Green text: already scouted
  - Red wavy crossed-out: scouting problem (like duplicate data)
  - Green underline: our team
  - Orange underline: data needed for our next match
+
+#### Scores
+  - White text: prediction
+  - Green text: from scouting data
+  - Orange text: from API data
+  - Yellow bars above and below: winner or predicted winner
 
 ### Scouting
 

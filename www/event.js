@@ -184,16 +184,28 @@ $(document).ready(function(){
 			if(ourNext && ourNext.Match==match.Match) seenOurNext=true
 			if(lastFullyDone && lastFullyDone.Match==match.Match) seenLastFullyDone=true
 			var row = $($('template#matchRow').html()),
-			redPrediction = 0, bluePrediction=0
+			redPrediction = 0, bluePrediction=0,
+			redScouting = 0, blueScouting=0,
+			isRedScouted = true, isBlueScouted = true
 			if ("ftc"==eventCompetition) row.find('.noftc').hide()
 			BOT_POSITIONS.forEach(pos=>{
-				if(/^R/.test(pos)){
-					redPrediction += getScore(eventStatsByTeam, match[pos])
-				} else {
-					bluePrediction += getScore(eventStatsByTeam, match[pos])
-				}
 				var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0,
 				isScouted=((typeof scouted.score)!=='undefined')
+				if(/^R/.test(pos)){
+					if (!isScouted){
+						isRedScouted=false
+					} else {
+						redScouting += scouted.score
+					}
+					redPrediction += getScore(eventStatsByTeam, match[pos])
+				} else {
+					if (!isScouted){
+						isBlueScouted=false
+					} else {
+						blueScouting += scouted.score
+					}
+					bluePrediction += getScore(eventStatsByTeam, match[pos])
+				}
 				row.find(`.${pos}`).text(match[pos])
 					.toggleClass("scouted",isScouted)
 					.toggleClass("needed",(!isScouted)&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
@@ -203,8 +215,9 @@ $(document).ready(function(){
 			})
 			redPrediction=Math.round(redPrediction)
 			bluePrediction=Math.round(bluePrediction)
-			if (eventScores[match.Match]){
-				var redScore,blueScore
+			var hasScores = !!eventScores[match.Match],
+			redScore=0, blueScore=0
+			if (hasScores){
 				eventScores[match.Match].alliances.forEach(function(alliance){
 					if (alliance.alliance == "Blue"){
 						blueScore = alliance.totalPoints
@@ -212,12 +225,12 @@ $(document).ready(function(){
 						redScore = alliance.totalPoints
 					}
 				})
-				row.find('.redScore').addClass('score').toggleClass('winner',redScore>blueScore).text(redScore).attr('title',"Prediction: " + redPrediction)
-				row.find('.blueScore').addClass('score').toggleClass('winner',redScore<blueScore).text(blueScore).attr('title',"Prediction: " + bluePrediction)
-			} else {
-				row.find('.redScore').addClass('prediction').toggleClass('winner',redPrediction>bluePrediction).text(redPrediction)
-				row.find('.blueScore').addClass('prediction').toggleClass('winner',redPrediction<bluePrediction).text(bluePrediction)
 			}
+			var redPoints=hasScores?redScore:(isRedScouted?redScouting:redPrediction),
+			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:bluePrediction)
+			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':'prediction')).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('title',(hasScores||isRedScouted?`Prediction: ${redPrediction}`:"")+(hasScores&&isRedScouted?`, Scouted: ${redScouting}`:"")).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction)
+			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':'prediction')).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('title',(hasScores||isBlueScouted?`Prediction: ${bluePrediction}`:"")+ (hasScores&&isBlueScouted?`, Scouted: ${blueScouting}`:"")).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction)
+
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
 			row.click(showLinks)
 			$('#matches').append(row)
@@ -263,7 +276,6 @@ $(document).ready(function(){
 		if (!stats) return 0
 		return (stats.score||0)/(stats.count||1)
 	}
-
 
 	function escapeExcelCsvField(s){
 		if (Array.isArray(s)) s = s.join(" ")
@@ -365,7 +377,9 @@ function showLinks(e){
 	match=row.find('.match-id'),
 	matchId=match.attr('data-match-id'),
 	matchName=match.text(),
-	positions=""
+	positions="",
+	redScore=row.find('.redScore'),
+	blueScore=row.find('.blueScore')
 	BOT_POSITIONS.forEach(function(pos){
 		var t = row.find(`.${pos}`).text()
 		if (positions) positions+="&"
@@ -384,7 +398,13 @@ function showLinks(e){
 		.replace(/MATCH_ID/g, matchId)
 		.replace(/BOTS/g, positions)
 		.replace(/MATCH_NAME/g, matchName)
-		.replace(/TEAM_NAME/g, teamName),
+		.replace(/TEAM_NAME/g, teamName)
+		.replace(/RED_SCORE/g, redScore.attr('data-score'))
+		.replace(/BLUE_SCORE/g, blueScore.attr('data-score'))
+		.replace(/RED_SCOUTED/g, redScore.attr('data-scouted'))
+		.replace(/BLUE_SCOUTED/g, blueScore.attr('data-scouted'))
+		.replace(/RED_PREDICTION/g, redScore.attr('data-prediction'))
+		.replace(/BLUE_PREDICTION/g, blueScore.attr('data-prediction')),
 	ma = $('#matchActions')
 	ma.html(html).find('.dependTeam').toggle(!!team)
 	showLightBox(ma)
