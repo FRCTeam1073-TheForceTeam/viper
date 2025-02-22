@@ -32,6 +32,40 @@ You need six clients to use the system (one for each robot on the field.)  We re
  - $7 [Car outlet socket](https://www.amazon.com/dp/B01FJ8OXX2) — To attach the charger to a robot battery so that you can charge tablets in the stands
  - $17 [Robot battery connectors](https://www.amazon.com/dp/B0CJ8XR5PN) — To attach the charger to a robot battery so that you can charge tablets in the stands
 
+## Server Configuration
+
+![portable server](portable-server.jpg)
+
+Everything is attached to the inside of the case with velcro.
+
+### Battery
+
+The battery has the following plugged into it:
+
+ - Wall plug for charging into the USB-C input
+ - USB switch with a three way splitter
+ - Some short USB cords for charging tablets at events
+
+### Router
+
+The router has the following plugged into it:
+
+ - Ethernet cord to the network switch
+ - USB power from the splitter
+ - A USB cord to plug in a phone that can share its network connection with the system via USB tethering
+
+### Network switch
+
+ - Power from the USB splitter
+ - Ethernet to the router
+ - Ethernet to the Raspberry Pi
+ - Ethernet for four tablets
+
+### Raspberry Pi
+
+ - Ethernet via a micro-USB dongle
+ - Power via micro-USB from the USB splitter
+
 
 ## Other documentation
 
