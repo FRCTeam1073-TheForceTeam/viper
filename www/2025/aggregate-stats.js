@@ -1047,6 +1047,10 @@ var statInfo={
 		name: 'Theft in Teleop',
 		type: '%'
 	},
+	coral_stuck:{
+		name: 'Coral Stuck',
+		type: '%'
+	},
 }
 
 var teamGraphs={
