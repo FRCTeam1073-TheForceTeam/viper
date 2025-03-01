@@ -15,7 +15,7 @@ $(document).ready(function(){
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
 		setTimeout(initialRobotStartPosition,500)
-		matchStartTime = 0
+		initScouting2025()
 		renderTimeline()
 		return true
 	})
@@ -28,8 +28,13 @@ $(document).ready(function(){
 	window.onInputChanged = window.onInputChanged || []
 	window.onInputChanged.push(inputChanged)
 
-	function inputChanged(input, change){
+	function initScouting2025(){
+		matchStartTime = 0
+		proceedToTeleBlink()
+		console.log("hello")
+	}
 
+	function inputChanged(input, change){
 		toggleScoringElements()
 
 		if(!input.closest('.auto,.teleop,#no-show-area').length) return
@@ -56,10 +61,7 @@ $(document).ready(function(){
 		} else {
 			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
 		}
-		if (!text){
-			matchStartTime = 0
-			proceedToTeleBlink()
-		}
+		if (!text)initScouting2025()
 		order.val(text)
 		renderTimeline()
 	}
@@ -77,10 +79,7 @@ $(document).ready(function(){
 			animateChangeFloater(-1, input)
 		}
 		if (input.is(":checked")) input.prop('checked',false)
-		if (!text) {
-			matchStartTime = 0
-			proceedToTeleBlink()
-		}
+		if (!text)initScouting2025()
 		order.val(text)
 		toggleScoringElements()
 		renderTimeline()
@@ -236,6 +235,8 @@ $(document).ready(function(){
 	}
 
 	function proceedToTeleBlink(){
-		$('#to-tele-button').toggleClass('pulse-bg', matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS)
+		var goTele=matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS
+		$('#tele-reminder').toggle(goTele)
+		$('.to-tele').toggleClass('pulse-bg',goTele)
 	}
 })
