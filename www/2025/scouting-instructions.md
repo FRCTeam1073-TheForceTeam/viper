@@ -2,16 +2,18 @@
 
 Watch your robot and record its actions by clicking on the corresponding buttons. The icons used for actions are:
 
-| | Collect | Remove<br>(without<br>collecting) | Drop<br>or Miss | Place<br>or Score |
-| :---: | :---: | :---: | :---: | :---: |
-| **Coral** | <img src=coral-collect.png style=height:5em> | | <img src=coral-drop.png style=height:5em> | <img src=coral-place.png style=height:5em> |
-| **Algae** | <img src=algae-collect.png style=height:5em> | <img src=algae-remove.png style=height:5em> | <img src=algae-drop.png style=height:5em> | <img src=algae-place.png style=height:5em> |
+| | Collect | Remove<br>(without<br>collecting) | Drop<br>or Miss | Place<br>or Score | Leave |
+| :---: | :---: | :---: | :---: | :---: | :---: |
+| **Coral** | <img src=coral-collect.png style=height:5em> | | <img src=coral-drop.png style=height:5em> | <img src=coral-place.png style=height:5em> | |
+| **Algae** | <img src=algae-collect.png style=height:5em> | <img src=algae-remove.png style=height:5em> | <img src=algae-drop.png style=height:5em> | <img src=algae-place.png style=height:5em> | |
+| **Robot** | | | | | <img src=leave.png style=height:5em> |
 
 After your bot places algae into the processor, you are responsible for recording if the **opponent's human player** throws that algae into their barge net.
 
 Most buttons on the image of the field are placed where that action takes place, but there are exceptions:
 
 - Drop button (<img src=coral-drop.png style=height:1em> and <img src=algae-drop.png style=height:1em>) appear **at the edge of the field** but are meant to be used whenever a game piece is **dropped anywhere**.
+- In auto, leaving the starting line (<img src=leave.png style=height:1em>) should be pressed when the robot leaves the starting line from any position.
 - In telop, collection buttons (<img src=coral-collect.png style=height:1em> and <img src=algae-collect.png style=height:1em>) **on the carpet** are  meant to be used for **any ground pickup**, regardless of location.
 - In telop, collection buttons (<img src=coral-collect.png style=height:1em> and <img src=algae-collect.png style=height:1em>) **on the other side of the field** are meant to be used for **any pickup on the other side of the field**, ground or otherwise.
 

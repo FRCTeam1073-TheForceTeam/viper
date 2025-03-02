@@ -4,7 +4,7 @@
 #scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;vertical-align:top;width:25%;vertical-align:middle}
 #scouting .num {display:block;font-size:125%;margin:0 auto;font-weight:bold}
 
-.orientLeft .bigimg, body.leftField.redTeam #start-area,body.rightField.blueTeam #start-area,body.leftField.redTeam .scout-locations,body.rightField.blueTeam .scout-locations,body.leftField.redTeam .scout-locations > *,body.rightField.blueTeam .scout-locations > * {transform:rotate(180deg)}
+.orientLeft .bigimg, body.leftField.redTeam #start-area,body.rightField.blueTeam #start-area,body.leftField.redTeam .orient-rotate,body.rightField.blueTeam .orient-rotate,body.leftField.redTeam .orient-rotate > *,body.rightField.blueTeam .orient-rotate > * {transform:rotate(180deg)}
 
 #start-area{width:7em;height:25em;position:relative;margin:0 auto}
 .blueTeam #start-area{background:url(start-area-blue.png) no-repeat center center / 100% 100%}
@@ -21,10 +21,10 @@
 .scout-locations button{background-color:#0008;border-color:#0008}
 .redTeam .scout-locations{background:url(scout-red.png) no-repeat center center / 100% 100%}
 .blueTeam .scout-locations{background:url(scout-blue.png) no-repeat center center / 100% 100%}
-.scout-locations > button{height:14%;position:absolute;min-width:0;aspect-ratio:1;display:inline-block}
+.scout-locations > button,.scout-locations > label{height:14%;position:absolute;min-width:0;aspect-ratio:1;display:inline-block}
 .reef-scout{position:absolute;height:56%;aspect-ratio:1}
 .reef-scout > *{height:25%;position:absolute;min-width:0;aspect-ratio:1;display:inline-block}
-.scout-locations button img{height:100%;margin:0}
+.scout-locations button img,.scout-locations label span,.scout-locations label img{height:100%;margin:0;display:inline-block}
 .scout-locations .label{padding-top:.6em;font-size:125%}
 .redTeam .scout-locations .label{background-color:var(--red-team-color)}
 .blueTeam .scout-locations .label{background-color:var(--blue-team-color)}

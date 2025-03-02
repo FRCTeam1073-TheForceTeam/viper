@@ -130,10 +130,10 @@
 	</div>
 
 	<div class="auto tab-content">
-		<table class=field-table><tr><td colspan=5>
-			<div class=scout-locations>
-				<button class=count data-input=auto_coral_drop style=right:30%;bottom:1%><img src=coral-drop.png></button>
-				<button class=count data-input=auto_algae_drop style="right:45%;bottom:1%"><img src=algae-drop.png></button>
+		<table class=field-table><tr><td colspan=4>
+			<div class="scout-locations orient-rotate">
+				<button class=count data-input=auto_coral_drop style=right:25%;bottom:1%><img src=coral-drop.png></button>
+				<button class=count data-input=auto_algae_drop style="right:40%;bottom:1%"><img src=algae-drop.png></button>
 				<button class=count data-input=auto_coral_station_1 style="right:5%;top:3%"><img src=coral-collect.png></button>
 				<button class=count data-input=auto_coral_station_2 style="right:5%;bottom:3%"><img src=coral-collect.png></button>
 				<button class=count data-input=auto_algae_processor style="left:43%;top:0.5%"><img src=algae-place.png></button>
@@ -159,11 +159,10 @@
 					<button class=count data-input=auto_algae_lower_removed style="left:75%;bottom:37.5%"><img src=algae-remove.png></button>
 					<button class=count data-input=auto_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.png></button>
 				</div>
-				<button id=tele-reminder class="to-tele tab-button" data-content=teleop style="left:57%;bottom:20%;aspect-ratio:1.8"><img src=teleop.png></button>
+				<button id=tele-reminder class="to-tele tab-button" data-content=teleop style="right:25%;top:5.5%;aspect-ratio:1.8"><img src=teleop.png></button>
+				<label class=orient-rotate style="left:34%;bottom:7%"><input type=checkbox name=auto_leave value=1><span><img src=leave.png></span></label>
 			</div>
 		</td></tr><tr><td class="team teamColorBG">
-		</td><td>
-			<label><input type=checkbox name=auto_leave value=1><span>Leave Starting Line</span></label>
 		</td><td>
 			<button class=undo>Undo</button>
 		</td><td>
@@ -171,7 +170,7 @@
 			<div class=collapse data-content=auto-timeline>Timeline</div>
 		</td><td>
 			<button class="to-tele tab-button" data-content=teleop>Teleop »</button>
-		</td></tr>
+		</td></tr></table>
 
 		<table id=auto-values class=collapsable><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=auto_algae_upper_removed size=1 disabled max=3>
