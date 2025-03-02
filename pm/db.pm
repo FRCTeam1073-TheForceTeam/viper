@@ -85,7 +85,7 @@ sub printCsv(){
 	my($self, $sth) = @_;
 
 	binmode(STDOUT, ":utf8");
-	my $headers = "Content-type: text/plain; charset=UTF-8\n\n";
+	my $headers = "Content-type: text/plain; charset=UTF-8\nContent-Disposition: attachment\n\n";
 	return $self->writeCsv($sth, \*STDOUT, $headers, 0);
 }
 
