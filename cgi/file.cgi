@@ -118,7 +118,7 @@ sub apiJson(){
 	$webutil->notfound() if (!scalar(@$data));
 
 	binmode(STDOUT, ":utf8");
-	print "Content-type: text/json; charset=UTF-8\n\n";
+	print "Content-type: text/json; charset=UTF-8\nContent-Disposition: attachment\n\n";
 	print $data->[0]->[0];
 }
 
