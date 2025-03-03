@@ -31,7 +31,6 @@ $(document).ready(function(){
 	function initScouting2025(){
 		matchStartTime = 0
 		proceedToTeleBlink()
-		console.log("hello")
 	}
 
 	function inputChanged(input, change){
@@ -235,8 +234,13 @@ $(document).ready(function(){
 	}
 
 	function proceedToTeleBlink(){
-		var goTele=matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS
+		var goTele=$('.auto.tab-content').is(':visible') && matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS
 		$('#tele-reminder').toggle(goTele)
 		$('.to-tele').toggleClass('pulse-bg',goTele)
+		if(goTele)setTimeout(proceedToTeleForce,10200)
+	}
+
+	function proceedToTeleForce(){
+		if($('.auto.tab-content').is(':visible') && matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS+10000) showTab(null, $('.tab[data-content="teleop"]'))
 	}
 })
