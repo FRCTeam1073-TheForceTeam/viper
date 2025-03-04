@@ -21,7 +21,7 @@
 <link rel=preload as=image href=start-area-red.png>
 <link rel=preload as=image href=scout-red.png>
 <link rel=preload as=image href=scout-blue.png>
-<link rel=preload as=image href=algae-collec.png>
+<link rel=preload as=image href=algae-collect.png>
 <link rel=preload as=image href=algae-drop.png>
 <link rel=preload as=image href=algae-place.png>
 <link rel=preload as=image href=algae-remove.png>
@@ -29,6 +29,8 @@
 <link rel=preload as=image href=coral-drop.png>
 <link rel=preload as=image href=coral-place.png>
 <link rel=preload as=image href=reef.png>
+<link rel=preload as=image href=leave.png>
+<link rel=preload as=image href=climb.png>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 
@@ -249,7 +251,7 @@
 
 	<div class="teleop tab-content">
 		<table class=field-table><tr><td colspan=4>
-			<div class=scout-locations>style=>
+			<div class="scout-locations orient-rotate">
 				<button class=count data-input=tele_coral_drop style=right:30%;bottom:1%><img src=coral-drop.png></button>
 				<button class=count data-input=tele_algae_drop style="right:45%;bottom:1%"><img src=algae-drop.png></button>
 				<button class=count data-input=tele_algae_theft style="left:9%;bottom:30%"><img src=algae-collect.png></button>
@@ -258,7 +260,8 @@
 				<button class=count data-input=tele_coral_station_2 style="right:5%;bottom:3%"><img src=coral-collect.png></button>
 				<button class=count data-input=tele_algae_processor style="left:43%;top:0.5%"><img src=algae-place.png></button>
 				<button class=count data-input=tele_algae_opponent_processor style="left:5%;bottom:0.5%"><img src=algae-place.png></button>
-				<button class=count data-input=tele_algae_net style="left:24%;bottom:20%"><img src=algae-place.png></button>
+				<button class=count data-input=tele_algae_net style="left:24%;bottom:28%"><img src=algae-place.png></button>
+				<button class=timer data-input=climb_time style="left:24%;bottom:10%"><img src=climb.png></button>
 				<button class=count data-input=tele_algae_opponent_net style="left:24%;top:20%"><img src=algae-place.png></button>
 				<button class=count data-input=tele_algae_ground style="right:10%;bottom:30%"><img src=algae-collect.png></button>
 				<button class=count data-input=tele_coral_ground style="right:10%;top:30%"><img src=coral-collect.png></button>
@@ -329,7 +332,7 @@
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_4 size=1 disabled>
 			Coral onto L4
-		</td><td rowspan=4 class="coral placement">
+		</td><td rowspan=2 class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_drop size=1 disabled>
 			Coral dropped or missed
 		</td></tr><tr><td class="coral placement">
@@ -344,6 +347,9 @@
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_2 size=1 disabled>
 			Coral onto L2
+		</td><td rowspan=2 class=timer>
+			<input type=text class=num value=0 name=climb_time size=1 disabled>
+			Climb time
 		</td></tr><tr><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_1 size=1 disabled>
 			Coral onto L1

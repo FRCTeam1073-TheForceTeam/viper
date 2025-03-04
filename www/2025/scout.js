@@ -2,6 +2,7 @@
 
 $(document).ready(function(){
 	const AUTO_MS=15000
+	const MATCH_LENGTH_MS=150000
 	var matchStartTime = 0
 
 	window.onBeforeShowScouting = window.onBeforeShowScouting || []
@@ -55,10 +56,14 @@ $(document).ready(function(){
 		}
 		if ((input.is('.num') && change>0) || input.is(':checked')){
 			if (text) text += " "
-			var seconds = Math.round((new Date().getTime() - matchStartTime)/1000)
+			var seconds = Math.floor((new Date().getTime() - matchStartTime)/1000)
 			text += `${seconds}:${name}`
 		} else {
-			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
+			if(input.val()=="0"){
+				text = text.replace(new RegExp(`((?<= |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`,'g'),"").trim()
+			} else {
+				text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
+			}
 		}
 		if (!text)initScouting2025()
 		order.val(text)
@@ -70,11 +75,12 @@ $(document).ready(function(){
 		text = order.val(),
 		m = text.match(/(.*(?: |^))[0-9]+\:([a-z0-9_]+)(?:\:[a-z0-9_]*)?$/)
 		if (!m) return false
+		scoutTimers={}
 		text = m[1].trim()
 		var field = m[2],
 		input = $(`input[name="${field}"]`)
 		if (input.is(".num")){
-			input.val(parseInt(input.val())-1)
+			input.val(Math.max(0,parseInt(input.val())-1))
 			animateChangeFloater(-1, input)
 		}
 		if (input.is(":checked")) input.prop('checked',false)
@@ -243,4 +249,37 @@ $(document).ready(function(){
 	function proceedToTeleForce(){
 		if($('.auto.tab-content').is(':visible') && matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS+10000) showTab(null, $('.tab[data-content="teleop"]'))
 	}
+
+	var scoutTimers={}
+
+	setInterval(function(){
+		if(matchStartTime==0||(new Date().getTime()-matchStartTime)>MATCH_LENGTH_MS) return
+		Object.values(scoutTimers).forEach(function(timer){
+			var oldVal = timer.input.val(),
+			newVal = ""+Math.floor((new Date().getTime() - timer.start)/1000)
+			if(oldVal != newVal){
+				animateChangeFloater(newVal,timer.e)
+				inputChanged(timer.input,1)
+			}
+			timer.input.val(newVal)
+		})
+	},100)
+
+	$('.timer').click(function(e){
+		var input = findInputInEl(findParentFromButton($(this))),
+		name = input.attr('name')
+		if(Object.hasOwn(scoutTimers,name)){
+			delete scoutTimers[name]
+		} else {
+			var val=parseInt(input.val()||"0")
+			inputChanged(input,1)
+			scoutTimers[name]={
+				e: e,
+				input: input,
+				start: new Date().getTime()-val*1000
+			}
+			animateChangeFloater("timing…", e)
+		}
+		return false
+	})
 })

@@ -400,7 +400,7 @@ function animateChangeFloater(change, relative){
 	if (change!=0){
 		var x = relative.pageX?relative.pageX:(relative.offset().left+relative.width()/2),
 		y = relative.pageY?relative.pageY:(relative.offset().top+relative.height()/2)
-		changeFloater.text(change<0?change:"+"+change).toggleClass("negative",change<0).css({top:y-changeFloater.height()/2,left:x-changeFloater.width()/2}).show()
+		changeFloater.text(((typeof change)!=='number'||change<0)?change:"+"+change).toggleClass("negative",change<0).css({top:y-changeFloater.height()/2,left:x-changeFloater.width()/2}).show()
 		$('body').append(changeFloater)
 	}
 }

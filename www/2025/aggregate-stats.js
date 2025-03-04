@@ -1051,6 +1051,14 @@ var statInfo={
 		name: 'Coral Stuck',
 		type: '%'
 	},
+	climb_time:{
+		name: 'Climb Time (seconds)',
+		type: 'num',
+		good: 'low',
+		timeline_stamp: "C",
+		timeline_fill: "#888",
+		timeline_outline: "#888"
+	},
 }
 
 var teamGraphs={
