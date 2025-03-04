@@ -180,9 +180,10 @@ function promiseScouting(){
 	return promiseCache.scouting
 }
 
-var statsIncludePractice = true
-function promiseEventStats(includePractice){
-	if (!promiseCache.eventStats) promiseCache.eventStats = Promise.all([
+var statsIncludePractice=true,
+statsStartMatch="pm1"
+function promiseEventStats(startMatch){
+	return Promise.all([
 		promiseScouting(),
 		promiseEventScores(),
 		promiseSubjectiveScouting(),
@@ -190,11 +191,15 @@ function promiseEventStats(includePractice){
 		promiseScript(`/${eventYear}/aggregate-stats.js`),
 	]).then(values => {
 		var [eventStats, eventScores, subjectiveData, pitData] = values
-		if (typeof includePractice != "boolean"){
-			includePractice=!haveNonPracticeMatchForEachTeam(eventStats)
+		if(typeof startMatch == "boolean"){
+			startMatch=startMatch?"pm1":"qm1"
 		}
-		statsIncludePractice = includePractice
-		$('.aggregationIncludesPractice').text(includePractice?"include":"exclude")
+		if(!startMatch){
+			startMatch=haveNonPracticeMatchForEachTeam(eventStats)?"qm1":"pm1"
+		}
+		statsIncludePractice=/^pm/.test(startMatch)
+		statsStartMatch=startMatch
+		$('.aggregationIncludesPractice').text(statsIncludePractice?"include":"exclude")
 		var eventStatsByTeam = {},
 		eventStatsByMatchTeam = {}
 		Object.keys(pitData).forEach(team=>{
@@ -203,6 +208,7 @@ function promiseEventStats(includePractice){
 		Object.keys(subjectiveData).forEach(team=>{
 			aggregateStats({},{},{},subjectiveData[team]||{},{},{},{},"")
 		})
+		var seenFirst=false
 		forEachTeamMatch(eventStats, function(team,match,scout){
 			var apiScore = {}
 			if (eventScores[match] && eventScores[match].alliances){
@@ -214,7 +220,8 @@ function promiseEventStats(includePractice){
 			pit = pitData[team]||{},
 			mt=`${match}-${team}`
 			scout.old=eventStatsByMatchTeam[mt]
-			if (!/^pm[0-9]+$/.test(match) || includePractice){
+			if(seenFirst||startMatch==match){
+				seenFirst=true
 				var aggregate = eventStatsByTeam[team] || {}
 				aggregateStats(scout,aggregate,apiScore,subjective,pit,eventStatsByMatchTeam,eventStatsByTeam,match)
 				eventStatsByTeam[team] = aggregate
@@ -225,10 +232,10 @@ function promiseEventStats(includePractice){
 		})
 		return [eventStats, eventStatsByTeam, eventStatsByMatchTeam]
 	})
-	return promiseCache.eventStats
 }
 
 function promiseScript(file) {
+	if($(`script[src='${file}']`).length) return Promise.resolve()
     return new Promise((resolve,reject)=>{
         const script=document.createElement("script")
         script.onload=resolve

@@ -29,9 +29,11 @@ $(document).ready(function(){
 		promiseEventStats(),
 		promisePitScouting(),
 		promiseSubjectiveScouting(),
+		promiseEventMatches(),
 		fetch(`/data/${eventYear}/stats.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values => {
-		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.myTeamsGraphs] = values
+		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.myTeamsGraphs] = values
+		eventMatches.forEach(match => $('#startingMatch').append($('<option>').attr('value',match.Match).text(getMatchName(match.Match))).val(statsStartMatch))
 		$('#sortBy').click(showSortOptions)
 		$('#markPicked').click(function(){
 			showTeamPicker(setTeamPicked, "Change Whether Team Has Been Picked")
@@ -56,7 +58,6 @@ $(document).ready(function(){
 		showLightBox($('#instructions'))
 		return false
 	})
-
 	sortable('#picklist', {
 		acceptFrom: '#picklist, #donotpicklist'
 	})[0].addEventListener('sortupdate', pickListReordered)
@@ -65,6 +66,12 @@ $(document).ready(function(){
 	})[0].addEventListener('sortupdate', pickListReordered)
 	$('#teamlists h4').click(function(){
 		$('.picklist-body').toggle()
+	})
+	$('#startingMatch').change(function(){
+		promiseEventStats($(this).val()).then(value=>{
+			[window.eventStats, window.eventStatsByTeam]=value
+			showStats()
+		})
 	})
 })
 

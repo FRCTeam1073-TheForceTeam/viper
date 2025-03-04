@@ -268,7 +268,6 @@ $(document).ready(function(){
 				if (body!='OK') console.error("Error sending stats: " + body)
 			})
 		}
-	}).catch(error=>{
 	})
 
 	function getScore(eventStatsByTeam, team){
