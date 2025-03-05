@@ -1154,7 +1154,7 @@ function showPitScouting(el,team){
 		if (dat.bot_name) el.append($("<p>").text("Bot name: " + dat.bot_name))
 
 		el.append($("<h4>").text("Robot"))
-		list=$("<ul>")
+		var list=$("<ul>")
 		list.append($("<li>").text("Dimensions (inches without bumpers): " + format(dat.frame_length+'x'+dat.frame_width+'"')))
 		list.append($("<li>").text("Weight (pounds): "+ format(dat.weight)))
 		list.append($("<li>").text("Drivetrain: " + format(dat.drivetrain)))
@@ -1184,9 +1184,8 @@ function showSubjectiveScouting(el,team){
 	promiseSubjectiveScouting().then(subjectiveData => {
 		var dat=subjectiveData[team]||{},
 		graph=$('<div class=graph>'),
-		f
-		el.append(graph)
 		f=dat.penalties||""
+		el.append(graph)
 		if (f){
 			el.append('<h4>Penalties</h4>')
 			el.append($('<div style=white-space:pre-wrap>').text(f))
