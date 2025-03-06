@@ -302,6 +302,11 @@ $(document).ready(function() {
 		return next.length > 0
 	}
 
+	$('.team-input').click(function(){
+		$(this).val("")
+		fillStats()
+	})
+
 	function withoutValues(i,el){
 		return $(el).val() == '' && (eventCompetition!='ftc'||!$(el).closest('th').is('.noftc'))
 	}
