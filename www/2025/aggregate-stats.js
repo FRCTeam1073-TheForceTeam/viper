@@ -233,7 +233,7 @@ var statInfo={
 		type: "text"
 	},
 	count:{
-		name: 'Count',
+		name: 'Matches Scouted',
 		type: 'num'
 	},
 	auto_start:{
