@@ -49,7 +49,7 @@ $(document).ready(function(){
 		name = input.attr('name'),
 		re = name
 		setTimeout(proceedToTeleBlink, AUTO_MS)
-		if (matchStartTime==0) matchStartTime = new Date().getTime()
+		if (matchStartTime==0) matchStartTime = new Date().getTime() - (input.closest('.teleop').length?AUTO_MS:0)
 		if ('radio'==input.attr('type')){
 			name += `:${input.val()}`
 			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
