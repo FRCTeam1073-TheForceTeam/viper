@@ -5,8 +5,10 @@ button.selected{background:var(--button-selected-bg-color)}
 #fieldBG.rotated{transform:rotate(180deg)}
 #field .overlay{position:absolute;z-index:2}
 #field canvas{z-index:3}
-.team-input{writing-mode:vertical-rl;text-orientation:upright;background-color:inherit;border:none;display:block;margin:0 auto}
+th:has(.team-input){height:3.1em;max-width:.5em}
+.team-input{transform:rotate(70deg) translate(.2em,1.2em);background-color:transparent;border:none;display:block;margin:0 auto}
 .team-input.lastFocus{background-color:var(--focus-bg-color)}
+@supports(-moz-appearance:none){.team-input{transform:rotate(70deg) translate(-.1em,.6em)}}
 #statsTable{margin:0}
 #statsTable th{padding:0.1em;min-width:1.5em}
 h3,#drawingControls{margin:0.5em 0}
