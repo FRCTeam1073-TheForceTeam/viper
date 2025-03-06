@@ -1,8 +1,11 @@
 "use strict"
 
 $(document).ready(function(){
-	const AUTO_MS=15000
-	const MATCH_LENGTH_MS=150000
+	const AUTO_MS=15000,
+	AUTO_GAP_MS=3000,
+	TELE_START_MS=AUTO_MS+AUTO_GAP_MS,
+	TELE_MS=135000,
+	MATCH_LENGTH_MS=TELE_START_MS+TELE_MS
 	var matchStartTime = 0
 
 	window.onBeforeShowScouting = window.onBeforeShowScouting || []
@@ -49,7 +52,7 @@ $(document).ready(function(){
 		name = input.attr('name'),
 		re = name
 		setTimeout(proceedToTeleBlink, AUTO_MS)
-		if (matchStartTime==0) matchStartTime = new Date().getTime() - (input.closest('.teleop').length?AUTO_MS:0)
+		if (matchStartTime==0) matchStartTime = new Date().getTime() - (input.closest('.teleop').length?TELE_START_MS:0)
 		if ('radio'==input.attr('type')){
 			name += `:${input.val()}`
 			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
