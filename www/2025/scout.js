@@ -31,6 +31,7 @@ $(document).ready(function(){
 
 	function initScouting2025(){
 		matchStartTime = 0
+		scoutTimers={}
 		proceedToTeleBlink()
 	}
 
