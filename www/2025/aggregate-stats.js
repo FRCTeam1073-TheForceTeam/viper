@@ -378,28 +378,28 @@ var statInfo={
 		timeline_outline: "#222"
 	},
 	auto_coral_level_1:{
-		name: "Level 1 Coral Placed During Auto",
+		name: "Coral Placed on Level 1 During Auto",
 		type: "avg",
 		timeline_stamp: "1",
 		timeline_fill: "#FFF",
 		timeline_outline: "#AAA"
 	},
 	auto_coral_level_2:{
-		name: "Level 2 Coral Placed During Auto",
+		name: "Coral Placed on Level 2 During Auto",
 		type: "avg",
 		timeline_stamp: "2",
 		timeline_fill: "#FFF",
 		timeline_outline: "#AAA"
 	},
 	auto_coral_level_3:{
-		name: "Level 3 Coral Placed During Auto",
+		name: "Coral Placed on Level 3 During Auto",
 		type: "avg",
 		timeline_stamp: "3",
 		timeline_fill: "#FFF",
 		timeline_outline: "#AAA"
 	},
 	auto_coral_level_4:{
-		name: "Level 4 Coral Placed During Auto",
+		name: "Coral Placed on Level 4 During Auto",
 		type: "avg",
 		timeline_stamp: "4",
 		timeline_fill: "#FFF",
@@ -588,28 +588,28 @@ var statInfo={
 		timeline_outline: "#222"
 	},
 	tele_coral_level_1:{
-		name: "Level 1 Coral Placed During Teleop",
+		name: "Coral Placed on Level 1 During Teleop",
 		type: "avg",
 		timeline_stamp: "1",
 		timeline_fill: "#FFF",
 		timeline_outline: "#AAA"
 	},
 	tele_coral_level_2:{
-		name: "Level 2 Coral Placed During Teleop",
+		name: "Coral Placed on Level 2 During Teleop",
 		type: "avg",
 		timeline_stamp: "2",
 		timeline_fill: "#FFF",
 		timeline_outline: "#AAA"
 	},
 	tele_coral_level_3:{
-		name: "Level 3 Coral Placed During Teleop",
+		name: "Coral Placed on Level 3 During Teleop",
 		type: "avg",
 		timeline_stamp: "3",
 		timeline_fill: "#FFF",
 		timeline_outline: "#AAA"
 	},
 	tele_coral_level_4:{
-		name: "Level 4 Coral Placed During Teleop",
+		name: "Coral Placed on Level 4 During Teleop",
 		type: "avg",
 		timeline_stamp: "4",
 		timeline_fill: "#FFF",
@@ -914,19 +914,19 @@ var statInfo={
 		type: 'avg'
 	},
 	auto_coral_level_1_score:{
-		name: 'Coral Level 1 Score in Auto',
+		name: 'Coral Score for Level 1 in Auto',
 		type: 'avg'
 	},
 	auto_coral_level_2_score:{
-		name: 'Coral Level 2 Score in Auto',
+		name: 'Coral Score for Level 2 in Auto',
 		type: 'avg'
 	},
 	auto_coral_level_3_score:{
-		name: 'Coral Level 3 Score in Auto',
+		name: 'Coral Score for Level 3 in Auto',
 		type: 'avg'
 	},
 	auto_coral_level_4_score:{
-		name: 'Coral Level 4 Score in Auto',
+		name: 'Coral Score for Level 4 in Auto',
 		type: 'avg'
 	},
 	coral_level_1:{
@@ -934,7 +934,7 @@ var statInfo={
 		type: 'avg'
 	},
 	coral_level_1_score:{
-		name: 'Coral Level 1 Score',
+		name: 'Coral Score for Level 1',
 		type: 'avg'
 	},
 	coral_level_2:{
@@ -942,7 +942,7 @@ var statInfo={
 		type: 'avg'
 	},
 	coral_level_2_score:{
-		name: 'Coral Level 2 Score',
+		name: 'Coral Score for Level 2',
 		type: 'avg'
 	},
 	coral_level_3:{
@@ -950,7 +950,7 @@ var statInfo={
 		type: 'avg'
 	},
 	coral_level_3_score:{
-		name: 'Coral Level 3 Score',
+		name: 'Coral Score for Level 3',
 		type: 'avg'
 	},
 	coral_level_4:{
@@ -958,7 +958,7 @@ var statInfo={
 		type: 'avg'
 	},
 	coral_level_4_score:{
-		name: 'Coral Level 4 Score',
+		name: 'Coral Score for Level 4',
 		type: 'avg'
 	},
 	coral_station_1:{
@@ -970,19 +970,19 @@ var statInfo={
 		type: 'avg'
 	},
 	tele_coral_level_1_score:{
-		name: 'Coral Level 1 Score in Teleop',
+		name: 'Coral Score for Level 1 in Teleop',
 		type: 'avg'
 	},
 	tele_coral_level_2_score:{
-		name: 'Coral Level 2 Score in Teleop',
+		name: 'Coral Score for Level 2 in Teleop',
 		type: 'avg'
 	},
 	tele_coral_level_3_score:{
-		name: 'Coral Level 3 Score in Teleop',
+		name: 'Coral Score for Level 3 in Teleop',
 		type: 'avg'
 	},
 	tele_coral_level_4_score:{
-		name: 'Coral Level 4 Score in Teleop',
+		name: 'Coral Score for Level 4 in Teleop',
 		type: 'avg'
 	},
 	preferred_coral_level:{
@@ -1159,7 +1159,7 @@ function showPitScouting(el,team){
 		list.append($("<li>").text("Weight (pounds): "+ format(dat.weight)))
 		list.append($("<li>").text("Drivetrain: " + format(dat.drivetrain)))
 		list.append($("<li>").text("Swerve: " + format(dat.swerve)))
-		list.append($("<li>").text("Drivetrain motors: " +  (dat.motor_count||"")+" "+format(dat.motors)))
+		list.append($("<li>").text("Drivetrain motors: " + (dat.motor_count||"")+" "+format(dat.motors)))
 		list.append($("<li>").text("Wheels: " + (dat.wheel_count||"")+" "+format(dat.wheels)))
 		el.append(list)
 
