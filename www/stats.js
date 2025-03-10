@@ -30,9 +30,10 @@ $(document).ready(function(){
 		promisePitScouting(),
 		promiseSubjectiveScouting(),
 		promiseEventMatches(),
+		promiseTeamsInfo(),
 		fetch(`/data/${eventYear}/stats.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values => {
-		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.myTeamsGraphs] = values
+		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.eventTeamsInfo, window.myTeamsGraphs] = values
 		eventMatches.forEach(match => $('#startingMatch').append($('<option>').attr('value',match.Match).text(getMatchName(match.Match))).val(statsStartMatch))
 		$('#sortBy').click(showSortOptions)
 		$('#markPicked').click(function(){
@@ -107,6 +108,11 @@ $(window).on('hashchange', function(){
 		lastHash=location.hash
 	}
 })
+
+function footer(tooltipItems){
+	if(!tooltipItems||!tooltipItems.length)return ""
+	return getTeamInfo(tooltipItems[0].label)
+}
 
 function showStats(){
 	graphList = statsConfig.getStatsConfig()
@@ -218,6 +224,13 @@ function showStats(){
 						scales: {
 							y: yScale,
 							x: {stacked: stacked}
+						},
+						plugins: {
+							tooltip: {
+								callbacks: {
+									footer: footer,
+								}
+							}
 						}
 					}
 				})
@@ -275,6 +288,16 @@ function showStats(){
 	}
 }
 
+function getTeamInfo(teamNum){
+	var info=eventTeamsInfo[teamNum]
+	if (!info)return""
+	var name=info.nameShort||""
+	if (info.city)name+=`, ${info.city}`
+	if (info.stateProv)name+=`, ${info.stateProv}`
+	if (info.country)name+=`, ${info.country}`
+	return name
+}
+
 function showStatClickMenu(e, team, fields){
 	if (!team) team = $(this).attr('data-team')||$(this).text()
 	if (!/^[0-9]+$/.test(team)) team=null
@@ -284,8 +307,12 @@ function showStatClickMenu(e, team, fields){
 	}
 	if (!team && !fields)return
 	var ca = $('#clickActions').html("")
-	if (team) ca.append($('<p>').append("Mark picked: ").append($('<button>').text(team).click(setTeamPicked)))
-	if (team) ca.append($('<p>').append("View stats: ").append($('<button>').text(team).click(showTeamStats)))
+	if (team){
+		var info = getTeamInfo(team)
+		if(info)ca.append($('<p>').text(info))
+		ca.append($('<p>').append("Mark picked: ").append($('<button>').text(team).click(setTeamPicked)))
+		ca.append($('<p>').append("View stats: ").append($('<button>').text(team).click(showTeamStats)))
+	}
 	if (fields){
 		if (typeof fields === 'string') fields = [fields]
 		fields.forEach(field=>{
