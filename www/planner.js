@@ -111,14 +111,15 @@ $(document).ready(function() {
 		promisePitScouting(),
 		promiseSubjectiveScouting(),
 		promiseEventMatches(),
+		promiseTeamsInfo(),
 		fetch(`/data/${eventYear}/whiteboard.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values => {
-		;[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.myTeamsStats] = values
+		;[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.eventTeamsInfo, window.myTeamsStats] = values
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){
 			var team = teamList[i]
-			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
+			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).attr('data-tooltip',getTeamInfo(team)).click(teamButtonClicked))
 		}
 		$('#matchList').append($('<option selected=1>')).change(function(){
 			matchId = $(this).val()
@@ -149,6 +150,16 @@ $(document).ready(function() {
 		if (!$(e.relatedTarget).is('button.team'))$('#teamButtons').toggle(focusNext())
 	})
 
+	function getTeamInfo(teamNum){
+		var info=eventTeamsInfo[teamNum]
+		if (!info)return null
+		var name=info.nameShort||""
+		if (info.city)name+=`, ${info.city}`
+		if (info.stateProv)name+=`, ${info.stateProv}`
+		if (info.country)name+=`, ${info.country}`
+		return name
+	}
+
 	function fillStats(){
 		if (!window.statInfo) return
 		setLocationHash()
@@ -156,12 +167,15 @@ $(document).ready(function() {
 		var teamList=[],
 		tbody = $('#statsTable tbody').html("")
 		$('.team-input').each(function(){
-			var val = $(this).val()
+			var val = $(this).val(),
+			tooltip=null
 			val = val?parseInt(val):0
 			if (val){
+				tooltip=getTeamInfo(""+val)
 				$(`#team-${val}`).addClass("picked")
 				teamList.push(val)
 			}
+			$(this).parent().attr('data-tooltip',tooltip)
 		})
 		$('.teamDataEntry').toggle(teamList.length!=BOT_POSITIONS.length)
 		if(teamList.length==BOT_POSITIONS.length){

@@ -22,9 +22,10 @@ statsConfig = new StatsConfig({
 $(document).ready(function(){
 	Promise.all([
 		promiseEventStats(),
+		promiseTeamsInfo(),
 		fetch(`/data/${eventYear}/predictor.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values =>{
-		[[window.eventStats, window.eventStatsByTeam, {}], window.myTeamsGraphs] = values
+		[[window.eventStats, window.eventStatsByTeam, {}], window.eventTeamsInfo, window.myTeamsGraphs] = values
 		fillPage()
 	})
 	$('#displayType').change(showStats)
@@ -33,6 +34,16 @@ $(document).ready(function(){
 $(window).on('hashchange',fillPage)
 
 var team
+
+function getTeamInfo(teamNum){
+	var info=eventTeamsInfo[teamNum]
+	if (!info)return""
+	var name=info.nameShort||""
+	if (info.city)name+=`, ${info.city}`
+	if (info.stateProv)name+=`, ${info.stateProv}`
+	if (info.country)name+=`, ${info.country}`
+	return name
+}
 
 function fillPage(){
 	if (!rawTitle){
@@ -53,7 +64,7 @@ function fillPage(){
 		})
 	} else {
 		$('title').text(rawTitle.replace("EVENT", eventName).replace("TEAM", team))
-		$('h1').text(rawH1.replace("EVENT", eventName).replace("TEAM", team))
+		$('h1').text(rawH1.replace("EVENT", eventName).replace("TEAM", team + " " + getTeamInfo(team)))
 		if(team){
 			$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
 			$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
