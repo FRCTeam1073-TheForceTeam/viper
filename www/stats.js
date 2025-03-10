@@ -259,7 +259,7 @@ function showStats(){
 				for (var j=0; j<teamList.length; j++){
 					var t = teamList[j],
 					picked = teamsPicked[t]
-					hr.append($('<th class=team>').text(t).click(showStatClickMenu).toggleClass('picked',picked))
+					hr.append($('<th class=team>').text(t).attr('data-tooltip',getTeamInfo(t)).click(showStatClickMenu).toggleClass('picked',picked))
 				}
 				table.append(hr)
 				for (var j=0; j<graphList[section].data.length; j++){
@@ -279,7 +279,7 @@ function showStats(){
 						var t = teamList[k]
 						picked = teamsPicked[t],
 						value = getTeamValue(field, t)
-						tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).click(showStatClickMenu).text(Math.round(value)))
+						tr.append($('<td>').toggleClass('picked',picked).toggleClass('best',!picked && value==best).attr('data-team',t).attr('data-tooltip',t+" "+getTeamInfo(t)).click(showStatClickMenu).text(Math.round(value)))
 					}
 					table.append(tr)
 				}

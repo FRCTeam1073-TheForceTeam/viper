@@ -51,6 +51,9 @@ h1{padding:0 2.5em}
 #lightBoxBG::before{content:'ⓧ';position:fixed;z-index:9999;top:.1em;left:.3em;font-size:150%}
 .lightBoxCenterContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:50%;left:50%;transform:translate(-50%,-50%);padding:1em;display:none;text-align:left}
 .lightBoxFullContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:2em;left:2em;width:calc(100vw - 4em);height:calc(100vh - 4em);padding:0;display:none}
+[data-tooltip]::before{position:absolute;content:attr(data-tooltip);opacity:0}
+[data-tooltip]:hover::before{opacity:1;color:var(--main-fg-color);background:var(--main-bg-color);margin-top:-1.5em;margin-left:1em;padding:0.3em;border:1px solid var(--main-border-color);white-space:pre-line;writing-mode:horizontal-tb;text-orientation:mixed}
+[data-tooltip]:not([data-tooltip-persistent])::before{pointer-events:none}
 @media only screen and ((max-width:600px) or (max-height:600px)){
 	html{font-size:12px;}
 }

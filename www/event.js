@@ -211,7 +211,7 @@ $(document).ready(function(){
 					.toggleClass("needed",(!isScouted)&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
 					.toggleClass("error",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
-					.attr('title',getTeamInfo(match[pos]))
+					.attr('data-tooltip',getTeamInfo(match[pos])||null)
 			})
 			redPrediction=Math.round(redPrediction)
 			bluePrediction=Math.round(bluePrediction)
@@ -227,10 +227,11 @@ $(document).ready(function(){
 				})
 			}
 			var redPoints=hasScores?redScore:(isRedScouted?redScouting:redPrediction),
-			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:bluePrediction)
-			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':'prediction')).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('title',(hasScores||isRedScouted?`Prediction: ${redPrediction}`:"")+(hasScores&&isRedScouted?`, Scouted: ${redScouting}`:"")).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction)
-			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':'prediction')).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('title',(hasScores||isBlueScouted?`Prediction: ${bluePrediction}`:"")+ (hasScores&&isBlueScouted?`, Scouted: ${blueScouting}`:"")).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction)
-
+			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:bluePrediction),
+			redTooltip=(hasScores?`Score: ${redScore}\n`:"")+(isRedScouted?`Scouted: ${redScouting}\n`:"")+`Prediction: ${redPrediction}`,
+			blueTooltip=(hasScores?`Score: ${blueScore}\n`:"")+(isBlueScouted?`Scouted: ${blueScouting}\n`:"")+`Prediction: ${bluePrediction}`
+			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':'prediction')).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction)
+			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':'prediction')).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction)
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
 			row.click(showLinks)
 			$('#matches').append(row)
@@ -388,7 +389,7 @@ function showLinks(e){
 		if (el.attr('class') && /\b[RB][1-3]\b/.test(el.attr('class'))){
 			pos=el.attr('class').match(/\b[RB][1-3]\b/)[0]
 			team=el.text()
-			teamName=el.attr('title')
+			teamName=el.attr('data-tooltip')
 		}
 	}
 	var html = $('#matchActionsTemplate').html()
