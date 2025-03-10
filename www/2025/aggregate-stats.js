@@ -187,6 +187,19 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.count=(aggregate.count||0)+1
 	aggregate.max_score=Math.max(aggregate.max_score||0,scout.score)
 	aggregate.min_score=Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score)
+
+	aggregate.max_coral_place=Math.max(aggregate.max_coral_place||0,scout.coral_place)
+	aggregate.max_auto_coral_place=Math.max(aggregate.max_auto_coral_place||0,scout.auto_coral_place)
+	aggregate.max_tele_coral_place=Math.max(aggregate.max_tele_coral_place||0,scout.tele_coral_place)
+
+	aggregate.max_algae_place=Math.max(aggregate.max_algae_place||0,scout.algae_place)
+	aggregate.max_auto_algae_place=Math.max(aggregate.max_auto_algae_place||0,scout.auto_algae_place)
+	aggregate.max_tele_algae_place=Math.max(aggregate.max_tele_algae_place||0,scout.tele_algae_place)
+
+	aggregate.max_place=Math.max(aggregate.max_place||0,scout.place)
+	aggregate.max_auto_place=Math.max(aggregate.max_auto_place||0,scout.auto_place)
+	aggregate.max_tele_place=Math.max(aggregate.max_tele_place||0,scout.tele_place)
+
 	aggregate.preferred_coral_level=getPreferredCoralLevel(aggregate.coral_level_1,aggregate.coral_level_2,aggregate.coral_level_3,aggregate.coral_level_4)
 	aggregate.preferred_algae_place=getPreferredAlgaePlace(aggregate.algae_processor,aggregate.algae_net)
 	aggregate.event=eventId
@@ -1058,6 +1071,42 @@ var statInfo={
 		timeline_stamp: "C",
 		timeline_fill: "#888",
 		timeline_outline: "#888"
+	},
+	max_algae_place:{
+		name: 'Max Algae Placed',
+		type: 'minmax'
+	},
+	max_auto_algae_place:{
+		name: 'Max Algae Placed in Auto',
+		type: 'minmax'
+	},
+	max_auto_coral_place:{
+		name: 'Max Coral Placed in Auto',
+		type: 'minmax'
+	},
+	max_auto_place:{
+		name: 'Max Scoring Elements Placed in Auto',
+		type: 'minmax'
+	},
+	max_coral_place:{
+		name: 'Max Coral Placed',
+		type: 'minmax'
+	},
+	max_place:{
+		name: 'Max Scoring Elements Placed',
+		type: 'minmax'
+	},
+	max_tele_algae_place:{
+		name: 'Max Algae Placed in Teleop',
+		type: 'minmax'
+	},
+	max_tele_coral_place:{
+		name: 'Max Coral Placed in Teleop',
+		type: 'minmax'
+	},
+	max_tele_place:{
+		name: 'Max Scoring Elements Placed in Teleop',
+		type: 'minmax'
 	},
 }
 
