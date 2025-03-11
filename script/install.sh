@@ -15,3 +15,4 @@ fi
 ./script/apache-config.sh
 ./script/static-ip-enable.sh
 ./script/dhcp-enable.sh
+./script/install-git-hooks.sh
