@@ -194,7 +194,7 @@ sub schema {
 				INDEX(`site`,`event`),
 				UNIQUE(`site`,`event`,`Match`)
 			)  $tableOptions
-	 	"
+		"
 	);
 	eval {
 		$dbh->do(
@@ -234,7 +234,7 @@ sub schema {
 				INDEX(`site`,`event`),
 				UNIQUE(`site`,`event`,`Alliance`)
 			)  $tableOptions
-	 	"
+		"
 	);
 	$dbh->commit();
 
@@ -254,7 +254,7 @@ sub schema {
 				`first_inspires_id` VARCHAR(32),
 				UNIQUE(`site`,`event`)
 			)  $tableOptions
-	 	"
+		"
 	);
 	eval {
 		$dbh->do(
@@ -281,7 +281,7 @@ sub schema {
 				`json` MEDIUMTEXT NOT NULL,
 				UNIQUE(`site`,`event`,`file`)
 			)  $tableOptions
-	 	"
+		"
 	);
 	$dbh->commit();
 
@@ -297,7 +297,7 @@ sub schema {
 				`conf` MEDIUMTEXT NOT NULL,
 				UNIQUE(`site`,`season`,`type`)
 			)  $tableOptions
-	 	"
+		"
 	);
 	$dbh->commit();
 
@@ -314,7 +314,7 @@ sub schema {
 				`image` MEDIUMBLOB NOT NULL,
 				UNIQUE(`site`,`year`,`team`,`view`)
 			)  $tableOptions
-	 	"
+		"
 	);
 	eval {
 		$dbh->do(

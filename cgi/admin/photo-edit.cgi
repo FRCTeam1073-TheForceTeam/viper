@@ -28,8 +28,8 @@ $view = "" if (!$view);
 
 if ($delete){
 	if ($dbh){
-		 $dbh->prepare("DELETE FROM `images` WHERE `site`=? AND `year`=? AND `team`=? and `view`=?")->execute($db->getSite(), $year, $team, $view);
-		 $db->commit();
+		$dbh->prepare("DELETE FROM `images` WHERE `site`=? AND `year`=? AND `team`=? and `view`=?")->execute($db->getSite(), $year, $team, $view);
+		$db->commit();
 	} else {
 		unlink $filePath;
 	}

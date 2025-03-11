@@ -107,12 +107,11 @@ function drawTimeline(canvas, data){
 		x = e.clientX - r.left,
 		y = e.clientY - r.top,
 
-		/*
-		  y =  rowHeight * (i+.5)
-		  y/rowHeight = i+.5
-		  y/rowHeight-.5 = i
+		// Rearranging with algebra:
+		// y =  rowHeight * (i+.5)
+		// y/rowHeight = i+.5
+		// y/rowHeight-.5 = i
 
-		 */
 		row = Math.round(y/rowHeight-.5),
 		time = Math.round((x - rowHeight/2)*(maxTime-minTime) / (canvas.width-rowHeight))
 		redraw()

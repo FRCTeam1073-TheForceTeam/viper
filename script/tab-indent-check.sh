@@ -1,11 +1,27 @@
 #!/bin/bash
 
-set -E
+set -e
 
-if git ls-files -c | grep -vE '(\.(yaml|yml|svg|md|png|jpg|json)$)|jquery|\.min\.' |  xargs grep -Eq '^\t* '
+files="$@"
+if [ $# -eq 0 ]
 then
-	git ls-files -c | grep -vE '(\.(yaml|yml|svg|md|png|jpg|json)$)|jquery|\.min\.' |  xargs grep -En '^\t* '
-	echo "ERROR: found spaces used as indentation"
-	exit 1
+	files=`git ls-files`
 fi
-exit 0
+
+status=0
+
+for file in $files
+do
+	if echo $file | grep -vEq '(\.(yaml|yml|svg|md|png|jpg|json)$)|jquery|\.min\.' && grep -Eq $'^\t* ' "$file"
+	then
+		grep -EHn $'^\t* ' "$file"
+		status=1
+	fi
+done
+
+if [ $status -ne 0 ]
+then
+	echo "ERROR: found spaces used as indentation"
+fi
+
+exit $status
