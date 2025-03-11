@@ -82,9 +82,15 @@ function unescapeField(s){
 }
 
 function scheduleSortKey(match){
-	var event = match.event,
-	id = match.Match,
-	m = id.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)([0-9]+)$/)
+	var event,id
+	if (typeof(match)==='string'){
+		event=""
+		id=match
+	} else {
+		event = match.event
+		id = match.Match
+	}
+	var m = id.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)([0-9]+)$/)
 	if (!m) return match
 	return event + "---" + MATCH_TYPE_SORT[m[1]] + "---" + m[2].padStart(12,'0')
 }
@@ -220,7 +226,7 @@ function promiseEventStats(startMatch){
 			pit = pitData[team]||{},
 			mt=`${match}-${team}`
 			scout.old=eventStatsByMatchTeam[mt]
-			if(seenFirst||startMatch==match){
+			if(seenFirst||scheduleSortKey(startMatch)<=scheduleSortKey(match)){
 				seenFirst=true
 				var aggregate = eventStatsByTeam[team] || {}
 				aggregateStats(scout,aggregate,apiScore,subjective,pit,eventStatsByMatchTeam,eventStatsByTeam,match)
@@ -230,6 +236,12 @@ function promiseEventStats(startMatch){
 			}
 			eventStatsByMatchTeam[mt]=scout
 		})
+		console.log("event stats")
+		console.log(eventStats)
+		console.log("event stats by team")
+		console.log(eventStatsByTeam)
+		console.log("event stats by match team")
+		console.log(eventStatsByMatchTeam)
 		return [eventStats, eventStatsByTeam, eventStatsByMatchTeam]
 	})
 }
