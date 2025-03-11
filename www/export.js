@@ -5,7 +5,7 @@ var hosts={}
 function addHost(host){
 	if (host && !hosts[host]){
 		hosts[host]=1
-		$('.hostOptions').append($('<li>').text(host).on('mousedown',setHost))
+		$('.hostOptions').append($('<li>').text(host).click(setHost))
 	}
 }
 
