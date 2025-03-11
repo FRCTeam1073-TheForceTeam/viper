@@ -199,7 +199,7 @@ function showQrCode(num){
 			.append(" ")
 			.append($('<button id=qr-code-next style=float:right>').text('Next').click(nextQrCode))
 		)
-        $('body').append(dialog)
+		$('body').append(dialog)
 	}
 	$('#qr-code-title').text(`QR Code ${qrNum} of ${qrUrls.length}`)
 	var size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)

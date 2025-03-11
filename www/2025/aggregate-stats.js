@@ -444,10 +444,6 @@ var statInfo={
 		name: "Score in Auto",
 		type: "avg"
 	},
-	auto_place_percent:{
-		name: "Percent of Scoring Elements Placed During Auto",
-		type: "ratio"
-	},
 	coral_preload:{
 		name: "Coral Preloaded Before Match",
 		type: "%",

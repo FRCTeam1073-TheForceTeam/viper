@@ -240,13 +240,13 @@ function promiseEventStats(startMatch){
 
 function promiseScript(file) {
 	if($(`script[src='${file}']`).length) return Promise.resolve()
-    return new Promise((resolve,reject)=>{
-        const script=document.createElement("script")
-        script.onload=resolve
-        script.onerror=reject
-        script.setAttribute("src",file)
-        document.head.appendChild(script)
-    }).catch(error=>{
+	return new Promise((resolve,reject)=>{
+		const script=document.createElement("script")
+		script.onload=resolve
+		script.onerror=reject
+		script.setAttribute("src",file)
+		document.head.appendChild(script)
+	}).catch(error=>{
 		console.error(error)
 		showError(`${file} Not Loaded`, `Maybe the season isn't implemented?`)
 	})

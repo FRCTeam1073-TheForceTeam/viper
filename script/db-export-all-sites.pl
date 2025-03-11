@@ -21,15 +21,15 @@ opendir DIR,$dir;
 my @subdirs = readdir(DIR);
 close DIR;
 for my $subdir (@subdirs){
-    if(-d "$dir/$subdir"){
+	if(-d "$dir/$subdir"){
 		if ($subdir =~ /^\./){
 			# Skipping hidden files
 		} elsif (! -d "$dir/$subdir/.git"){
 			print "$dir/$subdir/.git does not exist, skipping $dir/$subdir\n";
 		} else {
 			print("EXPORTING $dir/$subdir/\n");
-        	unlink(glob("$dir/$subdir/*.* $dir/$subdir/*.*"));
+			unlink(glob("$dir/$subdir/*.* $dir/$subdir/*.*"));
 			`./script/db-export-site.pl $dir/$subdir`
 		}
-    }
+	}
 }

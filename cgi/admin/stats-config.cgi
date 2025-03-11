@@ -30,7 +30,7 @@ my $conf = $cgi->param('conf');
 $webutil->error("Missing conf") if (!$conf);
 my $parsed = eval{decode_json($conf)};
 if ($@){
-    $webutil->error("conf not in json format","$@");
+	$webutil->error("conf not in json format","$@");
 }
 if ($type =~ /^(whiteboard)$/){
 	$webutil->error("Expected outer array") if (ref $parsed ne ref []);

@@ -10,17 +10,17 @@ for arg in "$@"
 do
 	case $arg in
 		"-q"|"--quiet" )
-		   VERBOSE=0
-		   QUIET="--quiet";;
+		VERBOSE=0
+		QUIET="--quiet";;
 		"-v"|"--verbose")
-		   VERBOSE=1
-		   QUIET="";;
+		VERBOSE=1
+		QUIET="";;
 		"--nocommit" )
-		   COMMIT=0;;
+		COMMIT=0;;
 		* )
-		   echo "Unknown argument $arg"
-		   exit 1;;
-   esac
+		echo "Unknown argument $arg"
+		exit 1;;
+esac
 done
 
 verboseCommand(){

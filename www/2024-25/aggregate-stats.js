@@ -372,8 +372,8 @@ var statInfo = {
 		type: '%'
 	},
 	count:{
-        name: 'Count',
-        type: 'avg'
+		name: 'Count',
+		type: 'avg'
 	},
 	max_score:{
 		name: 'Max score contribution',

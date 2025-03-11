@@ -2,7 +2,7 @@
 
 set -E
 
-if find . -name *.js | xargs grep -qE '^\s*console\.log'
+if find . -name *.js | xargs grep -Eq '^\s*console\.log'
 then
 	find . -name *.js | xargs grep -En '^\s*console\.log'
 	echo "ERROR: found console.log debugging"

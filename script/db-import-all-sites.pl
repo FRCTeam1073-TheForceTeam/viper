@@ -22,10 +22,10 @@ opendir DIR,$dir;
 my @subdirs = readdir(DIR);
 close DIR;
 for my $subdir (@subdirs){
-    if(-d "$dir/$subdir"){
+	if(-d "$dir/$subdir"){
 		if ($subdir !~ /^\./){
 			print("IMPORTING $dir/$subdir/\n");
-        	`VIPER_DB_SITE=$subdir ./script/db-import-file.pl $dir/$subdir/*.* $dir/$subdir/*/*.*`;
+			`VIPER_DB_SITE=$subdir ./script/db-import-file.pl $dir/$subdir/*.* $dir/$subdir/*/*.*`;
 		}
-    }
+	}
 }

@@ -29,9 +29,9 @@ sub getConfig {
 	my $configFile = $INC{"db.pm"};
 	$configFile =~ s/pm\/db\.pm/local.conf/g;
 	my $conf = read_file($configFile);
- 	my @list = $conf =~/^([A-Z_]+)\s*=\s*\"?([^\"\r\n]+)\"?$/gm;
+	my @list = $conf =~/^([A-Z_]+)\s*=\s*\"?([^\"\r\n]+)\"?$/gm;
 	while (my ($name,$value) = splice @list, 0, 2){
-	 	$db::config->{$name} = $value;
+		$db::config->{$name} = $value;
 	}
 	return $db::config;
 }

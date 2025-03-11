@@ -11,7 +11,7 @@ my $dbimport = dbimport->new();
 for my $file (@ARGV){
 	my $site = $dbimport->getSite();
 	print "SITE: $site FILE: $file\n";
- 	if ($file =~ /local\.js$/){
+	if ($file =~ /local\.js$/){
 		$dbimport->importLocalJsFile(scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
 	} elsif ($file =~ /local\.css$/){
 		$dbimport->importLocalCssFile(scalar(read_file($file, {binmode=>':encoding(UTF-8)'})));
