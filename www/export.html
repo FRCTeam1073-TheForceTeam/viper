@@ -30,10 +30,11 @@
 			<hr>
 
 			<p>Transfer all the event data and images to another Viper instance.</p>
-			<form method=POST action=https://viper.example.com/admin/import.cgi>
-				<input class=siteInput list=hostOptions placeholder=viper.example.com>
+			<form method=POST action=https://example.viperscout.com/admin/import.cgi>
+				<input class=siteInput placeholder=example.viperscout.com>
+				<ul class=hostOptions></ul>
 				<input name=json id=transferJsonImages type=hidden>
-				<button id=submitImages disabled><img id=loadingImages class=loading-spinner src=/loading.svg> Transfer Full Event</button>
+				<button class=submit id=submitImages disabled><img id=loadingImages class=loading-spinner src=/loading.svg> Transfer Full Event</button>
 			</form>
 		</div>
 
@@ -46,15 +47,13 @@
 			<hr>
 
 			<p>Transfer all the data to another Viper instance.</p>
-			<form method=POST action=https://viper.example.com/admin/import.cgi>
-				<input class=siteInput list=hostOptions placeholder=viper.example.com>
+			<form method=POST action=https://example.viperscout.com/admin/import.cgi>
+				<input class=siteInput placeholder=example.viperscout.com>
+				<ul class=hostOptions></ul>
 				<input name=json id=transferJsonData type=hidden>
-				<button id=submitData disabled><img id=loadingData class=loading-spinner src=/loading.svg> Transfer Data</button>
+				<button class=submit id=submitData disabled><img id=loadingData class=loading-spinner src=/loading.svg> Transfer Data</button>
 			</form>
 		</div>
-
-		<datalist id=hostOptions>
-		</datalist>
 	</div>
 
 	<iframe id=instructions class=lightBoxFullContent src=/import-export-instructions.html></iframe>

@@ -1,15 +1,43 @@
 "use strict"
 
-function onLocalJs(){
-	;(localStorage.getItem("transferHosts")||"").split(",").forEach(addHost)
-	if (window.transferHosts) window.transferHosts.forEach(addHost)
-	addHost('localhost')
-}
+var hosts={}
 
 function addHost(host){
-	if (host && !$(`#hostOptions option[value="${host}"]`).length){
-		$('#hostOptions').append($('<option>').attr('value',host))
+	if (host && !hosts[host]){
+		hosts[host]=1
+		$('.hostOptions').append($('<li>').text(host).on('mousedown',setHost))
 	}
+}
+
+function setHost(){
+	var input=$(this).closest('form').find('.siteInput')
+	input.val($(this).text())
+	hostSet(input)
+}
+
+function hostSet(input){
+	var url = input.val()
+	if (/^((https?\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$/.test(url)){
+		var hosts = (localStorage.getItem("transferHosts")||"").split(/,/),
+		hostList = hosts.reduce((m,o)=>(m[o]=o,m),{})
+		if (!hostList.hasOwnProperty(url)){
+			hosts.push(url)
+			hosts = hosts.slice(-5)
+			localStorage.setItem("transferHosts",hosts.join(","))
+		}
+		addHost(url)
+	}
+	if (!url) url = "example.viperscout.com"
+	if (!/^https?\:\/\//.test(url)){
+		var prefix = "http"
+		if (/\./.test(url)) prefix="https" // fully qualified domain
+		if (/^[0-9\.\:]+$/.test(url)) prefix="http" // IP address
+		url = `${prefix}://${url}`
+	}
+	url = url.replace(/\/$/,"")
+	url += "/admin/import.cgi"
+	input.closest('form').attr('action',url)
+
 }
 
 $(document).ready(function(){
@@ -38,27 +66,7 @@ $(document).ready(function(){
 		textFileCount = textFiles
 	})
 	$('.siteInput').change(function(){
-		var url = $(this).val()
-		if (/^((https?\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$/.test(url)){
-			var hosts = (localStorage.getItem("transferHosts")||"").split(/,/),
-			hostList = hosts.reduce((m,o)=>(m[o]=o,m),{})
-			if (!hostList.hasOwnProperty(url)){
-				hosts.push(url)
-				hosts = hosts.slice(-5)
-				localStorage.setItem("transferHosts",hosts.join(","))
-			}
-			addHost(url)
-		}
-		if (!url) url = "webscout.example.com"
-		if (!/^https?\:\/\//.test(url)){
-			var prefix = "http"
-			if (/\./.test(url)) prefix="https" // fully qualified domain
-			if (/^[0-9\.\:]+$/.test(url)) prefix="http" // IP address
-			url = `${prefix}://${url}`
-		}
-		url = url.replace(/\/$/,"")
-		url += "/admin/import.cgi"
-		$(this).closest('form').attr('action',url)
+		hostSet($(this))
 	})
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
@@ -95,6 +103,10 @@ $(document).ready(function(){
 		$('#submitData').removeAttr('disabled')
 	}
 	textDataLoaded()
+	;(localStorage.getItem("transferHosts")||"").split(",").forEach(addHost)
+	if (window.transferHosts) window.transferHosts.forEach(addHost)
+	addHost('localhost')
+
 })
 
 // https://stackoverflow.com/a/20285053

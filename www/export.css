@@ -1,4 +1,9 @@
-form input {margin: 0.5em}
+form,.siteInput{position:relative}
+.hostOptions{margin:0 0.5em;list-style-type:none;background:var(--main-bg-color);display:none;position:absolute}
+.hostOptions li{border:1px solid var(--main-border-color);padding:0.2em}
+.siteInput{margin:0.5em 0.5em 0.2em 0.5em;border:1px solid var(--main-border-color)}
+.siteInput:focus+.hostOptions,.siteInput+.hostOptions:active{display:block}
+button.submit{margin-top:0.5em}
 .side-by-side{max-width:20em;border:1px solid var(--main-fg-color);padding:0.5em}
 .loading-spinner{width:1em;animation:spin 4s linear infinite}
 @keyframes spin {100% {transform:rotate(360deg)}}
