@@ -214,7 +214,6 @@ function promiseEventStats(startMatch){
 		Object.keys(subjectiveData).forEach(team=>{
 			aggregateStats({},{},{},subjectiveData[team]||{},{},{},{},"")
 		})
-		var seenFirst=false
 		forEachTeamMatch(eventStats, function(team,match,scout){
 			var apiScore = {}
 			if (eventScores[match] && eventScores[match].alliances){
@@ -226,8 +225,7 @@ function promiseEventStats(startMatch){
 			pit = pitData[team]||{},
 			mt=`${match}-${team}`
 			scout.old=eventStatsByMatchTeam[mt]
-			if(seenFirst||scheduleSortKey(startMatch)<=scheduleSortKey(match)){
-				seenFirst=true
+			if(scheduleSortKey(startMatch)<=scheduleSortKey(match)){
 				var aggregate = eventStatsByTeam[team] || {}
 				aggregateStats(scout,aggregate,apiScore,subjective,pit,eventStatsByMatchTeam,eventStatsByTeam,match)
 				eventStatsByTeam[team] = aggregate
@@ -236,12 +234,6 @@ function promiseEventStats(startMatch){
 			}
 			eventStatsByMatchTeam[mt]=scout
 		})
-		console.log("event stats")
-		console.log(eventStats)
-		console.log("event stats by team")
-		console.log(eventStatsByTeam)
-		console.log("event stats by match team")
-		console.log(eventStatsByMatchTeam)
 		return [eventStats, eventStatsByTeam, eventStatsByMatchTeam]
 	})
 }
