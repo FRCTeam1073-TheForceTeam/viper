@@ -25,6 +25,7 @@ statsConfig = new StatsConfig({
 })
 
 $(document).ready(function(){
+	if(/^[0-9]{4}(-[0-9]{2})?combined$/.test(eventId))$('#startingControls').hide()
 	Promise.all([
 		promiseEventStats(),
 		promisePitScouting(),
