@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Add an Event</title>
+<title data-i18n=add_event_title></title>
 <meta name=viewport content="width=device-width,initial-scale=1.0">
 <meta charset=UTF-8>
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/add-event.css>
 <script src=/jquery.min.js></script>
+<script src=/main.js></script>
 <script src=/auto-year.js></script>
 <script src=/add-event.js></script>
-<script src=/main.js></script>
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<h1>Add an Event</h1>
+<h1 data-i18n=add_event_title></h1>
 <label>
-	Competition type: <select id=comp>
+	<span data-i18n=add_event_comp_type></span> <select id=comp>
 		<option value=frc>FRC</option>
 		<option value=ftc>FTC</option>
 	</select>
 </label>
 
 <div class="option side-by-side">
-	<h3><a href="/event-table.html#COMP">Data entry</a></h3>
-	Enter team numbers for each match.
+	<h3><a href="/event-table.html#_COMP_" data-i18n=add_event_data_entry_title></a></h3>
+	<span data-i18n=add_event_data_entry_description></span>
 </div>
 <div class="option side-by-side">
-	<h3><a href="/event-upload.html#COMP">Upload match schedule</a></h3>
-	Copy and paste a team list or a match schedule from FIRST Events,
-	The Blue Alliance, or The Orange Alliance websites.
+	<h3><a href="/event-upload.html#_COMP_" data-i18n=add_event_upload_title></a></h3>
+	<span data-i18n=add_event_upload_description></span>
 </div>
 <div class="option side-by-side">
-	<h3><a href="/api-events.html#SEASON">From the COMP API</a></h3>
-	Select an event from the official list.
+	<h3><a href="/api-events.html#_SEASON_" data-i18n=add_event_api_title></a></h3>
+	<span data-i18n=add_event_api_description></span>
 </div>
 <div class="option side-by-side">
-	<h3>Import from Viper</h3>
-	Import data exported from another Viper instance.
+	<h3 data-i18n=add_event_import_title></h3>
+	<span data-i18n=add_event_import_description></span>
 	<form method=POST action=/admin/import.cgi enctype=multipart/form-data>
-		<label>.json file: <input type=file name=json accept=application/json></label>
-		<input type=submit value=Upload>
+		<label><span data-i18n=add_event_import_file></span> <input type=file name=json accept=application/json></label>
+		<input type=submit data-i18n-value=add_event_import_upload>
 	</form>
 </div>
 </body>

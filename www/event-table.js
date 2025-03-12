@@ -1,5 +1,121 @@
 "use strict"
 
+
+addI18n({
+	event_table_title:{
+		en:'Enter Event Practice and Qualification Matches',
+		pt:'Coloque eventos de pratica',
+		fr:'Saisir les matchs d\'entraînement et de qualification',
+		tr:'Etkinlik Uygulama ve Eleme Maçlarına Girin',
+		zh_tw:'參加賽事練習和資格賽',
+	},
+	event_table_comp_type:{
+		en:'Competition type:',
+		pt:'Tipo de competição:',
+		fr:'Type de compétition :',
+		tr:'Yarışma türü:',
+		zh_tw:'比賽類型：',
+	},
+	event_name:{
+		en:'Event name:',
+		pt:'Nome do evento:',
+		fr:'Nom de l\'événement :',
+		tr:'Etkinlik adı:',
+		zh_tw:'事件名稱：',
+	},
+	event_name_placeholder:{
+		en:'Name of event',
+		pt:'Nome do evento',
+		fr:'Nom de l\'événement',
+		tr:'Etkinlik adı',
+		zh_tw:'活動名稱',
+	},
+	event_start:{
+		en:'Start date:',
+		pt:'Data de inicio:',
+		fr:'Date de début :',
+		tr:'Başlangıç ​​tarihi:',
+		zh_tw:'開始日期：',
+	},
+	event_end:{
+		en:'End date:',
+		pt:'Data de término:',
+		fr:'Date de fin :',
+		tr:'Bitiş tarihi:',
+		zh_tw:'結束日期：',
+	},
+	event_location:{
+		en:'Location:',
+		pt:'Localização:',
+		fr:'Date de fin :',
+		tr:'Yer:',
+		zh_tw:'地點：',
+	},
+	event_location_placeholder:{
+		en:'City, ST, USA',
+		pt:'Cidade, ST, EUA',
+		fr:'Ville, ST, États-Unis',
+		tr:'Şehir, ST, ABD',
+		zh_tw:'城市，ST，美國',
+	},
+	event_id:{
+		en:'Event ID:',
+		pt:'ID do evento:',
+		fr:'ID de l\'événement :',
+		tr:'Etkinlik kimliği:',
+		zh_tw:'事件 ID：',
+	},
+	event_id_placeholder:{
+		en:'No spaces or punctuation',
+		pt:'Sem espaços ou simbulos',
+		fr:'Sans espaces ni ponctuation',
+		tr:'Boşluk veya noktalama işareti yok',
+		zh_tw:'沒有空格或標點',
+	},
+	event_table_practice:{
+		en:'Practice Matches',
+		pt:'Partidas de praticas',
+		fr:'Matchs d\'entraînement',
+		tr:'Uygulama Maçları',
+		zh_tw:'練習賽',
+	},
+	event_table_qualification:{
+		en:'Qualification Matches',
+		pt:'Qualificatorias',
+		fr:'Matchs de qualification',
+		tr:'Eleme Maçları',
+		zh_tw:'資格賽',
+	},
+	event_table_match:{
+		en:'Match',
+		pt:'Partida',
+		fr:'Match',
+		tr:'Maç',
+		zh_tw:'匹配',
+	},
+	swap_red_blue:{
+		en:'Red ↔ Blue',
+		pt:'Vermelho ↔ Azul',
+		fr:'Rouge ↔ Bleu',
+		tr:'Kırmızı ↔ Mavi',
+		zh_tw:'紅色 ↔ 藍色',
+	},
+	clear_row:{
+		en:'Clear Row',
+		pt:'Limpar Coluna',
+		fr:'Effacer la ligne',
+		tr:'Satırı Temizle',
+		zh_tw:'清除行',
+	},
+	save_event:{
+		en:'Save Event',
+		pt:'Salvar Evento',
+		fr:'Enregistrer l\'événement',
+		tr:'Etkinliği Kaydet',
+		zh_tw:'保存事件',
+	},
+})
+
 function addRow(table){
 	if (!table) table = "qm"
 	var rowNum = $(`#${table} tr`).length+1,

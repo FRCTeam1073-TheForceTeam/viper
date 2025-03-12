@@ -1,4 +1,27 @@
 "use strict"
+addI18n({
+	add_event_button:{
+		en:'+ Add an event',
+		pt:'+ Adicionar um evento',
+		fr:'+ Ajouter un événement',
+		tr:'+ Bir etkinlik ekle',
+		zh_tw:'+ 新增活動',
+	},
+	choose_season_option:{
+		en:'Choose season…',
+		pt:'Escolha a temporada…',
+		fr:'Choisir la saison…',
+		tr:'Sezonu seç...',
+		zh_tw:'選擇季節…',
+	},
+	index_h1:{
+		en:'Viper — Scouting App',
+		pt:'Viper — Scouting App',
+		fr:'Viper — Application de repérage',
+		tr:'Viper — İzcilik Uygulaması',
+		zh_tw:'Viper——偵察應用程式',
+	}
+})
 
 $(document).ready(function(){
 	var seasonStatsLinkHtml,

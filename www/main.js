@@ -1,5 +1,73 @@
 "use strict"
 
+const I18N={},
+onApplyTranslation=[]
+
+addI18n({
+	home_link:{
+		en:'Event List',
+		pt:'Lista de eventos',
+		fr:'Liste des événements',
+		tr:'Etkinlik Listesi',
+		zh_tw:'事件列表',
+	},
+	upload_data_link:{
+		en:'Upload Data',
+		pt:'Carregar dados',
+		fr:'Télécharger des données',
+		tr:'Veri Yükle',
+		zh_tw:'上傳數據',
+	},
+	about_link:{
+		en:'About this app',
+		pt:'Sobre este aplicativo',
+		fr:'À propos de cette application',
+		tr:'Bu uygulama hakkında',
+		zh_tw:'關於此應用程式',
+	},
+	my_team_num:{
+		en:'My team #',
+		pt:'Minha equipe #',
+		fr:'Mon équipe #',
+		tr:'Takımım #',
+		zh_tw:'我的團隊',
+	},
+	instructions:{
+		en:'Instructions',
+		pt:'Instruções',
+		fr:'Instructions',
+		tr:'Talimatlar',
+		zh_tw:'指示',
+	},
+})
+var locale=computeLocale()
+function addI18n(i){
+	Object.assign(I18N,i)
+}
+
+function computeLocale(){
+	var l=localStorage.locale||navigator.language||'en'
+	l=l.replace(/\-/g,"_")
+	while(l){
+		if(l=='qd'||Object.hasOwn(I18N.home_link,l)) return l
+		l=l.replace(/[_]?[^_]*$/,"")
+	}
+	return 'en'
+}
+
+function translate(key){
+	var unknown=key
+	if(!Object.hasOwn(I18N,key))return unknown
+	var g=I18N[key],
+	l=locale
+	if(l=='qd')return Object.hasOwn(g,'en')?g.en.replace(/[^ ]/g,'.'):unknown
+	while(l){
+		if(Object.hasOwn(g,l))return g[l]
+		l=l.replace(/[_]?[^_]*$/,"")
+	}
+	return unknown
+}
+
 function getDate(s){
 	if (!s) return ""
 	var m = /[0-9]{4}-[0-9]{2}-[0-9]{2}/.exec(s)
@@ -9,6 +77,20 @@ function getDate(s){
 
 function dateCompare(a,b){
 	return getDate(b).localeCompare(getDate(a))
+}
+
+function applyTranslations(node){
+	if(!node)node=$('body')
+	node.find('[data-i18n]').each(function(){
+		$(this).text(translate($(this).attr('data-i18n')))
+	})
+	node.find('[data-i18n-value]').each(function(){
+		$(this).attr('value',translate($(this).attr('data-i18n-value')))
+	})
+	node.find('[data-i18n-placeholder]').each(function(){
+		$(this).attr('placeholder',translate($(this).attr('data-i18n-placeholder')))
+	})
+	onApplyTranslation.forEach(x=>x())
 }
 
 $(document).ready(function(){
@@ -36,10 +118,16 @@ $(document).ready(function(){
 						.replace(/EVENT_ID/g,eId)
 						.replace(/YEAR/g,eYear)
 				)
+				applyTranslations(mainMenu)
 				mainMenu.find('.dependEvent').toggle(!!(eName))
 				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
 					localStorage.setItem('my-team', parseInt($(this).val()))
 					location.reload()
+				})
+				$('#locale-choose').val(locale).change(function(){
+					localStorage.locale=locale=$(this).val()
+					applyTranslations()
+
 				})
 				showMainMenuUploads()
 				$('#logout-link').click(function(){
@@ -66,6 +154,7 @@ $(document).ready(function(){
 			}
 		})
 	}
+	applyTranslations()
 	var site = location.host.replace(/^(www|viper|webscout)\./,"")
 	if (!site || /^[0-9\.\:]*$/.test(site)){
 		site = ""
