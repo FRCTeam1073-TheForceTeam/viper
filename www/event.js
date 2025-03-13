@@ -1,9 +1,369 @@
 "use strict"
 
+
+addI18n({
+	scouting_heading:{
+		en:'Scouting',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	event_upload_link:{
+		en:'Upload Scouting Data (Matches: _UPLOAD_COUNT_)',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	scout_match_link:{
+		en:'Scout a match',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	all_photos_link:{
+		en:'Upload bot photos for all teams',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	all_pit_link:{
+		en:'Open pit scouting for all teams',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	pit_squads:{
+		en:'Open pit and photo scouting squads:',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	all_subjective_link:{
+		en:'Subjective scouting',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	top_scouters_link:{
+		en:'Top scouters',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	compare_link:{
+		en:'Compare scouting to official scores',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	strategy_heading:{
+		en:'Strategy',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	event_stats_link:{
+		en:'View stats for alliance selection',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	all_predict_link:{
+		en:'Predict a match outcome',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	all_planner_link:{
+		en:'View match planner with whiteboard',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	all_team_stats_link:{
+		en:'View individual team stats and pit scouting data',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	data_heading:{
+		en:'Data',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	viper_export_link:{
+		en:'Export to another Viper',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	computed_data_link:{
+		en:'Scouting Data with Computed Scores',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	aggregated_data_link:{
+		en:'Scouting Data Aggregated by Team',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	edit_event_heading:{
+		en:'Edit Event',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	edit_event_link:{
+		en:'Change event details and match schedule',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	edit_playoffs_link:{
+		en:'Input alliance selection results and playoff type',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	api_link:{
+		en:'Fetch latest schedule and official scores from the FIRST API',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	import_link:{
+		en:'Import data from another app',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	external_links_heading:{
+		en:'External Links',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_main_link:{
+		en:'The Blue Alliance',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_results_link:{
+		en:'Results',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_rankings_link:{
+		en:'Rankings',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_awards_link:{
+		en:'Awards',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_district_link:{
+		en:'District Points',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_teams_link:{
+		en:'Teams',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_insights_link:{
+		en:'Insights',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	blue_alliance_media_link:{
+		en:'Media',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	orange_alliance_main_link:{
+		en:'The Orange Alliance',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	first_main_link:{
+		en:'First Inspires',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	first_practice_link:{
+		en:'Practice Matches',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	first_matches_link:{
+		en:'Qualification Matches',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	first_ranking_link:{
+		en:'Qualification Rankings',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	first_playoffs_link:{
+		en:'Playoff Matches',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	first_awards_link:{
+		en:'Awards',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	show_advanced_link:{
+		en:'Show advanced options',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+	xxxx:{
+		en:'',
+		pt:'',
+		fr:'',
+		tr:'',
+		zh_tw:'',
+	},
+})
+
 $(document).ready(function(){
 	if (!eventYear || !eventVenue) return showError('Event Not Specified')
 	if ("ftc"==eventCompetition) $('.noftc').hide()
-	var title = $('title')
 	var uploadCount = getUploads().length
 	$('.initHid').hide()
 	var extensionMap = {
@@ -49,8 +409,7 @@ $(document).ready(function(){
 
 	})
 	function setName(){
-		title.text(title.text().replace(/EVENT/, eventName))
-		$('h1').text(eventName)
+		$('title,h1').text(eventName)
 	}
 	function toDisplayDate(d){
 		if (!d) return ""
@@ -64,20 +423,26 @@ $(document).ready(function(){
 		}
 	}
 
-	$('a').each(function(){
-		$(this).attr(
-			'href',$(this).attr('href')
-			.replace('YEAR', eventYear)
-			.replace('EVENT', eventId)
-			.replace('UPLOAD_COUNT', uploadCount)
-		)
-		$(this).text(
-			$(this).text()
-			.replace('YEAR', eventYear)
-			.replace('EVENT', eventId)
-			.replace('UPLOAD_COUNT', uploadCount)
-		)
-	})
+	function replaceVariables(){
+		$('a').each(function(){
+			$(this).attr(
+				'href',$(this).attr('href')
+				.replace('_YEAR_', eventYear)
+				.replace('_EVENT_', eventId)
+				.replace('_UPLOAD_COUNT_', uploadCount)
+			)
+			$(this).text(
+				$(this).text()
+				.replace('_YEAR_', eventYear)
+				.replace('_EVENT_', eventId)
+				.replace('_UPLOAD_COUNT_', uploadCount)
+			)
+		})
+	}
+
+	replaceVariables()
+	onApplyTranslation.push(replaceVariables)
+
 	if (uploadCount) dependencySatisfied('dependUploads')
 
 	function dependencySatisfied(depend){

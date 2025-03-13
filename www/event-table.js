@@ -1,6 +1,5 @@
 "use strict"
 
-
 addI18n({
 	event_table_title:{
 		en:'Enter Event Practice and Qualification Matches',
