@@ -1,4 +1,4 @@
-pre{white-space:pre-wrap;overflow-wrap:break-word;max-width:30em;text-align:left;margin:0 auto}
+pre{white-space:pre-wrap;overflow-wrap:break-word;max-width:30em;text-align:start;margin:0 auto}
 .deleted{border:.2em solid var(--button-disabled-decoration-color);padding:.2em}
 .uploaded{border:.2em solid var(--winner-color);padding:.2em}
 h4{width:fit-content;margin:1em auto .4em auto}

@@ -85,13 +85,6 @@ addI18n({
 		tr:'Eleme Maçları',
 		zh_tw:'資格賽',
 	},
-	event_table_match:{
-		en:'Match',
-		pt:'Partida',
-		fr:'Match',
-		tr:'Maç',
-		zh_tw:'匹配',
-	},
 	swap_red_blue:{
 		en:'Red ↔ Blue',
 		pt:'Vermelho ↔ Azul',

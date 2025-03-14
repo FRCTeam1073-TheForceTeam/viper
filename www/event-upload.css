@@ -1,4 +1,4 @@
-body{max-width:30em;margin:1em auto; text-align:left}
+body{max-width:30em;margin:1em auto; text-align:start}
 textarea{width:100%;margin:1em;display:block;height:15em}
 code{background-color:var(--main-fg-color);color:var(--main-bg-color);padding:0 0.2em}
 .initHid{display:none}

@@ -16,14 +16,14 @@ h3{margin:0 0 .25em 0;padding:0}
 #matchTable .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color)}
 #matchTable .error{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 #pitScoutSetup img{width:2em;display:block}
-#pitScoutSetup{text-align:left}
+#pitScoutSetup{text-align:start}
 #pitScoutSetup .side-by-side{margin:.5em .1em}
 .ourTeam{text-decoration:solid underline var(--highlight-fg-color) 4px}
 .needed{text-decoration:solid underline var(--highlight2-fg-color) 4px}
-#jsonLightBox{text-align:left;overflow:auto}
+#jsonLightBox{text-align:start;overflow:auto}
 #jsonLightBox h2{margin-left:1em}
 .narrow ul{margin:0;padding:0}
 .narrow li{margin:.2em 0;padding:0;border:1px solid var(--main-border-color);padding:0.3em}
 .narrow li>ul{margin-top:0.2em;padding-left:0.5em}
-#event-menu h2 {text-align:left;font-size:110%;margin:0.5em 0}
-#left-nav{text-align:left;}
+#event-menu h2 {text-align:start;font-size:110%;margin:0.5em 0}
+#left-nav{text-align:start}

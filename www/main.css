@@ -30,10 +30,10 @@ table,tr,td,th,button,input,select,option,input,textarea,form{font-size:inherit;
 button,input[type="submit"],select{border-radius:0.3em;background:var(--button-bg-color);border-color:var(--button-bg-color);color:var(--button-fg-color)}
 body{text-align:center;overscroll-behavior:contain}
 table,ul{margin:0 auto;}
-ol,ul,p{text-align:left;max-width:40em;margin:0 auto}
+ol,ul,p{text-align:start;max-width:40em;margin:0 auto}
 *+ul,*+ol,*+p{margin:1em auto}
-.right{text-align:right}
-.left{text-align:left}
+.right{text-align:end}
+.left{text-align:start}
 .redTeamBG,.subheader.redTeamBG{background-color:var(--red-team-color);border-color:var(--red-team-color)}
 .blueTeamBG,.subheader.blueTeamBG{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}
 .lastFocus{background-color:var(--focus-bg-color)}
@@ -49,7 +49,7 @@ h1{padding:0 2.5em}
 #mainMenu li {margin:.25em 0;padding:0;padding:0.25em;border:1px solid var(--main-border-color)}
 #lightBoxBG{z-index:9998;width:100vw;height:100vh;position:fixed;background-color:var(--translucent-hide-color);left:0;top:0;display:none}
 #lightBoxBG::before{content:'ⓧ';position:fixed;z-index:9999;top:.1em;left:.3em;font-size:150%}
-.lightBoxCenterContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:50%;left:50%;transform:translate(-50%,-50%);padding:1em;display:none;text-align:left}
+.lightBoxCenterContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:50%;left:50%;transform:translate(-50%,-50%);padding:1em;display:none;text-align:start}
 .lightBoxFullContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:2em;left:2em;width:calc(100vw - 4em);height:calc(100vh - 4em);padding:0;display:none}
 [data-tooltip]::before{position:absolute;content:attr(data-tooltip);opacity:0}
 [data-tooltip]:hover::before{opacity:1;color:var(--main-fg-color);background:var(--main-bg-color);margin-top:-1.5em;margin-left:1em;padding:0.3em;border:1px solid var(--main-border-color);white-space:pre-line;writing-mode:horizontal-tb;text-orientation:mixed;z-index:9997}

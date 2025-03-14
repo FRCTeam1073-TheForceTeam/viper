@@ -346,28 +346,28 @@ function getUploads(){
 
 function getMatchName(matchId){
 	return matchId
-		.replace(/^pm/, "Prac­tice ")
-		.replace(/^qm/, "Qual­ific­ation ")
-		.replace(/^qf/, "Quar­ter-final ")
-		.replace(/^sf/, "Semi-final ")
-		.replace(/^1p/, "Play­offs first round ")
-		.replace(/^2p/, "Play­offs second round ")
-		.replace(/^3p/, "Play­offs third round ")
-		.replace(/^4p/, "Play­offs fourth round ")
-		.replace(/^5p/, "Play­offs fifth round ")
-		.replace(/^f/, "Final ")
+		.replace(/^pm/,translate("mt_pm"))
+		.replace(/^qm/,translate("mt_qm"))
+		.replace(/^qf/,translate("mt_qf"))
+		.replace(/^sf/,translate("mt_sf"))
+		.replace(/^1p/,translate("mt_1p"))
+		.replace(/^2p/,translate("mt_2p"))
+		.replace(/^3p/,translate("mt_3p"))
+		.replace(/^4p/,translate("mt_4p"))
+		.replace(/^5p/,translate("mt_5p"))
+		.replace(/^f/,translate("mt_f"))
 }
 
 function getShortMatchName(matchId){
 	return matchId
-		.replace(/^pm/, "Prac ")
-		.replace(/^qm/, "Qual ")
-		.replace(/^qf/, "QF ")
-		.replace(/^sf/, "SF ")
-		.replace(/^1p/, "Play­off R1 M")
-		.replace(/^2p/, "Play­off R2 M")
-		.replace(/^3p/, "Play­off R3 M")
-		.replace(/^4p/, "Play­off R4 M")
-		.replace(/^5p/, "Play­off R5 M")
-		.replace(/^f/, "Final ")
+		.replace(/^pm/,translate("mts_pm"))
+		.replace(/^qm/,translate("mts_qm"))
+		.replace(/^qf/,translate("mts_qf"))
+		.replace(/^sf/,translate("mts_sf"))
+		.replace(/^1p/,translate("mts_1p"))
+		.replace(/^2p/,translate("mts_2p"))
+		.replace(/^3p/,translate("mts_3p"))
+		.replace(/^4p/,translate("mts_4p"))
+		.replace(/^5p/,translate("mts_5p"))
+		.replace(/^f/,translate("mts_f"))
 }
