@@ -6,6 +6,7 @@ addI18n({
 		fr:'+ Ajouter un événement',
 		tr:'+ Bir etkinlik ekle',
 		zh_tw:'+ 新增活動',
+		he:'+ הוסף אירוע',
 	},
 	choose_season_option:{
 		en:'Choose season…',
@@ -13,6 +14,7 @@ addI18n({
 		fr:'Choisir la saison…',
 		tr:'Sezonu seç...',
 		zh_tw:'選擇季節…',
+		he:'בחר עונה…',
 	},
 	index_h1:{
 		en:'Viper — Scouting App',
@@ -20,6 +22,7 @@ addI18n({
 		fr:'Viper — Application de repérage',
 		tr:'Viper — İzcilik Uygulaması',
 		zh_tw:'Viper——偵察應用程式',
+		he:'צפע - אפליקציית צופים',
 	}
 })
 

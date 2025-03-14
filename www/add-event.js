@@ -7,6 +7,7 @@ addI18n({
 		fr:'Ajouter un événement',
 		tr:'Bir Etkinlik Ekle',
 		zh_tw:'新增事件',
+		he:'הוסף אירוע',
 	},
 	add_event_comp_type:{
 		en:'Competition type:',
@@ -14,6 +15,7 @@ addI18n({
 		fr:'Type de compétition :',
 		tr:'Yarışma türü:',
 		zh_tw:'比賽類型：',
+		he:'סוג התחרות:',
 	},
 	add_event_data_entry_title:{
 		en:'Data entry',
@@ -21,6 +23,7 @@ addI18n({
 		fr:'Saisie des données',
 		tr:'Veri girişi',
 		zh_tw:'資料輸入',
+		he:'הזנת נתונים',
 	},
 	add_event_data_entry_description:{
 		en:'Enter team numbers for each match.',
@@ -28,6 +31,7 @@ addI18n({
 		fr:'Saisissez les numéros d\'équipe pour chaque match.',
 		tr:'Her maç için takım numaralarını girin.',
 		zh_tw:'輸入每場比賽的球隊號碼。',
+		he:'הזן מספרי קבוצות עבור כל משחק.',
 	},
 	add_event_upload_title:{
 		en:'Upload match schedule',
@@ -35,6 +39,7 @@ addI18n({
 		fr:'Téléchargez le calendrier des matchs',
 		tr:'Maç programını yükle',
 		zh_tw:'上傳比賽行程',
+		he:'העלה לוח משחקים',
 	},
 	add_event_upload_description:{
 		en:'Copy and paste a team list or a match schedule from FIRST Events, The Blue Alliance, or The Orange Alliance websites.',
@@ -42,6 +47,7 @@ addI18n({
 		fr:'Copiez et collez une liste d\'équipe ou un calendrier de match depuis les sites web de FIRST Events, The Blue Alliance ou The Orange Alliance.',
 		tr:'FIRST Events, The Blue Alliance veya The Orange Alliance web sitelerinden bir takım listesini veya maç programını kopyalayıp yapıştırın.',
 		zh_tw:'從 FIRST Events、藍色聯盟或橙色聯盟網站複製並貼上球隊名單或比賽日程。',
+		he:'העתק והדבק רשימת קבוצות או לוח זמנים למשחקים מאתרי האינטרנט של FIRST Events, The Blue Alliance או The Orange Alliance.',
 	},
 	add_event_api_title:{
 		en:'From the _COMP_ API',
@@ -49,6 +55,7 @@ addI18n({
 		fr:'Depuis l\'API _COMP_',
 		tr:'_COMP_ API\'sinden',
 		zh_tw:'來自 _COMP_ API',
+		he:'מ-_COMP_ API',
 	},
 	add_event_api_description:{
 		en:' Select an event from the official list.',
@@ -56,6 +63,7 @@ addI18n({
 		fr:'Sélectionnez un événement dans la liste officielle.',
 		tr:'Resmi listeden bir etkinlik seçin.',
 		zh_tw:'從官方清單中選擇一個事件。',
+		he:' בחר אירוע מהרשימה הרשמית.',
 	},
 	add_event_import_title:{
 		en:'Import from Viper',
@@ -63,6 +71,7 @@ addI18n({
 		fr:'Importer depuis Viper',
 		tr:'Viper\'dan içe aktar',
 		zh_tw:'從 Viper 匯入',
+		he:'ייבוא ​​מ- Viper',
 	},
 	add_event_import_description:{
 		en:'Import data exported from another Viper instance.',
@@ -70,6 +79,7 @@ addI18n({
 		fr:'Importez les données exportées depuis une autre instance Viper.',
 		tr:'Başka bir Viper örneğinden dışa aktarılan verileri içe aktar.',
 		zh_tw:'匯入從另一個 Viper 實例匯出的資料。',
+		he:'ייבוא ​​נתונים שיוצאו ממופע אחר של Viper.',
 	},
 	add_event_import_file:{
 		en:'.json file:',
@@ -77,6 +87,7 @@ addI18n({
 		fr:'Fichier .json :',
 		tr:'.json dosyası:',
 		zh_tw:'.json 檔：',
+		he:'קובץ json:',
 	},
 	add_event_import_upload:{
 		en:'Upload',
@@ -84,6 +95,7 @@ addI18n({
 		fr:'Téléchargement',
 		tr:'Yükle',
 		zh_tw:'上傳',
+		he:'העלה',
 	},
 })
 

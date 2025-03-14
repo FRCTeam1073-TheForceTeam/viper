@@ -7,6 +7,7 @@ addI18n({
 		fr:'Saisir les matchs d\'entraînement et de qualification',
 		tr:'Etkinlik Uygulama ve Eleme Maçlarına Girin',
 		zh_tw:'參加賽事練習和資格賽',
+		he:'היכנס למשחקי תרגול והסמכה לאירועים',
 	},
 	event_table_comp_type:{
 		en:'Competition type:',
@@ -14,6 +15,7 @@ addI18n({
 		fr:'Type de compétition :',
 		tr:'Yarışma türü:',
 		zh_tw:'比賽類型：',
+		he:'סוג התחרות:',
 	},
 	event_name:{
 		en:'Event name:',
@@ -21,6 +23,7 @@ addI18n({
 		fr:'Nom de l\'événement :',
 		tr:'Etkinlik adı:',
 		zh_tw:'事件名稱：',
+		he:'שם האירוע:',
 	},
 	event_name_placeholder:{
 		en:'Name of event',
@@ -28,6 +31,7 @@ addI18n({
 		fr:'Nom de l\'événement',
 		tr:'Etkinlik adı',
 		zh_tw:'活動名稱',
+		he:'שם האירוע',
 	},
 	event_start:{
 		en:'Start date:',
@@ -35,6 +39,7 @@ addI18n({
 		fr:'Date de début :',
 		tr:'Başlangıç ​​tarihi:',
 		zh_tw:'開始日期：',
+		he:'תאריך התחלה:',
 	},
 	event_end:{
 		en:'End date:',
@@ -42,6 +47,7 @@ addI18n({
 		fr:'Date de fin :',
 		tr:'Bitiş tarihi:',
 		zh_tw:'結束日期：',
+		he:'תאריך סיום:',
 	},
 	event_location:{
 		en:'Location:',
@@ -49,6 +55,7 @@ addI18n({
 		fr:'Date de fin :',
 		tr:'Yer:',
 		zh_tw:'地點：',
+		he:'מִקוּם:',
 	},
 	event_location_placeholder:{
 		en:'City, ST, USA',
@@ -56,6 +63,7 @@ addI18n({
 		fr:'Ville, ST, États-Unis',
 		tr:'Şehir, ST, ABD',
 		zh_tw:'城市，ST，美國',
+		he:'סיטי, ST, ארה"ב',
 	},
 	event_id:{
 		en:'Event ID:',
@@ -63,6 +71,7 @@ addI18n({
 		fr:'ID de l\'événement :',
 		tr:'Etkinlik kimliği:',
 		zh_tw:'事件 ID：',
+		he:'מזהה אירוע:',
 	},
 	event_id_placeholder:{
 		en:'No spaces or punctuation',
@@ -70,6 +79,7 @@ addI18n({
 		fr:'Sans espaces ni ponctuation',
 		tr:'Boşluk veya noktalama işareti yok',
 		zh_tw:'沒有空格或標點',
+		he:'ללא רווחים או סימני פיסוק',
 	},
 	event_table_practice:{
 		en:'Practice Matches',
@@ -77,6 +87,7 @@ addI18n({
 		fr:'Matchs d\'entraînement',
 		tr:'Uygulama Maçları',
 		zh_tw:'練習賽',
+		he:'תרגול התאמות',
 	},
 	event_table_qualification:{
 		en:'Qualification Matches',
@@ -84,6 +95,7 @@ addI18n({
 		fr:'Matchs de qualification',
 		tr:'Eleme Maçları',
 		zh_tw:'資格賽',
+		he:'משחקי הסמכה',
 	},
 	swap_red_blue:{
 		en:'Red ↔ Blue',
@@ -91,6 +103,7 @@ addI18n({
 		fr:'Rouge ↔ Bleu',
 		tr:'Kırmızı ↔ Mavi',
 		zh_tw:'紅色 ↔ 藍色',
+		he:'אדום ↔ כחול',
 	},
 	clear_row:{
 		en:'Clear Row',
@@ -98,6 +111,7 @@ addI18n({
 		fr:'Effacer la ligne',
 		tr:'Satırı Temizle',
 		zh_tw:'清除行',
+		he:'נקה שורה',
 	},
 	save_event:{
 		en:'Save Event',
@@ -105,6 +119,7 @@ addI18n({
 		fr:'Enregistrer l\'événement',
 		tr:'Etkinliği Kaydet',
 		zh_tw:'保存事件',
+		he:'שמור אירוע',
 	},
 })
 
