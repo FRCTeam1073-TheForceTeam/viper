@@ -240,6 +240,7 @@ var statInfo={
 		pt:'Evento',
 		zh_tw:'事件',
 		tr:'Etkinlik',
+		he:'מִקרֶה',
 	},
 	match:{
 		name: "Match",
@@ -248,6 +249,7 @@ var statInfo={
 		pt:'Partida',
 		zh_tw:'匹配',
 		tr:'Maç',
+		he:'לְהַתְאִים',
 	},
 	team:{
 		name: "Team",
@@ -256,6 +258,7 @@ var statInfo={
 		pt:'Equipe',
 		zh_tw:'團隊',
 		tr:'Takım',
+		he:'קְבוּצָה',
 	},
 	count:{
 		name: 'Matches Scouted',
@@ -264,6 +267,7 @@ var statInfo={
 		pt:'Partidas observadas',
 		zh_tw:'已偵察的比賽',
 		tr:'İzlenen Maçlar',
+		he:'גפרורים בצופים',
 	},
 	auto_start:{
 		name: "Location where the robot starts",
@@ -278,6 +282,7 @@ var statInfo={
 		pt:'Local onde o robô começa',
 		zh_tw:'機器人啟動的位置',
 		tr:'Robotun başladığı yer',
+		he:'המיקום שבו הרובוט מתחיל',
 	},
 	auto_leave:{
 		name: "Left the Start Line During Auto",
@@ -289,6 +294,7 @@ var statInfo={
 		pt:'Deixou a linha de partida durante o modo automático',
 		zh_tw:'自動擋汽車行駛過程中離開起跑線',
 		tr:'Auto sırasında Başlangıç ​​Çizgisinden Ayrılma',
+		he:'עזב את קו ההתחלה במהלך אוטומטי',
 	},
 	auto_leave_score:{
 		name: "Score for Leaving the Start Line During Auto",
@@ -297,6 +303,7 @@ var statInfo={
 		pt:'Pontuação por deixar a linha de partida durante o modo automático',
 		zh_tw:'自動擋賽車過程中離開起跑線的得分',
 		tr:'Auto sırasında Başlangıç ​​Çizgisinden Ayrılma Puanı',
+		he:'ציון עבור עזיבת קו ההתחלה במהלך אוטומטי',
 	},
 	no_show:{
 		name: "No Show",
@@ -308,6 +315,7 @@ var statInfo={
 		pt:'Não comparecimento',
 		zh_tw:'沒有出席',
 		tr:'Gelmedi',
+		he:'אין הופעה',
 	},
 	defense:{
 		name: "Played Defense",
@@ -316,6 +324,7 @@ var statInfo={
 		pt:'Defesa jogada',
 		zh_tw:'防守',
 		tr:'Savunma Oynandı',
+		he:'שיחק הגנה',
 	},
 	bricked:{
 		name: "Robot Disabled",
@@ -324,6 +333,7 @@ var statInfo={
 		pt:'Robô desabilitado',
 		zh_tw:'機器人已停用',
 		tr:'Robot Devre Dışı',
+		he:'רובוט מושבת',
 	},
 	auto_algae_drop:{
 		name: "Algae Dropped in Auto",
@@ -335,6 +345,7 @@ var statInfo={
 		pt:'Algas caídas no modo automático',
 		zh_tw:'汽車內藻類減少',
 		tr:'Auto modunda Yosun Düştü',
+		he:'אצות נפלו באוטו',
 	},
 	auto_algae_lower:{
 		name: "Algae Collected from Lower Reef in Auto",
@@ -346,6 +357,7 @@ var statInfo={
 		pt:'Algas coletadas do recife inferior no modo automático',
 		zh_tw:'從下層珊瑚礁中收集的藻類',
 		tr:'Auto modunda Alt Resif\'ten Toplanan Yosun',
+		he:'אצות שנאספו מהשונית התחתונה באוטו',
 	},
 	auto_algae_lower_removed:{
 		name: "Algae Knocked Off Lower Reef in Auto",
@@ -357,6 +369,7 @@ var statInfo={
 		pt:'Algas arrancadas do recife inferior no modo automático',
 		zh_tw:'藻類從汽車下部珊瑚礁中脫落',
 		tr:'Auto modunda Alt Resif\'ten Düşen Yosun',
+		he:'אצות נפלו מהשונית התחתונה אוטומטית',
 	},
 	auto_algae_mark_1:{
 		name: "Algae Collected from Mark 1 in Auto",
@@ -368,6 +381,7 @@ var statInfo={
 		pt:'Algas coletadas da marca 1 no modo automático',
 		zh_tw:'從汽車中的 Mark 1 收集的藻類',
 		tr:'Auto modunda Mark 1\'den Toplanan Yosun',
+		he:'אצות שנאספו מסימן 1 באוטו',
 	},
 	auto_algae_mark_2:{
 		name: "Algae Collected from Mark 2 in Auto",
@@ -379,6 +393,7 @@ var statInfo={
 		pt:'Algas coletadas da marca 2 no modo automático',
 		zh_tw:'從 Mark 2 號汽車收集的藻類',
 		tr:'Auto modunda Mark 2\'den Toplanan Yosun',
+		he:'אצות שנאספו מסימן 2 באוטו',
 	},
 	auto_algae_mark_3:{
 		name: "Algae Collected from Mark 3 in Auto",
@@ -390,6 +405,7 @@ var statInfo={
 		pt:'Algas coletadas da marca 3 no modo automático',
 		zh_tw:'從 Mark 3 號汽車收集的藻類',
 		tr:'Auto modunda Mark 3\'ten Toplanan Yosun',
+		he:'אצות שנאספו מסימן 3 באוטו',
 	},
 	auto_algae_net:{
 		name: "Algae Placed in Net by Robot in Auto",
@@ -401,6 +417,7 @@ var statInfo={
 		pt:'Algas colocadas na rede pelo robô no modo automático',
 		zh_tw:'機器人自動將藻類放入網中',
 		tr:'Auto modunda Robot tarafından Ağa Yerleştirilen Yosun',
+		he:'אצות הוצבו ברשת על ידי רובוט באוטו',
 	},
 	auto_algae_opponent_processor:{
 		name: "Algae Placed in the Opponent's Processor in Auto",
@@ -412,6 +429,7 @@ var statInfo={
 		pt:'Algas colocadas no processador do oponente no modo automático',
 		zh_tw:'藻類被放置在對手的汽車處理器中',
 		tr:'Auto modunda Rakibin İşlemcisine Yerleştirilen Yosun',
+		he:'אצות ממוקמות במעבד של היריב באופן אוטומטי',
 	},
 	auto_algae_processor:{
 		name: "Algae Placed in the Processor in Auto",
@@ -423,6 +441,7 @@ var statInfo={
 		pt:'Algas colocadas no processador no modo automático',
 		zh_tw:'藻類放置在自動處理器中',
 		tr:'Auto modunda İşlemciye Yerleştirilen Yosun',
+		he:'אצות ממוקמות במעבד באופן אוטומטי',
 	},
 	auto_algae_upper:{
 		name: "Algae Collected from Upper Reef in Auto",
@@ -434,6 +453,7 @@ var statInfo={
 		pt:'Algas coletadas do recife superior no modo automático',
 		zh_tw:'從上層珊瑚礁中收集的藻類',
 		tr:'Auto modunda Üst Resif\'ten Toplanan Yosun',
+		he:'אצות שנאספו מהשונית העליונה באוטו',
 	},
 	auto_algae_upper_removed:{
 		name: "Algae Knocked Off Upper Reef in Auto",
@@ -445,6 +465,7 @@ var statInfo={
 		pt:'Algas arrancadas do recife superior no modo automático',
 		zh_tw:'藻類從汽車上部珊瑚礁中脫落',
 		tr:'Auto modunda Üst Resif\'ten Düşen Yosun',
+		he:'אצות נפלו מהשונית העליונה אוטומטית',
 	},
 	auto_coral_drop:{
 		name: "Coral Dropped in Auto",
@@ -456,6 +477,7 @@ var statInfo={
 		pt:'Coral caído no modo automático',
 		zh_tw:'珊瑚掉入汽車',
 		tr:'Auto modunda Mercan Düştü',
+		he:'אלמוג ירד באוטו',
 	},
 	auto_coral_mark_1:{
 		name: "Coral Collected from Mark 1 in Auto",
@@ -467,6 +489,7 @@ var statInfo={
 		pt:'Coral coletado da marca 1 no modo automático',
 		zh_tw:'從 Mark 1 號汽車上採集的珊瑚',
 		tr:'Auto modunda Mark 1\'den Toplanan Mercan',
+		he:'אלמוגים שנאספו מסימן 1 באוטו',
 	},
 	auto_coral_mark_2:{
 		name: "Coral Collected from Mark 2 in Auto",
@@ -478,6 +501,7 @@ var statInfo={
 		pt:'Coral coletado da marca 2 no modo Auto',
 		zh_tw:'從 Mark 2 號車上採集的珊瑚',
 		tr:'Auto modunda Mark 2\'den Toplanan Mercan Otomatik',
+		he:'אלמוגים שנאספו מסימן 2 באוטו',
 	},
 	auto_coral_mark_3:{
 		name: "Coral Collected from Mark 3 in Auto",
@@ -489,6 +513,7 @@ var statInfo={
 		pt:'Coral coletado da marca 3 em Auto',
 		zh_tw:'從 Mark 3 號車上採集的珊瑚',
 		tr:'Otomatikte Mark 3\'ten Toplanan Mercan',
+		he:'אלמוגים שנאספו מסימן 3 באוטו',
 	},
 	auto_coral_level_1:{
 		name: "Coral Placed on Level 1 During Auto",
@@ -500,6 +525,7 @@ var statInfo={
 		pt:'Coral colocado no nível 1 durante Auto',
 		zh_tw:'珊瑚在自動期間放置在 1 級',
 		tr:'Otomatik Sırasında Seviye 1\'e Yerleştirilen Mercan',
+		he:'אלמוג מוצב ברמה 1 במהלך אוטומטי',
 	},
 	auto_coral_level_2:{
 		name: "Coral Placed on Level 2 During Auto",
@@ -511,6 +537,7 @@ var statInfo={
 		pt:'Coral colocado no nível 2 durante Auto',
 		zh_tw:'珊瑚在自動期間放置在第 2 層',
 		tr:'Otomatik Sırasında Seviye 2\'ye Yerleştirilen Mercan',
+		he:'אלמוג מוצב ברמה 2 במהלך אוטומטי',
 	},
 	auto_coral_level_3:{
 		name: "Coral Placed on Level 3 During Auto",
@@ -522,6 +549,7 @@ var statInfo={
 		pt:'Coral colocado no nível 3 durante Auto',
 		zh_tw:'珊瑚在自動期間放置在第 3 層',
 		tr:'Otomatik Sırasında Seviye 3\'e Yerleştirilen Mercan',
+		he:'אלמוג מוצב ברמה 3 במהלך אוטומטי',
 	},
 	auto_coral_level_4:{
 		name: "Coral Placed on Level 4 During Auto",
@@ -533,6 +561,7 @@ var statInfo={
 		pt:'Coral colocado no nível 4 durante Auto',
 		zh_tw:'珊瑚在自動期間放置在第 4 層',
 		tr:'Otomatik Sırasında Seviye 4\'e Yerleştirilen Mercan',
+		he:'אלמוג מוצב ברמה 4 במהלך אוטומטי',
 	},
 	auto_coral_station_1:{
 		name: "Coral Collected from Station 1 in Auto",
@@ -544,6 +573,7 @@ var statInfo={
 		pt:'Coral coletado da estação 1 em Auto',
 		zh_tw:'從 1 號站自動收集的珊瑚',
 		tr:'Otomatik Sırasında İstasyon 1\'den Toplanan Mercan',
+		he:'אלמוגים שנאספו מתחנה 1 באוטו',
 	},
 	auto_coral_station_2:{
 		name: "Coral Collected from Station 1 in Auto",
@@ -555,6 +585,7 @@ var statInfo={
 		pt:'Coral coletado da estação 1 em Auto',
 		zh_tw:'從 1 號站自動收集的珊瑚',
 		tr:'Otomatik Sırasında İstasyon 1\'den Toplanan Mercan',
+		he:'אלמוגים שנאספו מתחנה 1 באוטו',
 	},
 	auto_coral_place:{
 		name: "Coral Placed During Auto",
@@ -563,6 +594,7 @@ var statInfo={
 		pt:'Coral colocado durante Auto',
 		zh_tw:'珊瑚在汽車中放置',
 		tr:'Otomatik Sırasında Mercan',
+		he:'אלמוג ממוקם במהלך אוטו',
 	},
 	auto_place:{
 		name: "Scoring Elements Placed During Auto",
@@ -571,6 +603,7 @@ var statInfo={
 		pt:'Elementos de pontuação colocados durante Auto',
 		zh_tw:'自動放置的得分元素',
 		tr:'Otomatik Sırasında Puanlama Elemanları Yerleştirildi',
+		he:'רכיבי ניקוד שהוצבו במהלך אוטומטי',
 	},
 	auto_score:{
 		name: "Score in Auto",
@@ -579,6 +612,7 @@ var statInfo={
 		pt:'Pontuação em Auto',
 		zh_tw:'自動得分',
 		tr:'Otomatik Sırasında Puan',
+		he:'ציון באוטו',
 	},
 	coral_preload:{
 		name: "Coral Preloaded Before Match",
@@ -587,6 +621,7 @@ var statInfo={
 		pt:'Coral pré-carregado antes da partida',
 		zh_tw:'比賽前預載 Coral',
 		tr:'Maçtan Önce Mercan Önceden Yüklendi',
+		he:'קורל נטען מראש לפני המשחק',
 	},
 	end_game_climb_fail:{
 		name: "Climb Failed",
@@ -595,6 +630,7 @@ var statInfo={
 		pt:'Escalada falhou',
 		zh_tw:'攀爬失敗',
 		tr:'Tırmanma Başarısız Oldu',
+		he:'הטיפוס נכשל',
 	},
 	end_game_position:{
 		name: "End Game Position",
@@ -603,6 +639,7 @@ var statInfo={
 		pt:'Posição final do jogo',
 		zh_tw:'遊戲結束位置',
 		tr:'Oyun Sonu Pozisyonu',
+		he:'עמדת סיום משחק',
 	},
 	tele_drop:{
 		name: "Scoring Elements Dropped in Teleop",
@@ -611,6 +648,7 @@ var statInfo={
 		pt:'Elementos de pontuação descartados no teleop',
 		zh_tw:'遠端操作中被放棄的評分要素',
 		tr:'Teleoperasyonda Düşen Puanlama Elemanları',
+		he:'רכיבי ניקוד נפלו ב-Teleoperation',
 	},
 	tele_place:{
 		name: "Scoring Elements Placed During Teleop",
@@ -619,6 +657,7 @@ var statInfo={
 		pt:'Elementos de pontuação colocados durante o teleop',
 		zh_tw:'遠端操作期間放置的得分元素',
 		tr:'Teleoperasyon Sırasında Yerleştirilen Puanlama Elemanları',
+		he:'רכיבי ניקוד שהונחו במהלך ניתוח טלפוני',
 	},
 	opponent_human_player_team:{
 		name: "Opponent Human Player Team",
@@ -627,6 +666,7 @@ var statInfo={
 		pt:'Equipe de jogadores humanos oponentes',
 		zh_tw:'對手人類玩家隊伍',
 		tr:'Rakip İnsan Oyuncu Takımı',
+		he:'צוות שחקן אנושי יריב',
 	},
 	place:{
 		name: "Scoring Elements Placed",
@@ -635,6 +675,7 @@ var statInfo={
 		pt:'Elementos de pontuação colocados',
 		zh_tw:'放置得分元素',
 		tr:'Yerleştirilen Puanlama Elemanları',
+		he:'ניקוד אלמנטים ממוקמים',
 	},
 	parked_score:{
 		name: "Parking Score",
@@ -643,6 +684,7 @@ var statInfo={
 		pt:'Pontuação de estacionamento',
 		zh_tw:'停車積分',
 		tr:'Park Puanı',
+		he:'ציון חניה',
 	},
 	end_game_position:{
 		name: "Position at End of Game",
@@ -651,6 +693,7 @@ var statInfo={
 		pt:'Posição no final do jogo',
 		zh_tw:'遊戲結束時的位置',
 		tr:'Oyun Sonundaki Pozisyon',
+		he:'מיקום בסוף המשחק',
 	},
 	timeline:{
 		name: "Timeline",
@@ -659,6 +702,7 @@ var statInfo={
 		pt:'Linha do tempo',
 		zh_tw:'時間軸',
 		tr:'Zaman Çizelgesi',
+		he:'ציר זמן',
 	},
 	max_score:{
 		name: "Maximum Score Contribution",
@@ -667,6 +711,7 @@ var statInfo={
 		pt:'Contribuição máxima de pontuação',
 		zh_tw:'最大分數貢獻',
 		tr:'Maksimum Puan Katkısı',
+		he:'תרומת ציון מקסימלי',
 	},
 	min_score:{
 		name: "Minimum Score Contribution",
@@ -675,6 +720,7 @@ var statInfo={
 		pt:'Contribuição mínima de pontuação',
 		zh_tw:'最低分數貢獻',
 		tr:'Minimum Puan Katkısı',
+		he:'תרומת ציון מינימלי',
 	},
 	score:{
 		name: "Score Contribution",
@@ -683,6 +729,7 @@ var statInfo={
 		pt:'Contribuição de pontuação',
 		zh_tw:'分數貢獻',
 		tr:'Puan Katkısı',
+		he:'תרומה של ציון',
 	},
 	scouter:{
 		name: "Scouter",
@@ -691,6 +738,7 @@ var statInfo={
 		pt:'Patrulheiro',
 		zh_tw:'偵察兵',
 		tr:'Scouter',
+		he:'צופית',
 	},
 	comments:{
 		name: "Comments",
@@ -699,6 +747,7 @@ var statInfo={
 		pt:'Comentários',
 		zh_tw:'評論',
 		tr:'Yorumlar',
+		he:'הערות',
 	},
 	created:{
 		name: "Created",
@@ -707,6 +756,7 @@ var statInfo={
 		pt:'Criado',
 		zh_tw:'創建',
 		tr:'Oluşturuldu',
+		he:'נוצר',
 	},
 	modified:{
 		name: "Modified",
@@ -715,6 +765,7 @@ var statInfo={
 		pt:'Modificado',
 		zh_tw:'修改的',
 		tr:'Değiştirildi',
+		he:'שונה',
 	},
 	tele_algae_drop:{
 		name: "Algae Dropped in Teleop",
@@ -726,6 +777,7 @@ var statInfo={
 		pt:'Algas caídas no teleop',
 		zh_tw:'藻類在遠端操作中被丟棄',
 		tr:'Algler Teleoperasyonda Bırakılan',
+		he:'אצות נפלו ב-Teleoperation',
 	},
 	tele_algae_ground:{
 		name: "Algae Collected from Ground in Teleop",
@@ -737,6 +789,7 @@ var statInfo={
 		pt:'Algas coletadas de Solo em Teleop',
 		zh_tw:'遠端操作從地面收集藻類',
 		tr:'Teleoperasyonda Yerden Toplanan Yosun',
+		he:'אצות שנאספו מהקרקע ב-Teleoperation',
 	},
 	tele_algae_lower:{
 		name: "Algae Collected from Lower Reef in Teleop",
@@ -748,6 +801,7 @@ var statInfo={
 		pt:'Algas coletadas do recife inferior em Teleop',
 		zh_tw:'透過遠端操作從下層珊瑚礁收集藻類',
 		tr:'Teleoperasyonda Alt Resiften Toplanan Yosun',
+		he:'אצות שנאספו מהשונית התחתונה ב-Teleoperation',
 	},
 	tele_algae_lower_removed:{
 		name: "Algae Knocked Off Lower Reef in Teleop",
@@ -759,6 +813,7 @@ var statInfo={
 		pt:'Algas derrubadas do recife inferior em Teleop',
 		zh_tw:'遠端操作清除下層珊瑚礁中的藻類',
 		tr:'Teleoperasyonda Alt Resiften Düşürülen Yosun',
+		he:'אצות נפלו מהשונית התחתונה ב-Teleoperation',
 	},
 	tele_algae_net:{
 		name: "Algae Placed in Net by Robot in Teleop",
@@ -770,6 +825,7 @@ var statInfo={
 		pt:'Algas colocadas na rede pelo robô em Teleop',
 		zh_tw:'機器人透過遠端操作將藻類放入網中',
 		tr:'Teleoperasyonda Robot Tarafından Ağa Yerleştirilen Yosun',
+		he:'אצות הוצבו ברשת על ידי רובוט ב-Teleoperation',
 	},
 	tele_algae_opponent_net:{
 		name: "Algae Thrown in Net by Opponent Human Player in Teleop",
@@ -781,6 +837,7 @@ var statInfo={
 		pt:'Algas lançadas na rede pelo jogador humano oponente em Teleop',
 		zh_tw:'遠程操作中對手人類玩家將藻類丟進網中',
 		tr:'Teleoperasyonda Rakip İnsan Oyuncu Tarafından Ağa Atılan Yosun',
+		he:'אצות זרקו ברשת על ידי שחקן יריב אנושי ב-Teleoperation',
 	},
 	tele_algae_opponent_processor:{
 		name: "Algae Placed in the Opponent's Processor in Teleop",
@@ -792,6 +849,7 @@ var statInfo={
 		pt:'Algas colocadas no processador do oponente em Teleop',
 		zh_tw:'在遠端操作中將藻類放置在對手的處理器中',
 		tr:'Teleoperasyonda Rakibin İşlemcisine Yerleştirilen Yosun',
+		he:'אצות ממוקמות במעבד של היריב ב-Teleoperation',
 	},
 	tele_algae_processor:{
 		name: "Algae Placed in the Processor in Teleop",
@@ -803,6 +861,7 @@ var statInfo={
 		pt:'Algas colocadas no processador em Teleop',
 		zh_tw:'藻類在遠端操作中放置在處理器中',
 		tr:'Teleoperasyonda İşlemciye Yerleştirilen Yosun',
+		he:'אצות ממוקמות במעבד ב-Teleoperation',
 	},
 	tele_algae_upper:{
 		name: "Algae Collected from Upper Reef in Teleop",
@@ -814,6 +873,7 @@ var statInfo={
 		pt:'Algas coletadas do recife superior em Teleop',
 		zh_tw:'遠端操作從上層珊瑚礁收集藻類',
 		tr:'Teleoperasyonda Üst Resiften Toplanan Yosun',
+		he:'אצות שנאספו מהשונית העליונה ב-Teleoperation',
 	},
 	tele_algae_upper_removed:{
 		name: "Algae Knocked Off Upper Reef in Teleop",
@@ -825,6 +885,7 @@ var statInfo={
 		pt:'Algas derrubadas do recife superior em Teleop',
 		zh_tw:'遠端操作清除上層珊瑚礁中的藻類',
 		tr:'Teleoperasyonda Üst Resiften Düşürülen Yosun',
+		he:'אצות נפלו מהשונית העליונה ב-Teleoperation',
 	},
 	tele_coral_drop:{
 		name: "Coral Dropped in Teleop",
@@ -836,6 +897,7 @@ var statInfo={
 		pt:'Coral derrubado em Teleop',
 		zh_tw:'珊瑚在遠端操作中掉落',
 		tr:'Teleoperasyonda Mercan Bırakıldı',
+		he:'אלמוג ירד ב-Teleoperation',
 	},
 	tele_coral_ground:{
 		name: "Coral Collected from Ground in Teleop",
@@ -847,6 +909,7 @@ var statInfo={
 		pt:'Coral coletado do solo em Teleop',
 		zh_tw:'遠端操作從地面收集珊瑚',
 		tr:'Teleoperasyonda Yerden Toplanan Mercan',
+		he:'אלמוגים שנאספו מהקרקע ב-Teleoperation',
 	},
 	tele_coral_level_1:{
 		name: "Coral Placed on Level 1 During Teleop",
@@ -858,6 +921,7 @@ var statInfo={
 		pt:'Coral colocado no nível 1 durante Teleop',
 		zh_tw:'遠端操作期間將珊瑚放置在 1 級',
 		tr:'Teleoperasyon Sırasında Seviye 1\'e Yerleştirilen Mercan',
+		he:'אלמוג מוצב ברמה 1 במהלך ניתוח טלפוני',
 	},
 	tele_coral_level_2:{
 		name: "Coral Placed on Level 2 During Teleop",
@@ -869,6 +933,7 @@ var statInfo={
 		pt:'Coral colocado no nível 2 durante Teleop',
 		zh_tw:'遠端操作期間將珊瑚放置在第 2 層',
 		tr:'Teleoperasyon Sırasında Seviye 2\'ye Yerleştirilen Mercan',
+		he:'אלמוג הונח על רמה 2 במהלך ניתוח טלפוני',
 	},
 	tele_coral_level_3:{
 		name: "Coral Placed on Level 3 During Teleop",
@@ -880,6 +945,7 @@ var statInfo={
 		pt:'Coral colocado no nível 3 durante Teleop',
 		zh_tw:'遠端操作期間將珊瑚放置在第 3 層',
 		tr:'Teleoperasyon Sırasında Seviye 3\'e Yerleştirilen Mercan',
+		he:'אלמוג מוצב ברמה 3 במהלך ניתוח טלפוני',
 	},
 	tele_coral_level_4:{
 		name: "Coral Placed on Level 4 During Teleop",
@@ -891,6 +957,7 @@ var statInfo={
 		pt:'Coral colocado no nível 4 durante Teleop',
 		zh_tw:'遠端操作期間將珊瑚放置在第 4 層',
 		tr:'Teleoperasyon Sırasında Seviye 4\'e Yerleştirilen Mercan',
+		he:'אלמוג הונח על רמה 4 במהלך ניתוח טלפוני',
 	},
 	tele_coral_station_1:{
 		name: "Coral Collected from Station 1 in Teleop",
@@ -902,6 +969,7 @@ var statInfo={
 		pt:'Coral coletado da estação 1 em Teleop',
 		zh_tw:'遠端操作從 1 號站收集的珊瑚',
 		tr:'İstasyon 1\'den Toplanan Mercan Teleoperasyon',
+		he:'אלמוגים שנאספו מתחנה 1 ב-Teleoperation',
 	},
 	tele_coral_station_2:{
 		name: "Coral Collected from Station 2 in Teleop",
@@ -913,6 +981,7 @@ var statInfo={
 		pt:'Coral coletado da estação 2 em Teleop',
 		zh_tw:'遠端操作中從 2 號站收集的珊瑚',
 		tr:'Teleoperasyonda İstasyon 2\'den Toplanan Mercan',
+		he:'קורל שנאסף מתחנה 2 ב-Teleoperation',
 	},
 	algae_collect:{
 		name: 'Algae Collected',
@@ -921,6 +990,7 @@ var statInfo={
 		pt:'Algas coletadas',
 		zh_tw:'收集藻類',
 		tr:'Toplanan Yosun',
+		he:'אצות נאספו',
 	},
 	algae_collect_reef:{
 		name: 'Algae Collected from Reef',
@@ -929,6 +999,7 @@ var statInfo={
 		pt:'Algas coletadas de Recife',
 		zh_tw:'從珊瑚礁收集的藻類',
 		tr:'Resiften Toplanan Yosun',
+		he:'אצות שנאספו משונית',
 	},
 	algae_drop:{
 		name: 'Algae Dropped',
@@ -937,6 +1008,7 @@ var statInfo={
 		pt:'Algas caídas',
 		zh_tw:'藻類掉落',
 		tr:'Atılan Yosun',
+		he:'אצות נשמטו',
 	},
 	algae_ground:{
 		name: 'Algae Collected from Ground',
@@ -945,6 +1017,7 @@ var statInfo={
 		pt:'Algas coletadas do solo',
 		zh_tw:'從地面收集的藻類',
 		tr:'Yerden Toplanan Yosun',
+		he:'אצות שנאספו מהאדמה',
 	},
 	algae_lower:{
 		name: 'Algae Collected from Lower Reef',
@@ -953,6 +1026,7 @@ var statInfo={
 		pt:'Algas coletadas do recife inferior',
 		zh_tw:'從下層珊瑚礁收集的藻類',
 		tr:'Alt Resiften Toplanan Yosun',
+		he:'אצות שנאספו מהשונית התחתונה',
 	},
 	algae_lower_removed:{
 		name: 'Algae Knocked Off Lower Reef',
@@ -961,6 +1035,7 @@ var statInfo={
 		pt:'Algas derrubadas do recife inferior',
 		zh_tw:'珊瑚礁下部藻類被清除',
 		tr:'Alt Resiften Düşen Yosun',
+		he:'אצות נפלו מהשונית התחתונה',
 	},
 	algae_net:{
 		name: 'Algae Placed or Shot into the Net by the Robot',
@@ -969,6 +1044,7 @@ var statInfo={
 		pt:'Algas colocadas ou atiradas na rede pelo robô',
 		zh_tw:'機器人將藻類放入或射入網中',
 		tr:'Robot Tarafından Ağa Yerleştirilen veya Atılan Yosun',
+		he:'אצות שהונחו או ירו ברשת על ידי הרובוט',
 	},
 	algae_net_score:{
 		name: 'Algae Net Score',
@@ -977,6 +1053,7 @@ var statInfo={
 		pt:'Pontuação da rede de algas',
 		zh_tw:'藻類淨評分',
 		tr:'Yosun Net Puanı',
+		he:'ציון נטו של אצות',
 	},
 	algae_opponent_net:{
 		name: 'Algae Opponent Net',
@@ -985,6 +1062,7 @@ var statInfo={
 		pt:'Rede do oponente de algas',
 		zh_tw:'藻類對抗網',
 		tr:'Rakip Yosun Net Puanı',
+		he:'יריב אצות נטו',
 	},
 	algae_opponent_net_score:{
 		name: 'Algae Opponent Net Score',
@@ -993,6 +1071,7 @@ var statInfo={
 		pt:'Pontuação da rede do oponente de algas',
 		zh_tw:'海藻對手淨得分',
 		tr:'Rakip Yosun Net Puanı',
+		he:'ציון נטו של יריב אצות',
 	},
 	algae_opponent_processor:{
 		name: "Algae Placed in the Opponent's Processor",
@@ -1001,6 +1080,7 @@ var statInfo={
 		pt:'Algas colocadas no processador do oponente',
 		zh_tw:'放置在對手處理器中的藻類',
 		tr:'Rakip Yosun Net Puanı',
+		he:'אצות ממוקמות במעבד של היריב',
 	},
 	algae_opponent_processor_score:{
 		name: 'Algae Opponent Processor Score',
@@ -1009,6 +1089,7 @@ var statInfo={
 		pt:'Pontuação do processador do oponente de algas',
 		zh_tw:'藻類對手處理器得分',
 		tr:'Rakibin İşlemcisine Yerleştirilen Yosun',
+		he:'ציון מעבד יריב אצות',
 	},
 	algae_processor:{
 		name: 'Algae Placed in Processor',
@@ -1017,6 +1098,7 @@ var statInfo={
 		pt:'Algas colocadas no processador',
 		zh_tw:'藻類放入處理器',
 		tr:'Rakip Yosun İşlemci Puanı',
+		he:'אצות ממוקמות במעבד',
 	},
 	algae_processor_score:{
 		name: 'Algae Processor Score',
@@ -1025,6 +1107,7 @@ var statInfo={
 		pt:'Pontuação do processador de algas',
 		zh_tw:'藻類處理器評分',
 		tr:'İşlemciye Yerleştirilen Yosun',
+		he:'ציון מעבד אצות',
 	},
 	algae_reef:{
 		name: 'Algae Collected from Reef',
@@ -1033,6 +1116,7 @@ var statInfo={
 		pt:'Algas coletadas do recife',
 		zh_tw:'從珊瑚礁收集的藻類',
 		tr:'Yosun İşlemci Puanı',
+		he:'אצות שנאספו משונית',
 	},
 	algae_removed_reef:{
 		name: 'Algae Knocked Off Reef',
@@ -1041,6 +1125,7 @@ var statInfo={
 		pt:'Algas derrubadas do recife',
 		zh_tw:'珊瑚礁上的藻類被清除',
 		tr:'Resiften Toplanan Yosun',
+		he:'אצות נפלו מהשונית',
 	},
 	algae_score:{
 		name: 'Algae Score',
@@ -1049,6 +1134,7 @@ var statInfo={
 		pt:'Pontuação das algas',
 		zh_tw:'藻類評分',
 		tr:'Resiften Düşen Yosun',
+		he:'ציון אצות',
 	},
 	algae_score_total:{
 		name: 'Algae Score for FMS Comparison',
@@ -1057,6 +1143,7 @@ var statInfo={
 		pt:'Pontuação das algas para comparação de FMS',
 		zh_tw:'FMS 比較的藻類評分',
 		tr:'Yosun Puanı',
+		he:'ציון אצות עבור השוואת FMS',
 	},
 	algae_upper:{
 		name: 'Algae Collected from Upper Reef',
@@ -1065,6 +1152,7 @@ var statInfo={
 		pt:'Algas coletadas do recife superior',
 		zh_tw:'從上層珊瑚礁收集的藻類',
 		tr:'FMS Karşılaştırması İçin Yosun Puanı',
+		he:'אצות שנאספו מהשונית העליונה',
 	},
 	algae_upper_removed:{
 		name: 'Algae Knocked Off Upper Reef',
@@ -1073,6 +1161,7 @@ var statInfo={
 		pt:'Algas derrubadas do recife superior',
 		zh_tw:'珊瑚礁上部的藻類被清除',
 		tr:'Üst Resiften Toplanan Yosun',
+		he:'אצות נפלו מהשונית העליונה',
 	},
 	auto_algae_collect:{
 		name: 'Algae Collected in Auto',
@@ -1081,6 +1170,7 @@ var statInfo={
 		pt:'Algas coletadas em Automático',
 		zh_tw:'汽車內收集的藻類',
 		tr:'Üst Resiften Düşen Yosun',
+		he:'אצות שנאספו אוטומטית',
 	},
 	auto_algae_collect_reef:{
 		name: 'Algae Collected from Reef in Auto',
@@ -1089,6 +1179,7 @@ var statInfo={
 		pt:'Algas coletadas do recife em Automático',
 		zh_tw:'從珊瑚礁中自動收集的藻類',
 		tr:'Otomatikte Toplanan Yosun',
+		he:'אצות שנאספו משונית באוטו',
 	},
 	auto_algae_ground:{
 		name: 'Algae Collected from Ground in Auto',
@@ -1097,6 +1188,7 @@ var statInfo={
 		pt:'Algas coletadas do solo em Automático',
 		zh_tw:'從汽車地面收集的藻類',
 		tr:'Yosun Auto\'da Resiften Toplanan',
+		he:'אצות שנאספו מהקרקע באוטו',
 	},
 	auto_algae_net_score:{
 		name: 'Algae Net Score in Auto',
@@ -1105,6 +1197,7 @@ var statInfo={
 		pt:'Pontuação da rede de algas em Automático',
 		zh_tw:'汽車中的藻類淨得分',
 		tr:'Auto\'da Zeminden Toplanan Yosun',
+		he:'ציון נטו אצות באוטומטי',
 	},
 	auto_algae_opponent_processor_score:{
 		name: 'Algae Opponent Processor Score in Auto',
@@ -1113,6 +1206,7 @@ var statInfo={
 		pt:'Pontuação do processador do oponente de algas em Automático',
 		zh_tw:'藻類對手處理器自動得分',
 		tr:'Auto\'da Yosun Net Puanı',
+		he:'ציון מעבד יריב אצות באוטומטי',
 	},
 	auto_algae_place:{
 		name: 'Algae Placed in Auto',
@@ -1121,6 +1215,7 @@ var statInfo={
 		pt:'Algas colocadas em Auto',
 		zh_tw:'藻類放置在汽車',
 		tr:'Auto\'da Yosun Rakip İşlemci Puanı',
+		he:'אצות מונחת באוטו',
 	},
 	auto_algae_processor_net_score:{
 		name: 'Algae Processor Net Score in Auto',
@@ -1129,6 +1224,7 @@ var statInfo={
 		pt:'Pontuação líquida do processador de algas em Auto',
 		zh_tw:'藻類處理器淨得分',
 		tr:'Auto\'da Yerleştirilen Yosun',
+		he:'ציון נטו של מעבד אצות באוטומטי',
 	},
 	auto_algae_processor_score:{
 		name: 'Algae Processor Score in Auto',
@@ -1137,6 +1233,7 @@ var statInfo={
 		pt:'Pontuação do processador de algas em Auto',
 		zh_tw:'藻類處理器自動評分',
 		tr:'Auto\'da Yosun İşlemci Net Puanı',
+		he:'ציון מעבד אצות באוטומטי',
 	},
 	auto_algae_reef:{
 		name: 'Algae Collected from Reef in Auto',
@@ -1145,6 +1242,7 @@ var statInfo={
 		pt:'Algas coletadas do recife em Auto',
 		zh_tw:'從珊瑚礁中自動收集的藻類',
 		tr:'Auto\'da Yosun İşlemci Puanı',
+		he:'אצות שנאספו משונית באוטו',
 	},
 	auto_algae_removed_reef:{
 		name: 'Algae Knocked Off Reef in Auto',
@@ -1153,6 +1251,7 @@ var statInfo={
 		pt:'Algas derrubadas do recife em Auto',
 		zh_tw:'藻類從汽車中衝出珊瑚礁',
 		tr:'Auto\'da Resiften Toplanan Yosun',
+		he:'אצות נפלו מהשונית אוטומטית',
 	},
 	auto_algae_score:{
 		name: 'Algae Score in Auto',
@@ -1161,6 +1260,7 @@ var statInfo={
 		pt:'Pontuação das algas em Auto',
 		zh_tw:'自動藻類評分',
 		tr:'Auto\'da Resiften Düşürülen Yosun',
+		he:'ציון אצות באוטומטי',
 	},
 	auto_collect:{
 		name: 'Scoring Elements Collected in Auto',
@@ -1169,6 +1269,7 @@ var statInfo={
 		pt:'Elementos de pontuação coletados em Auto',
 		zh_tw:'自動收集的評分元素',
 		tr:'Auto\'da Yosun Puanı',
+		he:'רכיבי ניקוד שנאספו אוטומטית',
 	},
 	auto_coral_collect:{
 		name: 'Coral Collected in Auto',
@@ -1177,6 +1278,7 @@ var statInfo={
 		pt:'Coral coletado em Auto',
 		zh_tw:'汽車收集的珊瑚',
 		tr:'Auto\'da Toplanan Puanlama Elemanları',
+		he:'אלמוגים שנאספו באוטו',
 	},
 	auto_coral_ground:{
 		name: 'Coral Collected from Ground in Auto',
@@ -1185,6 +1287,7 @@ var statInfo={
 		pt:'Coral coletado do solo em Auto',
 		zh_tw:'汽車從地面收集的珊瑚',
 		tr:'Auto\'da Toplanan Mercan',
+		he:'אלמוגים שנאספו מהקרקע באוטו',
 	},
 	auto_coral_score:{
 		name: 'Coral Score in Auto',
@@ -1193,6 +1296,7 @@ var statInfo={
 		pt:'Pontuação dos corais em Auto',
 		zh_tw:'汽車中的珊瑚評分',
 		tr:'Auto\'da Zeminden Toplanan Mercan',
+		he:'ציון קורל באוטו',
 	},
 	auto_coral_station:{
 		name: 'Coral Collected from Station in Auto',
@@ -1201,6 +1305,7 @@ var statInfo={
 		pt:'Coral coletado da estação em Auto',
 		zh_tw:'從汽車站收集的珊瑚',
 		tr:'Auto\'da Mercan Puanı',
+		he:'אלמוגים שנאספו מהתחנה באוטו',
 	},
 	auto_drop:{
 		name: 'Scoring Elements Dropped in Auto',
@@ -1209,6 +1314,7 @@ var statInfo={
 		pt:'Elementos de pontuação descartados em Auto',
 		zh_tw:'自動放棄的得分元素',
 		tr:'Auto\'da İstasyondan Toplanan Mercan',
+		he:'רכיבי ניקוד נפלו באוטומט',
 	},
 	cage_score:{
 		name: 'Cage Score',
@@ -1217,6 +1323,7 @@ var statInfo={
 		pt:'Pontuação da gaiola',
 		zh_tw:'籠中得分',
 		tr:'Auto\'da Düşen Puanlama Elemanları',
+		he:'ציון כלוב',
 	},
 	collect:{
 		name: 'Scoring Elements Collected',
@@ -1225,6 +1332,7 @@ var statInfo={
 		pt:'Elementos de pontuação coletados',
 		zh_tw:'收集的評分要素',
 		tr:'Kafes Puanı',
+		he:'רכיבי ניקוד שנאספו',
 	},
 	coral_collect:{
 		name: 'Coral Collected',
@@ -1233,6 +1341,7 @@ var statInfo={
 		pt:'Coral coletado',
 		zh_tw:'收集珊瑚',
 		tr:'Toplanan Puanlama Elemanları',
+		he:'אלמוגים אספו',
 	},
 	coral_drop:{
 		name: 'Coral Dropped',
@@ -1241,6 +1350,7 @@ var statInfo={
 		pt:'Coral descartado',
 		zh_tw:'珊瑚掉落',
 		tr:'Toplanan Mercan',
+		he:'אלמוג ירד',
 	},
 	coral_ground:{
 		name: 'Coral Collected from Ground',
@@ -1249,6 +1359,7 @@ var statInfo={
 		pt:'Coral coletado do solo',
 		zh_tw:'從地面採集的珊瑚',
 		tr:'Düşen Mercan',
+		he:'אלמוגים שנאספו מהאדמה',
 	},
 	coral_score:{
 		name: 'Coral Score',
@@ -1257,6 +1368,7 @@ var statInfo={
 		pt:'Pontuação dos corais',
 		zh_tw:'珊瑚評分',
 		tr:'Yerden Toplanan Mercan',
+		he:'ציון קורל',
 	},
 	coral_station:{
 		name: 'Coral Collected from Station',
@@ -1265,6 +1377,7 @@ var statInfo={
 		pt:'Coral coletado da estação',
 		zh_tw:'從遺址收集的珊瑚',
 		tr:'Mercan Puanı',
+		he:'אלמוגים שנאספו מהתחנה',
 	},
 	deep:{
 		name: 'Deep Cage',
@@ -1273,6 +1386,7 @@ var statInfo={
 		pt:'Gaiola funda',
 		zh_tw:'深籠',
 		tr:'İstasyondan Toplanan Mercan',
+		he:'כלוב עמוק',
 	},
 	deep_score:{
 		name: 'Deep Cage Score',
@@ -1281,6 +1395,7 @@ var statInfo={
 		pt:'Pontuação da gaiola funda',
 		zh_tw:'深籠得分',
 		tr:'Derin Kafes',
+		he:'ציון כלוב עמוק',
 	},
 	drop:{
 		name: 'Scoring Elements Dropped',
@@ -1289,6 +1404,7 @@ var statInfo={
 		pt:'Elementos de pontuação descartados',
 		zh_tw:'得分要素被刪除',
 		tr:'Derin Kafes Puanı',
+		he:'רכיבי ניקוד נשמטו',
 	},
 	end_game_score:{
 		name: 'End Game Score',
@@ -1297,6 +1413,7 @@ var statInfo={
 		pt:'Pontuação do final do jogo',
 		zh_tw:'遊戲結束分數',
 		tr:'Düşen Puanlama Elemanları',
+		he:'ציון משחק סיום',
 	},
 	park:{
 		name: 'Park',
@@ -1305,6 +1422,7 @@ var statInfo={
 		pt:'Parque',
 		zh_tw:'公園',
 		tr:'Oyun Sonu Puan',
+		he:'פַּארק',
 	},
 	park_score:{
 		name: 'Park Score',
@@ -1313,6 +1431,7 @@ var statInfo={
 		pt:'Pontuação do parque',
 		zh_tw:'公園評分',
 		tr:'Park',
+		he:'ציון פארק',
 	},
 	shallow:{
 		name: 'Shallow Cage',
@@ -1321,6 +1440,7 @@ var statInfo={
 		pt:'Gaiola rasa',
 		zh_tw:'淺籠',
 		tr:'Park Puanı',
+		he:'כלוב רדוד',
 	},
 	shallow_score:{
 		name: 'Shallow Cage Score',
@@ -1329,6 +1449,7 @@ var statInfo={
 		pt:'Pontuação da gaiola rasa',
 		zh_tw:'淺籠評分',
 		tr:'Sığ Kafes',
+		he:'ציון כלוב רדוד',
 	},
 	tele_algae_collect:{
 		name: 'Algae Collected in Teleop',
@@ -1337,6 +1458,7 @@ var statInfo={
 		pt:'Algas coletadas no Teleop',
 		zh_tw:'遠端操作收集藻類',
 		tr:'Sığ Kafes Puanı',
+		he:'אצות שנאספו ב-Teleoperation',
 	},
 	tele_algae_collect_reef:{
 		name: 'Algae Collected Reef in Teleop',
@@ -1345,6 +1467,7 @@ var statInfo={
 		pt:'Algas coletadas do recife em Teleop',
 		zh_tw:'遠端操作採集珊瑚礁中的藻類',
 		tr:'Teleoperasyonda Toplanan Yosun',
+		he:'אצות אסוף ריף ב-Teleoperation',
 	},
 	tele_algae_net_score:{
 		name: 'Algae Net Score in Teleop',
@@ -1353,6 +1476,7 @@ var statInfo={
 		pt:'Pontuação líquida das algas no Teleop',
 		zh_tw:'遠端操作中的藻類網路得分',
 		tr:'Teleoperasyonda Resifte Toplanan Yosun',
+		he:'ציון נטו אצות ב-Teleoperation',
 	},
 	tele_algae_opponent_net_score:{
 		name: 'Algae Opponent Net Score in Teleop',
@@ -1361,6 +1485,7 @@ var statInfo={
 		pt:'Algas Pontuação líquida do oponente em Teleop',
 		zh_tw:'藻類對手遠程操作淨得分',
 		tr:'Teleoperasyonda Yosun Net Puanı',
+		he:'ציון נטו של יריב אצות ב-Teleoperation',
 	},
 	tele_algae_opponent_processor_score:{
 		name: 'Algae Opponent Processor Score in Teleop',
@@ -1369,6 +1494,7 @@ var statInfo={
 		pt:'Pontuação do processador do oponente de algas em Teleop',
 		zh_tw:'藻類對手處理器在遠端操作的得分',
 		tr:'Teleoperasyonda Yosun Rakibi Net Puanı',
+		he:'ציון מעבד יריב אצות ב-Teleoperation',
 	},
 	tele_algae_processor_net_score:{
 		name: 'Algae Processor Net Score in Teleop',
@@ -1377,6 +1503,7 @@ var statInfo={
 		pt:'Pontuação líquida do processador de algas em Teleop',
 		zh_tw:'藻類處理器遠端操作淨得分',
 		tr:'Teleoperasyonda Yosun Rakibi İşlemci Puanı',
+		he:'ציון נטו של מעבד אצות ב-Teleoperation',
 	},
 	tele_algae_processor_score:{
 		name: 'Algae Processor Score in Teleop',
@@ -1385,6 +1512,7 @@ var statInfo={
 		pt:'Pontuação do processador de algas em Teleop',
 		zh_tw:'藻類處理器在遠端操作的得分',
 		tr:'Teleoperasyonda Yosun İşlemci Net Puanı',
+		he:'ציון מעבד אצות ב-Teleoperation',
 	},
 	tele_algae_reef:{
 		name: 'Algae Collected from Reef in Teleop',
@@ -1393,6 +1521,7 @@ var statInfo={
 		pt:'Algas coletadas do recife em Teleop',
 		zh_tw:'遠端操作從珊瑚礁中收集藻類',
 		tr:'Teleoperasyonda Yosun İşlemci Puanı',
+		he:'אצות שנאספו משונית ב-Teleoperation',
 	},
 	tele_algae_removed_reef:{
 		name: 'Algae Knocked Off Reef in Teleop',
@@ -1401,6 +1530,7 @@ var statInfo={
 		pt:'Algas derrubadas do recife em Teleop',
 		zh_tw:'遠端操作清除珊瑚礁上的藻類',
 		tr:'Teleoperasyonda Resiften Toplanan Yosun',
+		he:'אצות נפלו מהשונית ב-Teleoperation',
 	},
 	tele_algae_score:{
 		name: 'Algae Score in Teleop',
@@ -1409,6 +1539,7 @@ var statInfo={
 		pt:'Pontuação de algas em Teleop',
 		zh_tw:'遠端操作中的藻類評分',
 		tr:'Teleoperasyonda Resiften Düşen Yosun',
+		he:'ציון אצות ב-Teleoperation',
 	},
 	tele_collect:{
 		name: 'Scoring Elements Collected in Teleop',
@@ -1417,6 +1548,7 @@ var statInfo={
 		pt:'Elementos de pontuação coletados em Teleop',
 		zh_tw:'遠端操作中收集的評分要素',
 		tr:'Teleoperasyonda Yosun Puanı',
+		he:'רכיבי ניקוד שנאספו ב-Teleoperation',
 	},
 	tele_coral_collect:{
 		name: 'Coral Collected in Teleop',
@@ -1425,6 +1557,7 @@ var statInfo={
 		pt:'Coral coletado em Teleop',
 		zh_tw:'遠端操作採集珊瑚',
 		tr:'Teleoperasyonda Toplanan Puanlama Elemanları',
+		he:'אלמוגים שנאספו ב-Teleoperation',
 	},
 	tele_coral_place:{
 		name: 'Coral Placed in Teleop',
@@ -1433,6 +1566,7 @@ var statInfo={
 		pt:'Coral colocado em Teleop',
 		zh_tw:'珊瑚被置於遠端操作中',
 		tr:'Teleoperasyonda Toplanan Mercan',
+		he:'אלמוג מוצב ב-Teleoperation',
 	},
 	tele_coral_score:{
 		name: 'Coral Score in Teleop',
@@ -1441,6 +1575,7 @@ var statInfo={
 		pt:'Pontuação de coral em Teleop',
 		zh_tw:'遠端操作中的珊瑚分數',
 		tr:'Teleoperasyonda Yerleştirilen Mercan',
+		he:'ציון אלמוגים בטלאופציה',
 	},
 	tele_coral_station:{
 		name: 'Coral Collected from Station in Teleop',
@@ -1449,6 +1584,7 @@ var statInfo={
 		pt:'Coral coletado da estação em Teleop',
 		zh_tw:'從遠端操作站收集的珊瑚',
 		tr:'Teleoperasyonda Mercan Puanı',
+		he:'אלמוגים שנאספו מתחנה ב-Teleoperation',
 	},
 	tele_score:{
 		name: 'Score in Teleop',
@@ -1457,6 +1593,7 @@ var statInfo={
 		pt:'Pontuação em Teleop',
 		zh_tw:'遠端操作得分',
 		tr:'Teleoperasyonda İstasyondan Toplanan Mercan',
+		he:'ציון ב-Teleoperation',
 	},
 	algae_place:{
 		name: 'Algae Placed',
@@ -1465,6 +1602,7 @@ var statInfo={
 		pt:'Algas colocadas',
 		zh_tw:'放置藻類',
 		tr:'Teleoperasyonda Puan',
+		he:'אצות מונחות',
 	},
 	coral_place:{
 		name: 'Coral Placed',
@@ -1473,6 +1611,7 @@ var statInfo={
 		pt:'Coral colocado',
 		zh_tw:'珊瑚放置',
 		tr:'Yerleştirilen Yosun',
+		he:'קורל ממוקם',
 	},
 	tele_algae_place:{
 		name: 'Algae Placed in Teleop',
@@ -1481,6 +1620,7 @@ var statInfo={
 		pt:'Algas colocadas em Teleop',
 		zh_tw:'藻類用於遠端操作',
 		tr:'Yerleştirilen Mercan',
+		he:'אצות שהוכנסו לטלאופציה',
 	},
 	auto_coral_level_1_score:{
 		name: 'Coral Score for Level 1 in Auto',
@@ -1489,6 +1629,7 @@ var statInfo={
 		pt:'Pontuação de coral para nível 1 em Auto',
 		zh_tw:'汽車 1 級珊瑚評分',
 		tr:'Yerleştirilen Yosun Teleoperasyonda',
+		he:'ציון קורל לרמה 1 באוטו',
 	},
 	auto_coral_level_2_score:{
 		name: 'Coral Score for Level 2 in Auto',
@@ -1497,6 +1638,7 @@ var statInfo={
 		pt:'Pontuação de coral para nível 2 em Auto',
 		zh_tw:'汽車 2 級珊瑚評分',
 		tr:'Otomatikte Seviye 1 için Coral Puanı',
+		he:'ציון קורל לרמה 2 באוטו',
 	},
 	auto_coral_level_3_score:{
 		name: 'Coral Score for Level 3 in Auto',
@@ -1505,6 +1647,7 @@ var statInfo={
 		pt:'Pontuação de coral para nível 3 em Auto',
 		zh_tw:'汽車 3 級珊瑚評分',
 		tr:'Otomatikte Seviye 2 için Coral Puanı',
+		he:'ציון קורל לרמה 3 באוטו',
 	},
 	auto_coral_level_4_score:{
 		name: 'Coral Score for Level 4 in Auto',
@@ -1513,6 +1656,7 @@ var statInfo={
 		pt:'Pontuação de coral para nível 4 em Auto',
 		zh_tw:'汽車 4 級珊瑚評分',
 		tr:'Otomatikte Seviye 3 için Coral Puanı',
+		he:'ציון קורל לרמה 4 באוטו',
 	},
 	coral_level_1:{
 		name: 'Coral Placed on Level 1',
@@ -1521,6 +1665,7 @@ var statInfo={
 		pt:'Coral colocado no nível 1',
 		zh_tw:'珊瑚放置在第 1 層',
 		tr:'Otomatikte Seviye 4 için Coral Puanı',
+		he:'אלמוג מוצב ברמה 1',
 	},
 	coral_level_1_score:{
 		name: 'Coral Score for Level 1',
@@ -1529,6 +1674,7 @@ var statInfo={
 		pt:'Pontuação de coral para nível 1',
 		zh_tw:'1 級珊瑚評分',
 		tr:'Seviye 1\'e Yerleştirilen Coral',
+		he:'ציון קורל לרמה 1',
 	},
 	coral_level_2:{
 		name: 'Coral Placed on Level 2',
@@ -1537,6 +1683,7 @@ var statInfo={
 		pt:'Coral colocado no nível 2',
 		zh_tw:'珊瑚放置在第 2 層',
 		tr:'Seviye 1 için Coral Puanı',
+		he:'אלמוג מוצב ברמה 2',
 	},
 	coral_level_2_score:{
 		name: 'Coral Score for Level 2',
@@ -1545,6 +1692,7 @@ var statInfo={
 		pt:'Pontuação de coral para nível 2',
 		zh_tw:'2 級珊瑚評分',
 		tr:'Seviye 2\'ye Yerleştirilen Coral',
+		he:'ציון קורל לרמה 2',
 	},
 	coral_level_3:{
 		name: 'Coral Placed on Level 3',
@@ -1553,6 +1701,7 @@ var statInfo={
 		pt:'Coral colocado no Nível 3',
 		zh_tw:'珊瑚放置在第 3 層',
 		tr:'Seviye 2 için Coral Puanı',
+		he:'אלמוג מוצב ברמה 3',
 	},
 	coral_level_3_score:{
 		name: 'Coral Score for Level 3',
@@ -1561,6 +1710,7 @@ var statInfo={
 		pt:'Pontuação de Coral para o Nível 3',
 		zh_tw:'3 級珊瑚評分',
 		tr:'Seviye 3\'e Yerleştirilen Coral',
+		he:'ציון קורל לרמה 3',
 	},
 	coral_level_4:{
 		name: 'Coral Placed on Level 4',
@@ -1569,6 +1719,7 @@ var statInfo={
 		pt:'Coral Colocado no Nível 4',
 		zh_tw:'珊瑚放置在第 4 層',
 		tr:'Seviye 3 için Coral Puanı',
+		he:'אלמוג ממוקם ברמה 4',
 	},
 	coral_level_4_score:{
 		name: 'Coral Score for Level 4',
@@ -1577,6 +1728,7 @@ var statInfo={
 		pt:'Pontuação de Coral para o Nível 4',
 		zh_tw:'4 級珊瑚評分',
 		tr:'Seviye 4\'e Yerleştirilen Coral',
+		he:'ציון קורל לרמה 4',
 	},
 	coral_station_1:{
 		name: 'Coral Collected from Station 1',
@@ -1585,6 +1737,7 @@ var statInfo={
 		pt:'Coral Coletado da Estação 1',
 		zh_tw:'從 1 號站收集的珊瑚',
 		tr:'İstasyon 1\'den Toplanan Coral',
+		he:'אלמוגים שנאספו מתחנה 1',
 	},
 	coral_station_2:{
 		name: 'Coral Collected from Station 2',
@@ -1593,6 +1746,7 @@ var statInfo={
 		pt:'Coral Coletado da Estação 2',
 		zh_tw:'從 2 號站收集的珊瑚',
 		tr:'İstasyon 2\'den Toplanan Coral',
+		he:'אלמוגים שנאספו מתחנה 2',
 	},
 	tele_coral_level_1_score:{
 		name: 'Coral Score for Level 1 in Teleop',
@@ -1601,6 +1755,7 @@ var statInfo={
 		pt:'Pontuação de Coral para o Nível 1 em Teleop',
 		zh_tw:'遠端操作一級珊瑚評分',
 		tr:'Teleoperasyonda Seviye 1 için Coral Puanı',
+		he:'ציון קורל לרמה 1 ב-Teleoperation',
 	},
 	tele_coral_level_2_score:{
 		name: 'Coral Score for Level 2 in Teleop',
@@ -1609,6 +1764,7 @@ var statInfo={
 		pt:'Pontuação de Coral para o Nível 2 em Teleop',
 		zh_tw:'遠端操作 2 級 Coral 評分',
 		tr:'Teleoperasyonda Seviye 2 için Coral Puanı',
+		he:'ציון קורל לרמה 2 ב-Teleoperation',
 	},
 	tele_coral_level_3_score:{
 		name: 'Coral Score for Level 3 in Teleop',
@@ -1617,6 +1773,7 @@ var statInfo={
 		pt:'Pontuação de Coral para o Nível 3 em Teleop',
 		zh_tw:'遠端操作 3 級 Coral 評分',
 		tr:'Teleoperasyonda Seviye 3 için Coral Puanı',
+		he:'ציון קורל לרמה 3 ב-Teleoperation',
 	},
 	tele_coral_level_4_score:{
 		name: 'Coral Score for Level 4 in Teleop',
@@ -1625,6 +1782,7 @@ var statInfo={
 		pt:'Pontuação de Coral para o Nível 4 em Teleop',
 		zh_tw:'遠端操作 4 級 Coral 評分',
 		tr:'Teleoperasyonda Seviye 4 için Coral Puanı',
+		he:'ציון קורל לרמה 4 ב-Teleoperation',
 	},
 	preferred_coral_level:{
 		name: 'Preferred Coral Level',
@@ -1633,6 +1791,7 @@ var statInfo={
 		pt:'Nível de Coral Preferido',
 		zh_tw:'首選珊瑚等級',
 		tr:'Tercih Edilen Coral Seviyesi',
+		he:'רמת קורל מועדפת',
 	},
 	preferred_algae_place:{
 		name: 'Preferred Algae Placement',
@@ -1641,6 +1800,7 @@ var statInfo={
 		pt:'Posicionamento de Algas Preferido',
 		zh_tw:'首選藻類放置位置',
 		tr:'Tercih Edilen Yosun Yerleşimi',
+		he:'מיקום אצות מועדף',
 	},
 	human_player_algae_received:{
 		name: 'Human Player Shots',
@@ -1649,6 +1809,7 @@ var statInfo={
 		pt:'Tiros de Jogadores Humanos',
 		zh_tw:'人類球員射門',
 		tr:'İnsan Oyuncu Atışları',
+		he:'יריות שחקן אנושי',
 	},
 	human_player_net:{
 		name: 'Human Player Shots Made',
@@ -1657,6 +1818,7 @@ var statInfo={
 		pt:'Tiros de Jogadores Humanos Feitos',
 		zh_tw:'人類球員射門次數',
 		tr:'Yapılan İnsan Oyuncu Atışları',
+		he:'יריות של שחקן אנושי',
 	},
 	human_player_accuracy:{
 		name: 'Human Player Accuracy',
@@ -1665,6 +1827,7 @@ var statInfo={
 		pt:'Precisão de Jogadores Humanos',
 		zh_tw:'人類玩家準確度',
 		tr:'İnsan Oyuncu Doğruluk',
+		he:'דיוק שחקן אנושי',
 	},
 	algae_litter:{
 		name: 'Algae Litter',
@@ -1674,6 +1837,7 @@ var statInfo={
 		pt:'Lixo de Algas',
 		zh_tw:'藻類垃圾',
 		tr:'Alg Çöpü',
+		he:'המלטה של ​​אצות',
 	},
 	coral_litter:{
 		name: 'Coral Litter',
@@ -1683,6 +1847,7 @@ var statInfo={
 		pt:'Lixo de Coral',
 		zh_tw:'珊瑚垃圾',
 		tr:'Mercan Çöpü',
+		he:'המלטה של ​​אלמוגים',
 	},
 	litter:{
 		name: 'Litter',
@@ -1692,6 +1857,7 @@ var statInfo={
 		pt:'Lixo',
 		zh_tw:'垃圾',
 		tr:'Çöp',
+		he:'אַשׁפָּה',
 	},
 	auto_paths:{
 		name: "Auto Paths",
@@ -1705,6 +1871,7 @@ var statInfo={
 		pt:'Caminhos Automáticos',
 		zh_tw:'自動路徑',
 		tr:'Otomatik Yollar',
+		he:'נתיבים אוטומטיים',
 	},
 	tele_algae_theft:{
 		name: 'Algae Theft in Teleop',
@@ -1716,6 +1883,7 @@ var statInfo={
 		pt:'Roubo de Algas em Teleop',
 		zh_tw:'遠端操作中的藻類盜竊',
 		tr:'Teleoperasyonda Yosun Hırsızlığı',
+		he:'גניבת אצות ב-Teleoperation',
 	},
 	tele_coral_theft:{
 		name: 'Coral Theft in Teleop',
@@ -1727,6 +1895,7 @@ var statInfo={
 		pt:'Roubo de Coral em Teleop',
 		zh_tw:'遠端操作中的珊瑚盜竊',
 		tr:'Teleoperasyonda Mercan Hırsızlığı',
+		he:'גניבת אלמוגים ב-Teleoperation',
 	},
 	tele_theft:{
 		name: 'Theft in Teleop',
@@ -1735,6 +1904,7 @@ var statInfo={
 		pt:'Roubo em Teleop',
 		zh_tw:'遠端操作中的盜竊',
 		tr:'Teleoperasyonda Hırsızlık',
+		he:'גניבה ב-Teleoperation',
 	},
 	coral_stuck:{
 		name: 'Coral Stuck',
@@ -1743,6 +1913,7 @@ var statInfo={
 		pt:'Coral Preso',
 		zh_tw:'珊瑚卡住了',
 		tr:'Mercan Sıkışması',
+		he:'קורל תקוע',
 	},
 	climb_time:{
 		name: 'Climb Time (seconds)',
@@ -1755,6 +1926,7 @@ var statInfo={
 		pt:'Tempo de Escalada (segundos)',
 		zh_tw:'爬升時間（秒）',
 		tr:'Tırmanma Süresi (saniye)',
+		he:'זמן טיפוס (שניות)',
 	},
 	max_algae_place:{
 		name: 'Max Algae Placed',
@@ -1763,6 +1935,7 @@ var statInfo={
 		pt:'Máx. Algas Colocadas',
 		zh_tw:'最大藻類投放量',
 		tr:'Yerleştirilen Maksimum Yosun',
+		he:'מקסימום אצות הוצבו',
 	},
 	max_auto_algae_place:{
 		name: 'Max Algae Placed in Auto',
@@ -1771,6 +1944,7 @@ var statInfo={
 		pt:'Máx. Algas Colocadas em Automático',
 		zh_tw:'自動放置的最大藻類',
 		tr:'Otomatikte Yerleştirilen Maksimum Yosun',
+		he:'מקסימום אצות מוצבות באוטו',
 	},
 	max_auto_coral_place:{
 		name: 'Max Coral Placed in Auto',
@@ -1779,6 +1953,7 @@ var statInfo={
 		pt:'Máx. Coral Colocado em Automático',
 		zh_tw:'自動放置最大珊瑚',
 		tr:'Otomatikte Yerleştirilen Maksimum Mercan',
+		he:'מקסימום אלמוגים ממוקם באוטו',
 	},
 	max_auto_place:{
 		name: 'Max Scoring Elements Placed in Auto',
@@ -1787,6 +1962,7 @@ var statInfo={
 		pt:'Máx. Elementos de Pontuação Colocados em Automático',
 		zh_tw:'自動放置的最大得分元素',
 		tr:'Otomatikte Yerleştirilen Maksimum Puanlama Elemanları',
+		he:'רכיבי ניקוד מקסימליים ממוקמים אוטומטית',
 	},
 	max_coral_place:{
 		name: 'Max Coral Placed',
@@ -1795,6 +1971,7 @@ var statInfo={
 		pt:'Máx. Coral colocado',
 		zh_tw:'放置的最大珊瑚數量',
 		tr:'Yerleştirilen Maksimum Mercan',
+		he:'מקסימום קורל ממוקם',
 	},
 	max_place:{
 		name: 'Max Scoring Elements Placed',
@@ -1803,6 +1980,7 @@ var statInfo={
 		pt:'Elementos de pontuação máxima colocados',
 		zh_tw:'放置的最高得分元素',
 		tr:'Yerleştirilen Maksimum Puanlama Elemanları',
+		he:'רכיבי ניקוד מקסימליים ממוקמים',
 	},
 	max_tele_algae_place:{
 		name: 'Max Algae Placed in Teleop',
@@ -1811,6 +1989,7 @@ var statInfo={
 		pt:'Algas máximas colocadas em Teleop',
 		zh_tw:'遠端操作中放置的最大藻類',
 		tr:'Teleoperasyonda Yerleştirilen Maksimum Yosun',
+		he:'מקסימום אצות מוצבות ב-Teleoperation',
 	},
 	max_tele_coral_place:{
 		name: 'Max Coral Placed in Teleop',
@@ -1819,6 +1998,7 @@ var statInfo={
 		pt:'Max Coral Colocado em Teleop',
 		zh_tw:'遠端操作中放置的最大珊瑚數量',
 		tr:'Teleoperasyonda Yerleştirilen Maksimum Mercan',
+		he:'מקסימום אלמוג ממוקם ב-Teleoperation',
 	},
 	max_tele_place:{
 		name: 'Max Scoring Elements Placed in Teleop',
@@ -1827,6 +2007,7 @@ var statInfo={
 		pt:'Elementos de Pontuação Máxima Colocados em Teleop',
 		zh_tw:'遠端操作中的最大得分元素',
 		tr:'Teleoperasyonda Yerleştirilen Maksimum Puanlama Elemanları',
+		he:'רכיבי ניקוד מקסימליים ממוקמים ב-Teleoperation',
 	},
 }
 
