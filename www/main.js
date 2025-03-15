@@ -223,9 +223,19 @@ addI18n({
 	},
 	cancel_button:{
 		en:'Cancel',
+		he:'לְבַטֵל',
+		pt:'Cancelar',
+		fr:'Annuler',
+		tr:'İptal etmek',
+		zh_tw:'取消',
 	},
 	next_button:{
 		en:'Next',
+		he:'הַבָּא',
+		pt:'Próximo',
+		fr:'Aller ensuite',
+		tr:'Sonraki',
+		zh_tw:'下一個',
 	},
 })
 var locale=computeLocale()
