@@ -8,17 +8,17 @@ my $lang='';
 my $file='';
 
 for my $arg (@ARGV){
-	$lang = $arg if ($arg =~ /^[a-z-]+$/);
+	$lang = $arg if ($arg =~ /^[a-z_]+$/);
 	$file = $arg if ($arg =~ /\.js$/);
 }
 
 if (!$lang){
-	print "No language argument\n";
+	print STDERR "No language argument\n";
 	exit 1;
 }
 
 if (!$file){
-	print "No file argument\n";
+	print STDERR "No file argument\n";
 	exit 1;
 }
 
