@@ -4,66 +4,82 @@ addI18n({
 	coral_preload:{
 		en:'Preloaded Coral',
 		he:'קורל טעון מראש',
+		tr:'Önceden Yüklenmiş Mercan',
 	},
 	opponent_processor_team:{
 		en:'What is the team number of the OPPONENT\'s human player at the processor?',
 		he:'מהו מספר הצוות של השחקן האנושי של OPPONENT במעבד?',
+		tr:'Rakibin insan oyuncusunun işlemcideki takım numarası nedir?',
 	},
 	starting_position:{
 		en:'Click team _TEAMNUM_\'s starting position.',
 		he:'לחץ על עמדת ההתחלה של צוות _TEAMNUM_.',
+		tr:'Takım _TEAMNUM_\'un başlangıç ​​pozisyonuna tıklayın.',
 	},
 	pre_team_header:{
 		en:'Team _TEAMNUM_',
 		he:'צוות _TEAMNUM_',
+		tr:'Takım _TEAMNUM_',
 	},
 	barge_zone_question:{
 		en:'Is _TEAMNUM_\'s robot in the _TEAMCOLOR_ barge zone?',
 		he:'האם הרובוט של _TEAMNUM_ נמצא באזור ה-_TEAMCOLOR_?',
+		tr:'_TEAMNUM_\'un robotu _TEAMRENGİ_ mavna bölgesinde mi?',
 	},
 	barge_zone_parked_button:{
 		en:'Parked',
 		he:'חונה',
+		tr:'Park edilmiş',
 	},
 	barge_zone_shallow_button:{
 		en:'Hanging from a shallow cage',
 		he:'תלוי מכלוב רדוד',
+		tr:'Sığ bir kafesten sarkmış',
 	},
 	barge_zone_deep_parked_button:{
 		en:'Hanging from a deep cage',
 		he:'תלוי מכלוב עמוק',
+		tr:'Derin bir kafesten sarkmış',
 	},
 	climb_failed_question:{
 		en:'If not off the ground on a cage:',
 		he:'אם לא מעל הקרקע על כלוב:',
+		tr:'Kafes üzerinde yerden yüksekte değilse:',
 	},
 	climb_failed_button:{
 		en:'Robot attempted to climb, but failed',
 		he:'רובוט ניסה לטפס, אך נכשל',
+		tr:'Robot tırmanmaya çalıştı ancak başaramadı',
 	},
 	barge_heading:{
 		en:'Barge',
 		he:'דוֹבְרָה',
+		tr:'Mavna',
 	},
 	gameplay_heading:{
 		en:'Gameplay',
 		he:'משחקיות',
+		tr:'Oyun',
 	},
 	gameplay_question:{
 		en:'During the match, the robot:',
 		he:'במהלך המשחק, הרובוט:',
+		tr:'Maç sırasında robot:',
 	},
 	defense_button:{
 		en:'Played defense',
 		he:'שיחק הגנה',
+		tr:'Defans oynadı',
 	},
 	bricked_button:{
 		en:'Broke or was disabled',
 		he:'נשבר או היה מושבת',
+		tr:'Kırıldı veya devre dışı bırakıldı',
 	},
 	coral_stuck_button:{
 		en:'Had a coral stuck on it',
 		he:'היה תקוע עליו אלמוג',
+		tr:'Üzerine bir mercan takıldı',
 	},
 })
 
