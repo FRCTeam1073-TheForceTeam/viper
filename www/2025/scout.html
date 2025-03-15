@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Scout EVENT</title>
+<title></title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
@@ -9,13 +9,13 @@
 <link rel=stylesheet href=/scout.css>
 <link rel=stylesheet href=scout.css>
 <script src=/jquery.min.js></script>
+<script src=/main.js></script>
 <script src=/event-url.js></script>
 <script src=/qrcode.min.js></script>
 <script src=/canvas-path.js></script>
 <script src=/scout.js></script>
 <script src=scout.js></script>
 <script src=/heartbeat.js></script>
-<script src=/main.js></script>
 <script src=/local.js></script>
 <link rel=preload as=image href=start-area-blue.png>
 <link rel=preload as=image href=start-area-red.png>
@@ -36,8 +36,8 @@
 
 <body>
 <div id=select-bot class=screen style=display:none>
-	<h1>Viper</h1>
-	<h2>Pick your field orientation and robot position</h2>
+	<h1></h1>
+	<h2 data-i18n=choose_pos_heading></h2>
 	<div class=side-by-side>
 		<table class=orientLeft><tr>
 			<td class=redTeamBG><button>R1</button></td>
@@ -52,7 +52,7 @@
 		</tr></table>
 	</div>
 	<div class=side-by-side>
-		OR
+		<span data-i18n=choose_pos_or></span>
 	</div>
 	<div class=side-by-side>
 		<table class=orientRight><tr>
@@ -67,20 +67,20 @@
 			<td class=redTeamBG><button>R1</button></td>
 		</tr></table>
 	</div>
-	<button class=showInstructions>Instructions</button>
+	<button class=showInstructions data-i18n=instructions></button>
 	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
 </div>
 
 <div id=select-match class=screen style=display:none>
-	<h1>Viper</h1>
-	<button class=showInstructions>Instructions</button>
-	<button class=robotBtn>Change Robot</button>
+	<h1></h1>
+	<button class=showInstructions data-i18n=instructions></button>
+	<button class=robotBtn data-i18n=change_robot_button></button>
 	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
 	<div id=match-list></div>
 </div>
 
 <div id=change-team class=screen style=display:none>
-	<h1>Viper</h1>
+	<h1></h1>
 	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
 	<button id=teamChangeBtn>Change</button>
 	<button id=teamCancelBtn>Cancel</button>
@@ -89,44 +89,41 @@
 <form id=scouting class=screen style=display:none>
 
 	<div class=tabs>
-		<div class="tab default-tab" data-content=prematch>Pre</div>
-		<div class=tab data-content=auto>Auto</div>
-		<div class=tab data-content=teleop>Tele</div>
-		<div class=tab data-content=end-game>End</div>
+		<div class="tab default-tab" data-content=prematch data-i18n=pre_match_tab></div>
+		<div class=tab data-content=auto data-i18n=auto_tab>Auto</div>
+		<div class=tab data-content=teleop data-i18n=tele_tab>Tele</div>
+		<div class=tab data-content=end-game data-i18n=end_game_tab>End</div>
 	</div>
 
 	<div class="prematch tab-content">
 		<table><tr><td colspan=2>
-			<h1>Viper</h1>
+			<h1></h1>
 			<div>
-				<button class=showInstructions>Instructions</button>
-				<button id=teamBtn>Team # Correction</button>
-				<button id=matchBtn>Choose Match</button>
-				<button class=robotBtn>Change Robot</button>
-				<button class=fieldRotateBtn>Rotate Field</button>
+				<button class=showInstructions data-i18n=instructions></button>
+				<button id=teamBtn data-i18n=team_correction_button></button>
+				<button id=matchBtn data-i18n=choose_match_button></button>
+				<button class=robotBtn data-i18n=change_robot_button></button>
+				<button class=fieldRotateBtn data-i18n=rotate_field_button></button>
 				<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
 			</div>
 			<input type=hidden name=event>
 			<input type=hidden name=match>
 			<input type=hidden name=team>
 			<input type=hidden name=timeline id=timeline>
-		</td></tr><tr><td class=subheader>
-			Click team <span class=team></span>'s starting position.
-		</td><td class="subheader teamColorBG" style=height:3%>
-			Team <span class=team></span>
+		</td></tr><tr><td class=subheader data-i18n=starting_position>
+		</td><td class="subheader teamColorBG" style=height:3% data-i18n=pre_team_header
 		</td></tr><tr><td rowspan=4>
 			<div id=start-area><div id=robot-starting-position></div></div>
 			<input id=auto-start-input type=hidden name=auto_start>
 		</td><td>
-			<label><input type=checkbox data-element=coral data-provides=1 name=coral_preload value=1><span>Preloaded Coral</span></label>
+			<label><input type=checkbox data-element=coral data-provides=1 name=coral_preload value=1><span data-i18n=coral_preload></span></label>
 		</td></tr><tr><td id=no-show-area>
-			<label><input type=checkbox name=no_show value=1><span>No Show</span></label>
-		</td></tr><tr><td class="subheader otherTeamBG">
-			What is the team number of the OPPONENT's human player at the processor?
+			<label><input type=checkbox name=no_show value=1><span data-i18n=no_show></span></label>
+		</td></tr><tr><td class="subheader otherTeamBG" data-i18n=opponent_processor_team>
 		</td></tr><tr><td id=choose-opponent>
 			<input type=text name=opponent_human_player_team placeholder=99999 size=5 style=width:4em>
 		</td></tr><tr><td colspan=2>
-			<button style=float:right class=tab-button data-content=auto>Auto »</button>
+			<button style=float:right class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
 		</td></tr></table>
 
 	</div>
@@ -164,86 +161,84 @@
 				<button id=tele-reminder class="to-tele tab-button" data-content=teleop style="right:25%;top:5.5%;aspect-ratio:1.8"><img src=teleop.png></button>
 				<label class=orient-rotate style="left:34%;bottom:7%"><input type=checkbox name=auto_leave value=1><span><img src=leave.png></span></label>
 			</div>
-		</td></tr><tr><td class="team teamColorBG">
+		</td></tr><tr><td class=teamColorBG data-i18n=pos_team>
 		</td><td>
-			<button class=undo>Undo</button>
+			<button class=undo data-i18n=undo_button></button>
 		</td><td>
-			<div class=collapse data-content=auto-values>Values</div>
-			<div class=collapse data-content=auto-timeline>Timeline</div>
+			<div class=collapse data-content=auto-values data-i18n=values_button></div>
+			<div class=collapse data-content=auto-timeline data-i18n=timeline_button></div>
 		</td><td>
-			<button class="to-tele tab-button" data-content=teleop>Teleop »</button>
+			<button class="to-tele tab-button" data-content=teleop data-i18n=proceed_tele_button></button>
 		</td></tr></table>
 
 		<table id=auto-values class=collapsable><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=auto_algae_upper_removed size=1 disabled max=3>
-			Algae knocked off upper reef
+			<span data-i18n=auto_algae_upper_removed></span>
 		</td><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_1 size=1 disabled max=1>
-			Algae from mark 1
+			<span data-i18n=auto_algae_mark_1></span>
 		</td><td class="algae placement" rowspan=3>
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_processor size=1 disabled>
-			Algae into processor
+			<span data-i18n=auto_algae_processor></span>
 		</td><td class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_net size=1 disabled>
-			Algae into net (shot by robot)
+			<span data-i18n=auto_algae_net></span>
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=auto_algae_lower_removed size=1 disabled max=3>
-			Algae knocked off lower reef
+			<span data-i18n=auto_algae_lower_removed></span>
 		</td><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_2 size=1 disabled max=1>
-			Algae from mark 2
+			<span data-i18n=auto_algae_mark_2></span>
 		</td><td rowspan=2 class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_opponent_processor size=1 disabled>
-			Algae into opponent's processor
+			<span data-i18n=auto_algae_opponent_processor></span>
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_upper size=1 disabled max=3>
-			Algae from upper reef
+			<span data-i18n=auto_algae_upper></span>
 		</td><td rowspan=2 class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_mark_3 size=1 disabled max=1>
-			Algae from mark 3
+			<span data-i18n=auto_algae_mark_3></span>
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=auto_algae_lower size=1 disabled max=3>
-			Algae from lower reef
+			<span data-i18n=auto_algae_lower></span>
 		</td><td colspan=2 class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=auto_algae_drop size=1 disabled>
-			Algae dropped or missed
+			<span data-i18n=auto_algae_drop></span>
 		</td></tr><tr><td rowspan=2 class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_station_1 size=1 disabled>
-			Coral from station 1
+			<span data-i18n=auto_coral_station_1></span>
 		</td><td class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_mark_1 size=1 disabled max=1>
-			Coral from mark 1
+			<span data-i18n=auto_coral_mark_1></span>
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_4 size=1 disabled>
-			Coral onto L4
+			<span data-i18n=auto_coral_level_4></span>
 		</td><td rowspan=4 class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_drop size=1 disabled>
-			Coral dropped or missed
+			<span data-i18n=auto_coral_drop></span>
 		</td></tr><tr><td class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_mark_2 size=1 disabled max=1>
-			Coral from mark 2
+			<span data-i18n=auto_coral_mark_2></span>
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_3 size=1 disabled>
-			Coral onto L3
+			<span data-i18n=auto_coral_level_3></span>
 		</td></tr><tr><td rowspan=2 class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_station_2 size=1 disabled>
-			Coral from station 2
+			<span data-i18n=auto_coral_station_2></span>
 		</td><td rowspan=2 class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=auto_coral_mark_3 size=1 disabled max=1>
-			Coral from mark 3
+			<span data-i18n=auto_coral_mark_3></span>
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_2 size=1 disabled>
-			Coral onto L2
+			<span data-i18n=auto_coral_level_2></span>
 		</td></tr><tr><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=auto_coral_level_1 size=1 disabled>
-			Coral onto L1
+			<span data-i18n=auto_coral_level_1></span>
 		</td></tr></table>
 
-		<table id=auto-timeline class=collapsable>
-			<thead><tr><td class=subheader>
-				Time
-			</td><td class=subheader>
-				Event
+		<table id=auto-timeline class="collapsable timeline-table">
+			<thead><tr><td class=subheader data-i18n=timeline_time_header>
+			</td><td class=subheader data-i18n=timeline_action_header>
 			</td></tr></thead>
 			<tbody class=timeline></tbody>
 		</table>
@@ -280,86 +275,84 @@
 					<button class=count data-input=tele_algae_lower style="left:50%;bottom:37.5%"><img src=algae-collect.png></button>
 				</div>
 			</div>
-		</td></tr><tr><td class="team teamColorBG">
+		</td></tr><tr><td class=teamColorBG data-i18n=pos_team>
 		</td><td>
-			<button class=undo>Undo</button>
+			<button class=undo data-i18n=undo_button></button>
 		</td><td>
-			<div class=collapse data-content=tele-values>Values</div>
-			<div class=collapse data-content=tele-timeline>Timeline</div>
+			<div class=collapse data-content=tele-values data-i18n=values_button></div>
+			<div class=collapse data-content=tele-timeline data-i18n=timeline_button></div>
 		</td><td>
 			<button class=tab-button data-content=end-game>End Game »</button>
 		</td></tr></table>
 
 		<table id=tele-values class=collapsable><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=tele_algae_upper_removed size=1 disabled max=3>
-			Algae knocked off upper reef
+			<span data-i18n=tele_algae_upper_removed></span>
 		</td><td class="algae collection" rowspan=2>
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_ground size=1 disabled>
-			Algae from ground
+			<span data-i18n=tele_algae_ground></span>
 		</td><td class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_processor size=1 disabled>
-			Algae into processor
+			<span data-i18n=tele_algae_processor></span>
 		</td><td class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_net size=1 disabled>
-			Algae into net (shot by robot)
+			<span data-i18n=tele_algae_net></span>
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=0 value=0 name=tele_algae_lower_removed size=1 disabled max=3>
-			Algae knocked off lower reef
+			<span data-i18n=tele_algae_lower_removed></span>
 		</td><td rowspan=2 class="algae placement">
 			<input type=text class=num value=0 data-element=opponent-algae data-accepts=1 name=tele_algae_opponent_net size=1 disabled>
-			Algae into opponent's net (by opponent's human player after team <span class=team></span> placed it into their processor)
+			<span data-i18n=tele_algae_opponent_net></span>
 		</td><td rowspan=2 class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_opponent_processor size=1 disabled>
-			Algae into opponent's processor
+			<span data-i18n=tele_algae_opponent_processor></span>
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_upper size=1 disabled max=3>
-			Algae from upper reef
+			<span data-i18n=tele_algae_upper></span>
 		</td><td class="algae collection" rowspan=2>
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_theft size=1 disabled>
-			Algae from opponents' side
+			<span data-i18n=tele_algae_theft></span>
 		</td></tr><tr><td class="algae collection">
 			<input type=text class=num data-element=algae data-provides=1 value=0 name=tele_algae_lower size=1 disabled max=3>
-			Algae from lower reef
+			<span data-i18n=tele_algae_lower></span>
 		</td><td colspan=2 class="algae placement">
 			<input type=text class=num data-element=algae data-accepts=1 value=0 name=tele_algae_drop size=1 disabled>
-			Algae dropped or missed
+			<span data-i18n=tele_algae_drop></span>
 		</td></tr><tr><td rowspan=2 class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_station_1 size=1 disabled>
-			Coral from station 1
+			<span data-i18n=tele_coral_station_1></span>
 		</td><td class="coral collection" rowspan=2>
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_ground size=1 disabled>
-			Coral from ground
+			<span data-i18n=tele_coral_ground></span>
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_4 size=1 disabled>
-			Coral onto L4
+			<span data-i18n=tele_coral_level_4></span>
 		</td><td rowspan=2 class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_drop size=1 disabled>
-			Coral dropped or missed
+			<span data-i18n=tele_coral_drop></span>
 		</td></tr><tr><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_3 size=1 disabled>
-			Coral onto L3
+			<span data-i18n=tele_coral_level_3></span>
 		</td></tr><tr><td rowspan=2 class="coral collection">
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_station_2 size=1 disabled>
-			Coral from station 2
+			<span data-i18n=tele_coral_station_2></span>
 		</td><td class="coral collection" rowspan=2>
 			<input type=text class=num data-element=coral data-provides=1 value=0 name=tele_coral_theft size=1 disabled>
-			Coral from opponents's side
+			<span data-i18n=tele_coral_theft></span>
 		</td><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_2 size=1 disabled>
-			Coral onto L2
+			<span data-i18n=tele_coral_level_2></span>
 		</td><td rowspan=2 class=timer>
 			<input type=text class=num value=0 name=climb_time size=1 disabled>
-			Climb time
+			<span data-i18n=climb_time></span>
 		</td></tr><tr><td class="coral placement">
 			<input type=text class=num data-element=coral data-accepts=1 value=0 name=tele_coral_level_1 size=1 disabled>
-			Coral onto L1
+			<span data-i18n=tele_coral_level_1></span>
 		</td></tr></table>
 
-		<table id=tele-timeline class=collapsable>
-			<thead><tr><td class=subheader>
-				Time
-			</td><td class=subheader>
-				Event
+		<table id=tele-timeline class="collapsable timeline-table">
+			<thead><tr><td class=subheader data-i18n=timeline_time_header>
+			</td><td class=subheader data-i18n=timeline_action_header>
 			</td></tr></thead>
 			<tbody class=timeline></tbody>
 		</table>

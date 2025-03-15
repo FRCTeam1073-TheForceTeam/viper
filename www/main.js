@@ -1,7 +1,8 @@
 "use strict"
 
 const I18N={},
-onApplyTranslation=[]
+onApplyTranslation=[],
+translationContext={}
 
 addI18n({
 	text_direction:{
@@ -220,10 +221,21 @@ addI18n({
 		tr:'Final ',
 		zh_tw:'最終的',
 	},
+	cancel_button:{
+		en:'Cancel',
+	},
+	next_button:{
+		en:'Next',
+	},
 })
 var locale=computeLocale()
+
 function addI18n(i){
 	Object.assign(I18N,i)
+}
+
+function addTranslationContext(c){
+	Object.assign(translationContext,c)
 }
 
 function computeLocale(){
@@ -236,14 +248,20 @@ function computeLocale(){
 	return 'en'
 }
 
-function translate(key){
+function translate(key,context){
 	var unknown=key
-	if(!Object.hasOwn(I18N,key))return unknown
-	var g=I18N[key],
+	var g=I18N[key]||(window.statInfo||{})[key]||{},
 	l=locale
-	if(l=='qd')return Object.hasOwn(g,'en')?g.en.replace(/[^ ]/g,'.'):unknown
+	if(l=='qd')return (g.en||g.name||"").replace(/[^ ]/g,'.')
 	while(l){
-		if(Object.hasOwn(g,l))return g[l]
+		var t=g[l]||(locale=='en'?g.name:'')
+		if(t){
+			context||=translationContext
+			Object.entries(context).forEach(([key,value])=>{
+				t=t.replace(`_${key.toUpperCase()}_`,value)
+			})
+			return t
+		}
 		l=l.replace(/[_]?[^_]*$/,"")
 	}
 	return unknown
@@ -262,6 +280,7 @@ function dateCompare(a,b){
 
 function applyTranslations(node){
 	if(!node)node=$('body')
+	onApplyTranslation.forEach(x=>x())
 	$('html').attr('dir',translate('text_direction')).attr('lang',locale.replace(/[_\-].*/,""))
 	node.find('[data-i18n]').each(function(){
 		$(this).text(translate($(this).attr('data-i18n')))
@@ -272,7 +291,13 @@ function applyTranslations(node){
 	node.find('[data-i18n-placeholder]').each(function(){
 		$(this).attr('placeholder',translate($(this).attr('data-i18n-placeholder')))
 	})
-	onApplyTranslation.forEach(x=>x())
+	$('iframe').each(function(){
+		var w = $(this)[0].contentWindow
+		if (w.locale && w.applyTranslations){
+			w.locale=locale
+			w.applyTranslations()
+		}
+	})
 }
 
 $(document).ready(function(){
@@ -368,6 +393,7 @@ function closeLightBox(){
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').show()
+	applyTranslations()
 	content.show()
 	return false
 }

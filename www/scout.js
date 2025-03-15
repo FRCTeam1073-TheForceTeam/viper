@@ -1,25 +1,225 @@
 "use strict"
 
+addI18n({
+	choose_pos_heading:{
+		en:'Pick your field orientation and robot position',
+	},
+	choose_pos_or:{
+		en:'OR',
+	},
+	change_robot_button:{
+		en:'Change Robot',
+	},
+	pre_match_tab:{
+		en:'Pre',
+	},
+	auto_tab:{
+		en:'Auto',
+	},
+	tele_tab:{
+		en:'Tele',
+	},
+	end_game_tab:{
+		en:'End',
+	},
+	team_correction_button:{
+		en:'Team # Correction',
+	},
+	choose_match_button:{
+		en:'Choose Match',
+	},
+	rotate_field_button:{
+		en:'Rotate Field',
+	},
+	no_show:{
+		en:'No Show',
+	},
+	proceed_auto_button:{
+		en:'Auto »',
+	},
+	proceed_tele_button:{
+		en:'Teleop »',
+	},
+	scouting_title:{
+		en:'_TEAMNUM_ _POS_ _MATCHSHORT_ _EVENTNAME_',
+	},
+	scouting_heading:{
+		en:'_EVENTNAME_, _POS_, _MATCHNAME_, Team _TEAMNUM_',
+	},
+	pit_scouting_title:{
+		en:'_TEAMNUM_ Pit Scouting at _EVENTNAME_',
+	},
+	pit_scouting_heading:{
+		en:'Pit Scout _TEAMNUM_ at _EVENTNAME_',
+	},
+	select_pos_title:{
+		en:'Choose _EVENTNAME_ bot',
+	},
+	select_pos_heading:{
+		en:'_EVENTNAME_',
+	},
+	team_correction_title:{
+		en:'_EVENTNAME_, _POS_, _MATCHNAME_,',
+	},
+	team_correction_heading:{
+		en:'_MATCHNAME_ _POS_ Team Number Correction',
+	},
+	pit_scouting_select_team_title:{
+		en:'Pit Scout at _EVENTNAME_',
+	},
+	pit_scouting_select_team_heading:{
+		en:'Select a Team to Pit Scout',
+	},
+	subjective_scouting_select_team_title:{
+		en:'Subjective Scout at _EVENTNAME_',
+	},
+	subjective_scouting_select_team_heading:{
+		en:'Select a Team to Subjectively Scout',
+	},
+	event_not_found:{
+		en:'Event Not Found',
+	},
+	confirm_save_data_question:{
+		en:'Do you want to save your data?',
+	},
+	done_scouting:{
+		en:'Data saved and done. That was the last match!',
+	},
+	undo_button:{
+		en:'Undo',
+	},
+	pos_team:{
+		en:'_POS_ _TEAMNUM_',
+	},
+	values_button:{
+		en:'Values',
+	},
+	timeline_button:{
+		en:'Timeline',
+	},
+	timeline_time_header:{
+		en:'Time',
+	},
+	timeline_action_header:{
+		en:'Action',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+})
+
 var pos = "",
 team = "",
 match = "",
 orient = localStorage.getItem("last_orient")||"right",
-matchName = "",
 teamList=[],
 go,
 scouting,
 pitScouting,
 subjectiveScouting,
-storeTime=0
+storeTime=0,
+h1Key='',
+titleKey=''
 parseHash()
+
+onApplyTranslation.push(function(){
+	setTranslationContext()
+	$('title').text(translate(titleKey))
+	$('h1').text(translate(h1Key))
+})
 
 function parseHash(){
 	pos = (location.hash.match(/^\#(?:.*\&)?(?:pos\=)([RB][1-3])(?:\&.*)?$/)||["",""])[1]
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
 	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",orient])[1]
-	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
+	match=(location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
 	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1]
 	go = (location.hash.match(/^\#(?:.*\&)?(?:go\=)(back)(?:\&.*)?$/)||["",""])[1]
+	setTranslationContext()
 }
 
 function showScreen(){
@@ -36,7 +236,7 @@ function showScreen(){
 
 function maybeSaveFirst(){
 	if (changedNotStored(getActiveForm())){
-		if (confirm("Do you want to save your data?")) store()
+		if (confirm(translate('confirm_save_data_question'))) store()
 	}
 }
 
@@ -59,7 +259,8 @@ function showSelectPitScoutTeam(){
 		resetInitialValues(pitScouting)
 		setHash(null,null,null,null,teamList)
 		window.scrollTo(0,0)
-		$('h1').text("Pit Scouting " + eventName)
+		titleKey='pit_scouting_select_team_title'
+		h1Key='pit_scouting_select_team_heading'
 		var el = $('#teamList').html(""),
 		withData = getTeamsWithPitData(),
 		showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
@@ -70,6 +271,7 @@ function showSelectPitScoutTeam(){
 			el.append(button)
 		}
 		$('#select-team').show()
+		applyTranslations()
 	})
 }
 
@@ -83,7 +285,8 @@ function showSelectSubjectiveScoutTeam(){
 		resetInitialValues(subjectiveScouting)
 		setHash(null,null,null,null,teamList)
 		window.scrollTo(0,0)
-		$('h1').text("Subjective Scouting " + eventName)
+		titleKey='subjective_scouting_select_team_title'
+		h1Key='subjective_scouting_select_team_heading'
 		var el = $('#teamList').html(""),
 		withData = getTeamsWithSubjectiveData(),
 		showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
@@ -94,6 +297,7 @@ function showSelectSubjectiveScoutTeam(){
 			el.append(button)
 		}
 		$('#select-team').show()
+		applyTranslations()
 	})
 }
 
@@ -102,7 +306,8 @@ function showTeamChange(){
 	location.hash=buildHash(pos,orient,null,match)
 	resetInitialValues(scouting)
 	window.scrollTo(0,0)
-	$('h1').text(eventName)
+	titleKey='team_correction_title'
+	h1Key='team_correction_heading'
 	$('#teamChangeBtn').click(function(){
 		team = $('#teamChange').val()
 		showScouting()
@@ -117,24 +322,28 @@ function showTeamChange(){
 		return false
 	})
 	$('#change-team').show()
+	applyTranslations()
 }
 
 function showPosList(){
 	$('.screen,.init-hide').hide()
 	setHash()
 	window.scrollTo(0,0)
-	$('h1').text(eventName)
+	titleKey='select_pos_title'
+	h1Key='select_pos_heading'
 	$('.orientLeft,.orientRight').show()
 	$('#select-bot button').each(function(){
 		$(this).toggleClass("highlighted", $(this).text() == localStorage.getItem("last_pos"))
 	})
 	$('#select-bot button').click(function(){
 		pos = $(this).text()
+		if (!BOT_POSITIONS.includes(pos)) return
 		if ($(this).closest('.orientLeft').length) orient='left'
 		if ($(this).closest('.orientRight').length) orient='right'
 		showMatchList()
 	})
 	$('#select-bot').show()
+	applyTranslations()
 }
 
 function showMatchList(){
@@ -167,13 +376,26 @@ function showMatchList(){
 				$('<div class=match>')
 				.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
 					team = $(this).attr('data-team')
-					match = $(this).attr('data-match')
+					match=$(this).attr('data-match')
+					setTranslationContext()
 					showScouting()
 				})).append($('<span>').text(' ' + matchName))
 			)
 		})
 		setTeamBG()
 		$('#select-match').show()
+	})
+}
+
+function setTranslationContext(){
+	addTranslationContext({
+		pos:pos,
+		teamNum:team,
+		match:match,
+		orient:orient,
+		matchName:getMatchName(match),
+		matchShort:getShortMatchName(match),
+		eventName:eventName,
 	})
 }
 
@@ -288,7 +510,8 @@ function showPitScoutingForm(t){
 		if (t && typeof t != 'number') t = parseInt($(this).text())
 		if (t) team = t
 		$('.screen,.init-hide').hide()
-		$('h1').text("Pit Scouting " + eventName + " Team " + team)
+		h1Key='pit_scouting_heading'
+		titleKey='pit_scouting_title'
 		window.scrollTo(0,0)
 		setHash(null,null,team,null,teamList)
 		resetInitialValues(pitScouting)
@@ -310,6 +533,7 @@ function showPitScoutingForm(t){
 		pitScouting.show()
 		setupButtons()
 		localStorage.setItem("last_scout_type", "pit-scout")
+		applyTranslations()
 	})
 }
 
@@ -407,7 +631,7 @@ function animateChangeFloater(change, relative){
 
 function showScouting(){
 	promiseEventStats().then(resolve=>{
-		var [eventStats, eventStatsByTeam, eventStatsByMatchTeam] = resolve
+		var [_, _, eventStatsByMatchTeam] = resolve
 		for (var i=0; i<window.onBeforeShowScouting.length; i++){
 			if(!window.onBeforeShowScouting[i]()) return false
 		}
@@ -416,13 +640,12 @@ function showScouting(){
 		setHash(pos,orient,team,match)
 		window.scrollTo(0,0)
 		if (typeof beforeShowScouting == 'function') beforeShowScouting()
-		matchName = getMatchName(match)
-		$('h1').text(`${eventName} ${pos}, ${matchName}, Team ${team}`)
+		h1Key='scouting_heading'
+		titleKey='scouting_title'
 		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
 		$('.teamColorCaps').text(pos.startsWith('R')?"Red":"Blue")
 		$('input[name="match"]').val(match).attr('data-at-scout-start',match)
 		fillDefaultFormFields()
-		$('.match').text(matchName)
 		setTeamBG()
 		fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
 		$('.count').each(countHandler)
@@ -435,6 +658,7 @@ function showScouting(){
 		scouting.show()
 		setupButtons()
 		localStorage.setItem("last_scout_type", "scout")
+		applyTranslations()
 	})
 }
 
@@ -479,9 +703,9 @@ function toCSV(form){
 }
 
 function getActiveForm(){
-	if (scouting.length && scouting.is(':visible')) return scouting
-	if (pitScouting.length && pitScouting.is(':visible')) return pitScouting
-	if (subjectiveScouting.length && subjectiveScouting.is(':visible')) return subjectiveScouting
+	if (window.scouting && scouting.length && scouting.is(':visible')) return scouting
+	if (window.pitScouting && pitScouting.length && pitScouting.is(':visible')) return pitScouting
+	if (window.subjectiveScouting && subjectiveScouting.length && subjectiveScouting.is(':visible')) return subjectiveScouting
 	return null
 }
 
@@ -699,10 +923,11 @@ function goNextMatch(uploaded){
 	if (!store(uploaded)) return false
 	var next = getNextMatch()
 	if (!next){
-		alert("Data saved and done. That was the last match!")
+		alert(translate("done_scouting"))
 	} else {
 		team = next[pos]
-		match = next['Match']
+		match=next['Match']
+		setTranslationContext()
 		showScouting()
 	}
 	return false
@@ -761,9 +986,9 @@ function showQrCode(num){
 		.append($('<h2 id=qr-code-title>'))
 		.append($('<div id=qr-code style="border:.5em solid white">'))
 		.append($('<p>')
-			.append($('<button>').text("Cancel").click(closeLightBox))
+			.append($('<button data-i18n=cancel_button>').click(closeLightBox))
 			.append(" ")
-			.append($('<button style=float:right>').text('Next').click(nextQrCode))
+			.append($('<button style=float:right data-i18n=next_button>').click(nextQrCode))
 		)
 		$('body').append(dialog)
 	}
@@ -861,7 +1086,7 @@ function toggleCollapse(_,c){
 	c = c||$(this)
 	var content=$(`#${c.attr('data-content')}`)
 	content.toggle()
-	c.attr('data-before',content.is(':visible')?'🞃':'🞂')
+	c.toggleClass('open',content.is(':visible'))
 }
 
 var eventMatches
@@ -875,7 +1100,8 @@ function labelClicked(e){
 
 $(document).ready(function(){
 	if (!eventYear || !eventVenue){
-		$('h1').text("Event Not Found")
+		showError('event_not_found')
+		applyTranslations()
 		return
 	}
 
@@ -930,7 +1156,8 @@ $(document).ready(function(){
 	$(".robotBtn").click(goChooseRobot)
 	$(".fieldRotateBtn").click(rotateField)
 	$("#teamBtn").click(goChangeTeam)
-	$('.showInstructions').click(function(){
+	$('.showInstructions').click(function(e){
+		e.preventDefault()
 		showLightBox($(this).parent().find('.instructions'))
 		return false
 	})
@@ -955,4 +1182,14 @@ function resetSequentialInputSeries(){
 		next = name.replace(n,parseInt(n)+1)
 		$('textarea[name='+next+'],input[name='+next+']').closest('.sequential-input-series').toggle($(this).val()!="")
 	})
+}
+
+function showError(key){
+	var error=$('#error')
+	if (!error.length){
+		error=$('<div id=error class=screen><h1></h1></div>')
+		$('body').append(error)
+	}
+	h1Key=titleKey=key
+	applyTranslations()
 }

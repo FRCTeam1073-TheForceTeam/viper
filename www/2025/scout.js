@@ -1,5 +1,113 @@
 "use strict"
 
+addI18n({
+	coral_preload:{
+		en:'Preloaded Coral',
+	},
+	opponent_processor_team:{
+		en:'What is the team number of the OPPONENT\'s human player at the processor?',
+	},
+	starting_position:{
+		en:'Click team _TEAMNUM_\'s starting position.',
+	},
+	pre_team_header:{
+		en:'Team _TEAMNUM_',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+	xxxxx:{
+		en:'',
+	},
+})
+
 $(document).ready(function(){
 	const AUTO_MS=15000,
 	AUTO_GAP_MS=3000,
@@ -31,6 +139,8 @@ $(document).ready(function(){
 
 	window.onInputChanged = window.onInputChanged || []
 	window.onInputChanged.push(inputChanged)
+
+	onApplyTranslation.push(renderTimeline)
 
 	function initScouting2025(){
 		matchStartTime = 0
@@ -99,11 +209,10 @@ $(document).ready(function(){
 		var tl = $('.timeline').html("")
 		$('#timeline').val().split(/ /).forEach(entry => {
 			if (!entry) return
-			var [time,event] = entry.split(/:/),
+			var [time,action] = entry.split(/:/),
 			min=Math.floor(time/60),
 			sec=(""+time%60).padStart(2,'0')
-			event=event.replace(/_/g," ").replace(/\b\w/g, s => s.toUpperCase())
-			tl.append($('<tr>').append($('<td>').text(`${min}:${sec}`)).append($('<td>').text(event)))
+			tl.append($('<tr>').append($('<td>').text(`${min}:${sec}`)).append($('<td>').text(translate(action))))
 		})
 	}
 

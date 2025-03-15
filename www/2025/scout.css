@@ -1,7 +1,7 @@
 #scouting{max-width:60em;margin:0 auto}
 #scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-bottom:3vmin;width:100%}
 #scouting>div>table>tbody>tr>th{border:1px solid var(--main-border-color);font-size:200%}
-#scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;vertical-align:top;width:25%;vertical-align:middle}
+#scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;vertical-align:top;vertical-align:middle}
 #scouting .num {display:block;font-size:125%;margin:0 auto;font-weight:bold}
 
 .orientLeft .bigimg, body.leftField.redTeam #start-area,body.rightField.blueTeam #start-area,body.leftField.redTeam .orient-rotate,body.rightField.blueTeam .orient-rotate,body.leftField.redTeam .orient-rotate > *,body.rightField.blueTeam .orient-rotate > * {transform:rotate(180deg)}
@@ -28,6 +28,8 @@
 .scout-locations .label{padding-top:.6em;font-size:125%}
 .redTeam .scout-locations .label{background-color:var(--red-team-color)}
 .blueTeam .scout-locations .label{background-color:var(--blue-team-color)}
+
+.timeline-table td:nth-child(1){max-width:4em}
 
 html{padding:0}
 #nextButtons{margin-bottom:50vh}

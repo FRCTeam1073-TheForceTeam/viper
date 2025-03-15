@@ -9,12 +9,12 @@ img.bigimg{width:48vw}
 img.expandable-image{width:5em;vertical-align:middle;cursor:pointer}
 img.full-image{object-fit:contain;width:100%;height:100%}
 img.count{max-width:10em;margin:0.25em 0;cursor:pointer}
-label > span,button{background:var(--button-bg-color);color:var(--button-fg-color);display:inline-block;padding:.5vw;border-radius:1vw;min-width:8vw;text-align:center;margin:.5vw 0;cursor:pointer;}
-label :checked+span{background:var(--button-selected-bg-color)}
-label :disabled+span{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
+.screen label>span,button{background:var(--button-bg-color);color:var(--button-fg-color);display:inline-block;padding:.5vw;border-radius:1vw;min-width:8vw;text-align:center;margin:.5vw 0;cursor:pointer;}
+.screen label :checked+span{background:var(--button-selected-bg-color)}
+.screen label :disabled+span{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 input[type='checkbox'],input[type='radio'], .init-hide{display:none}
 .full{width:calc(100% - 1em);margin:.5em auto;max-width:50em;display:block}
-label,fieldset{display:inline-block}
+.screen label,fieldset{display:inline-block}
 input[type="text"]:disabled{background-color:inherit;border:none;color:inherit;pointer-events:none}
 input.num{text-align:end}
 fieldset{margin:0.5em;font-weight:normal}
@@ -37,4 +37,5 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 .pulse-bg{animation:pulse 2s infinite;color:white}
 @keyframes pulse{0%{background-color:var(--red-team-color);border-color:var(--red-team-color)}50%{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}100%{background-color:var(--red-team-color);border-color:var(--red-team-color)}}
 .collapsable{display:none}
-.collapse::before{content:attr(data-before);padding-right:0.5em}
+.collapse::before{content:'';margin-right:.35em;display:inline-block;width:0;height:0;border-top:.35em solid transparent;border-bottom:.4em solid transparent;border-left:.7em solid var(--main-fg-color);border-right:none}
+.collapse.open::before{border-left:.35em solid transparent;border-right:.35em solid transparent;border-top:.7em solid var(--main-fg-color);border-bottom:none}
