@@ -13,56 +13,41 @@ addI18n({
 	pre_team_header:{
 		en:'Team _TEAMNUM_',
 	},
-	xxxxx:{
-		en:'',
+	barge_zone_question:{
+		en:'Is _TEAMNUM_\'s robot in the _TEAMCOLOR_ barge zone?',
 	},
-	xxxxx:{
-		en:'',
+	barge_zone_parked_button:{
+		en:'Parked',
 	},
-	xxxxx:{
-		en:'',
+	barge_zone_shallow_button:{
+		en:'Hanging from a shallow cage',
 	},
-	xxxxx:{
-		en:'',
+	barge_zone_deep_parked_button:{
+		en:'Hanging from a deep cage',
 	},
-	xxxxx:{
-		en:'',
+	climb_failed_question:{
+		en:'If not off the ground on a cage:',
 	},
-	xxxxx:{
-		en:'',
+	climb_failed_button:{
+		en:'Robot attempted to climb, but failed',
 	},
-	xxxxx:{
-		en:'',
+	barge_heading:{
+		en:'Barge',
 	},
-	xxxxx:{
-		en:'',
+	gameplay_heading:{
+		en:'Gameplay',
 	},
-	xxxxx:{
-		en:'',
+	gameplay_question:{
+		en:'During the match, the robot:',
 	},
-	xxxxx:{
-		en:'',
+	defense_button:{
+		en:'Played defense',
 	},
-	xxxxx:{
-		en:'',
+	bricked_button:{
+		en:'Broke or was disabled',
 	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
+	coral_stuck_button:{
+		en:'Had a coral stuck on it',
 	},
 	xxxxx:{
 		en:'',

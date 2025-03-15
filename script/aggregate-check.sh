@@ -43,6 +43,6 @@ do
 			type="text"
 		fi
 		name=`echo "$var" | sed -E 's/_/ /g;s/.*/\L&/; s/[a-z]*/\u&/g;s/^Tele (.*)/\1 in Teleop/g;s/^Auto (.*)/\1 in Auto/;s/Place\b/Placed/g;s/Drop\b/Dropped/g;s/Collect\b/Collected/g;'`
-		echo -e "$var:{\n    name: '$name',\n    type: '$type'\n},"
+		echo -e "$var:{\n    en: '$name',\n    type: '$type'\n},"
 	fi
 done

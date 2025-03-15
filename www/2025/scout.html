@@ -282,7 +282,7 @@
 			<div class=collapse data-content=tele-values data-i18n=values_button></div>
 			<div class=collapse data-content=tele-timeline data-i18n=timeline_button></div>
 		</td><td>
-			<button class=tab-button data-content=end-game>End Game »</button>
+			<button class=tab-button data-content=end-game data-i18n=proceed_end_button></button>
 		</td></tr></table>
 
 		<table id=tele-values class=collapsable><tr><td class="algae collection">
@@ -359,45 +359,42 @@
 	</div>
 
 	<div class="end-game tab-content">
-		<table><tr><td class=subheader>
-			Barge
+		<table><tr><td class=subheader data-i18n=barge_heading>
 		</td></tr><tr><td>
 
 			<fieldset>
-				<legend>Is <span class=team></span>'s robot in the <span class=teamColor></span> barge zone?</legend>
-				<label><input type=radio name=end_game_position value=parked><span>Parked</span></label>
-				<label><input type=radio name=end_game_position value=shallow><span>Hanging from a shallow cage</span></label>
-				<label><input type=radio name=end_game_position value=deep><span>Hanging from a deep cage</span></label>
+				<legend data-i18n=barge_zone_question></legend>
+				<label><input type=radio name=end_game_position value=parked><span data-i18n=barge_zone_parked_button></span></label>
+				<label><input type=radio name=end_game_position value=shallow><span data-i18n=barge_zone_shallow_button></span></label>
+				<label><input type=radio name=end_game_position value=deep><span data-i18n=barge_zone_deep_parked_button></span></label>
 			</fieldset>
 			<fieldset>
-				<legend>If not off the ground on a cage:</legend>
-				<label><input type=checkbox name=end_game_climb_fail value=1><span>Robot attempted to climb, but failed</span></label>
+				<legend data-i18n=climb_failed_question></legend>
+				<label><input type=checkbox name=end_game_climb_fail value=1><span data-i18n=climb_failed_button></span></label>
 			</fieldset>
 
-		</td></tr><tr><td class=subheader>
-			Gameplay
+		</td></tr><tr><td class=subheader data-i18n=gameplay_heading>
 		</td></tr><tr><td>
 			<fieldset class=full>
-				<legend>During the match, the robot:</legend>
-				<div><label><input type=checkbox name=defense value=1><span>Played defense</span></label></div>
-				<div><label><input type=checkbox name=bricked value=1><span>Broke or was disabled</span></label></div>
-				<div><label><input type=checkbox name=coral_stuck value=1><span>Had a coral stuck on it</span></label></div>
+				<legend data-i18n=gameplay_question></legend>
+				<div><label><input type=checkbox name=defense value=1><span data-i18n=defense_button></span></label></div>
+				<div><label><input type=checkbox name=bricked value=1><span data-i18n=bricked_button></span></label></div>
+				<div><label><input type=checkbox name=coral_stuck value=1><span data-i18n=coral_stuck_button></span></label></div>
 			</fieldset>
-		</td></tr><tr><td class=subheader>
-			Scouter Info
+		</td></tr><tr><td class=subheader data-i18n=scouter_header>
 		</td></tr><tr><td>
 			<fieldset class="left full">
-				<legend>Name:</legend>
-				<input class=full type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
+				<legend data-i18n=scouter_name_question></legend>
+				<input class=full type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder>
 			</fieldset>
 			<fieldset class="left full" id=scouting-comments>
-				<legend>Comments:</legend>
-				<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+				<legend data-i18n=comments_question></legend>
+				<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
 			</fieldset>
 			<input type=hidden name=created value="">
 			<input type=hidden name=modified value="">
 			<fieldset class=full id=nextButtons>
-				<legend>Save data:</legend>
+				<legend data-i18n=save_data_question></legend>
 				<div id=doneButtons></div>
 			</fieldset>
 		</td></tr></table>

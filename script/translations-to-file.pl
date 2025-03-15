@@ -30,9 +30,9 @@ while (my $line = <$js>) {
 	chomp $line;
 	if(!$inI18n){
 		print "$line\n";
-		$inI18n=1 if ($line=~/addI18n/);
+		$inI18n=1 if ($line=~/addI18n|statInfo/);
 	} else {
-		if ($line =~ /\}\)/){
+		if ($line =~ /(\}\))|(^\}$)/){
 			print "$line\n";
 			$inTranslation=0;
 			$haveLang=0;
@@ -57,7 +57,7 @@ while (my $line = <$js>) {
 				$translation = shift @translations;
 				chomp $translation;
 			}
-			$translation =~ s/\\'/\\\\'/g;
+			$translation =~ s/\'/\\\'/g;
 			print "\t\t$lang:'$translation',\n" if ($inTranslation and !$haveLang);
 			$inTranslation=0;
 			$haveLang=0;

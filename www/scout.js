@@ -7,9 +7,6 @@ addI18n({
 	choose_pos_or:{
 		en:'OR',
 	},
-	change_robot_button:{
-		en:'Change Robot',
-	},
 	pre_match_tab:{
 		en:'Pre',
 	},
@@ -22,6 +19,12 @@ addI18n({
 	end_game_tab:{
 		en:'End',
 	},
+	red:{
+		en:'red',
+	},
+	blue:{
+		en:'blue',
+	},
 	team_correction_button:{
 		en:'Team # Correction',
 	},
@@ -31,6 +34,12 @@ addI18n({
 	rotate_field_button:{
 		en:'Rotate Field',
 	},
+	change_robot_button:{
+		en:'Change Robot',
+	},
+	save_button:{
+		en:'Save',
+	},
 	no_show:{
 		en:'No Show',
 	},
@@ -39,6 +48,9 @@ addI18n({
 	},
 	proceed_tele_button:{
 		en:'Teleop »',
+	},
+	proceed_end_button:{
+		en:'End Game »',
 	},
 	scouting_title:{
 		en:'_TEAMNUM_ _POS_ _MATCHSHORT_ _EVENTNAME_',
@@ -103,17 +115,32 @@ addI18n({
 	timeline_action_header:{
 		en:'Action',
 	},
-	xxxxx:{
-		en:'',
+	scouter_header:{
+		en:'Scouter Info',
 	},
-	xxxxx:{
-		en:'',
+	scouter_name_question:{
+		en:'Name:',
 	},
-	xxxxx:{
-		en:'',
+	scouter_name_placeholder:{
+		en:'Scouter Team, First name, Last initial, Eg. 1234 Pat Q',
 	},
-	xxxxx:{
-		en:'',
+	comments_question:{
+		en:'Comments:',
+	},
+	comments_placeholder:{
+		en:'Comments',
+	},
+	save_data_question:{
+		en:'Save data:',
+	},
+	next_match_button:{
+		en:'Next Match',
+	},
+	upload_data_button:{
+		en:'Upload Data',
+	},
+	qr_code_button:{
+		en:'QR Code',
 	},
 	xxxxx:{
 		en:'',
@@ -396,6 +423,7 @@ function setTranslationContext(){
 		matchName:getMatchName(match),
 		matchShort:getShortMatchName(match),
 		eventName:eventName,
+		teamColor:translate(pos.startsWith('R')?"red":"blue")
 	})
 }
 
@@ -1025,14 +1053,14 @@ function setupButtons(){
 
 function addButtons(div, featured, isFeatured){
 	if (getActiveForm()===scouting){
-		if((featured=='next')==isFeatured) div.append($('<button>').text('Next Match').click(goNext)).append(" ")
-		if((featured=='upload')==isFeatured) div.append($('<button>').text('Upload Data').click(goUploadData)).append(" ")
-		if((featured=='qr')==isFeatured) div.append($('<button>').text('QR Code').click(showQrCode)).append(" ")
-		if($('#matchBtn').length==0 && !isFeatured) div.append($('<button>').text('Choose Match').click(goChooseMatch)).append(" ")
-		if($('.robotBtn').length==0 && !isFeatured) div.append($('<button>').text('Change Robot').click(goChooseRobot)).append(" ")
+		if((featured=='next')==isFeatured) div.append($('<button data-i18n=next_match_button>').click(goNext)).append(" ")
+		if((featured=='upload')==isFeatured) div.append($('<button data-i18n=upload_data_button>').click(goUploadData)).append(" ")
+		if((featured=='qr')==isFeatured) div.append($('<button data-i18n=qr_code_button>').click(showQrCode)).append(" ")
+		if($('#matchBtn').length==0 && !isFeatured) div.append($('<button data-i18n=choose_match_button>').click(goChooseMatch)).append(" ")
+		if($('.robotBtn').length==0 && !isFeatured) div.append($('<button data-i18n=change_robot_button>').click(goChooseRobot)).append(" ")
 	} else {
-		if((featured=='next')==isFeatured) div.append($('<button>').text('Save').click(goNext)).append(" ")
-		if((featured=='qr')==isFeatured) div.append($('<button>').text('QR Code').click(showQrCode)).append(" ")
+		if((featured=='next')==isFeatured) div.append($('<button data-i18n=save_button>').click(goNext)).append(" ")
+		if((featured=='qr')==isFeatured) div.append($('<button data-i18n=qr_code_button>').click(showQrCode)).append(" ")
 	}
 }
 

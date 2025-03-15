@@ -235,7 +235,6 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 var statInfo={
 	event:{
 		name: 'Event',
-		en:'Event',
 		type: 'text'
 	},
 	match:{

@@ -21,4 +21,4 @@ then
 	exit 1
 fi
 
-grep "$lang:" "$file" | sed -E "s/^[^']*'//g;s/'.*/\n/g;s/­//g"
+grep -E "^\s*($lang)\:" "$file" | sed -E 's/^[^:]*:\s*//g;s/\s*,\s*$//g;s/^.//g;s/.$/\n/g;s/\\//g'
