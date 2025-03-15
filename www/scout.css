@@ -37,4 +37,5 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 .pulse-bg{animation:pulse 2s infinite;color:white}
 @keyframes pulse{0%{background-color:var(--red-team-color);border-color:var(--red-team-color)}50%{background-color:var(--blue-team-color);border-color:var(--blue-team-color)}100%{background-color:var(--red-team-color);border-color:var(--red-team-color)}}
 .collapsable{display:none}
-.collapse::before{content:attr(data-before);padding-right:0.5em}
+.collapse::before{content:'';margin-right:.35em;display:inline-block;width:0;height:0;border-top:.35em solid transparent;border-bottom:.4em solid transparent;border-left:.7em solid var(--main-fg-color);border-right:none}
+.collapse.open::before{border-left:.35em solid transparent;border-right:.35em solid transparent;border-top:.7em solid var(--main-fg-color);border-bottom:none}
