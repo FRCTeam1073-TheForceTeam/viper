@@ -2,6 +2,7 @@
 
 use strict;
 use autodie;
+use Data::Dumper;
 
 my $lang='';
 my $file='';
@@ -21,7 +22,7 @@ if (!$file){
 	exit 1;
 }
 
-my @translations = <STDIN>;
+my @translations = grep(!/^\s*$/,<STDIN>);
 my $inI18n=0;
 my $inTranslation=0;
 my $haveLang=0;
@@ -30,7 +31,7 @@ while (my $line = <$js>) {
 	chomp $line;
 	if(!$inI18n){
 		print "$line\n";
-		$inI18n=1 if ($line=~/addI18n|statInfo/);
+		$inI18n=1 if ($line=~/(addI18n\s*\()|(statInfo\s*=)/);
 	} else {
 		if ($line =~ /(\}\))|(^\}$)/){
 			print "$line\n";
@@ -40,7 +41,7 @@ while (my $line = <$js>) {
 		} elsif ($line =~ /^\s*[a-z0-9_]+\:\{/){
 			$inTranslation=1;
 			print "$line\n";
-		} elsif ($inTranslation and $line =~ /^\s*([a-z_]+)\:\'(.*)',/){
+		} elsif ($inTranslation and $line =~ /^\s*([a-z0-9_]+)\:/){
 			my $lineLang=$1;
 			my $lineValue=$2;
 			if ($lineLang eq $lang){
@@ -51,15 +52,15 @@ while (my $line = <$js>) {
 			} else {
 				print "$line\n";
 			}
-		} else {
-			my $translation="";
-			while (!$translation){
-				$translation = shift @translations;
-				chomp $translation;
-			}
+		} elsif ($inTranslation) {
+			my $translation=shift @translations;
+			chomp $translation;
 			$translation =~ s/\'/\\\'/g;
-			print "\t\t$lang:'$translation',\n" if ($inTranslation and !$haveLang);
+			print "\t\t$lang:'$translation',\n" if (!$haveLang);
 			$inTranslation=0;
+			$haveLang=0;
+			print "$line\n";
+		} else {
 			$haveLang=0;
 			print "$line\n";
 		}
