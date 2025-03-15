@@ -3,93 +3,67 @@
 addI18n({
 	coral_preload:{
 		en:'Preloaded Coral',
+		he:'קורל טעון מראש',
 	},
 	opponent_processor_team:{
 		en:'What is the team number of the OPPONENT\'s human player at the processor?',
+		he:'מהו מספר הצוות של השחקן האנושי של OPPONENT במעבד?',
 	},
 	starting_position:{
 		en:'Click team _TEAMNUM_\'s starting position.',
+		he:'לחץ על עמדת ההתחלה של צוות _TEAMNUM_.',
 	},
 	pre_team_header:{
 		en:'Team _TEAMNUM_',
+		he:'צוות _TEAMNUM_',
 	},
 	barge_zone_question:{
 		en:'Is _TEAMNUM_\'s robot in the _TEAMCOLOR_ barge zone?',
+		he:'האם הרובוט של _TEAMNUM_ נמצא באזור ה-_TEAMCOLOR_?',
 	},
 	barge_zone_parked_button:{
 		en:'Parked',
+		he:'חונה',
 	},
 	barge_zone_shallow_button:{
 		en:'Hanging from a shallow cage',
+		he:'תלוי מכלוב רדוד',
 	},
 	barge_zone_deep_parked_button:{
 		en:'Hanging from a deep cage',
+		he:'תלוי מכלוב עמוק',
 	},
 	climb_failed_question:{
 		en:'If not off the ground on a cage:',
+		he:'אם לא מעל הקרקע על כלוב:',
 	},
 	climb_failed_button:{
 		en:'Robot attempted to climb, but failed',
+		he:'רובוט ניסה לטפס, אך נכשל',
 	},
 	barge_heading:{
 		en:'Barge',
+		he:'דוֹבְרָה',
 	},
 	gameplay_heading:{
 		en:'Gameplay',
+		he:'משחקיות',
 	},
 	gameplay_question:{
 		en:'During the match, the robot:',
+		he:'במהלך המשחק, הרובוט:',
 	},
 	defense_button:{
 		en:'Played defense',
+		he:'שיחק הגנה',
 	},
 	bricked_button:{
 		en:'Broke or was disabled',
+		he:'נשבר או היה מושבת',
 	},
 	coral_stuck_button:{
 		en:'Had a coral stuck on it',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
-	},
-	xxxxx:{
-		en:'',
+		he:'היה תקוע עליו אלמוג',
 	},
 })
 
