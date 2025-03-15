@@ -1114,7 +1114,7 @@ $(document).ready(function(){
 	storeInitialValues(subjectiveScouting,"subjective")
 
 	$('.tab,.tab-button').click(showTab)
-	$('.collapse').attr('data-before','🞂').click(toggleCollapse)
+	$('.collapse').click(toggleCollapse)
 
 	$('title').text($('title').text().replace(/EVENT/g, eventName))
 
