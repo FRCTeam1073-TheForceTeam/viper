@@ -41,11 +41,11 @@ while (my $line = <$js>) {
 		} elsif ($line =~ /^\s*[a-z0-9_]+\:\{/){
 			$inTranslation=1;
 			print "$line\n";
-		} elsif ($inTranslation and $line =~ /^\s*([a-z0-9_]+)\:/){
+		} elsif ($inTranslation and $line =~ /^\s*([a-z0-9_]+)\s*\:\s*['"](.*)['"]/){
 			my $lineLang=$1;
 			my $lineValue=$2;
 			if ($lineLang eq $lang){
-				if ($lineValue){
+				if ($lineValue ne ""){
 					print "$line\n";
 					$haveLang=1;
 				}
