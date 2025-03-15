@@ -861,7 +861,8 @@ function toggleCollapse(_,c){
 	c = c||$(this)
 	var content=$(`#${c.attr('data-content')}`)
 	content.toggle()
-	c.toggleClass('open',content.is(':visible'))}
+	c.toggleClass('open',content.is(':visible'))
+}
 
 var eventMatches
 
