@@ -12,10 +12,13 @@ status=0
 
 for file in $files
 do
-	if echo $file | grep -vEq '(\.(yaml|yml|svg|md|png|jpg|json)$)|jquery|\.min\.' && grep -Eq $'^\t* ' "$file"
+	if [ -f "$file" ]
 	then
-		grep -EHn $'^\t* ' "$file"
-		status=1
+		if echo $file | grep -vEq '(\.(yaml|yml|svg|md|png|jpg|json)$)|jquery|\.min\.' && grep -Eq $'^\t* ' "$file"
+		then
+			grep -EHn $'^\t* ' "$file"
+			status=1
+		fi
 	fi
 done
 
