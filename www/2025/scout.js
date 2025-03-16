@@ -229,6 +229,7 @@ $(document).ready(function(){
 	})
 
 	function renderTimeline(){
+		if(!$('#timeline').length)return
 		var tl = $('.timeline').html("")
 		$('#timeline').val().split(/ /).forEach(entry => {
 			if (!entry) return
