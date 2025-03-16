@@ -787,12 +787,27 @@ addI18n({
 	},
 	subjective_penalties_question:{
 		en:'Team _TEAMNUM_ Penalties',
+		zh_tw:'球隊 _TEAMNUM_ 罰球',
+		fr:'Pénalités de l\'équipe _TEAMNUM_',
+		tr:'Takım _TEAMNUM_ Cezaları',
+		he:'צוות _TEAMNUM_ פנדלים',
+		pt:'Penalidades da equipe _TEAMNUM_',
 	},
 	subjective_defense_question:{
 		en:'Team _TEAMNUM_ Defense Tips',
+		zh_tw:'球隊 _TEAMNUM_ 防守提示',
+		fr:'Conseils de défense de l\'équipe _TEAMNUM_',
+		tr:'Takım _TEAMNUM_ Savunma İpuçları',
+		he:'צוות _TEAMNUM_ טיפים להגנה',
+		pt:'Dicas de defesa da equipe _TEAMNUM_',
 	},
 	subjective_notes_question:{
 		en:'Other',
+		zh_tw:'其他',
+		fr:'Autre',
+		tr:'Diğer',
+		he:'אַחֵר',
+		pt:'Outros',
 	},
 })
 
