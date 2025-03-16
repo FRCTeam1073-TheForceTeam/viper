@@ -11,7 +11,7 @@ fi
 status=0
 for file in $files
 do
-	if [ -f "$file"]
+	if [ -f "$file" ]
 	then
 		if echo $file | grep -vEq '(\.(svg|png|jpg)$)|empty|jquery|\.min\.' && [[ $(tail -c1 "$file" | wc -l) -eq 0 ]]
 		then
