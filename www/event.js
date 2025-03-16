@@ -636,15 +636,14 @@ $(document).ready(function(){
 	}
 
 	function replaceVariables(){
+		addTranslationContext({
+			year:eventYear,
+			event:eventId,
+			uploadCount:uploadCount,
+		})
 		$('a').each(function(){
 			$(this).attr(
 				'href',$(this).attr('href')
-				.replace('_YEAR_', eventYear)
-				.replace('_EVENT_', eventId)
-				.replace('_UPLOADCOUNT_', uploadCount)
-			)
-			$(this).text(
-				$(this).text()
 				.replace('_YEAR_', eventYear)
 				.replace('_EVENT_', eventId)
 				.replace('_UPLOADCOUNT_', uploadCount)
