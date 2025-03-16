@@ -377,14 +377,6 @@ addI18n({
 		he:'קוד QR',
 		tr:'QR Kodu',
 	},
-	select_team:{
-		en:'Select a team',
-		pt:'Selecione uma equipe',
-		tr:'Bir takım seçin',
-		he:'בחר צוות',
-		fr:'Sélectionner une équipe',
-		zh_tw:'選擇一個團隊',
-	},
 	back_team_select_button:{
 		en:'Back to Team Selection',
 		pt:'Voltar para Seleção de equipe',
@@ -793,6 +785,15 @@ addI18n({
 		fr:'Sauvegarde des données :',
 		zh_tw:'儲存資料：',
 	},
+	subjective_penalties_question:{
+		en:'Team _TEAMNUM_ Penalties',
+	},
+	subjective_defense_question:{
+		en:'Team _TEAMNUM_ Defense Tips',
+	},
+	subjective_notes_question:{
+		en:'Other',
+	},
 })
 
 var pos = "",
@@ -1163,6 +1164,7 @@ function showSubjectiveScoutingForm(t){
 		form.show()
 		setupButtons()
 		localStorage.setItem("last_scout_type", "subjective-scout")
+		applyTranslations()
 	})
 }
 

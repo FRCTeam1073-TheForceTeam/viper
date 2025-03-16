@@ -22,43 +22,43 @@
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<h1><span class=team></span> Subjective Scouting</h1>
+<h1></h1>
+
 <div id=select-team class="sequential-input-series init-hide screen">
-	<H2>Select a team</H2>
 	<div id=teamList></div>
 </div>
 
 <form id=subjective-scouting class="sequential-input-series init-hide screen">
 
-	<button id=subjectiveTeamButton>Back to Team Selection</button>
+	<button id=subjectiveTeamButton data-i18n=back_team_select_button></button>
 
 	<input type=hidden name=event>
 	<input type=hidden name=team>
 
 	<fieldset class=full>
-		<legend>Team <span class=team></span> Penalties</legend>
+		<legend data-i18n=subjective_penalties_question></legend>
 		<textarea class=full name=penalties></textarea>
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Team <span class=team></span> Defense Tips</legend>
+		<legend data-i18n=subjective_defense_question></legend>
 		<textarea class=full name=defense_tips></textarea>
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Other</legend>
+		<legend data-i18n=subjective_notes_question></legend>
 		<textarea class=full name=notes></textarea>
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Scouter</legend>
-		<input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
+		<legend data-i18n=scouter_header></legend>
+		<span data-i18n=scouter_name_question></span> <div class=full><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></div>
 	</fieldset>
 
 	<input type=hidden name=created value="">
 	<input type=hidden name=modified value="">
 	<fieldset class=full id=nextButtons>
-		<legend>Save data:</legend>
+		<legend data-i18n=save_data_legend></legend>
 		<div id=doneButtons></div>
 	</fieldset>
 </form>
