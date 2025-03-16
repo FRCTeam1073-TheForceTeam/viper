@@ -235,6 +235,7 @@ $(document).ready(function(){
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
 			row.click(showLinks)
 			$('#matches').append(row)
+			$('#main').show()
 		})
 		window.eventStats = eventStats
 		$('#extendedScoutingData')
