@@ -1,5 +1,144 @@
 "use strict"
 
+addI18n({
+	upload_page_title:{
+		en:'Upload Data',
+		tr:'Verileri Yükle',
+		he:'העלה נתונים',
+		zh_tw:'上傳數據',
+		fr:'Importer des données',
+		pt:'Carregar dados',
+	},
+	upload_all_button:{
+		en:'Upload All Data',
+		tr:'Tüm Verileri Yükle',
+		he:'העלה את כל הנתונים',
+		zh_tw:'上傳所有數據',
+		fr:'Importer toutes les données',
+		pt:'Carregar todos os dados',
+	},
+	no_uploads:{
+		en:'There is no data to upload.',
+		tr:'Yüklenecek veri yok.',
+		he:'אין נתונים להעלות.',
+		zh_tw:'沒有可上傳的數據。',
+		fr:'Aucune donnée à importer.',
+		pt:'Não há dados para carregar.',
+	},
+	uploading_button:{
+		en:'Uploading, please wait…',
+		tr:'Yükleniyor, lütfen bekleyin...',
+		he:'מעלה, אנא המתן...',
+		zh_tw:'正在上傳，請稍候…',
+		fr:'Importation en cours, veuillez patienter…',
+		pt:'Carrega, aguarde…',
+	},
+	delete_match_confirm:{
+		en:'Are you sure you want to delete _MATCH_?',
+		tr:'_MATCH_ öğesini silmek istediğinizden emin misiniz?',
+		he:'האם אתה בטוח שברצונך למחוק את _MATCH_?',
+		zh_tw:'您確定要刪除_MATCH_嗎？',
+		fr:'Voulez-vous vraiment supprimer _MATCH_ ?',
+		pt:'Tem certeza de que deseja excluir _MATCH_?',
+	},
+	remove_match_confirm:{
+		en:'Are you sure you want to remove _MATCH_?',
+		tr:'_MATCH_ öğesini kaldırmak istediğinizden emin misiniz?',
+		he:'האם אתה בטוח שברצונך להסיר את _MATCH_?',
+		zh_tw:'您確定要刪除_MATCH_嗎？',
+		fr:'Voulez-vous vraiment supprimer _MATCH_ ?',
+		pt:'Tem certeza de que deseja remover _MATCH_?',
+	},
+	show_data_button:{
+		en:'Show Data',
+		tr:'Verileri Göster',
+		he:'הצג נתונים',
+		zh_tw:'顯示數據',
+		fr:'Afficher les données',
+		pt:'Mostrar dados',
+	},
+	uploads_heading:{
+		en:'Data to Upload (_UPLOADCOUNT_)',
+		tr:'Yüklenecek Veriler (_UPLOADCOUNT_)',
+		he:'נתונים להעלאה (_UPLOADCOUNT_)',
+		zh_tw:'要上傳的資料 (_UPLOADCOUNT_)',
+		fr:'Données à importer (_UPLOADCOUNT_)',
+		pt:'Dados para carregar (_UPLOADCOUNT_)',
+	},
+	history_heading:{
+		en:'History (_HISTORYCOUNT_)',
+		tr:'Geçmiş (_HISTORYCOUNT_)',
+		he:'היסטוריה (_HISTORYCOUNT_)',
+		zh_tw:'歷史記錄 (_HISTORYCOUNT_)',
+		fr:'Historique (_HISTORYCOUNT_)',
+		pt:'Histórico (_HISTORYCOUNT_)',
+	},
+	delete_button:{
+		en:'Delete',
+		tr:'Sil',
+		he:'לִמְחוֹק',
+		zh_tw:'刪除',
+		fr:'Supprimer',
+		pt:'Excluir',
+	},
+	qr_code_button:{
+		en:'QR Code',
+		tr:'QR Kodu',
+		he:'קוד QR',
+		zh_tw:'QR 圖碼',
+		fr:'Code QR',
+		pt:'Código QR',
+	},
+	undelete_button:{
+		en:'Undelete',
+		tr:'Silmeyi Geri Al',
+		he:'בטל מחיקה',
+		zh_tw:'取消刪除',
+		fr:'Annuler la suppression',
+		pt:'Desfazer exclusão',
+	},
+	remove_history_button:{
+		en:'Remove from History',
+		tr:'Geçmişten Kaldır',
+		he:'הסר מההיסטוריה',
+		zh_tw:'從歷史記錄中刪除',
+		fr:'Supprimer de l\'historique',
+		pt:'Remover do histórico',
+	},
+	reupload_button:{
+		en:'Reupload',
+		tr:'Yeniden Yükle',
+		he:'העלה מחדש',
+		zh_tw:'重新上傳',
+		fr:'Importer à nouveau',
+		pt:'Recarregar',
+	},
+	clear_history_button:{
+		en:'Clear Entire History',
+		tr:'Tüm Geçmişi Temizle',
+		he:'נקה את כל ההיסטוריה',
+		zh_tw:'清除全部歷史記錄',
+		fr:'Effacer tout l\'historique',
+		pt:'Limpar histórico inteiro',
+	},
+	clear_history_confirm:{
+		en:'Are you sure you want to clear the history?',
+		tr:'Geçmişi temizlemek istediğinizden emin misiniz?',
+		he:'האם אתה בטוח שברצונך לנקות את ההיסטוריה?',
+		zh_tw:'您確定要清除歷史記錄嗎？',
+		fr:'Voulez-vous vraiment effacer l\'historique ?',
+		pt:'Tem certeza de que deseja limpar o histórico?',
+	},
+	qr_heading:{
+		en:'QR Code _QRNUM_ of _QRTOTAL_',
+		tr:'QR Kodu _QRNUM_ / _QRTOTAL_',
+		he:'קוד QR _QRNUM_ מתוך _QRTOTAL_',
+		zh_tw:'QR 碼 _QRNUM_ / _QRTOTAL_',
+		fr:'Code QR _QRNUM_ sur _QRTOTAL_',
+		pt:'Código QR _QRNUM_ de _QRTOTAL_',
+	},
+})
+
 $(document).ready(showUploads)
 
 var scoutCsv,pitCsv,subjectiveCsv
@@ -12,7 +151,7 @@ function showUploads(){
 	scoutCsv = {}
 	pitCsv = {}
 	subjectiveCsv = {}
-	his.append($('<button>Clear Entire History</button>').click(clearHistory))
+	his.append($('<button data-i18n=clear_history_button></button>').click(clearHistory))
 	for (i in localStorage){
 		if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
@@ -24,8 +163,8 @@ function showUploads(){
 			up.append($('<hr>'))
 			up.append($('<h4>').text(i))
 			up.append($('<pre>').text(header + localStorage.getItem(i)))
-			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
-			up.append($('<button>QR Code</button>').attr("data-match",i).click(showQrCode))
+			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
+			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?.*_.*_/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
@@ -37,8 +176,8 @@ function showUploads(){
 			up.append($('<hr>'))
 			up.append($('<h4>').text(i))
 			up.append($('<pre>').text(header + localStorage.getItem(i)))
-			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
-			up.append($('<button>QR Code</button>').attr("data-match",i).click(showQrCode))
+			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
+			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
@@ -50,29 +189,31 @@ function showUploads(){
 			up.append($('<hr>'))
 			up.append($('<h4>').text(i))
 			up.append($('<pre>').text(header + localStorage.getItem(i)))
-			up.append($('<button>Delete</button>').attr("data-match",i).click(deleteMatch))
-			up.append($('<button>QR Code</button>').attr("data-match",i).click(showQrCode))
+			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
+			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^deleted_20/.test(i)){
 			his.append($('<hr>'))
 			his.append($('<h4 class=deleted>').text(i))
 			his.append($('<pre>').text(localStorage.getItem(i)))
-			his.append($('<button>Undelete</button>').attr("data-match",i).click(undeleteMatch))
-			his.append($('<button>Remove from History</button>').attr("data-match",i).click(removeMatch))
+			his.append($('<button data-i18n=undelete_button></button>').attr("data-match",i).click(undeleteMatch))
+			his.append($('<button data-i18n=remove_history_button></button>').attr("data-match",i).click(removeMatch))
 			historyCount++
 		} else if (/^uploaded_20/.test(i)){
 			his.append($('<hr>'))
 			his.append($('<h4 class=uploaded>').text(i))
 			his.append($('<pre>').text(localStorage.getItem(i)))
-			his.append($('<button>Reupload</button>').attr("data-match",i).click(undeleteMatch))
-			his.append($('<button>Remove from History</button>').attr("data-match",i).click(removeMatch))
+			his.append($('<button data-i18n=reupload_button></button>').attr("data-match",i).click(undeleteMatch))
+			his.append($('<button data-i18n=remove_history_button></button>').attr("data-match",i).click(removeMatch))
 			historyCount++
 		}
 	}
-	$('#upload-description').text(!count?'There is no data to upload.':'')
-	$('#upload-count').text(count)
+	$('#upload-description').attr('data-i18n',!count?'no_uploads':'')
+	addTranslationContext({
+		uploadCount:count,
+		historyCount:historyCount,
+	})
 	$('.uploads').toggle(!!count)
-	$('#history-count').text(historyCount)
 	$('.history').toggle(!!historyCount)
 	var years = Object.keys(scoutCsv);
 	var text = ""
@@ -90,7 +231,7 @@ function showUploads(){
 	$('#csv').val(text)
 
 	$('#upload-all').click(function(){
-		$(this).text('Uploading, please wait ...')
+		$(this).text(translate('uploading_button'))
 		if ($('button').prop('disabled') != 'true'){
 			$('button').prop('disabled', 'true')
 			$('#upload').submit()
@@ -107,11 +248,11 @@ function showUploads(){
 		$(this).hide()
 		$('#history').show()
 	})
-
+	applyTranslations()
 }
 
 function clearHistory(){
-	if (!confirm(`Are you sure you want to clear the history?`)) return
+	if (!confirm(translate('clear_history_confirm'))) return
 	for (var i in localStorage){
 		if (/^(deleted|uploaded)_20/.test(i)) localStorage.removeItem(i)
 	}
@@ -120,7 +261,7 @@ function clearHistory(){
 
 function deleteMatch(){
 	var match = $(this).attr("data-match")
-	if (confirm(`Are you sure you want to delete ${match}?`)){
+	if (confirm(translate('delete_match_confirm',{match:match}))){
 		var d = localStorage.getItem(match)
 		localStorage.removeItem(match)
 		localStorage.setItem(`deleted_${match}`, d)
@@ -130,7 +271,7 @@ function deleteMatch(){
 
 function removeMatch(){
 	var match = $(this).attr("data-match")
-	if (confirm(`Are you sure you want to remove ${match}?`)){
+	if (confirm(translate('remove_match_confirm',{match:match}))){
 		localStorage.removeItem(match)
 		showUploads()
 	}
@@ -195,13 +336,14 @@ function showQrCode(num){
 		.append($('<h2 id=qr-code-title>'))
 		.append($('<div id=qr-code style="border:.5em solid white">'))
 		.append($('<p>')
-			.append($('<button>').text("Cancel").click(closeLightBox))
+			.append($('<button data-i18n=cancel_button>').click(closeLightBox))
 			.append(" ")
-			.append($('<button id=qr-code-next style=float:right>').text('Next').click(nextQrCode))
+			.append($('<button id=qr-code-next style=float:right data-i18n=next_button>').click(nextQrCode))
 		)
 		$('body').append(dialog)
+		applyTranslations()
 	}
-	$('#qr-code-title').text(`QR Code ${qrNum} of ${qrUrls.length}`)
+	$('#qr-code-title').text(translate('qr_heading',{qrNum:qrNum,qrTotal:qrUrls.length}))
 	var size = Math.min($('body').innerWidth()-20,$('body').innerHeight()-20,700)
 	new QRCode($("#qr-code").html("").click(copyTitleAttr)[0],{
 		text:qrUrls[num-1],

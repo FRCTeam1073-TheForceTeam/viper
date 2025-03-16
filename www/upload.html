@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Upload Data</title>
+<title data-i18n=upload_page_title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/upload.css>
 <script src=/jquery.min.js></script>
+<script src=/main.js></script>
 <script src=/qrcode.min.js></script>
 <script src=/upload.js></script>
-<script src=/main.js></script>
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<h1>Upload Data</h1>
+<h1 data-i18n=upload_page_title></h1>
 <form id=upload action=/scout/upload.cgi method=POST>
 	<input type=hidden id=csv name=csv>
 	<input type=hidden id=next name=next>
-	<button class=uploads id=upload-all>Upload All Data</button>
+	<button class=uploads id=upload-all data-i18n=upload_all_button></button>
 </form>
 <div id=upload-description></div>
-<h2 class=uploads>Data to Upload (<span id=upload-count></span>) <button id=show-uploads>Show Data</button></h2>
+<h2 class=uploads><span data-i18n=uploads_heading></span> <button id=show-uploads data-i18n=show_data_button></button></h2>
 <div class=uploads><div class=initHid id=uploads></div></div>
-<h2 class=history>History (<span id=history-count></span>) <button id=show-history>Show Data</button></h2>
+<h2 class=history><span data-i18n=history_heading></span> <button id=show-history data-i18n=show_data_button></button></h2>
 <div class=history><div class=initHid id=history></div></div>
 </body>
 </html>
