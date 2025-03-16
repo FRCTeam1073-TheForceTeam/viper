@@ -807,6 +807,7 @@ $(document).ready(function(){
 			row.click(showLinks)
 			$('#matches').append(row)
 			applyTranslations()
+			$('#main').show()
 		})
 		window.eventStats = eventStats
 		$('#extendedScoutingData')
