@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Pit Scout EVENT</title>
+<title></title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
@@ -11,9 +11,9 @@
 <script src=/jquery.min.js></script>
 <script src=/main.js></script>
 <script src=/event-url.js></script>
+<script src=/scout.js></script>
 <script src=/canvas-path.js></script>
 <script src=/qrcode.min.js></script>
-<script src=/scout.js></script>
 <script src=/2025/scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/local.js></script>
@@ -21,33 +21,33 @@
 <link rel=icon type=image/png href=auto-area-blue.png>
 </head>
 <body>
-<h1><span class=team></span> Pit Scouting</h1>
+<h1></h1>
 <div id=select-team class="sequential-input-series init-hide screen">
-	<H2>Select a team</H2>
+	<h2 data-i18n=select_team></h2>
 	<div id=teamList></div>
 </div>
 
 <form id=pit-scouting class="sequential-input-series init-hide screen">
 
-	<button id=pitTeamButton>Back to Team Selection</button>
+	<button id=pitTeamButton data-i18n=back_team_select_button></button>
 
 	<input type=hidden name=event>
 	<input type=hidden name=team>
 
 	<fieldset class=full>
-		<legend><span class=team></span> Team info</legend>
-		<p>Name: <input name=team_name type=text placeholder="NOT the team number"></p>
-		<p>Location: <input name=team_location type=text placeholder="Anytown, ST, USA"></p>
-		<p>Bot name: <input name=bot_name type=text></p>
+		<legend data-i18n=team_info_legend></legend>
+		<p><span data-i18n=team_name_label></span> <input name=team_name type=text data-i18n-placeholder=team_name_placeholder></p>
+		<p><span data-i18n=team_location_label></span> <input name=team_location type=text  data-i18n-placeholder=team_location_placeholder></p>
+		<p><span data-i18n=bot_name_label></span> <input name=bot_name type=text></p>
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Draw the robot's path for each auto routine that team <span class=team></span> can perform</legend>
+		<legend data-i18n=auto_path_legend></legend>
 
 		<canvas id=auto-paths></canvas>
 		<div>
-			<button id=auto-path-undo>Undo Last Point</button>
-			<button id=auto-path-next>Next Auto</button>
+			<button id=auto-path-undo data-i18n=auto_path_undo_button></button>
+			<button id=auto-path-next data-i18n=auto_path_next_button></button>
 		</div>
 
 		<input type=hidden class=auto-path name=auto_1_path data-color=green>
@@ -62,75 +62,75 @@
 	</fieldset>
 
 	<fieldset class=full>
-		<legend>Robot</legend>
+		<legend data-i18n=robot_legend></legend>
 		<p>
-			What are the robot frame dimensions <b>without</b> bumpers?<br>
-			<label>Length: <input type=number min=12 step=1 max=48 name=frame_length> inches</label><br>
-			<label>Width: <input type=number min=12 step=1 max=48 name=frame_width> inches</label><br>
+			<span data-i18n=robot_size_question></span><br>
+			<label><span data-i18n=robot_size_length></span> <input type=number min=12 step=1 max=48 name=frame_length> <span data-i18n=robot_size_unit></span></label><br>
+			<label><span data-i18n=robot_size_width></span> <input type=number min=12 step=1 max=48 name=frame_width> <span data-i18n=robot_size_unit></span></label><br>
 		</p>
 		<p>
-			What is the weight of the robot?<br>
-			<label><input type=number min=30 step=1 max=200 name=weight> pounds</label><br>
+			<span data-i18n=robot_weight_question></span><br>
+			<label><input type=number min=30 step=1 max=200 name=weight> <span data-i18n=robot_weight_unit></label><br>
 		</p>
 		<p>
-			What drivetrain is used?<br>
-			<label><input type=radio name=drivetrain value=tank><span>Tank</span></label>
-			<label><input type=radio name=drivetrain value=swerve><span>Swerve</span></label>
-			<label><input type=radio name=drivetrain value=other><span>Other</span></label>
+			<span data-i18n=robot_drivetrain_question></span><br>
+			<label><input type=radio name=drivetrain value=tank><span data-i18n=robot_drivetrain_tank>Tank</span></label>
+			<label><input type=radio name=drivetrain value=swerve><span data-i18n=robot_drivetrain_swerve>Swerve</span></label>
+			<label><input type=radio name=drivetrain value=other><span data-i18n=robot_drivetrain_other>Other</span></label>
 		</p>
 		<p>
-			If swerve, which modules?<br>
-			<label><input type=radio name=swerve value=swerve-drive-specialties><span>Swerve Drive Specialties</span></label>
-			<label><input type=radio name=swerve value=andymark><span>AndyMark</span></label>
-			<label><input type=radio name=swerve value=rev-robotics><span>REV Robotics</span></label>
-			<label><input type=radio name=swerve value=westcoast-products><span>WestCoast Products</span></label>
-			<label><input type=radio name=swerve value=other><span>Other/Custom</span></label>
+			<span data-i18n=robot_swerve_question></span><br>
+			<label><input type=radio name=swerve value=swerve-drive-specialties><span data-i18n=robot_swerve_sds></span></label>
+			<label><input type=radio name=swerve value=andymark><span data-i18n=robot_swerve_am></span></label>
+			<label><input type=radio name=swerve value=rev-robotics><span data-i18n=robot_swerve_rev></span></label>
+			<label><input type=radio name=swerve value=westcoast-products><span data-i18n=robot_swerve_wcp></span></label>
+			<label><input type=radio name=swerve value=other><span data-i18n=robot_swerve_other></span></label>
 		</p>
 		<p>
-			How many motors power the drive train?<br>
+			<span data-i18n=drivetrain_motor_count_question></span><br>
 			<input type=number min=1 step=1 name=motor_count>
 		</p>
 		<p>
-			What type of motors power the drivetrain?<br>
-			<label><input type=radio name=motors value=neo><span>Neo</span></label>
-			<label><input type=radio name=motors value=falcon_500><span>Falcon 500</span></label>
-			<label><input type=radio name=motors value=full_size_cim><span>Full Size CIM</span></label>
-			<label><input type=radio name=motors value=kraken><span>Kraken</span></label>
-			<label><input type=radio name=motors value=other><span>Other</span></label>
+			<span data-i18n=drivetrain_motor_type_question></span><br>
+			<label><input type=radio name=motors value=neo><span data-i18n=motor_type_neo></span></label>
+			<label><input type=radio name=motors value=falcon_500><span data-i18n=motor_type_f500></span></label>
+			<label><input type=radio name=motors value=full_size_cim><span data-i18n=motor_type_cim></span></label>
+			<label><input type=radio name=motors value=kraken><span data-i18n=motor_type_kraken></span></label>
+			<label><input type=radio name=motors value=other><span data-i18n=motor_type_other></span></label>
 		</p>
 		<p>
-			How many wheels?<br>
+			<span data-i18n=wheel_count_question></span><br>
 			<input type=number min=4 step=1 name=wheel_count value=4>
 		</p>
 		<p>
-			What type of drive wheels?<br>
-			<label><input type=radio name=wheels value=traction><span><img src=/wheel-traction.png><br>Treaded</span></label>
-			<label><input type=radio name=wheels value=high-traction><span><img src=/wheel-high-traction.png><br>High Traction (TPU)</span></label>
-			<label><input type=radio name=wheels value=pneumatic><span><img src=/wheel-pneumatic.png><br>Pneumatic</span></label>
-			<label><input type=radio name=wheels value=mechanum><span><img src=/wheel-mechanum.png><br>Mechanum</span></label>
-			<label><input type=radio name=wheels value=omni><span><img src=/wheel-omni.png><br>Omni</span></label>
-			<label><input type=radio name=wheels value=untreaded><span><img src=/wheel-colson.png><br>Untreaded</span></label>
-			<label><input type=radio name=wheels value=mixed><span>Mixed</span></label>
-			<label><input type=radio name=wheels value=other><span>Other</span></label>
+			<span data-i18n=wheel_type_question></span><br>
+			<label><input type=radio name=wheels value=traction><span><img src=/wheel-traction.png><br><span data-i18n=wheel_type_traction></span></span></label>
+			<label><input type=radio name=wheels value=high-traction><span><img src=/wheel-high-traction.png><br><span data-i18n=wheel_type_high_traction></span></span></label>
+			<label><input type=radio name=wheels value=pneumatic><span><img src=/wheel-pneumatic.png><br><span data-i18n=wheel_type_pneumatic></span></span></label>
+			<label><input type=radio name=wheels value=mechanum><span><img src=/wheel-mechanum.png><br><span data-i18n=wheel_type_traction></span></span></label>
+			<label><input type=radio name=wheels value=omni><span><img src=/wheel-omni.png><br><span data-i18n=wheel_type_omni></span></span></label>
+			<label><input type=radio name=wheels value=untreaded><span><img src=/wheel-colson.png><br><span data-i18n=wheel_type_untreaded></span></span></label>
+			<label><input type=radio name=wheels value=mixed><span><span data-i18n=wheel_type_mixed></span></span></label>
+			<label><input type=radio name=wheels value=other><span><span data-i18n=wheel_type_other></span></span></label>
 		</p>
 		<p>
-			Computer vision can assist the robot with:<br>
-			<label><input type=checkbox name=vision_auto value=yes><span>Auto</span></label>
-			<label><input type=checkbox name=vision_collecting value=yes><span>Collecting</span></label>
-			<label><input type=checkbox name=vision_placing value=yes><span>Placing, shooting or aiming</span></label>
-			<label><input type=checkbox name=vision_localization value=yes><span>Localization</span></label>
+			<span data-i18n=vision_question></span><br>
+			<label><input type=checkbox name=vision_auto value=yes><span data-i18n=vision_auto></span></label>
+			<label><input type=checkbox name=vision_collecting value=yes><span data-i18n=vision_collecting></span></label>
+			<label><input type=checkbox name=vision_placing value=yes><span data-i18n=vision_placing></span></label>
+			<label><input type=checkbox name=vision_localization value=yes><span data-i18n=vision_localization></span></label>
 		</p>
 	</fieldset>
 
-	Scouter name and notes:
-	<div class=full><input type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q"></div>
-	<p><textarea name=notes placeholder="Notes (Other things that would be good to know)"></textarea></p>
-	<p>If you are also bot photo scouting, don't forget to take a picture!</p>
+	<span data-i18n=scouter_header></span><br>
+	<span data-i18n=scouter_name_question></span> <div class=full><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></div>
+	<p><textarea name=notes  data-i18n-placeholder=pit_scout_notes_placeholder></textarea></p>
+	<p data-i18n=pit_scout_photo_reminder></p>
 
 	<input type=hidden name=created value="">
 	<input type=hidden name=modified value="">
 	<fieldset class=full id=nextButtons>
-		<legend>Save data:</legend>
+		<legend data-i18n=save_data_legend></legend>
 		<div id=doneButtons></div>
 	</fieldset>
 </form>

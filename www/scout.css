@@ -9,12 +9,12 @@ img.bigimg{width:48vw}
 img.expandable-image{width:5em;vertical-align:middle;cursor:pointer}
 img.full-image{object-fit:contain;width:100%;height:100%}
 img.count{max-width:10em;margin:0.25em 0;cursor:pointer}
-.screen label>span,button{background:var(--button-bg-color);color:var(--button-fg-color);display:inline-block;padding:.5vw;border-radius:1vw;min-width:8vw;text-align:center;margin:.5vw 0;cursor:pointer;}
-.screen label :checked+span{background:var(--button-selected-bg-color)}
-.screen label :disabled+span{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
+label:has(>input[type="radio"])>span,label:has(>input[type="checkbox"])>span,button{background:var(--button-bg-color);color:var(--button-fg-color);display:inline-block;padding:.5vw;border-radius:1vw;min-width:8vw;text-align:center;margin:.5vw 0;cursor:pointer;}
+label input:checked+span{background:var(--button-selected-bg-color)}
+label input:disabled+span{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 input[type='checkbox'],input[type='radio'], .init-hide{display:none}
 .full{width:calc(100% - 1em);margin:.5em auto;max-width:50em;display:block}
-.screen label,fieldset{display:inline-block}
+label,fieldset{display:inline-block}
 input[type="text"]:disabled{background-color:inherit;border:none;color:inherit;pointer-events:none}
 input.num{text-align:end}
 fieldset{margin:0.5em;font-weight:normal}

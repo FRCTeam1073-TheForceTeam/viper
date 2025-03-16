@@ -270,6 +270,7 @@ function translate(key,context){
 			Object.entries(context).forEach(([key,value])=>{
 				t=t.replace(`_${key.toUpperCase()}_`,value)
 			})
+			t=t.replace(/_[A-Z]+_/g,"")
 			return t
 		}
 		l=l.replace(/[_]?[^_]*$/,"")

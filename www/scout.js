@@ -377,6 +377,162 @@ addI18n({
 		he:'קוד QR',
 		tr:'QR Kodu',
 	},
+	select_team:{
+		en:'Select a team',
+	},
+	back_team_select_button:{
+		en:'Back to Team Selection',
+	},
+	team_info_legend:{
+		en:'_TEAMNUM_ Team info',
+	},
+	team_name_label:{
+		en:'Name:',
+	},
+	team_name_placeholder:{
+		en:'NOT the team number',
+	},
+	team_location_label:{
+		en:'Location:',
+	},
+	team_location_placeholder:{
+		en:'Anytown, ST, USA',
+	},
+	bot_name_label:{
+		en:'Bot name:',
+	},
+	auto_path_legend:{
+		en:'Draw the robot\'s path for each auto routine that team _TEAMNUM_ can perform',
+	},
+	auto_path_undo_button:{
+		en:'Undo Last Point',
+	},
+	auto_path_next_button:{
+		en:'Next Auto',
+	},
+	robot_legend:{
+		en:'Robot',
+	},
+	robot_size_question:{
+		en:'What are the robot frame dimensions WITHOUT bumpers?',
+	},
+	robot_size_length:{
+		en:'Length:',
+	},
+	robot_size_width:{
+		en:'Width:',
+	},
+	robot_size_unit:{
+		en:'inches',
+	},
+	robot_weight_question:{
+		en:'What is the weight of the robot?',
+	},
+	robot_weight_unit:{
+		en:'pounds',
+	},
+	robot_drivetrain_question:{
+		en:'What drivetrain is used?',
+	},
+	robot_drivetrain_tank:{
+		en:'Tank',
+	},
+	robot_drivetrain_swerve:{
+		en:'Swerve',
+	},
+	robot_drivetrain_other:{
+		en:'Other',
+	},
+	robot_swerve_question:{
+		en:'If swerve, which modules?',
+	},
+	robot_swerve_sds:{
+		en:'Swerve Drive Specialties',
+	},
+	robot_swerve_am:{
+		en:'AndyMark',
+	},
+	robot_swerve_rev:{
+		en:'REV Robotics',
+	},
+	robot_swerve_wcp:{
+		en:'WestCoast Products',
+	},
+	robot_swerve_other:{
+		en:'Other/Custom',
+	},
+	drivetrain_motor_count_question:{
+		en:'How many motors power the drive train?',
+	},
+	drivetrain_motor_type_question:{
+		en:'What type of motors power the drivetrain?',
+	},
+	motor_type_neo:{
+		en:'Neo',
+	},
+	motor_type_f500:{
+		en:'Falcon 500',
+	},
+	motor_type_cim:{
+		en:'Full Size CIM',
+	},
+	motor_type_kraken:{
+		en:'Kraken',
+	},
+	motor_type_other:{
+		en:'Other',
+	},
+	wheel_count_question:{
+		en:'How many wheels?',
+	},
+	wheel_type_question:{
+		en:'What type of drive wheels?',
+	},
+	wheel_type_traction:{
+		en:'Treaded',
+	},
+	wheel_type_high_traction:{
+		en:'High Traction (TPU)',
+	},
+	wheel_type_pneumatic:{
+		en:'Pneumatic',
+	},
+	wheel_type_omni:{
+		en:'Omni',
+	},
+	wheel_type_untreaded:{
+		en:'Untreaded',
+	},
+	wheel_type_mixed:{
+		en:'Mixed',
+	},
+	wheel_type_other:{
+		en:'Other',
+	},
+	vision_question:{
+		en:'Computer vision can assist the robot with:',
+	},
+	vision_auto:{
+		en:'Auto',
+	},
+	vision_collecting:{
+		en:'Collecting',
+	},
+	vision_placing:{
+		en:'Placing, shooting or aiming',
+	},
+	vision_localization:{
+		en:'Localization',
+	},
+	pit_scout_notes_placeholder:{
+		en:'Notes (Other things that would be good to know)',
+	},
+	pit_scout_photo_reminder:{
+		en:'If you are also bot photo scouting, don\'t forget to take a picture!',
+	},
+	save_data_legend:{
+		en:'Save data:',
+	},
 })
 
 var pos = "",
