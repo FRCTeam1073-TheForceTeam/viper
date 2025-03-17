@@ -1,6 +1,8 @@
 "use strict"
 onApplyTranslation.push(show)
+var lastLocale='xx'
 function show(){
+	if(locale==lastLocale)return
 	load(locale).then(function(text){
 		var m,
 		title = ""
@@ -15,6 +17,7 @@ function show(){
 		}
 		$('#md').html(window.markdownit({html:true}).render(text).replace(/\$URL\$/,location.origin+"/"))
 	})
+	lastLocale=locale
 }
 function load(locale){
 	return fetch(location.pathname.replace(/\.html$/,locale?`.${locale}.md`:'.md')).then(response=>{
