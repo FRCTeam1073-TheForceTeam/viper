@@ -1,8 +1,35 @@
 "use strict"
 
-var file=(location.hash.match(/^\#(?:(?:.*\&)?(?:file\=))?(20[0-9]{2}[a-zA-Z0-9\-]+\.[a-z]+\.csv)(?:\&.*)?$/)||["",""])[1]
+addI18n({
+	save_button:{
+		en:'Save',
+		zh_tw:'節省',
+		fr:'Enregistrer',
+		tr:'Kaydet',
+		pt:'Salvar',
+		he:'לְהַצִיל',
+	},
+	delete_button:{
+		en:'Delete',
+		zh_tw:'刪除',
+		fr:'Supprimer',
+		tr:'Sil',
+		pt:'Excluir',
+		he:'לִמְחוֹק',
+	},
+	delete_confirm:{
+		en:'Are you sure you want to delete _FILE_?',
+		zh_tw:'您確定要刪除_FILE_嗎？',
+		fr:'Êtes-vous sûr de vouloir supprimer _FILE_ ?',
+		tr:'_FILE_ dosyasını silmek istediğinizden emin misiniz?',
+		pt:'Você tem certeza de que deseja excluir _FILE_?',
+		he:'האם אתה בטוח שברצונך למחוק את _FILE_?',
+	},
+})
 
-var editor
+var file=(location.hash.match(/^\#(?:(?:.*\&)?(?:file\=))?(20[0-9]{2}[a-zA-Z0-9\-]+\.[a-z]+\.csv)(?:\&.*)?$/)||["",""])[1],
+editor
+
 $(document).ready(function(){
 	$('#file').val(file)
 	function loadFile(){
@@ -29,7 +56,7 @@ $(document).ready(function(){
 		$('#csv').val((editor.getData().map(safeCSV).map(l=>l.join(",")).join('\n')+"\n").replace(/,(\r|\n|(\r\n))/gm,"\n").replace(/^,+\n/gm,""))
 	})
 	$('#delete').click(function(e){
-		if (!confirm(`Are you sure you want to delete ${file}?`)){
+		if (!confirm(translate('delete_confirm',{file:file}))){
 			e.preventDefault()
 			return false
 		}

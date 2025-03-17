@@ -9,8 +9,8 @@
 <link rel=stylesheet href=/edit.css>
 <link rel=stylesheet href=/handsontable.full.min.css>
 <script src=/jquery.min.js></script>
-<script src=/event-url.js></script>
 <script src=/main.js></script>
+<script src=/event-url.js></script>
 <script src=/local.js></script>
 <script src=/handsontable.full.min.js></script>
 <script src=/edit.js></script>
@@ -20,8 +20,8 @@
 <form id=saver method=POST action=/admin/edit.cgi>
 	<input id=file type=text readonly name=file pattern="^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|schedule|event|alliances)\.csv$" required placeholder=20xxEvent.type.csv>
 	<input id=csv type=hidden name=csv>
-	<input type=submit value=Save>
-	<input id=delete type=submit name=delete value=Delete>
+	<input type=submit data-i18n-value=save_button>
+	<input id=delete type=submit name=delete data-i18n-value=delete_button>
 </form>
 <div id=editor></div>
 </body></html>
