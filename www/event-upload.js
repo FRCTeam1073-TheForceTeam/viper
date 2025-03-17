@@ -1,5 +1,40 @@
 "use strict"
 
+addI18n({
+	event_upload_title:{
+		en:'Import an Event',
+	},
+	event_upload_short_instructions:{
+		en:'Paste data from another source into the text area below.',
+	},
+	no_data:{
+		en:'No data found!',
+	},
+	event_name_label:{
+		en:'Event name:',
+	},
+	event_name_placeholder:{
+		en:'Name of event',
+	},
+	start_date_label:{
+		en:'Start date:',
+	},
+	end_date_label:{
+		en:'End date:',
+	},
+	event_location_label:{
+		en:'Location:',
+	},
+	event_location_placeholder:{
+		en:'Venue name and address',
+	},
+	event_id_label:{
+		en:'Event ID:',
+	},
+	event_id_placeholder:{
+		en:'No spaces or symbols',
+	},
+})
 
 $(document).ready(function(){
 	$('#importData').submit(processInput)
@@ -14,7 +49,7 @@ $(document).ready(function(){
 			randomPracticeSchedule(getGenericTeamList(src))
 		)
 		if (!csv){
-			alert("No data found!")
+			alert(translate('no_data'))
 			return false
 		}
 		$('#csvInp').val(csv)
@@ -171,4 +206,9 @@ $(document).ready(function(){
 		}
 		return schedule.map(function(d){return d.join(',')}).join('\n') + "\n"
 	}
+
+	$('#showInstructions').click(function(){
+		showLightBox($('#instructions'))
+		return false
+	})
 })
