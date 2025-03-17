@@ -1,7 +1,46 @@
 "use strict"
 
-
 addI18n({
+	edit_link:{
+		en:'Edit',
+		pt:'Editar',
+		he:'לַעֲרוֹך',
+		tr:'Düzenle',
+		fr:'Modifier',
+		zh_tw:'編輯',
+	},
+	history_link:{
+		en:'History',
+		pt:'Histórico',
+		he:'הִיסטוֹרִיָה',
+		tr:'Geçmiş',
+		fr:'Historique',
+		zh_tw:'歷史',
+	},
+	download_link:{
+		en:'Download',
+		pt:'Download',
+		he:'הורד',
+		tr:'İndir',
+		fr:'Télécharger',
+		zh_tw:'下載',
+	},
+	file_view_link:{
+		en:'View',
+		pt:'Visualizar',
+		he:'נוֹף',
+		tr:'Görüntüle',
+		fr:'Afficher',
+		zh_tw:'看法',
+	},
+	date_range:{
+		en:"_START_ to _END_",
+		pt:'_START_ a _END_',
+		he:'_START_ אל _END_',
+		tr:'_START_ ile _END_',
+		fr:'_START_ à _END_',
+		zh_tw:'_START_ 至 _END_',
+	},
 	scouting_heading:{
 		en:'Scouting',
 		he:'צוֹפִיוּת',
@@ -36,11 +75,11 @@ addI18n({
 	},
 	all_pit_link:{
 		en:'Open pit scouting for all teams',
-		he:'',
 		zh_tw:'為所有團隊進行露天礦場勘察',
 		pt:'Observação de poço aberto para todos os times',
 		fr:'Repérage en fosse ouverte pour toutes les équipes',
 		tr:'Tüm takımlar için açık çukur izciliği',
+		he:'',
 	},
 	pit_squads:{
 		en:'Open pit and photo scouting squads:',
@@ -598,19 +637,19 @@ $(document).ready(function(){
 		da = $('#dataActions'),
 		file = url.replace(/.*\//,""),
 		list = da.find('ul').html(""),
-		download = $('<a>').attr('href',url).text('Download')
+		download = $('<a data-i18n=download_link>').attr('href',url)
 		da.find('h2').text($(this).attr('download')?$(this).attr('download'):file)
 		if ($(this).attr('download')) download.attr('download', $(this).attr('download'))
 		list.append($('<li>').append(download))
 		if (/\.csv/.test(file)){
-			list.append($('<li>').append($('<a>').attr('href',`/edit.html#file=${file}`).text('Edit')))
-			list.append($('<li>').append($('<a>').attr('href',`/revisions.html#file=${file}`).text('History')))
+			list.append($('<li>').append($('<a data-i18n=edit_link>').attr('href',`/edit.html#file=${file}`)))
+			list.append($('<li>').append($('<a data-i18n=history_link>').attr('href',`/revisions.html#file=${file}`)))
 		}
 		if (/\.json/.test(file)){
-			list.append($('<li>').append($('<a>').attr('href',url).text('View').click(viewJson)))
+			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).click(viewJson)))
 		}
 		if (/^blob/.test(url)){
-			list.append($('<li>').append($('<a>').attr('href',url).attr('data-source',$(this).attr('data-source')).text('View').click(viewDataAsTable)))
+			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).attr('data-source',$(this).attr('data-source')).click(viewDataAsTable)))
 		}
 		showLightBox(da)
 		return false
@@ -626,9 +665,11 @@ $(document).ready(function(){
 	function toDisplayDate(d){
 		if (!d) return ""
 		try {
-			var b = d.split(/\D/)
-			var date = new Date(b[0], b[1]-1, b[2])
-			return new Intl.DateTimeFormat('en-US', {dateStyle: 'full'}).format(date)
+			var b = d.split(/\D/),
+			date = new Date(b[0], b[1]-1, b[2]),
+			locale=translate('date_locale')
+			if(!/^[a-z]{2}-[A-Z]{2}/.test(locale))locale='en-US'
+			return new Intl.DateTimeFormat(locale,{dateStyle:'full'}).format(date)
 		} catch (x){
 			console.error("Could not parse",d,x)
 			return ""
@@ -727,7 +768,7 @@ $(document).ready(function(){
 			if (start != end){
 				start = toDisplayDate(start)
 				end = toDisplayDate(end)
-				info.append($('<div>').text(`${start} to ${end}`))
+				info.append($('<div data-i18n=date_range>').attr('data-start',start).attr('data-end',end))
 			} else {
 				start = toDisplayDate(start)
 				info.append($('<div>').text(`${start}`))

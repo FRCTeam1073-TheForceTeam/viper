@@ -13,6 +13,14 @@ addI18n({
 		tr:'ltr',
 		zh_tw:'ltr',
 	},
+	date_locale:{
+		en:'en-US',
+		he:'he-IL',
+		pt:'pt-BR',
+		fr:'fr-CA',
+		tr:'tr-TR',
+		zh_tw:'zh-TW',
+	},
 	home_link:{
 		en:'Event List',
 		he:'רשימת אירועים',
