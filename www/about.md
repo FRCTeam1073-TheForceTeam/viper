@@ -9,11 +9,11 @@ The app is available [from GitHub](https://github.com/FRCTeam1073-TheForceTeam/v
 
 ## Origins of the name "Viper"
 
-  - **V**isual
-  - **I**nternet
-  - **P**lanning
-  - **E**nhanced
-  - **R**obotics
+- **V**isual
+- **I**nternet
+- **P**lanning
+- **E**nhanced
+- **R**obotics
 
 Plus, Viper is a scouting droid in the Star Wars universe.
 
