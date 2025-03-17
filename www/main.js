@@ -259,6 +259,7 @@ function computeLocale(){
 }
 
 function translate(key,context){
+	context=Object.assign({},translationContext,context||{})
 	var unknown=key
 	var g=I18N[key]||(window.statInfo||{})[key]||{},
 	l=locale
@@ -266,7 +267,6 @@ function translate(key,context){
 	while(l){
 		var t=g[l]||(locale=='en'?g.name:'')
 		if(t){
-			context||=translationContext
 			Object.entries(context).forEach(([key,value])=>{
 				t=t.replace(`_${key.toUpperCase()}_`,value)
 			})
@@ -294,13 +294,14 @@ function applyTranslations(node){
 	onApplyTranslation.forEach(x=>x())
 	$('html').attr('dir',translate('text_direction')).attr('lang',locale.replace(/[_\-].*/,""))
 	node.find('[data-i18n]').each(function(){
-		$(this).text(translate($(this).attr('data-i18n')))
+		if($(this).attr('data-i18n')=='team_num_heading') console.log($(this).data())
+		$(this).text(translate($(this).attr('data-i18n'),$(this).data()))
 	})
 	node.find('[data-i18n-value]').each(function(){
-		$(this).attr('value',translate($(this).attr('data-i18n-value')))
+		$(this).attr('value',translate($(this).attr('data-i18n-value'),$(this).data()))
 	})
 	node.find('[data-i18n-placeholder]').each(function(){
-		$(this).attr('placeholder',translate($(this).attr('data-i18n-placeholder')))
+		$(this).attr('placeholder',translate($(this).attr('data-i18n-placeholder'),$(this).data()))
 	})
 	$('iframe').each(function(){
 		var w = $(this)[0].contentWindow
