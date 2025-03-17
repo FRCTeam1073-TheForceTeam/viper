@@ -1,36 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>API Event List</title>
+<title data-i18n=api_events_title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <script src=/jquery.min.js></script>
-<script src=/api-events.js></script>
 <script src=/main.js></script>
+<script src=/api-events.js></script>
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<h1>FIRST Events</h1>
+<h1 data-i18n=api_events_title></h1>
 
-<p>Click on an event to download the official data for it.</p>
-<p><a href="/admin/COMP-api-season.cgi?season=SEASON">Refresh event list</a></p>
+<p data-i18n=api_events_instruction></p>
+<p><a href="/admin/COMP-api-season.cgi?season=SEASON" data-i18n=api_events_refresh_link></a></p>
 <p>
-	Season: <select id=season>
-	</select>
-	Show:
+	<span data-i18n=season_label></span> <select id=season></select>
+	<span data-i18n=filter_label></span>
 	<select id=filter>
-		<option value=all>All</option>
-		<option value=upcoming>Upcoming</option>
+		<option value=all data-i18n=filter_all></option>
+		<option value=upcoming data-i18n=filter_upcoming></option>
 	</select>
 </p>
 <div id=events></div>
 <div id=importOptions class=lightBoxCenterContent style=display:none>
-	<h3>Cached API Data Found</h3>
+	<h3 data-i18n=cached_heading></h3>
 	<ul>
-		<li><a id=importLink href=#>Create event from cached data</a></li>
-		<li><a id=fetchLink href=#>Fetch latest from API first</a></li>
+		<li><a id=importLink href=# data-i18n=cache_create_link></a></li>
+		<li><a id=fetchLink href=# data-i18n=cached_refresh_link>Fetch latest from API first</a></li>
 	</ul>
 </div>
 </body>

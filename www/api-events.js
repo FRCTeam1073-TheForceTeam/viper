@@ -1,3 +1,38 @@
+"use strict"
+
+addI18n({
+	api_events_title:{
+		en:'FIRST API Event List',
+	},
+	api_events_instruction:{
+		en:'Click on an event to download the official data for it.',
+	},
+	api_events_refresh_link:{
+		en:'Refresh event list',
+	},
+	season_label:{
+		en:'Season:',
+	},
+	filter_label:{
+		en:'Show:',
+	},
+	filter_all:{
+		en:'All',
+	},
+	filter_upcoming:{
+		en:'Upcoming',
+	},
+	cached_heading:{
+		en:'Cached API Data Found',
+	},
+	cache_create_link:{
+		en:'Create event from cached data',
+	},
+	cached_refresh_link:{
+		en:'Fetch latest from API first',
+	},
+})
+
 var season=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:season)\=))?(20[0-9]{2}(?:-[0-9]{2})?)(?:\&.*)?$/)||["",""])[1]
 var comp = /-/.test(season)?"ftc":"frc"
 var eventFilters

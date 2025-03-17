@@ -289,19 +289,25 @@ function dateCompare(a,b){
 	return getDate(b).localeCompare(getDate(a))
 }
 
+function translationAttributes(node){
+	return Object.fromEntries(Array.from(node.attributes).map(i=>{
+		if(!/^data-/.test(i.name))return null
+		return[i.name.replace(/^data-/,''),i.value.replace(/\-|_/,'')]
+	}).filter(a=>a!=null))
+}
+
 function applyTranslations(node){
-	if(!node)node=$('body')
+	if(!node)node=$('html')
 	onApplyTranslation.forEach(x=>x())
 	$('html').attr('dir',translate('text_direction')).attr('lang',locale.replace(/[_\-].*/,""))
 	node.find('[data-i18n]').each(function(){
-		if($(this).attr('data-i18n')=='team_num_heading') console.log($(this).data())
-		$(this).text(translate($(this).attr('data-i18n'),$(this).data()))
+		$(this).text(translate($(this).attr('data-i18n'),translationAttributes(this)))
 	})
 	node.find('[data-i18n-value]').each(function(){
-		$(this).attr('value',translate($(this).attr('data-i18n-value'),$(this).data()))
+		$(this).attr('value',translate($(this).attr('data-i18n-value'),translationAttributes(this)))
 	})
 	node.find('[data-i18n-placeholder]').each(function(){
-		$(this).attr('placeholder',translate($(this).attr('data-i18n-placeholder'),$(this).data()))
+		$(this).attr('placeholder',translate($(this).attr('data-i18n-placeholder'),translationAttributes(this)))
 	})
 	$('iframe').each(function(){
 		var w = $(this)[0].contentWindow
