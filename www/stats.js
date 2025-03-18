@@ -3,111 +3,59 @@
 addI18n({
 	mark_picked_header:{
 		en:'Change Whether Team Has Been Picked',
+		fr:'Modifier si l\'équipe a été sélectionnée',
+		zh_tw:'更改是否已選定球隊',
+		pt:'Alterar se a equipe foi escolhida',
+		he:'שנה אם צוות נבחר',
+		tr:'Takımın Seçilip Seçilmediğini Değiştir',
 	},
 	view_team_header:{
 		en:'Show Team Stats',
+		fr:'Afficher les statistiques de l\'équipe',
+		zh_tw:'顯示球隊統計數據',
+		pt:'Mostrar estatísticas da equipe',
+		he:'הצג סטטיסטיקות של צוות',
+		tr:'Takım İstatistiklerini Göster',
 	},
 	pick_list_heading:{
 		en:'Pick List',
+		fr:'Liste de sélection',
+		zh_tw:'選擇清單',
+		pt:'Lista de seleção',
+		he:'רשימת בחירה',
+		tr:'Seçim Listesi',
 	},
 	no_pick_heading:{
 		en:'No Pick',
+		fr:'Aucune sélection',
+		zh_tw:'沒有選擇',
+		pt:'Sem seleção',
+		he:'אין בחירה',
+		tr:'Seçim Yok',
 	},
 	mark_picked_label:{
 		en:'Mark picked:',
+		fr:'Marquer comme sélectionné :',
+		zh_tw:'馬克選擇：',
+		pt:'Marcar como escolhido:',
+		he:'מארק בחר:',
+		tr:'Seçildi olarak işaretle:',
 	},
 	view_team_label:{
 		en:'View stats:',
+		fr:'Afficher les statistiques :',
+		zh_tw:'查看統計數據：',
+		pt:'Exibir estatísticas:',
+		he:'צפה בסטטיסטיקה:',
+		tr:'İstatistikleri görüntüle:',
 	},
 	sort_by_label:{
 		en:'Sort by:',
-	},
-	validate_error_not_string:{
-		en:'_PROBLEMTEXT_ is not a string',
-	},
-	validate_error_unknown_data:{
-		en:'Unknown data: _PROBLEMTEXT_',
-	},
-	validate_error_need_symbol:{
-		en:'Expected _EXPECTEDTEXT_ following _PROBLEMTEXT_',
-	},
-	validate_error_not_all_strings:{
-		en:'_PROBLEMTEXT_ is not all strings',
-	},
-	validate_error_not_array:{
-		en:'_PROBLEMTEXT_ is not an array',
-	},
-	validate_error_empty:{
-		en:'_PROBLEMTEXT_ is empty',
-	},
-	validate_error_only_graph:{
-		en:'Expected only graph and data in "_PROBLEMTEXT_"',
-	},
-	add_label:{
-		en:'Add:',
-	},
-	graph_bar:{
-		en:'Bar chart',
-	},
-	graph_boxplot:{
-		en:'Box plot',
-	},
-	graph_heatmap:{
-		en:'Heatmap',
-	},
-	graph_stacked:{
-		en:'Stacked bars',
-	},
-	graph_stacked_percent:{
-		en:'Stacked percents',
-	},
-	graph_timeline:{
-		en:'Timeline',
-	},
-	graph_name_placeholder:{
-		en:'Name of graph',
-	},
-	section_name_placeholder:{
-		en:'Name of section',
-	},
-	remove_link:{
-		en:'Remove',
-	},
-	remove_graph_confirm:{
-		en:'Are you sure you want to remove this graph?',
-	},
-	manage_graphs_heading:{
-		en:'Manage Graphs',
-	},
-	manage_stats_heading:{
-		en:'Manage Stats',
-	},
-	edit_json_link:{
-		en:'Edit JSON',
-	},
-	download_data_link:{
-		en:'Download Data',
-	},
-	add_graph_link:{
-		en:'Add Graph',
-	},
-	add_section_link:{
-		en:'Add Section',
-	},
-	save_to_server_link:{
-		en:'Save to Server',
-	},
-	revert_personal_link:{
-		en:'Revert Personal Customizations',
-	},
-	revert_personal_confirm:{
-		en:'Are you sure you want delete ALL your personal custom graph configuration?',
-	},
-	revert_all_link:{
-		en:'Revert All Customizations',
-	},
-	revert_all_confirm:{
-		en:'Are you sure you want delete ALL your personal AND team\'s custom graph configuration?',
+		fr:'Trier par :',
+		zh_tw:'排序方式：',
+		pt:'Classificar por:',
+		he:'מיין לפי:',
+		tr:'Sırala:',
 	},
 	stats_title:{
 		en:'_EVENT_ Stats',
@@ -215,8 +163,8 @@ $(document).ready(function(){
 		teamList = Object.keys(eventStatsByTeam)
 		teamList.forEach(x=>teamsPicked[x]=false)
 		parseHash()
-		applyTranslations()
 		showStats()
+		applyTranslations()
 	})
 	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
@@ -314,7 +262,7 @@ function showStats(){
 			csv = csv[0].map((_, colIndex) => csv.map(row => row[colIndex]))
 			csv = csv.map(row=>row.map(String).join(',')).join('\n')
 			downloadBlobs[section]=new Blob([csv], {type: 'text/csv;charset=utf-8'})
-			graph.append($('<h2>').attr('data-i18n', section)
+			graph.append($('<h2>').append($('<span>').attr('data-i18n', section))
 			.append(" ").append($('<button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig))))
 			if (graphType=='heatmap'){
 				var image=stat.image,
