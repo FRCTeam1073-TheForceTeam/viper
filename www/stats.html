@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>EVENT Stats</title>
+<title data-i18n=stats_title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/stats.css>
 <script src=/jquery.min.js></script>
+<script src=/main.js></script>
 <script src=/event-url.js></script>
 <script src=/stats-config.js></script>
 <script src=/stats.js></script>
-<script src=/main.js></script>
 <script src=/local.js></script>
 <script src=/chart.min.js></script>
 <script src=/chartjs-boxplot.min.js></script>
@@ -22,25 +22,25 @@
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<h1>EVENT Match Stats</h1>
-<button class=showInstructions>Instructions</button>
-<button id=markPicked>Mark team as picked</button>
-<button id=viewTeam>View team info</button>
-<button id=sortBy>Sort: <span class=name>Score Contribution</span></button>
-<select id=displayType><option value=graph selected>Graphs</option><option value=table>Table</option></select>
-<nobr id=startingControls>Starting: <select id=startingMatch></select></nobr>
+<h1 data-i18n=stats_title></h1>
+<button class=showInstructions data-i18n=instructions></button>
+<button id=markPicked data-i18n=mark_picked_button></button>
+<button id=viewTeam data-i18n=view_team_button></button>
+<button id=sortBy><span data-i18n=sort_label></span> <span class=name data-i18n=score></span></button>
+<select id=displayType><option value=graph selected data-i18n=display_graphs></option><option value=table data-i18n=display_table></option></select>
+<nobr id=startingControls><span data-i18n=starting_match_label></span> <select id=startingMatch></select></nobr>
 <table id=statsTable></table>
 <div id=statGraphs></div>
-<p>Stats <span class=aggregationIncludesPractice>(include/exclude)</span> practice matches</p>
+<p data-include-practice=stats_include_practice data-exclude-practice=stats_exclude_practice></p>
 <div id=teamStats class=lightBoxFullContent style=display:none><iframe></iframe></div>
 <div id=teamPicker class=lightBoxCenterContent style=display:none></div>
 <div id=sortChooser class=lightBoxFullContent style=display:none></div>
 <div id=clickActions class=lightBoxCenterContent style=display:none></div>
 <iframe id=instructions class=lightBoxFullContent src=/stats-instructions.html></iframe>
 <div id=teamlists>
-	<h4>Pick List</h4>
+	<h4 data-i18n=pick_list_heading></h4>
 	<ol class="picklist-body sortable-list" id=picklist></ol>
-	<h4 class=picklist-body>No Pick</h4>
+	<h4 class=picklist-body data-i18n=no_pick_heading></h4>
 	<ol class="picklist-body sortable-list" id=donotpicklist></ol>
 </div>
 </body></html>

@@ -206,6 +206,10 @@ function promiseEventStats(startMatch){
 		statsIncludePractice=/^pm/.test(startMatch)
 		statsStartMatch=startMatch
 		$('.aggregationIncludesPractice').text(statsIncludePractice?"include":"exclude")
+		$('[data-include-practice]').each(function(){
+			$(this).attr('data-i18n',$(this).attr(statsIncludePractice?"data-include-practice":"data-exclude-practice"))
+			applyTranslations($(this).parent())
+		})
 		var eventStatsByTeam = {},
 		eventStatsByMatchTeam = {}
 		Object.keys(pitData).forEach(team=>{

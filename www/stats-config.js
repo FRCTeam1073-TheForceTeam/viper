@@ -16,32 +16,26 @@ var numericGraphTypes=new Set(['%','avg','count','capability','fraction','minmax
 
 var graphTypes={
 	"bar":{
-		name: "Bar chart",
 		types: numericGraphTypes,
 		modes: new Set(['aggregate','team'])
 	},
 	"boxplot":{
-		name: "Box plot",
 		types: new Set(['%','avg','count','minmax']),
 		modes: new Set(['aggregate'])
 	},
 	"heatmap":{
-		name: "Heatmap",
 		types: new Set(['heatmap']),
 		modes: new Set(['aggregate','team'])
 	},
 	"stacked":{
-		name: "Stacked bars",
 		types: numericGraphTypes,
 		modes: new Set(['aggregate','team'])
 	},
 	"stacked_percent":{
-		name: "Stacked percents",
 		types: new Set(['count']),
 		modes: new Set(['aggregate'])
 	},
 	"timeline":{
-		name: "Timeline",
 		types: new Set(['timeline']),
 		modes: new Set(['team'])
 	},
@@ -74,24 +68,24 @@ class StatsConfig {
 
 	validateItem(item, name){
 		if (!this.hasSections){
-			if (!isString(item)) throw (`${item} is not a string`)
-			if (!statInfo[item]) throw (`Unknown data: ${item}`)
+			if (!isString(item))throw(translate('validate_error_not_string',{problemText:item}))
+			if (!statInfo[item])throw(translate('validate_error_unknown_data',{problemText:item}))
 		} else if (!this.hasGraphs){
-			if (!isArray(item)) throw (`Expected :[ following "${name}"`)
+			if (!isArray(item))throw(translate('validate_error_need_symbol',{expectedText:':[',problemText:name}))
 			item.forEach(function(field){
-				if (!isString(field)) throw (`${name} is not all strings`)
-				if (!statInfo[field]) throw (`Unknown data: ${field}`)
+				if (!isString(field))throw(translate('validate_error_not_all_strings',{problemText:name}))
+				if (!statInfo[field])throw(translate('validate_error_unknown_data',{problemText:field}))
 			})
 		} else {
-			if (!isMap(item)) throw (`Expected :{ following "${name}"`)
-			if (!isString(item.graph)) throw (`${name}.graph is not a string`)
-			if (!isArray(item.data)) throw (`${name}.data is not an array`)
-			if (item.data.length==0) throw (`${name}.data is empty`)
+			if (!isMap(item))throw(translate('validate_error_need_symbol',{expectedText:':{',problemText:name}))
+			if (!isString(item.graph))throw(translate('validate_error_not_string',{problemText:`${name}.graph`}))
+			if (!isArray(item.data))throw(translate('validate_error_not_string',{problemText:`${name}.data`}))
+			if (item.data.length==0)throw(translate('validate_error_empty',{problemText:`${name}.data`}))
 			item.data.forEach(function(field){
-				if (!isString(field)) throw (`${name}.data is not all strings`)
-				if (!statInfo[field]) throw (`Unknown data: ${field}`)
+				if (!isString(field))throw(translate('validate_error_not_all_strings',{problemText:`${name}.data`}))
+				if (!statInfo[field])throw(translate('validate_error_unknown_data',{problemText:field}))
 			})
-			if (Object.keys(item).length != 2) throw (`Expected only graph and data in "${name}"`)
+			if (Object.keys(item).length != 2)throw(translate('validate_error_only_graph',{problemText:name}))
 		}
 	}
 
@@ -114,8 +108,8 @@ class StatsConfig {
 			this.validateJson(json)
 			localStorage.setItem(this.statsConfigKey, JSON.stringify(json))
 		} catch(e){
-			throw e
 			alert(e)
+			throw e
 		}
 		closeLightBox()
 		this.drawFunction()
@@ -128,11 +122,12 @@ class StatsConfig {
 			dialog=$('<div id=stats-export class=lightBoxCenterContent>')
 			.append(
 				$('<textarea id=stats-export-json style=display:block;width:98vw;max-width:30em;height:90vh;max-height:60em>')
-			).append($('<button>Save</button>').click(this.saveJson.bind(this)))
-			.append($('<button>Cancel</button>').click(closeLightBox))
+			).append($('<button data-i18n=save_button></button>').click(this.saveJson.bind(this)))
+			.append($('<button data-i18n=cancel_button></button>').click(closeLightBox))
 			$('body').append(dialog)
 		}
 		$('#stats-export-json').val(JSON.stringify(this.getStatsConfig(),null,2))
+		applyTranslations(dialog)
 		showLightBox(dialog)
 		return false
 	}
@@ -171,10 +166,10 @@ class StatsConfig {
 
 	appendFieldList(dialog){
 		dialog.append($('<ul id=stats-config-fields>'))
-		.append('Add: ').append($('<select id=stats-config-add-field>').change(this.handleAddFieldChange.bind(this)))
+		.append('<span data-i18n=add_label></span> ').append($('<select id=stats-config-add-field>').change(this.handleAddFieldChange.bind(this)))
 		.append(
-			$('<p>').append($('<button>Save</button>').click(this.save.bind(this)))
-			.append(" ").append($('<button>Cancel</button>').click(closeLightBox))
+			$('<p>').append($('<button data-i18n=save_button></button>').click(this.save.bind(this)))
+			.append(" ").append($('<button data-i18n=cancel_button></button>').click(closeLightBox))
 		)
 	}
 
@@ -194,7 +189,7 @@ class StatsConfig {
 	}
 
 	revertPersonalCustomizations(){
-		if (confirm("Are you sure you want delete ALL your personal custom graph configuration?")){
+		if (confirm(translate('revert_personal_confirm'))){
 			localStorage.removeItem(this.statsConfigKey)
 			closeLightBox()
 			this.drawFunction()
@@ -203,7 +198,7 @@ class StatsConfig {
 	}
 
 	revertAllCustomizations(){
-		if (confirm("Are you sure you want delete ALL your personal AND team's custom graph configuration?")){
+		if (confirm(translate('revert_all_confirm'))){
 			localStorage.setItem(this.statsConfigKey, JSON.stringify(this.defaultConfig))
 			closeLightBox()
 			this.drawFunction()
@@ -237,7 +232,7 @@ class StatsConfig {
 		dialog=$('#stats-config-edit')
 		if (!dialog.length){
 			dialog=$('<div id=stats-config-edit class=lightBoxCenterContent style=display:none>')
-			.append($(`<p><input id=stats-config-section-name type=text style=width:100% placeholder="Name of ${this.hasGraphs?'graph':'section'}"></p>`))
+			.append($(`<p><input id=stats-config-section-name type=text style=width:100% data-i18n-placeholder="${this.hasGraphs?'graph_name_placeholder':'section_name_placeholder'}"></p>`))
 			if (me.hasGraphs)dialog.append($('<p>').append($('<select id=stats-config-graph-type>').change(this.handleChangeGraphType.bind(this))))
 			this.appendFieldList(dialog)
 			$('body').append(dialog)
@@ -250,7 +245,7 @@ class StatsConfig {
 							break
 						}
 					}
-					if (available)$('#stats-config-graph-type').append($('<option>').attr('value',graphType).text(graphTypes[graphType].name))
+					if (available)$('#stats-config-graph-type').append($('<option>').attr('value',graphType).text(translate(`graph_${graphType}`)))
 				})
 			}
 		}
@@ -259,13 +254,14 @@ class StatsConfig {
 		fields=me.hasGraphs?stats.data:stats
 		if(me.hasGraphs)$('#stats-config-graph-type').val(stats.graph)
 		me.populateFields(fields)
+		applyTranslations(dialog)
 		showLightBox(dialog)
 		return false
 	}
 
 	removeSection(e){
 		var section=$(e.target).attr('data-section')
-		if (confirm("Are you sure you want to remove this graph?")){
+		if (confirm(translate('remove_graph_confirm'))){
 			var stats=this.getStatsConfig()
 			delete stats[section]
 			localStorage.setItem(this.statsConfigKey, JSON.stringify(stats))
@@ -298,13 +294,13 @@ class StatsConfig {
 		config=this,
 		types=config.hasGraphs? new Set(graphTypes[$('#stats-config-graph-type').val()].types):new Set(numericGraphTypes),
 		statNames=Object.keys(statInfo)
-		statNames.sort((a,b)=>statInfo[a].name.localeCompare(statInfo[b].name))
+		statNames.sort((a,b)=>statInfo[a].name.localeCompare(translate(b)))
 		select.html("")
 		select.append($('<option>').attr('value',"").attr('selected','true'))
 		statNames.forEach(function(stat){
 			var info=statInfo[stat]
 			if (types.has(info.type) || (config.hasWhiteboard && info.whiteboard_end)){
-				select.append($('<option>').attr('value',stat).text(`${info.name} (${info.type})`))
+				select.append($('<option>').attr('value',stat).text(`${translate(stat)} (${info.type})`))
 			}
 		})
 	}
@@ -320,23 +316,23 @@ class StatsConfig {
 			dialog=$('<div id=stats-config class=lightBoxCenterContent style=display:none>')
 			if(this.hasSections){
 				var sectionLinks=$('<ul>')
-				if (this.hasGraphs && this.downloadBlobs)sectionLinks.append($('<li>').append($('<a id=download-data-link>Download Data</a>')))
-				sectionLinks.append($('<li>').append($('<a class=needs-section-attr href=#edit>Edit</a>').click(this.showEditSectionDialog.bind(this))))
-				.append($('<li>').append($('<a class=needs-section-attr href=#remove>Remove</a>').click(this.removeSection.bind(this))))
+				if (this.hasGraphs && this.downloadBlobs)sectionLinks.append($('<li>').append($('<a id=download-data-link data-i18n=download_data_link></a>')))
+				sectionLinks.append($('<li>').append($('<a class=needs-section-attr href=#edit data-i18n=edit_link></a>').click(this.showEditSectionDialog.bind(this))))
+				.append($('<li>').append($('<a class=needs-section-attr href=#remove data-i18n=remove_link></a>').click(this.removeSection.bind(this))))
 				dialog.append($('<h2 class=needs-section-text>'))
 				.append(sectionLinks)
-				.append($('<h2>').text(this.hasGraphs?"Manage Graphs":"Manage Stats"))
+				.append($('<h2>').attr('data-i18n',this.hasGraphs?"manage_graphs_heading":"manage_stats_heading"))
 			} else {
 				this.appendFieldList(dialog)
 			}
 			var manageAllList = $('<ul>')
-			if (this.hasSections)manageAllList.append($('<li>').append($(`<a href=#edit-json>Add ${this.hasGraphs?"Graph":"Section"}</a>`).click(this.showEditSectionDialog.bind(this))))
+			if (this.hasSections)manageAllList.append($('<li>').append($(`<a href=#edit-json data-i18n=${this.hasGraphs?"add_graph_link":"add_section_link"}></a>`).click(this.showEditSectionDialog.bind(this))))
 
 			manageAllList
-			.append($('<li>').append($('<a href=#edit-json>Edit JSON</a>').click(this.showExportDialog.bind(this))))
-			.append($('<li>').append($('<a href=#save-server>Save to Server</a>').click(this.saveToServer.bind(this))))
-			.append($('<li>').append($('<a href=#revert-personal>Revert Personal Customizations</a>').click(this.revertPersonalCustomizations.bind(this))))
-			.append($('<li>').append($('<a href=#revert-all>Revert All Customizations</a>').click(this.revertAllCustomizations.bind(this))))
+			.append($('<li>').append($('<a href=#edit-json data-i18n=edit_json_link></a>').click(this.showExportDialog.bind(this))))
+			.append($('<li>').append($('<a href=#save-server data-i18n=save_to_server_link></a>').click(this.saveToServer.bind(this))))
+			.append($('<li>').append($('<a href=#revert-personal data-i18n=revert_personal_link></a>').click(this.revertPersonalCustomizations.bind(this))))
+			.append($('<li>').append($('<a href=#revert-all data-i18n=revert_all_link></a>').click(this.revertAllCustomizations.bind(this))))
 			dialog.append(manageAllList)
 			$('body').append(dialog)
 		}
@@ -355,6 +351,7 @@ class StatsConfig {
 				`${eventId}.${this.team?this.team+".":""}${section.toLowerCase().replace(/[^a-zA-Z0-9 ]/,"").replace(" ","_")}.csv`
 			)
 		}
+		applyTranslations(dialog)
 		showLightBox(dialog)
 	}
 }

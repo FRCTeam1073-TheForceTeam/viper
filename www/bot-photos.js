@@ -57,14 +57,6 @@ addI18n({
 		zh_tw:'全部上傳',
 		fr:'Télécharger tout',
 	},
-	edit_link:{
-		en:'Edit',
-		pt:'Editar',
-		he:'לַעֲרוֹך',
-		tr:'Düzenle',
-		zh_tw:'編輯',
-		fr:'Modifier',
-	},
 	team_num_heading:{
 		en:'Team _TEAMNUM_',
 		pt:'Equipe _TEAMNUM_',

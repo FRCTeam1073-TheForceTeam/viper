@@ -97,14 +97,6 @@ addI18n({
 		he:'שנה רובוט',
 		tr:'Robotu Değiştir',
 	},
-	save_button:{
-		en:'Save',
-		pt:'Salvar',
-		fr:'Enregistrer',
-		zh_tw:'節省',
-		he:'לְהַצִיל',
-		tr:'Kaydet',
-	},
 	no_show:{
 		en:'No Show',
 		pt:'Não aparecer',

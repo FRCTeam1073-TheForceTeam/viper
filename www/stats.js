@@ -1,5 +1,172 @@
 "use strict"
 
+addI18n({
+	mark_picked_header:{
+		en:'Change Whether Team Has Been Picked',
+	},
+	view_team_header:{
+		en:'Show Team Stats',
+	},
+	pick_list_heading:{
+		en:'Pick List',
+	},
+	no_pick_heading:{
+		en:'No Pick',
+	},
+	mark_picked_label:{
+		en:'Mark picked:',
+	},
+	view_team_label:{
+		en:'View stats:',
+	},
+	sort_by_label:{
+		en:'Sort by:',
+	},
+	validate_error_not_string:{
+		en:'_PROBLEMTEXT_ is not a string',
+	},
+	validate_error_unknown_data:{
+		en:'Unknown data: _PROBLEMTEXT_',
+	},
+	validate_error_need_symbol:{
+		en:'Expected _EXPECTEDTEXT_ following _PROBLEMTEXT_',
+	},
+	validate_error_not_all_strings:{
+		en:'_PROBLEMTEXT_ is not all strings',
+	},
+	validate_error_not_array:{
+		en:'_PROBLEMTEXT_ is not an array',
+	},
+	validate_error_empty:{
+		en:'_PROBLEMTEXT_ is empty',
+	},
+	validate_error_only_graph:{
+		en:'Expected only graph and data in "_PROBLEMTEXT_"',
+	},
+	add_label:{
+		en:'Add:',
+	},
+	graph_bar:{
+		en:'Bar chart',
+	},
+	graph_boxplot:{
+		en:'Box plot',
+	},
+	graph_heatmap:{
+		en:'Heatmap',
+	},
+	graph_stacked:{
+		en:'Stacked bars',
+	},
+	graph_stacked_percent:{
+		en:'Stacked percents',
+	},
+	graph_timeline:{
+		en:'Timeline',
+	},
+	graph_name_placeholder:{
+		en:'Name of graph',
+	},
+	section_name_placeholder:{
+		en:'Name of section',
+	},
+	remove_link:{
+		en:'Remove',
+	},
+	remove_graph_confirm:{
+		en:'Are you sure you want to remove this graph?',
+	},
+	manage_graphs_heading:{
+		en:'Manage Graphs',
+	},
+	manage_stats_heading:{
+		en:'Manage Stats',
+	},
+	edit_json_link:{
+		en:'Edit JSON',
+	},
+	download_data_link:{
+		en:'Download Data',
+	},
+	add_graph_link:{
+		en:'Add Graph',
+	},
+	add_section_link:{
+		en:'Add Section',
+	},
+	save_to_server_link:{
+		en:'Save to Server',
+	},
+	revert_personal_link:{
+		en:'Revert Personal Customizations',
+	},
+	revert_personal_confirm:{
+		en:'Are you sure you want delete ALL your personal custom graph configuration?',
+	},
+	revert_all_link:{
+		en:'Revert All Customizations',
+	},
+	revert_all_confirm:{
+		en:'Are you sure you want delete ALL your personal AND team\'s custom graph configuration?',
+	},
+	stats_title:{
+		en:'_EVENT_ Stats',
+		he:'_EVENT_ סטטיסטיקות',
+		pt:'_EVENT_ Estatísticas',
+		tr:'_EVENT_ İstatistikleri',
+		zh_tw:'_EVENT_ 統計訊息',
+		fr:'Statistiques _EVENT_',
+	},
+	mark_picked_button:{
+		en:'Mark team as picked',
+		he:'סמן את הצוות כנבחר',
+		pt:'Marcar time como escolhido',
+		tr:'Takımı seçilmiş olarak işaretle',
+		zh_tw:'將團隊標記為已選',
+		fr:'Marquer l\'équipe comme sélectionnée',
+	},
+	view_team_button:{
+		en:'View team info',
+		he:'צפה בפרטי הצוות',
+		pt:'Exibir informações do time',
+		tr:'Takım bilgilerini görüntüle',
+		zh_tw:'查看團隊資訊',
+		fr:'Voir les informations sur l\'équipe',
+	},
+	sort_label:{
+		en:'Sort:',
+		he:'סוּג:',
+		pt:'Classificar:',
+		tr:'Sırala:',
+		zh_tw:'種類：',
+		fr:'Trier :',
+	},
+	display_graphs:{
+		en:'Graphs',
+		he:'גרפים',
+		pt:'Gráficos',
+		tr:'Grafikler',
+		zh_tw:'圖表',
+		fr:'Graphiques',
+	},
+	display_table:{
+		en:'Table',
+		he:'לוּחַ',
+		pt:'Tabela',
+		tr:'Tablo',
+		zh_tw:'桌子',
+		fr:'Tableau',
+	},
+	starting_match_label:{
+		en:'Starting:',
+		he:'מתחיל:',
+		pt:'Começando:',
+		tr:'Başlangıç:',
+		zh_tw:'開始：',
+		fr:'Début :',
+	},
+})
+onApplyTranslation.push(showStats)
 var teamList = [],
 sortStat = 'score',
 teamsPicked = {},
@@ -24,6 +191,8 @@ statsConfig = new StatsConfig({
 	mode:"aggregate"
 })
 
+addTranslationContext({event:eventName})
+
 $(document).ready(function(){
 	if(/^[0-9]{4}(-[0-9]{2})?combined$/.test(eventId))$('#startingControls').hide()
 	Promise.all([
@@ -38,21 +207,19 @@ $(document).ready(function(){
 		eventMatches.forEach(match => $('#startingMatch').append($('<option>').attr('value',match.Match).text(getMatchName(match.Match))).val(statsStartMatch))
 		$('#sortBy').click(showSortOptions)
 		$('#markPicked').click(function(){
-			showTeamPicker(setTeamPicked, "Change Whether Team Has Been Picked")
+			showTeamPicker(setTeamPicked, "mark_picked_header")
 		})
 		$('#viewTeam').click(function(){
-			showTeamPicker(showTeamStats, "Show Team Stats")
+			showTeamPicker(showTeamStats, "view_team_header")
 		})
 		teamList = Object.keys(eventStatsByTeam)
 		teamList.forEach(x=>teamsPicked[x]=false)
 		parseHash()
+		applyTranslations()
 		showStats()
 	})
-	$('h1').text($('h1').text().replace("EVENT", eventName))
-	$('title').text($('title').text().replace("EVENT", eventName))
 	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
-		team=""
 		$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
 	})
 	$('#displayType').change(showStats)
@@ -76,11 +243,6 @@ $(document).ready(function(){
 		})
 	})
 })
-
-function getStatInfoName(field){
-	var info = statInfo[field]||{}
-	return info.name||field
-}
 
 function parseHash(){
 	var pl=(location.hash.match(/^\#(?:.*\&)?pl\=([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1].split(',').map(x=>parseInt(x)),
@@ -115,7 +277,9 @@ function footer(tooltipItems){
 	return getTeamInfo(tooltipItems[0].label)
 }
 
+var lastStatsLocale=''
 function showStats(){
+	if (!window.eventStatsByTeam)return
 	graphList = statsConfig.getStatsConfig()
 	for (var i=0; i<teamList.length; i++){
 		var t = teamList[i]
@@ -150,8 +314,7 @@ function showStats(){
 			csv = csv[0].map((_, colIndex) => csv.map(row => row[colIndex]))
 			csv = csv.map(row=>row.map(String).join(',')).join('\n')
 			downloadBlobs[section]=new Blob([csv], {type: 'text/csv;charset=utf-8'})
-
-			graph.append($('<h2>').text(section)
+			graph.append($('<h2>').attr('data-i18n', section)
 			.append(" ").append($('<button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig))))
 			if (graphType=='heatmap'){
 				var image=stat.image,
@@ -201,7 +364,7 @@ function showStats(){
 						}
 						data.push({
 							field: field,
-							label: (info.type=='avg'&&!boxplot?'Average ':'') + (info.name||field) + (info.type=='%'?' %':''),
+							label: (info.type=='avg'&&!boxplot?'Average ':'') + translate(field) + (info.type=='%'?' %':''),
 							data: values,
 							backgroundColor: bgArr(graphColors[j]),
 							borderColor: bgArr(graphColors[j]),
@@ -232,7 +395,10 @@ function showStats(){
 									footer: footer,
 								}
 							}
-						}
+						},
+						animation: {
+							duration: 0
+						},
 					}
 				})
 				canvas.click(function(evt) {
@@ -267,7 +433,7 @@ function showStats(){
 					var field = graphList[section].data[j],
 					info = statInfo[field]||{},
 					highGood = (info.good||"high")=='high',
-					statName = (info.type=='avg'?"Average ":"") + (info.name||field) + (info.type=='%'?" %":""),
+					statName = (info.type=='avg'?"Average ":"") + translate(field) + (info.type=='%'?" %":""),
 					tr = $('<tr class=statRow>').append($('<th>').text(statName + " ").attr('data-field',field).click(reSort)),
 					best = (highGood?-1:1)*99999999
 					for (var k=0; k<teamList.length; k++){
@@ -286,6 +452,10 @@ function showStats(){
 				}
 			}
 		}
+	}
+	if(locale!=lastStatsLocale){
+		lastStatsLocale=locale
+		applyTranslations()
 	}
 }
 
@@ -311,43 +481,45 @@ function showStatClickMenu(e, team, fields){
 	if (team){
 		var info = getTeamInfo(team)
 		if(info)ca.append($('<p>').text(info))
-		ca.append($('<p>').append("Mark picked: ").append($('<button>').text(team).click(setTeamPicked)))
-		ca.append($('<p>').append("View stats: ").append($('<button>').text(team).click(showTeamStats)))
+		ca.append($('<p>').append("<span data-i18n=mark_picked_label></span> ").append($('<button>').text(team).click(setTeamPicked)))
+		ca.append($('<p>').append("<span data-i18n=view_team_label></span> ").append($('<button>').text(team).click(showTeamStats)))
 	}
 	if (fields){
 		if (typeof fields === 'string') fields = [fields]
 		fields.forEach(field=>{
-			ca.append($('<p>').append("Sort by: ").append($('<button>').text(getStatInfoName(field)).attr('data-field',field).click(reSort)))
+			ca.append($('<p>').append("<span data-i18n=sort_by_label></span> ").append($('<button>').text(translate(field)).attr('data-field',field).click(reSort)))
 		})
 	}
+	applyTranslations(ca)
 	showLightBox(ca)
 }
 
 function showSortOptions(){
-	var picker = $('#sortChooser').html(`<h2>Choose Sorting</h2>`)
+	var picker = $('#sortChooser').html(`<h2 data-i18n=choose_sort_heading></h2>`)
 	var allStats = []
 	graphList=statsConfig.getStatsConfig()
 	Object.keys(graphList).forEach(x=>{
 		graphList[x].data.forEach(y=>allStats.push(y))
 	})
-	allStats.sort((a,b)=>{return getStatInfoName(a).localeCompare(getStatInfoName(b))})
+	allStats.sort((a,b)=>{return translate(a).localeCompare(translate(b))})
 	for (var i=0; i<allStats.length; i++){
 		var field = allStats[i],
 		info = statInfo[field]||{},
-		name = getStatInfoName(field),
 		active = sortStat==field?" active":""
-		if(!/^(text|enum)$/.test(info.type)) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).text(name).click(reSort))
+		if(!/^(text|enum)$/.test(info.type)) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).attr('data-i18n',translate(field)).click(reSort))
 	}
+	applyTranslations(picker)
 	showLightBox(picker)
 }
 
 function showTeamPicker(callback, heading){
-	var picker = $('#teamPicker').html(`<h2>${heading}</h2>`)
+	var picker = $('#teamPicker').html($('<h2>').attr('data-i18n',heading))
 	teamList.sort((a,b)=>{return a-b})
 	for (var i=0; i<teamList.length; i++){
 		var team = teamList[i]
 		picker.append($('<button class=team>').text(team).addClass(teamsPicked[team]?"picked":"not-picked").click(callback))
 	}
+	applyTranslations(picker)
 	showLightBox(picker)
 }
 

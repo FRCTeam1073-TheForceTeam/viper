@@ -1,14 +1,6 @@
 "use strict"
 
 addI18n({
-	save_button:{
-		en:'Save',
-		zh_tw:'節省',
-		fr:'Enregistrer',
-		tr:'Kaydet',
-		pt:'Salvar',
-		he:'לְהַצִיל',
-	},
 	delete_button:{
 		en:'Delete',
 		zh_tw:'刪除',

@@ -25,33 +25,42 @@ if (!$file){
 	exit 1;
 }
 my $inI18n=0;
-my $inTranslation=0;
+my $translationKey='';
 my $haveLang=0;
 my $english='';
 open my $js, "<", $file;
 while (my $line = <$js>) {
 	chomp $line;
 	if(!$inI18n){
-		$inI18n=1 if ($line=~/(addI18n\s*\()|(statInfo\s*=)/);
+		$inI18n=1 if ($line=~/(addI18n\s*\()|(statInfo\s*=)|(teamGraphs\s*=)|(aggregateGraphs\s*=)|(matchPredictorSections\s*=)/);
 	} else {
 		if ($line =~ /(\}\))|(^\}$)/){
-			$inTranslation=0;
+			$translationKey='';
 			$haveLang=0;
 			$inI18n=0;
-		} elsif ($line =~ /^\s*[a-z0-9_]+\:\{/){
-			$inTranslation=1;
-		} elsif ($inTranslation and $line =~ /^\s*([a-z0-9_]+)\s*\:\s*['"](.*)['"]/){
+		} elsif ($line =~ /^\s*(.+)\:\{/){
+			$translationKey=$1;
+			$translationKey=~s/^['"]//g;
+			$translationKey=~s/['"]$//g;
+			$english=$translationKey;
+			$english=~s/_/ /g;
+		} elsif ($translationKey ne '' and $line =~ /^\s*([a-z0-9_]+)\s*\:/){
 			my $lineLang=$1;
-			my $lineValue=$2;
+			my $lineValue='';
+			if ($line =~ /:\s*['"](.*)['"]/){
+				$lineValue = $1;
+			}
 			if ($lineLang eq $lang){
 				if ($lineValue ne ""){
 					$haveLang=1;
 				}
-			} elsif($lineLang eq 'en' or $lineLang eq 'name') {
-				$english=$lineValue;
-				$english=~s/\\//g;
+			} elsif($lineLang eq 'en' or $lineLang eq 'name'){
+				if ($lineValue ne ""){
+					$english=$lineValue;
+					$english=~s/\\//g;
+				}
 			}
-		} elsif ($inTranslation) {
+		} elsif ($translationKey ne ''){
 			if($haveLang){
 				print "#\n\n";
 			} elsif ($english eq ""){
@@ -59,7 +68,7 @@ while (my $line = <$js>) {
 			} else {
 				print "$english\n\n";
 			}
-			$inTranslation=0;
+			$translationKey='';
 			$haveLang=0;
 		} else {
 			$haveLang=0;

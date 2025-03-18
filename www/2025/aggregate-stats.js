@@ -2018,7 +2018,7 @@ var teamGraphs={
 	},
 	"Match Timeline":{
 		graph:"timeline",
-		data:['timeline']
+		data:['timeline'],
 	},
 	"Scoring Element Cycles":{
 		graph:"stacked",

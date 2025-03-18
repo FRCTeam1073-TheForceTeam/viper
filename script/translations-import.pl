@@ -54,14 +54,14 @@ for my $line (@jsLines){
 	chomp $line;
 	if(!$inI18n){
 		$fh->print("$line\n");
-		$inI18n=1 if ($line=~/(addI18n\s*\()|(statInfo\s*=)/);
+		$inI18n=1 if ($line=~/(addI18n\s*\()|(statInfo\s*=)|(teamGraphs\s*=)|(aggregateGraphs\s*=)|(matchPredictorSections\s*=)/);
 	} else {
 		if ($line =~ /(\}\))|(^\}$)/){
 			$fh->print("$line\n");
 			$inTranslation=0;
 			$haveLang=0;
 			$inI18n=0;
-		} elsif ($line =~ /^\s*[a-z0-9_]+\:\{/){
+		} elsif ($line =~ /^\s*.*\:\{/){
 			$inTranslation=1;
 			$fh->print("$line\n");
 		} elsif ($inTranslation and $line =~ /^\s*([a-z0-9_]+)\s*\:\s*['"](.*)['"]/){

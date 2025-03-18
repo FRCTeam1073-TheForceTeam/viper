@@ -1,14 +1,6 @@
 "use strict"
 
 addI18n({
-	edit_link:{
-		en:'Edit',
-		pt:'Editar',
-		he:'לַעֲרוֹך',
-		tr:'Düzenle',
-		fr:'Modifier',
-		zh_tw:'編輯',
-	},
 	history_link:{
 		en:'History',
 		pt:'Histórico',
@@ -592,6 +584,22 @@ addI18n({
 		pt:'Pontuação prevista',
 		fr:'Score prévu',
 		tr:'Tahmin Edilen Skor',
+	},
+	aggregation_includes_practice:{
+		en:'* Aggregation includes practice matches',
+		he:'* צבירה כוללת משחקי אימון',
+		pt:'* Agregação inclui partidas de treino',
+		tr:'* Toplama, antrenman maçlarını içerir',
+		zh_tw:'* 總結包括練習賽',
+		fr:'* L\'agrégation inclut les matchs d\'entraînement',
+	},
+	aggregation_excludes_practice:{
+		en:'* Aggregation excludes practice matches',
+		he:'* צבירה לא כוללת משחקי אימון',
+		pt:'* Agregação exclui partidas de treino',
+		tr:'* Toplama, antrenman maçlarını hariç tutar',
+		zh_tw:'* 總結不包括練習賽',
+		fr:'* L\'agrégation exclut les matchs d\'entraînement',
 	},
 })
 

@@ -237,6 +237,14 @@ addI18n({
 		tr:'İptal etmek',
 		zh_tw:'取消',
 	},
+	save_button:{
+		en:'Save',
+		pt:'Salvar',
+		fr:'Enregistrer',
+		zh_tw:'節省',
+		he:'לְהַצִיל',
+		tr:'Kaydet',
+	},
 	next_button:{
 		en:'Next',
 		he:'הַבָּא',
@@ -244,6 +252,30 @@ addI18n({
 		fr:'Aller ensuite',
 		tr:'Sonraki',
 		zh_tw:'下一個',
+	},
+	edit_link:{
+		en:'Edit',
+		pt:'Editar',
+		he:'לַעֲרוֹך',
+		tr:'Düzenle',
+		fr:'Modifier',
+		zh_tw:'編輯',
+	},
+	stats_include_practice:{
+		en:'Stats include practice matches',
+		he:'הסטטיסטיקה כוללת משחקי אימון',
+		pt:'Estatísticas incluem partidas de treino',
+		tr:'İstatistikler, antrenman maçlarını içerir',
+		zh_tw:'統計數據包括練習賽',
+		fr:'Statistiques incluant les matchs d\'entraînement',
+	},
+	stats_exclude_practice:{
+		en:'Stats exclude practice matches',
+		he:'הסטטיסטיקה אינה כוללת משחקי אימון',
+		pt:'Estatísticas excluem partidas de treino',
+		tr:'İstatistikler, antrenman maçlarını hariç tutar',
+		zh_tw:'數據不包括練習賽',
+		fr:'Statistiques excluant les matchs d\'entraînement',
 	},
 })
 var locale=computeLocale()
@@ -268,10 +300,9 @@ function computeLocale(){
 
 function translate(key,context){
 	context=Object.assign({},translationContext,context||{})
-	var unknown=key
-	var g=I18N[key]||(window.statInfo||{})[key]||{},
+	var g=I18N[key]||(window.statInfo||{})[key]||(window.teamGraphs||{})[key]||(window.aggregateGraphs||{})[key]||(window.matchPredictorSections||{})[key]||{},
 	l=locale
-	if(l=='qd')return (g.en||g.name||"").replace(/[^ ]/g,'.')
+	if(l=='qd')return (g.en||g.name||key).replace(/[^ ]/g,'.')
 	while(l){
 		var t=g[l]||(locale=='en'?g.name:'')
 		if(t){
@@ -283,7 +314,7 @@ function translate(key,context){
 		}
 		l=l.replace(/[_]?[^_]*$/,"")
 	}
-	return unknown
+	return key
 }
 
 function getDate(s){
