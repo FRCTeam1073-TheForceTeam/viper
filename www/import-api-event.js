@@ -1,3 +1,5 @@
+"use strict"
+
 var backForward = false
 
 window.addEventListener('pageshow', function (event){

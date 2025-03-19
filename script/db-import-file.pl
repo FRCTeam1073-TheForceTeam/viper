@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use strict;
 use open ':std', ':encoding(UTF-8)';
 use Data::Dumper;
 use File::Slurp;
