@@ -45,7 +45,7 @@ function drawDot(ctx, at, radius){
 }
 
 function sizeAndClearCanvas(canvas){
-	ctx = canvas.getContext('2d')
+	var ctx = canvas.getContext('2d')
 	canvas.width = canvas.clientWidth
 	canvas.height = canvas.clientHeight
 	ctx.clearRect(0, 0, canvas.width, canvas.height)
