@@ -1,5 +1,24 @@
 "use strict"
 
+addI18n({
+	upload_done_title:{
+		en:'Upload Complete',
+		fr:'Téléchargement terminé',
+		zh_tw:'上傳完成',
+		pt:'Upload concluído',
+		he:'ההעלאה הושלמה',
+		tr:'Yükleme Tamamlandı',
+	},
+	upload_done_please_wait:{
+		en:'Moving uploaded data to history…',
+		fr:'Transfert des données téléchargées vers l\'historique…',
+		zh_tw:'正在將上傳的資料移至歷史記錄...',
+		pt:'Movendo dados enviados para o histórico…',
+		he:'מעביר נתונים שהועלו להיסטוריה...',
+		tr:'Yüklenen veriler geçmişe taşınıyor…',
+	},
+})
+
 if (location.hash){
 	var keys = location.hash.replace(/^\#/,"").replace(/\#.*/,"").split(/,/)
 	for (var i=0; i<keys.length; i++){
