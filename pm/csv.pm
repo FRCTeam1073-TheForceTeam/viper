@@ -9,7 +9,7 @@ sub new {
 	my ($class, $data) = @_;
 	$data = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $data) ] if (ref($data) ne 'ARRAY');
 	my $headers = shift @{$data}||[];
-	$headerMap = { map { $headers->[$_] => $_ } 0..(scalar(@{$headers})-1) };
+	my $headerMap = { map { $headers->[$_] => $_ } 0..(scalar(@{$headers})-1) };
 	my $self = {
 		_data => $data,
 		_headers => $headers,
@@ -130,8 +130,8 @@ sub columnSortKey(){
 
 sub cmpRowsVals(){
 	my($self,$a,$b,$name) = @_;
-	$aval = $self->getByName($a,$name);
-	$bval = $self->getByName($b,$name);
+	my $aval = $self->getByName($a,$name);
+	my $bval = $self->getByName($b,$name);
 
 	return ($aval||"0")+0 <=> ($bval||"0")+0 if ($name eq "team" or $name eq "Alliance");
 
