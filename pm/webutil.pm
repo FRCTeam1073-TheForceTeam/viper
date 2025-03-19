@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use strict;
 package webutil;
 use Cwd;
 

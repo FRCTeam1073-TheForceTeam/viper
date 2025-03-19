@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use strict;
 use Data::Dumper;
 use lib './pm';
 use db;

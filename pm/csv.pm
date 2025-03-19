@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 
+use strict;
 package csv;
 
 use Data::Dumper;

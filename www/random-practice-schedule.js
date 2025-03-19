@@ -1,3 +1,5 @@
+"use strict"
+
 function randomPracticeSchedule(teams){
 	if (!teams || !teams.length) return ""
 	var match=0,
