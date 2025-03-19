@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 dir=$1
 
 if [ "z$dir" == "z" ]

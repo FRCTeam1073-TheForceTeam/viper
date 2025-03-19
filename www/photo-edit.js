@@ -1,3 +1,5 @@
+"use strict"
+
 $(document).ready(function(){
 	$('#delete').click(function(e){
 		if (!confirm("Really delete image?")){

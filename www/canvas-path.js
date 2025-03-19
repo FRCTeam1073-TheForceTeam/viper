@@ -1,3 +1,4 @@
+"use strict"
 
 function getPixelCoordinates(mapImage, isReversedX, coordinates, floatingImage, isReversedY, isSwapXY){
 	var m = coordinates.match(/^([0-9]{1,2})x([0-9]{1,2})$/)

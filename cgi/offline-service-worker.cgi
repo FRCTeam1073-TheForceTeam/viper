@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 
+use strict;
 use File::Slurp;
 
 print "Content-type: text/javascript;charset=UTF-8\n\n";

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -E
+set -e
 
 if [ ! -d .git/ ]
 then

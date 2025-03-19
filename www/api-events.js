@@ -1,3 +1,5 @@
+"use strict"
+
 var season=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:season)\=))?(20[0-9]{2}(?:-[0-9]{2})?)(?:\&.*)?$/)||["",""])[1]
 var comp = /-/.test(season)?"ftc":"frc"
 var eventFilters
