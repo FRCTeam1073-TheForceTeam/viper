@@ -1,14 +1,6 @@
 "use strict"
 
 addI18n({
-	delete_button:{
-		en:'Delete',
-		zh_tw:'刪除',
-		fr:'Supprimer',
-		tr:'Sil',
-		pt:'Excluir',
-		he:'לִמְחוֹק',
-	},
 	delete_confirm:{
 		en:'Are you sure you want to delete _FILE_?',
 		zh_tw:'您確定要刪除_FILE_嗎？',

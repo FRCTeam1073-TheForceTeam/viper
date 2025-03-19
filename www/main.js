@@ -261,6 +261,14 @@ addI18n({
 		fr:'Modifier',
 		zh_tw:'編輯',
 	},
+	delete_button:{
+		en:'Delete',
+		tr:'Sil',
+		he:'לִמְחוֹק',
+		zh_tw:'刪除',
+		fr:'Supprimer',
+		pt:'Excluir',
+	},
 	stats_include_practice:{
 		en:'Stats include practice matches',
 		he:'הסטטיסטיקה כוללת משחקי אימון',

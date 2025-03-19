@@ -73,14 +73,6 @@ addI18n({
 		fr:'Historique (_HISTORYCOUNT_)',
 		pt:'Histórico (_HISTORYCOUNT_)',
 	},
-	delete_button:{
-		en:'Delete',
-		tr:'Sil',
-		he:'לִמְחוֹק',
-		zh_tw:'刪除',
-		fr:'Supprimer',
-		pt:'Excluir',
-	},
 	qr_code_button:{
 		en:'QR Code',
 		tr:'QR Kodu',
