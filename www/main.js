@@ -336,8 +336,10 @@ function translationAttributes(node){
 }
 
 function applyTranslations(node){
-	if(!node)node=$('html')
-	onApplyTranslation.forEach(x=>x())
+	if(!node){
+		node=$('html')
+		onApplyTranslation.forEach(x=>x())
+	}
 	$('html').attr('dir',translate('text_direction')).attr('lang',locale.replace(/[_\-].*/,""))
 	node.find('[data-i18n]').each(function(){
 		$(this).text(translate($(this).attr('data-i18n'),translationAttributes(this)))
@@ -347,6 +349,9 @@ function applyTranslations(node){
 	})
 	node.find('[data-i18n-placeholder]').each(function(){
 		$(this).attr('placeholder',translate($(this).attr('data-i18n-placeholder'),translationAttributes(this)))
+	})
+	node.find('[data-i18n-tooltip]').each(function(){
+		$(this).attr('data-tooltip',translate($(this).attr('data-i18n-tooltip'),translationAttributes(this)))
 	})
 	$('iframe').each(function(){
 		var w = $(this)[0].contentWindow

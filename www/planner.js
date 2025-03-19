@@ -1,9 +1,131 @@
 "use strict"
 
+addI18n({
+	eraser_tooltip:{
+		en:'Whiteboard eraser',
+		tr:'Beyaz tahta silgisi',
+		he:'מחק לוח לבן',
+		pt:'Apagador de quadro branco',
+		zh_tw:'白板擦',
+		fr:'Effaceur de tableau blanc',
+	},
+	undo_tooltip:{
+		en:'Whiteboard undo',
+		tr:'Beyaz tahta geri al',
+		he:'בטל לוח לבן',
+		pt:'Desfazer quadro branco',
+		zh_tw:'白板撤銷',
+		fr:'Annulation du tableau blanc',
+	},
+	clear_tooltip:{
+		en:'Whiteboard clear',
+		tr:'Beyaz tahta temizle',
+		he:'לוח לבן ברור',
+		pt:'Limpar quadro branco',
+		zh_tw:'白板清除',
+		fr:'Effacement du tableau blanc',
+	},
+	rotate_tooltip:{
+		en:'Whiteboard rotate',
+		tr:'Beyaz tahta döndür',
+		he:'סיבוב לוח לבן',
+		pt:'Girar quadro branco',
+		zh_tw:'白板旋轉',
+		fr:'Rotation du tableau blanc',
+	},
+	print_tooltip:{
+		en:'Print, save page',
+		tr:'Sayfayı yazdır, kaydet',
+		he:'הדפס, שמור עמוד',
+		pt:'Imprimir, salvar página',
+		zh_tw:'列印、儲存頁面',
+		fr:'Imprimer, enregistrer la page',
+	},
+	choose_teams_tooltip:{
+		en:'Choose teams',
+		tr:'Takımları seç',
+		he:'בחר צוותים',
+		pt:'Escolher equipes',
+		zh_tw:'選擇團隊',
+		fr:'Choisir les équipes',
+	},
+	configure_tooltip:{
+		en:'Configure stats',
+		tr:'İstatistikleri yapılandır',
+		he:'הגדר סטטיסטיקה',
+		pt:'Configurar estatísticas',
+		zh_tw:'配置統計數據',
+		fr:'Configurer les statistiques',
+	},
+	instructions_tooltip:{
+		en:'Show instructions',
+		tr:'Talimatları göster',
+		he:'הצג הוראות',
+		pt:'Mostrar instruções',
+		zh_tw:'顯示說明',
+		fr:'Afficher les instructions',
+	},
+	black_pen_tooltip:{
+		en:'Whiteboard pen, black',
+		tr:'Beyaz tahta kalemi, siyah',
+		he:'עט לוח לבן, שחור',
+		pt:'Caneta de quadro branco, preta',
+		zh_tw:'白板筆 黑色',
+		fr:'Stylo pour tableau blanc, noir',
+	},
+	robot_pen_tooltip:{
+		en:'Whiteboard pen, colored for this robot',
+		tr:'Beyaz tahta kalemi, bu robot için renkli',
+		he:'עט לוח לבן, צבעוני לרובוט הזה',
+		pt:'Caneta de quadro branco, colorida para este robô',
+		zh_tw:'為這款機器人配色的白板筆',
+		fr:'Stylo pour tableau blanc, couleur pour ce robot',
+	},
+	stamp_tooltip:{
+		en:'Whiteboard stamp',
+		tr:'Beyaz tahta damgası',
+		he:'חותמת לוח לבן',
+		pt:'Carimbo de quadro branco',
+		zh_tw:'白板圖章',
+		fr:'Tampon pour tableau blanc',
+	},
+	team_stats_tooltip:{
+		en:'View team stats',
+		tr:'Takım istatistiklerini görüntüle',
+		he:'הצג נתונים סטטיסטיים של הצוות',
+		pt:'Exibir estatísticas de equipe',
+		zh_tw:'查看球隊統計數據',
+		fr:'Afficher les statistiques de l\'équipe',
+	},
+	planner_title:{
+		en:'Match Planner _EVENT_',
+		tr:'Maç Planlayıcısı _EVENT_',
+		he:'מתכנן התאמה _EVENT_',
+		pt:'Planejador de Partidas _EVENT_',
+		zh_tw:'比賽規劃師 _EVENT_',
+		fr:'Planificateur de match _EVENT_',
+	},
+	planner_heading:{
+		en:'_EVENT_ _MATCHSHORT_',
+		fr:'_EVENT_ _MATCHSHORT_',
+		pt:'_EVENT_ _MATCHSHORT_',
+		tr:'_EVENT_ _MATCHSHORT_',
+		he:'_EVENT_ _MATCHSHORT_',
+		zh_tw:'_EVENT_ _MATCHSHORT_',
+	},
+})
+
 var matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1],
 myTeamsStats
+onApplyTranslation.push(function(){
+	addTranslationContext({
+		event:eventName,
+		matchShort:getShortMatchName(matchId)
+	})
+})
 
-$(document).ready(function() {
+$(document).ready(function(){
+	onApplyTranslation.push(fillStats)
 	var statsConfig = new StatsConfig({
 		statsConfigKey:`${eventYear}WhiteboardStats`,
 		getStatsConfig:function(){
@@ -22,8 +144,6 @@ $(document).ready(function() {
 	})
 	if (typeof eventYear !== 'undefined') $('#field').prepend($('<img id=fieldBG>').attr('src',`/${eventYear}/field-whiteboard.png`))
 	if (eventCompetition=='ftc') $('.noftc').hide()
-	displayMatchName()
-
 
 	$('.rotate').click(function(){
 		$('#fieldBG').toggleClass('rotated')
@@ -46,10 +166,6 @@ $(document).ready(function() {
 		showLightBox($('#instructions'))
 		return false
 	})
-
-	function displayMatchName(){
-		$('h3').text(eventName + " " + getShortMatchName(matchId))
-	}
 
 	function setLocationHash(){
 		var hash = `event=${eventId}`
@@ -138,7 +254,7 @@ $(document).ready(function() {
 
 		if (window.whiteboardStamps){
 			window.whiteboardStamps.forEach(function(stamp){
-				$('#stamps').append(" ").append($(`<button class="stamp icon-button draw-mode"><img src=${stamp}></button>`).click(stampWhiteboard).click(showDrawMode))
+				$('#stamps').append(" ").append($(`<button class="stamp icon-button draw-mode" data-i18n-tooltip=stamp_tooltip><img src=${stamp}></button>`).click(stampWhiteboard).click(showDrawMode))
 			})
 		}
 		sizeWhiteboard()
@@ -161,7 +277,7 @@ $(document).ready(function() {
 	}
 
 	function fillStats(){
-		if (!window.statInfo) return
+		if (!window.statInfo||!window.eventTeamsInfo) return
 		setLocationHash()
 		$('#teamButtons button').removeClass("picked")
 		var teamList=[],
@@ -182,7 +298,7 @@ $(document).ready(function() {
 			var row = $("<tr>")
 			teamList.forEach(function(team,i){
 				var color = (i<BOT_POSITIONS.length/2)?"red":"blue"
-				row.append($(`<td class="${color}TeamBG viewTeam" data-team=${team}>`).click(showTeamStats).html('<img src=/graph.svg>'))
+				row.append($(`<td class="${color}TeamBG viewTeam" data-team=${team} data-i18n-tooltip=team_stats_tooltip>`).click(showTeamStats).html('<img src=/graph.svg>'))
 				if (team == getLocalTeam() && (i<BOT_POSITIONS.length/2)) $('#fieldBG').addClass('rotated')
 			})
 			tbody.append(row)
@@ -196,7 +312,7 @@ $(document).ready(function() {
 			})
 			statsConfig.getStatsConfig().forEach(field=>{
 				var info = statInfo[field]||{},
-				name = info.name||field
+				name = translate(field)
 				if (!info.whiteboard_end){
 					row = $("<tr>")
 					var best=info.good=='low'?99999999:-99999999,
@@ -234,6 +350,7 @@ $(document).ready(function() {
 					tbody.append(row)
 				}
 			})
+			applyTranslations(tbody)
 		}
 	}
 

@@ -515,7 +515,7 @@ class StatsConfig {
 		$('#stats-config-fields').append(
 			$('<li>')
 			.attr('data-field',field)
-			.text(" " + statInfo[field].name).prepend(
+			.text(" " + translate(field)).prepend(
 				$('<button style=color:red>').text('✘').click(function(){
 					$(this).closest('li').remove()
 				})
@@ -528,7 +528,7 @@ class StatsConfig {
 		config=this,
 		types=config.hasGraphs? new Set(graphTypes[$('#stats-config-graph-type').val()].types):new Set(numericGraphTypes),
 		statNames=Object.keys(statInfo)
-		statNames.sort((a,b)=>statInfo[a].name.localeCompare(translate(b)))
+		statNames.sort((a,b)=>translate(a).localeCompare(translate(b)))
 		select.html("")
 		select.append($('<option>').attr('value',"").attr('selected','true'))
 		statNames.forEach(function(stat){
