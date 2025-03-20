@@ -299,7 +299,7 @@ $(document).ready(function(){
 			teamList.forEach(function(team,i){
 				var color = (i<BOT_POSITIONS.length/2)?"red":"blue"
 				row.append($(`<td class="${color}TeamBG viewTeam" data-team=${team} data-i18n-tooltip=team_stats_tooltip>`).click(showTeamStats).html('<img src=/graph.svg>'))
-				if (team == getLocalTeam() && (i<BOT_POSITIONS.length/2)) $('#fieldBG').addClass('rotated')
+				if (team == getLocalTeam() && (i>=BOT_POSITIONS.length/2)) $('#fieldBG').addClass('rotated')
 			})
 			tbody.append(row)
 			;["","-top"].forEach(function(imageSuffix){
