@@ -2058,10 +2058,38 @@ var aggregateGraphs = {
 }
 
 var matchPredictorSections={
-	Total:["score"],
-	"Game Stage":["auto_score","tele_score","end_game_score"],
-	"Scoring Element":["coral_score","algae_score"],
-	"Placement":["coral_level_1_score","coral_level_2_score","coral_level_3_score","coral_level_4_score","algae_processor_score","algae_net_score"]
+	Total:{
+		tr:'Total',
+		he:'סַך הַכֹּל',
+		zh_tw:'全部的',
+		pt:'Total',
+		fr:'Total',
+		data:["score"],
+	},
+	"Game Stage":{
+		tr:'Fase do Jogo',
+		he:'שלב המשחק',
+		zh_tw:'遊戲舞台',
+		pt:'Fase do Jogo',
+		fr:'Phase de jeu',
+		data:["auto_score","tele_score","end_game_score"],
+	},
+	"Scoring Element":{
+		tr:'Elemento de Pontuação',
+		he:'אלמנט ניקוד',
+		zh_tw:'評分要素',
+		pt:'Elemento de Pontuação',
+		fr:'Élément de score',
+		data:["coral_score","algae_score"],
+	},
+	"Placement":{
+		tr:'Colocação',
+		he:'מיקום',
+		zh_tw:'放置',
+		pt:'Colocação',
+		fr:'Placement',
+		data:["coral_level_1_score","coral_level_2_score","coral_level_3_score","coral_level_4_score","algae_processor_score","algae_net_score"],
+	},
 }
 
 var whiteboardStamps=[]

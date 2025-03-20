@@ -1,5 +1,37 @@
 "use strict"
 addI18n({
+	validate_error_json_not_array:{
+		en:'JSON is not an array',
+		fr:'JSON n\'est pas un tableau',
+		he:'JSON אינו מערך',
+		pt:'JSON não é um array',
+		zh_tw:'JSON 不是數組',
+		tr:'JSON bir dizi değil',
+	},
+	validate_error_json_not_map:{
+		en:'JSON is not a map',
+		fr:'JSON n\'est pas une carte',
+		he:'JSON אינו מפה',
+		pt:'JSON não é um mapa',
+		zh_tw:'JSON 不是地圖',
+		tr:'JSON bir harita değil',
+	},
+	validate_error_no_fields:{
+		en:'Error: No fields in list',
+		fr:'Erreur : Aucun champ dans la liste',
+		he:'שגיאה: אין שדות ברשימה',
+		pt:'Erro: Nenhum campo na lista',
+		zh_tw:'錯誤：清單中沒有字段',
+		tr:'Hata: Listede alan yok',
+	},
+	validate_error_no_name:{
+		en:'Error: Name not specified',
+		fr:'Erreur : Nom non spécifié',
+		he:'שגיאה: השם לא צוין',
+		pt:'Erro: Nome não especificado',
+		zh_tw:'錯誤：未指定名稱',
+		tr:'Hata: Ad belirtilmemiş',
+	},
 	validate_error_not_string:{
 		en:'_PROBLEMTEXT_ is not a string',
 		fr:'_PROBLEMTEXT_ n\'est pas une chaîne',
@@ -292,10 +324,10 @@ class StatsConfig {
 
 	validateJson(json){
 		if (!this.hasSections){
-			if (!isArray(json)) throw('JSON is not an array')
+			if (!isArray(json)) throw(translate('validate_error_json_not_array'))
 			json.forEach(this.validateItem.bind(this))
 		} else {
-			if (!isMap(json)) throw('JSON is not a map')
+			if (!isMap(json)) throw(translate('validate_error_json_not_map'))
 			Object.keys(json).forEach(section=>this.validateItem(json[section],section))
 		}
 	}
@@ -304,12 +336,6 @@ class StatsConfig {
 		if (!this.hasSections){
 			if (!isString(item))throw(translate('validate_error_not_string',{problemText:item}))
 			if (!statInfo[item])throw(translate('validate_error_unknown_data',{problemText:item}))
-		} else if (!this.hasGraphs){
-			if (!isArray(item))throw(translate('validate_error_need_symbol',{expectedText:':[',problemText:name}))
-			item.forEach(function(field){
-				if (!isString(field))throw(translate('validate_error_not_all_strings',{problemText:name}))
-				if (!statInfo[field])throw(translate('validate_error_unknown_data',{problemText:field}))
-			})
 		} else {
 			if (!isMap(item))throw(translate('validate_error_need_symbol',{expectedText:':{',problemText:name}))
 			if (!isString(item.graph))throw(translate('validate_error_not_string',{problemText:`${name}.graph`}))
@@ -369,12 +395,12 @@ class StatsConfig {
 	save(){
 		var fields=$("#stats-config-fields li").map(function(){return $(this).attr("data-field")}).get(),
 		stats=this.getStatsConfig()
-		if (!fields.length) return alert("Error: No fields in list")
+		if (!fields.length) return alert(translate('validate_error_no_fields'))
 		if (this.hasSections){
 			var sectionName=$('#stats-config-section-name'),
 			oldSectionName=sectionName.attr('old-name'),
 			newSectionName=sectionName.val()
-			if (!newSectionName) return alert("Error: Name not specified")
+			if (!newSectionName) return alert(translate('validate_error_no_name'))
 			if (oldSectionName != newSectionName) delete stats[oldSectionName]
 			if (this.hasGraphs){
 				stats[newSectionName]={
@@ -484,8 +510,8 @@ class StatsConfig {
 			}
 		}
 		$('#stats-config-section-name').val(section||"")
-		var stats=me.getStatsConfig()[section]||(me.hasGraphs?{graph:"bar",data:[]}:[]),
-		fields=me.hasGraphs?stats.data:stats
+		var stats=me.getStatsConfig()[section]||(me.hasGraphs?{graph:"bar",data:[]}:{data:[]}),
+		fields=stats.data
 		if(me.hasGraphs)$('#stats-config-graph-type').val(stats.graph)
 		me.populateFields(fields)
 		applyTranslations(dialog)
@@ -572,7 +598,7 @@ class StatsConfig {
 		}
 		var stats=this.getStatsConfig()
 		if(this.hasSections){
-			stats=stats[section]||(this.hasGraphs?{graph:'bar',data:[]}:[])
+			stats=stats[section]||(this.hasGraphs?{graph:'bar',data:[]}:{data:[]})
 			$('.needs-section-attr').attr('data-section',section)
 			$('.needs-section-text').text(section)
 		} else {

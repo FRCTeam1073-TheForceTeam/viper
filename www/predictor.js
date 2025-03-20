@@ -1,5 +1,55 @@
 "use strict"
 
+addI18n({
+	predictor_title:{
+		en:'Match Predictor for _EVENT_',
+		tr:'Previsor de Partida para _EVENT_',
+		he:'מנבא התאמה עבור _EVENT_',
+		zh_tw:'_EVENT_ 的匹配預測器',
+		pt:'Previsor de Partida para _EVENT_',
+		fr:'Prédicteur de match pour _EVENT_',
+	},
+	predictor_match_title:{
+		en:'_MATCH_ Match Predictor for _EVENT_',
+		tr:'_MATCH_ Previsor de Partida para _EVENT_',
+		he:'_MATCH_ מנבא התאמה עבור _EVENT_',
+		zh_tw:'_MATCH_ _EVENT_ 的比賽預測器',
+		pt:'_MATCH_ Previsor de Partida para _EVENT_',
+		fr:'_MATCH_ Prédicteur de match pour _EVENT_',
+	},
+	red_heading:{
+		en:'Red',
+		tr:'Vermelho',
+		he:'אָדוֹם',
+		zh_tw:'紅色的',
+		pt:'Vermelho',
+		fr:'Rouge',
+	},
+	blue_heading:{
+		en:'Blue',
+		tr:'Azul',
+		he:'כְּחוֹל',
+		zh_tw:'藍色的',
+		pt:'Azul',
+		fr:'Bleu',
+	},
+	change_teams_button:{
+		en:'Change Teams',
+		tr:'Alterar Equipes',
+		he:'שנה צוותים',
+		zh_tw:'更換團隊',
+		pt:'Alterar Equipes',
+		fr:'Changer d\'équipe',
+	},
+})
+
+onApplyTranslation.push(function(){
+	addTranslationContext({
+		event:eventName,
+		match:getShortMatchName(match),
+	})
+})
+
 function lf(){
 	return $('#prediction .lastFocus')
 }
@@ -7,11 +57,17 @@ function lf(){
 var statsConfig = new StatsConfig({
 	statsConfigKey:`${eventYear}PredictorStats`,
 	getStatsConfig:function(){
-		var s = statsConfig.getLocalStatsConfig()
-		if (s) return s
-		if (window.myTeamsStats && window.myTeamsStats.length) return window.myTeamsStats
-		if (window.matchPredictorSections) return window.matchPredictorSections
-		return {}
+		var conf = statsConfig.getLocalStatsConfig()
+		if (!conf && window.myTeamsStats && window.myTeamsStats.length)conf=window.myTeamsStats
+		if (!conf && window.matchPredictorSections)conf=window.matchPredictorSections
+		conf==conf||{}
+		Object.entries(conf).forEach(([k,v])=>{
+			if(Array.isArray(v)){
+				conf[k]={}
+				conf[k].data=v
+			}
+		})
+		return conf
 	},
 	drawFunction:setPickedTeams,
 	fileName:"predictor",
@@ -44,10 +100,8 @@ $(document).ready(function(){
 		})
 		loadFromLocationHash()
 		$(window).on('hashchange', loadFromLocationHash)
-		var title = "Match Predictor"
-		if (eventId) title = `${eventName} ${title}`
-		if (match) title = `${match} ${title}`
-		$('title,h1').text(title)
+		if (match) $('title,h1').attr('data-i18n','predictor_match_title')
+		applyTranslations()
 	})
 	$('#prediction input').focus(focusInput).change(setPickedTeams)
 	if (eventCompetition=='ftc') $('.noftc').hide()
@@ -102,12 +156,12 @@ function setPickedTeams(){
 				$('<tr>').append(
 					$(`<th colspan=${BOT_POSITIONS.length+3}>`)
 					.append(
-						$('<h4>').text(section)
-						.append(" ").append($('<button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig)))
+						$('<h4>').append($('<span>').attr('data-i18n',section))
+						.append(" ").append($(' <button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig)))
 					)
 				)
 			)
-			stats[section].forEach(function(field){
+			stats[section].data.forEach(function(field){
 				statInfo[field] = statInfo[field]||{}
 				var statName = statInfo[field]['name']||field,
 				statType = statInfo[field]['type']||""
@@ -130,7 +184,7 @@ function setPickedTeams(){
 						tr.append($('<td>').addClass(i<(BOT_POSITIONS.length/2)?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamBest?"winner":"")))
 						if(i==(BOT_POSITIONS.length/2-1)){
 							tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceBest?("winner"):"")))
-							tr.append($('<td>').append($('<div>').text(statName)))
+							tr.append($('<td>').append($('<div>').attr('data-i18n',field)))
 							tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceBest?"winner":"")))
 						}
 					})
@@ -145,6 +199,7 @@ function setPickedTeams(){
 		$('#change-teams').hide()
 	}
 	setLocationHash()
+	applyTranslations()
 }
 
 var match = ""

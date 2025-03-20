@@ -133,7 +133,6 @@ $(document).ready(function(){
 			if (s) return s
 			if (myTeamsStats && myTeamsStats.length) return myTeamsStats
 			if (window.whiteboardStats && window.whiteboardStats.length) return window.whiteboardStats
-			if (window.matchPredictorSections) return Object.keys(window.matchPredictorSections).map(k=>window.matchPredictorSections[k]).flat(1)
 			return []
 		},
 		hasWhiteboard:true,
