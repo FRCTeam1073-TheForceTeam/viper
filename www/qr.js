@@ -1,6 +1,14 @@
 "use strict"
 
 addI18n({
+	qr_title{
+		en:'Processing QR Code',
+		fr:'Traitement du code QR',
+		tr:'QR Kodu İşleniyor',
+		zh_tw:'正在處理二維碼',
+		he:'מעבד קוד QR',
+		pt:'Processando código QR',
+	},
 	qr_format_error:{
 		en:'Data not in expected format',
 		zh_tw:'數據不符合預期格式',
