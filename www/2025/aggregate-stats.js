@@ -2126,57 +2126,70 @@ var fmsMapping=[
 
 function showPitScouting(el,team){
 	promisePitScouting().then(pitData => {
-		var dat=pitData[team]||{}
-		if (dat.team_name) el.append($("<p>").text("Team name: " + dat.team_name))
-		if (dat.team_location) el.append($("<p>").text("Location: " + dat.team_location))
-		if (dat.bot_name) el.append($("<p>").text("Bot name: " + dat.bot_name))
+		var dat=pitData[team]||{},
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','team_info_legend')),
+		ti=(window.eventTeamsInfo||{})[team]||{}
+		dlText(section,'team_name_label',dat.team_name||ti.nameShort)
+		dlText(section,'team_location_label',dat.team_location||ti.city?`${ti.city}, ${ti.stateProv}, ${ti.country}`:'')
+		dlText(section,'bot_name_label',dat.bot_name||ti.robotName)
+		el.append(section)
 
-		el.append($("<h4>").text("Robot"))
-		var list=$("<ul>")
-		list.append($("<li>").text("Dimensions (inches without bumpers): " + format(dat.frame_length+'x'+dat.frame_width+'"')))
-		list.append($("<li>").text("Weight (pounds): "+ format(dat.weight)))
-		list.append($("<li>").text("Drivetrain: " + format(dat.drivetrain)))
-		list.append($("<li>").text("Swerve: " + format(dat.swerve)))
-		list.append($("<li>").text("Drivetrain motors: " + (dat.motor_count||"")+" "+format(dat.motors)))
-		list.append($("<li>").text("Wheels: " + (dat.wheel_count||"")+" "+format(dat.wheels)))
-		el.append(list)
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','robot_legend'))
+		dlText(section,'robot_size_question',`${dat.frame_length}x${dat.frame_width}`,'robot_size_unit')
+		dlText(section,'robot_weight_question',dat.weight,'robot_weight_unit')
+		dlTranslation(section,'robot_drivetrain_question',dat.drivetrain,'robot_drivetrain_')
+		dlTranslation(section,'robot_swerve_question',dat.swerve,'robot_swerve_')
+		dlText(section,'drivetrain_motor_count_question',dat.motor_count)
+		dlTranslation(section,'drivetrain_motor_type_question',dat.motors,'motor_type_')
+		dlText(section,'wheel_count_question',dat.wheel_count)
+		dlTranslation(section,'wheel_type_question',dat.wheels,'wheel_type_')
+		el.append(section)
 
-		el.append($("<h4>").text("Computer Vision"))
-		list=$("<ul>")
-		list.append((dat.vision_auto?$('<li>'):$('<li style=text-decoration:line-through>')).text("Auto"))
-		list.append((dat.vision_collecting?$('<li>'):$('<li style=text-decoration:line-through>')).text("Collecting"))
-		list.append((dat.vision_placing?$('<li>'):$('<li style=text-decoration:line-through>')).text("Placing, shooting or aiming"))
-		list.append((dat.vision_localization?$('<li>'):$('<li style=text-decoration:line-through>')).text("Localization"))
-		el.append(list)
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','vision_question'))
+		divCheckbox(section,'vision_collecting',dat.vision_auto)
+		divCheckbox(section,'vision_auto',dat.vision_collecting)
+		divCheckbox(section,'vision_placing',dat.vision_placing)
+		divCheckbox(section,'vision_localization',dat.vision_localization)
+		el.append(section)
+
+		applyTranslations()
 	})
 
-	function format(s){
-		s=""+s
-		if (!s||s=="0"||/^undefined/.test(s)) s="Unknown"
-		s=s[0].toUpperCase() + s.slice(1)
-		return s.replace(/_/g," ")
+	function divCheckbox(parent,key,value){
+		parent.append($('<div>').attr('data-i18n',key).toggleClass('unused',!is(value)))
+	}
+
+	function dlText(parent,question,s,unit){
+		parent.append($("<dl>").append($('<dt>').attr('data-i18n',question)).append(text($('<dd>'),s,unit)))
+	}
+
+	function text(node,s,unit){
+		if (is(s)){
+			node.text(s)
+			if (unit)node.append(' ').append($('<span>').attr('data-i18n',unit))
+		}else node.attr('data-i18n','pit_scout_not_answered')
+		return node
+	}
+
+	function dlTranslation(parent,question,s,prefix){
+		parent.append($("<dl>").append($('<dt>').attr('data-i18n',question)).append(translation($('<dd>'),s,prefix)))
+	}
+
+	function translation(node,s,prefix){
+		return node.attr('data-i18n',is(s)?`${prefix}${s}`.replace(/-/g,'_'):'pit_scout_not_answered')
+	}
+
+	function is(s){
+		return s&&s!="0"&&!/^undefined/.test(s)
 	}
 }
 
 function showSubjectiveScouting(el,team){
 	promiseSubjectiveScouting().then(subjectiveData => {
-		var dat=subjectiveData[team]||{},
-		graph=$('<div class=graph>'),
-		f=dat.penalties||""
-		el.append(graph)
-		if (f){
-			el.append('<h4>Penalties</h4>')
-			el.append($('<div style=white-space:pre-wrap>').text(f))
-		}
-		f=dat.defense_tips||""
-		if (f){
-			el.append('<h4>Defense Tips</h4>')
-			el.append($('<div style=white-space:pre-wrap>').text(f))
-		}
-		f=dat.notes||""
-		if (f){
-			el.append('<h4>Other</h4>')
-			el.append($('<div style=white-space:pre-wrap>').text(f))
-		}
+		var dat=subjectiveData[team]||{}
+		el.append($('<fieldset>').append($('<legend data-i18n=subjective_penalties_question>').append($('<div style=white-space:pre-wrap>').text(dat.penalties||""))))
+		el.append($('<fieldset>').append($('<legend data-i18n=subjective_defense_question>').append($('<div style=white-space:pre-wrap>').text(dat.defense_tips||""))))
+		el.append($('<fieldset>').append($('<legend data-i18n=subjective_notes_question>').append($('<div style=white-space:pre-wrap>').text(dat.notes||""))))
+		applyTranslations()
 	})
 }

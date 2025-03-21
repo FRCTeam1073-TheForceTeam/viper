@@ -285,6 +285,22 @@ addI18n({
 		zh_tw:'數據不包括練習賽',
 		fr:'Statistiques excluant les matchs d\'entraînement',
 	},
+	display_graphs:{
+		en:'Graphs',
+		he:'גרפים',
+		pt:'Gráficos',
+		tr:'Grafikler',
+		zh_tw:'圖表',
+		fr:'Graphiques',
+	},
+	display_table:{
+		en:'Table',
+		he:'לוּחַ',
+		pt:'Tabela',
+		tr:'Tablo',
+		zh_tw:'桌子',
+		fr:'Tableau',
+	},
 })
 var locale=computeLocale()
 

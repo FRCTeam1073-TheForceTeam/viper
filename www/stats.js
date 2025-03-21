@@ -89,22 +89,6 @@ addI18n({
 		zh_tw:'種類：',
 		fr:'Trier :',
 	},
-	display_graphs:{
-		en:'Graphs',
-		he:'גרפים',
-		pt:'Gráficos',
-		tr:'Grafikler',
-		zh_tw:'圖表',
-		fr:'Graphiques',
-	},
-	display_table:{
-		en:'Table',
-		he:'לוּחַ',
-		pt:'Tabela',
-		tr:'Tablo',
-		zh_tw:'桌子',
-		fr:'Tableau',
-	},
 	starting_match_label:{
 		en:'Starting:',
 		he:'מתחיל:',

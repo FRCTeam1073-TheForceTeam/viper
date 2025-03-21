@@ -1,4 +1,4 @@
-#comments{max-width:30em;margin:0 auto;text-align:left}
+#comments,fieldset{max-width:30em;margin:0 auto;text-align:start}
 .scouter{text-align:end}
 .scouter::before{content:"-- "}
 .chart canvas{height:20em}
@@ -22,3 +22,4 @@
 #topNav ul{display:inline-block}
 #topNav li{display:inline-block}
 #topNav li:not(:last-of-type)::after{content:" | "}
+.unused{text-decoration:line-through}

@@ -1,7 +1,48 @@
 "use strict"
+addI18n({
+	team_page_title:{
+		en:'_TEAM_ at _EVENT_',
+		tr:'_TEAM_ _EVENT_ adresinde',
+		pt:'_TEAM_ em _EVENT_',
+		he:'_TEAM_ ב-_EVENT_',
+		zh_tw:'_TEAM_ 參加 _EVENT_',
+		fr:'_TEAM_ à _EVENT_',
+	},
+	choose_team_page_title:{
+		en:'Choose a Team',
+		tr:'Bir Takım Seçin',
+		pt:'Escolha uma equipe',
+		he:'בחר צוות',
+		zh_tw:'選擇團隊',
+		fr:'Choisir une équipe',
+	},
+	pit_scouting_heading:{
+		en:'Pit Scouting',
+		tr:'Pit İzciliği',
+		pt:'Pit Scouting',
+		he:'צופי בור',
+		zh_tw:'礦坑勘察',
+		fr:'Repérage des stands',
+	},
+	subjective_scouting_heading:{
+		en:'Subjective Scouting',
+		tr:'Öznel İzcilik',
+		pt:'Subjective Scouting',
+		he:'צופית סובייקטיבית',
+		zh_tw:'主觀球探',
+		fr:'Repérage subjectif',
+	},
+	comments_heading:{
+		en:'Comments',
+		tr:'Yorumlar',
+		pt:'Comentários',
+		he:'הערות',
+		zh_tw:'評論',
+		fr:'Commentaires',
+	},
+})
 
-var rawTitle="",rawH1="",
-downloadBlobs={},
+var downloadBlobs={},
 statsConfig = new StatsConfig({
 	statsConfigKey:`${eventYear}TeamStats`,
 	getStatsConfig:function(){
@@ -44,18 +85,19 @@ function getTeamInfo(teamNum){
 	if (info.country)name+=`, ${info.country}`
 	return name
 }
-
+onApplyTranslation.push(fillPage)
+var lastLocale=''
 function fillPage(){
-	if (!rawTitle){
-		rawTitle = $('title').text()
-		rawH1 = $('h1').text()
-	}
+	if(!window.eventStats || locale==lastLocale)return
+	lastLocale=locale
 	window.scroll(0,0)
 	team = parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||""
+	addTranslationContext({event:eventName,team:team})
 	statsConfig.setTeam(team)
 	$('#teamButtons').toggle(!team)
 	$('#teamStats').toggle(!!team)
 	if (!team){
+		$('title,h1').attr('data-i18n','choose_team_page_title')
 		$('#teamButtons').html("")
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
@@ -63,12 +105,9 @@ function fillPage(){
 			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
 		})
 	} else {
-		$('title').text(rawTitle.replace("EVENT", eventName).replace("TEAM", team))
-		$('h1').text(rawH1.replace("EVENT", eventName).replace("TEAM", team + " " + getTeamInfo(team)))
-		if(team){
-			$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
-			$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
-		}
+		$('title,h1').attr('data-i18n','team_page_title')
+		$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
+		$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
 		$('.imagePreview img').click(function(){
 			showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
 		})
@@ -102,6 +141,7 @@ function fillPage(){
 			$('.subjectiveScouting').hide()
 		}
 	}
+	applyTranslations()
 }
 
 function teamButtonClicked(){
@@ -136,7 +176,7 @@ function showTables(matchList, matchNames){
 			var hr = $('<tr>')
 			hr.append(
 				$('<th class=borderless>').append(
-					$('<h4>').text(section)
+					$('<h4>').attr('data-i18n',section)
 				)
 			)
 			for (var j=0; j<matchList.length; j++){
@@ -145,7 +185,7 @@ function showTables(matchList, matchNames){
 			table.append(hr)
 			sections[section].data.forEach(function(field){
 				var info = statInfo[field]||{},
-				tr = $('<tr class=statRow>').append($('<th>').text(info.name||field))
+				tr = $('<tr class=statRow>').append($('<th>').attr('data-i18n',field))
 				matchList.forEach(function(match){
 					tr.append($('<td>').text(match[field]||0))
 				})
@@ -206,7 +246,7 @@ function showGraphs(matchList, matchNames){
 		var graph=$('<div class=graph>')
 		graphs.append(graph)
 		graph.append(
-			$('<h2>').text(section).append(" ")
+			$('<h2>').append($('<span>').attr('data-i18n',section)).append(" ")
 			.append($('<button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig)))
 		)
 		if (sections[section].graph=='heatmap'){
@@ -231,14 +271,14 @@ function showGraphs(matchList, matchNames){
 						time = parseInt(pair[0]),
 						field = pair[1]||"",
 						info = statInfo[field]||{name:field}
-						data.points[info.name] = {
+						data.points[translate(info.name)] = {
 							stamp: info.timeline_stamp,
 							fill: info.timeline_fill,
 							outline: info.timeline_outline
 						}
 						events.push({
 							time: time,
-							event: info.name
+							event: translate(info.name)
 						})
 					})
 					data.timelines.push({
@@ -261,7 +301,7 @@ function showGraphs(matchList, matchNames){
 					values.push(matchList[k][field]||0)
 				}
 				data.push({
-					label: info.name||field,
+					label:translate(field),
 					data: values,
 					backgroundColor: color,
 					backgroundColor: color,
@@ -282,7 +322,10 @@ function showGraphs(matchList, matchNames){
 						y: {beginAtZero: true,stacked: stacked},
 						x: {stacked: stacked}
 					}
-				}
+				},
+				animation: {
+					duration: 0
+				},
 			})
 		}
 	})
