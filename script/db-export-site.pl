@@ -26,22 +26,22 @@ $sth->execute($db->getSite());
 my $data = $sth->fetchall_arrayref();
 if (scalar(@$data)){
 
-	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.js");
+	die "Error opening local.js for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.js");
 	print $fh $data->[0]->[0];
 	close $fh;
 
-	die "Error opening $file for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.css");
+	die "Error opening local.css for writing: $!" if (!open $fh, ">:encoding(UTF-8)", "$dir/local.css");
 	print $fh $data->[0]->[1];
 	close $fh;
 
 	if ($data->[0]->[2]){
-		die "Error opening $file for writing: $!" if (!open $fh, ">:raw", "$dir/background.png");
+		die "Error opening background.png for writing: $!" if (!open $fh, ">:raw", "$dir/background.png");
 		print $fh $data->[0]->[2];
 		close $fh;
 	}
 
 	if ($data->[0]->[3]){
-		die "Error opening $file for writing: $!" if (!open $fh, ">:raw", "$dir/logo.png");
+		die "Error opening logo.png for writing: $!" if (!open $fh, ">:raw", "$dir/logo.png");
 		print $fh $data->[0]->[3];
 		close $fh;
 	}
@@ -51,7 +51,7 @@ my $events = [];
 my $sth = $dbh->prepare("SELECT DISTINCT `A`.`event` FROM ((SELECT DISTINCT `event` FROM `schedule` WHERE `site`=?) UNION (SELECT `event` FROM `event` WHERE `site`=?)) as `A`");
 $sth->execute($db->getSite(),$db->getSite());
 my $data = $sth->fetchall_arrayref();
-for $row (@$data){
+for my $row (@$data){
 	my $event = $row->[0];
 	push(@$events, $event);
 }
@@ -80,7 +80,7 @@ sub queryToCsv(){
 
 }
 
-for $event (@$events){
+for my $event (@$events){
 	my ($season) = $event =~ /^(20[0-9]{2}(?:[0-9]{2})?)/;
 	&queryToCsv("event", "event", $site, $event, "'event'");
 	&queryToCsv("schedule", "schedule", $site, $event, "'Match'");
@@ -93,7 +93,7 @@ for $event (@$events){
 my $sth = $dbh->prepare("SELECT `year`, `team`, `view`, `image` FROM `images` WHERE `site`=?");
 $sth->execute($db->getSite());
 my $data = $sth->fetchall_arrayref();
-for $row (@$data){
+for my $row (@$data){
 	my $year = $row->[0];
 	my $team = $row->[1];
 	my $view = $row->[2];
@@ -110,7 +110,7 @@ for $row (@$data){
 my $sth = $dbh->prepare("SELECT `season`, `type`, `conf` FROM `siteconf` WHERE `site`=?");
 $sth->execute($db->getSite());
 my $data = $sth->fetchall_arrayref();
-for $row (@$data){
+for my $row (@$data){
 	my $season = $row->[0];
 	my $type = $row->[1];
 	my $conf = $row->[2];

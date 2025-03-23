@@ -4,5 +4,5 @@ use strict;
 use lib './pm';
 use db;
 
-$db = db->new();
+my $db = db->new();
 $db->schema();
