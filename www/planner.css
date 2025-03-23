@@ -5,7 +5,7 @@ button.selected{background:var(--button-selected-bg-color)}
 #fieldBG.rotated{transform:rotate(180deg)}
 #field .overlay{position:absolute;z-index:2}
 #field canvas{z-index:3}
-th:has(.team-input){height:3.1em;max-width:.5em}
+th:has(.team-input){height:3.1em;max-width:.5em;overflow:hidden}
 .team-input{transform:rotate(70deg) translate(.2em,1.2em);background-color:transparent;border:none;display:block;margin:0 auto}
 .team-input.lastFocus{background-color:var(--focus-bg-color)}
 @supports(-moz-appearance:none){.team-input{transform:rotate(70deg) translate(-.1em,.6em)}}
