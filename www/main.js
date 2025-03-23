@@ -322,16 +322,16 @@ function computeLocale(){
 	return 'en'
 }
 
-function translate(key,context){
+function translate(key,context,l){
 	context=Object.assign({},translationContext,context||{})
-	var g=I18N[key]||(window.statInfo||{})[key]||(window.teamGraphs||{})[key]||(window.aggregateGraphs||{})[key]||(window.matchPredictorSections||{})[key]||{},
-	l=locale
+	var g=I18N[key]||(window.statInfo||{})[key]||(window.teamGraphs||{})[key]||(window.aggregateGraphs||{})[key]||(window.matchPredictorSections||{})[key]||{}
+	l||=locale
 	if(l=='qd')return (g.en||g.name||key).replace(/[^ ]/g,'.')
 	while(l){
 		var t=g[l]||(locale=='en'?g.name:'')
 		if(t){
 			Object.entries(context).forEach(([key,value])=>{
-				t=t.replace(`_${key.toUpperCase()}_`,value)
+				t=t.replace(`_${key.toUpperCase().replace(/[^A-Z0-9]/g,'')}_`,value)
 			})
 			t=t.replace(/_[A-Z]+_/g,"")
 			return t
@@ -355,7 +355,8 @@ function dateCompare(a,b){
 function translationAttributes(node){
 	return Object.fromEntries(Array.from(node.attributes).map(i=>{
 		if(!/^data-/.test(i.name))return null
-		return[i.name.replace(/^data-/,''),i.value.replace(/\-|_/,'')]
+		if(/^data-translate-/.test(i.name))return[i.name.replace(/^data-translate-/,''),translate(i.value)]
+		return[i.name.replace(/^data-/,''),i.value]
 	}).filter(a=>a!=null))
 }
 

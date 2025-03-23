@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Alliances, Playoffs, Finals</title>
+<title data-i18n=playoffs_page_title></title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/playoffs.css>
 <script src=/jquery.min.js></script>
+<script src=/main.js></script>
 <script src=/event-url.js></script>
 <script src=/playoffs.js></script>
-<script src=/main.js></script>
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<h1>Alliances, Playoffs, Finals</h1>
+<h1 data-i18n=playoffs_page_title></h1>
 <div class=screen id=alliance-selection style=display:none>
-	<h2>Playoff Brackets</h2>
+	<h2 data-i18n=bracket_type_heading></h2>
 	<select id=bracket-type>
-		<option value=double selected>Double elimination</option>
-		<option value=single>Single elimination</option>
+		<option value=double selected data-i18n=bracket_type_double></option>
+		<option value=single data-i18n=bracket_type_single></option>
 	</select>
-	<h2>Alliance Selection</h2>
+	<h2 data-i18n=alliance_selection_heading></h2>
 	<table border=1>
-		<thead id=alliancesHead><tr><th>Alliance</th><th>Captain</th><th>First <br>Pick</th><th>Second <br>Pick</th></tr></thead>
+		<thead id=alliancesHead><tr><th data-csv=Alliance data-i18n=alliance_heading></th><th data-csv=Captain  data-i18n=captain_heading></th><th data-csv="First Pick" data-i18n=first_pick_heading></th><th data-csv="Second Pick" data-i18n=second_pick_heading></th></tr></thead>
 		<tbody id=alliances></tbody>
 	</table>
 
 	<template id=allianceRow>
 		<tr class=allianceTr>
 			<th>$#</th>
-			<td><input type=text data-alliance="$#" class=captain id="A$#_captain" placeholder="team #" pattern="^[0-9]+$" size=5></td>
-			<td><input type=text data-alliance="$#" class=pick_1 id="A$#_pick_1" placeholder="team #" pattern="^[0-9]+$" size=5></td>
-			<td><input type=text data-alliance="$#" class=pick_2 id="A$#_pick_2" placeholder="team #" pattern="^[0-9]+$" size=5></td>
+			<td><input type=text data-alliance="$#" class=captain id="A$#_captain" data-i18n-placeholder=team_number_placeholder pattern="^[0-9]+$" size=5></td>
+			<td><input type=text data-alliance="$#" class=pick_1 id="A$#_pick_1" data-i18n-placeholder=team_number_placeholder pattern="^[0-9]+$" size=5></td>
+			<td><input type=text data-alliance="$#" class=pick_2 id="A$#_pick_2" data-i18n-placeholder=team_number_placeholder pattern="^[0-9]+$" size=5></td>
 		</tr>
 	</template>
 	<div id=teams></div>
@@ -45,11 +45,11 @@
 <div id=scheduleSection style=display:none>
 	<h2></h2>
 	<table border=1 id=scheduleTable>
-		<thead><tr><th>Match</th><th>R1</th><th>R2</th><th>R3</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
+		<thead><tr><th data-i18n=match data-csv=Match></th><th>R1</th><th>R2</th><th>R3</th><th>B1</th><th>B2</th><th>B3</th></tr></thead>
 		<tbody id=schedule></tbody>
 	</table>
 
-	<button id=save>Save</button>
+	<button id=save data-i18n=save_button></button>
 </div>
 
 <form id=addAlliances method=POST action=/admin/playoffs.cgi>
