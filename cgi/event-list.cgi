@@ -29,7 +29,6 @@ sub isoDate(){
 }
 
 # print web page beginning
-print "Cache-Control: max-age=10, stale-if-error=28800, public, must-revalidate\n";
 print "Content-type: text/csv; charset=UTF-8\n\n";
 
 my $dbh = $db->dbConnection();
