@@ -31,10 +31,8 @@ function eventFromHash(){
 	eventName = eventYear+(eventYear?" ":"")+eventVenue
 	eventCompetition = (/^20[0-9]{2}$/.test(eventYear)||location.hash=='#frc')?"frc":"ftc"
 	promiseCache = {}
-	if (eventId){
-		if (localStorage.last_event_id==eventId){
-			eventName = localStorage.last_event_name||eventName
-		}
+	if (eventId && !/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eventId)){
+		if (localStorage.last_event_id==eventId)eventName=localStorage.last_event_name||eventName
 		localStorage.last_event_id=eventId
 		localStorage.last_event_year=eventYear
 		localStorage.last_event_name=eventName

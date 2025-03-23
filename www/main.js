@@ -36,7 +36,7 @@ $(document).ready(function(){
 						.replace(/EVENT_ID/g,eId)
 						.replace(/YEAR/g,eYear)
 				)
-				mainMenu.find('.dependEvent').toggle(!!(eName))
+				mainMenu.find('.dependEvent').toggle(eName&&!/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eId||""))
 				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
 					localStorage.setItem('my-team', parseInt($(this).val()))
 					location.reload()
