@@ -16,6 +16,9 @@ Redirect permanent /favicon.ico /logo.png
 Redirect 401 /logout
 
 <If "%{REQUEST_URI} =~ m#data/.*\.(csv|json)$# || %{QUERY_STRING} =~ m#file=.*\.(csv|json)$#">
+	# Dynamic data should be fetched fresh every 10 seconds
+	# Unless disconnected from the internet in which case they
+	# Can be used from cache stale for up to 12 hours
 	Header set Cache-Control "max-age=10, stale-if-error=28800, public"
 </If>
 <ElseIf "%{REQUEST_FILENAME} =~ /heartbeat\.html/ || %{REMOTE_ADDR} == '127.0.0.1' || env('DEBUG') == 1">
