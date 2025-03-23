@@ -4,15 +4,10 @@ $.ajaxSetup({
 	cache: true
 });
 
-var eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}(?:-[0-9]{2})?[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1],
-eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1'),
-eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
-eventName = eventYear+(eventYear?" ":"")+eventVenue,
-eventCompetition = (/^20[0-9]{2}$/.test(eventYear)||location.hash=='#frc')?"frc":"ftc",
-promiseCache = {},
+var eventId,eventYear,eventVenue,eventName,eventCompetition,BOT_POSITIONS,
+promiseCache={},
 FRC_BOT_POSITIONS = ['R1','R2','R3','B1','B2','B3'],
 FTC_BOT_POSITIONS = ['R1','R2','B1','B2'],
-BOT_POSITIONS = eventCompetition=='frc'?FRC_BOT_POSITIONS:FTC_BOT_POSITIONS,
 MATCH_TYPE_SORT = {
 	'pm':'00',
 	'qm':'01',
@@ -28,13 +23,27 @@ MATCH_TYPE_SORT = {
 	'2sf':'11',
 	'f':'12',
 }
-if (eventId){
-	if (localStorage.getItem("last_event_id")==eventId){
-		eventName = localStorage.getItem("last_event_name")||eventName
+
+function eventFromHash(){
+	eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}(?:-[0-9]{2})?[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1]
+	eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1')
+	eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1')
+	eventName = eventYear+(eventYear?" ":"")+eventVenue
+	eventCompetition = (/^20[0-9]{2}$/.test(eventYear)||location.hash=='#frc')?"frc":"ftc"
+	promiseCache = {}
+	if (eventId){
+		if (localStorage.last_event_id==eventId){
+			eventName = localStorage.last_event_name||eventName
+		}
+		localStorage.last_event_id=eventId
+		localStorage.last_event_year=eventYear
+		localStorage.last_event_name=eventName
 	}
-	localStorage.setItem("last_event_id", eventId)
-	localStorage.setItem("last_event_year", eventYear)
+	BOT_POSITIONS = eventCompetition=='frc'?FRC_BOT_POSITIONS:FTC_BOT_POSITIONS
 }
+
+$(window).on('hashchange', eventFromHash)
+eventFromHash()
 
 function promiseEventAjax(file){
 	return new Promise(callback=>{
@@ -303,7 +312,7 @@ function promiseEventInfo(){
 			var eventInfo = csvToArrayOfMaps(text)[0]
 			if (eventInfo.name)	{
 				eventName = (eventInfo.name.includes(eventYear)?"":`${eventYear} `)+eventInfo.name
-				localStorage.setItem("last_event_name", eventName)
+				localStorage.last_event_name=eventName
 			}
 		} else {
 			eventInfo = []
@@ -339,7 +348,7 @@ function getUploads(){
 	var uploads = []
 	for (var i in localStorage){
 		if (new RegExp(`^${eventYear}.*_.*_`).test(i)) {
-			uploads.push(localStorage.getItem(i))
+			uploads.push(localStorage[i])
 		}
 	}
 	return uploads
