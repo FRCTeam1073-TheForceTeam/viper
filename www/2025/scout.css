@@ -24,7 +24,8 @@
 .scout-locations > button,.scout-locations > label{height:14%;position:absolute;min-width:0;aspect-ratio:1;display:inline-block}
 .reef-scout{position:absolute;height:56%;aspect-ratio:1}
 .reef-scout > *{height:25%;position:absolute;min-width:0;aspect-ratio:1;display:inline-block}
-.scout-locations button img,.scout-locations label span,.scout-locations label img{height:100%;margin:0;display:inline-block}@media only screen and (min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait){.scout-locations button img,.scout-locations label span,.scout-locations label img{height:2.5em}}
+.scout-locations button img,.scout-locations label span,.scout-locations label img{height:100%;margin:0;display:inline-block}
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait){.scout-locations button img,.scout-locations label span,.scout-locations label img{height:2.5em}}
 .scout-locations .label{padding-top:.6em;font-size:125%}
 .redTeam .scout-locations .label{background-color:var(--red-team-color)}
 .blueTeam .scout-locations .label{background-color:var(--blue-team-color)}
