@@ -96,7 +96,7 @@ function closeLightBox(){
 
 function showLightBox(content){
 	closeLightBox()
-	$('#lightBoxBG').show()
+	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
 	content.show()
 	return false
 }
