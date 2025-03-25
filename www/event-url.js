@@ -89,6 +89,7 @@ function unescapeField(s){
 }
 
 function scheduleSortKey(match){
+	if(!match)return""
 	var event,id
 	if (typeof(match)==='string'){
 		event=""

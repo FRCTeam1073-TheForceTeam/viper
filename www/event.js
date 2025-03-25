@@ -110,8 +110,11 @@ $(document).ready(function(){
 	]).then(values =>{
 		var [eventMatches, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventScores, fileList, eventInfo, subjectiveData, pitData, eventTeamsInfo, seasonFiles] = values,
 		lastDone,
+		nextToScout,
+		lastMatch,
 		lastFullyDone,
-		ourNext
+		ourNext,
+		haveScouting=false
 		if (!fileList.length) return showError('Event Not Found')
 		if (window.importFunctions&&Object.keys(window.importFunctions).length) dependencySatisfied('dependImport')
 		fileList.forEach(file=>{
@@ -123,9 +126,11 @@ $(document).ready(function(){
 				title = extensionMap[extension][1]
 				if (depend) dependencySatisfied(depend)
 			}
+			if(extension=='scouting.csv')haveScouting=true
 			title+=fileNum?(" "+fileNum):""
 			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions).html(title))).parents('.initHid').show()
 		})
+		if(!haveScouting)$('#scout-link').after($('#photo-scout-link,#pit-scout-link'))
 		seasonFiles.split(/[\r\n]+/).forEach(file=>{
 			if (/\/subjective-scout\.html$/.test(file)) dependencySatisfied('dependSubjective')
 			if (/\/pit-scout\.html$/.test(file)) dependencySatisfied('dependPit')
@@ -164,10 +169,20 @@ $(document).ready(function(){
 		}
 
 		for (var i=eventMatches.length-1; !lastFullyDone && i>=0; i--){
-			var m = eventMatches[i]
-			if (matchScoutingDataCount(eventStatsByMatchTeam, m)==6) lastFullyDone = m
-			if (!lastDone && matchScoutingDataCount(eventStatsByMatchTeam, m)) lastDone = m
-			if (!lastDone && matchHasTeam(m,getLocalTeam())) ourNext=m
+			var m=eventMatches[i]
+			if(matchScoutingDataCount(eventStatsByMatchTeam,m)==6)lastFullyDone=m
+			if(!lastDone&&matchScoutingDataCount(eventStatsByMatchTeam,m))lastDone=m
+			if(!lastDone&&matchHasTeam(m,getLocalTeam()))ourNext=m
+			if(!lastDone&&!matchScoutingDataCount(eventStatsByMatchTeam,m))nextToScout=m
+			if(!lastMatch)lastMatch=m
+		}
+		if((!nextToScout||!/^(pm|qm)/.test(nextToScout.Match))&&lastMatch&&!/^f/.test(lastMatch.Match)){
+			$('#edit-event-section').prepend($('#edit-event-header'))
+			$('#edit-event-section>ul').append($('#edit-playoffs-link'))
+		}
+		if(lastMatch&&/^pm/.test(lastMatch.Match)){
+			$('#edit-event-section').prepend($('#edit-event-header'))
+			$('#edit-event-section>ul').append($('#edit-match-link,#fetch-api-link'))
 		}
 		function getTeamInfo(teamNum){
 			var info=eventTeamsInfo[teamNum]
