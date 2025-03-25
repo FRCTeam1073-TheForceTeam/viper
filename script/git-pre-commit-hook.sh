@@ -19,4 +19,7 @@ let status=status+$?
 ./script/final-new-line-check.sh $files
 let status=status+$?
 
+./script/conflicts-check.sh $files
+let status=status+$?
+
 exit $status
