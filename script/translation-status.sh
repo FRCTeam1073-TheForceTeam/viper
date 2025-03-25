@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 (
 	for file in www/*.html www/*/*.html
 	do
