@@ -1,5 +1,72 @@
 "use strict"
 
+addI18n({
+	import_api_event_title:{
+		en:'Import API Event',
+		fr:'Importation d\'un événement API',
+		zh_tw:'導入API事件',
+		tr:'API Etkinliğini İçe Aktar',
+		he:'אירוע ייבוא ​​API',
+		pt:'Importar evento da API',
+	},
+	import_api_event_heading:{
+		en:'Importing API Event',
+		fr:'Importation d\'un événement API',
+		zh_tw:'導入API事件',
+		tr:'API Etkinliğini İçe Aktarma',
+		he:'ייבוא ​​אירוע API',
+		pt:'Importando evento da API',
+	},
+	event_name_heading:{
+		en:'Event name',
+		fr:'Nom de l\'événement',
+		zh_tw:'活動名稱',
+		tr:'Etkinlik adı',
+		he:'שם האירוע',
+		pt:'Nome do evento',
+	},
+	dates_heading:{
+		en:'Dates',
+		fr:'Dates',
+		zh_tw:'棗子',
+		tr:'Tarihler',
+		he:'תאריכים',
+		pt:'Datas',
+	},
+	location_heading:{
+		en:'Location',
+		fr:'Lieu',
+		zh_tw:'地點',
+		tr:'Konum',
+		he:'מִקוּם',
+		pt:'Localização',
+	},
+	event_id_heading:{
+		en:'Event ID',
+		fr:'ID de l\'événement',
+		zh_tw:'事件ID',
+		tr:'Etkinlik kimliği',
+		he:'מזהה אירוע',
+		pt:'ID do evento',
+	},
+	schedule_heading:{
+		en:'Schedule',
+		fr:'Calendrier',
+		zh_tw:'行程',
+		tr:'Program',
+		he:'לוּחַ זְמַנִים',
+		pt:'Programação',
+	},
+	no_event_heading:{
+		en:'No event specified',
+		fr:'Aucun événement spécifié',
+		zh_tw:'沒有指定事件',
+		tr:'Belirtilen bir etkinlik yok',
+		he:'לא צוין אירוע',
+		pt:'Nenhum evento especificado',
+	},
+})
+
 var backForward = false
 
 window.addEventListener('pageshow', function (event){
@@ -12,7 +79,7 @@ function fetchJson(url){
 
 $(document).ready(function(){
 	if (!eventId){
-		$('body').prepend("<h1>No event specified</h1>")
+		$('body').prepend("<h1 data-i18n=no_event_heading></h1>")
 		return
 	}
 	Promise.all([
