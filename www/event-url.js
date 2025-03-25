@@ -357,30 +357,27 @@ function getUploads(){
 	return uploads
 }
 
+function getMatchNumber(matchId){
+	return (matchId.match(/[0-9]+$/)||[0])[0]
+}
+
+
+function getMatchTypeKey(matchId){
+	return (matchId.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)/)||[""])[0]
+}
+
+function getMatchNameKey(matchId){
+	return 'mt_'+getMatchTypeKey(matchId)
+}
+
 function getMatchName(matchId){
-	return matchId
-		.replace(/^pm/,translate("mt_pm"))
-		.replace(/^qm/,translate("mt_qm"))
-		.replace(/^qf/,translate("mt_qf"))
-		.replace(/^sf/,translate("mt_sf"))
-		.replace(/^1p/,translate("mt_1p"))
-		.replace(/^2p/,translate("mt_2p"))
-		.replace(/^3p/,translate("mt_3p"))
-		.replace(/^4p/,translate("mt_4p"))
-		.replace(/^5p/,translate("mt_5p"))
-		.replace(/^f/,translate("mt_f"))
+	return translate(getMatchNameKey(matchId))+getMatchNumber(matchId)
+}
+
+function getShortMatchNameKey(matchId){
+	return 'mts_'+getMatchTypeKey(matchId)
 }
 
 function getShortMatchName(matchId){
-	return matchId
-		.replace(/^pm/,translate("mts_pm"))
-		.replace(/^qm/,translate("mts_qm"))
-		.replace(/^qf/,translate("mts_qf"))
-		.replace(/^sf/,translate("mts_sf"))
-		.replace(/^1p/,translate("mts_1p"))
-		.replace(/^2p/,translate("mts_2p"))
-		.replace(/^3p/,translate("mts_3p"))
-		.replace(/^4p/,translate("mts_4p"))
-		.replace(/^5p/,translate("mts_5p"))
-		.replace(/^f/,translate("mts_f"))
+	return translate(getShortMatchNameKey(matchId))+getMatchNumber(matchId)
 }

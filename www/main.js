@@ -301,6 +301,22 @@ addI18n({
 		zh_tw:'桌子',
 		fr:'Tableau',
 	},
+	red_heading:{
+		en:'Red',
+		tr:'Vermelho',
+		he:'אָדוֹם',
+		zh_tw:'紅色的',
+		pt:'Vermelho',
+		fr:'Rouge',
+	},
+	blue_heading:{
+		en:'Blue',
+		tr:'Azul',
+		he:'כְּחוֹל',
+		zh_tw:'藍色的',
+		pt:'Azul',
+		fr:'Bleu',
+	},
 })
 var locale=computeLocale()
 

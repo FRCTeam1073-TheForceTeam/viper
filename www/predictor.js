@@ -17,22 +17,6 @@ addI18n({
 		pt:'_MATCH_ Previsor de Partida para _EVENT_',
 		fr:'_MATCH_ Prédicteur de match pour _EVENT_',
 	},
-	red_heading:{
-		en:'Red',
-		tr:'Vermelho',
-		he:'אָדוֹם',
-		zh_tw:'紅色的',
-		pt:'Vermelho',
-		fr:'Rouge',
-	},
-	blue_heading:{
-		en:'Blue',
-		tr:'Azul',
-		he:'כְּחוֹל',
-		zh_tw:'藍色的',
-		pt:'Azul',
-		fr:'Bleu',
-	},
 	change_teams_button:{
 		en:'Change Teams',
 		tr:'Alterar Equipes',
