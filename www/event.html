@@ -28,10 +28,10 @@
 				<h2 data-i18n=scouting_heading></h2>
 				<ul>
 					<li class=initHid><a class=dependUploads href="/upload.html" data-i18n=event_upload_link></a></li>
-					<li class=initHid><a class=dependSchedule href="/_YEAR_/scout.html#event=_EVENT_" data-i18n=scout_match_link></a></li>
+					<li id=scout-link class=initHid><a class=dependSchedule href="/_YEAR_/scout.html#event=_EVENT_" data-i18n=scout_match_link></a></li>
 					<ul class=more>
-						<li><a href="/bot-photos.html#event=_EVENT_" data-i18n=all_photos_link></a></li>
-						<li class=initHid><a class=dependPit href="/_YEAR_/pit-scout.html#event=_EVENT_" data-i18n=all_pit_link></a></li>
+						<li id=photo-scout-link><a href="/bot-photos.html#event=_EVENT_" data-i18n=all_photos_link></a></li>
+						<li id=pit-scout-link class=initHid><a class=dependPit href="/_YEAR_/pit-scout.html#event=_EVENT_" data-i18n=all_pit_link></a></li>
 						<li class=initHid id=pitScoutSetup>
 							<div class=dependPit data-i18n=pit_squads></div>
 							<div class=side-by-side>
@@ -61,7 +61,6 @@
 
 			<div id=data>
 				<h2 data-i18n=data_heading></h2>
-
 				<ul>
 					<li><a href="/export.html#event=_EVENT_" data-i18n=viper_export_link></a></li>
 					<ul id=dataList class=more>
@@ -71,14 +70,17 @@
 				</ul>
 			</div>
 
-			<div class=more>
-				<h2 data-i18n=edit_event_heading></h2>
-				<ul>
-					<li><a href="/event-table.html#event=_EVENT_" data-i18n=edit_event_link></a></li>
-					<li class=initHid><a class=dependScouting href="/playoffs.html#event=_EVENT_" data-i18n=edit_playoffs_link></a></li>
-					<li class=initHid><a class=dependFirstFrc href="/admin/frc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a></li>
-					<li class=initHid><a class=dependImport href="/import-scouting.html#event=_EVENT_" data-i18n=import_link></a></li>
-				</ul>
+			<div id=edit-event-section>
+				<ul></ul>
+				<div class=more>
+					<h2 id=edit-event-header>Edit Event</h2>
+					<ul>
+						<li id=edit-match-link><a href="/event-table.html#event=EVENT" data-i18n=edit_event_link></a></li>
+						<li id=edit-playoffs-link class=initHid><a class=dependScouting href="/playoffs.html#event=EVENT" data-i18n=edit_playoffs_link></a></li>
+						<li class=initHid id=fetch-api-link><a class=dependFirstFrc href="/admin/frc-api-event.cgi?event=EVENT&first=FIID" data-i18n=api_link></a></li>
+						<li class=initHid><a class=dependImport href="/import-scouting.html#event=EVENT" data-i18n=import_link></a></li>
+					</ul>
+				</div>
 			</div>
 
 			<div class=more>
