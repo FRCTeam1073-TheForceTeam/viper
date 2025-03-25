@@ -23,7 +23,7 @@ $(document).ready(function(){
 	Promise.all([
 		promiseEventStats(),
 		promiseTeamsInfo(),
-		fetch(`/data/${eventYear}/predictor.json`).then(response=>{if(response.ok)return response.json()})
+		fetch(`/data/${eventYear}/team.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values =>{
 		[[window.eventStats, window.eventStatsByTeam, {}], window.eventTeamsInfo, window.myTeamsGraphs] = values
 		fillPage()
