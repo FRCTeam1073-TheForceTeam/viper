@@ -1,6 +1,14 @@
 "use strict"
 
 addI18n({
+	switch_to_season_link:{
+		en:'Use full season stats',
+		fr:'Utiliser les statistiques de la saison complète',
+		zh_tw:'使用整個賽季的數據',
+		pt:'Use estatísticas completas da temporada',
+		he:'השתמש בסטטיסטיקה מלאה של העונה',
+		tr:'Tam sezon istatistiklerini kullan',
+	},
 	eraser_tooltip:{
 		en:'Whiteboard eraser',
 		tr:'Beyaz tahta silgisi',
@@ -115,7 +123,7 @@ addI18n({
 	},
 })
 
-var matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1],
+var matchId,
 myTeamsStats
 onApplyTranslation.push(function(){
 	addTranslationContext({
@@ -166,26 +174,67 @@ $(document).ready(function(){
 		return false
 	})
 
-	function setLocationHash(){
-		var hash = `event=${eventId}`
-		if (matchId) hash += `&match=${matchId}`
-		$('#statsTable input').each(function(){
-			var val = $(this).val()
-			if (/^[0-9]+$/.test(val)){
-				var name = $(this).attr('id')
-				hash += `&${name}=${val}`
-			}
+	function getHash(eventId,matchId,teams){
+		var hash=`event=${eventId}`
+		if (matchId)hash+=`&match=${matchId}`
+		Object.entries(teams||{}).forEach(([pos,team])=>{
+			if (/^[0-9]+$/.test(team))hash+=`&${pos}=${team}`
 		})
-		location.hash = hash
+		return hash
+	}
+
+	function getTeamPositions(){
+		return Object.fromEntries($('.team-input').toArray().map(i=>[i.id,i.value]))
+	}
+
+	function setLocationHash(){
+		location.hash=getHash(eventId,matchId,getTeamPositions())
 	}
 
 	function loadFromLocationHash(){
+		matchId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:match)\=))?([a-z0-9]+)(?:\&.*)?$/)||["",""])[1]
 		$('#statsTable input').each(function(){
 			var name = $(this).attr('id')
 			var val = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${name}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
 			$(this).val(val)
 		})
-		fillStats()
+		Promise.all([
+			promiseEventStats(),
+			promisePitScouting(),
+			promiseSubjectiveScouting(),
+			promiseEventMatches(),
+			promiseTeamsInfo(),
+			fetch(`/data/${eventYear}/whiteboard.json`).then(response=>{if(response.ok)return response.json()})
+		]).then(values => {
+			;[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.eventTeamsInfo, window.myTeamsStats] = values
+			var teamList = Object.keys(eventStatsByTeam)
+			teamList.sort((a,b) => a-b)
+			for (var i=0; i<teamList.length; i++){
+				var team = teamList[i]
+				$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).attr('data-tooltip',getTeamInfo(team)).click(teamButtonClicked))
+			}
+			$('#matchList').append($('<option selected=1>')).change(function(){
+				matchId = $(this).val()
+				var match = (eventMatches.filter(m=>m.Match==matchId))[0]
+				BOT_POSITIONS.forEach(function(pos){
+					$(`#${pos}`).val(match[pos])
+				})
+				displayMatchName()
+				fillStats()
+				focusNext()
+			})
+			eventMatches.forEach(match=>{
+				$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',match.Match))
+			})
+			fillStats()
+
+			if (window.whiteboardStamps){
+				window.whiteboardStamps.forEach(function(stamp){
+					$('#stamps').append(" ").append($(`<button class="stamp icon-button draw-mode" data-i18n-tooltip=stamp_tooltip><img src=${stamp}></button>`).click(stampWhiteboard).click(showDrawMode))
+				})
+			}
+			sizeWhiteboard()
+		})
 	}
 
 	loadFromLocationHash()
@@ -221,44 +270,6 @@ $(document).ready(function(){
 		drawOverlays()
 	}
 
-	Promise.all([
-		promiseEventStats(),
-		promisePitScouting(),
-		promiseSubjectiveScouting(),
-		promiseEventMatches(),
-		promiseTeamsInfo(),
-		fetch(`/data/${eventYear}/whiteboard.json`).then(response=>{if(response.ok)return response.json()})
-	]).then(values => {
-		;[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.eventTeamsInfo, window.myTeamsStats] = values
-		var teamList = Object.keys(eventStatsByTeam)
-		teamList.sort((a,b) => a-b)
-		for (var i=0; i<teamList.length; i++){
-			var team = teamList[i]
-			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).attr('data-tooltip',getTeamInfo(team)).click(teamButtonClicked))
-		}
-		$('#matchList').append($('<option selected=1>')).change(function(){
-			matchId = $(this).val()
-			var match = (eventMatches.filter(m=>m.Match==matchId))[0]
-			BOT_POSITIONS.forEach(function(pos){
-				$(`#${pos}`).val(match[pos])
-			})
-			displayMatchName()
-			fillStats()
-			focusNext()
-		})
-		eventMatches.forEach(match=>{
-			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',match.Match))
-		})
-		fillStats()
-
-		if (window.whiteboardStamps){
-			window.whiteboardStamps.forEach(function(stamp){
-				$('#stamps').append(" ").append($(`<button class="stamp icon-button draw-mode" data-i18n-tooltip=stamp_tooltip><img src=${stamp}></button>`).click(stampWhiteboard).click(showDrawMode))
-			})
-		}
-		sizeWhiteboard()
-	})
-
 	$('#statsTable input').change(fillStats).focus(function(){
 		focusInput($(this))
 	}).blur(function(e){
@@ -266,6 +277,7 @@ $(document).ready(function(){
 	})
 
 	function getTeamInfo(teamNum){
+		if(!window.eventTeamsInfo)return""
 		var info=eventTeamsInfo[teamNum]
 		if (!info)return null
 		var name=info.nameShort||""
@@ -278,6 +290,7 @@ $(document).ready(function(){
 	function fillStats(){
 		if (!window.statInfo||!window.eventTeamsInfo) return
 		setLocationHash()
+		displayMatchName()
 		$('#teamButtons button').removeClass("picked")
 		var teamList=[],
 		tbody = $('#statsTable tbody').html("")
@@ -292,6 +305,7 @@ $(document).ready(function(){
 			}
 			$(this).parent().attr('data-tooltip',tooltip)
 		})
+		$('#switch-to-season').toggle(!/combined$/.test(eventId)).find('a').attr('href','#'+getHash(eventId.replace(/(20[[0-9]{2}(-[0-9]{2})?).*/,"$1combined"),null,getTeamPositions()))
 		$('.teamDataEntry').toggle(teamList.length!=BOT_POSITIONS.length)
 		if(teamList.length==BOT_POSITIONS.length){
 			var row = $("<tr>")
@@ -449,7 +463,7 @@ $(document).ready(function(){
 	}
 
 	function getTeamValue(field, team){
-		if (!team) return ""
+		if (!team||!window.eventStatsByTeam) return ""
 		if (! team in eventStatsByTeam) return ""
 		var stats = eventStatsByTeam[team]
 		if (! stats || ! field in stats) return ""

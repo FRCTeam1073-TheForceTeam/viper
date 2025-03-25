@@ -15,18 +15,18 @@ RedirectMatch permanent /(20[0-9]{2}(-[0-9]{2}))/?$ /#$1
 Redirect permanent /favicon.ico /logo.png
 Redirect 401 /logout
 
-<If "%{REQUEST_URI} =~ m#data/.*\.(csv|json)$# || %{QUERY_STRING} =~ m#file=.*\.(csv|json)$#">
+<If "%{REQUEST_URI} =~ m#((\.cgi)|(data/.*\.(csv|json)))$# || %{QUERY_STRING} =~ m#file=.*\.(csv|json)$#">
 	# Dynamic data should be fetched fresh every 10 seconds
-	# Unless disconnected from the internet in which case they
-	# Can be used from cache stale for up to 12 hours
-	Header set Cache-Control "max-age=10, stale-if-error=28800, public"
+	# Or if not connected to the internet for 5 days
+	Header set Cache-Control "max-age=10, stale-if-error=432000, public"
 </If>
 <ElseIf "%{REQUEST_FILENAME} =~ /heartbeat\.html/ || %{REMOTE_ADDR} == '127.0.0.1' || env('DEBUG') == 1">
 	Header set Cache-Control no-store
 </ElseIf>
 <Else>
-	# Allow most files to be cached for 12 hours
-	Header set Cache-Control "max-age=28800, public"
+	# Allow most files to be cached for 20 hours
+	# or if not connected to the internet for 5 days
+	Header set Cache-Control "max-age=72000, stale-if-error=432000, public"
 </Else>
 
 RewriteEngine On

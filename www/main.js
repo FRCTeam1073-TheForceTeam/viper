@@ -413,7 +413,7 @@ $(document).ready(function(){
 						.replace(/YEAR/g,eYear)
 				)
 				applyTranslations(mainMenu)
-				mainMenu.find('.dependEvent').toggle(!!(eName))
+				mainMenu.find('.dependEvent').toggle(eName&&!/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eId||""))
 				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
 					localStorage.setItem('my-team', parseInt($(this).val()))
 					location.reload()
@@ -479,7 +479,7 @@ function closeLightBox(){
 
 function showLightBox(content){
 	closeLightBox()
-	$('#lightBoxBG').show()
+	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
 	applyTranslations()
 	content.show()
 	return false
