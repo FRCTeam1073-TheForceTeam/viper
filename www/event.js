@@ -802,7 +802,7 @@ $(document).ready(function(){
 		}
 		if(lastMatch&&/^pm/.test(lastMatch.Match)){
 			$('#edit-event-section').prepend($('#edit-event-header'))
-			$('#edit-event-section>ul').append($('#edit-match-link,#fetch-api-link'))
+			$('#edit-event-section>ul').append($('#edit-match-link,.fetch-api-link'))
 		}
 		function getTeamInfo(teamNum){
 			var info=eventTeamsInfo[teamNum]
