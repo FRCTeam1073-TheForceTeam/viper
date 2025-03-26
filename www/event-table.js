@@ -237,7 +237,7 @@ function setComp(){
 	var newComp = $('#comp').val()
 	if (comp!=newComp) swapRedBlue()
 	comp = newComp
-	location.hash=comp
+	if(!/event/.test(location.hash||""))location.hash=comp
 	if (comp == 'ftc'){
 		BOT_POSITIONS = FTC_BOT_POSITIONS
 		$('#idInp').attr('pattern',"^20[0-9]{2}-[0-9]{2}[0-9a-zA-Z\\-]+$")
@@ -339,6 +339,9 @@ $(document).ready(function(){
 		$('#csvInp').val(csv + otherCSV)
 	})
 	if (eventId){
+		$('#comp').val(/^20[0-9]{2}-[0-9]{2}/.test(eventId)?'ftc':'frc')
+		setComp()
+		$('#comp-type-section').hide()
 		$('#idInp').val(eventId)
 		promiseEventMatches().then(eventMatches => {
 			for (var i=1; i<=eventMatches.length; i++){
