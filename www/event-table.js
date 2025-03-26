@@ -1,6 +1,14 @@
 "use strict"
 
 addI18n({
+	clear_row_confirm:{
+		en:'Clear entire row?',
+		tr:'Tüm satırı temizle?',
+		pt:'Limpar linha inteira?',
+		fr:'Effacer toute la ligne ?',
+		he:'לנקות את כל השורה?',
+		zh_tw:'清除整行？',
+	},
 	event_table_title:{
 		en:'Enter Event Practice and Qualification Matches',
 		pt:'Coloque eventos de pratica',
@@ -52,7 +60,7 @@ addI18n({
 	event_location:{
 		en:'Location:',
 		pt:'Localização:',
-		fr:'Date de fin :',
+		fr:'Lieu :',
 		tr:'Yer:',
 		zh_tw:'地點：',
 		he:'מִקוּם:',
@@ -299,7 +307,7 @@ $(document).ready(function(){
 	$('#nameInp').change(venueNameToId).keyup(venueNameToId)
 	var otherCSV = ""
 	$('button.clearRow').click(function(){
-		if (confirm("Clear entire row?")){
+		if (confirm(translate('clear_row_confirm'))){
 			lf().closest('tr').find('input').val("")
 		}
 		lf().focus()
