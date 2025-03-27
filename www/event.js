@@ -3,12 +3,27 @@
 addI18n({
 	score_label:{
 		en:'Score:',
+		tr:'Puan:',
+		pt:'Pontuação:',
+		fr:'Score :',
+		he:'צִיוּן:',
+		zh_tw:'分數：',
 	},
 	scouted_label:{
 		en:'Scouted:',
+		tr:'İzlenen:',
+		pt:'Observado:',
+		fr:'Scruté :',
+		he:'צופי:',
+		zh_tw:'偵察：',
 	},
 	prediction_label:{
 		en:'Predicted:',
+		tr:'Tahmin edilen:',
+		pt:'Previsto:',
+		fr:'Prévu :',
+		he:'חזוי:',
+		zh_tw:'預測：',
 	},
 	history_link:{
 		en:'History',
