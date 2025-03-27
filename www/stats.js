@@ -462,7 +462,7 @@ function setTeamPicked(e, team, dnp){
 	teamsPicked[team] = !teamsPicked[team]
 	if(teamsPicked[team]){
 		var list = (dnp || getLocalTeam() == team)?'#donotpicklist':'#picklist'
-		$(list).append($('<li>').attr('id',`pl${team}`).text(team).click(showStatClickMenu))
+		$(list).append($('<li>').attr('id',`pl${team}`).text(team).click(showStatClickMenu).attr('data-tooltip',getTeamInfo(team)||null).addClass('tooltip-before'))
 		sortable(list)
 	} else {
 		$(`#pl${team}`).remove()

@@ -52,7 +52,11 @@ h1{padding:0 2.5em}
 .lightBoxCenterContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:50%;left:50%;transform:translate(-50%,-50%);padding:1em;display:none;text-align:start}
 .lightBoxFullContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:2em;left:2em;width:calc(100vw - 4em);height:calc(100vh - 4em);padding:0;display:none}
 [data-tooltip]::before{position:absolute;content:attr(data-tooltip);opacity:0}
-[data-tooltip]:hover::before{opacity:1;color:var(--main-fg-color);background:var(--main-bg-color);margin-top:-1.5em;margin-left:1em;padding:0.3em;border:1px solid var(--main-border-color);white-space:pre-line;writing-mode:horizontal-tb;text-orientation:mixed;z-index:9997}
+[data-tooltip]:hover::before{opacity:1;color:var(--main-fg-color);background:var(--main-bg-color);margin-top:-1.5em;padding:0.3em;border:1px solid var(--main-border-color);white-space:pre-line;writing-mode:horizontal-tb;text-orientation:mixed;z-index:9997;max-width:9em}
+html[dir="ltr"] [data-tooltip]:hover::before{margin-left:3em}
+html[dir="rtl"] .tooltip-before[data-tooltip]:hover::before{margin-right:-11em}
+html[dir="ltr"] .tooltip-before[data-tooltip]:hover::before{margin-left:-11em}
+html[dir="rtl"] [data-tooltip]:hover::before{margin-right:3em}
 [data-tooltip]:not([data-tooltip-persistent])::before{pointer-events:none}
 @media only screen and ((max-width:600px) or (max-height:600px)){
 	html{font-size:12px;}

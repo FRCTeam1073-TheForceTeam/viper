@@ -1,6 +1,15 @@
 "use strict"
 
 addI18n({
+	score_label:{
+		en:'Score:',
+	},
+	scouted_label:{
+		en:'Scouted:',
+	},
+	prediction_label:{
+		en:'Predicted:',
+	},
 	history_link:{
 		en:'History',
 		pt:'Histórico',
@@ -846,6 +855,7 @@ $(document).ready(function(){
 					.toggleClass("needed",(!isScouted)&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
 					.toggleClass("error",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
+					.toggleClass("tooltip-before",/^B/.test(pos))
 					.attr('data-tooltip',getTeamInfo(match[pos])||null)
 			})
 			redPrediction=Math.round(redPrediction)
@@ -863,10 +873,10 @@ $(document).ready(function(){
 			}
 			var redPoints=hasScores?redScore:(isRedScouted?redScouting:redPrediction),
 			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:bluePrediction),
-			redTooltip=(hasScores?`Score: ${redScore}\n`:"")+(isRedScouted?`Scouted: ${redScouting}\n`:"")+`Prediction: ${redPrediction}`,
-			blueTooltip=(hasScores?`Score: ${blueScore}\n`:"")+(isBlueScouted?`Scouted: ${blueScouting}\n`:"")+`Prediction: ${bluePrediction}`
+			redTooltip=(hasScores?`${translate('score_label')} ${redScore}\n`:"")+(isRedScouted?`${translate('scouted_label')} ${redScouting}\n`:"")+`${translate('prediction_label')} ${redPrediction}`,
+			blueTooltip=(hasScores?`${translate('score_label')} ${blueScore}\n`:"")+(isBlueScouted?`${translate('scouted_label')} ${blueScouting}\n`:"")+`${translate('prediction_label')} ${bluePrediction}`
 			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':'prediction')).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction)
-			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':'prediction')).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction)
+			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':'prediction')).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).addClass('tooltip-before')
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
 			row.click(showLinks)
 			$('#matches').append(row)
