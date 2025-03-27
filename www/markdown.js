@@ -20,6 +20,7 @@ function show(){
 	lastLocale=locale
 }
 function load(locale){
+	if (locale=='en')return load('')
 	return fetch(location.pathname.replace(/\.html$/,locale?`.${locale}.md`:'.md')).then(response=>{
 		if(response.ok)return response.text()
 		else if(!locale) return Promise.reject(new Error("404 Not Found"))
