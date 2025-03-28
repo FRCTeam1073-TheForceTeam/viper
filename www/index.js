@@ -1,5 +1,13 @@
 "use strict"
 addI18n({
+	full_season_link:{
+		en:'_YEAR_ full season stats',
+		tr:'_YEAR_ tam sezon istatistikleri',
+		pt:'Estatísticas completas da temporada _YEAR_',
+		fr:'Statistiques de la saison complète de _YEAR_',
+		zh_tw:'_YEAR_ 完整賽季統計數據',
+		he:'_YEAR_ נתונים סטטיסטיים של העונה המלאה',
+	},
 	add_event_button:{
 		en:'+ Add an event',
 		pt:'+ Adicionar um evento',
@@ -27,8 +35,7 @@ addI18n({
 })
 
 $(document).ready(function(){
-	var seasonStatsLinkHtml,
-	events = []
+	var events = []
 	$.ajax({
 		url:"/event-list.cgi",
 		dataType:"text",
@@ -66,8 +73,7 @@ $(document).ready(function(){
 				eventsShown++
 			}
 		}
-		if (!seasonStatsLinkHtml) seasonStatsLinkHtml = $('#seasonStatsLink').html()
-		$('#seasonStatsLink').html(seasonStatsLinkHtml.replace(/YEAR/g,filter)).toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1)
+		$('#seasonStatsLink').toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1)
 		var ael = $('#add-event-link')
 		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
 		window.scrollTo(0,0)
