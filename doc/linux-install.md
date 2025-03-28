@@ -36,4 +36,6 @@ The installation will touch a number of files.
 
  - [README](../README.md)
  - [Recommended hardware](hardware.md)
+ - [Installing on Windows with XAMPP](windows-install.md)
  - [Development Environment with Docker](docker-install.md)
+ - [Translation and Internationalization](translation.md)

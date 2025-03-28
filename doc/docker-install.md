@@ -19,3 +19,5 @@ When you are done, run `docker-compose down` to stop the server.
  - [README](../README.md)
  - [Recommended hardware](hardware.md)
  - [Installing on Linux (Like a Raspberry Pi)](linux-install.md)
+ - [Installing on Windows with XAMPP](windows-install.md)
+ - [Translation and Internationalization](translation.md)

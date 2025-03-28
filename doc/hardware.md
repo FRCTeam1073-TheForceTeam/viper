@@ -71,4 +71,6 @@ The router has the following plugged into it:
 
  - [README](../README.md)
  - [Installing on Linux (Like a Raspberry Pi)](linux-install.md)
+ - [Installing on Windows with XAMPP](windows-install.md)
  - [Development Environment with Docker](docker-install.md)
+ - [Translation and Internationalization](translation.md)

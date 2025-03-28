@@ -41,6 +41,7 @@ The demo and public data can be found on the official Viper website: [ViperScout
  - [Installing on Linux (Like a Raspberry Pi)](doc/linux-install.md)
  - [Installing on Windows with XAMPP](doc/windows-install.md)
  - [Windows, Mac, or Linux development environment with Docker](doc/docker-install.md)
+ - [Translation and Internationalization](doc/translation.md)
  - For users:
    - [About](www/about.md)
    - [Printable instructions](www/printable-instructions.md)

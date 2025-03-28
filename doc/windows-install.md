@@ -29,3 +29,11 @@ Almost everything works on Windows with a few exceptions:
 
 - Bot photo scouting does not work. It uses Image Magick for photo resizing and format conversion. Installation of that isn't yet in these instructions for Windows.
 - CGI scripts on Windows have to start with a different first line than on Linux. Because of this, they get copied into place with that alteration. Every time you update a CGI script (or get an updated CGI script from git), you will need to re-run the installation script (or at least `./script/cgi-setup.sh`)
+
+## Other documentation
+
+ - [README](../README.md)
+ - [Recommended hardware](hardware.md)
+ - [Installing on Linux (Like a Raspberry Pi)](linux-install.md)
+ - [Development Environment with Docker](docker-install.md)
+ - [Translation and Internationalization](translation.md)
