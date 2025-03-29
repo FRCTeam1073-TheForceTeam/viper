@@ -1,5 +1,48 @@
 "use strict"
 
+addI18n({
+	error_label:{
+		en:'Error:',
+		zh_tw:'錯誤：',
+		he:'שְׁגִיאָה:',
+		fr:'Erreur :',
+		pt:'Erro:',
+		tr:'Hata:',
+	},
+	no_event_title:{
+		en:'Event not specified',
+		zh_tw:'未指定事件',
+		he:'האירוע לא צוין',
+		fr:'Événement non spécifié',
+		pt:'Evento não especificado',
+		tr:'Etkinlik belirtilmedi',
+	},
+	no_event_message:{
+		en:'No event parameter found in URL',
+		zh_tw:'URL 中未找到事件參數',
+		he:'לא נמצא פרמטר אירוע ב-URL',
+		fr:'Aucun paramètre d\'événement trouvé dans l\'URL',
+		pt:'Nenhum parâmetro de evento encontrado na URL',
+		tr:'URL\'de etkinlik parametresi bulunamadı',
+	},
+	js_error_title:{
+		en:'_FILENAME_ not loaded',
+		zh_tw:'_FILENAME_ 未載入',
+		he:'_FILENAME_ לא נטען',
+		fr:'_FILENAME_ non chargé',
+		pt:'_FILENAME_ não carregado',
+		tr:'_FILENAME_ yüklenmedi',
+	},
+	js_error_message:{
+		en:'Maybe the season isn\'t implemented?',
+		zh_tw:'也許這個季節還沒有實施？',
+		he:'אולי העונה לא מיושמת?',
+		fr:'Peut-être que la saison n\'est pas implémentée ?',
+		pt:'Talvez a temporada não esteja implementada?',
+		tr:'Belki de sezon uygulanmadı?',
+	},
+})
+
 $.ajaxSetup({
 	cache: true
 });
@@ -197,6 +240,10 @@ function promiseScouting(){
 var statsIncludePractice=true,
 statsStartMatch="pm1"
 function promiseEventStats(startMatch){
+	if(!eventYear) {
+		showError('no_event_title','no_event_message')
+		return Promise.reject(new Error("Event not specified"))
+	}
 	return Promise.all([
 		promiseScouting(),
 		promiseEventScores(),
@@ -260,7 +307,8 @@ function promiseScript(file) {
 		document.head.appendChild(script)
 	}).catch(error=>{
 		console.error(error)
-		showError(`${file} Not Loaded`, `Maybe the season isn't implemented?`)
+		addTranslationContext({fileName:file})
+		showError('js_error_title', 'js_error_message')
 	})
 }
 
@@ -268,8 +316,9 @@ function showError(title, detail){
 	if ($('body.error').length)return false
 	$('body').addClass('error')
 	$('#main,body').last().html('')
-	.append($('<h2>').text('Error: '+ title))
-	.append($('<p>').text(detail)).show()
+	.append($('<h2>').append($('<span>').attr('data-i18n','error_label')).append(" ").append($('<span>').attr('data-i18n',title)))
+	.append($('<p>').attr('data-i18n',detail)).show()
+	applyTranslations()
 	return false
 }
 
