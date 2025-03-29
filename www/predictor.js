@@ -38,27 +38,7 @@ function lf(){
 	return $('#prediction .lastFocus')
 }
 
-var statsConfig = new StatsConfig({
-	statsConfigKey:`${eventYear}PredictorStats`,
-	getStatsConfig:function(){
-		var conf = statsConfig.getLocalStatsConfig()
-		if (!conf && window.myTeamsStats && window.myTeamsStats.length)conf=window.myTeamsStats
-		if (!conf && window.matchPredictorSections)conf=window.matchPredictorSections
-		conf==conf||{}
-		Object.entries(conf).forEach(([k,v])=>{
-			if(Array.isArray(v)){
-				conf[k]={}
-				conf[k].data=v
-			}
-		})
-		return conf
-	},
-	drawFunction:setPickedTeams,
-	fileName:"predictor",
-	defaultConfig:window.matchPredictorSections,
-	mode:"aggregate",
-	hasSections:true,
-})
+var statsConfig
 
 $(document).ready(function(){
 	Promise.all([
@@ -67,6 +47,27 @@ $(document).ready(function(){
 		fetch(`/data/${eventYear}/predictor.json`).then(response=>{if(response.ok)return response.json()})
 	]).then(values =>{
 		[window.eventMatches, [{}, window.eventStatsByTeam, {}], window.myTeamsStats] = values
+		statsConfig= new StatsConfig({
+			statsConfigKey:`${eventYear}PredictorStats`,
+			getStatsConfig:function(){
+				var conf = statsConfig.getLocalStatsConfig()
+				if (!conf && window.myTeamsStats && Object.keys(window.myTeamsStats).length)conf=window.myTeamsStats
+				if (!conf && window.matchPredictorSections)conf=window.matchPredictorSections
+				conf==conf||{}
+				Object.entries(conf).forEach(([k,v])=>{
+					if(Array.isArray(v)){
+						conf[k]={}
+						conf[k].data=v
+					}
+				})
+				return conf
+			},
+			drawFunction:setPickedTeams,
+			fileName:"predictor",
+			defaultConfig:window.matchPredictorSections,
+			mode:"aggregate",
+			hasSections:true,
+		})
 		var teamList = Object.keys(eventStatsByTeam)
 		teamList.sort((a,b) => a-b)
 		for (var i=0; i<teamList.length; i++){

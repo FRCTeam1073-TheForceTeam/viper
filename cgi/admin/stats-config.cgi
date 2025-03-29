@@ -38,12 +38,14 @@ if ($type =~ /^(whiteboard)$/){
 		$webutil->error("Unexpected stat", $field) if ($field !~ /^[a-zA-Z0-9_\-]+$/);
 	}
 } elsif ($type =~ /^(predictor)$/){
-	$webutil->error("Expected outer map") if (ref $parsed ne ref {});
+	$webutil->error("Expected outer map",Dumper($parsed)) if (ref $parsed ne ref {});
 	for my $sectionName (keys %{$parsed}){
 		my $section = $parsed->{$sectionName};
-		$webutil->error("Expected array in each section:") if (ref $section ne ref []);
-		$webutil->error("Empty section array") if (scalar @{$section} == 0);
-		for my $field (@{$section}){
+		$webutil->error("Expected :{ following '${sectionName}'") if (ref $section ne ref {});
+		$webutil->error("Expected [ following data:") if (ref $section->{"data"} ne ref []);
+		$webutil->error("Empty data array") if (scalar @{$section->{"data"}} == 0);
+		$webutil->error("Expected only data field", Dumper($section)) if (scalar keys %{$section} != 1);
+		for my $field (@{$section->{"data"}}){
 			$webutil->error("Unexpected stat", $field) if ($field !~ /^[a-zA-Z0-9_\-]+$/);
 		}
 	}
@@ -78,22 +80,4 @@ if ($dbh){
 	close $fh;
 }
 
-print "Content-type: text/html;charset=UTF-8\n\n";
-print "<!DOCTYPE html>
-<html>
-<title>Configuration Saved</title>
-<meta name=viewport content=width=device-width,initial-scale=1.0>
-<meta charset=UTF-8>
-<link rel=stylesheet href=/main.css>
-<link rel=stylesheet href=/local.css>
-<script src=/jquery.min.js></script>
-<script src=/main.js></script>
-<script src=/local.js></script>
-<link rel=icon type=image/png href=/logo.png>
-<meta http-equiv=refresh content='3; url=$return'></head>
-<body>
-<h1>Configuration Saved</h1>
-<p>Redirecting back, please wait...</p>
-</body>
-</html>
-";
+$webutil->redirect("/stat-config-return.html#$return");

@@ -124,7 +124,8 @@ addI18n({
 })
 
 var matchId,
-myTeamsStats
+myTeamsStats,
+statsConfig
 onApplyTranslation.push(function(){
 	addTranslationContext({
 		event:eventName,
@@ -134,21 +135,6 @@ onApplyTranslation.push(function(){
 
 $(document).ready(function(){
 	onApplyTranslation.push(fillStats)
-	var statsConfig = new StatsConfig({
-		statsConfigKey:`${eventYear}WhiteboardStats`,
-		getStatsConfig:function(){
-			var s = statsConfig.getLocalStatsConfig()
-			if (s) return s
-			if (myTeamsStats && myTeamsStats.length) return myTeamsStats
-			if (window.whiteboardStats && window.whiteboardStats.length) return window.whiteboardStats
-			return []
-		},
-		hasWhiteboard:true,
-		drawFunction:fillStats,
-		fileName:"whiteboard",
-		defaultConfig:window.whiteboardStats,
-		mode:"aggregate"
-	})
 	if (typeof eventYear !== 'undefined') $('#field').prepend($('<img id=fieldBG>').attr('src',`/${eventYear}/field-whiteboard.png`))
 	if (eventCompetition=='ftc') $('.noftc').hide()
 
@@ -166,8 +152,6 @@ $(document).ready(function(){
 		focusNext()
 		fillStats()
 	})
-
-	$('.configure-stats').click(statsConfig.showConfigDialog.bind(statsConfig))
 
 	$('button.showInstructions').click(function(){
 		showLightBox($('#instructions'))
@@ -208,6 +192,22 @@ $(document).ready(function(){
 		]).then(values => {
 			;[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.eventTeamsInfo, window.myTeamsStats] = values
 			var teamList = Object.keys(eventStatsByTeam)
+			statsConfig = new StatsConfig({
+				statsConfigKey:`${eventYear}WhiteboardStats`,
+				getStatsConfig:function(){
+					var s = statsConfig.getLocalStatsConfig()
+					if (s) return s
+					if (myTeamsStats && myTeamsStats.length) return myTeamsStats
+					if (window.whiteboardStats && window.whiteboardStats.length) return window.whiteboardStats
+					return []
+				},
+				hasWhiteboard:true,
+				drawFunction:fillStats,
+				fileName:"whiteboard",
+				defaultConfig:window.whiteboardStats,
+				mode:"aggregate"
+			})
+			$('.configure-stats').click(statsConfig.showConfigDialog.bind(statsConfig))
 			teamList.sort((a,b) => a-b)
 			for (var i=0; i<teamList.length; i++){
 				var team = teamList[i]
@@ -219,7 +219,6 @@ $(document).ready(function(){
 				BOT_POSITIONS.forEach(function(pos){
 					$(`#${pos}`).val(match[pos])
 				})
-				displayMatchName()
 				fillStats()
 				focusNext()
 			})
@@ -288,9 +287,8 @@ $(document).ready(function(){
 	}
 
 	function fillStats(){
-		if (!window.statInfo||!window.eventTeamsInfo) return
+		if (!window.statInfo||!window.eventTeamsInfo||!statsConfig) return
 		setLocationHash()
-		displayMatchName()
 		$('#teamButtons button').removeClass("picked")
 		var teamList=[],
 		tbody = $('#statsTable tbody').html("")

@@ -1,5 +1,22 @@
 "use strict"
+
 addI18n({
+	validate_error_only_graph:{
+		en:'Expected only data in "_PROBLEMTEXT_"',
+		tr:'Yalnızca "_PROBLEMTEXT_" içindeki veriler bekleniyor',
+		pt:'Esperados apenas dados em "_PROBLEMTEXT_"',
+		fr:'Données attendues uniquement dans « _PROBLEMTEXT_ »',
+		he:'צפוי רק נתונים ב-"_PROBLEMTEXT_"',
+		zh_tw:'僅需“_PROBLEMTEXT_”中的數據',
+	},
+	remove_section_confirm:{
+		en:'Are you sure you want to remove this section?',
+		tr:'Bu bölümü kaldırmak istediğinizden emin misiniz?',
+		pt:'Tem certeza de que deseja remover esta seção?',
+		fr:'Voulez-vous vraiment supprimer cette section ?',
+		he:'האם אתה בטוח שברצונך להסיר את הקטע הזה?',
+		zh_tw:'您確實要刪除此部分嗎？',
+	},
 	validate_error_json_not_array:{
 		en:'JSON is not an array',
 		fr:'JSON n\'est pas un tableau',
@@ -338,14 +355,15 @@ class StatsConfig {
 			if (!statInfo[item])throw(translate('validate_error_unknown_data',{problemText:item}))
 		} else {
 			if (!isMap(item))throw(translate('validate_error_need_symbol',{expectedText:':{',problemText:name}))
-			if (!isString(item.graph))throw(translate('validate_error_not_string',{problemText:`${name}.graph`}))
+			if (this.hasGraphs&&!isString(item.graph))throw(translate('validate_error_not_string',{problemText:`${name}.graph`}))
 			if (!isArray(item.data))throw(translate('validate_error_not_string',{problemText:`${name}.data`}))
 			if (item.data.length==0)throw(translate('validate_error_empty',{problemText:`${name}.data`}))
 			item.data.forEach(function(field){
 				if (!isString(field))throw(translate('validate_error_not_all_strings',{problemText:`${name}.data`}))
 				if (!statInfo[field])throw(translate('validate_error_unknown_data',{problemText:field}))
 			})
-			if (Object.keys(item).length != 2)throw(translate('validate_error_only_graph',{problemText:name}))
+			if (this.hasGraphs&&Object.keys(item).length!=2)throw(translate('validate_error_only_graph',{problemText:name}))
+			if (!this.hasGraphs&&Object.keys(item).length!=1)throw(translate('validate_error_only_data',{problemText:name}))
 		}
 	}
 
@@ -376,25 +394,52 @@ class StatsConfig {
 		return false
 	}
 
+	cleanConfig(json){
+		if (this.hasSections){
+			Object.keys(json).forEach(section=>this.cleanItem(json[section]))
+		}
+		return json
+	}
+
+	cleanItem(item){
+		Object.keys(item).forEach(x=>{
+			try{
+				if (x!='data'&&(x!='graph'||!this.hasGraphs))delete item[x]
+			}catch(e){}
+		})
+	}
+
+	translateConfig(json){
+		if (this.hasSections){
+			Object.keys(json).forEach(name=>{
+				var x=json[name]
+				delete json[name]
+				json[translate(name)]=x
+			})
+		}
+		return json
+	}
+
 	showExportDialog(){
+		if(!this.hasSections)this.ui2Json()
 		var dialog=$('#stats-export')
 		if (!dialog.length){
 			dialog=$('<div id=stats-export class=lightBoxCenterContent>')
 			.append(
 				$('<textarea id=stats-export-json style=display:block;width:98vw;max-width:30em;height:90vh;max-height:60em>')
-			).append($('<button data-i18n=save_button></button>').click(this.saveJson.bind(this)))
+			).append($('<button data-i18n=save_button></button>').click(this.saveJson.bind(this))).append(" ")
 			.append($('<button data-i18n=cancel_button></button>').click(closeLightBox))
 			$('body').append(dialog)
 		}
-		$('#stats-export-json').val(JSON.stringify(this.getStatsConfig(),null,2))
+		$('#stats-export-json').val(JSON.stringify(this.translateConfig(this.cleanConfig(this.getStatsConfig())),null,2))
 		applyTranslations(dialog)
 		showLightBox(dialog)
 		return false
 	}
 
-	save(){
+	ui2Json(){
 		var fields=$("#stats-config-fields li").map(function(){return $(this).attr("data-field")}).get(),
-		stats=this.getStatsConfig()
+		stats=this.cleanConfig(this.getStatsConfig())
 		if (!fields.length) return alert(translate('validate_error_no_fields'))
 		if (this.hasSections){
 			var sectionName=$('#stats-config-section-name'),
@@ -414,6 +459,11 @@ class StatsConfig {
 			stats=fields
 		}
 		localStorage.setItem(this.statsConfigKey, JSON.stringify(stats))
+
+	}
+
+	save(){
+		this.ui2Json()
 		closeLightBox()
 		this.drawFunction()
 	}
@@ -434,6 +484,7 @@ class StatsConfig {
 	}
 
 	saveToServer(){
+		if(!this.hasSections)this.ui2Json()
 		var form=$('#stats-config-save-form')
 		if (!form.length){
 			form=$('<form method=POST action=/admin/stats-config.cgi id=stats-config-save-form>')
@@ -443,7 +494,7 @@ class StatsConfig {
 			.append($('<input type=hidden name=conf>'))
 			$('body').append(form)
 		}
-		form.find('[name="conf"]').val(JSON.stringify(this.getStatsConfig()))
+		form.find('[name="conf"]').val(JSON.stringify(this.cleanConfig((this.getStatsConfig()))))
 		form.submit()
 		return false
 	}
@@ -459,7 +510,7 @@ class StatsConfig {
 
 	revertAllCustomizations(){
 		if (confirm(translate('revert_all_confirm'))){
-			localStorage.setItem(this.statsConfigKey, JSON.stringify(this.defaultConfig))
+			localStorage.setItem(this.statsConfigKey, this.cleanConfig(JSON.stringify(this.defaultConfig)))
 			closeLightBox()
 			this.drawFunction()
 		}
@@ -521,12 +572,12 @@ class StatsConfig {
 
 	removeSection(e){
 		var section=$(e.target).attr('data-section')
-		if (confirm(translate('remove_graph_confirm'))){
+		if (confirm(translate(this.hasGraphs?'remove_graph_confirm':'remove_section_confirm'))){
 			var stats=this.getStatsConfig()
 			delete stats[section]
 			localStorage.setItem(this.statsConfigKey, JSON.stringify(stats))
 			closeLightBox()
-			showStats()
+			this.drawFunction()
 		}
 		return false
 	}

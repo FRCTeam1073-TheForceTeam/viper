@@ -358,12 +358,11 @@ function getUploads(){
 }
 
 function getMatchNumber(matchId){
-	return (matchId.match(/[0-9]+$/)||[0])[0]
+	return ((matchId||"").match(/[0-9]+$/)||[0])[0]
 }
 
-
 function getMatchTypeKey(matchId){
-	return (matchId.match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)/)||[""])[0]
+	return ((matchId||"").match(/^(pm|qm|qf|sf|(?:[1-5]p)|f)/)||[""])[0]
 }
 
 function getMatchNameKey(matchId){
