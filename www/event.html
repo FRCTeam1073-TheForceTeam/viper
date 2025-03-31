@@ -24,16 +24,16 @@
 		<button id=showInstructions data-i18n=instructions></button>
 
 		<div id=event-menu>
-			<div>
+			<div class=initHid>
 				<h2 data-i18n=scouting_heading></h2>
 				<ul>
 					<li class=initHid><a class=dependUploads href="/upload.html" data-i18n=event_upload_link></a></li>
 					<li id=scout-link class=initHid><a class=dependSchedule href="/_YEAR_/scout.html#event=_EVENT_" data-i18n=scout_match_link></a></li>
 					<ul class=more>
-						<li id=photo-scout-link><a href="/bot-photos.html#event=_EVENT_" data-i18n=all_photos_link></a></li>
-						<li id=pit-scout-link class=initHid><a class=dependPit href="/_YEAR_/pit-scout.html#event=_EVENT_" data-i18n=all_pit_link></a></li>
+						<li id=photo-scout-link class=initHid><a class=dependSchedule href="/bot-photos.html#event=_EVENT_" data-i18n=all_photos_link></a></li>
+						<li id=pit-scout-link class=initHid><a class="dependPit dependSchedule" href="/_YEAR_/pit-scout.html#event=_EVENT_" data-i18n=all_pit_link></a></li>
 						<li class=initHid id=pitScoutSetup>
-							<div class=dependPit data-i18n=pit_squads></div>
+							<div class="dependPit dependSchedule" data-i18n=pit_squads></div>
 							<div class=side-by-side>
 								<img src=/count_up.svg>
 								<img src=/count_down.svg>
