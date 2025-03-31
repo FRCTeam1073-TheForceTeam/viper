@@ -202,7 +202,7 @@ $(document).ready(function(){
 	if (window.transferHosts) window.transferHosts.forEach(addHost)
 	addHost('localhost')
 	$('form').submit(function(e){
-		if($(this).find('[disabled]')){
+		if($(this).find('[disabled]').length){
 			e.preventDefault()
 			return false
 		}
