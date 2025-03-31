@@ -49,7 +49,7 @@ $webutil->error("Malformed FTC CSV", $schedule) if ($comp eq 'ftc' && $schedule 
 my $dbh = $db->dbConnection();
 
 sub writeCsvData(){
-	my ($file, $lockFile, $lock);
+	my ($file, $lockFile, $lock, $fh);
 	if ($schedule){
 		$file = "../data/${event}.schedule.csv";
 		$lockFile = "$file.lock";
@@ -66,14 +66,13 @@ sub writeCsvData(){
 			my ($newPlayoffs) = $schedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
 			$schedule = $headers.($newPractice||$oldPractice||"").($newQuals||$oldQuals||"").($newPlayoffs||$oldPlayoffs||"");
 		}
+		$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
+		print $fh $schedule;
+		close $fh;
+		$webutil->commitDataFile($file, "add-event");
+		close $lock;
+		unlink($lockFile);
 	}
-
-	$webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
-	print $fh $schedule;
-	close $fh;
-	$webutil->commitDataFile($file, "add-event");
-	close $lock;
-	unlink($lockFile);
 
 	$file = "../data/${event}.event.csv";
 	$lockFile = "$file.lock";
