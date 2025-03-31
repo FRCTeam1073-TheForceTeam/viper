@@ -824,7 +824,7 @@ $(document).ready(function(){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('#edit-playoffs-link'))
 		}
-		if(lastMatch&&/^pm/.test(lastMatch.Match)){
+		if(!lastMatch||lastMatch&&/^pm/.test(lastMatch.Match)){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('#edit-match-link,.fetch-api-link'))
 		}
