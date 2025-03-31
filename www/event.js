@@ -497,7 +497,7 @@ addI18n({
 		fr:'Équipe _TEAMID_',
 		tr:'Takım _TEAMID_',
 	},
-	scout_match_link:{
+	scout_this_match_link:{
 		en:'Scout',
 		he:'לְגַשֵׁשׁ',
 		zh_tw:'偵察',
