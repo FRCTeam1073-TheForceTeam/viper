@@ -39,21 +39,26 @@ if ($dbh){
 	exit 0;
 }
 
+my $seen={};
+
 # get all of the event files containing match schedules
-foreach my $name (glob("data/*.schedule.csv")){
+foreach my $name (glob("data/*.schedule.csv data/*.event.csv")){
 	$name =~ s/\..*//g; # Remove file extension
 	$name =~ s/.*\///g; # Remove directory
-	print "$name";
-	my $eventFile =  "data/$name.event.csv";
-	if (-e $eventFile){
-		print ",";
-		my $data = read_file($eventFile, {binmode=>':encoding(UTF-8)'});
-		$data =~ s/^\A.*[\r\n]+//g; # Remove header line
-		chomp $data;
-		print $data;
-	} else {
-		my $mod = &isoDate((stat("data/$name.schedule.csv"))[9]);
-		print ",,,,$mod,$mod";
+	if (!$seen->{$name}){
+		$seen->{$name}=1;
+		print "$name";
+		my $eventFile =  "data/$name.event.csv";
+		if (-e $eventFile){
+			print ",";
+			my $data = read_file($eventFile, {binmode=>':encoding(UTF-8)'});
+			$data =~ s/^\A.*[\r\n]+//g; # Remove header line
+			chomp $data;
+			print $data;
+		} else {
+			my $mod = &isoDate((stat("data/$name.schedule.csv"))[9]);
+			print ",,,,$mod,$mod";
+		}
+		print "\n";
 	}
-	print "\n";
 }
