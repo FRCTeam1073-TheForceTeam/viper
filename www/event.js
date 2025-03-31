@@ -895,8 +895,6 @@ $(document).ready(function(){
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
 			row.click(showLinks)
 			$('#matches').append(row)
-			applyTranslations()
-			$('#main').show()
 		})
 		window.eventStats = eventStats
 		$('#extendedScoutingData')
@@ -931,6 +929,8 @@ $(document).ready(function(){
 				if (body!='OK') console.error("Error sending stats: " + body)
 			})
 		}
+		applyTranslations()
+		$('#main').show()
 	})
 
 	function getScore(eventStatsByTeam, team){
