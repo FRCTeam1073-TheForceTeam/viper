@@ -33,9 +33,10 @@ addI18n({
 		he:'צפע - אפליקציית צופים',
 	}
 })
-
+var ssHref
 $(document).ready(function(){
 	var events = []
+	ssHref=$('#seasonStatsLink a').attr('href')
 	$.ajax({
 		url:"/event-list.cgi",
 		dataType:"text",
@@ -73,7 +74,7 @@ $(document).ready(function(){
 				eventsShown++
 			}
 		}
-		$('#seasonStatsLink').toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1)
+		$('#seasonStatsLink').toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1).find('a').attr('href',ssHref.replace(/YEAR/,filter))
 		var ael = $('#add-event-link')
 		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
 		window.scrollTo(0,0)
