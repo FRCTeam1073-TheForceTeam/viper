@@ -32,7 +32,7 @@ sub error {
 
 sub redirect {
 	my ($self, $url) = @_;
-	my $protocol = "http".(($ENV{'HTTPS'} or $ENV{'HTTP_X_FORWARDED_PROTO'} eq 'https')?"s":"");
+	my $protocol = "http".(($ENV{'HTTPS'} or ($ENV{'HTTP_X_FORWARDED_PROTO'}||'') eq 'https')?"s":"");
 	my $hostname = $ENV{'SERVER_NAME'};
 	my $port = ($ENV{'HTTP_X_FORWARDED_FOR'} or $ENV{'SERVER_PORT'}=~/^80|443$/)?"":(":".$ENV{'SERVER_PORT'});
 	$url = "$protocol://$hostname$port$url" if ($url =~ /^\//);
