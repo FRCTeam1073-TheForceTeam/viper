@@ -41,8 +41,9 @@ if ($dbh){
 
 my $seen={};
 
-# get all of the event files containing match schedules
-foreach my $name (glob("data/*.schedule.csv data/*.event.csv")){
+# List all the event files
+foreach my $file (glob("data/20*.csv")){
+	my $name = $file;
 	$name =~ s/\..*//g; # Remove file extension
 	$name =~ s/.*\///g; # Remove directory
 	if (!$seen->{$name}){
@@ -56,7 +57,7 @@ foreach my $name (glob("data/*.schedule.csv data/*.event.csv")){
 			chomp $data;
 			print $data;
 		} else {
-			my $mod = &isoDate((stat("data/$name.schedule.csv"))[9]);
+			my $mod = &isoDate((stat($file))[9]);
 			print ",,,,$mod,$mod";
 		}
 		print "\n";
