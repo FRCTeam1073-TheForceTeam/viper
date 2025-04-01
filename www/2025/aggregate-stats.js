@@ -2253,3 +2253,39 @@ function showSubjectiveScouting(el,team){
 		applyTranslations()
 	})
 }
+
+
+var importFunctions={
+	"195":{
+		example:"/2025/195.csv",
+		convert:importScouting195,
+	},
+}
+
+function importScouting195(text){
+	var rows = csvToArrayOfMaps(text)
+	rows.forEach(row=>{
+		row.match = "qm" + row.matchNum
+		row.no_show = row.preNoShow
+		row.auto_leave = row.autoLeave
+		row.auto_coral_level_4 = row.autoL4
+		row.auto_coral_level_3 = row.autoL3
+		row.auto_coral_level_2 = row.autoL2
+		row.auto_coral_level_1 = row.autoL1
+		row.auto_algae_processor = row.autoProcessor
+		row.auto_algae_net = row.autoBarge
+		row.tele_coral_level_4 = row.teleL4
+		row.tele_coral_level_3 = row.teleL3
+		row.tele_coral_level_2 = row.teleL2
+		row.tele_coral_level_1 = row.teleL1
+		row.tele_algae_processor = row.teleProcessor
+		row.tele_algae_net = row.teleBarge
+		row.tele_algae_opponent_processor = row.teleOppProcessor
+		switch(row.climbStatusID){
+			case 4:row.end_game_position='shallow';break
+			case 5:row.end_game_position='deep';break
+			case 6:row.end_game_position='parked';break
+		}
+	})
+	return rows
+}
