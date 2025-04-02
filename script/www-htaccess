@@ -36,3 +36,5 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} ^(.*)\.html$
 RewriteCond %1.md -f
 RewriteRule ^ /markdown.html [L]
+
+ErrorDocument 500 /500.html
