@@ -206,9 +206,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 
 
 	if(scout.algae_processor&&/^[1-9][0-9]*$/.test(""+scout.opponent_human_player_team)){
-		var hpTeam = parseInt(""+scout.opponent_human_player_team),
-		hpScout = eventStatsByMatchTeam[`${match}-${hpTeam}`]||={},
-		hpAggregate = eventStatsByTeam[hpTeam]||={}
+		var hpTeam=parseInt(""+scout.opponent_human_player_team),
+		hpScout=eventStatsByMatchTeam[`${match}-${hpTeam}`]||={},
+		hpAggregate=eventStatsByTeam[hpTeam]||={}
 		hpScout.team=hpTeam
 		hpAggregate.team=hpTeam
 		hpScout.event=eventId
@@ -225,9 +225,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	}
 	if (scout.old &&(typeof scout.old.score=='undefined'))scout.old=null
 
-	pit.auto_paths = []
+	pit.auto_paths=[]
 	for (var i=1; i<=9; i++){
-		var path = pit[`auto_${i}_path`]
+		var path=pit[`auto_${i}_path`]
 		if (path) pit.auto_paths.push(path)
 	}
 }
@@ -2060,7 +2060,7 @@ var teamGraphs={
 	},
 }
 
-var aggregateGraphs = {
+var aggregateGraphs={
 	"Match Score":{
 		graph:"boxplot",
 		tr:'Maç Puanı',
@@ -2263,29 +2263,54 @@ var importFunctions={
 }
 
 function importScouting195(text){
-	var rows = csvToArrayOfMaps(text)
+	var rows=csvToArrayOfMaps(text)
 	rows.forEach(row=>{
-		row.match = "qm" + row.matchNum
-		row.no_show = row.preNoShow
-		row.auto_leave = row.autoLeave
-		row.auto_coral_level_4 = row.autoL4
-		row.auto_coral_level_3 = row.autoL3
-		row.auto_coral_level_2 = row.autoL2
-		row.auto_coral_level_1 = row.autoL1
-		row.auto_algae_processor = row.autoProcessor
-		row.auto_algae_net = row.autoBarge
-		row.tele_coral_level_4 = row.teleL4
-		row.tele_coral_level_3 = row.teleL3
-		row.tele_coral_level_2 = row.teleL2
-		row.tele_coral_level_1 = row.teleL1
-		row.tele_algae_processor = row.teleProcessor
-		row.tele_algae_net = row.teleBarge
-		row.tele_algae_opponent_processor = row.teleOppProcessor
+		row.match="qm" + row.matchNum
+		row.no_show=row.preNoShow
+		row.auto_leave=row.autoLeave
+		switch(row.preStartPosID){
+			case 1:row.auto_start='17x43';break
+			case 2:row.auto_start='33x43';break
+			case 3:row.auto_start='50x43';break
+			case 4:row.auto_start='67x43';break
+			case 5:row.auto_start='83x43';break
+		}
+		row.auto_coral_level_4=row.autoL4
+		row.auto_coral_level_3=row.autoL3
+		row.auto_coral_level_2=row.autoL2
+		row.auto_coral_level_1=row.autoL1
+		row.auto_coral_drop=row.autoMissL4+row.autoMissL3+row.autoMissL2+row.autoMissL1
+		row.auto_algae_lower=row.autoAlgaeRmv
+		row.auto_algae_processor=row.autoProcessor
+		row.auto_coral_mark_1=row.autoMarkCoral
+		row.auto_algae_mark_1=row.autoMarkAlgae
+		row.auto_coral_station_1=row.autoCoralStation1
+		row.auto_coral_station_2=row.autoCoralStation2
+		row.auto_algae_drop=row.autoMissProcessor+row.autoMissBarge
+		row.auto_algae_net=row.autoBarge
+		row.tele_coral_level_4=row.teleL4
+		row.tele_coral_level_3=row.teleL3
+		row.tele_coral_level_2=row.teleL2
+		row.tele_coral_level_1=row.teleL1
+		row.tele_coral_drop=row.teleMissL4+row.teleMissL3+row.teleMissL2+row.teleMissL1
+		row.tele_algae_lower=row.teleAlgaeRmv
+		row.tele_algae_processor=row.teleProcessor
+		row.tele_algae_net=row.teleBarge
+		row.tele_algae_drop=row.teleMissProcessor+row.teleMissBarge
+		row.tele_algae_opponent_processor=row.teleOppProcessor
+		row.tele_coral_theft=row.teleOppCoral
+		row.tele_algae_theft=row.teleOppAlgae
+		row.tele_coral_ground=row.teleCoralGround
+		row.tele_coral_station_1=row.teleCoralStation1
+		row.tele_coral_station_2=row.teleCoralStation2
+		row.tele_algae_drop=row.teleMissProcessor+row.teleMissBarge
+		row.climb_time=row.climbTime
 		switch(row.climbStatusID){
 			case 4:row.end_game_position='shallow';break
 			case 5:row.end_game_position='deep';break
 			case 6:row.end_game_position='parked';break
 		}
+		row.defense=row.postDefense
 	})
 	return rows
 }
