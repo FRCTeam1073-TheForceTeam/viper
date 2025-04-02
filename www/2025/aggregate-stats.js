@@ -2268,12 +2268,12 @@ function importScouting195(text){
 		row.match="qm" + row.matchNum
 		row.no_show=row.preNoShow
 		row.auto_leave=row.autoLeave
-		switch(row.preStartPosID){
-			case 1:row.auto_start='17x43';break
-			case 2:row.auto_start='33x43';break
-			case 3:row.auto_start='50x43';break
-			case 4:row.auto_start='67x43';break
-			case 5:row.auto_start='83x43';break
+		switch(((""+row.preStartPosID)||"0")[0]){
+			case "1":row.auto_start='17x43';break
+			case "2":row.auto_start='33x43';break
+			case "3":row.auto_start='50x43';break
+			case "4":row.auto_start='67x43';break
+			case "5":row.auto_start='83x43';break
 		}
 		row.auto_coral_level_4=row.autoL4
 		row.auto_coral_level_3=row.autoL3
@@ -2305,10 +2305,11 @@ function importScouting195(text){
 		row.tele_coral_station_2=row.teleCoralStation2
 		row.tele_algae_drop=row.teleMissProcessor+row.teleMissBarge
 		row.climb_time=row.climbTime
-		switch(row.climbStatusID){
-			case 4:row.end_game_position='shallow';break
-			case 5:row.end_game_position='deep';break
-			case 6:row.end_game_position='parked';break
+		switch(((""+row.climbStatusID)||"0")[0]){
+			case "2":case "3":row.end_game_position='parked';row.end_game_climb_fail=1;break
+			case "4":row.end_game_position='shallow';break
+			case "5":row.end_game_position='deep';break
+			case "6":row.end_game_position='parked';break
 		}
 		row.defense=row.postDefense
 	})
