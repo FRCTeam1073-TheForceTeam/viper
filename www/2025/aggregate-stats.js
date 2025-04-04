@@ -691,15 +691,6 @@ var statInfo={
 		tr:'Park Puanı',
 		he:'ציון חניה',
 	},
-	end_game_position:{
-		name: "Position at End of Game",
-		type: "text",
-		fr:'Position en fin de partie',
-		pt:'Posição no final do jogo',
-		zh_tw:'遊戲結束時的位置',
-		tr:'Oyun Sonundaki Pozisyon',
-		he:'מיקום בסוף המשחק',
-	},
 	timeline:{
 		name: "Timeline",
 		type: "timeline",
@@ -2274,6 +2265,7 @@ function importScouting195(text){
 			case "3":row.auto_start='50x43';break
 			case "4":row.auto_start='67x43';break
 			case "5":row.auto_start='83x43';break
+			default:row.auto_start='';break
 		}
 		row.auto_coral_level_4=row.autoL4
 		row.auto_coral_level_3=row.autoL3
@@ -2310,6 +2302,7 @@ function importScouting195(text){
 			case "4":row.end_game_position='shallow';break
 			case "5":row.end_game_position='deep';break
 			case "6":row.end_game_position='parked';break
+			default:row.end_game_position='';break
 		}
 		row.defense=row.postDefense
 	})
