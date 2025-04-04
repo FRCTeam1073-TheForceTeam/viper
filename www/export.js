@@ -95,44 +95,13 @@ addTranslationContext({
 	event:eventName
 })
 
-var hosts={}
-
-function addHost(host){
-	if (host && !hosts[host]){
-		hosts[host]=1
-		$('.hostOptions').append($('<li>').text(host).click(setHost))
-	}
+function displayHostOption(host){
+	if (host)$('.hostOptions').append($('<li>').text(host).click(hostOptionSelected))
 }
 
-function setHost(){
+function hostOptionSelected(){
 	var input=$(this).closest('form').find('.siteInput')
 	input.val($(this).text())
-	hostSet(input)
-}
-
-function hostSet(input){
-	var url = input.val()
-	if (/^((https?\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$/.test(url)){
-		var hosts = (localStorage.getItem("transferHosts")||"").split(/,/),
-		hostList = hosts.reduce((m,o)=>(m[o]=o,m),{})
-		if (!hostList.hasOwnProperty(url)){
-			hosts.push(url)
-			hosts = hosts.slice(-5)
-			localStorage.setItem("transferHosts",hosts.join(","))
-		}
-		addHost(url)
-	}
-	if (!url) url = "example.viperscout.com"
-	if (!/^https?\:\/\//.test(url)){
-		var prefix = "http"
-		if (/\./.test(url)) prefix="https" // fully qualified domain
-		if (/^[0-9\.\:]+$/.test(url)) prefix="http" // IP address
-		url = `${prefix}://${url}`
-	}
-	url = url.replace(/\/$/,"")
-	url += "/admin/import.cgi"
-	input.closest('form').attr('action',url)
-
 }
 
 $(document).ready(function(){
@@ -159,9 +128,6 @@ $(document).ready(function(){
 			}
 		})
 		textFileCount = textFiles
-	})
-	$('.siteInput').change(function(){
-		hostSet($(this))
 	})
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
@@ -198,17 +164,34 @@ $(document).ready(function(){
 		$('#submitData').removeAttr('disabled')
 	}
 	textDataLoaded()
-	;(localStorage.getItem("transferHosts")||"").split(",").forEach(addHost)
-	if (window.transferHosts) window.transferHosts.forEach(addHost)
-	addHost('localhost')
+	;[...new Set([...(localStorage.transferHosts||"").split(","),...(window.transferHosts||[]),...['localhost']])].toSorted((a,b)=>domainSortKey(a).localeCompare(domainSortKey(b))).forEach(displayHostOption)
 	$('form').submit(function(e){
 		if($(this).find('[disabled]').length){
 			e.preventDefault()
 			return false
 		}
+		var url = $(this).find('.siteInput').val().trim()
+		if (!/^((https?:\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$/.test(url))return false
+		url = url.replace(/\/$/,"")
+		var hosts = (localStorage.transferHosts||""),
+		hostList = hosts.split(",").reduce((m,o)=>(m[o]=o,m),{})
+		if (!hostList.hasOwnProperty(url)) localStorage.transferHosts=url+","+hosts.replace(/(^([^,]*,){9}).*/,"$1")
+		if (!/^https?\:\/\//.test(url)){
+			var prefix = "http"
+			if (/\./.test(url)) prefix="https" // fully qualified domain
+			if (/^[0-9\.\:]+$/.test(url)) prefix="http" // IP address
+			url = `${prefix}://${url}`
+		}
+		url += "/admin/import.cgi"
+		$(this).attr('action',url)
 		return true
 	})
 })
+
+function domainSortKey(s){
+	if (/^[0-9\.]+$/.test(s))return s
+	return s.split(/\./).reverse().join(".")
+}
 
 // https://stackoverflow.com/a/20285053
 function toDataURL(url, callback){
