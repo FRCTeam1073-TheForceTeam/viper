@@ -86,12 +86,13 @@ function getTeamInfo(teamNum){
 	return name
 }
 onApplyTranslation.push(fillPage)
-var lastLocale=''
+var lastLocale='',lastTeam=''
 function fillPage(){
-	if(!window.eventStats || locale==lastLocale)return
+	team=parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||""
+	if(!window.eventStats || (locale==lastLocale&&team==lastTeam))return
 	lastLocale=locale
+	lastTeam=team
 	window.scroll(0,0)
-	team = parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||""
 	addTranslationContext({event:eventName,team:team})
 	statsConfig.setTeam(team)
 	$('#teamButtons').toggle(!team)
