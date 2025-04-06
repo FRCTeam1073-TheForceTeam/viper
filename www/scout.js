@@ -1198,7 +1198,7 @@ function copyTitleAttr(){
 }
 
 function setupButtons(){
-	var featured='next',
+	var featured=$('#hamburger').is(':visible')?'upload':'next',
 	doneButtons=$('#doneButtons'),
 	featuredButton=$('<div id=featuredButton>'),
 	otherButtons=$('<div id=otherButtons>')
@@ -1210,6 +1210,7 @@ function setupButtons(){
 	addButtons(featuredButton,featured,true)
 	addButtons(otherButtons,featured,false)
 	doneButtons.html("").append(featuredButton).append(otherButtons)
+	applyTranslations(doneButtons)
 }
 
 function addButtons(div, featured, isFeatured){
@@ -1263,6 +1264,7 @@ function showTab(event, tab){
 	var button = (tab||$(this)),
 	name = button.attr('data-content'),
 	tab=$(`.tab[data-content="${name}"]`)
+	if(tab.attr('data-content')=='end-game')setupButtons()
 	$('.tab').removeClass("redTeamBG").removeClass("blueTeamBG")
 	tab.addClass(pos.startsWith('R')?"redTeamBG":"blueTeamBG")
 	$('.tab-content').hide()
