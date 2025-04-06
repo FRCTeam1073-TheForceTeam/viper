@@ -46,10 +46,31 @@ $schedule =~ s/\r\n|\r/\n/g;
 $webutil->error("Malformed FRC CSV", $schedule) if ($comp eq 'frc' && $schedule !~ /\A(Match,R1,R2,R3,B1,B2,B3\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){6}\n)+)?\Z/g);
 $webutil->error("Malformed FTC CSV", $schedule) if ($comp eq 'ftc' && $schedule !~ /\A(Match,R1,R2,B1,B2\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){4}\n)+)?\Z/g);
 
+my $alliancesCsv = $cgi->param('alliancesCsv');
+if ($alliancesCsv){
+	$alliancesCsv =~ s/\r\n|\r/\n/g;
+	$alliancesCsv =~ s/,undefined/,/g;
+	$webutil->error("Malformed alliances CSV", $alliancesCsv) if (!$alliancesCsv or $alliancesCsv !~ /\AAlliance,Captain,First Pick,Second Pick,(?:(?:Won Quarter-Finals,Won Semi-Finals)|(?:Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5)),Won Finals\n(?:[0-9]+(?:,[0-9]+){3}(,[01]?){3,6}\n){8}\Z/g);
+}
+
 my $dbh = $db->dbConnection();
 
 sub writeCsvData(){
 	my ($file, $lockFile, $lock, $fh);
+
+	if ($alliancesCsv){
+		$file = "../data/${event}.alliances.csv";
+		$lockFile = "$file.lock";
+		open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
+		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
+		$webutil->error("Error opening $file for writing", "$!") if (!open my $fh, ">", $file);
+		print $fh $alliancesCsv;
+		close $fh;
+		$webutil->commitDataFile($file, "playoffs");
+		close $lock;
+		unlink($lockFile);
+	}
+
 	if ($schedule){
 		$file = "../data/${event}.schedule.csv";
 		$lockFile = "$file.lock";
@@ -59,11 +80,11 @@ sub writeCsvData(){
 			my $oldSchedule = read_file($file, {binmode => ':encoding(UTF-8)'});
 			my ($oldPractice) = $oldSchedule =~ /((?:^pm.*\n)+)/m;
 			my ($oldQuals) = $oldSchedule =~ /((?:^qm.*\n)+)/m;
-			my ($oldPlayoffs) = $oldSchedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
+			my ($oldPlayoffs) = $oldSchedule =~ /((?:^(?:qf|sf|f|(?:[1-5]p)).*\n)+)/m;
 			my ($headers) = $schedule =~ /((?:^Match.*\n)+)/m;
 			my ($newPractice) = $schedule =~ /((?:^pm.*\n)+)/m;
 			my ($newQuals) = $schedule =~ /((?:^qm.*\n)+)/m;
-			my ($newPlayoffs) = $schedule =~ /((?:^(?:qf|sf|(?:[1-5]p)).*\n)+)/m;
+			my ($newPlayoffs) = $schedule =~ /((?:^(?:qf|sf|f|(?:[1-5]p)).*\n)+)/m;
 			$schedule = $headers.($newPractice||$oldPractice||"").($newQuals||$oldQuals||"").($newPlayoffs||$oldPlayoffs||"");
 		}
 		$webutil->error("Error opening $file for writing", "$!") if (!open $fh, ">", $file);
@@ -107,6 +128,14 @@ sub writeCsvData(){
 }
 
 sub writeDbData(){
+	if($alliancesCsv){
+		my $csv = csv->new($alliancesCsv);
+		for my $row (1..$csv->getRowCount()){
+			my $data = $csv->getRowMap($row);
+			$data->{'event'}=$event;
+			$db->upsert('alliances', $data);
+		}
+	}
 	my $blueAllianceId = $event;
 	my $orangeAllianceId = $event;
 	my $firstInspiresId = $event;

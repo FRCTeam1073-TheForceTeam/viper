@@ -86,9 +86,10 @@ $(document).ready(function(){
 		fetchJson(`/data/${eventId}.info.json`),
 		fetchJson(`/data/${eventId}.schedule.practice.json`),
 		fetchJson(`/data/${eventId}.schedule.qualification.json`),
+		fetchJson(`/data/${eventId}.schedule.playoff.json`),
 		fetchJson(`/data/${eventId}.teams.json`)
 	]).then(values => {
-		var [info,practice,qual,teamsJson] = values,
+		var [info,practice,qual,playoffs,teamsJson] = values,
 		csv = ""
 		info.Events = info.Events||info.events||[]
 		if (info.Events.length){
@@ -118,6 +119,26 @@ $(document).ready(function(){
 				csv+=","+(team.teamNumber||0)
 			})
 			csv+="\n"
+		})
+		playoffs = playoffs||{}
+		playoffs.Schedule = playoffs.Schedule||playoffs.schedule||[]
+		var lastRound=0,roundMatch=0
+		playoffs.Schedule.forEach(function(match){
+			var round=(match.description.match(/\(R([0-9])\)/)||["",""])[1]
+			if(round)round=round+"p"
+			if(!round && /^quarterfinal/i.test(match.description))round="qf"
+			if(!round && /^semifinal/i.test(match.description))round="sf"
+			if(!round && /^final/i.test(match.description))round="f"
+			if(round){
+				if(round!=lastRound)roundMatch=0
+				roundMatch++
+				csv+=round+roundMatch
+				match.teams.forEach(function(team){
+					csv+=","+(team.teamNumber||0)
+				})
+				csv+="\n"
+				lastRound=round
+			}
 		})
 		if (csv.length){
 			csv = "Match," + BOT_POSITIONS.join(",") + "\n" + csv
