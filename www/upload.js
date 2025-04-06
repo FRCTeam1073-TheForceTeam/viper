@@ -135,6 +135,11 @@ $(document).ready(showUploads)
 
 var scoutCsv,pitCsv,subjectiveCsv
 
+function uploadComparator(i){
+	var m = localStorage[i].match(/(20\d\d-[01]\d-[0-3]\dT[0-2]\d[^,\n]*)/g)||[i]
+	return m[m.length-1]
+}
+
 function showUploads(){
 	var up = $('#uploads').html(""),
 	his = $('#history').html(""),
@@ -144,7 +149,7 @@ function showUploads(){
 	pitCsv = {}
 	subjectiveCsv = {}
 	his.append($('<button data-i18n=clear_history_button></button>').click(clearHistory))
-	for (i in localStorage){
+	Object.keys(localStorage).toSorted((a,b)=>uploadComparator(b).localeCompare(uploadComparator(a))).forEach(i=>{
 		if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
 			header = localStorage.getItem(`${year}_subjectiveheaders`)
@@ -199,7 +204,7 @@ function showUploads(){
 			his.append($('<button data-i18n=remove_history_button></button>').attr("data-match",i).click(removeMatch))
 			historyCount++
 		}
-	}
+	})
 	$('#upload-description').attr('data-i18n',!count?'no_uploads':'')
 	addTranslationContext({
 		uploadCount:count,
