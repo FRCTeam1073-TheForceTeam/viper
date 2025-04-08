@@ -76,7 +76,7 @@ addI18n({
 })
 
 $(document).ready(function(){
-	var teams = (/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)/g.exec(location.hash)||["",""])[1].split(/,/)
+	var teams=(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)/g.exec(location.hash)||["",""])[1].split(/,/)
 	$('#seasonInp').val(
 		((/^\#(?:.*\&)?(?:season\=)(20[0-9]{2}(?:-[0-9]{2})?)/g.exec(location.hash)||["",""])[1])||
 		((/^([0-9]{4}(?:-[0-9]{2})?)/.exec(eventId)||["",""])[1])||
@@ -84,7 +84,7 @@ $(document).ready(function(){
 	)
 	if(teams[0]){
 		teams.forEach(function(team){
-			addTeam(team);
+			addTeam(team)
 		})
 	} else if (eventId){
 		promiseEventTeams().then(eventTeams=>{
@@ -103,7 +103,7 @@ $(document).ready(function(){
 
 function photoChange(url){
 	$('img').each(function(){
-		var src = $(this).attr('src')
+		var src=$(this).attr('src')
 		if (src && src.includes(url)){
 			$(this).attr('src',src.replace(/\?.*/,"")+"?"+(new Date().getTime()))
 		}
@@ -138,15 +138,51 @@ function photoEditLightBox(){
 	return false
 }
 
+// Based on https://stackoverflow.com/a/24015367/1145388
+function resizeAndStoreImageUpload(e){
+	var file=e.target.files[0]
+	if(/^image/.test(file.type)){
+		var reader=new FileReader()
+		reader.onload=function(re){
+			var image=new Image()
+			image.onload=function(){
+				var canvas=document.createElement('canvas'),
+				max_size=1000,
+				width=image.width,
+				height=image.height
+				if (width>height&&width>max_size){
+					height*=max_size/width
+					width=max_size
+				} else if (height>max_size){
+					width*=max_size/height
+					height=max_size
+				}
+				canvas.width=width
+				canvas.height=height
+				canvas.getContext('2d').drawImage(image,0,0,width,height)
+				var dataUrl=canvas.toDataURL('image/jpeg')
+				localStorage[`${eventYear}_photo_${e.target.name}`]=dataUrl
+				var parent=$(e.target).parent(),
+				img=parent.find('img')
+				img.attr('src',dataUrl).show()
+				localStorage.last_scout_type='photos'
+
+			}
+			image.src=re.target.result
+		}
+		reader.readAsDataURL(file)
+	}
+}
+
 function imageCell(imgName){
-	var season = $('#seasonInp').val(),
-	td = $('<td>')
+	var season=$('#seasonInp').val(),
+	td=$('<td>')
 	td.append($(`<a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a>`).click(photoEditLightBox))
-	.append($(`<img class=photoPreview src=/data/${season}/${imgName}.jpg>`).click(showFullPhoto).on('error',function(){
-		$(this).parent().find('a,img').remove()
+	.append($(`<img class=photoPreview>`).attr('src',localStorage[`${season}_photo_${imgName}`]?localStorage[`${season}_photo_${imgName}`]:`/data/${season}/${imgName}.jpg`).click(showFullPhoto).on('error',function(){
+		$(this).parent().find('a,img').hide()
 	}).each(function(){
 		if(this.error) $(this).error()
 	}))
-	.append(`<input type=file name=${imgName} accept="image/*">`)
+	.append($(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload))
 	return td
 }

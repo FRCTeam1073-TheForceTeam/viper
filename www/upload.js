@@ -136,7 +136,7 @@ $(document).ready(showUploads)
 var scoutCsv,pitCsv,subjectiveCsv
 
 function uploadComparator(i){
-	var m = localStorage[i].match(/(20\d\d-[01]\d-[0-3]\dT[0-2]\d[^,\n]*)/g)||[i]
+	var m = localStorage[i].match(/(20\d\d-[01]\d-[0-3]\dT[0-2]\d[^,\n]*)/g)||["!"+i]
 	return m[m.length-1]
 }
 
@@ -148,18 +148,29 @@ function showUploads(){
 	scoutCsv = {}
 	pitCsv = {}
 	subjectiveCsv = {}
+	$('#upload .image').remove()
 	his.append($('<button data-i18n=clear_history_button></button>').click(clearHistory))
 	Object.keys(localStorage).toSorted((a,b)=>uploadComparator(b).localeCompare(uploadComparator(a))).forEach(i=>{
-		if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i)){
+		if (/^20[0-9]{2}(-[0-9]{2})?_photo_[0-9]+/.test(i)){
+			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
+			name=i.replace(/.*_photo_/,'')
+			up.append($('<hr>'))
+			up.append($('<h4>').text(i))
+			up.append($('<img class=photo-upload>').attr('src',localStorage[i]))
+			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
+			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
+			count++
+			$('#upload').append($('<input type=hidden class=image>').attr('name',`${year}/${name}`).attr('value',localStorage[i]))
+		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
 			header = localStorage.getItem(`${year}_subjectiveheaders`)
 			if (!subjectiveCsv[year]){
 				subjectiveCsv[year] = header
 			}
-			subjectiveCsv[year] += localStorage.getItem(i)
+			subjectiveCsv[year] += localStorage[i]
 			up.append($('<hr>'))
 			up.append($('<h4>').text(i))
-			up.append($('<pre>').text(header + localStorage.getItem(i)))
+			up.append($('<pre>').text(header + localStorage[i]))
 			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
 			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
 			count++
@@ -169,10 +180,10 @@ function showUploads(){
 			if (!scoutCsv[year]){
 				scoutCsv[year] = header
 			}
-			scoutCsv[year] += localStorage.getItem(i)
+			scoutCsv[year] += localStorage[i]
 			up.append($('<hr>'))
 			up.append($('<h4>').text(i))
-			up.append($('<pre>').text(header + localStorage.getItem(i)))
+			up.append($('<pre>').text(header + localStorage[i]))
 			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
 			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
 			count++
@@ -182,24 +193,26 @@ function showUploads(){
 			if (!pitCsv[year]){
 				pitCsv[year] = header
 			}
-			pitCsv[year] += localStorage.getItem(i)
+			pitCsv[year] += localStorage[i]
 			up.append($('<hr>'))
 			up.append($('<h4>').text(i))
-			up.append($('<pre>').text(header + localStorage.getItem(i)))
+			up.append($('<pre>').text(header + localStorage[i]))
 			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
 			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^deleted_20/.test(i)){
 			his.append($('<hr>'))
 			his.append($('<h4 class=deleted>').text(i))
-			his.append($('<pre>').text(localStorage.getItem(i)))
+			if(/^data:image/.test(localStorage[i])) his.append($('<img class=photo-upload>').attr('src',localStorage[i]))
+			else his.append($('<pre>').text(localStorage[i]))
 			his.append($('<button data-i18n=undelete_button></button>').attr("data-match",i).click(undeleteMatch))
 			his.append($('<button data-i18n=remove_history_button></button>').attr("data-match",i).click(removeMatch))
 			historyCount++
 		} else if (/^uploaded_20/.test(i)){
 			his.append($('<hr>'))
 			his.append($('<h4 class=uploaded>').text(i))
-			his.append($('<pre>').text(localStorage.getItem(i)))
+			if(/^data:image/.test(localStorage[i])) his.append($('<img class=photo-upload>').attr('src',localStorage[i]))
+			else his.append($('<pre>').text(localStorage[i]))
 			his.append($('<button data-i18n=reupload_button></button>').attr("data-match",i).click(undeleteMatch))
 			his.append($('<button data-i18n=remove_history_button></button>').attr("data-match",i).click(removeMatch))
 			historyCount++

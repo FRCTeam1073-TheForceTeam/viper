@@ -4,7 +4,9 @@ use strict;
 use warnings;
 use CGI;
 use Data::Dumper;
+use File::Temp;
 use File::Slurp;
+use MIME::Base64;
 use HTML::Escape qw/escape_html/;
 use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
@@ -16,10 +18,8 @@ my $cgi = CGI->new;
 my $webutil = webutil->new;
 my $db = db->new();
 
-my $uCsv = $cgi->param('csv');
-$webutil->error("No data uploaded", "Scouting CSV data not found.") if (!$uCsv);
+my $uCsv = $cgi->param('csv')||"";
 $uCsv = [ map { [ split(/,/, $_, -1) ] } split(/[\r\n]+/, $uCsv) ];
-$webutil->error("Not enough CSV lines", "expected at least two lines in uploaded CSV") if(scalar(@{$uCsv})<2);
 my $csvHeaders;
 my $uHead;
 my $scoutCsv = {};
@@ -28,6 +28,7 @@ my $pitCsv = {};
 my $pitHeaders = {};
 my $subjectiveCsv = {};
 my $subjectiveHeaders = {};
+
 foreach my $row (@{$uCsv}){
 	if ($row->[0] eq 'event'){
 		$csvHeaders = $row;
@@ -61,6 +62,29 @@ foreach my $row (@{$uCsv}){
 
 my $savedKeys = "";
 my $dbh = $db->dbConnection();
+
+
+for my $param ($cgi->param){
+	if ($param =~ /^([0-9]+(?:-[0-9]{2})?)\/([0-9]+(?:\-top)?)$/){
+		my $season=$1;
+		my $photo=$2;
+		my $success = 0;
+		my $data = $cgi->param($param);
+		$webutil->error("Photo is not 'data:image/jpeg;base64,'",$data) if($data !~ /^data:image\/jpeg;base64,/);
+		$data =~ s/^data:image\/jpeg;base64,//g;
+		my $teamPicFile = "../data/$season/$photo.jpg";
+		if ($dbh){
+			$teamPicFile = File::Temp->new(TEMPLATE => 'viperXXXXXXX', SUFFIX => '.jpg', TMPDIR => 1, OPEN => 0)->filename;
+		}
+		open my $fh, '>:raw', $teamPicFile or die;
+		print $fh decode_base64($data);
+		close $fh;
+
+		$savedKeys .= "," if($savedKeys);
+		$savedKeys .= "${season}_photo_${photo}";
+	}
+}
+
 
 sub writeCsvData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;

@@ -40,6 +40,7 @@ function redirect(){
 	eType = localStorage.getItem("last_scout_type")
 	if (!eId) return delayRedirect(`/`)
 	if (!eYear || !eType) return delayRedirect(`/event.html#event=${eId}`)
+	if (eType=='photos') return delayRedirect(`/bot-photos.html#event=${eId}`)
 	if (eType=='scout' && ePos) return delayRedirect(`/${eYear}/scout.html#event=${eId}&pos=${ePos}`+(eOrient?`&orient=${eOrient}`:""))
 	delayRedirect(`/${eYear}/${eType}.html#event=${eId}`)
 }
