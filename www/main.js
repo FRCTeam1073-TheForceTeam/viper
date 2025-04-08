@@ -452,10 +452,6 @@ $(document).ready(function(){
 			})
 		}
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
-		function showMainMenuUploads(){
-			hamburger.toggleClass("hasUploads", hasUploads())
-			mainMenu.find('.dependUpload').toggle(hasUploadsOrHistory()).toggleClass("hasUploads", hasUploads())
-		}
 		$(window).on('hashchange',showMainMenuUploads)
 		$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
 			if (e.key=='Escape' && $('#lightBoxBG').is(":visible")){
@@ -484,6 +480,11 @@ $(document).ready(function(){
 	document.title = t
 })
 
+function showMainMenuUploads(){
+	$('#hamburger').toggleClass("hasUploads", hasUploads())
+	$('#mainMenu').find('.dependUpload').toggle(hasUploadsOrHistory()).toggleClass("hasUploads", hasUploads())
+}
+
 function getLocalTeam(){
 	return localStorage.getItem('my-team') || window.ourTeam || 0
 }
@@ -511,14 +512,14 @@ function toggleFullScreen() {
 function hasUploads(){
 	if (location.pathname == '/upload.html') return false
 	for (var i in localStorage){
-		if (/^20[0-9]{2}[A-Za-z0-9\-]+_(([0-9]+)|(.*_.*))$/.test(i)) return true
+		if (/^20[0-9]{2}[_A-Za-z0-9\-]+/.test(i)&&!/headers$/.test(i)) return true
 	}
 	return false
 }
 
 function hasUploadsOrHistory(){
 	for (var i in localStorage){
-		if (/^((deleted|uploaded)_)?20[0-9]{2}[A-Za-z0-9\-]+_(([0-9]+)|(.*_.*))$/.test(i)) return true
+		if (/^((deleted|uploaded)_)?20[0-9]{2}[_A-Za-z0-9\-]+$/.test(i)&&!/headers$/.test(i)) return true
 	}
 	return false
 }
