@@ -409,6 +409,14 @@ addI18n({
 		fr:'Repérage (CSV)',
 		tr:'İzleme CSV',
 	},
+	json_alliances:{
+		en:'API Alliances',
+		tr:'API İttifakları',
+		pt:'Alianças de API',
+		fr:'Alliances API',
+		he:'בריתות API',
+		zh_tw:'API 聯盟',
+	},
 	csv_alliances:{
 		en:'Alliances CSV',
 		he:'CSV של בריתות',
@@ -644,6 +652,7 @@ onApplyTranslation.push(function(){
 		"schedule.playoff.json":['',translate('json_schedule_playoff')],
 		"scores.qualification.json":['dependScores',translate('json_scores_qualification')],
 		"scores.playoff.json":['dependScores',translate('json_scores_playoff')],
+		"alliances.json":['dependAlliances',translate('json_alliances')],
 	}
 	fileList.forEach(file=>{
 		var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
@@ -820,7 +829,7 @@ $(document).ready(function(){
 			if(!lastDone&&!matchScoutingDataCount(eventStatsByMatchTeam,m))nextToScout=m
 			if(!lastMatch)lastMatch=m
 		}
-		if((!nextToScout||!/^(pm|qm)/.test(nextToScout.Match))&&lastMatch&&!/^f/.test(lastMatch.Match)){
+		if((!nextToScout||!/^(pm|qm)/.test(nextToScout.Match))&&lastMatch){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('#edit-playoffs-link'))
 		}

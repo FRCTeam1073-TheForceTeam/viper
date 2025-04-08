@@ -57,6 +57,14 @@ addI18n({
 		he:'לוּחַ זְמַנִים',
 		pt:'Programação',
 	},
+	alliances_heading:{
+		en:'Alliances',
+		tr:'İttifaklar',
+		pt:'Alianças',
+		fr:'Alliances',
+		he:'בריתות',
+		zh_tw:'聯盟',
+	},
 	no_event_heading:{
 		en:'No event specified',
 		fr:'Aucun événement spécifié',
@@ -87,9 +95,11 @@ $(document).ready(function(){
 		fetchJson(`/data/${eventId}.schedule.practice.json`),
 		fetchJson(`/data/${eventId}.schedule.qualification.json`),
 		fetchJson(`/data/${eventId}.schedule.playoff.json`),
-		fetchJson(`/data/${eventId}.teams.json`)
+		fetchJson(`/data/${eventId}.teams.json`),
+		fetchJson(`/data/${eventId}.alliances.json`),
+		fetchJson(`/data/${eventId}.scores.playoff.json`),
 	]).then(values => {
-		var [info,practice,qual,playoffs,teamsJson] = values,
+		var [info,practice,qual,playoffs,teamsJson,alliancesJson,playoffScoresJson] = values,
 		csv = ""
 		info.Events = info.Events||info.events||[]
 		if (info.Events.length){
@@ -122,7 +132,16 @@ $(document).ready(function(){
 		})
 		playoffs = playoffs||{}
 		playoffs.Schedule = playoffs.Schedule||playoffs.schedule||[]
-		var lastRound=0,roundMatch=0
+		var lastRound=0,roundMatch=0,teamAlliances={},playoffMatchAlliances={}
+		if(alliancesJson){
+			alliancesJson.Alliances.forEach(a=>{
+				if(a.captain)teamAlliances[a.captain]=a.number
+				if(a.round1)teamAlliances[a.round1]=a.number
+				if(a.round2)teamAlliances[a.round2]=a.number
+				if(a.round3)teamAlliances[a.round3]=a.number
+				if(a.backup)teamAlliances[a.backup]=a.number
+			})
+		}
 		playoffs.Schedule.forEach(function(match){
 			var round=(match.description.match(/\(R([0-9])\)/)||["",""])[1]
 			if(round)round=round+"p"
@@ -132,14 +151,48 @@ $(document).ready(function(){
 			if(round){
 				if(round!=lastRound)roundMatch=0
 				roundMatch++
-				csv+=round+roundMatch
+				var matchId=round+roundMatch
+				playoffMatchAlliances[matchId]={matchNumber:match.matchNumber,matchId:matchId}
+				playoffMatchAlliances[match.matchNumber]=playoffMatchAlliances[matchId]
+				playoffMatchAlliances[round]||={}
+				csv+=matchId
 				match.teams.forEach(function(team){
 					csv+=","+(team.teamNumber||0)
+					if(team.teamNumber&&teamAlliances[team.teamNumber]){
+						if(/^Red/.test(team.station))playoffMatchAlliances[matchId].red=teamAlliances[team.teamNumber]
+						if(/^Blue/.test(team.station))playoffMatchAlliances[matchId].blue=teamAlliances[team.teamNumber]
+						playoffMatchAlliances[round][teamAlliances[team.teamNumber]]||={}
+						playoffMatchAlliances[round][teamAlliances[team.teamNumber]][matchId]=playoffMatchAlliances[matchId]
+					}
 				})
 				csv+="\n"
 				lastRound=round
 			}
 		})
+		if(alliancesJson){
+			var alliancesCsv = "Alliance,Captain,First Pick,Second Pick,Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5,Won Finals\n"
+			alliancesJson.Alliances.forEach(a=>{
+				alliancesCsv += `${a.number},${a.captain},${a.round1},${a.round2}`
+				;['1p','2p','3p','4p','5p','f'].forEach(function(round){
+					var matches=(playoffMatchAlliances[round]||{})[a.number]||{},
+					wonCount=0,
+					lostCount=0,
+					matchCount=Object.keys(matches).length,
+					doneThreshold=(matchCount+1)/2
+					Object.values(matches).forEach(match=>{
+						if(match.matchNumber&&playoffScoresJson&&playoffScoresJson.MatchScores&&playoffScoresJson.MatchScores.length>=match.matchNumber){
+							var scores=playoffScoresJson.MatchScores[match.matchNumber-1]
+							wonCount+=((match.blue==a.number)==(scores.winningAlliance==2))
+							lostCount+=((match.blue==a.number)==(scores.winningAlliance==1))
+						}
+					})
+					alliancesCsv+=","
+					if(matchCount>0&&(wonCount>=doneThreshold||lostCount>=doneThreshold))alliancesCsv+=(wonCount>lostCount?1:0)
+				})
+				alliancesCsv+='\n'
+			})
+			$('#allianceCsvInp').val(alliancesCsv)
+		}
 		if (csv.length){
 			csv = "Match," + BOT_POSITIONS.join(",") + "\n" + csv
 			$('#csvInp').val(csv)

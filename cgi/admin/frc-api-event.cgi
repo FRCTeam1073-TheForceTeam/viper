@@ -36,6 +36,8 @@ $filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournam
 $filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/qualification","../data/$event.scores.qualification.json");
 $filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json");
 $filesWritten += $frcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json");
+$filesWritten += $frcapi->writeFileFromAPI("$eventYear/alliances/$eventId","../data/$event.alliances.json");
+
 $webutil->error("API returned no data") if ($filesWritten==0);
 
 my $scheduleExists = 0;
