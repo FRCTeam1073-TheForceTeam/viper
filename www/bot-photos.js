@@ -166,6 +166,7 @@ function resizeAndStoreImageUpload(e){
 				img=parent.find('img')
 				img.attr('src',dataUrl).show()
 				localStorage.last_scout_type='photos'
+				showMainMenuUploads()
 
 			}
 			image.src=re.target.result
@@ -177,9 +178,9 @@ function resizeAndStoreImageUpload(e){
 function imageCell(imgName){
 	var season=$('#seasonInp').val(),
 	td=$('<td>')
-	td.append($(`<a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a>`).click(photoEditLightBox))
+	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
 	.append($(`<img class=photoPreview>`).attr('src',localStorage[`${season}_photo_${imgName}`]?localStorage[`${season}_photo_${imgName}`]:`/data/${season}/${imgName}.jpg`).click(showFullPhoto).on('error',function(){
-		$(this).parent().find('a,img').hide()
+		$(this).parent().find('.edit-link,img').hide()
 	}).each(function(){
 		if(this.error) $(this).error()
 	}))
