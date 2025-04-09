@@ -37,7 +37,12 @@ $(document).ready(function(){
 	}
 	loadFile()
 	$('#saver').submit(function(e){
-		$('#csv').val((editor.getData().map(safeCSV).map(l=>l.join(",")).join('\n')+"\n").replace(/,(\r|\n|(\r\n))/gm,"\n").replace(/^,+\n/gm,""))
+		try{
+			$('#csv').val((to2DArray(editor.getData()).map(safeCSV).map(l=>l.join(",")).join('\n')+"\n").replace(/,(\r|\n|(\r\n))/gm,"\n").replace(/^,+\n/gm,""))
+		} catch(x){
+			console.error(x)
+			return false
+		}
 	})
 	$('#delete').click(function(e){
 		if (!confirm(translate('delete_confirm',{file:file}))){
@@ -48,6 +53,19 @@ $(document).ready(function(){
 	document.title = document.title.replace(/FILE/,file)
 })
 
+function to2DArray(data){
+	var h=Object.keys(data[0]).filter(k=>k!='id'),d=[]
+	d.push(h)
+	for(var i=0;i<data.length;i++){
+		var r=[]
+		for(var j=0;j<h.length;j++){
+			r.push(data[i][h[j]])
+		}
+		d.push(r)
+	}
+	return d
+}
+
 function blankTable(){
 	tableEditor([['','',''],['','',''],['','','']])
 	$('#file').removeAttr('readonly')
@@ -55,14 +73,71 @@ function blankTable(){
 }
 
 function tableEditor(data){
-	editor = new Handsontable($('#editor')[0],{
-		data: data,
-		rowHeaders: true,
-		colHeaders: true,
-		contextMenu: true,
-		manualColumnFreeze: true,
-		minSpareRows: 1,
-		minSpareCols: 1,
+	var h=data[0],b=[],c=[]
+	for(var j=0;j<h.length;j++){
+		c.push({
+			title:h[j],
+			field:h[j],
+		})
+	}
+	for (var i=1;i<data.length;i++){
+		var d = data[i],r={id:i}
+		for(var j=0;j<d.length;j++){
+			r[h[j]]=d[j]
+		}
+		b.push(r)
+	}
+
+	editor = new Tabulator("#editor",{
+		data:b,
+		columns:c,
+		history:true,
+		height:"100%",
+		paginationCounter:"rows",
+		movableColumns:true,
+		selectableRange:1,
+		selectableRangeColumns:true,
+		selectableRangeRows:true,
+		selectableRangeClearCells:true,
+		editTriggerEvent:"dblclick",
+		clipboard:true,
+		clipboardCopyStyled:false,
+		clipboardCopyConfig:{
+			rowHeaders:false,
+			columnHeaders:false,
+		},
+		pagination:true,
+		clipboardCopyRowRange:"range",
+		clipboardPasteParser:"range",
+		clipboardPasteAction:"range",
+		headerSortClickElement:'icon',
+		history:true,
+		columnDefaults:{
+			headerSort:true,
+			headerHozAlign:"start",
+			editor:"input",
+			resizable:"header",
+		},
+		rowContextMenu:[
+			{
+				label:"Delete Row",
+				action:function(_,row){
+					row.delete()
+				}
+			},
+			{
+				label:"Add Row Above",
+				action:function(_,row){
+					editor.addRow([""],true,row.getIndex())
+				}
+			},
+			{
+				label:"Add Row Below",
+				action:function(_,row){
+					editor.addRow([""],false,row.getIndex())
+				}
+			},
+		]
 	})
 }
 
@@ -75,10 +150,10 @@ function unescapeField(s){
 
 function safeCSV(s){
 	if (!s) return ""
-	if (typeof s === 'object'){
+	if (s.map && typeof s.map === 'function'){
 		return s.map(safeCSV)
 	}
-	return s
+	return (""+s)
 		.replace(/\t/g, " ")
 		.replace(/\r|\n|\r\n/g, "⏎")
 		.replace(/\"/g, "״")

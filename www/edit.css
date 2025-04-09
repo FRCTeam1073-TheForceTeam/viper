@@ -1,5 +1,5 @@
-body {text-align:start;padding-top:3.5em}
-form {margin:1em;display:inline-block}
-.handsontable{font-size:12px;color:black}
-#saver{position:fixed;top:0.4em;left:0.4em;z-index:99999;background:var(--main-bg-color); margin:0;padding:0.7em}
-html{padding-bottom:0}
+.tabulator-menu-item{color:black}
+html,body{padding:0;margin:0}
+#main{display:flex;height:100vh;background:var(--main-bg-color);flex-direction:column;align-content:stretch}
+#saver{text-align:start;padding:0.5em}
+#editor{flex-grow:1}

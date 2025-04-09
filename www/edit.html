@@ -7,16 +7,17 @@
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/edit.css>
-<link rel=stylesheet href=/handsontable.full.min.css>
+<link rel=stylesheet href=/tabulator.min.css>
 <script src=/jquery.min.js></script>
 <script src=/main.js></script>
 <script src=/event-url.js></script>
 <script src=/local.js></script>
-<script src=/handsontable.full.min.js></script>
+<script src=/tabulator.min.js></script>
 <script src=/edit.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
+<div id=main>
 <form id=saver method=POST action=/admin/edit.cgi>
 	<input id=file type=text readonly name=file pattern="^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|schedule|event|alliances)\.csv$" required placeholder=20xxEvent.type.csv>
 	<input id=csv type=hidden name=csv>
@@ -24,4 +25,5 @@
 	<input id=delete type=submit name=delete data-i18n-value=delete_button>
 </form>
 <div id=editor></div>
+</div>
 </body></html>
