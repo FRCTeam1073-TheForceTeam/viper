@@ -16,6 +16,7 @@
 #stats td.blank{border:none;height:2em}
 #teamButtons{column-width:4.5em}
 #teamButtons button {margin:0.2em;width:4em}
+.chart canvas{min-height:30em}
 @media (min-height:800px){
 	.chart canvas{max-height:50vh}
 }
