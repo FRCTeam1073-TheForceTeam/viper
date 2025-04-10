@@ -1,0 +1,576 @@
+match	teamNumber	role	coralPickup	algaePickup	algaeKnocking	underShallowCage	teleopPoints	autoPoints	driverAbility	feeds	defends	coralPickups	algaePickups	coralDrops	algaeDrops	coralL1	coralL2	coralL3	coralL4	processorScores	netScores	netFails	activeAuton	endgame	scouter	notes
+Q1	21	OFFENSE	STATION	NONE	FALSE	FALSE	27	3	3	0	0	6	1	3	1	0	0	0	3	0	0	0	TRUE	DEEP		James Sanders; driver had difficulty lining up coral for intake and score. Slow cycle times.
+Q1	79	OFFENSE	STATION	REEF	TRUE	FALSE	33	0	4	0	0	5	2	1	1	0	1	3	0	1	0	0	FALSE	DEEP		Did fairly well at scoring coral and excelled at removing the algae. Their auto did fail though but it attempted to score a coral at l4. They can climb deep cage quickly. Good team to watch. - Angel
+Q1	86	OFFENSE	STATION	NONE	FALSE	FALSE	18	3	3	0	0	11	0	5	0	1	2	2	0	0	0	0	TRUE	PARKED		Dropped a lot of L4 coral
+Q1	86	OFFENSE	STATION	NONE	FALSE	FALSE	17	3	5	0	0	11	0	5	0	2	1	2	0	0	0	0	TRUE	PARKED		Xander Jones
+Q1	4118	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q1	4118	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	3	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Remained stationary most of the match
+Q1	8324	FEEDER	GROUND	NONE	TRUE	FALSE	27	3	2	0	0	9	0	4	0	0	0	0	5	0	0	0	TRUE	PARKED		Scored coral at L4 consistently; dropped coral on accident a lot and was slow
+Q1	8841	OFFENSE	STATION	REEF	TRUE	FALSE	30	17	3	0	0	11	1	2	0	1	1	1	5	1	0	0	TRUE	NOT_ATTEMPTED		Dropped pieces that seemed to be securely in thr intake. Implies a rough tower driver.
+Q1	8841	OFFENSE	STATION	REEF	TRUE	FALSE	31	10	3	0	0	9	1	2	0	1	0	2	4	1	0	0	TRUE	NOT_ATTEMPTED		3627 - Pretty good job!
+Q2	179	OFFENSE	GROUND	REEF	TRUE	FALSE	20	0	3	0	0	5	0	1	0	0	0	2	2	0	0	0	FALSE	PARKED		Robot's auto worked as intended but did not perform as intended due to coral station mishaps; started working very efficiently; but when their elevator got stuck; they tried in a latch ditch effort; ramming it repeatedly into the reef. Then parked. - Angel
+Q2	801	OFFENSE	STATION	REEF	TRUE	FALSE	49	17	5	0	0	13	3	0	2	0	5	4	4	1	0	0	TRUE	PARKED		Xander Jones
+Q2	2152	OFFENSE	STATION	REEF	TRUE	FALSE	4	0	3	0	0	3	0	1	0	0	0	1	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q2	3627	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	1	0	0	1	1	1	1	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Mostly disable
+Q2	3627	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q2	5145	OFFENSE	NONE	GROUND	FALSE	FALSE	14	0	2	0	0	1	6	1	4	0	0	0	0	2	0	0	FALSE	PARKED		Hasini- only scored algae into the processor but was not consistent with it and wasn't able to have a solid grip on the algae
+Q2	8057	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Bumper fell and they were stuck
+Q3	744	DEFENSE	NONE	NONE	FALSE	TRUE	2	0	3	0	30	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Rosaleigh- played defense pretty well
+Q3	744	OFFENSE	NONE	NONE	FALSE	FALSE	9	3	3	0	0	3	0	0	0	1	0	1	1	0	0	0	TRUE	NOT_ATTEMPTED
+Q3	744	DEFENSE	NONE	NONE	FALSE	TRUE	2	3	4	0	16	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED
+Q3	5842	OFFENSE	STATION	REEF	TRUE	FALSE	22	10	5	0	0	10	2	3	2	1	0	2	3	0	0	0	TRUE	PARKED		James Sanders; there was a defending robot and they juked them very well many times.
+Q3	8817	OFFENSE	STATION	REEF	FALSE	FALSE	9	3	3	0	0	2	1	1	0	0	0	0	1	0	1	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q3	9030	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		No show
+Q3	10017	OFFENSE	STATION	NONE	FALSE	FALSE	2	0	2	0	0	2	0	2	0	0	0	0	0	0	0	0	FALSE	PARKED		Auto moved from starting; did near nothing but parking.. - Angel
+Q3	10650	OFFENSE	STATION	NONE	FALSE	FALSE	4	0	3	0	0	2	0	0	0	2	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q3	10650	OFFENSE	STATION	NONE	FALSE	FALSE	8	0	2	0	4	6	0	2	0	4	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Was trying to do it's best
+Q4	233	FEEDER	STATION	BOTH	FALSE	TRUE	33	3	3	0	0	3	4	0	0	0	0	0	3	0	4	0	TRUE	PARKED
+Q4	233	OFFENSE	STATION	REEF	FALSE	FALSE	47	3	5	0	0	15	1	2	1	0	5	5	3	0	0	0	TRUE	PARKED		Xander Jones
+Q4	3932	OFFENSE	STATION	NONE	FALSE	FALSE	41	3	3	0	0	8	1	2	0	1	2	0	3	1	0	0	TRUE	DEEP		James Sanders; coral stuck in base at beginning
+Q4	6322	OFFENSE	NONE	GROUND	FALSE	TRUE	4	3	3	0	2	3	0	1	0	1	0	0	0	0	0	0	TRUE	PARKED		Struggled to score algae so they transitioned to offense
+Q4	6722	OFFENSE	STATION	REEF	TRUE	FALSE	26	0	4	0	0	6	3	2	1	2	0	0	2	2	0	0	FALSE	NOT_ATTEMPTED		Almost fell over. -Coy
+Q4	6722	OFFENSE	STATION	REEF	TRUE	FALSE	24	0	4	0	0	6	3	3	1	1	0	0	2	2	0	0	FALSE	NOT_ATTEMPTED
+Q4	9300	OFFENSE	STATION	NONE	FALSE	FALSE	2	0	1	0	0	3	0	2	0	0	0	0	0	0	0	0	FALSE	PARKED		Managed to get multiple corals stuck on their robot while scoring no corals; auto only went forward; and managed to get penalties. - Angel
+Q4	10323	OFFENSE	NONE	GROUND	FALSE	FALSE	48	3	5	0	0	1	6	0	0	0	0	0	0	6	0	0	TRUE	DEEP
+Q4	10323	FEEDER	NONE	GROUND	FALSE	FALSE	48	3	4	0	0	1	6	1	0	0	0	0	0	6	0	0	TRUE	DEEP		Good strategy
+Q5	1744	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		No show
+Q5	1902	OFFENSE	GROUND	REEF	TRUE	FALSE	36	3	4	0	0	12	0	0	0	3	4	4	0	0	0	0	TRUE	PARKED		Very interesting ground coral intake; it's very efficient. - 3627
+Q5	1902	OFFENSE	GROUND	REEF	TRUE	FALSE	43	3	5	0	0	16	2	2	2	5	5	4	0	0	0	0	TRUE	PARKED		Xander Jones
+Q5	4562	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	2	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		very unreponsive
+Q5	4562	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	1	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q5	4562	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	2	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Moved to opponent side; became immobile and then caused multiple large fowls at end game for touching while other team was in bardge.
+Q5	6473	OFFENSE	STATION	REEF	TRUE	FALSE	20	0	3	0	0	10	1	4	1	1	4	1	0	0	0	0	FALSE	PARKED		James Sanders; janky arm system using pvc and it fell out lots.
+Q5	7403	DEFENSE	STATION	NONE	FALSE	FALSE	10	10	3	0	1	4	0	0	0	0	0	0	3	0	0	0	TRUE	NOT_ATTEMPTED		They were really slow with it ngl
+Q5	7403	OFFENSE	STATION	NONE	FALSE	FALSE	17	10	3	0	0	4	0	0	0	0	0	0	4	0	0	0	TRUE	PARKED		Auto scored a coral on l4; subpar performance; scored multiple corals on l4 and parked. - Angel
+Q5	8775	OFFENSE	STATION	NONE	FALSE	FALSE	4	0	3	0	0	3	0	1	0	1	0	0	0	0	0	0	FALSE	PARKED
+Q5	8775	DEFENSE	STATION	NONE	FALSE	TRUE	8	0	2	0	2	3	0	0	0	3	0	0	0	0	0	0	FALSE	PARKED
+Q5	8775	OFFENSE	STATION	NONE	FALSE	FALSE	6	0	1	0	0	3	0	1	0	2	0	0	0	0	0	0	FALSE	PARKED		Struggled to line up coral to score. -Coy
+Q6	59	FEEDER	BOTH	GROUND	FALSE	TRUE	25	9	3	0	0	4	1	0	0	2	1	1	0	1	0	0	TRUE	DEEP
+Q6	59	FEEDER	BOTH	GROUND	FALSE	FALSE	34	3	3	0	0	5	5	0	4	2	1	1	1	1	0	0	TRUE	DEEP
+Q6	180	OFFENSE	BOTH	REEF	TRUE	FALSE	29	17	4	0	0	20	2	9	2	3	2	3	3	0	0	0	TRUE	NOT_ATTEMPTED		Fast af. Dropped a lot on L1. Had a very sharp L4
+Q6	180	OFFENSE	BOTH	REEF	TRUE	FALSE	30	10	4	0	0	15	2	3	2	6	2	3	1	0	0	0	TRUE	NOT_ATTEMPTED
+Q6	1592	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	4	0	0	7	0	0	0	2	1	2	2	0	0	0	TRUE	DEEP		James Sanders; good cycle times but issues loading coral.
+Q6	8753	DEFENSE	STATION	NONE	FALSE	FALSE	0	3	2	0	1	2	0	1	0	0	0	0	0	0	0	0	TRUE	FAILED_SHALLOW		Spent the whole time trying to get coral from the station and failing for the most part
+Q6	8753	OFFENSE	STATION	NONE	FALSE	FALSE	7	6	1	0	0	2	0	0	0	1	0	0	1	0	0	0	TRUE	PARKED		They scored two coral; one in autonomous on l1(on accident) ; and one in teleop on l4; heavily struggled to adapt to failing at the coral station. - Angel
+Q6	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		(3627) Driver skill unknown - robot remained disconnected all match
+Q6	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Xander Jones
+Q6	10335	OFFENSE	STATION	NONE	FALSE	FALSE	6	0	2	0	0	10	0	8	0	2	0	0	0	0	0	0	FALSE	PARKED
+Q6	10335	OFFENSE	STATION	NONE	FALSE	FALSE	6	0	1	0	0	8	0	6	0	2	0	0	0	0	0	0	FALSE	PARKED		Dropped a lot of coral. -Coy
+Q7	386	FEEDER	STATION	GROUND	FALSE	FALSE	8	3	3	0	0	2	2	2	1	0	0	0	0	1	0	0	TRUE	PARKED
+Q7	386	OFFENSE	STATION	GROUND	FALSE	FALSE	26	10	5	0	0	11	1	6	0	0	0	0	5	1	0	0	TRUE	FAILED_DEEP		Xander Jones
+Q7	386	OFFENSE	STATION	NONE	FALSE	FALSE	7	10	3	0	0	4	0	2	0	0	0	0	2	0	0	0	TRUE	PARKED
+Q7	386	DEFENSE	STATION	GROUND	FALSE	FALSE	21	10	3	0	0	7	1	2	0	1	0	0	4	0	1	0	TRUE	FAILED_DEEP
+Q7	4091	OFFENSE	STATION	NONE	FALSE	FALSE	9	0	3	0	0	5	0	3	0	0	0	1	1	0	0	0	FALSE	NOT_ATTEMPTED
+Q7	4091	OFFENSE	STATION	NONE	FALSE	FALSE	4	0	2	0	0	3	0	2	0	0	0	1	0	0	0	0	FALSE	NOT_ATTEMPTED		Very top heavy; almost fell over several times. Stop moving in the last bit of the match. -Coy
+Q7	5472	OFFENSE	STATION	REEF	TRUE	FALSE	46	14	4	0	0	10	1	0	1	0	3	2	5	0	0	0	TRUE	DEEP		Deep cage climb took a while; about 40 sec; decent intake success. (Allison)
+Q7	5472	DEFENSE	NONE	NONE	FALSE	FALSE	2	10	2	0	0	1	0	0	0	0	0	0	1	0	0	0	TRUE	PARKED		good auto but no tele op points
+Q7	7431	FEEDER	GROUND	NONE	FALSE	FALSE	22	3	4	0	0	4	1	1	0	1	0	2	0	0	0	0	TRUE	DEEP
+Q7	7431	OFFENSE	NONE	NONE	FALSE	TRUE	2	0	4	0	2	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Played offensive this round; and pretty good at it. Auto goes into other alliances area.
+Q8	1557	OFFENSE	NONE	REEF	TRUE	FALSE	32	0	4	0	1	1	6	1	1	0	0	0	0	5	0	0	FALSE	PARKED		Algae bot. -Coy
+Q8	1557	OFFENSE	NONE	REEF	TRUE	FALSE	32	0	4	0	0	1	6	1	1	0	0	0	0	5	0	0	FALSE	PARKED
+Q8	2797	OFFENSE	STATION	NONE	FALSE	FALSE	18	3	4	0	0	5	0	1	0	0	1	2	1	0	0	0	TRUE	PARKED		Carried their part with coral and parked good. - Angel
+Q8	4024	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	1	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q8	4024	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Slightly moved but couldn't continue.
+Q8	5816	OFFENSE	NONE	NONE	FALSE	FALSE	2	3	2	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q8	9670	OFFENSE	STATION	GROUND	FALSE	FALSE	14	0	3	0	0	2	4	2	2	0	0	0	0	2	0	0	FALSE	PARKED		James Sanders; coral stuck once in processor.
+Q8	10211	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	FAILED_SHALLOW		Tried to grab algae a from the ground a lot; wasn't able to.
+Q8	10211	FEEDER	NONE	NONE	FALSE	TRUE	0	3	1	0	0	1	0	1	0	0	0	0	0	0	0	0	TRUE	FAILED_DEEP		Drove around very confused; then feed algae to other teams so that they could score in the processor. Tugged on the deep cag3 until time was up.
+Q8	10211	OFFENSE	NONE	NONE	FALSE	FALSE	0	3	3	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	FAILED_DEEP
+Q9	86	OFFENSE	STATION	NONE	FALSE	FALSE	31	17	5	0	0	9	0	0	0	0	2	2	5	0	0	0	TRUE	PARKED
+Q9	86	DEFENSE	STATION	NONE	TRUE	FALSE	23	10	4	0	0	6	0	0	0	0	0	2	4	0	0	0	TRUE	FAILED_DEEP
+Q9	86	OFFENSE	STATION	NONE	TRUE	FALSE	31	17	5	0	0	10	0	1	0	0	2	2	5	0	0	0	TRUE	PARKED
+Q9	233	OFFENSE	STATION	GROUND	TRUE	FALSE	43	10	5	0	0	11	1	0	0	1	4	4	2	1	0	0	TRUE	PARKED		Xander Jones
+Q9	431	OFFENSE	NONE	GROUND	FALSE	FALSE	12	0	1	0	0	1	2	1	0	0	0	0	0	2	0	0	FALSE	NOT_ATTEMPTED		Coral unironically fell out of the intake; but it at least scored one algae. - Angel
+Q9	4013	DEFENSE	NONE	NONE	FALSE	FALSE	2	3	3	0	2	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED		very good D
+Q9	4013	DEFENSE	NONE	NONE	FALSE	FALSE	0	3	4	0	6	1	0	1	0	0	0	0	0	0	0	0	TRUE	FAILED_SHALLOW		Good driving
+Q9	10017	OFFENSE	STATION	GROUND	FALSE	FALSE	2	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Couldn't pick up coral and elevator broke
+Q9	10017	FEEDER	STATION	GROUND	FALSE	FALSE	12	0	1	0	0	1	1	0	0	0	0	0	0	1	0	0	FALSE	SHALLOW
+Q10	744	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	4	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q10	744	DEFENSE	NONE	NONE	TRUE	FALSE	0	0	4	0	7	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		They blocked the coral intakes after clearing the algae from the reef
+Q10	744	DEFENSE	NONE	NONE	FALSE	FALSE	0	3	3	0	1	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q10	801	OFFENSE	STATION	NONE	FALSE	FALSE	22	17	5	0	0	10	0	1	0	1	2	1	4	0	0	0	TRUE	NOT_ATTEMPTED		Hasini- had good speed and consistent scoring on the reef
+Q10	3627	FEEDER	STATION	REEF	TRUE	FALSE	27	10	3	0	0	6	2	0	0	1	0	2	3	2	0	0	TRUE	NOT_ATTEMPTED		Coral got stuck in robot and tried getting it out and didn't park
+Q10	3627	FEEDER	STATION	NONE	FALSE	FALSE	23	3	5	0	0	7	1	1	0	1	5	0	0	1	0	0	TRUE	NOT_ATTEMPTED
+Q10	3932	OFFENSE	STATION	NONE	FALSE	FALSE	29	3	4	0	0	9	0	3	0	0	0	1	5	0	0	0	TRUE	NOT_ATTEMPTED		James Sanders; robot disabled after scoring coral.
+Q10	4118	OFFENSE	STATION	REEF	TRUE	FALSE	30	0	4	0	0	6	3	1	1	0	0	2	2	2	0	0	FALSE	NOT_ATTEMPTED		Really good work not getting I the way of his teammates while scoring coral and processing algae. - Angel
+Q10	6473	OFFENSE	STATION	NONE	FALSE	FALSE	5	3	4	0	0	5	1	3	1	1	1	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q11	21	OFFENSE	STATION	NONE	FALSE	FALSE	10	3	5	0	0	7	0	5	0	0	0	0	2	0	0	0	TRUE	FAILED_DEEP		Xander Jones
+Q11	1592	OFFENSE	STATION	REEF	TRUE	FALSE	63	10	5	0	0	7	4	0	0	0	0	3	4	4	0	0	TRUE	DEEP		Swift and efficient work of scoring algae while scoring coral simultaneously. True mastery of the game with an auto that scores a coral on l4 no; and no time wasted a dream team. - Angel
+Q11	1592	OFFENSE	BOTH	GROUND	FALSE	FALSE	26	3	3	0	0	2	1	0	0	0	1	0	1	1	0	0	TRUE	DEEP
+Q11	4562	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED
+Q11	4562	IMMOBILE	NONE	NONE	FALSE	FALSE	6	0	1	0	0	1	2	0	2	0	0	0	0	0	0	0	FALSE	SHALLOW		Tried to pick up algea but failed many times.
+Q11	7403	OFFENSE	STATION	NONE	TRUE	FALSE	22	10	3	0	0	6	1	0	1	1	1	0	4	0	0	0	TRUE	PARKED		James Sanders; knocked algae off in auto.
+Q11	8817	OFFENSE	STATION	REEF	TRUE	FALSE	57	0	5	0	0	7	4	1	0	0	0	3	3	4	0	0	FALSE	SHALLOW
+Q11	8817	OFFENSE	NONE	BOTH	TRUE	FALSE	19	0	3	0	0	1	3	0	0	0	0	0	1	1	2	0	FALSE	NOT_ATTEMPTED		Hasini- only scored algae; stopped working halfway through the match
+Q11	10323	FEEDER	NONE	GROUND	FALSE	FALSE	48	3	5	0	0	1	6	0	0	0	0	0	0	6	0	0	TRUE	DEEP
+Q11	10323	FEEDER	NONE	GROUND	FALSE	TRUE	36	0	5	0	1	1	6	1	0	0	0	0	0	6	0	0	FALSE	FAILED_DEEP		Played offense in order to get more algae; big algae scorer and can almost climb deep
+Q12	179	OFFENSE	BOTH	NONE	FALSE	FALSE	66	3	5	0	2	11	0	0	0	0	0	1	10	0	0	0	TRUE	DEEP
+Q12	179	OFFENSE	GROUND	NONE	TRUE	FALSE	77	10	5	0	0	16	1	2	1	0	0	0	14	0	0	0	TRUE	DEEP		Had very good management and cleared the L4. Deep climbed last second
+Q12	4091	OFFENSE	NONE	NONE	FALSE	FALSE	2	3	2	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q12	4091	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	4	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		(3627) Robot was mostly immobile; but the driver was savvy enough to coax it over into the barge parking area before the match ended.
+Q12	5472	OFFENSE	STATION	NONE	FALSE	FALSE	36	6	4	0	0	7	0	0	0	1	0	1	5	0	0	0	TRUE	DEEP		Speedy work of scoring coral until they went to the cage 20 (or more) seconds early overall we'll performance would recommend for them to not pull out so early - Angel
+Q12	5472	OFFENSE	STATION	BOTH	FALSE	FALSE	7	6	2	0	1	2	0	0	0	1	0	0	1	0	0	0	TRUE	PARKED
+Q12	5842	OFFENSE	STATION	BOTH	TRUE	FALSE	10	10	3	0	0	1	6	0	1	0	0	0	1	0	2	3	TRUE	PARKED		Hasini- scores in barge but not very consistently and parked in endgame
+Q12	5842	OFFENSE	STATION	BOTH	TRUE	FALSE	10	10	4	0	0	1	6	0	2	0	0	0	1	0	2	2	TRUE	PARKED
+Q12	7431	DEFENSE	NONE	NONE	FALSE	TRUE	2	0	4	0	6	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		James Sanders; really good fast defense robot.
+Q12	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	3	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		DNA
+Q12	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Left
+Q13	59	OFFENSE	BOTH	NONE	FALSE	FALSE	56	10	5	0	0	13	0	1	0	0	3	5	4	0	0	0	TRUE	DEEP
+Q13	59	OFFENSE	GROUND	NONE	TRUE	FALSE	54	10	5	0	0	15	0	2	0	0	5	3	5	0	0	0	TRUE	DEEP		Worked on putting coral on reef in sections and worked quickly
+Q13	1523	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	2	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Kyle- they just sat under the barge the whole time and attempted one l4 at the start
+Q13	1523	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	2	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED
+Q13	4024	DEFENSE	NONE	NONE	FALSE	TRUE	2	0	3	0	10	0	1	0	1	0	0	0	0	0	0	0	FALSE	PARKED		Swerved I front of multiple robots blocking them from collecting coral but not scoring or helping his team score wise causing them to ultimately lose the match. No auto as well. - Angel
+Q13	4024	OFFENSE	NONE	NONE	FALSE	FALSE	0	3	4	0	0	1	0	1	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Drove and blocked other team the whole time.
+Q13	5145	FEEDER	GROUND	GROUND	FALSE	FALSE	8	0	2	0	0	1	1	1	0	0	0	0	0	1	0	0	FALSE	PARKED		Algae scorer but their scorer broke
+Q13	5145	FEEDER	BOTH	GROUND	FALSE	FALSE	20	3	3	0	0	2	2	1	1	1	0	0	0	1	0	0	TRUE	DEEP
+Q13	8775	OFFENSE	STATION	NONE	FALSE	FALSE	4	0	2	0	0	2	0	1	0	1	0	0	0	0	0	0	FALSE	PARKED		James Sanders; it shoots algae causing penalty.
+Q13	9030	OFFENSE	NONE	GROUND	FALSE	FALSE	18	0	3	0	0	1	3	1	0	0	0	0	0	3	0	0	FALSE	NOT_ATTEMPTED		Xander Jones; broke at the end of the match
+Q14	431	OFFENSE	STATION	GROUND	FALSE	FALSE	12	0	3	0	0	1	2	1	0	0	0	0	0	2	0	0	FALSE	NOT_ATTEMPTED
+Q14	431	OFFENSE	NONE	GROUND	FALSE	FALSE	12	0	4	0	0	1	3	1	1	0	0	0	0	2	0	0	FALSE	NOT_ATTEMPTED		Kyle- robot only scored algae In processor. RSL turned completely off in the last minute and the robot didn't move
+Q14	1902	FEEDER	GROUND	REEF	TRUE	FALSE	55	0	5	0	0	16	0	2	0	3	7	4	0	0	0	0	FALSE	DEEP		Ability to clear algae and score coral at the same time. Very well designed deep climb and is efficient. Great coral scoring ability
+Q14	1902	FEEDER	GROUND	REEF	TRUE	FALSE	37	3	3	0	0	10	0	1	0	3	5	1	0	0	0	0	TRUE	DEEP
+Q14	5816	OFFENSE	GROUND	NONE	FALSE	FALSE	2	6	4	0	0	2	0	1	0	1	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q14	8753	OFFENSE	STATION	NONE	FALSE	FALSE	12	3	3	0	0	2	0	1	0	0	0	0	0	0	0	0	TRUE	DEEP		They tried to get some coral on; then stopped ;ovomg to get ready to deep climb.
+Q14	8753	OFFENSE	STATION	NONE	FALSE	FALSE	12	3	3	0	1	1	0	0	0	0	0	0	0	0	0	0	TRUE	DEEP
+Q14	10211	DEFENSE	STATION	NONE	FALSE	TRUE	4	0	2	0	0	1	0	0	0	1	0	0	0	0	0	0	FALSE	PARKED		Random defense strategy failed in stopping the other team from doing anything;  scored minimally - Angel
+Q14	10650	DEFENSE	STATION	NONE	FALSE	FALSE	0	6	2	0	10	1	0	0	0	1	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		James Sanders; caused minor penalties.
+Q15	79	FEEDER	STATION	REEF	TRUE	FALSE	15	3	3	0	0	8	2	4	2	0	1	3	0	0	0	0	TRUE	FAILED_DEEP		Decent coral scorer; drops a couple times and deep climb attempted
+Q15	79	FEEDER	GROUND	GROUND	FALSE	FALSE	40	10	4	0	0	8	4	1	3	2	1	0	4	1	0	0	TRUE	DEEP		Very good; auto can score on L4 but they missed picking a coral up. When picking up algae; they got stuck a lot. They are speedy and can score coral consistently.
+Q15	79	FEEDER	STATION	REEF	TRUE	FALSE	27	3	4	0	0	6	0	1	0	0	5	0	0	0	0	0	TRUE	DEEP
+Q15	79	OFFENSE	BOTH	NONE	FALSE	FALSE	15	0	3	0	0	1	0	0	0	0	1	0	0	0	0	0	FALSE	DEEP
+Q15	6322	OFFENSE	STATION	NONE	FALSE	FALSE	12	3	3	0	3	5	0	2	0	0	2	1	0	0	0	0	TRUE	PARKED		Xander Jones
+Q15	6722	OFFENSE	STATION	REEF	TRUE	FALSE	33	3	5	0	0	11	2	3	2	0	0	2	5	0	0	0	TRUE	NOT_ATTEMPTED		Very fast at scoring l4 and removing algae; also the added bonus of after acquiring cooperation bonus can score algae in the net. Really would recommend alliance. - Angel
+Q15	6722	FEEDER	STATION	REEF	TRUE	FALSE	35	0	5	0	0	12	3	4	3	1	0	2	5	0	0	0	FALSE	NOT_ATTEMPTED
+Q15	9670	OFFENSE	NONE	GROUND	FALSE	FALSE	37	3	3	0	0	1	5	0	0	0	0	0	1	5	0	0	TRUE	PARKED		Kyle- the have a really inconsistent coral feed. They tried three times with an LED human player and failed every time and then gave up and went back to scoring algae.
+Q15	9670	OFFENSE	STATION	GROUND	FALSE	FALSE	32	0	4	0	0	0	5	0	0	0	0	0	0	5	0	0	FALSE	PARKED
+Q15	10335	OFFENSE	STATION	NONE	FALSE	FALSE	12	0	2	0	0	9	0	4	0	5	0	0	0	0	0	0	FALSE	PARKED		James Sanders; only scored l1 easily pushed by others
+Q15	10402	OFFENSE	NONE	NONE	FALSE	FALSE	0	3	3	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Did not show
+Q16	180	OFFENSE	GROUND	REEF	TRUE	FALSE	37	10	5	0	0	13	2	2	2	1	4	4	2	0	0	0	TRUE	PARKED		James Sanders. Insanely good robot.
+Q16	386	OFFENSE	STATION	GROUND	FALSE	FALSE	56	10	5	0	0	9	4	1	2	0	0	3	5	2	0	0	TRUE	DEEP		Quick work. Put coral on L4 first untill it was almost full the moved to L3.
+Q16	386	OFFENSE	BOTH	GROUND	FALSE	FALSE	57	17	4	0	0	9	3	0	1	0	0	2	7	2	0	0	TRUE	DEEP
+Q16	1557	FEEDER	STATION	REEF	TRUE	TRUE	12	0	2	0	1	1	4	1	2	0	0	0	0	2	0	0	FALSE	FAILED_DEEP		Grabs algae from both reefs; driver went into enemy cages and got a ton of penalty points
+Q16	1557	FEEDER	NONE	REEF	TRUE	FALSE	6	3	3	0	0	1	3	1	1	0	0	0	0	1	0	0	TRUE	FAILED_DEEP
+Q16	1744	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	2	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Kyle - the robot was disconnected for the whole match and kept reconnecting for like 1 second before disconnecting again.
+Q16	1744	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q16	2797	OFFENSE	STATION	NONE	FALSE	FALSE	5	3	4	0	0	6	0	4	0	0	1	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q16	2797	DEFENSE	STATION	NONE	FALSE	FALSE	7	0	2	0	1	5	0	3	0	1	1	0	0	0	0	0	FALSE	PARKED
+Q16	8841	DEFENSE	STATION	NONE	FALSE	FALSE	5	3	4	0	0	2	0	0	0	0	0	0	1	0	0	0	TRUE	NOT_ATTEMPTED		Started scoring slowly and then went to go defend off against spam; did a great job at knocking them off from scoring. Unfortunately the damage was already done. Still great defense. - angel
+Q17	2152	OFFENSE	STATION	NONE	FALSE	FALSE	9	0	3	0	0	4	0	1	0	0	3	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Okay scoring speed on coral; went for l2 for some reason and at the end I heard a snap from the elevator going half way up.. - angel
+Q17	4013	FEEDER	STATION	REEF	TRUE	FALSE	2	0	1	1	0	1	1	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Really really struggled to pick up and score anything; big floppy arm
+Q17	4562	OFFENSE	STATION	NONE	FALSE	FALSE	5	0	4	0	0	1	0	0	0	0	1	0	0	0	0	0	FALSE	PARKED		Xander Jones
+Q17	7431	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	2	0	4	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		James Sanders; good defense bot but driver got stuck many times.
+Q17	8057	OFFENSE	STATION	NONE	FALSE	FALSE	2	3	3	0	0	2	0	0	0	1	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q17	8057	OFFENSE	STATION	NONE	FALSE	FALSE	14	3	2	0	0	8	0	7	0	1	0	0	0	0	0	0	TRUE	DEEP		They tried to get L4 but could not get it. Deep climbed a bit early.
+Q17	8324	OFFENSE	GROUND	NONE	TRUE	FALSE	39	3	4	0	0	9	0	0	0	0	0	1	7	0	0	0	TRUE	NOT_ATTEMPTED		Kyle- had a solid intake but scoring the coral was finicky. They also could smoothly remove the algae after scoring l4
+Q18	21	OFFENSE	STATION	NONE	FALSE	FALSE	32	6	4	0	0	7	0	2	0	1	0	0	4	0	0	0	TRUE	DEEP		Put most of coral on L4; had a rocky start
+Q18	21	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	4	0	0	7	0	2	0	0	0	0	5	0	0	0	TRUE	DEEP
+Q18	744	OFFENSE	STATION	NONE	FALSE	FALSE	17	0	2	0	0	7	0	3	0	0	0	3	1	0	0	0	FALSE	NOT_ATTEMPTED		Struggled to score coral for the entire match ; an auto that moved; overall subpar. - angel
+Q18	1592	OFFENSE	STATION	BOTH	TRUE	FALSE	43	0	3	0	0	7	4	2	3	0	0	0	5	1	0	0	FALSE	DEEP		Hasini- scored coral consistently
+Q18	5472	FEEDER	STATION	REEF	TRUE	FALSE	47	13	5	1	0	13	2	1	0	2	2	4	4	1	0	0	TRUE	PARKED		Very good scorer and very good auto; can also score algae. Smooth robot but tips sometimes.
+Q18	8775	OFFENSE	STATION	NONE	TRUE	FALSE	4	3	4	0	0	1	0	0	0	1	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q18	9300	DEFENSE	STATION	NONE	FALSE	FALSE	2	0	4	0	9	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		James Sanders; really good defense driver
+Q19	86	FEEDER	STATION	REEF	TRUE	FALSE	28	17	3	1	0	10	1	4	0	1	0	1	4	0	0	0	TRUE	DEEP		Drops coral often; but a great auto and cycle time
+Q19	179	OFFENSE	GROUND	REEF	TRUE	FALSE	65	10	5	0	0	16	2	2	2	2	1	4	7	0	0	0	TRUE	DEEP		Hasini- strong team overall and had good speed and consistency
+Q19	179	OFFENSE	GROUND	REEF	TRUE	FALSE	58	10	5	0	0	15	2	0	2	6	0	0	9	0	0	0	TRUE	SHALLOW
+Q19	1902	OFFENSE	BOTH	REEF	TRUE	FALSE	63	3	5	0	0	19	3	5	3	0	5	9	0	0	0	0	TRUE	DEEP		Extremely good performance scored tremendous amounts of coral at lightning fast speeds; cleared algae and to top it off climbed as expected from. Exploding bacon - Angel
+Q19	10211	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	2	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Xander Jones
+Q20	431	FEEDER	STATION	GROUND	FALSE	FALSE	30	0	3	0	0	1	5	1	0	0	0	0	0	5	0	0	FALSE	NOT_ATTEMPTED		Good algae scorer; but when there's no algae driver wanders
+Q20	3627	OFFENSE	STATION	REEF	TRUE	FALSE	27	0	2	0	0	8	3	0	3	1	3	4	0	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders; issues intaking coral.
+Q20	4091	OFFENSE	STATION	NONE	FALSE	FALSE	14	0	3	0	0	5	0	0	0	1	0	3	0	0	0	0	FALSE	NOT_ATTEMPTED		Coral on L3; slow paced.
+Q20	5816	OFFENSE	GROUND	NONE	FALSE	TRUE	7	0	2	0	0	4	0	3	0	0	0	0	1	0	0	0	FALSE	PARKED		Slow to get. fast to score. Fast to miss. - Angel
+Q20	7403	OFFENSE	STATION	NONE	TRUE	FALSE	20	3	4	0	0	5	0	1	0	0	1	0	3	0	0	0	TRUE	PARKED		Xander Jones
+Q20	10335	OFFENSE	STATION	NONE	FALSE	FALSE	4	0	2	0	0	8	0	7	0	1	0	0	0	0	0	0	FALSE	PARKED
+Q20	10335	OFFENSE	STATION	NONE	FALSE	FALSE	8	3	2	0	0	11	0	8	0	3	0	0	0	0	0	0	TRUE	PARKED		Hasini- robot was kind of jerky and slow and was having a hard time collecting coral
+Q21	79	OFFENSE	STATION	NONE	FALSE	FALSE	29	0	3	0	0	8	0	3	0	0	3	2	0	0	0	0	FALSE	DEEP		Coral placed in sections by level
+Q21	79	OFFENSE	STATION	NONE	FALSE	FALSE	26	3	3	0	0	4	0	0	0	0	2	2	0	0	0	0	TRUE	DEEP
+Q21	1523	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Jack - Robot did not show up.
+Q21	1557	FEEDER	NONE	REEF	TRUE	FALSE	12	0	2	0	0	1	4	1	2	0	0	0	0	2	0	0	FALSE	FAILED_DEEP		Popped a algae this match
+Q21	5842	OFFENSE	STATION	NONE	FALSE	FALSE	47	17	5	0	0	13	1	1	1	0	1	3	8	0	0	0	TRUE	PARKED		James Sanders; fast cycle times.
+Q21	8753	DEFENSE	NONE	NONE	FALSE	FALSE	6	0	4	0	5	1	0	0	0	0	0	0	0	0	0	0	FALSE	SHALLOW
+Q21	8753	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	3	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Hasini
+Q21	10323	OFFENSE	NONE	GROUND	FALSE	FALSE	30	0	3	0	1	0	5	0	0	0	0	0	0	5	0	0	FALSE	FAILED_DEEP		May have cleared algae from reef but tablet was passed half way. Ignore coral and algae endgame info.
+Q21	10323	FEEDER	NONE	GROUND	FALSE	TRUE	34	3	5	0	0	1	5	0	0	1	0	0	0	5	0	0	TRUE	PARKED		Really good at grabbing coral
+Q22	2797	FEEDER	STATION	REEF	TRUE	FALSE	7	3	3	0	0	3	0	1	0	1	1	0	0	0	0	0	TRUE	PARKED		Mostly spent time feeding other Robot algae from reef
+Q22	2797	DEFENSE	STATION	NONE	TRUE	FALSE	5	0	3	0	0	3	0	2	0	0	1	0	0	0	0	0	FALSE	PARKED		Knocked algae from reef so other robotics could get it.
+Q22	3932	OFFENSE	STATION	NONE	FALSE	FALSE	28	17	3	0	0	10	0	2	0	1	0	1	6	0	0	0	TRUE	PARKED		Dropped a few too many but overall solid coral scorer. Favored L4 but could still consistently score on L3. (Allison)
+Q22	8324	FEEDER	GROUND	NONE	FALSE	FALSE	27	0	3	0	0	7	0	2	0	0	0	0	5	0	0	0	FALSE	PARKED
+Q22	8791	OFFENSE	STATION	NONE	FALSE	FALSE	0	0	2	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Was immobile.
+Q22	9670	FEEDER	NONE	GROUND	FALSE	FALSE	56	0	4	0	0	1	9	1	0	0	0	0	0	9	0	0	FALSE	PARKED
+Q22	9670	OFFENSE	NONE	GROUND	FALSE	FALSE	56	0	4	0	0	1	9	1	0	0	0	0	0	9	0	0	FALSE	PARKED		Hasini- moved in auto but wasn't able to score preloaded coral and only scores algae into processor
+Q22	10650	OFFENSE	STATION	NONE	FALSE	FALSE	12	0	1	0	0	8	0	2	0	6	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders; kept spinning and slamming into stuff.
+Q23	386	OFFENSE	STATION	REEF	TRUE	FALSE	33	3	3	0	0	11	2	6	0	0	0	4	1	2	0	0	TRUE	FAILED_DEEP		Really struggled this match; dropped multiple coral
+Q23	1744	OFFENSE	NONE	NONE	FALSE	FALSE	2	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Took a stroll around the field and then parked under badge several seconds early.
+Q23	2152	DEFENSE	NONE	NONE	FALSE	TRUE	2	0	3	0	14	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Hasini- robot only did defense and did nothing in auto
+Q23	2152	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	4	0	9	0	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED
+Q23	2152	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	3	0	16	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED
+Q23	6322	OFFENSE	STATION	NONE	FALSE	FALSE	7	0	3	0	2	7	0	4	0	2	1	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Got blocked a lot; dropped some coral.
+Q23	6322	OFFENSE	STATION	NONE	FALSE	FALSE	5	3	3	0	0	2	0	0	0	1	1	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q23	8817	IMMOBILE	STATION	BOTH	TRUE	FALSE	4	0	2	0	0	2	2	0	1	1	0	0	0	0	0	1	FALSE	PARKED		James Sanders; immobile for first minute and a half.
+Q23	10402	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Didn't move
+Q24	59	OFFENSE	GROUND	REEF	TRUE	FALSE	49	10	5	0	0	13	2	1	2	0	0	1	10	0	0	0	TRUE	NOT_ATTEMPTED		James Sanders; very wobbly
+Q24	180	OFFENSE	GROUND	REEF	TRUE	FALSE	56	10	5	0	0	13	6	4	1	0	0	1	7	0	5	0	TRUE	PARKED		Hasini- strong team and had good speed; vert fast cycles; good consistency
+Q24	180	OFFENSE	GROUND	REEF	TRUE	FALSE	50	10	5	0	0	11	6	3	1	0	0	0	7	0	5	0	TRUE	FAILED_DEEP
+Q24	6473	OFFENSE	STATION	NONE	FALSE	FALSE	33	0	3	0	0	6	0	0	0	0	3	3	0	0	0	0	FALSE	DEEP		Tried to put coral in the robot many times
+Q24	8057	DEFENSE	NONE	NONE	FALSE	FALSE	2	3	1	0	3	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED		Kinda sat under the opposing team's feeder station and called it a day
+Q25	233	OFFENSE	STATION	GROUND	TRUE	FALSE	58	10	5	0	0	12	2	1	0	0	1	4	6	2	0	0	TRUE	PARKED		Xander Jones
+Q25	801	FEEDER	STATION	REEF	TRUE	FALSE	46	17	5	0	0	16	1	1	0	5	4	2	4	1	0	0	TRUE	NOT_ATTEMPTED		Extremely good coral scorer on all levels and can score algae in the processor.
+Q25	4118	OFFENSE	STATION	NONE	FALSE	FALSE	10	0	2	0	0	4	0	2	0	0	0	2	0	0	0	0	FALSE	PARKED		Didn't move for the first couple parts of the game then when it did move it had trouble scoring. KP
+Q25	4118	OFFENSE	NONE	NONE	FALSE	FALSE	0	10	3	0	0	1	0	0	0	0	0	0	1	0	0	0	TRUE	NOT_ATTEMPTED
+Q25	6722	OFFENSE	NONE	REEF	TRUE	FALSE	16	0	5	0	0	1	6	1	1	0	0	0	0	0	4	1	FALSE	NOT_ATTEMPTED
+Q25	6722	OFFENSE	STATION	REEF	TRUE	FALSE	16	0	3	0	0	1	5	1	0	0	0	0	0	0	4	1	FALSE	NOT_ATTEMPTED
+Q25	6722	OFFENSE	NONE	REEF	TRUE	FALSE	18	3	4	0	0	1	6	1	1	0	0	0	0	0	4	1	TRUE	PARKED		Hasini- only scored in barge because a coral got stuck in the robot; but there was a lot of consistency when scoring in the barge
+Q25	8841	OFFENSE	STATION	NONE	FALSE	FALSE	52	3	3	0	0	10	0	2	0	0	0	0	8	0	0	0	TRUE	DEEP
+Q25	9030	OFFENSE	STATION	GROUND	FALSE	FALSE	8	0	2	0	0	1	2	1	1	0	0	0	0	1	0	0	FALSE	PARKED		James Sanders
+Q26	21	OFFENSE	STATION	NONE	FALSE	FALSE	19	3	4	0	0	6	0	2	0	1	0	0	3	0	0	0	TRUE	PARKED		Hasini- Did pretty consistent with scoring on the reef but could've done much better overall
+Q26	21	OFFENSE	STATION	NONE	FALSE	FALSE	19	3	3	0	0	6	0	2	0	1	0	0	3	0	0	0	TRUE	PARKED
+Q26	5816	OFFENSE	GROUND	NONE	FALSE	FALSE	9	6	2	0	0	7	0	4	0	2	0	0	1	0	0	0	TRUE	PARKED		James Sanders; robot had issues picking up coral
+Q26	5842	FEEDER	STATION	REEF	TRUE	FALSE	41	0	4	0	0	8	2	1	0	0	0	2	5	0	2	0	FALSE	NOT_ATTEMPTED		Slow but can score a lot of coral and can score in barge
+Q26	7431	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	2	0	12	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED
+Q26	7431	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		Remy
+Q26	9300	DEFENSE	NONE	NONE	FALSE	FALSE	2	3	4	0	3	1	0	1	0	0	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q26	9300	OFFENSE	NONE	NONE	FALSE	FALSE	2	3	3	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED
+Q26	10335	OFFENSE	STATION	NONE	FALSE	FALSE	14	0	1	0	0	11	0	5	0	6	0	0	0	0	0	0	FALSE	PARKED		Had a lot of trouble scoring algae and could only score on L1. KP
+Q27	86	FEEDER	STATION	NONE	TRUE	FALSE	35	17	4	1	0	9	1	2	0	0	0	2	5	0	0	0	TRUE	DEEP		Drops coral often but good robot and auto
+Q27	744	OFFENSE	STATION	NONE	FALSE	FALSE	20	0	3	0	0	7	0	1	0	2	2	2	0	0	0	0	FALSE	PARKED		James Sanders
+Q27	1557	OFFENSE	NONE	REEF	TRUE	FALSE	38	0	4	0	0	1	6	1	0	0	0	0	0	6	0	0	FALSE	PARKED
+Q27	1557	OFFENSE	NONE	BOTH	TRUE	FALSE	38	3	3	0	0	1	6	1	0	0	0	0	0	6	0	0	TRUE	PARKED		Hasini- only scored algae In the processor but they did it consistently
+Q27	4091	OFFENSE	STATION	NONE	FALSE	FALSE	2	0	1	0	0	6	0	5	0	1	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Had a whole lot of trouble scoring the entire time and doesn't have an auto. KP
+Q27	4562	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		Remy Key. Technically they did wiggle a bit but basically didn't move.
+Q27	10650	OFFENSE	STATION	NONE	FALSE	FALSE	6	6	4	0	5	6	0	2	0	4	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q27	10650	DEFENSE	NONE	NONE	FALSE	FALSE	2	3	4	0	2	1	0	0	0	1	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q28	3932	FEEDER	STATION	NONE	TRUE	FALSE	15	10	2	0	0	7	0	5	0	0	1	0	1	0	0	0	TRUE	DEEP		Dropped coral almost every single time
+Q28	8775	FEEDER	STATION	NONE	FALSE	FALSE	6	0	3	0	0	3	0	0	0	2	0	0	0	0	0	0	FALSE	PARKED
+Q28	8775	OFFENSE	STATION	NONE	TRUE	FALSE	6	0	3	0	0	2	1	0	0	2	0	0	0	0	0	0	FALSE	PARKED		Remy
+Q28	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	3	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		James Sanders
+Q28	8817	OFFENSE	STATION	BOTH	TRUE	FALSE	13	3	5	0	0	1	2	0	0	0	0	0	1	0	2	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q28	10211	OFFENSE	NONE	NONE	FALSE	FALSE	2	3	2	0	0	1	0	1	0	0	0	0	0	0	0	0	TRUE	PARKED
+Q28	10211	OFFENSE	NONE	NONE	FALSE	FALSE	2	0	2	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Hasini- left in auto and missed scoring the preloaded coral; and later they didn't do anything other than drive around and park
+Q28	10402	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Just rolled around
+Q28	10402	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Didn't do anything the entire match. KP
+Q29	79	OFFENSE	STATION	BOTH	TRUE	FALSE	11	0	3	0	0	6	1	3	1	0	1	2	0	0	0	0	FALSE	FAILED_DEEP		James Sanders
+Q29	2797	OFFENSE	NONE	NONE	FALSE	FALSE	20	3	2	0	0	1	4	1	1	0	0	0	0	3	0	0	TRUE	PARKED
+Q29	2797	OFFENSE	NONE	GROUND	FALSE	FALSE	20	3	4	0	0	1	3	1	0	0	0	0	0	3	0	0	TRUE	PARKED		Xander Jones
+Q29	5145	OFFENSE	NONE	BOTH	TRUE	FALSE	20	0	3	0	0	1	3	1	0	0	0	0	0	3	0	0	FALSE	PARKED		Remy
+Q29	5145	OFFENSE	NONE	GROUND	FALSE	FALSE	20	0	2	0	0	1	4	1	1	0	0	0	0	3	0	0	FALSE	PARKED
+Q29	5472	FEEDER	STATION	REEF	TRUE	FALSE	39	14	4	1	0	13	1	0	0	1	4	2	5	0	0	0	TRUE	NOT_ATTEMPTED
+Q29	7403	OFFENSE	STATION	NONE	FALSE	FALSE	39	3	3	0	0	8	0	2	0	1	0	0	5	0	0	0	TRUE	DEEP
+Q29	7403	OFFENSE	STATION	NONE	FALSE	FALSE	20	10	2	0	0	7	0	2	0	0	0	0	5	0	0	0	TRUE	NOT_ATTEMPTED		Stopped working when there was about 40 seconds left in the match. KP
+Q29	10017	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q29	10017	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	2	0	0	2	0	2	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Rosaleigh- they didn't move the match
+Q30	233	OFFENSE	STATION	REEF	TRUE	TRUE	51	0	5	0	0	12	0	0	0	0	2	5	5	0	0	0	FALSE	FAILED_DEEP		Our climb didn't work but we still did AMAZING!!! KP
+Q30	233	OFFENSE	STATION	NONE	FALSE	FALSE	57	3	4	0	0	12	0	1	0	0	4	2	5	0	0	0	TRUE	DEEP
+Q30	1523	OFFENSE	STATION	REEF	FALSE	FALSE	36	0	5	0	0	5	2	0	0	0	1	1	3	2	0	0	FALSE	PARKED
+Q30	1523	OFFENSE	STATION	BOTH	TRUE	FALSE	31	0	3	0	0	6	3	1	1	0	1	1	2	2	0	0	FALSE	PARKED		Remy
+Q30	1592	FEEDER	STATION	BOTH	TRUE	FALSE	52	3	4	2	0	4	7	2	0	0	0	0	2	5	0	0	TRUE	DEEP		Can score algae on L4 and grab algae at the same time
+Q30	1744	OFFENSE	STATION	NONE	FALSE	FALSE	6	3	3	0	0	2	0	0	0	2	0	0	0	0	0	0	TRUE	PARKED
+Q30	1744	OFFENSE	STATION	NONE	FALSE	FALSE	6	3	4	0	0	5	0	3	0	2	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q30	4118	OFFENSE	STATION	NONE	TRUE	FALSE	19	0	3	0	0	6	1	1	1	0	0	1	3	0	0	0	FALSE	NOT_ATTEMPTED		Hasini- scored only coral and did it relatively consistently; but did miss a few times
+Q30	4118	OFFENSE	STATION	NONE	FALSE	FALSE	17	0	4	0	0	5	1	1	1	1	0	0	3	0	0	0	FALSE	NOT_ATTEMPTED
+Q30	8057	DEFENSE	STATION	NONE	FALSE	FALSE	2	0	2	0	0	2	0	2	0	0	0	0	0	0	0	0	FALSE	PARKED		James Sanders; robot couldn't decide on attack or defense.
+Q30	8057	OFFENSE	STATION	NONE	FALSE	FALSE	2	0	1	0	0	1	0	0	0	1	0	0	0	0	0	0	FALSE	FAILED_DEEP		James Sanders; robot gave up at 2 minutes left and attempted deep cage but failed.
+Q31	386	OFFENSE	STATION	NONE	FALSE	FALSE	42	17	5	0	0	13	0	5	0	0	0	0	8	0	0	0	TRUE	DEEP		Kept missing some L4 and ramed one of the robots on its alliance. KP
+Q31	386	OFFENSE	STATION	NONE	FALSE	FALSE	44	17	5	0	0	13	0	4	0	1	0	0	8	0	0	0	TRUE	DEEP
+Q31	801	OFFENSE	STATION	REEF	TRUE	FALSE	51	10	4	0	0	16	2	1	1	2	6	2	4	1	0	0	TRUE	NOT_ATTEMPTED		James Sanders
+Q31	4013	OFFENSE	STATION	REEF	FALSE	FALSE	5	3	3	0	1	5	1	3	1	0	1	0	0	0	0	0	TRUE	PARKED
+Q31	4013	OFFENSE	STATION	REEF	TRUE	FALSE	5	3	3	0	0	4	2	2	2	0	1	0	0	0	0	0	TRUE	PARKED		Hasini- they were a little jerky and it took them a while to pick up a single coral
+Q31	4024	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Remy
+Q31	4024	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	3	0	72	1	0	0	0	1	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q31	6722	OFFENSE	STATION	NONE	FALSE	FALSE	29	0	5	0	0	6	0	0	0	0	1	1	4	0	0	0	FALSE	PARKED
+Q31	6722	OFFENSE	STATION	REEF	TRUE	FALSE	37	10	5	0	0	12	2	2	2	2	1	2	5	0	0	0	TRUE	PARKED		Xander Jones
+Q31	8753	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q32	179	OFFENSE	BOTH	NONE	TRUE	FALSE	57	3	5	0	0	14	2	2	1	1	4	4	3	0	0	0	TRUE	DEEP		Remy
+Q32	179	OFFENSE	BOTH	NONE	FALSE	FALSE	59	15	5	0	0	16	0	1	0	2	4	4	5	0	0	0	TRUE	DEEP
+Q32	180	OFFENSE	GROUND	NONE	TRUE	FALSE	43	17	5	0	0	16	3	3	1	2	3	4	4	0	1	1	TRUE	NOT_ATTEMPTED		Hasini- did really good overall; had good speed and consistency
+Q32	180	OFFENSE	GROUND	REEF	TRUE	FALSE	37	10	5	0	0	13	3	2	2	3	3	2	3	0	1	0	TRUE	NOT_ATTEMPTED
+Q32	431	DEFENSE	NONE	GROUND	FALSE	FALSE	18	0	3	0	0	1	4	1	1	0	0	0	0	3	0	0	FALSE	NOT_ATTEMPTED		Died or smth midway through
+Q32	431	IMMOBILE	STATION	GROUND	FALSE	FALSE	12	0	1	0	0	2	2	2	0	0	0	0	0	2	0	0	FALSE	NOT_ATTEMPTED		James Sanders; they e stopped in the last 40 seconds
+Q32	8324	OFFENSE	GROUND	NONE	FALSE	FALSE	25	0	4	0	0	9	0	2	0	1	1	2	2	0	0	0	FALSE	PARKED
+Q32	8324	OFFENSE	GROUND	NONE	FALSE	FALSE	25	0	3	0	0	9	0	2	0	1	1	2	2	0	0	0	FALSE	PARKED		Had trouble scoring coral. KP
+Q32	9030	OFFENSE	STATION	BOTH	FALSE	FALSE	8	3	4	0	0	1	1	1	0	0	0	0	0	1	0	0	TRUE	PARKED		Xander Jones
+Q32	9030	DEFENSE	NONE	NONE	FALSE	FALSE	8	0	2	0	0	1	1	1	0	0	0	0	0	1	0	0	FALSE	PARKED
+Q33	1902	OFFENSE	GROUND	BOTH	TRUE	FALSE	52	0	5	0	1	16	0	1	0	1	5	5	3	0	0	0	FALSE	FAILED_DEEP
+Q33	2152	OFFENSE	STATION	NONE	FALSE	FALSE	5	0	2	0	0	6	0	4	0	1	1	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q33	2152	OFFENSE	STATION	NONE	FALSE	FALSE	5	0	2	0	0	8	0	6	0	0	1	0	0	0	0	0	FALSE	PARKED		Had a lot of trouble scoring coral they kept missing and their coral would get stuck in the middle of their intake. KP
+Q33	3627	OFFENSE	STATION	BOTH	TRUE	FALSE	22	3	5	0	0	6	4	2	2	3	0	1	0	2	0	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q33	8841	OFFENSE	STATION	NONE	FALSE	FALSE	48	0	3	0	0	10	0	1	0	3	0	0	6	0	0	0	FALSE	DEEP		James Sanders
+Q33	9670	FEEDER	STATION	NONE	FALSE	FALSE	3	0	2	0	0	3	0	1	0	0	1	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q33	9670	OFFENSE	STATION	NONE	TRUE	FALSE	5	3	2	0	0	3	2	1	1	1	1	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Remy
+Q33	10323	OFFENSE	NONE	GROUND	FALSE	TRUE	42	3	4	0	0	1	7	1	0	0	0	0	0	7	0	0	TRUE	FAILED_DEEP		Hasini- did good with scoring algae in the processor; was hanging in endgame but randomly fell in last few seconds so something may have broken
+Q34	59	OFFENSE	BOTH	BOTH	TRUE	TRUE	46	0	3	0	0	10	0	2	0	2	0	0	6	0	0	0	FALSE	DEEP		No auto; lots of robot issues; DNP
+Q34	86	OFFENSE	STATION	NONE	FALSE	FALSE	35	3	5	0	0	9	0	2	0	2	2	2	1	0	0	0	TRUE	DEEP		Xander Jones
+Q34	2797	OFFENSE	STATION	BOTH	TRUE	FALSE	12	0	2	0	0	2	3	1	1	0	0	0	0	2	0	0	FALSE	NOT_ATTEMPTED		James Sanders; robot had issues intaking coral.
+Q34	3932	OFFENSE	STATION	NONE	FALSE	FALSE	14	10	3	0	0	11	0	7	0	0	0	3	1	0	0	0	TRUE	PARKED		Hasini- can score on the reef kind of consistently; when trying to score on l4 they usually missed
+Q34	3932	OFFENSE	STATION	NONE	FALSE	FALSE	24	0	3	0	0	4	0	1	0	0	0	3	0	0	0	0	FALSE	DEEP
+Q34	5842	OFFENSE	STATION	NONE	FALSE	FALSE	26	0	3	0	0	8	3	2	2	1	0	0	4	0	1	0	FALSE	NOT_ATTEMPTED		Remy
+Q34	6473	OFFENSE	STATION	NONE	FALSE	FALSE	10	0	2	0	0	6	0	3	0	2	0	1	0	0	0	0	FALSE	PARKED		Had a lot of trouble getting coral into their intake. KP
+Q34	6473	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	1	0	0	1	1	1	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q35	1557	OFFENSE	NONE	BOTH	TRUE	FALSE	32	0	3	0	0	1	6	0	1	0	0	0	0	5	0	0	FALSE	PARKED		Remy
+Q35	5145	OFFENSE	NONE	NONE	FALSE	FALSE	32	0	5	0	0	1	6	0	1	0	0	0	0	5	0	0	FALSE	PARKED		Good strategy
+Q35	5145	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q35	5145	OFFENSE	NONE	GROUND	FALSE	FALSE	20	3	2	0	0	1	6	1	3	0	0	0	0	3	0	0	TRUE	PARKED		Struggled to maneuver with algae.
+Q35	8057	OFFENSE	STATION	REEF	FALSE	FALSE	5	3	2	0	0	4	0	3	0	0	0	0	1	0	0	0	TRUE	NOT_ATTEMPTED		Robot no move
+Q35	8057	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Wrong team; team is 4013
+Q35	10211	OFFENSE	NONE	NONE	FALSE	FALSE	0	3	3	0	2	1	0	1	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Hasini- didn't do much except a little defense
+Q35	10335	OFFENSE	STATION	NONE	FALSE	FALSE	10	3	5	0	0	7	0	3	0	4	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q36	801	OFFENSE	STATION	REEF	TRUE	FALSE	62	17	5	0	0	12	3	0	1	0	0	2	10	2	0	0	TRUE	PARKED		Quick and clean intake and some small parts got off
+Q36	7403	OFFENSE	STATION	NONE	FALSE	FALSE	17	0	2	0	0	6	1	1	1	1	0	0	3	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders
+Q36	7431	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	3	0	11	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED
+Q36	7431	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	6	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Hasini- didn't do much except a little bit of defense
+Q36	8817	OFFENSE	STATION	BOTH	FALSE	FALSE	20	3	5	0	0	3	4	1	0	0	0	0	2	0	2	2	TRUE	PARKED		Xander Jones
+Q36	10017	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Remy
+Q37	21	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	5	0	0	7	0	2	0	0	0	0	5	0	0	0	TRUE	DEEP		James Sanders; had issues with loading coral for a few seconds.
+Q37	4013	OFFENSE	STATION	NONE	TRUE	FALSE	16	3	4	0	0	5	0	1	0	1	0	3	0	0	0	0	TRUE	PARKED		Cleared a couple of algae to put coral on the reef
+Q37	4024	OFFENSE	STATION	GROUND	FALSE	FALSE	8	0	1	0	0	6	0	3	0	0	0	2	0	0	0	0	FALSE	NOT_ATTEMPTED		Ded :(
+Q37	4091	OFFENSE	STATION	NONE	FALSE	FALSE	10	3	4	0	0	6	0	2	0	1	0	2	0	0	0	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q37	6322	OFFENSE	STATION	NONE	FALSE	FALSE	8	0	1	0	0	4	0	1	0	3	0	0	0	0	0	0	FALSE	PARKED
+Q37	6322	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Remy
+Q37	8753	OFFENSE	STATION	NONE	FALSE	FALSE	0	0	3	0	0	5	0	5	0	0	0	0	0	0	0	0	FALSE	FAILED_DEEP
+Q37	8753	OFFENSE	STATION	NONE	FALSE	FALSE	4	3	3	0	0	5	0	4	0	1	0	0	0	0	0	0	TRUE	PARKED		Hasini- struggled a lot with even picking up one coral from the feeder station; when they picked a coral up they could barely even score it; only scored one coral overall; parked in endgame
+Q38	431	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q38	431	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Hasini- didn't participate in this match
+Q38	744	OFFENSE	STATION	REEF	TRUE	FALSE	13	0	3	0	0	4	2	1	2	0	1	2	0	0	0	0	FALSE	PARKED		James Sanders
+Q38	1523	OFFENSE	STATION	REEF	TRUE	FALSE	8	0	3	0	0	3	1	3	0	0	0	0	0	1	0	0	FALSE	PARKED		Took the algae from the reef to the processor
+Q38	1902	OFFENSE	GROUND	NONE	TRUE	FALSE	4	0	1	0	1	2	1	1	1	0	0	1	0	0	0	0	FALSE	NOT_ATTEMPTED		Remy
+Q38	8324	OFFENSE	GROUND	NONE	TRUE	FALSE	29	10	5	0	0	7	0	0	0	0	1	1	5	0	0	0	TRUE	PARKED		Xander Jones
+Q38	8324	OFFENSE	BOTH	REEF	FALSE	FALSE	21	10	5	0	0	5	0	0	0	0	0	1	4	0	0	0	TRUE	PARKED
+Q39	180	OFFENSE	GROUND	REEF	TRUE	FALSE	40	10	5	0	0	13	3	4	3	0	0	2	7	0	0	0	TRUE	PARKED		Xander Jones
+Q39	1744	FEEDER	STATION	NONE	FALSE	FALSE	4	0	1	0	0	2	0	1	0	1	0	0	0	0	0	0	FALSE	PARKED		James Sanders; broke and threw a bunch on the ground fo4 SPAM
+Q39	3627	OFFENSE	BOTH	NONE	TRUE	FALSE	10	0	3	0	0	3	0	1	0	0	1	0	1	0	0	0	FALSE	PARKED		Remy
+Q39	10323	OFFENSE	NONE	GROUND	FALSE	FALSE	48	0	4	0	0	0	6	0	0	0	0	0	0	6	0	0	FALSE	DEEP		Just took the algae to the processor
+Q39	10402	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		DNP
+Q39	10650	DEFENSE	NONE	NONE	FALSE	FALSE	0	6	3	0	31	1	0	0	0	1	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Kyle- Disconnected for part of the match; played defense for most of the match
+Q39	10650	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	4	0	33	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q40	1592	OFFENSE	STATION	REEF	TRUE	FALSE	21	0	3	0	0	6	2	2	1	1	1	2	0	1	0	0	FALSE	PARKED		Remy
+Q40	1592	OFFENSE	STATION	NONE	FALSE	FALSE	25	0	4	0	0	6	4	3	2	0	1	2	0	2	0	0	FALSE	PARKED
+Q40	1592	FEEDER	STATION	BOTH	TRUE	FALSE	23	3	4	0	0	6	3	3	1	0	1	2	0	2	0	0	TRUE	FAILED_DEEP
+Q40	4562	DEFENSE	STATION	NONE	FALSE	FALSE	0	0	4	0	11	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders
+Q40	5472	OFFENSE	STATION	REEF	FALSE	FALSE	47	10	4	0	0	12	1	2	0	0	2	2	6	1	0	0	TRUE	PARKED		1had to deal with defense
+Q40	6473	OFFENSE	NONE	NONE	FALSE	FALSE	5	3	3	0	1	1	0	0	0	0	1	0	0	0	0	0	TRUE	PARKED		Kyle - the whole match they tried to intake coral but it never went in so they didn't really do much
+Q40	6473	OFFENSE	NONE	NONE	FALSE	FALSE	5	3	2	0	1	2	0	1	0	0	1	0	0	0	0	0	TRUE	PARKED
+Q40	8841	OFFENSE	STATION	GROUND	TRUE	FALSE	50	3	2	0	0	12	0	1	0	0	0	0	10	0	0	0	TRUE	FAILED_DEEP		OTTER RED FIN
+Q40	9670	OFFENSE	STATION	GROUND	FALSE	FALSE	36	3	5	0	0	3	5	2	0	0	0	1	0	5	0	0	TRUE	PARKED		Xander Jones
+Q41	59	FEEDER	BOTH	BOTH	TRUE	FALSE	60	3	5	0	0	15	2	4	1	2	0	7	2	1	0	0	TRUE	DEEP
+Q41	59	OFFENSE	BOTH	REEF	TRUE	FALSE	68	10	5	0	0	14	2	1	1	1	1	5	6	1	0	0	TRUE	DEEP		Remy
+Q41	179	OFFENSE	NONE	BOTH	TRUE	FALSE	20	3	4	0	0	1	5	1	3	0	0	0	0	0	2	0	TRUE	DEEP		Took the reef algea and tried to score in the barge; fail3d and succeeded.
+Q41	179	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q41	2152	OFFENSE	STATION	NONE	FALSE	FALSE	0	3	3	0	0	4	0	3	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Hasini- collected coral but something happened with the intake so it wasn't able to shoot out into the reef; when it did they missed
+Q41	2152	OFFENSE	STATION	NONE	FALSE	FALSE	2	3	2	0	0	3	0	3	0	0	0	0	0	0	0	0	TRUE	PARKED
+Q41	5816	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Didn't move; DNP!
+Q41	6722	OFFENSE	STATION	REEF	TRUE	FALSE	41	0	4	0	0	13	1	4	1	0	0	4	5	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders
+Q41	8775	DEFENSE	NONE	NONE	FALSE	FALSE	2	3	4	0	9	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q42	79	OFFENSE	STATION	NONE	TRUE	FALSE	37	3	4	0	0	9	2	1	2	1	5	2	0	0	0	0	TRUE	DEEP		Put coral mainly on L2 and L3
+Q42	4024	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	1	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Remy it was being very defensive and broke
+Q42	4024	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	5	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Blocked other team very well
+Q42	8057	OFFENSE	STATION	NONE	FALSE	FALSE	5	0	2	0	0	6	0	5	0	0	1	0	0	0	0	0	FALSE	PARKED		James Sanders; Didn't score anything
+Q42	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	1	0	0	0	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q42	8791	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Hasini- didn't do anything rhe entire match
+Q42	9030	OFFENSE	NONE	GROUND	FALSE	FALSE	8	3	4	0	0	1	1	1	0	0	0	0	0	1	0	0	TRUE	PARKED		Xander Jones
+Q42	9300	FEEDER	NONE	NONE	TRUE	FALSE	2	0	1	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Cleared some algae; scored some penalties; LOL!
+Q43	1902	OFFENSE	GROUND	NONE	TRUE	FALSE	40	3	4	0	0	13	3	2	3	2	3	5	1	0	0	0	TRUE	PARKED		Cleared the algae from the reff to put the coral on the reef
+Q43	1902	OFFENSE	BOTH	REEF	TRUE	FALSE	44	0	3	0	0	13	0	0	0	3	4	6	0	0	0	0	FALSE	PARKED
+Q43	4091	OFFENSE	NONE	NONE	FALSE	FALSE	0	3	3	0	0	1	0	1	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Robot didn't move 💀
+Q43	5145	OFFENSE	NONE	BOTH	FALSE	FALSE	26	3	4	0	0	1	7	1	3	0	0	0	0	4	0	0	TRUE	PARKED		Xander Jones
+Q43	5145	OFFENSE	NONE	GROUND	FALSE	FALSE	20	3	4	0	0	1	3	1	0	0	0	0	0	3	0	0	TRUE	PARKED
+Q43	8324	OFFENSE	STATION	NONE	FALSE	FALSE	34	10	5	0	0	9	0	1	0	1	0	0	7	0	0	0	TRUE	PARKED		Remy
+Q43	8324	FEEDER	STATION	NONE	FALSE	FALSE	36	3	4	0	1	9	2	2	1	0	2	1	4	1	0	0	TRUE	FAILED_DEEP
+Q43	8817	OFFENSE	STATION	GROUND	FALSE	FALSE	35	3	4	0	0	2	6	1	0	0	0	0	1	2	4	0	TRUE	PARKED
+Q43	8817	OFFENSE	NONE	BOTH	TRUE	FALSE	24	0	3	0	0	1	6	1	1	0	0	0	0	1	4	0	FALSE	PARKED		Hasini- scores algae in barge very consistently
+Q43	10335	OFFENSE	STATION	NONE	FALSE	FALSE	8	0	1	0	0	10	0	7	0	3	0	0	0	0	0	0	FALSE	PARKED		Only scored one coral
+Q44	1557	OFFENSE	NONE	BOTH	FALSE	FALSE	19	0	4	0	0	2	3	1	1	0	0	0	1	2	0	0	FALSE	PARKED
+Q44	1557	OFFENSE	NONE	BOTH	FALSE	FALSE	32	3	4	0	0	1	6	1	0	0	0	0	0	5	0	0	TRUE	PARKED		Xander Jones
+Q44	3932	FEEDER	STATION	NONE	FALSE	TRUE	26	0	4	0	0	5	0	1	0	1	0	3	0	0	0	0	FALSE	DEEP
+Q44	3932	OFFENSE	STATION	NONE	FALSE	FALSE	37	6	4	0	0	12	0	3	0	4	3	0	2	0	0	0	TRUE	DEEP		Remy
+Q44	4118	OFFENSE	STATION	REEF	TRUE	FALSE	23	0	4	0	0	8	0	3	0	0	1	2	2	0	0	0	FALSE	PARKED
+Q44	4118	OFFENSE	STATION	NONE	FALSE	FALSE	18	0	3	0	0	6	0	2	0	0	0	2	2	0	0	0	FALSE	FAILED_DEEP		Tried to get algae off reef. Failed.
+Q44	7403	OFFENSE	NONE	NONE	FALSE	FALSE	15	3	3	0	0	6	0	2	0	0	0	0	3	0	0	0	TRUE	NOT_ATTEMPTED		Kinda bad ngl
+Q44	8753	OFFENSE	STATION	NONE	FALSE	FALSE	6	0	2	0	0	3	0	1	0	2	0	0	0	0	0	0	FALSE	PARKED		James Sanders
+Q44	10402	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q44	10402	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Hasini- didn't do anything this entire match and stayed in one place
+Q45	431	OFFENSE	NONE	GROUND	FALSE	FALSE	18	3	4	0	0	1	3	1	0	0	0	0	0	3	0	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q45	6322	OFFENSE	STATION	NONE	FALSE	FALSE	5	3	2	0	0	3	0	1	0	0	1	0	0	0	0	0	TRUE	PARKED
+Q45	6322	OFFENSE	STATION	NONE	FALSE	FALSE	5	3	3	0	0	4	0	2	0	0	1	0	0	0	0	0	TRUE	PARKED		Hasini- tried scoring coral at first but then got a coral stuck in the robot; so they couldn't do anything for the rest of the match other than park
+Q45	7431	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	4	0	1	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Went to the other coral station of opposite side and guarded it
+Q45	7431	DEFENSE	NONE	NONE	FALSE	TRUE	2	0	2	0	234	0	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED
+Q45	8841	OFFENSE	STATION	REEF	TRUE	FALSE	64	10	3	0	0	11	2	1	0	1	1	0	8	2	0	0	TRUE	DEEP		Remy
+Q45	8841	FEEDER	STATION	BOTH	TRUE	FALSE	37	12	4	0	0	11	2	1	0	3	0	5	1	2	0	0	TRUE	FAILED_DEEP
+Q45	10323	OFFENSE	NONE	GROUND	FALSE	FALSE	36	0	4	0	0	1	5	1	1	0	0	0	0	4	0	0	FALSE	DEEP		James Sanders
+Q46	86	OFFENSE	STATION	NONE	TRUE	FALSE	41	17	5	0	0	11	0	1	0	0	4	3	3	0	0	0	TRUE	DEEP		Xander Jones
+Q46	801	OFFENSE	STATION	REEF	TRUE	FALSE	57	10	5	0	0	13	2	0	1	0	0	4	8	1	0	0	TRUE	NOT_ATTEMPTED		James Sanders; insanely fast cycle times
+Q46	5472	OFFENSE	STATION	REEF	TRUE	FALSE	44	10	5	0	0	9	2	0	0	0	1	3	4	2	0	0	TRUE	PARKED
+Q46	5472	OFFENSE	STATION	REEF	TRUE	FALSE	51	3	3	0	0	12	2	1	0	0	1	4	5	2	0	0	TRUE	NOT_ATTEMPTED		Hasini- good speed and consistency with scoring on the reef; missed a few times; parked in endgame
+Q46	5816	OFFENSE	NONE	GROUND	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Remy
+Q46	5816	FEEDER	STATION	REEF	FALSE	FALSE	8	3	3	0	0	3	0	1	0	0	0	2	0	0	0	0	TRUE	FAILED_DEEP
+Q47	59	OFFENSE	GROUND	REEF	TRUE	FALSE	74	10	5	0	0	19	1	1	1	3	4	6	5	0	0	0	TRUE	DEEP		Did good and can score on all levels and tried to score on the barge but missed. KP
+Q47	59	OFFENSE	BOTH	REEF	FALSE	FALSE	72	0	5	0	0	19	1	3	0	2	4	6	4	0	0	1	FALSE	DEEP
+Q47	3627	FEEDER	STATION	REEF	TRUE	FALSE	10	3	4	0	0	3	0	1	0	0	0	0	2	0	0	0	TRUE	FAILED_DEEP
+Q47	3627	OFFENSE	STATION	REEF	TRUE	FALSE	11	3	3	0	0	8	1	5	1	2	0	0	1	0	0	0	TRUE	PARKED		A tad unreliable at scoring and picking up.
+Q47	4562	DEFENSE	NONE	NONE	FALSE	TRUE	2	0	2	0	3	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		Morgan- drove around the field; tried to pick up already but failed
+Q47	9030	OFFENSE	NONE	GROUND	FALSE	FALSE	14	3	2	0	0	0	2	0	0	0	0	0	0	2	0	0	TRUE	PARKED		Hasini- robot moved pretty slowly; was consistent with scoring in processor
+Q47	9300	OFFENSE	STATION	NONE	TRUE	FALSE	4	3	4	0	0	5	0	4	0	1	0	0	0	0	0	0	TRUE	PARKED		Xander Jones
+Q47	10211	IMMOBILE	NONE	GROUND	FALSE	TRUE	0	0	3	0	0	1	1	0	1	0	0	0	0	0	0	0	FALSE	FAILED_DEEP		Software issues at being of match. Able to park at the end.
+Q48	21	OFFENSE	STATION	NONE	FALSE	FALSE	36	3	4	0	0	5	1	1	0	0	0	0	4	0	1	0	TRUE	DEEP
+Q48	386	OFFENSE	STATION	NONE	FALSE	FALSE	62	17	5	0	0	12	0	0	0	0	0	0	12	0	0	0	TRUE	DEEP		Very fast
+Q48	386	OFFENSE	STATION	NONE	FALSE	FALSE	62	0	5	0	0	12	0	2	0	0	0	0	10	0	0	0	FALSE	DEEP
+Q48	386	FEEDER	STATION	NONE	FALSE	FALSE	54	3	5	0	0	14	0	2	0	1	0	11	0	0	0	0	TRUE	DEEP		Very efficient for corals
+Q48	386	OFFENSE	STATION	NONE	FALSE	FALSE	47	10	5	0	0	9	0	1	0	0	0	0	8	0	0	0	TRUE	DEEP		Very efficient at scoring coral L4; Excellent! - 3627
+Q48	2152	OFFENSE	STATION	NONE	FALSE	FALSE	14	3	4	0	0	4	0	0	0	1	2	1	0	0	0	0	TRUE	PARKED		Morgan- only went for coral and scored on low levels. Struggled to grab coral from human player occasionally
+Q48	6473	OFFENSE	STATION	NONE	TRUE	FALSE	24	3	3	0	0	7	0	0	0	1	4	2	0	0	0	0	TRUE	PARKED		Scored roughly 7-8 corals. Removed one algae from reef. Struggle to intake coral from station sometimes because of sideways intake
+Q48	6473	OFFENSE	STATION	NONE	FALSE	FALSE	21	0	4	0	0	6	0	0	0	1	3	2	0	0	0	0	FALSE	PARKED		Had trouble getting coral in their intake. KP
+Q48	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	0	3	1	0	0	0	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q48	8791	OFFENSE	NONE	NONE	FALSE	FALSE	2	3	3	0	0	0	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED		Hasini- did nothing the whole match except for driving round very slowly and parking
+Q48	10017	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	4	0	4	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Xander Jones
+Q49	179	OFFENSE	GROUND	NONE	TRUE	FALSE	51	0	4	0	0	16	1	5	1	1	0	3	7	0	0	0	FALSE	PARKED		Morgan- very fast; might have missed a few L4 at then start
+Q49	179	OFFENSE	GROUND	NONE	TRUE	FALSE	61	17	4	0	0	21	1	6	1	1	0	3	11	0	0	0	TRUE	PARKED		Can deep climb; but didn't have time. Got nervous at the end and started dropping pieces more frequently. (Allison)
+Q49	233	OFFENSE	STATION	GROUND	TRUE	FALSE	41	10	5	0	0	11	3	1	3	1	1	1	7	0	0	0	TRUE	PARKED		Hasini- good speed and consistency; able to score in processor easily and consistently
+Q49	233	OFFENSE	STATION	GROUND	FALSE	FALSE	47	10	5	0	0	11	1	1	0	1	1	1	7	1	0	0	TRUE	PARKED
+Q49	1592	OFFENSE	STATION	REEF	FALSE	FALSE	47	0	4	0	0	8	2	2	0	0	1	5	0	2	0	0	FALSE	DEEP
+Q49	1592	OFFENSE	NONE	REEF	FALSE	FALSE	44	3	5	0	0	7	4	1	1	0	0	6	0	3	0	0	TRUE	PARKED
+Q49	8775	OFFENSE	STATION	NONE	FALSE	FALSE	4	3	1	0	0	2	0	1	0	1	0	0	0	0	0	0	TRUE	PARKED
+Q49	10650	DEFENSE	STATION	NONE	FALSE	TRUE	0	6	4	0	10	1	0	0	0	1	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Xander Jones
+Q50	744	OFFENSE	STATION	NONE	FALSE	FALSE	28	0	3	0	0	9	0	1	0	0	4	4	0	0	0	0	FALSE	NOT_ATTEMPTED		Remy
+Q50	1744	OFFENSE	STATION	NONE	FALSE	FALSE	6	0	2	0	0	7	0	4	0	3	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q50	1744	OFFENSE	STATION	NONE	FALSE	FALSE	6	0	4	0	0	7	0	4	0	3	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Slow
+Q50	5842	OFFENSE	STATION	NONE	FALSE	FALSE	31	10	3	0	0	11	0	2	0	2	1	1	5	0	0	0	TRUE	NOT_ATTEMPTED		May drive rather slow but reliable scorer
+Q50	6722	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	3	0	0	9	0	1	0	1	0	0	7	0	0	0	TRUE	NOT_ATTEMPTED		Slow to do intake. Ripped bumper; allison
+Q50	6722	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	5	0	0	9	0	1	0	1	0	0	7	0	0	0	TRUE	NOT_ATTEMPTED
+Q50	6722	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	4	0	0	9	0	1	0	1	0	0	7	0	0	0	TRUE	NOT_ATTEMPTED		Hasini- scored well on l4
+Q50	9670	OFFENSE	STATION	GROUND	FALSE	FALSE	32	0	3	0	0	1	6	1	1	0	0	0	0	5	0	0	FALSE	PARKED		James Sanders; robot got coral stuck in base while picking up
+Q51	431	OFFENSE	STATION	GROUND	FALSE	FALSE	32	0	4	0	0	1	5	1	0	0	0	0	0	5	0	0	FALSE	PARKED		When Lucas drives; they are a great algae scorer
+Q51	431	OFFENSE	NONE	GROUND	FALSE	FALSE	32	0	5	0	0	1	5	1	0	0	0	0	0	5	0	0	FALSE	PARKED		Remy
+Q51	4118	OFFENSE	NONE	NONE	FALSE	FALSE	21	0	3	0	0	7	1	4	0	0	0	0	3	1	0	0	FALSE	NOT_ATTEMPTED
+Q51	4118	OFFENSE	STATION	NONE	FALSE	FALSE	23	3	4	0	0	7	1	4	0	0	0	0	3	1	0	0	TRUE	PARKED		Chloe
+Q51	5472	OFFENSE	STATION	REEF	TRUE	FALSE	41	16	5	0	0	14	1	2	0	2	2	4	4	0	1	0	TRUE	NOT_ATTEMPTED		James Sanders
+Q51	8057	OFFENSE	STATION	NONE	FALSE	FALSE	12	3	3	0	0	4	0	4	0	0	0	0	0	0	0	0	TRUE	DEEP
+Q51	8057	OFFENSE	STATION	NONE	FALSE	FALSE	12	3	3	0	0	4	0	3	0	0	0	0	0	0	0	0	TRUE	DEEP		Hasini- wasn't able to score any coral and one got stuck in the robot
+Q51	8817	OFFENSE	STATION	REEF	TRUE	FALSE	22	0	3	0	0	7	4	3	1	1	0	3	0	0	2	1	FALSE	NOT_ATTEMPTED		Morgan- good at placing allgea in the net.
+Q52	86	OFFENSE	STATION	NONE	TRUE	FALSE	49	10	4	0	0	10	0	1	0	0	1	1	7	0	0	0	TRUE	DEEP		Very good at L4 coral
+Q52	86	OFFENSE	STATION	BOTH	FALSE	FALSE	53	17	5	0	0	11	1	0	1	0	1	2	8	0	0	0	TRUE	DEEP		Remy
+Q52	4091	DEFENSE	STATION	NONE	FALSE	FALSE	0	0	3	0	10	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders. Coral broke so they became defense.
+Q52	7403	OFFENSE	STATION	NONE	FALSE	FALSE	2	3	2	0	0	3	0	3	0	0	0	0	0	0	0	0	TRUE	PARKED		Morgan-  missed almost all attempts in placing aand intaking coral
+Q52	8841	OFFENSE	STATION	NONE	TRUE	FALSE	44	17	5	0	2	9	0	0	0	1	0	0	8	0	0	0	TRUE	DEEP		Cleared algae for coral; was blocked for a bit
+Q52	9030	OFFENSE	NONE	GROUND	FALSE	FALSE	14	3	2	0	0	1	2	1	0	0	0	0	0	2	0	0	TRUE	PARKED
+Q52	9030	OFFENSE	NONE	GROUND	FALSE	FALSE	14	3	2	0	1	1	2	1	0	0	0	0	0	2	0	0	TRUE	PARKED		Scored two processor algae veeeerrrrry slowly.(allison)
+Q52	10323	OFFENSE	NONE	GROUND	FALSE	FALSE	24	0	4	0	0	0	4	0	0	0	0	0	0	4	0	0	FALSE	FAILED_DEEP		Chloe
+Q53	801	OFFENSE	STATION	BOTH	TRUE	TRUE	30	10	5	0	0	3	5	2	0	0	0	0	1	4	1	0	TRUE	PARKED		3d prints on their intake broke so no coral; very good at adapting
+Q53	801	OFFENSE	STATION	REEF	TRUE	FALSE	20	10	3	0	0	3	4	2	1	0	0	0	1	3	0	0	TRUE	PARKED		In their auto they broke something on their robot and couldn't control their tilt or score coral; but despite all that they managed to score half the points in algae and win the round. That's resilience. - Angel
+Q53	1523	OFFENSE	NONE	NONE	FALSE	FALSE	2	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		Didn't do anything except park for the entire match. KP
+Q53	4562	OFFENSE	NONE	NONE	FALSE	FALSE	2	0	1	0	1	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		Slow
+Q53	4562	OFFENSE	STATION	GROUND	FALSE	FALSE	4	0	2	0	0	1	0	0	0	1	0	0	0	0	0	0	FALSE	PARKED
+Q53	6322	OFFENSE	STATION	NONE	FALSE	FALSE	11	0	2	0	0	5	0	2	0	1	1	1	0	0	0	0	FALSE	PARKED		James Sanders
+Q53	6322	OFFENSE	STATION	NONE	FALSE	FALSE	9	3	4	0	0	5	0	2	0	2	1	0	0	0	0	0	TRUE	PARKED
+Q53	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		Hard time moving-Chloe
+Q53	10335	OFFENSE	STATION	NONE	FALSE	FALSE	22	0	3	0	0	12	0	2	0	10	0	0	0	0	0	0	FALSE	PARKED		Remy
+Q54	59	OFFENSE	GROUND	NONE	FALSE	TRUE	48	10	4	0	0	14	0	4	0	3	0	0	7	0	0	0	TRUE	DEEP		Chloe
+Q54	1557	OFFENSE	NONE	REEF	TRUE	FALSE	14	3	3	0	0	2	4	2	2	0	0	0	0	2	0	0	TRUE	PARKED		Took algea for processor
+Q54	1557	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q54	1557	OFFENSE	NONE	BOTH	TRUE	FALSE	14	0	2	0	0	1	3	0	1	0	0	0	0	2	0	0	FALSE	PARKED		Could only score alge no coral and just went and parked mid match. KP
+Q54	1902	OFFENSE	GROUND	REEF	TRUE	FALSE	59	3	5	0	0	16	0	0	0	1	5	10	0	0	0	0	TRUE	PARKED		Smooth operator
+Q54	3627	OFFENSE	STATION	BOTH	TRUE	FALSE	11	0	3	0	0	3	1	0	1	1	1	1	0	0	0	0	FALSE	PARKED		Elevator wouldn't fully extend not allowing them to score on l4; took too long for them to realize this.  - angel
+Q54	7431	IMMOBILE	NONE	NONE	FALSE	TRUE	2	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		James Sanders. Broken from match start.
+Q55	1744	OFFENSE	STATION	NONE	FALSE	FALSE	12	3	3	0	0	10	0	5	0	5	0	0	0	0	0	0	TRUE	PARKED		Chloe
+Q55	5145	OFFENSE	STATION	BOTH	TRUE	TRUE	18	10	4	0	0	1	5	0	2	0	0	0	1	3	0	0	TRUE	NOT_ATTEMPTED		Scored many algae -angel
+Q55	5816	OFFENSE	GROUND	NONE	TRUE	FALSE	10	0	2	0	0	7	0	5	0	0	0	0	2	0	0	0	FALSE	NOT_ATTEMPTED		There was a lot of chasing down runaway algae pieces that slippes from the robots grasp
+Q55	6722	OFFENSE	NONE	REEF	TRUE	FALSE	6	0	3	0	0	2	3	2	0	0	0	0	0	0	1	2	FALSE	PARKED		Stopped moving around 1:30 in
+Q55	6722	OFFENSE	NONE	BOTH	TRUE	FALSE	9	3	3	0	0	2	3	1	0	0	0	0	1	0	1	2	TRUE	NOT_ATTEMPTED		Remy
+Q55	8324	OFFENSE	GROUND	NONE	FALSE	FALSE	40	0	5	0	0	8	0	0	0	0	0	0	8	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders
+Q55	10017	DEFENSE	NONE	NONE	FALSE	TRUE	2	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	PARKED		Nothing worked so they tried doing defense. KP
+Q55	10017	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q56	21	OFFENSE	STATION	NONE	FALSE	FALSE	34	10	5	0	0	6	0	0	0	1	0	0	5	0	0	0	TRUE	DEEP		Did really good and scored mostly L4 and also climbed. KP
+Q56	180	OFFENSE	BOTH	REEF	TRUE	FALSE	76	17	5	0	0	19	4	1	4	3	2	3	10	0	0	0	TRUE	DEEP		James Sanders
+Q56	233	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	2	0	0	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Uhh we kinda couldn't move and disabled. - Angel :(
+Q56	386	OFFENSE	STATION	NONE	FALSE	FALSE	44	10	5	0	0	12	0	1	0	0	2	2	7	0	0	0	TRUE	NOT_ATTEMPTED
+Q56	386	OFFENSE	STATION	NONE	TRUE	FALSE	45	3	3	0	0	8	0	1	0	0	0	2	5	0	0	0	TRUE	DEEP		Might have underestimated the coral count; distracted by our robot having problems
+Q56	3932	OFFENSE	STATION	NONE	FALSE	FALSE	37	17	5	0	0	12	1	3	1	0	4	2	3	0	0	0	TRUE	DEEP		Remy
+Q56	9670	OFFENSE	STATION	NONE	FALSE	FALSE	6	3	4	0	0	1	1	1	0	0	0	0	0	1	0	0	TRUE	NOT_ATTEMPTED		Chloe
+Q57	744	OFFENSE	STATION	NONE	TRUE	FALSE	14	0	3	0	0	7	0	4	0	0	0	3	0	0	0	0	FALSE	PARKED		Dropped coral many times however; dragged teammate to be parked
+Q57	2152	OFFENSE	STATION	NONE	FALSE	FALSE	21	3	4	0	0	10	0	3	0	2	1	3	0	0	0	0	TRUE	PARKED		Chloe
+Q57	2797	IMMOBILE	STATION	NONE	FALSE	FALSE	2	3	2	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	PARKED
+Q57	2797	IMMOBILE	STATION	GROUND	FALSE	FALSE	5	0	1	0	0	2	0	1	0	0	1	0	0	0	0	0	FALSE	PARKED		James Sanders; robot ran straight into middle pole full speed and died
+Q57	8753	OFFENSE	STATION	NONE	FALSE	FALSE	21	10	4	0	0	4	0	0	0	2	0	0	2	0	0	0	TRUE	DEEP		Remy
+Q57	8775	OFFENSE	STATION	REEF	TRUE	TRUE	7	3	2	0	1	3	0	1	0	1	1	0	0	0	0	0	TRUE	PARKED		They were scoring for a bit but then a coral got stuck so they did defense. KP
+Q57	9300	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Hasini- team did nothing and stayed in one spot
+Q57	9300	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	2	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		didn’t move :/
+Q58	179	OFFENSE	GROUND	NONE	TRUE	FALSE	73	10	5	0	1	17	0	3	0	0	0	4	10	0	0	0	TRUE	DEEP		Scored mostly on L4. KP
+Q58	4013	OFFENSE	STATION	NONE	FALSE	FALSE	12	0	3	0	0	5	2	2	2	1	0	2	0	0	0	0	FALSE	PARKED		Remy
+Q58	6473	OFFENSE	STATION	NONE	TRUE	FALSE	20	3	3	0	0	5	0	0	0	0	2	3	0	0	0	0	TRUE	PARKED
+Q58	6473	OFFENSE	STATION	NONE	TRUE	FALSE	20	3	3	0	0	5	0	0	0	0	2	3	0	0	0	0	TRUE	PARKED		Hasini- is able to score coral consistently but takes sonetime to pick coral up
+Q58	10211	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	6	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		James Sanders
+Q58	10402	OFFENSE	NONE	NONE	FALSE	FALSE	2	3	3	0	0	1	0	1	0	0	0	0	0	0	0	0	TRUE	PARKED		Not much scoring effort-chloe
+Q59	1592	OFFENSE	STATION	REEF	TRUE	FALSE	23	3	3	0	0	4	1	3	0	0	0	0	1	1	0	0	TRUE	DEEP
+Q59	3627	OFFENSE	STATION	BOTH	TRUE	FALSE	14	3	3	0	0	5	1	3	0	0	0	2	0	0	1	0	TRUE	PARKED		Hasini- consistent when scoring algae; took some time when collecting coral
+Q59	3627	OFFENSE	STATION	BOTH	TRUE	FALSE	18	3	5	0	0	8	1	5	0	0	0	3	0	0	1	0	TRUE	PARKED		fire robot
+Q59	5842	OFFENSE	STATION	NONE	FALSE	FALSE	39	17	5	0	0	13	1	1	1	0	1	4	6	0	0	0	TRUE	NOT_ATTEMPTED		James Sanders
+Q59	6322	OFFENSE	STATION	NONE	FALSE	FALSE	27	3	3	0	0	8	0	1	0	1	1	5	0	0	0	0	TRUE	PARKED		Morgan- driver forgot the direction of the robot at some point and  almost missed the coral due to that
+Q59	7431	OFFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Did not show
+Q59	8817	OFFENSE	STATION	BOTH	TRUE	FALSE	22	0	2	0	0	3	6	1	1	0	0	0	2	0	3	2	FALSE	NOT_ATTEMPTED		Remy
+Q60	86	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	4	0	0	9	0	4	0	0	0	0	5	0	0	0	TRUE	DEEP		Hasini- scored coral pretty consistently but they did miss a few shots
+Q60	86	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	4	0	0	5	0	0	0	0	0	0	5	0	0	0	TRUE	DEEP
+Q60	86	OFFENSE	STATION	NONE	FALSE	FALSE	32	10	5	0	0	7	0	2	0	0	0	0	5	0	0	0	TRUE	DEEP
+Q60	1523	OFFENSE	NONE	NONE	TRUE	FALSE	2	0	2	0	0	1	2	1	2	0	0	0	0	0	0	0	FALSE	PARKED		Broke in the middle of match.
+Q60	6722	OFFENSE	STATION	BOTH	TRUE	FALSE	7	3	3	0	2	5	2	4	2	0	0	0	1	0	0	0	TRUE	PARKED		Morgan- struggled to score coral in the second half. Kept dropping coral on itself.
+Q60	7403	DEFENSE	NONE	NONE	FALSE	FALSE	2	0	4	0	2	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		Remy
+Q60	8791	IMMOBILE	NONE	NONE	FALSE	FALSE	2	0	1	0	5	1	0	1	0	0	0	0	0	0	0	0	FALSE	PARKED		It was scooting around but didn't do anything the entire match but park. KP
+Q60	8841	OFFENSE	STATION	NONE	FALSE	FALSE	62	10	4	0	0	13	0	2	0	0	0	0	11	0	0	0	TRUE	DEEP		James Sanders
+Q61	233	OFFENSE	STATION	NONE	TRUE	FALSE	48	10	5	0	0	11	0	0	0	0	1	0	10	0	0	0	TRUE	NOT_ATTEMPTED
+Q61	1744	OFFENSE	NONE	NONE	FALSE	FALSE	0	3	2	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED		Didnt record entire match but 1744 was playing offensive the entire match
+Q61	4024	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	2	0	1	1	0	1	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Kept freezing; didn't move well. It went defensive but didn't make any defends
+Q61	5472	FEEDER	STATION	REEF	TRUE	FALSE	31	6	5	0	0	11	0	1	0	2	3	5	0	0	0	0	TRUE	NOT_ATTEMPTED		Dropped 1 coral; took 1 algae off reef; very efficient despite attacker
+Q61	5472	OFFENSE	BOTH	REEF	FALSE	FALSE	38	7	4	0	0	10	1	1	1	0	2	2	5	0	0	0	TRUE	PARKED
+Q61	5472	OFFENSE	STATION	REEF	TRUE	FALSE	33	7	4	0	0	9	0	1	0	0	2	2	4	0	0	0	TRUE	PARKED
+Q62	1902	FEEDER	BOTH	BOTH	FALSE	FALSE	45	3	5	0	0	10	0	0	0	0	7	3	0	0	0	0	TRUE	DEEP		Really good
+Q62	3932	OFFENSE	STATION	NONE	FALSE	FALSE	52	0	4	0	0	8	0	0	0	0	0	0	8	0	0	0	FALSE	DEEP
+Q62	8057	OFFENSE	NONE	NONE	FALSE	FALSE	2	3	3	0	0	2	0	1	0	1	0	0	0	0	0	0	TRUE	FAILED_SHALLOW		Played offensively on other team's side
+Q62	8753	OFFENSE	STATION	NONE	FALSE	FALSE	10	3	4	0	0	3	0	1	0	0	0	0	2	0	0	0	TRUE	FAILED_DEEP
+Q62	8753	FEEDER	STATION	NONE	FALSE	FALSE	24	3	3	0	0	6	0	0	0	0	0	6	0	0	0	0	TRUE	FAILED_DEEP
+Q62	10323	OFFENSE	NONE	GROUND	FALSE	FALSE	54	3	5	0	0	1	7	1	0	0	0	0	0	7	0	0	TRUE	DEEP
+Q63	79	OFFENSE	STATION	NONE	FALSE	FALSE	28	7	3	0	0	5	0	0	0	0	1	4	0	0	0	0	TRUE	DEEP
+Q63	180	FEEDER	BOTH	REEF	TRUE	FALSE	38	9	4	0	0	10	0	1	0	2	2	5	0	0	0	0	TRUE	DEEP		Failed around 8 L1 coral
+Q63	180	OFFENSE	BOTH	REEF	FALSE	FALSE	61	17	4	0	0	16	0	0	0	5	2	2	7	0	0	0	TRUE	DEEP
+Q63	2152	OFFENSE	STATION	NONE	FALSE	FALSE	11	0	4	0	0	4	0	0	0	1	3	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q64	2797	OFFENSE	STATION	BOTH	TRUE	FALSE	9	3	3	0	0	4	1	1	1	0	1	1	0	0	0	0	TRUE	PARKED
+Q64	2797	OFFENSE	STATION	REEF	TRUE	FALSE	6	3	3	0	0	3	0	2	0	0	0	1	0	0	0	0	TRUE	PARKED
+Q64	4013	FEEDER	STATION	REEF	TRUE	FALSE	10	0	4	0	0	4	0	0	0	2	2	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q64	4013	OFFENSE	STATION	REEF	FALSE	FALSE	16	0	3	0	0	5	0	1	0	0	2	2	0	0	0	0	FALSE	PARKED
+Q64	5816	FEEDER	BOTH	NONE	FALSE	TRUE	11	3	2	0	1	4	0	0	0	2	0	0	1	0	0	0	TRUE	PARKED
+Q65	386	OFFENSE	STATION	NONE	FALSE	FALSE	27	10	5	0	0	6	1	0	1	0	0	0	6	0	0	0	TRUE	PARKED
+Q65	4118	OFFENSE	STATION	NONE	FALSE	FALSE	23	0	3	0	0	8	0	3	0	0	0	2	3	0	0	0	FALSE	NOT_ATTEMPTED
+Q65	4118	OFFENSE	STATION	REEF	TRUE	FALSE	23	3	4	0	0	8	1	3	1	0	0	2	3	0	0	0	TRUE	NOT_ATTEMPTED
+Q65	10650	FEEDER	STATION	NONE	FALSE	FALSE	0	0	4	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	FAILED_DEEP
+Q66	801	FEEDER	STATION	REEF	TRUE	FALSE	23	9	4	0	0	8	1	1	0	1	5	1	0	1	0	0	TRUE	NOT_ATTEMPTED
+Q66	801	OFFENSE	STATION	NONE	FALSE	FALSE	36	10	2	0	0	11	1	2	0	0	3	4	2	1	0	0	TRUE	NOT_ATTEMPTED
+Q66	8775	OFFENSE	BOTH	NONE	FALSE	FALSE	2	3	1	0	0	1	0	0	0	1	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q67	6473	OFFENSE	STATION	NONE	FALSE	FALSE	13	0	2	0	0	6	0	3	0	0	1	2	0	0	0	0	FALSE	PARKED
+Q67	10323	OFFENSE	NONE	NONE	FALSE	FALSE	0	3	3	0	0	1	0	0	0	0	0	0	0	0	0	0	TRUE	NOT_ATTEMPTED
+Q68	1744	FEEDER	STATION	NONE	FALSE	FALSE	4	0	1	0	0	2	0	0	0	2	0	0	0	0	0	0	FALSE	FAILED_DEEP
+Q68	3932	FEEDER	BOTH	GROUND	FALSE	FALSE	19	3	2	0	0	4	1	1	0	0	1	0	2	1	0	0	TRUE	NOT_ATTEMPTED
+Q68	4091	OFFENSE	STATION	NONE	FALSE	FALSE	10	3	3	0	0	4	0	2	0	0	1	0	1	0	0	0	TRUE	PARKED
+Q68	4091	OFFENSE	STATION	NONE	FALSE	FALSE	12	0	1	0	0	7	0	4	0	1	1	0	1	0	0	0	FALSE	PARKED
+Q69	233	OFFENSE	STATION	GROUND	FALSE	FALSE	55	10	5	0	0	11	2	1	0	0	1	0	9	2	0	0	TRUE	NOT_ATTEMPTED
+Q69	4013	OFFENSE	STATION	NONE	FALSE	FALSE	4	3	1	0	0	2	0	0	0	2	0	0	0	0	0	0	TRUE	FAILED_DEEP
+Q69	8817	FEEDER	NONE	BOTH	FALSE	FALSE	16	3	4	0	0	1	4	0	0	0	0	0	0	0	4	0	TRUE	NOT_ATTEMPTED
+Q70	86	FEEDER	STATION	NONE	FALSE	FALSE	41	9	4	0	0	10	0	0	0	2	3	5	0	0	0	0	TRUE	DEEP
+Q70	1592	FEEDER	BOTH	NONE	FALSE	FALSE	22	3	4	0	0	3	0	1	0	0	0	0	2	0	0	0	TRUE	DEEP
+Q70	3627	OFFENSE	STATION	REEF	FALSE	FALSE	20	0	3	0	0	7	0	2	0	0	2	3	0	0	0	0	FALSE	PARKED
+Q70	3627	OFFENSE	STATION	REEF	TRUE	FALSE	13	3	3	0	0	4	0	1	0	0	1	2	0	0	0	0	TRUE	PARKED
+Q70	3627	OFFENSE	STATION	BOTH	TRUE	FALSE	19	3	3	0	0	9	1	4	1	0	3	2	0	0	0	0	TRUE	PARKED
+Q71	21	OFFENSE	STATION	NONE	FALSE	FALSE	35	10	5	0	0	7	0	1	0	0	1	0	5	0	0	0	TRUE	DEEP		Really efficient coral scoring! Deep cage worked well - 3627
+Q71	431	FEEDER	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED		Very wobbly
+Q72	9300	DEFENSE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	FAILED_DEEP
+Q73	180	OFFENSE	GROUND	REEF	TRUE	FALSE	57	10	5	0	0	19	2	5	2	3	5	1	5	0	0	0	TRUE	DEEP
+Q73	744	FEEDER	STATION	NONE	FALSE	FALSE	13	0	4	0	0	7	2	1	2	2	3	0	0	0	0	0	FALSE	FAILED_DEEP
+Q74	8057	OFFENSE	STATION	NONE	FALSE	FALSE	20	3	3	0	0	6	0	3	0	1	2	0	0	0	0	0	TRUE	DEEP		Joshua Green - Drives slow and in random places
+Q74	10017	FEEDER	STATION	NONE	FALSE	FALSE	2	0	1	0	0	2	0	0	0	1	0	0	0	0	0	0	FALSE	FAILED_DEEP
+Q75	5472	FEEDER	STATION	REEF	TRUE	FALSE	16	12	5	0	0	7	0	1	0	1	0	5	0	0	0	0	TRUE	FAILED_DEEP
+Q75	6322	OFFENSE	STATION	NONE	FALSE	FALSE	21	3	5	0	0	8	0	1	0	1	3	2	0	0	0	0	TRUE	PARKED		Joshua Green - Highest is L3
+Q75	6473	FEEDER	BOTH	NONE	FALSE	FALSE	4	3	2	0	0	2	0	1	0	1	0	0	0	0	0	0	TRUE	PARKED
+Q76	21	OFFENSE	STATION	NONE	TRUE	FALSE	40	3	5	0	0	7	0	1	0	0	1	0	5	0	0	0	TRUE	DEEP		Joshua Green
+Q76	6722	OFFENSE	NONE	BOTH	FALSE	FALSE	20	3	3	0	0	3	0	1	0	0	1	0	1	0	0	0	TRUE	DEEP
+Q76	10211	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q77	8753	FEEDER	STATION	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	FAILED_DEEP
+Q78	744	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q79	7403	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q80	2152	OFFENSE	STATION	NONE	TRUE	FALSE	32	0	3	0	0	10	0	0	0	1	4	2	2	0	0	0	FALSE	NOT_ATTEMPTED		(3627) Driver excels at collecting coral but sometimes has a difficult time scoring it.
+Q81	386	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q82	59	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q83	79	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED
+Q84	21	IMMOBILE	NONE	NONE	FALSE	FALSE	0	0	3	0	0	1	0	0	0	0	0	0	0	0	0	0	FALSE	NOT_ATTEMPTED

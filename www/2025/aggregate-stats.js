@@ -1,10 +1,11 @@
 "use strict"
 
+function bool_1_0(s){
+	return (!s||/^0|no|false$/i.test(""+s))?0:1
+}
+
 function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStatsByMatchTeam, eventStatsByTeam, match){
 
-	function bool_1_0(s){
-		return (!s||/^0|no|false$/i.test(""+s))?0:1
-	}
 
 	function getPreferredCoralLevel(l1,l2,l3,l4){
 		var m=Math.max(l1,l2,l3,l4)
@@ -2251,6 +2252,10 @@ var importFunctions={
 		example:"/2025/195.csv",
 		convert:importScouting195,
 	},
+	"Lovat":{
+		example:"/2025/lovat.tsv",
+		convert:importScoutingLovat,
+	},
 }
 
 function importScouting195(text){
@@ -2288,7 +2293,6 @@ function importScouting195(text){
 		row.tele_algae_lower=row.teleAlgaeRmv
 		row.tele_algae_processor=row.teleProcessor
 		row.tele_algae_net=row.teleBarge
-		row.tele_algae_drop=row.teleMissProcessor+row.teleMissBarge
 		row.tele_algae_opponent_processor=row.teleOppProcessor
 		row.tele_coral_theft=row.teleOppCoral
 		row.tele_algae_theft=row.teleOppAlgae
@@ -2306,6 +2310,33 @@ function importScouting195(text){
 			case "6":row.end_game_position='parked';break
 		}
 		row.defense=row.postDefense
+	})
+	return rows
+}
+
+function importScoutingLovat(text){
+	var rows=csvToArrayOfMaps(text.replace(/,/g,"،").replace(/\t/g,","))
+	rows.forEach(row=>{
+		row.auto_leave=bool_1_0(row.activeAuton)
+		row.match=row.match.replace(/Q/,"qm")
+		row.team=row.teamNumber
+		row.tele_coral_level_4=row.coralL4
+		row.tele_coral_level_3=row.coralL3
+		row.tele_coral_level_2=row.coralL2
+		row.tele_coral_level_1=row.coralL1
+		row.tele_coral_drop=row.coralDrops
+		row.tele_algae_processor=row.processorScores
+		row.tele_algae_net=row.netScores
+		row.tele_algae_drop=row.algaeDrops
+		row.end_game_climb_fail=''
+		row.end_game_position=''
+		switch(row.endgame){
+			case "FAILED_DEEP":case "FAILED_SHALLOW":row.end_game_position='parked';row.end_game_climb_fail=1;break
+			case "SHALLOW":row.end_game_position='shallow';break
+			case "DEEP":row.end_game_position='deep';break
+			case "PARKED":row.end_game_position='parked';break
+		}
+		row.comments=row.notes
 	})
 	return rows
 }
