@@ -37,27 +37,26 @@ var ssHref
 $(document).ready(function(){
 	var events = []
 	ssHref=$('#seasonStatsLink a').attr('href')
-	$.ajax({
-		url:"/event-list.cgi",
-		dataType:"text",
-		success:function(data){
-			events = data.split(/[\r\n]/)
-			var seasons = {}
-			for (var i=0; i<events.length; i++){
-				var m = events[i].match(/^[0-9]{4}(-[0-9]{2})?/)
-				if(m) seasons[m[0]] = 1
-			}
-			seasons = Object.keys(seasons)
-			seasons.sort((a,b) => {return b.localeCompare(a)})
-			for (var i=0; i<seasons.length; i++){
-				var season = seasons[i],
-				comp = /-/.test(season)?"FTC":"FRC"
-				$('#seasons').append($(`<option value=${season}>${season} ${comp}</option>`))
-			}
-			$('#seasons').toggle(seasons.length > 1)
-			events = events.sort(dateCompare)
-			showEvents()
+
+	fetch("/event-list.cgi").then(response=>{
+		return response.text()
+	}).then(data=>{
+		events = data.split(/[\r\n]/)
+		var seasons = {}
+		for (var i=0; i<events.length; i++){
+			var m = events[i].match(/^[0-9]{4}(-[0-9]{2})?/)
+			if(m) seasons[m[0]] = 1
 		}
+		seasons = Object.keys(seasons)
+		seasons.sort((a,b) => {return b.localeCompare(a)})
+		for (var i=0; i<seasons.length; i++){
+			var season = seasons[i],
+			comp = /-/.test(season)?"FTC":"FRC"
+			$('#seasons').append($(`<option value=${season}>${season} ${comp}</option>`))
+		}
+		$('#seasons').toggle(seasons.length > 1)
+		events = events.sort(dateCompare)
+		showEvents()
 	})
 	function showEvents(){
 		var list = $('#events-list')
@@ -70,7 +69,7 @@ $(document).ready(function(){
 			if (season == filter){
 				var [id, name] = events[i].split(/,/)
 				if (!name) name = id
-				list.append($(`<li><a href=/event.html#${id}>${name}</a></li>`))
+				list.append($(`<li><a href=/event.html#${id}>${unescapeField(name)}</a></li>`))
 				eventsShown++
 			}
 		}
@@ -88,3 +87,10 @@ $(document).ready(function(){
 		$('#seasons').val('-')
 	})
 })
+
+function unescapeField(s){
+	return s
+		.replace(/⏎/g, "\n")
+		.replace(/״/g, "\"")
+		.replace(/،/g, ",")
+}
