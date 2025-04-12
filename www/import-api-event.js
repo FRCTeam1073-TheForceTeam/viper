@@ -133,7 +133,7 @@ $(document).ready(function(){
 		playoffs = playoffs||{}
 		playoffs.Schedule = playoffs.Schedule||playoffs.schedule||[]
 		var lastRound=0,roundMatch=0,teamAlliances={},playoffMatchAlliances={}
-		if(alliancesJson){
+		if(alliancesJson&&alliancesJson.Alliances){
 			alliancesJson.Alliances.forEach(a=>{
 				if(a.captain)teamAlliances[a.captain]=a.number
 				if(a.round1)teamAlliances[a.round1]=a.number
@@ -169,7 +169,7 @@ $(document).ready(function(){
 				lastRound=round
 			}
 		})
-		if(alliancesJson){
+		if(alliancesJson&&alliancesJson.Alliances){
 			var alliancesCsv = "Alliance,Captain,First Pick,Second Pick,Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5,Won Finals\n"
 			alliancesJson.Alliances.forEach(a=>{
 				alliancesCsv += `${a.number},${a.captain},${a.round1},${a.round2}`
