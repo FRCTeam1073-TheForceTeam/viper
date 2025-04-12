@@ -30,13 +30,41 @@ my $dbh = $db->dbConnection();
 
 my $filesWritten = 0;
 $filesWritten += $frcapi->writeFileFromAPI("$eventYear/events?eventCode=$eventId","../data/$event.info.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=practice","../data/$event.schedule.practice.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=qualification","../data/$event.schedule.qualification.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=playoff","../data/$event.schedule.playoff.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/qualification","../data/$event.scores.qualification.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json");
-$filesWritten += $frcapi->writeFileFromAPI("$eventYear/alliances/$eventId","../data/$event.alliances.json");
+eval{
+	$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=practice","../data/$event.schedule.practice.json", 1);
+	1;
+};
+print STDERR $@ if $@;
+eval{
+	$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=qualification","../data/$event.schedule.qualification.json", 1);
+	1;
+};
+print STDERR $@ if $@;
+eval{
+	$filesWritten += $frcapi->writeFileFromAPI("$eventYear/schedule/$eventId?tournamentLevel=playoff","../data/$event.schedule.playoff.json", 1);
+	1;
+};
+print STDERR $@ if $@;
+eval{
+	$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/qualification","../data/$event.scores.qualification.json", 1);
+	1;
+};
+print STDERR $@ if $@;
+eval{
+	$filesWritten += $frcapi->writeFileFromAPI("$eventYear/scores/$eventId/playoff","../data/$event.scores.playoff.json", 1);
+	1;
+};
+print STDERR $@ if $@;
+eval{
+	$filesWritten += $frcapi->writeFileFromAPI("$eventYear/teams?eventCode=$eventId","../data/$event.teams.json", 1);
+	1;
+};
+print STDERR $@ if $@;
+eval{
+	$filesWritten += $frcapi->writeFileFromAPI("$eventYear/alliances/$eventId","../data/$event.alliances.json", 1);
+	1;
+};
+print STDERR $@ if $@;
 
 $webutil->error("API returned no data") if ($filesWritten==0);
 

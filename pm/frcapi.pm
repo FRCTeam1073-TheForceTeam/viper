@@ -29,21 +29,24 @@ $webutil->error("Missing API ".($apiUser?"Token":"User"), "FRC_API_USER=\"myuser
 my $ua = LWP::UserAgent->new;
 
 sub fetchFromAPI(){
-	my ($this, $url) = @_;
+	my ($this, $url, $dieOnError) = @_;
 	$url = "https://frc-api.firstinspires.org/v3.0/$url";
 	my $req = HTTP::Request->new(
 		'GET',$url,["If-Modified-Since"=>""]
 	);
 	$req->authorization_basic($apiUser, $apiToken);
 	my $response = $ua->request($req);
-	$webutil->error("FRC API Error", "Error fetching $url: ".$response->message()."\n\n\n\nRefresh this page to try fetching from the API again.") if ($response->is_error());
+	if ($response->is_error()){
+		die  "Error fetching $url: ".$response->message() if ($dieOnError);
+		$webutil->error("FRC API Error", "Error fetching $url: ".$response->message()."\n\n\n\nRefresh this page to try fetching from the API again.");
+	}
 	sleep(1);
 	return $response->content;
 }
 
 sub writeFileFromAPI(){
-	my ($this, $url, $file) = @_;
-	my $content = $this->fetchFromAPI($url);
+	my ($this, $url, $file, $dieOnError) = @_;
+	my $content = $this->fetchFromAPI($url, $dieOnError);
 	my $pages = 1;
 	my $filesWritten=0;
 	if ($content =~ /^\{\"[A-Za-z0-9]+\"\:\[\]\}$/){
@@ -63,7 +66,7 @@ sub writeFileFromAPI(){
 		$filesWritten++;
 		for (my $i=2; $i<=$pages; $i++){
 			my $pageUrl = $url.($url=~/\?/?"&":"?")."page=$i";
-			$content = $this->fetchFromAPI($pageUrl);
+			$content = $this->fetchFromAPI($pageUrl, $dieOnError);
 			my $pageFile = $file;
 			$pageFile =~ s/(\.[0-9]+)?\.json/.$i.json/g;
 			$this->writeSingle($pageFile, $content);
