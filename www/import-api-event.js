@@ -170,26 +170,29 @@ $(document).ready(function(){
 			}
 		})
 		if(alliancesJson&&alliancesJson.Alliances){
-			var alliancesCsv = "Alliance,Captain,First Pick,Second Pick,Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5,Won Finals\n"
+			var alliancesCsv = ""
 			alliancesJson.Alliances.forEach(a=>{
-				alliancesCsv += `${a.number},${a.captain},${a.round1},${a.round2}`
-				;['1p','2p','3p','4p','5p','f'].forEach(function(round){
-					var matches=(playoffMatchAlliances[round]||{})[a.number]||{},
-					wonCount=0,
-					lostCount=0,
-					matchCount=Object.keys(matches).length,
-					doneThreshold=(matchCount+1)/2
-					Object.values(matches).forEach(match=>{
-						if(match.matchNumber&&playoffScoresJson&&playoffScoresJson.MatchScores&&playoffScoresJson.MatchScores.length>=match.matchNumber){
-							var scores=playoffScoresJson.MatchScores[match.matchNumber-1]
-							wonCount+=((match.blue==a.number)==(scores.winningAlliance==2))
-							lostCount+=((match.blue==a.number)==(scores.winningAlliance==1))
-						}
+				if (a.captain&&a.round1&&a.round2){
+					if (!alliancesCsv)alliancesCsv = "Alliance,Captain,First Pick,Second Pick,Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5,Won Finals\n"
+					alliancesCsv += `${a.number},${a.captain},${a.round1},${a.round2}`
+					;['1p','2p','3p','4p','5p','f'].forEach(function(round){
+						var matches=(playoffMatchAlliances[round]||{})[a.number]||{},
+						wonCount=0,
+						lostCount=0,
+						matchCount=Object.keys(matches).length,
+						doneThreshold=(matchCount+1)/2
+						Object.values(matches).forEach(match=>{
+							if(match.matchNumber&&playoffScoresJson&&playoffScoresJson.MatchScores&&playoffScoresJson.MatchScores.length>=match.matchNumber){
+								var scores=playoffScoresJson.MatchScores[match.matchNumber-1]
+								wonCount+=((match.blue==a.number)==(scores.winningAlliance==2))
+								lostCount+=((match.blue==a.number)==(scores.winningAlliance==1))
+							}
+						})
+						alliancesCsv+=","
+						if(matchCount>0&&(wonCount>=doneThreshold||lostCount>=doneThreshold))alliancesCsv+=(wonCount>lostCount?1:0)
 					})
-					alliancesCsv+=","
-					if(matchCount>0&&(wonCount>=doneThreshold||lostCount>=doneThreshold))alliancesCsv+=(wonCount>lostCount?1:0)
-				})
-				alliancesCsv+='\n'
+					alliancesCsv+='\n'
+				}
 			})
 			$('#allianceCsvInp').val(alliancesCsv)
 		}
