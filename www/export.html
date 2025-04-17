@@ -47,7 +47,7 @@
 
 			<p data-i18n=without_images_transfer_description></p>
 			<form method=POST action=https://example.viperscout.com/admin/import.cgi>
-				<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$'>
+				<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-z]+(:[^:@]+)?@)?([a-zA-Z0-9\-\.\:]+)(\/?)$'>
 				<ul class=hostOptions></ul>
 				<input name=json id=transferJsonData type=hidden>
 				<button class=submit id=submitData disabled=true><img id=loadingData class=loading-spinner src=/loading.svg> <span data-i18n=without_images_transfer_button></span></button>

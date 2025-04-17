@@ -171,7 +171,7 @@ $(document).ready(function(){
 			return false
 		}
 		var url = $(this).find('.siteInput').val().trim()
-		if (!/^((https?:\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$/.test(url))return false
+		if (!/^((https?:\/\/)?)([a-z]+(:[^:@]+)?@)?([a-zA-Z0-9\-\.\:]+)(\/?)$/.test(url))return false
 		url = url.replace(/\/$/,"")
 		var hosts = (localStorage.transferHosts||""),
 		hostList = hosts.split(",").reduce((m,o)=>(m[o]=o,m),{})
