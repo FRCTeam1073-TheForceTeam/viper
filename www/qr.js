@@ -1,7 +1,7 @@
 "use strict"
 
 addI18n({
-	qr_title{
+	qr_title:{
 		en:'Processing QR Code',
 		fr:'Traitement du code QR',
 		tr:'QR Kodu İşleniyor',
