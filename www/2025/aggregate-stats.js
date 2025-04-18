@@ -2252,6 +2252,10 @@ var importFunctions={
 		example:"/2025/195.csv",
 		convert:importScouting195,
 	},
+	"3061":{
+		example:"/2025/3061.json",
+		convert:importScouting3061,
+	},
 	"Lovat":{
 		example:"/2025/lovat.tsv",
 		convert:importScoutingLovat,
@@ -2339,4 +2343,74 @@ function importScoutingLovat(text){
 		row.comments=row.notes
 	})
 	return rows
+}
+
+function importScouting3061(text){
+	var data = [],
+	MAP={
+		autoAlgaeRight:"auto_algae_mark_1",
+		autoAlgaeCenter:"auto_algae_mark_2",
+		autoAlgaeLeft:"auto_algae_mark_3",
+		autoAlgaeDrop:"auto_algae_drop",
+		autoCoralRight:"auto_coral_mark_1",
+		autoAlgaeCenter:"auto_coral_mark_2",
+		autoCoralLeft:"auto_coral_mark_3",
+		autoCoralDrop:"auto_coral_drop",
+		autol1:"auto_coral_level_1",
+		autol2:"auto_coral_level_2",
+		autol3:"auto_coral_level_3",
+		autol4:"auto_coral_level_4",
+		autoMissCoral:"auto_coral_drop",
+		autoMissNet:"auto_algae_drop",
+		autoReefPickupAlgae:"auto_algae_upper",
+		autoScoreNet:"auto_algae_net",
+		autoScoreProcessor:"auto_algae_processor",
+		autoStationPickupCoral:"auto_coral_station_1",
+		bargeFall:"end_game_climb_fail",
+		broken:"bricked",
+		leave:"auto_leave",
+		preloadCoral:"coral_preload",
+		teleopAlgaeDrop:"tele_algae_drop",
+		teleopCoralDrop:"tele_coral_drop",
+		teleopGroundPickupAlgae:"tele_algae_ground",
+		teleopGroundPickupCoral:"tele_coral_ground",
+		teleopl1:"tele_coral_level_1",
+		teleopl2:"tele_coral_level_2",
+		teleopl3:"tele_coral_level_3",
+		teleopl4:"tele_coral_level_4",
+		teleopMissCoral:"tele_coral_drop",
+		teleopMissNet:"tele_algae_drop",
+		teleopReefPickupAlgae:"tele_algae_upper",
+		teleopScoreNet:"tele_algae_net",
+		teleopScoreProcessor:"tele_algae_processor",
+		teleopStationPickupCoral:"tele_coral_station_1",
+	}
+	JSON.parse(text).forEach(m=>{
+		var r = {}
+		data.push(r)
+		r.match="qm"+m.matchNumber
+		r.team=m.robotNumber
+		r.scouter=m.scouterId
+		r.created=new Date(m.timestamp).toISOString().replace(/\..*/,"+00:00")
+		r.modified=r.created
+		r.timeline=[]
+		r.end_game_position=""
+		Object.values(MAP).forEach(v=>r[v]=0)
+		m.actionQueue.forEach(a=>{
+			var t=Math.floor(a.ts/1000)
+			switch(a.id){
+				case "deep":m.end_game_position="deep";break;
+				case "park":m.end_game_position="parked";break;
+				case "shallow":m.end_game_position="shallow";break;
+				default:
+					if(MAP.hasOwnProperty(a.id)){
+						r[MAP[a.id]]++
+						r.timeline.push(`${t}:${MAP[a.id]}`)
+					}
+					break;
+			}
+		})
+		r.timeline=r.timeline.join(" ")
+	})
+	return data
 }
