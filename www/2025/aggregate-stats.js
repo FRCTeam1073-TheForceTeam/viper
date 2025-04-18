@@ -2399,9 +2399,9 @@ function importScouting3061(text){
 		m.actionQueue.forEach(a=>{
 			var t=Math.floor(a.ts/1000)
 			switch(a.id){
-				case "deep":m.end_game_position="deep";break;
-				case "park":m.end_game_position="parked";break;
-				case "shallow":m.end_game_position="shallow";break;
+				case "deep":r.end_game_position="deep";break;
+				case "park":r.end_game_position="parked";break;
+				case "shallow":r.end_game_position="shallow";break;
 				default:
 					if(MAP.hasOwnProperty(a.id)){
 						r[MAP[a.id]]++
