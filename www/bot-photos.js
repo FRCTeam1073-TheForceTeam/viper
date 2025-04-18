@@ -134,7 +134,7 @@ function addTeam(team){
 }
 
 function photoEditLightBox(){
-	showLightBox($('#photoEdit').attr('src',$(this).attr('href')))
+	showLightBox($('#photoEdit').attr('src',$(this).find('a').attr('href')))
 	return false
 }
 
