@@ -1035,7 +1035,7 @@ var statInfo={
 		he:'אצות נפלו מהשונית התחתונה',
 	},
 	algae_net:{
-		name: 'Algae Placed or Shot into the Net by the Robot',
+		name: 'Algae Into the Net by the Robot',
 		type: 'avg',
 		fr:'Algues placées ou lancées dans le filet par le robot',
 		pt:'Algas colocadas ou atiradas na rede pelo robô',
