@@ -1107,7 +1107,7 @@ var statInfo={
 		he:'ציון מעבד אצות',
 	},
 	algae_reef:{
-		name: 'Algae Collected from Reef',
+		name: 'Algae Off Reef',
 		type: 'avg',
 		fr:'Algues collectées sur le récif',
 		pt:'Algas coletadas do recife',
@@ -2345,6 +2345,7 @@ function importScoutingLovat(text){
 	return rows
 }
 
+// https://scouting.team3061.org/analysis/api/dataset
 function importScouting3061(text){
 	var data = [],
 	MAP={
