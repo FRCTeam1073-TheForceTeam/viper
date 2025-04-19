@@ -148,6 +148,8 @@ $(document).ready(function(){
 			if(!round && /^quarterfinal/i.test(match.description))round="qf"
 			if(!round && /^semifinal/i.test(match.description))round="sf"
 			if(!round && /^final/i.test(match.description))round="f"
+			if(!round && /^einstein final/i.test(match.description))round="f"
+			if(!round && /^einstein/i.test(match.description))round="sf"
 			if(round){
 				if(round!=lastRound)roundMatch=0
 				roundMatch++
