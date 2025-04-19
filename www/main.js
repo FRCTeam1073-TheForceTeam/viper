@@ -449,6 +449,25 @@ $(document).ready(function(){
 					req.send()
 					return false
 				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
+				$('#error-logs-link').click(function(){
+					var p=$('#show-errors')
+					if(!p.length){
+						p=$('<div id=show-errors class=lightBoxFullContent style=overflow:auto>')
+						$('body').append(p)
+					}
+					p.text("")
+					function f(s){
+						if(s.hasOwnProperty('length')&&s.length==1)return f(s[0])
+						if(typeof s === 'string')return s
+						return JSON.stringify(s)
+					}
+					console.history.error.forEach(m=>p.append($('<pre style="color:var(--button-disabled-decoration-color)">').text(f(m))))
+					console.history.warn.forEach(m=>p.append($('<pre style="color:var(--highlight2-fg-color)">').text(f(m))))
+					console.history.info.forEach(m=>p.append($('<pre style="color:var(--winner-color)">').text(f(m))))
+					console.history.log.forEach(m=>p.append($('<pre>').text(f(m))))
+					showLightBox(p)
+					return false
+				})
 			})
 		}
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
@@ -512,7 +531,7 @@ function toggleFullScreen() {
 function hasUploads(){
 	if (location.pathname == '/upload.html') return false
 	for (var i in localStorage){
-		if (/^20[0-9]{2}[_A-Za-z0-9\-]+/.test(i)&&!/headers$/.test(i)) return true
+		if (/^20[0-9]{2}[A-Za-z0-9\-]+_[_A-Za-z0-9\-]+/.test(i)&&!/headers$/.test(i)) return true
 	}
 	return false
 }
@@ -531,3 +550,38 @@ function inIframe(){
 		return true
 	}
 }
+
+window.console=(function (oc){
+	if (!oc)oc={}
+	return{
+		history:{
+			log: [],
+			info: [],
+			warn: [],
+			error: [],
+		},
+		x:function(l,a){
+			$('#error-logs-link').parent().show()
+			this.history[l].push(a)
+			oc.hasOwnProperty(l)&&oc[l].apply(oc,a)
+		},
+		log:function(){this.x("log",arguments)},
+		info:function(){this.x("info",arguments)},
+		warn:function(){this.x("warn",arguments)},
+		error:function(){this.x("error",arguments)},
+	}
+}(window.console))
+window.onerror=(message,file,line,col,error)=>{
+	console.error(JSON.stringify({
+		message:message,
+		file:file,
+		line:line,
+		col:col,
+		error:error,
+	}))
+	return false
+}
+window.addEventListener("unhandledrejection",e=>{
+	e.preventDefault()
+	console.error(JSON.stringify({rejection:e.reason}))
+})
