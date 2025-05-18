@@ -159,7 +159,7 @@ $(document).ready(function(){
 				playoffMatchAlliances[round]||={}
 				csv+=matchId
 				match.teams.forEach(function(team){
-					csv+=","+(team.teamNumber||0)
+					csv+=","+(t	||0)
 					if(team.teamNumber&&teamAlliances[team.teamNumber]){
 						if(/^Red/.test(team.station))playoffMatchAlliances[matchId].red=teamAlliances[team.teamNumber]
 						if(/^Blue/.test(team.station))playoffMatchAlliances[matchId].blue=teamAlliances[team.teamNumber]

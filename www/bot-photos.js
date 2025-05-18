@@ -1,6 +1,14 @@
 "use strict"
 
 addI18n({
+	localstorage_full:{
+		en:'Local photo storage is full, upload now',
+		tr:'Yerel fotoğraf depolama alanı doldu, şimdi yükleyin',
+		pt:'O armazenamento local de fotos está cheio, faça upload agora',
+		he:'אחסון התמונות המקומי מלא, העלה עכשיו',
+		zh_tw:'本地照片儲存已滿，請立即上傳',
+		fr:'Le stockage local des photos est plein, téléchargez-les maintenant',
+	},
 	bot_photo_title:{
 		en:'Bot Photos for _EVENT_',
 		pt:'Fotos de bot para _EVENTO_',
@@ -167,7 +175,7 @@ function resizeAndStoreImageUpload(e){
 				img.attr('src',dataUrl).show()
 				localStorage.last_scout_type='photos'
 				showMainMenuUploads()
-
+				ifNoRoom()
 			}
 			image.src=re.target.result
 		}
@@ -177,13 +185,31 @@ function resizeAndStoreImageUpload(e){
 
 function imageCell(imgName){
 	var season=$('#seasonInp').val(),
-	td=$('<td>')
+	td=$('<td class=upload-cell>')
 	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
 	.append($(`<img class=photoPreview>`).attr('src',localStorage[`${season}_photo_${imgName}`]?localStorage[`${season}_photo_${imgName}`]:`/data/${season}/${imgName}.jpg`).click(showFullPhoto).on('error',function(){
 		$(this).parent().find('.edit-link,img').hide()
 	}).each(function(){
 		if(this.error) $(this).error()
 	}))
-	.append($(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload))
+	if(hasLocalStorageCapacity())td.append($(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload))
+	else td.append($('<div data-i18n=localstorage_full>'))
 	return td
+}
+
+function ifNoRoom(){
+	if(!hasLocalStorageCapacity()){
+		$('input[type="file"]').remove()
+		applyTranslations($('.upload-cell').append($('<div data-i18n=localstorage_full>')))
+	}
+}
+
+function hasLocalStorageCapacity(){
+	try {
+		localStorage['x']='x'.repeat(800000)
+	} catch (e){
+		return false
+	}
+	localStorage.removeItem('x')
+	return true
 }

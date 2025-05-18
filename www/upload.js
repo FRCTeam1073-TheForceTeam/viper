@@ -274,7 +274,7 @@ function deleteMatch(){
 	if (confirm(translate('delete_match_confirm',{match:match}))){
 		var d = localStorage.getItem(match)
 		localStorage.removeItem(match)
-		localStorage.setItem(`deleted_${match}`, d)
+		if(!/^data:image/.test(d))localStorage.setItem(`deleted_${match}`, d)
 		showUploads()
 	}
 }
