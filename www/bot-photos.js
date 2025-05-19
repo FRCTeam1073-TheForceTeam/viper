@@ -169,7 +169,7 @@ function resizeAndStoreImageUpload(e){
 				canvas.height=height
 				canvas.getContext('2d').drawImage(image,0,0,width,height)
 				var dataUrl=canvas.toDataURL('image/jpeg')
-				localStorage[`${eventYear}_photo_${e.target.name}`]=dataUrl
+				pdb.put(`${eventYear}_photo_${e.target.name}`,dataUrl)
 				var parent=$(e.target).parent(),
 				img=parent.find('img')
 				img.attr('src',dataUrl).show()
@@ -185,13 +185,15 @@ function resizeAndStoreImageUpload(e){
 
 function imageCell(imgName){
 	var season=$('#seasonInp').val(),
-	td=$('<td class=upload-cell>')
-	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
-	.append($(`<img class=photoPreview>`).attr('src',localStorage[`${season}_photo_${imgName}`]?localStorage[`${season}_photo_${imgName}`]:`/data/${season}/${imgName}.jpg`).click(showFullPhoto).on('error',function(){
+	td=$('<td class=upload-cell>'),
+	img=$(`<img class=photoPreview>`).click(showFullPhoto).on('error',function(){
 		$(this).parent().find('.edit-link,img').hide()
 	}).each(function(){
-		if(this.error) $(this).error()
-	}))
+		if(this.error)$(this).error()
+	})
+	pdb.get(`${season}_photo_${imgName}`,p=>img.attr('src',p?p:`/data/${season}/${imgName}.jpg`))
+	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
+	.append(img)
 	if(hasLocalStorageCapacity())td.append($(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload))
 	else td.append($('<div data-i18n=localstorage_full>'))
 	return td

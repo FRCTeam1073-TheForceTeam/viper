@@ -19,18 +19,16 @@ addI18n({
 	},
 })
 
-if (location.hash){
-	var keys = location.hash.replace(/^\#/,"").replace(/\#.*/,"").split(/,/)
-	for (var i=0; i<keys.length; i++){
-		var key = keys[i]
-		if (/^20\d\d/.test(key)){
-			var d = localStorage.getItem(key)
-			localStorage.removeItem(key)
-			if (d&&!/^data:image/.test(d))localStorage.setItem(`uploaded_${key}`, d)
+$(document).ready(function(){
+	if (location.hash){
+		var keys = location.hash.replace(/^\#/,"").replace(/\#.*/,"").split(/,/)
+		for (var i=0; i<keys.length; i++){
+			var key = keys[i]
+			if (/^20\d\d/.test(key))pdb.rename(key,`uploaded_${key}`)
 		}
 	}
-}
-redirect()
+	redirect()
+})
 
 function redirect(){
 	var eId = localStorage.getItem('last_event_id'),

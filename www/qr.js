@@ -119,7 +119,7 @@ $(document).ready(function(){
 		if (!data) return error('qr_no_data_error')
 		var m = /^([0-9]+)\.\.\.(.*)/.exec(data)
 		if (m) [{},fragment,data] = m
-		m = /^((([0-9]{4}(?:-[0-9]{2})?)[A-Za-z0-9\-]+)((?:_subjective_[0-9]+)|(?:_[a-z0-9]+_[0-9]+)|(?:_[0-9]+))),(.*)/.exec(data)
+		m = /^((([0-9]{4}(?:-[0-9]{2})?)[A-Za-z0-9\-]*)((?:_(?:subjective|photo)_[0-9]+)|(?:_[a-z0-9]+_[0-9]+)|(?:_[0-9]+))),(.*)/.exec(data)
 		if (!m)return error('qr_format_error')
 		var [{},key,event,season,type,data] = m
 		if (/subjective/.test(type)){
@@ -154,7 +154,7 @@ $(document).ready(function(){
 			return message('qr_another_needed')
 		}
 		localStorage.removeItem(partialKey)
-		localStorage.setItem(key,data)
+		pdb.put(key,data)
 		message('qr_upload_complete')
 		$('body').append($('<p><a href=/upload.html data-i18n=qr_upload_link></a></p>'))
 		applyTranslations()

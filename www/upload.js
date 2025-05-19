@@ -133,7 +133,8 @@ addI18n({
 
 $(document).ready(showUploads)
 
-var scoutCsv,pitCsv,subjectiveCsv
+var scoutCsv,pitCsv,subjectiveCsv,
+oldRemovalDate=new Date(new Date().setDate(new Date().getDate()-18)).toISOString().replace(/\..*/,"+00:00")
 
 function uploadComparator(i){
 	var m = localStorage[i].match(/(20\d\d-[01]\d-[0-3]\dT[0-2]\d[^,\n]*)/g)||["!"+i]
@@ -149,18 +150,24 @@ function showUploads(){
 	pitCsv = {}
 	subjectiveCsv = {}
 	$('#upload .image').remove()
-	his.append($('<button data-i18n=clear_history_button></button>').click(clearHistory))
+	his.append($('<button data-i18n=clear_history_button>').click(clearHistory))
 	Object.keys(localStorage).toSorted((a,b)=>uploadComparator(b).localeCompare(uploadComparator(a))).forEach(i=>{
 		if (/^20[0-9]{2}(-[0-9]{2})?_photo_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
-			name=i.replace(/.*_photo_/,'')
+			name=i.replace(/.*_photo_/,''),
+			img=$('<img class=photo-upload>'),
+			input=$('<input type=hidden class=image>').attr('name',`${year}/${name}`)
+			pdb.get(i,p=>{
+				img.attr('src',p)
+				input.attr('value',p)
+			})
 			up.append($('<hr>'))
-			up.append($('<h4>').text(i))
-			up.append($('<img class=photo-upload>').attr('src',localStorage[i]))
-			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
-			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
+			.append($('<h4>').text(i))
+			.append(img)
+			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
+			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
 			count++
-			$('#upload').append($('<input type=hidden class=image>').attr('name',`${year}/${name}`).attr('value',localStorage[i]))
+			$('#upload').append(input)
 		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
 			header = localStorage.getItem(`${year}_subjectiveheaders`)
@@ -169,10 +176,10 @@ function showUploads(){
 			}
 			subjectiveCsv[year] += localStorage[i]
 			up.append($('<hr>'))
-			up.append($('<h4>').text(i))
-			up.append($('<pre>').text(header + localStorage[i]))
-			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
-			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
+			.append($('<h4>').text(i))
+			.append($('<pre>').text(header + localStorage[i]))
+			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
+			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?.*_.*_/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
@@ -182,10 +189,10 @@ function showUploads(){
 			}
 			scoutCsv[year] += localStorage[i]
 			up.append($('<hr>'))
-			up.append($('<h4>').text(i))
-			up.append($('<pre>').text(header + localStorage[i]))
-			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
-			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
+			.append($('<h4>').text(i))
+			.append($('<pre>').text(header + localStorage[i]))
+			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
+			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
 			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_[0-9]+/.test(i)){
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
@@ -195,27 +202,29 @@ function showUploads(){
 			}
 			pitCsv[year] += localStorage[i]
 			up.append($('<hr>'))
-			up.append($('<h4>').text(i))
-			up.append($('<pre>').text(header + localStorage[i]))
-			up.append($('<button data-i18n=delete_button></button>').attr("data-match",i).click(deleteMatch))
-			up.append($('<button data-i18n=qr_code_button></button>').attr("data-match",i).click(showQrCode))
+			.append($('<h4>').text(i))
+			.append($('<pre>').text(header + localStorage[i]))
+			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
+			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
 			count++
-		} else if (/^deleted_20/.test(i)){
-			his.append($('<hr>'))
-			his.append($('<h4 class=deleted>').text(i))
-			if(/^data:image/.test(localStorage[i])) his.append($('<img class=photo-upload>').attr('src',localStorage[i]))
-			else his.append($('<pre>').text(localStorage[i]))
-			his.append($('<button data-i18n=undelete_button></button>').attr("data-match",i).click(undeleteMatch))
-			his.append($('<button data-i18n=remove_history_button></button>').attr("data-match",i).click(removeMatch))
-			historyCount++
-		} else if (/^uploaded_20/.test(i)){
-			his.append($('<hr>'))
-			his.append($('<h4 class=uploaded>').text(i))
-			if(/^data:image/.test(localStorage[i])) his.append($('<img class=photo-upload>').attr('src',localStorage[i]))
-			else his.append($('<pre>').text(localStorage[i]))
-			his.append($('<button data-i18n=reupload_button></button>').attr("data-match",i).click(undeleteMatch))
-			his.append($('<button data-i18n=remove_history_button></button>').attr("data-match",i).click(removeMatch))
-			historyCount++
+		} else if (/^(deleted|uploaded)_20/.test(i)){
+			var date=localStorage[i].match(/(20\d\d-[01]\d-[0-3]\dT[0-2]\d[^,\n]*)/g)||[""]
+			date=date[date.length-1]
+			if(date&&date<oldRemovalDate)pdb.delete(i)
+			else{
+				var view=$('<div>'),
+				type=i.replace(/_.*/,'')
+				his.append($('<hr>'))
+				.append($('<h4>').attr('class',type).text(i))
+				.append(view)
+				.append($('<button data-i18n=undelete_button>').attr('data-i18n',type=='deleted'?'undelete_button':'reupload_button').attr("data-match",i).click(undeleteMatch))
+				.append($('<button data-i18n=remove_history_button>').attr("data-match",i).click(removeMatch))
+				pdb.get(i,d=>{
+					if(/^data:image/.test(d)) view.append($('<img class=photo-upload>').attr('src',d))
+					else view.append($('<pre>').text(d))
+				})
+				historyCount++
+			}
 		}
 	})
 	$('#upload-description').attr('data-i18n',!count?'no_uploads':'')
@@ -264,7 +273,7 @@ function showUploads(){
 function clearHistory(){
 	if (!confirm(translate('clear_history_confirm'))) return
 	for (var i in localStorage){
-		if (/^(deleted|uploaded)_20/.test(i)) localStorage.removeItem(i)
+		if (/^(deleted|uploaded)_20/.test(i)) pdb.delete(i)
 	}
 	showUploads()
 }
@@ -272,27 +281,20 @@ function clearHistory(){
 function deleteMatch(){
 	var match = $(this).attr("data-match")
 	if (confirm(translate('delete_match_confirm',{match:match}))){
-		var d = localStorage.getItem(match)
-		localStorage.removeItem(match)
-		if(!/^data:image/.test(d))localStorage.setItem(`deleted_${match}`, d)
-		showUploads()
+		pdb.rename(match,`deleted_${match}`,showUploads)
 	}
 }
 
 function removeMatch(){
 	var match = $(this).attr("data-match")
 	if (confirm(translate('remove_match_confirm',{match:match}))){
-		localStorage.removeItem(match)
-		showUploads()
+		pdb.delete(match,showUploads)
 	}
 }
 
 function undeleteMatch(){
 	var match = $(this).attr("data-match")
-	var d = localStorage.getItem(match)
-	localStorage.removeItem(match)
-	localStorage.setItem(match.replace(/^(deleted|uploaded)_/,''), d)
-	showUploads()
+	pdb.rename(match,match.replace(/^(deleted|uploaded)_/,''),showUploads)
 }
 
 function getQrUrls(key,csv){
@@ -326,18 +328,20 @@ function nextQrCode(){
 function showQrCode(num){
 	if (typeof num == 'object'){
 		qrMatch = $(this).attr("data-match")
-		qrUrls = getQrUrls(qrMatch,localStorage.getItem(qrMatch))
-		num=1
+		pdb.get(qrMatch,d=>{
+			qrUrls = getQrUrls(qrMatch,d)
+			showQrCode(1)
+		})
+		return false
 	}
 	qrNum=num
 	if (num>qrUrls.length){
 		closeLightBox()
-		var d = localStorage.getItem(qrMatch)
-		localStorage.removeItem(qrMatch)
-		localStorage.setItem(`uploaded_${qrMatch}`, d)
-		showUploads()
-		$('#show-uploads').hide()
-		$('#uploads').show()
+		pdb.rename(qrMatch,`uploaded_${qrMatch}`,_=>{
+			showUploads()
+			$('#show-uploads').hide()
+			$('#uploads').show()
+		})
 		return false
 	}
 	var dialog=$('#qr-code-dialog')
