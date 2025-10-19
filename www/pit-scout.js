@@ -321,6 +321,14 @@ addI18n({
 		fr:'Sans chenilles',
 		zh_tw:'未受踐踏',
 	},
+	wheel_type_mechanum:{
+		en:'Mechanum',
+		pt:'Mechanum',
+		tr:'Mekanum',
+		he:'מכנום',
+		fr:'Mécanisme',
+		zh_tw:'機械能',
+	},
 	wheel_type_mixed:{
 		en:'Mixed',
 		pt:'Misto',
