@@ -781,6 +781,7 @@ function countHandler(e){
 	count = $(this).is('.count')?$(this):$(this).find('.count').first(),
 	input = findInputInEl(parent),
 	src = count.attr('src'),
+	dataValue = count.attr('data-value'),
 	val=parseInt(input.val())||0,
 	max=parseInt(input.attr('max'))||999999,
 	min=parseInt(input.attr('min'))||0
@@ -792,6 +793,7 @@ function countHandler(e){
 		if(/down/.test(src))toAdd = -1
 		else if(/three/.test(src))toAdd = 3
 		else if(/five/.test(src))toAdd = 5
+		if(dataValue)toAdd=parseInt(dataValue)||0
 		val+=toAdd
 		val = val<min?min:val
 		val = val>max?max:val

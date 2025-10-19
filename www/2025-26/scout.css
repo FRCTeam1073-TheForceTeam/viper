@@ -1,0 +1,10 @@
+html{padding:0}
+.auto td, .teleop td{position:relative}
+@media (max-width: 450px){
+	h1{font-size:115%}
+	.tab{font-size:70%}
+}
+.num{text-align:center!important}
+table{background:var(--main-bg-color);width:80%}
+.tab-content table td{padding:1em 0.3em}
+.tab-content table td.subheader{padding:0.3em;text-align:right}
