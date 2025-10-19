@@ -133,7 +133,7 @@ $(document).ready(function(){
 		promiseSubjectiveScouting(),
 		promiseEventMatches(),
 		promiseTeamsInfo(),
-		fetch(`/data/${eventYear}/stats.json`).then(response=>{if(response.ok)return response.json()})
+		promiseJson(`/data/${eventYear}/stats.json`)
 	]).then(values => {
 		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.eventTeamsInfo, window.myTeamsGraphs] = values
 		eventMatches.forEach(match => $('#startingMatch').append($('<option>').attr('value',match.Match).text(getMatchName(match.Match))).val(statsStartMatch))
@@ -219,7 +219,7 @@ function showStats(){
 	}
 	teamList.sort((a,b)=>{
 		if (teamsPicked[a] != teamsPicked[b]) return teamsPicked[b]?-1:1
-		if (statInfo[sortStat].good == 'low') return getTeamValue(sortStat,a)-getTeamValue(sortStat,b)
+		if (statInfo[sortStat]?.good??'' == 'low') return getTeamValue(sortStat,a)-getTeamValue(sortStat,b)
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
 	var graphs = $('#statGraphs').html(''),
