@@ -87,21 +87,9 @@ $(window).on('hashchange', eventFromHash)
 eventFromHash()
 
 function promiseEventAjax(file){
-	return new Promise(callback=>{
-		$.ajax({
-			async: true,
-			beforeSend: function(xhr){
-				xhr.overrideMimeType("text/plain;charset=UTF-8");
-			},
-			url: file,
-			timeout: 30000,
-			type: "GET",
-			success: callback,
-			error: function(xhr,status,err){
-				console.error(file,err)
-				callback("")
-			}
-		})
+	return fetch(file).then(response=>{
+		if(!response.ok) return ''
+		return response.text()
 	})
 }
 
@@ -168,13 +156,18 @@ function promiseEventTeams(){
 	return promiseCache.eventTeams
 }
 
-function promiseJson(file){
-	return new Promise(callback=>getJson(file,{teams:[]},callback))
-}
-
-function getJson(file, empty, callback){
-	$.getJSON(file,callback).fail(function(){
-		if (callback) callback(empty)
+function promiseJson(file,defaultResponse){
+	return fetch(file).then(response=>{
+		if (response.ok) return response.text()
+		return ""
+	}).then(text=>{
+		if (!text) return defaultResponse??{}
+		try {
+			return JSON.parse(text)
+		} catch(e) {
+			console.error(e)
+			return defaultResponse??{}
+		}
 	})
 }
 
@@ -374,6 +367,7 @@ function promiseEventInfo(){
 	return promiseCache.eventInfo
 }
 
+
 function promisePitScouting(){
 	if (!promiseCache.pitScouting) promiseCache.pitScouting = promiseEventAjax(`/data/${eventId}.pit.csv`).then(text=>{
 		var data = {}
@@ -381,6 +375,9 @@ function promisePitScouting(){
 			data[teamData.team]=teamData
 		})
 		return data
+	}).catch(e=>{
+		console.error(e)
+		return Promise.resolve([])
 	})
 	return promiseCache.pitScouting
 }
@@ -392,6 +389,9 @@ function promiseSubjectiveScouting(){
 			data[teamData.team]=teamData
 		})
 		return data
+	}).catch(e=>{
+		console.error(e)
+		return Promise.resolve([])
 	})
 	return promiseCache.subjectiveScouting
 }

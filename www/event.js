@@ -859,7 +859,7 @@ $(document).ready(function(){
 			if ("ftc"==eventCompetition) row.find('.noftc').hide()
 			BOT_POSITIONS.forEach(pos=>{
 				var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0,
-				isScouted=((typeof scouted.score)!=='undefined')
+				isScouted=((typeof scouted)=='object')
 				if(/^R/.test(pos)){
 					if (!isScouted){
 						isRedScouted=false

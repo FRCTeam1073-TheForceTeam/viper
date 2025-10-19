@@ -94,7 +94,7 @@ sub logoPng(){
 
 sub siteConfJson(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^(20[0-9]{2}(?:[0-9]{2})?)\/([a-z\-]+)\.json$/);
+	$webutil->error("Unexpected file name", $file) if ($file !~ /^(20[0-9]{2}(?:-[0-9]{2})?)\/([a-z\-]+)\.json$/);
 	my ($season, $type) = $file =~ /^(20[0-9]{2}(?:[0-9]{2})?)\/([a-z\-]+)\.json$/;
 	my $dbh = $db->dbConnection();
 	my $sth = $dbh->prepare("SELECT `conf` FROM `siteconf` WHERE `site`=? AND `season`=? AND `type`=?");

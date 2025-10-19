@@ -459,6 +459,7 @@ $(document).ready(function(){
 					function f(s){
 						if(s.hasOwnProperty('length')&&s.length==1)return f(s[0])
 						if(typeof s === 'string')return s
+						if(s.hasOwnProperty('message')) return s.message + '\n' + s.stack?.replace(/[\r\n].*/gm,'')
 						return JSON.stringify(s)
 					}
 					console.history.error.forEach(m=>p.append($('<pre style="color:var(--button-disabled-decoration-color)">').text(f(m))))
@@ -562,6 +563,7 @@ window.console=(function (oc){
 		},
 		x:function(l,a){
 			$('#error-logs-link').parent().show()
+			$('#hamburger').addClass('error')
 			this.history[l].push(a)
 			oc.hasOwnProperty(l)&&oc[l].apply(oc,a)
 		},
@@ -581,7 +583,4 @@ window.onerror=(message,file,line,col,error)=>{
 	}))
 	return false
 }
-window.addEventListener("unhandledrejection",e=>{
-	e.preventDefault()
-	console.error(JSON.stringify({rejection:e.reason}))
-})
+window.addEventListener("unhandledrejection",e=>{throw e})
