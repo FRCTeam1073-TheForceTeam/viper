@@ -117,6 +117,22 @@ var statInfo = {
 		en: 'Patterns Purple in Auto',
 		type: '%'
 	},
+	auto_preset_1:{
+		en: 'Preset 1 in Auto',
+		type: '%'
+	},
+	auto_preset_2:{
+		en: 'Preset 2 in Auto',
+		type: '%'
+	},
+	auto_preset_3:{
+		en: 'Preset 3 in Auto',
+		type: '%'
+	},
+	auto_preset_4:{
+		en: 'Preset 4 in Auto',
+		type: '%'
+	},
 	auto_start:{
 		en: 'Start in Auto',
 		type: 'enum',
@@ -228,6 +244,10 @@ var teamGraphs = {
 		graph:"stacked",
 		data:["auto_artifact","tele_artifact"]
 	},
+	"Presets":{
+		graph:"stacked",
+		data:["auto_preset_1","auto_preset_2","auto_preset_3","auto_preset_4"]
+	},
 	"End Game":{
 		graph:"bar",
 		data:["base_return_none","base_return_partially","base_return_alone","base_return_under","base_return_above"]
@@ -242,6 +262,10 @@ var aggregateGraphs = {
 	"Match Stages":{
 		graph:"stacked",
 		data:["auto_artifact","tele_artifact"]
+	},
+	"Presets":{
+		graph:"bar",
+		data:["auto_preset_1","auto_preset_2","auto_preset_3","auto_preset_4"]
 	},
 	"End Game":{
 		graph:"bar",

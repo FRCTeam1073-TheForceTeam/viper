@@ -8,3 +8,4 @@ html{padding:0}
 table{background:var(--main-bg-color);width:80%}
 .tab-content table td{padding:1em 0.3em}
 .tab-content table td.subheader{padding:0.3em;text-align:right}
+body.blueTeam .blue-rev{transform: scale(-1,1)}

@@ -6,8 +6,7 @@ season="$1"
 
 if [ "z$season" == "z" ]
 then
-	echo "Expected season as argument eg 2024"
-	exit 1
+	season=`ls -1 www | grep -oE '20[0-9]{2}(-[0-9]{2})?' | sort | tail -n 1`
 fi
 
 if ! echo "$season" | grep -Eq '^20[0-9]{2}(-[0-9]{2})?$'

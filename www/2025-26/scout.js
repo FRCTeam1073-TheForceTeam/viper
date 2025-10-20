@@ -62,9 +62,14 @@ $(document).ready(function(){
 		return false
 	})
 
+	var wentToTeleAuto=false
+
 	function proceedToTeleBlink(){
 		var teleTime=(new Date().getTime()-matchStartTime)>=AUTO_MS
 		$('#to-tele-button').toggleClass('pulse-bg', matchStartTime>0 && teleTime)
-		if (teleTime)setTimeout(function(){showTab({},$('.tab[data-content="teleop"]'))},5000)
+		if(!wentToTeleAuto){
+			wentToTeleAuto=true
+			if (teleTime)setTimeout(function(){showTab({},$('.tab[data-content="teleop"]'))},5000)
+		}
 	}
 })
