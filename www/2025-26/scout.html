@@ -21,9 +21,9 @@
 </head>
 
 <body>
-<h1>Viper</h1>
+<h1></h1>
 <div id=select-bot class=screen style=display:none>
-	<H2>Select your robot</H2>
+	<h2 data-i18n=choose_pos_heading></h2>
 	<div class=blueTeamBG>
 		<button>B1</button>
 		<button>B2</button>
@@ -32,13 +32,13 @@
 		<button>R1</button>
 		<button>R2</button>
 	</div>
-	<button class=showInstructions>Instructions</button>
+	<button class=showInstructions data-i18n=instructions></button>
 	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
 </div>
 
 <div id=select-match class=screen style=display:none>
-	<button class=showInstructions>Instructions</button>
-	<button class=robotBtn>Change Robot</button>
+	<button class=showInstructions data-i18n=instructions></button>
+	<button class=robotBtn data-i18n=change_robot_button></button>
 	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
 	<div id=match-list></div>
 </div>
@@ -46,15 +46,15 @@
 <div id=change-team class=screen style=display:none>
 	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
 	<button id=teamChangeBtn>Change</button>
-	<button id=teamCancelBtn>Cancel</button>
+	<button id=teamCancelBtn data-i18n=cancel_button></button>
 </div>
 
 <form id=scouting class=screen style=display:none>
 	<div>
-		<button class=showInstructions>Instructions</button>
-		<button id=teamBtn>Team # Correction</button>
-		<button id=matchBtn>Choose Match</button>
-		<button class=robotBtn>Change Robot</button>
+		<button class=showInstructions data-i18n=instructions></button>
+		<button id=teamBtn data-i18n=team_correction_button></button>
+		<button id=matchBtn data-i18n=choose_match_button></button>
+		<button class=robotBtn data-i18n=change_robot_button></button>
 		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
 	</div>
 	<input type=hidden name=event>
@@ -63,52 +63,51 @@
 	<input type=hidden name=timeline id=timeline>
 
 	<div class=tabs>
-		<div class="tab default-tab" data-content=pre>Pre</div>
-		<div class="tab" data-content=auto>Auto</div>
-		<div class=tab data-content=teleop>Teleop</div>
-		<div class=tab data-content=end>End</div>
+		<div class="tab default-tab" data-content=pre data-i18n=pre_match_tab></div>
+		<div class="tab" data-content=auto data-i18n=auto_tab></div>
+		<div class=tab data-content=teleop data-i18n=tele_tab></div>
+		<div class=tab data-content=end data-i18n=end_game_tab></div>
 	</div>
 
 	<div class="pre tab-content">
 		<table><tr><td class=subheader colspan=4>
-			<label><input type=checkbox name=no_show value=1><span>No Show</span></label>
+			<label><input type=checkbox name=no_show value=1><span data-i18n=no_show></span></label>
 		</td></tr><tr><td colspan=4>
-			Starting position:<br>
-			<label><input type=radio name=auto_start value=goal><span>At Goal</span></label>
-			<label><input type=radio name=auto_start value=1><span>Near Audience</span></label>
+			<span data-i18n=starting_position></span><br>
+			<label><input type=radio name=auto_start value=goal><span data-i18n=at_goal></span></label>
+			<label><input type=radio name=auto_start value=1><span data-i18n=near_audience></span></label>
 		</td></tr><tr><td class=subheader colspan=4>
-			<button id=to-auto-button class=tab-button data-content=auto>Proceed to Auto</button>
+			<button id=to-auto-button class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
 		</td></tr></table>
 	</div>
 
 	<div class="auto tab-content">
 		<table><tr><td class=subheader>
-			<button class=undo>Undo</button>
+			<button class=undo data-i18n=undo_button></button>
 		</td></tr><tr><td>
-			Use preset:<br>
+			<span data-i18n=use_preset></span><br>
 			<label class=blue-rev><input type=checkbox name=auto_preset_4 value=1><span><img src=artifact-green.png><img src=artifact-purple.png><img src=artifact-purple.png></span></label><br>
 			<label><input type=checkbox name=auto_preset_3 value=1><span><img src=artifact-purple.png><img src=artifact-green.png><img src=artifact-purple.png></span></label><br>
 			<label class=blue-rev><input type=checkbox name=auto_preset_2 value=1><span><img src=artifact-purple.png><img src=artifact-purple.png><img src=artifact-green.png></span></label><br>
 			<label><input type=checkbox name=auto_preset_1 value=1><span><img src=artifact-purple.png><br><img src=artifact-green.png><br><img src=artifact-purple.png></span></label>
-
 		</td></tr><tr><td>
-			In goal:
+			<span data-i18n=in_goal></span>
 			<button class=count data-value=1><span>+1</span></button>
 			<button class=count data-value=2><span>+2</span></button>
 			<button class=count data-value=3><span>+3</span></button>
 			<input type=text class=num value=0 name=auto_goal size=1 disabled>
 		</td></tr><tr><td>
-			In depot:
+			<span data-i18n=in_depot></span>
 			<button class=count data-value=1><span>+1</span></button>
 			<button class=count data-value=2><span>+2</span></button>
 			<button class=count data-value=3><span>+3</span></button>
 			<input type=text class=num value=0 name=auto_depot size=1 disabled>
 		</td></tr><tr><td>
-			Opened gate:
+			<span data-i18n=opened_gate></span>
 			<button class=count data-value=1><span>+1</span></button>
 			<input type=text class=num value=0 name=auto_gate size=1 disabled>
 		</td></tr><tr><td class=subheader>
-			<button id=to-tele-button class=tab-button data-content=teleop>Proceed to Teleop</button>
+			<button id=to-tele-button class=tab-button data-content=teleop data-i18n=proceed_tele_button></button>
 		</td></tr></table>
 	</div>
 
@@ -116,23 +115,23 @@
 		<table><tr><td class=subheader>
 			<button class=undo>Undo</button>
 		</td></tr><tr><td>
-			In goal:
+			<span data-i18n=in_goal></span>
 			<button class=count data-value=1><span>+1</span></button>
 			<button class=count data-value=2><span>+2</span></button>
 			<button class=count data-value=3><span>+3</span></button>
 			<input type=text class=num value=0 name=tele_goal size=1 disabled>
 		</td></tr><tr><td>
-			In depot:
+			<span data-i18n=in_depot></span>
 			<button class=count data-value=1><span>+1</span></button>
 			<button class=count data-value=2><span>+2</span></button>
 			<button class=count data-value=3><span>+3</span></button>
 			<input type=text class=num value=0 name=tele_depot size=1 disabled>
 		</td></tr><tr><td>
-			Opened gate:
+			<span data-i18n=opened_gate></span>
 			<button class=count data-value=1><span>+1</span></button>
 			<input type=text class=num value=0 name=tele_gate size=1 disabled>
 		</td></tr><tr><td class=subheader>
-			<button id=to-end-button class=tab-button data-content=end>Proceed to End</button>
+			<button id=to-end-button class=tab-button data-content=end data-i18n=proceed_end_button></button>
 		</td></tr></table>
 	</div>
 
@@ -140,34 +139,34 @@
 		<table><tr><td class=subheader>
 		</td></tr><tr><td>
 			<fieldset class="full">
-				<legend>Returned to base:</legend>
-				<label><input type=radio name=base_return value=partially><span>Partially</span></label>
-				<label><input type=radio name=base_return value=alone><span>Fully (other robot not fully-in)</span></label><br>
-				<label><input type=radio name=base_return value=under><span>Fully and underneath fully-in robot</span></label><br>
-				<label><input type=radio name=base_return value=above><span>Fully and above fully-in robot</span></label>
+				<legend data-i18n=returned_base></legend>
+				<label><input type=radio name=base_return value=partially><span data-i18n=returned_base_partially></span></label>
+				<label><input type=radio name=base_return value=alone><span data-i18n=returned_base_alone></span></label><br>
+				<label><input type=radio name=base_return value=under><span data-i18n=returned_base_under></span></label><br>
+				<label><input type=radio name=base_return value=above><span data-i18n=returned_base_above></span></label>
 			</fieldset>
 			<fieldset class="full">
-				<legend>During auto:</legend>
-				<label><input type=radio name=auto_patterns value=obelisk><span>Scanned obelisk, created patterns matching motif</span></label><br>
-				<label><input type=radio name=auto_patterns value=purple><span>Used only purple classified artifacts</span></label><br>
-				<label><input type=checkbox name=auto_took_turns value=1><span>Avoided simultaneous goal shooting during classification</span></label>
+				<legend data-i18n=during_auto></legend>
+				<label><input type=radio name=auto_patterns value=obelisk><span data-i18n=during_auto_obelisk></span></label><br>
+				<label><input type=radio name=auto_patterns value=purple><span data-i18n=during_auto_purple></span></label><br>
+				<label><input type=checkbox name=auto_took_turns value=1><span data-i18n=during_auto_took_turns></span></label>
 			</fieldset>
 			<fieldset class="full">
-				<legend>During teleop:</legend>
-				<label><input type=checkbox name=tele_patterns value=1><span>Created patterns matching motif</span></label>
+				<legend data-i18n=during_tele></legend>
+				<label><input type=checkbox name=tele_patterns value=1><span data-i18n=during_tele_patterns></span></label>
 			</fieldset>
 			<fieldset class="left full">
-				<legend>Name:</legend>
-				<input class=full type=text size=50 name=scouter placeholder="Scouter Team, First name, Last initial, Eg. 1234 Pat Q">
+				<legend data-i18n=scouter_name_question></legend>
+				<input class=full type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder>
 			</fieldset>
 			<fieldset class="left full" id=scouting-comments>
-				<legend>Comments:</legend>
-				<textarea class=full name=comments rows=5 placeholder=Comments></textarea>
+				<legend data-i18n=comments_question></legend>
+				<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
 			</fieldset>
 			<input type=hidden name=created value="">
 			<input type=hidden name=modified value="">
 			<fieldset class=full id=nextButtons>
-				<legend>Save data:</legend>
+				<legend data-i18n=save_data_question></legend>
 				<div id=doneButtons></div>
 			</fieldset>
 		</td></tr></table>
