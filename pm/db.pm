@@ -475,7 +475,7 @@ sub schema {
 						$dbh->do(
 							"
 								ALTER TABLE
-									${$seasonTableName}subjective
+									${seasonTableName}subjective
 								ADD COLUMN
 									`$name` $type
 							"
