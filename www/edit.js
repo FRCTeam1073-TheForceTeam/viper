@@ -78,6 +78,7 @@ function tableEditor(data){
 		c.push({
 			title:h[j],
 			field:h[j],
+			frozen:false,
 		})
 	}
 	for (var i=1;i<data.length;i++){
@@ -93,12 +94,13 @@ function tableEditor(data){
 		columns:c,
 		history:true,
 		height:"100%",
+		index:false,
 		paginationCounter:"rows",
 		movableColumns:true,
 		selectableRange:1,
 		selectableRangeColumns:true,
-		selectableRangeRows:true,
 		selectableRangeClearCells:true,
+		selectableRangeAutoSelect:false,
 		editTriggerEvent:"dblclick",
 		clipboard:true,
 		clipboardCopyStyled:false,
