@@ -1070,7 +1070,7 @@ function showLinks(e){
 		.replace(/_MATCHID_/g, matchId)
 		.replace(/_BOTS_/g, positions)
 		.replace(/_MATCHNAME_/g, matchName)
-		.replace(/_TEAMNAME_/g, teamName)
+		.replace(/_TEAMNAME_/g, teamName||'')
 		.replace(/_REDSCORE_/g, redScore.attr('data-score'))
 		.replace(/_BLUESCORE_/g, blueScore.attr('data-score'))
 		.replace(/_REDSCOUTED_/g, redScore.attr('data-scouted'))
