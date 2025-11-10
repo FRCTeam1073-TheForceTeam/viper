@@ -22,6 +22,7 @@ The colors in the match table provide extra information:
 #### Team numbers
  - White text: not scouted
  - Green text: already scouted
+ - Yellow text with ⚠: review requested (scouting data needs to be checked)
  - Red wavy crossed-out: scouting problem (like duplicate data)
  - Green underline: our team
  - Orange underline: data needed for our next match

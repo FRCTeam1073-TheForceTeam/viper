@@ -879,6 +879,7 @@ $(document).ready(function(){
 					.toggleClass("scouted",isScouted)
 					.toggleClass("needed",(!isScouted)&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
 					.toggleClass("error",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
+					.toggleClass("review",isScouted&&(""+scouted.review_requested=="1"))
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
 					.toggleClass("tooltip-before",/^B/.test(pos))
 					.attr('data-tooltip',getTeamInfo(match[pos])||null)

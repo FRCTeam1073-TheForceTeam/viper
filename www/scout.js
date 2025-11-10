@@ -305,6 +305,22 @@ addI18n({
 		he:'מידע על צופי',
 		tr:'Scouter Bilgileri',
 	},
+	review_requested_legend:{
+		en:'Fall asleep? Watch the wrong robot? Press the wrong button?',
+		pt:'Adormeceu? Assistiu ao robô errado? Pressionou o botão errado?',
+		fr:'Vous vous êtes endormi ? Vous avez regardé le mauvais robot ? Vous avez appuyé sur le mauvais bouton ?',
+		zh_tw:'睡著了？看錯機器人？按錯按鈕了？',
+		he:'נרדמת? צפה ברובוט הלא נכון? לחץ על הכפתור הלא נכון?',
+		tr:'Uyudun mu? Yanlış robotu mu izliyorsun? Yanlış düğmeye mi bastınız?',
+	},
+	review_requested_button:{
+		en:'Check this if you want someone to review your scouting data',
+		pt:'Solicitar revisão destes dados',
+		fr:'Demander la révision de ces données',
+		zh_tw:'請求審查此數據',
+		he:'בקשת סקירה של נתונים אלה',
+		tr:'Bu verilerin incelenmesini isteyin',
+	},
 	scouter_name_question:{
 		en:'Name:',
 		pt:'Nome:',
@@ -842,6 +858,7 @@ function showScouting(){
 		$('.count').each(countHandler)
 		resetSequentialInputSeries()
 		$('#scouting-comments').toggle(!!window.showScoutingComments)
+		$('#review-request').toggle(!!window.showReviewRequest)
 		for (var i=0; i<window.onShowScouting.length; i++){
 			if(!window.onShowScouting[i]()) return false
 		}

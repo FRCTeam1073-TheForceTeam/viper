@@ -8,6 +8,9 @@ var ourTeam=0
 // Whether or not to collect comments during scouting
 var showScoutingComments=false
 
+// Whether or not to allow scouters to request data review
+var showReviewRequest=true
+
 // A list of options that will drop down from the host name
 // box on export.html
 var transferHosts = [
