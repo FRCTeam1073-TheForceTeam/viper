@@ -63,11 +63,19 @@ sub dbConnection {
 	$db::viper_database_name = $conf->{'MYSQL_DATABASE'};
 	my $user = $conf->{'MYSQL_USER'};
 	my $password = $conf->{'MYSQL_PASSWORD'};
+	my $ssl = $conf->{'MYSQL_SSL'};
 
 	return 0 if (!$host or !$port or !$db::viper_database_name or !$user or !$password);
 
+	my $dsn = "DBI:mysql:database=$db::viper_database_name;host=$host;port=$port";
+
+	# Enable SSL if configured
+	if ($ssl && $ssl =~ /^(1|yes|true|t|y)$/i) {
+		$dsn .= ";mysql_ssl=1";
+	}
+
 	$db::dbh = DBI->connect_cached(
-		"DBI:mysql:database=$db::viper_database_name;host=$host;port=$port",
+		$dsn,
 		$user,
 		$password,
 		{
