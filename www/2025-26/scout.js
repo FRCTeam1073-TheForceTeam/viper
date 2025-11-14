@@ -145,6 +145,14 @@ addI18n({
 		tr:'Motifle eşleşen desenler oluşturuldu',
 		zh_tw:'創建與圖案相符的圖案',
 	},
+	auto_leave:{
+		en:'Left the starting line during auto',
+		fr:'A quitté la ligne de départ pendant l\'auto',
+		he:'עזב את קו ההתחלה במהלך האוטומטי',
+		pt:'Saiu da linha de partida durante o modo automático',
+		tr:'Otomatik sırasında başlangıç çizgisinden ayrıldı',
+		zh_tw:'自動運行期間離開起始線',
+	},
 })
 
 $(document).ready(function(){
@@ -159,13 +167,20 @@ $(document).ready(function(){
 	})
 	window.onInputChanged = window.onInputChanged || []
 	window.onInputChanged.push(function(input, change){
+		if(!input.closest('.auto,.teleop,#no-show-area').length) return
+
+		if (input.closest('.auto')) setTimeout(proceedToTeleBlink, AUTO_MS)
+
+		var leave=$('[name="auto_leave"]')
+		if (input.closest('.auto').length&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
+			leave.prop('checked',true)
+			inputChanged(leave,0)
+		}
+
 		var order = $('#timeline'),
 		text = order.val(),
 		name = input.attr('name'),
-		re = name,
-		tab = input.closest('.tab-content')
-		if (!tab.is('.auto,.teleop')) return
-		if (tab.is('.auto')) setTimeout(proceedToTeleBlink, AUTO_MS)
+		re = name
 		if (matchStartTime==0) matchStartTime = new Date().getTime()
 		if ('radio'==input.attr('type')){
 			name += `:${input.val()}`
