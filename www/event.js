@@ -864,14 +864,14 @@ $(document).ready(function(){
 					if (!isScouted){
 						isRedScouted=false
 					} else {
-						redScouting += scouted.score
+						redScouting += scouted.score||0
 					}
 					redPrediction += getScore(eventStatsByTeam, match[pos])
 				} else {
 					if (!isScouted){
 						isBlueScouted=false
 					} else {
-						blueScouting += scouted.score
+						blueScouting += scouted.score||0
 					}
 					bluePrediction += getScore(eventStatsByTeam, match[pos])
 				}
@@ -879,7 +879,7 @@ $(document).ready(function(){
 					.toggleClass("scouted",isScouted)
 					.toggleClass("needed",(!isScouted)&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
 					.toggleClass("error",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
-					.toggleClass("review",isScouted&&(""+scouted.review_requested=="1"))
+					.toggleClass("review",isScouted&&(scouted.review_requested==1||scouted.review_requested=="1"))
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
 					.toggleClass("tooltip-before",/^B/.test(pos))
 					.attr('data-tooltip',getTeamInfo(match[pos])||null)
