@@ -3,3 +3,4 @@ table td, table th{border:.1em var(--main-fg-color) solid;vertical-align:top;pad
 .mainDiff{font-size:200%}
 table table{width:100%}
 html{font-size:12px}
+.reviewRequested::after{content:" ⚠️"}

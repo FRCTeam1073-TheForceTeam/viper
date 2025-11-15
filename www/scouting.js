@@ -125,7 +125,7 @@ $(document).ready(function(){
 						row.append($("<td>").text(scoutFields[i]))
 						.append($('<td>').text(stat.scout[scoutFields[i]].total))
 						stat.scout[scoutFields[i]].teams.forEach(team=>{
-							row.append($('<td>').text(team.points))
+							row.append($('<td>').text(team.points).addClass(team.review_requested ? 'reviewRequested' : ''))
 						})
 					}
 				}

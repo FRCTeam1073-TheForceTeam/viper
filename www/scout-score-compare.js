@@ -6,7 +6,7 @@ function promiseScoutScoreCompare(callback){
 		promiseEventStats(),
 		promiseEventMatches()
 	]).then(values =>{
-		var [eventScores, [eventStats, eventStatsByTeam, eventStatsByMatchTeam], eventMatches] = values,
+		var [eventScores, [_, _, eventStatsByMatchTeam], eventMatches] = values,
 		scouterStats = {},
 		matchStats = []
 		eventMatches.forEach(match => {
@@ -65,7 +65,8 @@ function getScoreDifference(scoutData, scoreData){
 				dat.scout[scout].teams.push({
 					points:scoutDat[scout]||0,
 					team:scoutDat.team,
-					scouter:scoutDat.scouter
+					scouter:scoutDat.scouter,
+					review_requested: scoutDat.review_requested || 0
 				})
 				dat.scout[scout].total+=scoutDat[scout]||0
 				dat.diff-=scoutDat[scout]||0
