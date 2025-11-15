@@ -314,7 +314,7 @@ addI18n({
 		tr:'Uyudun mu? Yanlış robotu mu izliyorsun? Yanlış düğmeye mi bastınız?',
 	},
 	review_requested_button:{
-		en:'Check this if you want someone to review your scouting data',
+		en:'Request data review',
 		pt:'Solicitar revisão destes dados',
 		fr:'Demander la révision de ces données',
 		zh_tw:'請求審查此數據',
@@ -858,7 +858,7 @@ function showScouting(){
 		$('.count').each(countHandler)
 		resetSequentialInputSeries()
 		$('#scouting-comments').toggle(!!window.showScoutingComments)
-		$('#review-request').toggle(!!window.showReviewRequest)
+		$('#review-request').toggle(!!(window.showReviewRequest??true))
 		for (var i=0; i<window.onShowScouting.length; i++){
 			if(!window.onShowScouting[i]()) return false
 		}
