@@ -23,6 +23,19 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 		}
 	})
 
+	var pointValues={
+		leave: 3,
+		classified: 3,
+		overflow: 1,
+		depot: 1,
+		motif: 2,
+		return_partially: 5,
+		return_fully: 10,
+		return_both_fully: 15,
+	},
+	ramp_size=9,
+	half_ramp=ramp_size/2
+
 	scout.auto_artifact=scout.auto_goal+scout.auto_depot
 	scout.tele_artifact=scout.tele_goal+scout.tele_depot
 	scout.artifact=scout.auto_artifact+scout.tele_artifact
@@ -30,9 +43,38 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit){
 	scout.gate=scout.auto_gate+scout.tele_gate
 	scout.depot=scout.auto_depot+scout.tele_depot
 	scout.goal=scout.auto_goal+scout.tele_goal
-	scout.patterns=Math.min(scout.auto_patterns_obelisk+scout.tele_patterns,1)
 	scout.base_return_both=scout.base_return_above+scout.base_return_under
 	scout.base_return_fully=scout.base_return_both+scout.base_return_alone
+
+	// Scores are all estimates based on heuristics
+	// Not collecting enough scouting data to be precise
+	scout.auto_classified=Math.round(Math.min(scout.auto_goal,((scout.auto_gate+1)*half_ramp)))
+	scout.auto_overflow=scout.auto_goal-scout.auto_classified
+	scout.auto_motif=Math.round(Math.min(scout.auto_classified,half_ramp)*(scout.auto_patterns_obelisk?1:(scout.auto_patterns_purple?(2/3):(1/3))))
+	scout.tele_classified=Math.round(Math.min(scout.tele_goal,((scout.tele_gate)*half_ramp)))
+	scout.tele_overflow=scout.tele_goal-scout.tele_classified
+	scout.tele_motif=Math.round(Math.min(scout.tele_classified,half_ramp)*(scout.tele_patterns?1:(1/3)))
+
+	scout.auto_leave_score=pointValues.leave*scout.auto_leave
+	scout.auto_classified_score=pointValues.classified*scout.auto_classified
+	scout.auto_overflow_score=pointValues.overflow*scout.auto_overflow
+	scout.auto_depot_score=pointValues.depot*scout.auto_depot
+	scout.auto_motif_score=pointValues.motif*scout.auto_motif
+
+	scout.tele_classified_score=pointValues.classified*scout.tele_classified
+	scout.tele_overflow_score=pointValues.overflow*scout.tele_overflow
+	scout.tele_depot_score=pointValues.depot*scout.tele_depot
+	scout.tele_motif_score=pointValues.motif*scout.tele_motif
+
+	scout.classified_score=scout.auto_classified_score+scout.tele_classified_score
+	scout.overflow_score=scout.auto_overflow_score+scout.tele_overflow_score
+	scout.depot_score=scout.auto_depot_score+scout.tele_depot_score
+	scout.motif_score=scout.auto_motif_score+scout.tele_motif_score
+
+	scout.auto_score=scout.auto_leave_score+scout.auto_classified_score+scout.auto_overflow_score+scout.auto_depot_score+scout.auto_motif_score
+	scout.tele_score=scout.tele_classified_score+scout.tele_overflow_score+scout.tele_depot_score+scout.tele_motif_score
+	scout.base_return_score=scout.base_return_both?pointValues.return_both_fully:(scout.base_return_alone?pointValues.return_fully:(scout.base_return_partially?pointValues.return_partially:0))
+	scout.score=scout.auto_score+scout.tele_score+scout.base_return_score
 
 	Object.keys(statInfo).forEach(field=>{
 		if(/^(\%|avg|count)$/.test(statInfo[field].type)){
@@ -163,6 +205,15 @@ var statInfo = {
 		tr:'Otomatikte Gol',
 		fr:'But en mode automatique',
 		pt:'Gol em Automático',
+	},
+	auto_leave:{
+		en:'Left Starting Line',
+		type: '%',
+		zh_tw:'自動離開起始線',
+		he:'עזב את קו ההתחלה',
+		tr:'Otomatikte Başlangıç Çizgisinden Ayrıldı',
+		fr:'A quitté la ligne de départ',
+		pt:'Saiu da linha de partida',
 	},
 	auto_patterns:{
 		en: 'Patterns in Auto',
@@ -384,15 +435,6 @@ var statInfo = {
 		fr:'Absence',
 		pt:'Não Comparecimento',
 	},
-	patterns:{
-		en: 'Patterns',
-		type: '%',
-		zh_tw:'圖案',
-		he:'דפוסים',
-		tr:'Desenler',
-		fr:'Motifs',
-		pt:'Padrões',
-	},
 	tele_artifact:{
 		en: 'Artifact in Teleop',
 		type: 'avg',
@@ -438,9 +480,234 @@ var statInfo = {
 		fr:'Motifs dans Téléopération',
 		pt:'Padrões em Teleop',
 	},
+	auto_classified:{
+		en: 'Classified in Auto (Estimated)',
+		fr:'Classifié en Auto (Estimé)',
+		he:'סווג באוטו (מוערך)',
+		pt:'Classificado em Automático (Estimado)',
+		tr:'Otomatikte Sınıflandırıldı (Tahmini)',
+		zh_tw:'自動分類（估計）',
+		type: 'avg'
+	},
+	auto_classified_score:{
+		en: 'Classified Score in Auto (Estimated)',
+		fr:'Score classifié en Auto (Estimé)',
+		he:'ציון סיווג באוטו (מוערך)',
+		pt:'Pontuação Classificada em Automático (Estimado)',
+		tr:'Otomatikte Sınıflandırma Puanı (Tahmini)',
+		zh_tw:'自動分類得分（估計）',
+		type: 'avg'
+	},
+	auto_depot_score:{
+		en: 'Depot Score in Auto (Estimated)',
+		fr:'Score du dépôt en Auto (Estimé)',
+		he:'ציון מחסן באוטו (מוערך)',
+		pt:'Pontuação do Depósito em Automático (Estimado)',
+		tr:'Otomatikte Depo Puanı (Tahmini)',
+		zh_tw:'自動倉庫得分（估計）',
+		type: 'avg'
+	},
+	auto_leave_score:{
+		en: 'Leave Score in Auto (Estimated)',
+		fr:'Score de départ en Auto (Estimé)',
+		he:'ציון עזיבה באוטו (מוערך)',
+		pt:'Pontuação de Saída em Automático (Estimado)',
+		tr:'Otomatikte Ayrılma Puanı (Tahmini)',
+		zh_tw:'自動離開得分（估計）',
+		type: 'avg'
+	},
+	auto_motif:{
+		en: 'Motif in Auto (Estimated)',
+		fr:'Motif en Auto (Estimé)',
+		he:'דפוס באוטו (מוערך)',
+		pt:'Motivo em Automático (Estimado)',
+		tr:'Otomatikte Motif (Tahmini)',
+		zh_tw:'自動圖案（估計）',
+		type: 'avg'
+	},
+	auto_motif_score:{
+		en: 'Motif Score in Auto (Estimated)',
+		fr:'Score du motif en Auto (Estimé)',
+		he:'ציון דפוס באוטו (מוערך)',
+		pt:'Pontuação do Motivo em Automático (Estimado)',
+		tr:'Otomatikte Motif Puanı (Tahmini)',
+		zh_tw:'自動圖案得分（估計）',
+		type: 'avg'
+	},
+	auto_overflow:{
+		en: 'Overflow in Auto (Estimated)',
+		fr:'Débordement en Auto (Estimé)',
+		he:'עודף באוטו (מוערך)',
+		pt:'Excesso em Automático (Estimado)',
+		tr:'Otomatikte Taşma (Tahmini)',
+		zh_tw:'自動溢出（估計）',
+		type: '%'
+	},
+	auto_overflow_score:{
+		en: 'Overflow Score in Auto (Estimated)',
+		fr:'Score de débordement en Auto (Estimé)',
+		he:'ציון עודף באוטו (מוערך)',
+		pt:'Pontuação de Excesso em Automático (Estimado)',
+		tr:'Otomatikte Taşma Puanı (Tahmini)',
+		zh_tw:'自動溢出得分（估計）',
+		type: 'avg'
+	},
+	auto_score:{
+		en: 'Score in Auto (Estimated)',
+		fr:'Score en Auto (Estimé)',
+		he:'ציון באוטו (מוערך)',
+		pt:'Pontuação em Automático (Estimado)',
+		tr:'Otomatikte Puan (Tahmini)',
+		zh_tw:'自動得分（估計）',
+		type: 'avg'
+	},
+	base_return_score:{
+		en: 'Base Return Score (Estimated)',
+		zh_tw:'基地返回得分（估計）',
+		he:'ציון החזרת בסיס (מוערך)',
+		tr:'Üs Dönüşü Puanı (Tahmini)',
+		fr:'Score de retour de base (Estimé)',
+		pt:'Pontuação de Regresso à Base (Estimado)',
+		type: 'avg'
+	},
+	classified_score:{
+		en: 'Classified Score (Estimated)',
+		fr:'Score classifié (Estimé)',
+		he:'ציון סיווג (מוערך)',
+		pt:'Pontuação Classificada (Estimada)',
+		tr:'Sınıflandırma Puanı (Tahmini)',
+		zh_tw:'分類得分（估計）',
+		type: 'avg'
+	},
+	depot_score:{
+		en: 'Depot Score (Estimated)',
+		fr:'Score du dépôt (Estimé)',
+		he:'ציון מחסן (מוערך)',
+		pt:'Pontuação do Depósito (Estimada)',
+		tr:'Depo Puanı (Tahmini)',
+		zh_tw:'倉庫得分（估計）',
+		type: 'avg'
+	},
+	motif_score:{
+		en: 'Motif Score (Estimated)',
+		fr:'Score du motif (Estimé)',
+		he:'ציון דפוס (מוערך)',
+		pt:'Pontuação do Motivo (Estimada)',
+		tr:'Motif Puanı (Tahmini)',
+		zh_tw:'圖案得分（估計）',
+		type: 'avg'
+	},
+	overflow_score:{
+		en: 'Overflow Score (Estimated)',
+		fr:'Score de débordement (Estimé)',
+		he:'ציון עודף (מוערך)',
+		pt:'Pontuação de Excesso (Estimada)',
+		tr:'Taşma Puanı (Tahmini)',
+		zh_tw:'溢出得分（估計）',
+		type: 'avg'
+	},
+	review_requested:{
+		en: 'Review Requested (Estimated)',
+		fr:'Revue demandée (Estimée)',
+		he:'סקירה מבקשת (מוערכת)',
+		pt:'Revisão Solicitada (Estimada)',
+		tr:'İnceleme Talebi (Tahmini)',
+		zh_tw:'請求審查（估計）',
+		type: '%'
+	},
+	score:{
+		en: 'Score Contribution (Estimated)',
+		fr:'Contribution au score (Estimée)',
+		he:'תרומת ציון (מוערכת)',
+		pt:'Contribuição de Pontuação (Estimada)',
+		tr:'Puan Katkısı (Tahmini)',
+		zh_tw:'得分貢獻（估計）',
+		type: 'avg'
+	},
+	tele_classified:{
+		en: 'Classified in Teleop (Estimated)',
+		fr:'Classifié en Téléopération (Estimé)',
+		he:'סווג בטלהופ (מוערך)',
+		pt:'Classificado em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Sınıflandırıldı (Tahmini)',
+		zh_tw:'遠端操作分類（估計）',
+		type: 'avg'
+	},
+	tele_classified_score:{
+		en: 'Classified Score in Teleop (Estimated)',
+		fr:'Score classifié en Téléopération (Estimé)',
+		he:'ציון סיווג בטלהופ (מוערך)',
+		pt:'Pontuação Classificada em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Sınıflandırma Puanı (Tahmini)',
+		zh_tw:'遠端操作分類得分（估計）',
+		type: 'avg'
+	},
+	tele_depot_score:{
+		en: 'Depot Score in Teleop (Estimated)',
+		fr:'Score du dépôt en Téléopération (Estimé)',
+		he:'ציון מחסן בטלהופ (מוערך)',
+		pt:'Pontuação do Depósito em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Depo Puanı (Tahmini)',
+		zh_tw:'遠端操作倉庫得分（估計）',
+		type: 'avg'
+	},
+	tele_motif:{
+		en: 'Motif in Teleop (Estimated)',
+		fr:'Motif en Téléopération (Estimé)',
+		he:'דפוס בטלהופ (מוערך)',
+		pt:'Motivo em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Motif (Tahmini)',
+		zh_tw:'遠端操作圖案（估計）',
+		type: 'avg'
+	},
+	tele_motif_score:{
+		en: 'Motif Score in Teleop (Estimated)',
+		fr:'Score du motif en Téléopération (Estimé)',
+		he:'ציון דפוס בטלהופ (מוערך)',
+		pt:'Pontuação do Motivo em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Motif Puanı (Tahmini)',
+		zh_tw:'遠端操作圖案得分（估計）',
+		type: 'avg'
+	},
+	tele_overflow:{
+		en: 'Overflow in Teleop (Estimated)',
+		fr:'Débordement en Téléopération (Estimé)',
+		he:'עודף בטלהופ (מוערך)',
+		pt:'Excesso em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Taşma (Tahmini)',
+		zh_tw:'遠端操作溢出（估計）',
+		type: 'avg'
+	},
+	tele_overflow_score:{
+		en: 'Overflow Score in Teleop (Estimated)',
+		fr:'Score de débordement en Téléopération (Estimé)',
+		he:'ציון עודף בטלהופ (מוערך)',
+		pt:'Pontuação de Excesso em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Taşma Puanı (Tahmini)',
+		zh_tw:'遠端操作溢出得分（估計）',
+		type: 'avg'
+	},
+	tele_score:{
+		en: 'Score in Teleop (Estimated)',
+		fr:'Score en Téléopération (Estimé)',
+		he:'ציון בטלהופ (מוערך)',
+		pt:'Pontuação em Teleoperação (Estimado)',
+		tr:'Teleop\'ta Puan (Tahmini)',
+		zh_tw:'遠端操作得分（估計）',
+		type: 'avg'
+	},
 }
 
 var teamGraphs = {
+	"Score Contribution":{
+		graph:"stacked",
+		zh_tw:'得分貢獻',
+		he:'תרומת ציון',
+		tr:'Puan Katkısı',
+		fr:'Contribution au score',
+		pt:'Contribuição de Pontuação',
+		data:["auto_score","tele_score","base_return_score"]
+	},
 	"Artifacts":{
 		graph:"stacked",
 		zh_tw:'神器',
@@ -449,15 +716,6 @@ var teamGraphs = {
 		fr:'Artefacts',
 		pt:'Artefatos',
 		data:["goal",'depot']
-	},
-	"Match Stages":{
-		graph:"stacked",
-		zh_tw:'比賽階段',
-		he:'שלבי משחק',
-		tr:'Maç Aşamaları',
-		fr:'Étapes du match',
-		pt:'Fases da Partida',
-		data:["auto_artifact","tele_artifact"]
 	},
 	"Presets":{
 		graph:"stacked",
@@ -475,6 +733,23 @@ var teamGraphs = {
 }
 
 var aggregateGraphs = {
+	"Score Contribution":{
+		graph:"boxplot",
+		zh_tw:'得分貢獻',
+		he:'תרומת ציון',
+		tr:'Puan Katkısı',
+		fr:'Contribution au score',
+		pt:'Contribuição de Pontuação',
+		data:["score"]
+	},
+	"Match Stages":{
+		graph:"stacked",
+		zh_tw:'比賽階段',
+		he:'שלבי משחק',
+		tr:'Maç Aşamaları',
+		fr:'Étapes du match',
+		data:["auto_score","tele_score","base_return_score"]
+	},
 	"Artifacts":{
 		graph:"boxplot",
 		zh_tw:'神器',
@@ -483,15 +758,6 @@ var aggregateGraphs = {
 		fr:'Artefacts',
 		pt:'Artefatos',
 		data:["artifact"]
-	},
-	"Match Stages":{
-		graph:"stacked",
-		zh_tw:'比賽階段',
-		he:'שלבי משחק',
-		tr:'Maç Aşamaları',
-		fr:'Étapes du match',
-		pt:'Fases da Partida',
-		data:["auto_artifact","tele_artifact"]
 	},
 	"Presets":{
 		graph:"bar",
