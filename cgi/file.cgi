@@ -94,8 +94,8 @@ sub logoPng(){
 
 sub siteConfJson(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^(20[0-9]{2}(?:-[0-9]{2})?)\/([a-z\-]+)\.json$/);
-	my ($season, $type) = $file =~ /^(20[0-9]{2}(?:[0-9]{2})?)\/([a-z\-]+)\.json$/;
+	$webutil->error("Unexpected site conf json file name", $file) if ($file !~ /^(20[0-9]{2}(?:-[0-9]{2})?)\/([a-z\-]+)\.json$/);
+	my ($season, $type) = $file =~ /^(20[0-9]{2}(?:-[0-9]{2})?)\/([a-z\-]+)\.json$/;
 	my $dbh = $db->dbConnection();
 	my $sth = $dbh->prepare("SELECT `conf` FROM `siteconf` WHERE `site`=? AND `season`=? AND `type`=?");
 	$sth->execute($db->getSite(), $season, $type);
@@ -109,7 +109,7 @@ sub siteConfJson(){
 
 sub apiJson(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]*\.[a-z0-9\.]+\.json$/);
+	$webutil->error("Unexpected api json file name", $file) if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-]*\.[a-z0-9\.]+\.json$/);
 	my ($event, $name) = $file =~ /^(20[0-9]+[^\.]*)\.([a-z0-9\.]+)\.json$/;
 	my $dbh = $db->dbConnection();
 	my $sth = $dbh->prepare("SELECT `json` FROM `apijson` WHERE `site`='' AND `event`=? AND `file`=?");
@@ -124,7 +124,7 @@ sub apiJson(){
 
 sub image(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^20[0-9]{2}(?:-[0-9]{2})?\/[0-9]+(?:\-[a-z]+)?\.jpg$/);
+	$webutil->error("Unexpected image file name", $file) if ($file !~ /^20[0-9]{2}(?:-[0-9]{2})?\/[0-9]+(?:\-[a-z]+)?\.jpg$/);
 	my ($year, $team, $view) = $file =~ /^(20[0-9]{2}(?:-[0-9]{2})?)\/([0-9]+)(?:\-([a-z]+))?\.jpg$/;
 	$view = $view||"";
 	my $dbh = $db->dbConnection();
@@ -140,7 +140,7 @@ sub image(){
 
 sub csv(){
 	my ($file) = @_;
-	$webutil->error("Unexpected file name", $file) if ($file !~ /^(20[0-9]{2}(?:-[0-9]{2})?)[a-zA-Z0-9\-]+\.(scouting|pit|subjective|event|schedule|alliances)\.csv$/);
+	$webutil->error("Unexpected csv file name", $file) if ($file !~ /^(20[0-9]{2}(?:-[0-9]{2})?)[a-zA-Z0-9\-]+\.(scouting|pit|subjective|event|schedule|alliances)\.csv$/);
 
 	my ($season, $event, $table) = $file =~ /^(20[0-9]{2}(?:-[0-9]{2})?)([^\.]+)\.([^\.]+)\.csv$/;
 	my $tableSeason = $season;

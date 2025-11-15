@@ -16,7 +16,7 @@ my $file = $cgi->param('file');
 my $revision = $cgi->param('revision');
 
 $webutil->error("No file specified") if (!$file);
-$webutil->error("Unexpected file name") if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-\.]+\.csv$/);
+$webutil->error("Unexpected csv file name for reverting") if ($file !~ /^20[0-9]{2}[a-zA-Z0-9\-\.]+\.csv$/);
 $webutil->error("Unexpected revision") if ($revision and $revision !~ /^[0-9]+$/);
 chdir "../data";
 $webutil->error("File does not exist") if ( ! -e $file);
