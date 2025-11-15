@@ -15,6 +15,7 @@ sub new {
 
 sub error {
 	my ($self, $title, $help) = @_;
+	print "Status: 500 Internal Server Error\n";
 	print "Content-type: text/html; charset=UTF-8\n\n";
 	print "<!DOCTYPE html>\n";
 	print "<html>\n";
