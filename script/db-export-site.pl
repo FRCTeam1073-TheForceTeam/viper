@@ -10,6 +10,8 @@ my $dbh = $db->dbConnection();
 
 die "Expect directory as first argument" if (scalar(@ARGV)==0);
 my $dir = @ARGV[0];
+$dir = "local.data/$dir" if (-d "local.data/$dir");
+$dir = "local.data/viper$dir" if (-d "local.data/viper$dir");
 die "'$dir' does not exist" if (! -e $dir);
 die "'$dir' is not a directory" if (! -d $dir);
 $dir =~ s/\/+$//g;

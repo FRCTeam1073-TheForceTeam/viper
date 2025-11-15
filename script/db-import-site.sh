@@ -10,6 +10,16 @@ then
 	exit 1
 fi
 
+if [ -d "local.data/$dir" ]
+then
+	dir="local.data/$dir"
+fi
+
+if [ -d "local.data/viper$dir" ]
+then
+	dir="local.data/viper$dir"
+fi
+
 if [ ! -d $dir ]
 then
 	echo "Not a directory: $dir"
