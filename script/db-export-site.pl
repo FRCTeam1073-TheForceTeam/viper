@@ -58,6 +58,7 @@ for my $row (@$data){
 
 sub queryToCsv(){
 	my ($table, $csv, $site, $event, $orderby) = @_;
+	$table =~ s/-/_/g;
 	my $query = "SELECT * FROM `$table` WHERE `site`=? and `event`=? ORDER BY $orderby";
 	my $sth = $dbh->prepare($query);
 	eval {
@@ -77,11 +78,10 @@ sub queryToCsv(){
 		return;
 	}
 	print "$file\n";
-
 }
 
 for my $event (@$events){
-	my ($season) = $event =~ /^(20[0-9]{2}(?:[0-9]{2})?)/;
+	my ($season) = $event =~ /^(20[0-9]{2}(?:-[0-9]{2})?)/;
 	&queryToCsv("event", "event", $site, $event, "'event'");
 	&queryToCsv("schedule", "schedule", $site, $event, "'Match'");
 	&queryToCsv("alliances", "alliances", $site, $event, "'alliance'");
