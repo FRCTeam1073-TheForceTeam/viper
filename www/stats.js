@@ -137,6 +137,9 @@ $(document).ready(function(){
 	]).then(values => {
 		[[window.eventStats, window.eventStatsByTeam], window.pitData, window.subjectiveData, window.eventMatches, window.eventTeamsInfo, window.myTeamsGraphs] = values
 		eventMatches.forEach(match => $('#startingMatch').append($('<option>').attr('value',match.Match).text(getMatchName(match.Match))).val(statsStartMatch))
+		if (!eventStats.some(match => match.review_requested == 1)) {
+			$('#reviewControls').hide()
+		}
 		$('#sortBy').click(showSortOptions)
 		$('#markPicked').click(function(){
 			showTeamPicker(setTeamPicked, "mark_picked_header")
@@ -168,8 +171,8 @@ $(document).ready(function(){
 	$('#teamlists h4').click(function(){
 		$('.picklist-body').toggle()
 	})
-	$('#startingMatch').change(function(){
-		promiseEventStats($(this).val()).then(value=>{
+	$('#startingMatch,#includeReviewRequested').change(function(){
+		promiseEventStats($('#startingMatch').val(),$('#includeReviewRequested').is(':checked')).then(value=>{
 			[window.eventStats, window.eventStatsByTeam]=value
 			showStats()
 		})

@@ -232,7 +232,7 @@ function promiseScouting(){
 
 var statsIncludePractice=true,
 statsStartMatch="pm1"
-function promiseEventStats(startMatch){
+function promiseEventStats(startMatch, includeReviewRequested){
 	if(!eventYear) {
 		showError('no_event_title','no_event_message')
 		return Promise.reject(new Error("Event not specified"))
@@ -277,7 +277,7 @@ function promiseEventStats(startMatch){
 			pit = pitData[team]||{},
 			mt=`${match}-${team}`
 			scout.old=eventStatsByMatchTeam[mt]
-			if(scheduleSortKey(startMatch)<=scheduleSortKey(match)){
+			if ((!scout.review_requested || includeReviewRequested) && (scheduleSortKey(startMatch)<=scheduleSortKey(match))){
 				var aggregate = eventStatsByTeam[team] || {}
 				aggregateStats(scout,aggregate,apiScore,subjective,pit,eventStatsByMatchTeam,eventStatsByTeam,match)
 				eventStatsByTeam[team] = aggregate
