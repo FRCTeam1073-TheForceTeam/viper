@@ -394,13 +394,17 @@ function applyTranslations(node){
 	node.find('[data-i18n-tooltip]').each(function(){
 		$(this).attr('data-tooltip',translate($(this).attr('data-i18n-tooltip'),translationAttributes(this)))
 	})
-	$('iframe').each(function(){
-		var w = $(this)[0].contentWindow
-		if (w.locale && w.applyTranslations){
-			w.locale=locale
-			w.applyTranslations()
-		}
-	})
+	try{
+		$('iframe').each(function(){
+			var w = $(this)[0].contentWindow
+			if (w.locale && w.applyTranslations){
+				w.locale=locale
+				w.applyTranslations()
+			}
+		})
+	}catch(x){
+		console.error(x)
+	}
 }
 
 $(document).ready(function(){

@@ -90,7 +90,7 @@ function promiseEventAjax(file){
 	return fetch(file).then(response=>{
 		if(!response.ok) return ''
 		return response.text()
-	})
+	}).catch(x=>'')
 }
 
 function csvToArrayOfMaps(csv){
@@ -165,9 +165,10 @@ function promiseJson(file,defaultResponse){
 		try {
 			return JSON.parse(text)
 		} catch(e) {
-			console.error(e)
 			return defaultResponse??{}
 		}
+	}).catch(e=>{
+		return defaultResponse??{}
 	})
 }
 
