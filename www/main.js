@@ -567,7 +567,7 @@ window.console=(function (oc){
 		},
 		x:function(l,a){
 			$('#error-logs-link').parent().show()
-			$('#hamburger').addClass('error')
+			$('#hamburger').addClass('error').removeClass('show-only-when-connected')
 			this.history[l].push(a)
 			oc.hasOwnProperty(l)&&oc[l].apply(oc,a)
 		},
