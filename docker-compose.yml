@@ -1,14 +1,13 @@
-version: "3.3"
 services:
   webscout:
     build: .
-    image: webscout-image
+    image: viper-image
     ports:
       - "1073:80"
-    container_name: webscout-container
+    container_name: viper-container
     volumes:
       - .:/usr/local/apache2/htdocs
 
-# docker-compose up
+# docker compose up
 # Visit: http://localhost:1073/
 # ctrl-c to stop it
