@@ -406,7 +406,8 @@ pitScouting,
 subjectiveScouting,
 storeTime=0,
 h1Key='',
-titleKey=''
+titleKey='',
+skipHashChangeSave=false
 parseHash()
 
 onApplyTranslation.push(function(){
@@ -446,7 +447,10 @@ function maybeSaveFirst(){
 $(window).on('hashchange', function(){
 	var current = buildHash(pos,orient,team,match,teamList)
 	if (location.hash==current) return
-	maybeSaveFirst()
+	if (!skipHashChangeSave) {
+		maybeSaveFirst()
+	}
+	skipHashChangeSave = false
 	parseHash()
 	showScreen()
 	window.scrollTo(0,0)
@@ -1136,6 +1140,7 @@ function goNextMatch(uploaded){
 		team = next[pos]
 		match=next['Match']
 		setTranslationContext()
+		skipHashChangeSave = true
 		showScouting()
 	}
 	return false
