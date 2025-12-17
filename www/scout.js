@@ -1141,6 +1141,7 @@ function goNextMatch(uploaded){
 		match=next['Match']
 		setTranslationContext()
 		skipHashChangeSave = true
+		setHash(pos,orient,team,match)
 		showScouting()
 	}
 	return false
