@@ -5,9 +5,9 @@
 .graph{display:inline-block;max-width:100%}
 .chart,.heatmap{padding:0 1em;display:inline-block}
 .comments{white-space:pre-wrap}
-.imagePreview img{width:320px}
+.imagePreview img{height:320px}
 .imagePreview{display:inline}
-#fullPhoto{object-fit:contain;background:#0000;border:none}
+#fullPhoto{object-fit:contain;background:#0000;border:none;position:fixed;z-index:9999;display:none}
 #stats th.match{writing-mode:vertical-rl;text-orientation:upright}
 #stats{font-size:12px;margin:1em auto;border-collapse:collapse}
 #stats h4{margin:1em 0 0.5em 0;font-size:200%;text-align:start;display:inline-block}
@@ -22,5 +22,7 @@
 }
 #topNav ul{display:inline-block}
 #topNav li{display:inline-block}
-#topNav li:not(:last-of-type)::after{content:" | "}
+#topNav li:not(:first-of-type)::before{content:" | "}
+#topNav li[style*="display: none"]::before,
+#topNav li[style*="display:none"]::before{content:""}
 .unused{text-decoration:line-through}

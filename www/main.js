@@ -477,13 +477,13 @@ $(document).ready(function(){
 		}
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
 		$(window).on('hashchange',showMainMenuUploads)
-		$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
-			if (e.key=='Escape' && $('#lightBoxBG').is(":visible")){
-				e.preventDefault()
-				closeLightBox()
-			}
-		})
 	}
+	$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
+		if (e.key=='Escape' && $('#lightBoxBG').is(":visible")){
+			e.preventDefault()
+			closeLightBox()
+		}
+	})
 	applyTranslations()
 	var site = location.host.replace(/^(www|viper|webscout)\./,"")
 	if (!site || /^[0-9\.\:]*$/.test(site)){

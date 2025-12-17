@@ -40,6 +40,14 @@ addI18n({
 		zh_tw:'評論',
 		fr:'Commentaires',
 	},
+	compare_teams:{
+		en:'Compare Teams',
+		tr:'Takımları Karşılaştır',
+		pt:'Comparar Equipes',
+		he:'השווה קבוצות',
+		zh_tw:'比較團隊',
+		fr:'Comparer les équipes',
+	},
 })
 
 var downloadBlobs={},
@@ -76,6 +84,24 @@ $(window).on('hashchange',fillPage)
 
 var team
 
+$(document).ready(function(){
+	if (window.self !== window.top) {
+		$('#topNav').hide()
+	} else {
+		$(window).on('hashchange', updateCompareLink)
+		updateCompareLink()
+	}
+})
+
+function updateCompareLink(){
+	var currentTeam = parseInt((location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["","0"])[1])||""
+	if (currentTeam && eventId) {
+		$('.compareTeams').attr('href', `compare.html#event=${eventId}&teams=${currentTeam}`)
+	} else if (eventId) {
+		$('.compareTeams').attr('href', `compare.html#event=${eventId}`)
+	}
+}
+
 function getTeamInfo(teamNum){
 	var info=eventTeamsInfo[teamNum]
 	if (!info)return""
@@ -110,7 +136,31 @@ function fillPage(){
 		$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
 		$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
 		$('.imagePreview img').click(function(){
-			showLightBox($('#fullPhoto').attr('src',$(this).attr('src')))
+			var photo = $('#fullPhoto').attr('src',$(this).attr('src'))
+			var offset = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2
+			var scrollTop = $(window).scrollTop()
+			var w, h
+			try {
+				// Try to get parent window dimensions if in iframe
+				if (window.self !== window.top) {
+					w = Math.min(window.innerWidth || document.documentElement.clientWidth, window.top.innerWidth)
+					h = Math.min(window.innerHeight || document.documentElement.clientHeight, window.top.innerHeight)
+				} else {
+					w = window.innerWidth
+					h = window.innerHeight
+				}
+			} catch(e) {
+				// Cross-origin iframe, use iframe dimensions
+				w = window.innerWidth || document.documentElement.clientWidth
+				h = window.innerHeight || document.documentElement.clientHeight
+			}
+			photo.css({
+				top: (scrollTop + offset) + 'px',
+				left: offset + 'px',
+				width: (w - offset * 2) + 'px',
+				height: (h - offset * 2) + 'px'
+			})
+			showLightBox(photo)
 		})
 		$('#fullPhoto').click(closeLightBox)
 

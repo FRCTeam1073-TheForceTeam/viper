@@ -1,0 +1,9 @@
+#compareContainer{display:flex;width:100%;min-height:100vh}
+#managementBar{background:var(--header-bg-color);border-bottom:2px solid var(--main-border-color);padding:0.5em;text-align:center}
+.teamFrame{flex:1;border-right:2px solid var(--main-border-color)}
+.teamFrame:last-child{border-right:none}
+.teamFrame iframe{width:100%;border:none;display:block;overflow:hidden}
+body{margin:0;padding:0}
+#teamButtons{column-width:4.5em;padding:1em;min-width:30em;display:none}
+#teamButtons button{margin:0.2em;width:4em}
+button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
