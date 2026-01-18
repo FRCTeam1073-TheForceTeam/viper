@@ -1,0 +1,61 @@
+#scouting{max-width:60em;margin:0 auto}
+#scouting>div>table{border-collapse:collapse;border:1px solid var(--main-border-color);margin-bottom:3vmin;width:100%}
+#scouting>div>table>tbody>tr>th{border:1px solid var(--main-border-color);font-size:200%}
+#scouting>div>table>tbody>tr>td{border:1px solid var(--main-border-color);overflow:hidden;text-align:center;padding:.4em;font-weight:bold; margin-bottom:0;vertical-align:top;vertical-align:middle}
+#scouting .num {display:block;font-size:125%;margin:0 auto;font-weight:bold}
+
+.orientLeft .bigimg, body.leftField.redTeam #start-area,body.rightField.blueTeam #start-area,body.leftField.redTeam .orient-rotate,body.rightField.blueTeam .orient-rotate,body.leftField.redTeam .orient-rotate > *,body.rightField.blueTeam .orient-rotate > * {transform:rotate(180deg)}
+
+#start-area{width:7em;height:25em;position:relative;margin:0 auto}
+.blueTeam #start-area{background:url(start-area-blue.png) no-repeat center center / 100% 100%}
+.redTeam #start-area{background:url(start-area-red.png) no-repeat center center / 100% 100%}
+.reef-scout{background:url(reef.png) no-repeat center center / 100% 100%}
+#robot-starting-position{position:absolute;top:0;left:0;width:2.5em;height:2.5em;border-radius:.3em;}
+.blueTeam #robot-starting-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
+.redTeam #robot-starting-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
+
+.scout-locations{position:relative;aspect-ratio:1.5;max-height:84vh;margin:0 auto}
+@media (max-height:400px){.scout-locations{max-height:60vh}}
+@media (min-height:401px) and (max-height:600px){.scout-locations{max-height:70vh}}
+@media (min-height:601px) and (max-height:800px){.scout-locations{max-height:77vh}}
+.scout-locations button{background-color:#0008;border-color:#0008}
+.redTeam .scout-locations{background:url(scout-red.png) no-repeat center center / 100% 100%}
+.blueTeam .scout-locations{background:url(scout-blue.png) no-repeat center center / 100% 100%}
+.scout-locations > button,.scout-locations > label{height:14%;position:absolute;min-width:0;aspect-ratio:1;display:inline-block}
+.reef-scout{position:absolute;height:56%;aspect-ratio:1}
+.reef-scout > *{height:25%;position:absolute;min-width:0;aspect-ratio:1;display:inline-block}
+.scout-locations button img,.scout-locations label span,.scout-locations label img{height:100%;margin:0;display:inline-block}
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait){.scout-locations button img,.scout-locations label span,.scout-locations label img{height:2.5em}}
+.scout-locations .label{padding-top:.6em;font-size:125%}
+.redTeam .scout-locations .label{background-color:var(--red-team-color)}
+.blueTeam .scout-locations .label{background-color:var(--blue-team-color)}
+
+.timeline-table td:nth-child(1){max-width:4em}
+
+html{padding:0}
+#nextButtons{margin-bottom:50vh}
+#select-bot button{font-size:100%}
+
+.algae{background:#99ddd5;font-size:80%}
+.coral{background:white;font-size:80%}
+.collection{color:rgb(5, 58, 0)}
+.placement{color:rgb(0, 23, 69)}
+
+.prematch td,.auto td,.teleop td{position:relative}
+.disabledOverlay {position:absolute;display:inline-block;width:100%;height:100%;background:#0006;top:0;left:0}
+
+@media (orientation: landscape) and (max-height:500px){
+	#scouting > div > table.field-table > tbody > tr {display:table-cell}
+	#scouting > div > table.field-table > tbody > tr > td {display:block;width:100%;height:100%}
+	#scouting > div > table.field-table > tbody > tr{width:20vw}
+	#scouting > div > table.field-table > tbody > tr:first-child {width:80vw;height:90vh}
+	.scout-locations{max-height:89vh;height:89vh}
+	.tabs{font-size:100%}
+	.tab{padding:.2em 1em}
+}
+@media (orientation: landscape) and (max-height:390px){
+	.scout-locations{height:83vh;max-height:83vh}
+	#scouting > div > table.field-table > tbody > tr:first-child {height:85vh}
+}
+
+#auto-paths {min-width:10em;width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('auto-area-blue.png');background-size:cover}

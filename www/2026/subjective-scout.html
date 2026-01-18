@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Subjective Scouting EVENT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.min.js></script>
+<script src=/main.js></script>
+<script src=/pit-scout.js></script>
+<script src=/canvas-path.js></script>
+<script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
+<script src=/scout.js></script>
+<script src=scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/local.js></script>
+<link rel=preload as=image href=speaker-shoot-area-blue.png>
+<link rel=preload as=image href=speaker-shoot-area-red.png>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+<body>
+<h1></h1>
+
+<div id=select-team class="sequential-input-series init-hide screen">
+	<div id=teamList></div>
+</div>
+
+<form id=subjective-scouting class="sequential-input-series init-hide screen">
+
+	<button id=subjectiveTeamButton data-i18n=back_team_select_button></button>
+
+	<input type=hidden name=event>
+	<input type=hidden name=team>
+
+	TODO
+
+	<fieldset class=full>
+		<legend data-i18n=scouter_header></legend>
+		<span data-i18n=scouter_name_question></span> <div class=full><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></div>
+	</fieldset>
+
+	<input type=hidden name=created value="">
+	<input type=hidden name=modified value="">
+	<fieldset class=full id=nextButtons>
+		<legend data-i18n=save_data_legend></legend>
+		<div id=doneButtons></div>
+	</fieldset>
+</form>
+</html>

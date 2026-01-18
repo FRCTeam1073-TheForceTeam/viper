@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.min.js></script>
+<script src=/main.js></script>
+<script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
+<script src=/canvas-path.js></script>
+<script src=/scout.js></script>
+<script src=scout.js></script>
+<script src=/heartbeat.js></script>
+<script src=/local.js></script>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+
+<body>
+<div id=select-bot class=screen style=display:none>
+	<h1></h1>
+	<h2 data-i18n=choose_pos_heading></h2>
+	<div>
+		<table class=orientLeft><tr>
+			<td class=redTeamBG><button>R1</button></td>
+			<td rowspan=3><img class=bigimg src=field.png></td>
+			<td class=blueTeamBG><button>B3</button></td>
+		</tr><tr>
+			<td class=redTeamBG><button>R2</button></td>
+			<td class=blueTeamBG><button>B2</button></td>
+		</tr><tr>
+			<td class=redTeamBG><button>R3</button></td>
+			<td class=blueTeamBG><button>B1</button></td>
+		</tr></table>
+	</div>
+	<div>
+		<span data-i18n=choose_pos_or></span>
+	</div>
+	<div>
+		<table class=orientRight><tr>
+			<td class=blueTeamBG><button>B1</button></td>
+			<td rowspan=3><img class=bigimg src=field.png></td>
+			<td class=redTeamBG><button>R3</button></td>
+		</tr><tr>
+			<td class=blueTeamBG><button>B2</button></td>
+			<td class=redTeamBG><button>R2</button></td>
+		</tr><tr>
+			<td class=blueTeamBG><button>B3</button></td>
+			<td class=redTeamBG><button>R1</button></td>
+		</tr></table>
+	</div>
+	<button class=showInstructions data-i18n=instructions></button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
+</div>
+
+<div id=select-match class=screen style=display:none>
+	<h1></h1>
+	<button class=showInstructions data-i18n=instructions></button>
+	<button class=robotBtn data-i18n=change_robot_button></button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
+	<div id=match-list></div>
+</div>
+
+<div id=change-team class=screen style=display:none>
+	<h1></h1>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn data-i18n=cancel_button></button>
+</div>
+
+<form id=scouting class=screen style=display:none>
+
+	<div class=tabs>
+		<div class="tab default-tab" data-content=prematch data-i18n=pre_match_tab></div>
+		<div class=tab data-content=auto data-i18n=auto_tab></div>
+		<div class=tab data-content=teleop data-i18n=tele_tab></div>
+		<div class=tab data-content=end-game data-i18n=end_game_tab></div>
+	</div>
+
+	<div class="prematch tab-content">
+		<table><tr><td colspan=2>
+			<h1></h1>
+			<div>
+				<button class=showInstructions data-i18n=instructions></button>
+				<button id=teamBtn data-i18n=team_correction_button></button>
+				<button id=matchBtn data-i18n=choose_match_button></button>
+				<button class=robotBtn data-i18n=change_robot_button></button>
+				<button class=fieldRotateBtn data-i18n=rotate_field_button></button>
+				<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+			</div>
+			<input type=hidden name=event>
+			<input type=hidden name=match>
+			<input type=hidden name=team>
+			<input type=hidden name=timeline id=timeline>
+		</td></tr><tr><td colspan=2>
+			<button style=float:right class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
+		</td></tr></table>
+
+	</div>
+
+	<div class="auto tab-content">
+		<table class=field-table><tr><td colspan=4>
+		</td></tr></table>
+	</div>
+
+	<div class="teleop tab-content">
+		<table class=field-table><tr><td colspan=4>
+		</td></tr></table>
+	</div>
+
+	<div class="end-game tab-content">
+	</div>
+</form>
+</body>
+</html>
