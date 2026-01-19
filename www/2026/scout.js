@@ -26,4 +26,35 @@ $(document).ready(function(){
 
 	window.onInputChanged = window.onInputChanged || []
 	window.onInputChanged.push(inputChanged)
+
+	function toAlliance(){
+		$('.alliance').show()
+		$('.neutral, .opponent').hide()
+		$('.target').removeClass('active')
+		$('.target-hub').addClass('active')
+		return false
+	}
+	function toOpponent(){
+		$('.opponent').show()
+		$('.neutral, .alliance').hide()
+		$('.target').removeClass('active')
+		$('.target-alliance-floor').addClass('active')
+		return false
+	}
+	function toNeutral(){
+		$('.neutral').show()
+		$('.alliance, .opponent').hide()
+		$('.target').removeClass('active')
+		$('.target-alliance-floor').addClass('active')
+		return false
+	}
+	function activateTarget(){
+		$('.target').removeClass('active')
+		$(this).addClass('active')
+	}
+	$('.to-alliance').on('click',toAlliance)
+	$('.to-neutral').on('click', toNeutral)
+	$('.to-opponent').on('click', toOpponent)
+	$('.target').on('click', activateTarget)
+	toAlliance()
 })

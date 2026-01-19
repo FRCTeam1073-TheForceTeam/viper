@@ -75,9 +75,9 @@
 <form id=scouting class=screen style=display:none>
 
 	<div class=tabs>
-		<div class="tab default-tab" data-content=prematch data-i18n=pre_match_tab></div>
+		<div class="tab" data-content=prematch data-i18n=pre_match_tab></div>
 		<div class=tab data-content=auto data-i18n=auto_tab></div>
-		<div class=tab data-content=teleop data-i18n=tele_tab></div>
+		<div class="tab default-tab" data-content=teleop data-i18n=tele_tab></div>
 		<div class=tab data-content=end-game data-i18n=end_game_tab></div>
 	</div>
 
@@ -103,13 +103,60 @@
 	</div>
 
 	<div class="auto tab-content">
-		<table class=field-table><tr><td colspan=4>
-		</td></tr></table>
+		<div class=field-actions>
+			<button class="alliance to-neutral" data-input=trench_table_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
+			<button class="alliance to-neutral" data-input=bump_table_alliance_to_neutral style=right:26%;bottom:21%>⬅</button>
+			<button class="alliance to-neutral" data-input=bump_notable_alliance_to_neutral style=right:26%;top:21%>⬅</button>
+			<button class="alliance to-neutral" data-input=trench_notable_alliance_to_neutral style=right:26%;top:5%>⬅</button>
+			<div class="alliance robot" style=right:13%;top:43%></div>
+			<button class="alliance target target-hub" style=right:26%;top:39%>🎯</button>
+
+			<button class="neutral to-alliance" data-input=trench_table_neutral_to_alliance style=right:26%;bottom:5%>➡</button>
+			<button class="neutral to-alliance" data-input=bump_table_neutral_to_alliance style=right:26%;bottom:21%>➡</button>
+			<button class="neutral to-alliance" data-input=bump_notable_neutral_to_alliance style=right:26%;top:21%>➡</button>
+			<button class="neutral to-alliance" data-input=trench_notable_neutral_to_alliance style=right:26%;top:5%>➡</button>
+			<button class="neutral target target-alliance-floor" style=right:13%;bottom:5%>🎯</button>
+			<div class="neutral robot" style=right:46.5%;top:43%></div>
+		</div>
+		<button class="fuel">1</button>
+		<button class="fuel">5</button>
+		<button class="fuel">10</button>
 	</div>
 
 	<div class="teleop tab-content">
-		<table class=field-table><tr><td colspan=4>
-		</td></tr></table>
+		<div class=field-actions>
+			<button class="alliance to-neutral" data-input=trench_table_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
+			<button class="alliance to-neutral" data-input=bump_table_alliance_to_neutral style=right:26%;bottom:21%>⬅</button>
+			<button class="alliance to-neutral" data-input=bump_notable_alliance_to_neutral style=right:26%;top:21%>⬅</button>
+			<button class="alliance to-neutral" data-input=trench_notable_alliance_to_neutral style=right:26%;top:5%>⬅</button>
+			<div class="alliance robot" style=right:13%;top:43%></div>
+			<button class="alliance target target-hub" style=right:26%;top:39%>🎯</button>
+			<button class="alliance target target-alliance-floor" style=right:13%;bottom:5%>🎯</button>
+			<button class="alliance target target-outpost" style=right:0%;top:4%>🎯</button>
+
+			<button class="neutral to-alliance" data-input=trench_table_neutral_to_alliance style=right:26%;bottom:5%>➡</button>
+			<button class="neutral to-alliance" data-input=bump_table_neutral_to_alliance style=right:26%;bottom:21%>➡</button>
+			<button class="neutral to-alliance" data-input=bump_notable_neutral_to_alliance style=right:26%;top:21%>➡</button>
+			<button class="neutral to-alliance" data-input=trench_notable_neutral_to_alliance style=right:26%;top:5%>➡</button>
+			<button class="neutral target target-alliance-floor" style=right:13%;bottom:5%>🎯</button>
+			<div class="neutral robot" style=right:46.5%;top:43%></div>
+<
+			<button class="neutral to-opponent" data-input=trench_table_neutral_to_opponent style=left:26%;bottom:5%>⬅</button>
+			<button class="neutral to-opponent" data-input=bump_table_neutral_to_opponent style=left:26%;bottom:21%>⬅</button>
+			<button class="neutral to-opponent" data-input=bump_notable_neutral_to_opponent style=left:26%;top:21%>⬅</button>
+			<button class="neutral to-opponent" data-input=trench_notable_neutral_to_opponent style=left:26%;top:5%>⬅</button>
+
+			<button class="opponent to-neutral" data-input=trench_table_opponent_to_neutral style=left:26%;bottom:5%>➡</button>
+			<button class="opponent to-neutral" data-input=bump_table_opponent_to_neutral style=left:26%;bottom:21%>➡</button>
+			<button class="opponent to-neutral" data-input=bump_notable_opponent_to_neutral style=left:26%;top:21%>➡</button>
+			<button class="opponent to-neutral" data-input=trench_notable_opponent_to_neutral style=left:26%;top:5%>➡</button>
+			<div class="opponent robot" style=left:13%;top:43%></div>
+			<button class="opponent target target-alliance-floor" style=right:13%;bottom:5%>🎯</button>
+			<button class="opponent target target-neutral-floor" style=right:46.5%;bottom:5%>🎯</button>
+		</div>
+		<button class="fuel">1</button>
+		<button class="fuel">5</button>
+		<button class="fuel">10</button>
 	</div>
 
 	<div class="end-game tab-content">
