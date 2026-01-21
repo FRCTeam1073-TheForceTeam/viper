@@ -17,6 +17,7 @@ $(document).ready(function(){
 	})
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
+		initScouting2026()
 		return true
 	})
 	window.onShowPitScouting = window.onShowPitScouting || []
@@ -29,6 +30,14 @@ $(document).ready(function(){
 
 	function initScouting2026(){
 		matchStartTime = 0
+		$('.field-actions').find('[style]').each(function(){
+			var c = $(this).attr('class'),
+			isRed = pos.startsWith('R'),
+			alliance = /side-alliance/.test(c),
+			opponent = /side-opponent/.test(c)
+			if ((alliance && isRed)||(opponent && !isRed)) $(this).attr('style', $(this).attr('style').replace(/left/g,'right'))
+			if ((opponent && isRed)||(alliance && !isRed)) $(this).attr('style', $(this).attr('style').replace(/right/g,'left'))
+		})
 	}
 
 	function inputChanged2026(input, change){
