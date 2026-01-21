@@ -25,36 +25,76 @@ $(document).ready(function(){
 	})
 
 	window.onInputChanged = window.onInputChanged || []
-	window.onInputChanged.push(inputChanged)
+	window.onInputChanged.push(inputChanged2026)
 
-	function toAlliance(){
+	function initScouting2026(){
+		matchStartTime = 0
+	}
+
+	function inputChanged2026(input, change){
+		var order = $('[name="timeline"]'),
+		text = order.val(),
+		name = input.attr('name'),
+		re = name
+		if (matchStartTime==0) matchStartTime = new Date().getTime() - (input.closest('.teleop').length?TELE_START_MS:0)
+		if ('radio'==input.attr('type')){
+			name += `:${input.val()}`
+			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
+		}
+		if ((input.is('.num') && change>0) || input.is(':checked')){
+			if (text) text += " "
+			var seconds = Math.floor((new Date().getTime() - matchStartTime)/1000)
+			text += `${seconds}:${name}`
+			if (change>1) text += `:${change}`
+		} else {
+			if(input.val()=="0"){
+				text = text.replace(new RegExp(`((?<= |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`,'g'),"").trim()
+			} else {
+				text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
+			}
+		}
+		if (!text)initScouting2026()
+		order.val(text)
+	}
+
+	function toAlliance(e){
 		$('.alliance').show()
 		$('.neutral, .opponent').hide()
 		$('.target').removeClass('active')
 		$('.target-hub').addClass('active')
-		return false
+		return countHandler.call(this,e)
 	}
-	function toOpponent(){
+	function toOpponent(e){
 		$('.opponent').show()
 		$('.neutral, .alliance').hide()
 		$('.target').removeClass('active')
-		$('.target-alliance-floor').addClass('active')
-		return false
+		$('.target-alliance').addClass('active')
+		return countHandler.call(this,e)
 	}
-	function toNeutral(){
+	function toNeutral(e){
 		$('.neutral').show()
 		$('.alliance, .opponent').hide()
 		$('.target').removeClass('active')
-		$('.target-alliance-floor').addClass('active')
-		return false
+		$('.target-alliance').addClass('active')
+		return countHandler.call(this,e)
 	}
 	function activateTarget(){
 		$('.target').removeClass('active')
 		$(this).addClass('active')
+		return false
 	}
 	$('.to-alliance').on('click',toAlliance)
 	$('.to-neutral').on('click', toNeutral)
 	$('.to-opponent').on('click', toOpponent)
 	$('.target').on('click', activateTarget)
 	toAlliance()
+
+	$('.fuel').on('click', function(e){
+		var target = $('.target.active:visible'),
+		offset = target.offset()
+		e.pageX = offset.left + target.width() / 2
+		e.pageY = offset.top + target.height() / 2
+		target.attr('data-value',$(this).attr('data-value'))
+		return countHandler.call(target[0],e)
+	})
 })

@@ -797,11 +797,12 @@ var changeFloater = $('<div id=change-floater>')
 var lastClickTimeOnCounter = 0
 function countHandler(e){
 	var clicked = e&&e.hasOwnProperty('type')&&e.type==='click'&&Math.abs(lastClickTimeOnCounter-e.timeStamp)>100,
-	parent = findParentFromButton($(this)),
+	inputAttr = $(this).attr('data-input'),
+	parent = inputAttr?$(this):findParentFromButton($(this)),
 	count = $(this).is('.count')?$(this):$(this).find('.count').first(),
-	input = findInputInEl(parent),
+	input = inputAttr ? $('input[name="' + inputAttr + '"]') : findInputInEl(parent),
 	src = count.attr('src'),
-	dataValue = count.attr('data-value'),
+	dataValue = count.attr('data-value')??$(this).attr('data-value'),
 	val=parseInt(input.val())||0,
 	max=parseInt(input.attr('max'))||999999,
 	min=parseInt(input.attr('min'))||0

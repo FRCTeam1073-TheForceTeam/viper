@@ -9,3 +9,4 @@ html{padding:0}
 .blueTeam .field-actions .robot{border-color:var(--blue-team-color)}
 .target.active{background:var(--button-selected-bg-color)}
 .fuel{width:2.3em;height:2.3em;border-radius:50%;background:#f1ce03;font-size:300%}
+td{text-align:left;padding:0.2em 0.5em}

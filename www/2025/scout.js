@@ -161,7 +161,7 @@ $(document).ready(function(){
 	})
 
 	window.onInputChanged = window.onInputChanged || []
-	window.onInputChanged.push(inputChanged)
+	window.onInputChanged.push(inputChanged2025)
 
 	onApplyTranslation.push(renderTimeline)
 
@@ -171,7 +171,7 @@ $(document).ready(function(){
 		proceedToTeleBlink()
 	}
 
-	function inputChanged(input, change){
+	function inputChanged2025(input, change){
 		toggleScoringElements()
 
 		if(!input.closest('.auto,.teleop,#no-show-area').length) return
@@ -179,7 +179,7 @@ $(document).ready(function(){
 		var leave=$('[name="auto_leave"]')
 		if (input.closest('.auto').length&&input.attr('name')!='auto_leave'&&!leave.is(':checked')){
 			leave.prop('checked',true)
-			inputChanged(leave,0)
+			inputChanged2025(leave,0)
 		}
 		var order = $('#timeline'),
 		text = order.val(),
@@ -396,7 +396,7 @@ $(document).ready(function(){
 			newVal = ""+Math.floor((new Date().getTime() - timer.start)/1000)
 			if(oldVal != newVal){
 				animateChangeFloater(newVal,timer.e)
-				inputChanged(timer.input,1)
+				inputChanged2025(timer.input,1)
 			}
 			timer.input.val(newVal)
 		})
@@ -409,7 +409,7 @@ $(document).ready(function(){
 			delete scoutTimers[name]
 		} else {
 			var val=parseInt(input.val()||"0")
-			inputChanged(input,1)
+			inputChanged2025(input,1)
 			scoutTimers[name]={
 				e: e,
 				input: input,
