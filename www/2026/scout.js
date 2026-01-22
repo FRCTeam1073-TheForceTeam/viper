@@ -32,38 +32,43 @@ $(document).ready(function(){
 		matchStartTime = 0
 		$('.field-actions').find('[style]').each(function(){
 			var c = $(this).attr('class'),
-			isRed = pos.startsWith('R'),
-			alliance = /side-alliance/.test(c),
-			opponent = /side-opponent/.test(c)
-			if ((alliance && isRed)||(opponent && !isRed)) $(this).attr('style', $(this).attr('style').replace(/left/g,'right'))
-			if ((opponent && isRed)||(alliance && !isRed)) $(this).attr('style', $(this).attr('style').replace(/right/g,'left'))
+			isBlue = pos.startsWith('B'),
+			side = $(this).attr('data-side'),
+			end = $(this).attr('data-end'),
+			lOrR = ((!isBlue && end=='alliance') || (isBlue && end=='opponent'))?'right':'left'
+			if (end) $(this).attr('style', $(this).attr('style').replace(/left|right/g,lOrR))
+			if (side) $(this).attr('data-input', $(this).attr('data-input').replace(/depot|outpost/g,side))
 		})
 	}
 
+	$('.fieldRotateBtn').click(initScouting2026)
+
 	function inputChanged2026(input, change){
-		var order = $('[name="timeline"]'),
-		text = order.val(),
-		name = input.attr('name'),
-		re = name
-		if (matchStartTime==0) matchStartTime = new Date().getTime() - (input.closest('.teleop').length?TELE_START_MS:0)
-		if ('radio'==input.attr('type')){
-			name += `:${input.val()}`
-			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
-		}
-		if ((input.is('.num') && change>0) || input.is(':checked')){
-			if (text) text += " "
-			var seconds = Math.floor((new Date().getTime() - matchStartTime)/1000)
-			text += `${seconds}:${name}`
-			if (change>1) text += `:${change}`
-		} else {
-			if(input.val()=="0"){
-				text = text.replace(new RegExp(`((?<= |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`,'g'),"").trim()
-			} else {
-				text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
+		if(input.closest('.auto,.teleop').length){
+			var order = $('[name="timeline"]'),
+			text = order.val(),
+			name = input.attr('name'),
+			re = name
+			if (matchStartTime==0) matchStartTime = new Date().getTime() - (input.closest('.teleop').length?TELE_START_MS:0)
+			if ('radio'==input.attr('type')){
+				name += `:${input.val()}`
+				text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
 			}
+			if ((input.is('.num') && change>0) || input.is(':checked')){
+				if (text) text += " "
+				var seconds = Math.floor((new Date().getTime() - matchStartTime)/1000)
+				text += `${seconds}:${name}`
+				if (change>1) text += `:${change}`
+			} else {
+				if(input.val()=="0"){
+					text = text.replace(new RegExp(`((?<= |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`,'g'),"").trim()
+				} else {
+					text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(\:[a-z0-9_]*)?( |$)`),"$1").trim()
+				}
+			}
+			if (!text)initScouting2026()
+			order.val(text)
 		}
-		if (!text)initScouting2026()
-		order.val(text)
 	}
 
 	function toAlliance(e){

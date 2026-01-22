@@ -106,18 +106,18 @@
 
 	<div class="auto tab-content">
 		<div class="field-actions orient-rotate">
-			<button class="alliance to-neutral side-alliance" data-input=auto_trench_depot_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
-			<button class="alliance to-neutral side-alliance" data-input=auto_bump_depot_alliance_to_neutral style=right:26%;bottom:21%>⬅</button>
-			<button class="alliance to-neutral side-alliance" data-input=auto_bump_outpost_alliance_to_neutral style=right:26%;top:21%>⬅</button>
-			<button class="alliance to-neutral side-alliance" data-input=auto_trench_outpost_alliance_to_neutral style=right:26%;top:5%>⬅</button>
-			<div class="alliance robot side-alliance" style=right:13%;top:43%></div>
-			<button class="alliance target target-hub side-alliance" data-input=auto_fuel_score style=right:26%;top:39%>🎯</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=depot data-input=auto_trench_depot_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=depot data-input=auto_bump_depot_alliance_to_neutral style=right:26%;bottom:21%>⬅</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=outpost data-input=auto_bump_outpost_alliance_to_neutral style=right:26%;top:21%>⬅</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=outpost data-input=auto_trench_outpost_alliance_to_neutral style=right:26%;top:5%>⬅</button>
+			<div class="alliance robot" data-end=alliance style=right:13%;top:43%></div>
+			<button class="alliance target target-hub" data-end=alliance data-input=auto_fuel_score style=right:26%;top:39%>🎯</button>
 
-			<button class="neutral to-alliance side-alliance" data-input=auto_trench_depot_neutral_to_alliance style=right:26%;bottom:5%>➡</button>
-			<button class="neutral to-alliance side-alliance" data-input=auto_bump_depot_neutral_to_alliance style=right:26%;bottom:21%>➡</button>
-			<button class="neutral to-alliance side-alliance" data-input=auto_bump_outpost_neutral_to_alliance style=right:26%;top:21%>➡</button>
-			<button class="neutral to-alliance side-alliance" data-input=auto_trench_outpost_neutral_to_alliance style=right:26%;top:5%>➡</button>
-			<div class="neutral robot side-alliance" style=right:46.5%;top:43%></div>
+			<button class="neutral to-alliance" data-end=alliance data-side=depot  data-input=auto_trench_depot_neutral_to_alliance style=right:26%;bottom:5%>➡</button>
+			<button class="neutral to-alliance" data-end=alliance data-side=depot data-input=auto_bump_depot_neutral_to_alliance style=right:26%;bottom:21%>➡</button>
+			<button class="neutral to-alliance" data-end=alliance data-side=outpost data-input=auto_bump_outpost_neutral_to_alliance style=right:26%;top:21%>➡</button>
+			<button class="neutral to-alliance" data-end=alliance data-side=outpost data-input=auto_trench_outpost_neutral_to_alliance style=right:26%;top:5%>➡</button>
+			<div class="neutral robot" data-end=alliance style=right:46.5%;top:43%></div>
 		</div>
 		<button class=fuel data-value=1>1</button>
 		<button class=fuel data-value=5>5</button>
@@ -168,34 +168,34 @@
 
 	<div class="teleop tab-content">
 		<div class="field-actions orient-rotate">
-			<button class="alliance to-neutral side-alliance" data-input=tele_trench_depot_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
-			<button class="alliance to-neutral side-alliance" data-input=tele_bump_depot_alliance_to_neutral style=right:26%;bottom:21%>⬅</button>
-			<button class="alliance to-neutral side-alliance" data-input=tele_bump_outpost_alliance_to_neutral style=right:26%;top:21%>⬅</button>
-			<button class="alliance to-neutral side-alliance" data-input=tele_trench_outpost_alliance_to_neutral style=right:26%;top:5%>⬅</button>
-			<div class="alliance robot side-alliance" style=right:13%;top:43%></div>
-			<button class="alliance target target-hub side-alliance" data-input=tele_fuel_score style=right:26%;top:39%>🎯</button>
-			<button class="alliance target target-alliance side-alliance" data-input=tele_fuel_alliance_dump style=right:13%;bottom:5%>🎯</button>
-			<button class="alliance target side-alliance" data-input=tele_fuel_outpost style=right:0%;top:4%>🎯</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=depot data-input=tele_trench_depot_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=depot data-input=tele_bump_depot_alliance_to_neutral style=right:26%;bottom:21%>⬅</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=outpost data-input=tele_bump_outpost_alliance_to_neutral style=right:26%;top:21%>⬅</button>
+			<button class="alliance to-neutral" data-end=alliance data-side=outpost data-input=tele_trench_outpost_alliance_to_neutral style=right:26%;top:5%>⬅</button>
+			<div class="alliance robot" data-end=alliance style=right:13%;top:43%></div>
+			<button class="alliance target target-hub" data-end=alliance data-input=tele_fuel_score style=right:26%;top:39%>🎯</button>
+			<button class="alliance target target-alliance" data-end=alliance data-input=tele_fuel_alliance_dump style=right:13%;bottom:5%>🎯</button>
+			<button class="alliance target" data-end=alliance data-input=tele_fuel_outpost style=right:0%;top:4%>🎯</button>
 
-			<button class="neutral to-alliance side-alliance" data-input=tele_trench_depot_neutral_to_alliance style=right:26%;bottom:5%>➡</button>
-			<button class="neutral to-alliance side-alliance" data-input=tele_bump_depot_neutral_to_alliance style=right:26%;bottom:21%>➡</button>
-			<button class="neutral to-alliance side-alliance" data-input=tele_bump_outpost_neutral_to_alliance style=right:26%;top:21%>➡</button>
-			<button class="neutral to-alliance side-alliance" data-input=tele_trench_outpost_neutral_to_alliance style=right:26%;top:5%>➡</button>
-			<button class="neutral target target-alliance side-alliance" data-input=tele_fuel_neutral_alliance_pass style=right:13%;bottom:5%>🎯</button>
-			<div class="neutral robot" style=right:46.5%;top:43%></div>
+			<button class="neutral to-alliance" data-end=alliance data-side=depot data-input=tele_trench_depot_neutral_to_alliance style=right:26%;bottom:5%>➡</button>
+			<button class="neutral to-alliance" data-end=alliance data-side=depot data-input=tele_bump_depot_neutral_to_alliance style=right:26%;bottom:21%>➡</button>
+			<button class="neutral to-alliance" data-end=alliance data-side=outpost data-input=tele_bump_outpost_neutral_to_alliance style=right:26%;top:21%>➡</button>
+			<button class="neutral to-alliance" data-end=alliance data-side=outpost data-input=tele_trench_outpost_neutral_to_alliance style=right:26%;top:5%>➡</button>
+			<button class="neutral target target-alliance" data-end=alliance data-input=tele_fuel_neutral_alliance_pass style=right:13%;bottom:5%>🎯</button>
+			<div class="neutral robot" data-end=alliance style=right:46.5%;top:43%></div>
 
-			<button class="neutral to-opponent side-opponent" data-input=tele_trench_outpost_neutral_to_opponent style=left:26%;bottom:5%>⬅</button>
-			<button class="neutral to-opponent side-opponent" data-input=tele_bump_outpost_neutral_to_opponent style=left:26%;bottom:21%>⬅</button>
-			<button class="neutral to-opponent side-opponent" data-input=tele_bump_depot_neutral_to_opponent style=left:26%;top:21%>⬅</button>
-			<button class="neutral to-opponent side-opponent" data-input=tele_trench_depot_neutral_to_opponent style=left:26%;top:5%>⬅</button>
+			<button class="neutral to-opponent" data-end=opponent data-side=outpost data-input=tele_trench_outpost_neutral_to_opponent style=left:26%;bottom:5%>⬅</button>
+			<button class="neutral to-opponent" data-end=opponent data-side=outpost data-input=tele_bump_outpost_neutral_to_opponent style=left:26%;bottom:21%>⬅</button>
+			<button class="neutral to-opponent" data-end=opponent data-side=depot data-input=tele_bump_depot_neutral_to_opponent style=left:26%;top:21%>⬅</button>
+			<button class="neutral to-opponent" data-end=opponent data-side=depot data-input=tele_trench_depot_neutral_to_opponent style=left:26%;top:5%>⬅</button>
 
-			<button class="opponent to-neutral side-opponent" data-input=tele_trench_outpost_opponent_to_neutral style=left:26%;bottom:5%>➡</button>
-			<button class="opponent to-neutral side-opponent" data-input=tele_bump_outpost_opponent_to_neutral style=left:26%;bottom:21%>➡</button>
-			<button class="opponent to-neutral side-opponent" data-input=tele_bump_depot_opponent_to_neutral style=left:26%;top:21%>➡</button>
-			<button class="opponent to-neutral side-opponent" data-input=tele_trench_depot_opponent_to_neutral style=left:26%;top:5%>➡</button>
-			<div class="opponent robot side-opponent" style=left:13%;top:43%></div>
-			<button class="opponent target target-alliance side-alliance" data-input=tele_fuel_opponent_alliance_pass style=right:13%;bottom:5%>🎯</button>
-			<button class="opponent target" data-input=tele_fuel_opponent_neutral_pass style=right:46.5%;bottom:5%>🎯</button>
+			<button class="opponent to-neutral" data-end=opponent data-side=outpost data-input=tele_trench_outpost_opponent_to_neutral style=left:26%;bottom:5%>➡</button>
+			<button class="opponent to-neutral" data-end=opponent data-side=outpost data-input=tele_bump_outpost_opponent_to_neutral style=left:26%;bottom:21%>➡</button>
+			<button class="opponent to-neutral" data-end=opponent data-side=depot data-input=tele_bump_depot_opponent_to_neutral style=left:26%;top:21%>➡</button>
+			<button class="opponent to-neutral" data-end=opponent data-side=depot data-input=tele_trench_depot_opponent_to_neutral style=left:26%;top:5%>➡</button>
+			<div class="opponent robot" data-end=opponent style=left:13%;top:43%></div>
+			<button class="opponent target target-alliance" data-end=alliance data-input=tele_fuel_opponent_alliance_pass style=right:13%;bottom:5%>🎯</button>
+			<button class="opponent target" data-end=opponent data-input=tele_fuel_opponent_neutral_pass style=right:46.5%;bottom:5%>🎯</button>
 		</div>
 		<button class=fuel data-value=1>1</button>
 		<button class=fuel data-value=5>5</button>
@@ -293,7 +293,82 @@
 	</div>
 
 	<div class="end-game tab-content">
+		<table><tr><td class=subheader>
+			Game play
+		</td></tr><tr><td>
+			<fieldset class=full>
+				<legend>Demonstrated Capabilities</legend>
+				<div>
+					<label><input type=checkbox name=shoot_move value=1><span>Shoot on the move</span></label>
+					<label><input type=checkbox name=shoot_collecting value=1><span>Shoot while collecting</span></label>
+					<label><input type=checkbox name=shoot_turret value=1><span>Change shooting direction while moving straight</span></label>
+				</div>
+			</fieldset>
+			<fieldset class=full>
+				<legend>What was the main strategy this bot used to get fuel into the alliance zone?</legend>
+				<div><label><input type=radio name=fuel_to_alliance value=carried><span>Carried</span></label> Stored fuel in the robot and carried it.</div>
+				<div><label><input type=radio name=fuel_to_alliance value=pushed><span>Pushed</span></label> Pushed fuel over the bump or under the trench.</div>
+				<div><label><input type=radio name=fuel_to_alliance value=passed><span>Passed</span></label> Shot fuel towards the alliance zone.</div>
+				<div><label><input type=radio name=fuel_to_alliance value=received><span>Received</span></label> Stayed in the alliance zone and received fuel from other bots.</div>
+			</fieldset>
+			<fieldset class=full>
+				<legend>Bricked</legend>
+				<div><label><input type=radio checked name=bricked value=''><span>No</span></label> Didn't get disabled.</div>
+				<div><label><input type=radio name=bricked value=some><span>Some</span></label> Disabled for a short time.</div>
+				<div><label><input type=radio name=bricked value=half><span>Half</span></label> Disabled for about half the match.</div>
+				<div><label><input type=radio name=bricked value=most><span>Most</span></label> Disabled for most of the match.</div>
+				<div><label><input type=radio name=bricked value=all><span>All</span></label> Disabled for the entire match.</div>
+			</fieldset>
+			<fieldset class=full>
+				<legend>Defense Rating</legend>
+				<div><label><input type=radio checked name=defense value=''><span>None</span></label> Didn't play defense.</div>
+				<div><label><input type=radio name=defense value=bad><span>Bad</span></label> More penalties playing defense than opponent points prevented.</div>
+				<div><label><input type=radio name=defense value=ineffective><span>Ineffective</span></label> Didn't significantly impact the game.</div>
+				<div><label><input type=radio name=defense value=good><span>Good</span></label> Prevented an opponent from scoring some points.</div>
+				<div><label><input type=radio name=defense value=great><span>Great</span></label> Mostly shut down an opponent.</div>
+			</fieldset>
+			<fieldset class=full>
+				<legend>Affected by Defense</legend>
+				<div><label><input type=radio checked name=defended value=''><span>Undefended</span></label> Didn't get defended.</div>
+				<div><label><input type=radio name=defended value=turned-tables><span>Turned tables</span></label> Unaffected and the defender got penalties.</div>
+				<div><label><input type=radio name=defended value=unaffected><span>Unaffected</span></label> Not slowed down by defense.</div>
+				<div><label><input type=radio name=defended value=slowed><span>Slowed</span></label> Prevented by an opponent from scoring some points.</div>
+				<div><label><input type=radio name=defended value=slowed-greatly><span>Slowed greatly</span></label> Mostly shut down by an opponent.</div>
+			</fieldset>
+			<fieldset class=full>
+				<legend>Misses</legend>
+				<div>Approximately what percent of shots missed their target?</div>
+				<div>
+					<label><input type=radio name=misses value=0-1><span>0-1%</span></label>
+					<label><input type=radio name=misses value=1-10><span>1-10%</span></label>
+					<label><input type=radio name=misses value=10-30><span>10-30%</span></label>
+					<label><input type=radio name=misses value=30-60><span>30-60%</span></label>
+					<label><input type=radio name=misses value=60-100><span>60-100%</span></label>
+				</div>
+			</fieldset>
+		</td></tr><tr><td class=subheader data-i18n=scouter_header>
+		</td></tr><tr><td>
+			<fieldset class="left full" id=review-request>
+				<legend data-i18n=review_requested_legend></legend>
+				<div><label><input type=checkbox name=review_requested value=1><span data-i18n=review_requested_button></span></label></div>
+			</fieldset>
+			<fieldset class="left full">
+				<legend data-i18n=scouter_name_question></legend>
+				<input class=full type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder>
+			</fieldset>
+			<fieldset class="left full" id=scouting-comments>
+				<legend data-i18n=comments_question></legend>
+				<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
+			</fieldset>
+			<input type=hidden name=created value="">
+			<input type=hidden name=modified value="">
+			<fieldset class=full id=nextButtons>
+				<legend data-i18n=save_data_question></legend>
+				<div id=doneButtons></div>
+			</fieldset>
+		</td></tr></table>
 	</div>
+</form>
 </form>
 </body>
 </html>
