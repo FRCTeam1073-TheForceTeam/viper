@@ -879,7 +879,7 @@ function fillDefaultFormFields(){
 	$('.team').text(team)
 	$('input[name="event"]').val(eventId).attr('data-at-scout-start',eventId)
 	$('input[name="team"]').val(team).attr('data-at-scout-start',team)
-	var lastScouter = localStorage.getItem("last_scouter")||""
+	var lastScouter = (localStorage.getItem("last_scouter")||"").replace(/^(null|undefined)$/,"")
 	$('input[name="scouter"]').val(lastScouter).attr('data-at-scout-start',lastScouter)
 }
 
