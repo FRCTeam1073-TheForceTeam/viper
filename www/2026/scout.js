@@ -111,4 +111,25 @@ $(document).ready(function(){
 		target.attr('data-value',$(this).attr('data-value'))
 		return countHandler.call(target[0],e)
 	})
+
+	$('.undo').click(function(){
+		var order = $('[name="timeline"]'),
+		text = order.val(),
+		m = text.match(/(.*(?: |^))[0-9]+\:([a-z0-9_]+)(?:\:([a-z0-9_]+))?$/)
+		if (!m) return false
+		text = m[1].trim()
+		var field = m[2],
+		valueStr = m[3],
+		value = valueStr && /^[0-9]+$/.test(valueStr) ? parseInt(valueStr) : 1,
+		input = $(`input[name="${field}"]`),
+		dataInput = $(`[data-input="${field}"]`)
+		if (input.is(".num")){
+			input.val(Math.max(0,parseInt(input.val())-value))
+			animateChangeFloater(-value, dataInput.length ? dataInput : input)
+		}
+		if (input.is(":checked")) input.prop('checked',false)
+		if (!text)initScouting2026()
+		order.val(text)
+		return false
+	})
 })
