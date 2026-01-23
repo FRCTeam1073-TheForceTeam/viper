@@ -8,6 +8,7 @@ html{padding:0}
 .field-actions .robot{border:.25em solid var(--red-team-color);background:gray}
 .blueTeam .field-actions .robot{border-color:var(--blue-team-color)}
 .target.active{background:var(--button-selected-bg-color)}
-.fuel{width:2.3em;height:2.3em;border-radius:50%;background:#f1ce03;font-size:300%}
+.fuel{width:2em;height:2em;border-radius:50%;background:#f1ce03;font-size:300%}
 td{text-align:left;padding:0.2em 0.5em}
+.timeline-table{width:100%}
 .orientLeft .bigimg,body.leftField .orient-rotate,body.blueTeam .orient-rotate>*{transform:rotate(180deg)}

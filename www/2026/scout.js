@@ -1,6 +1,14 @@
 "use strict"
 
 addI18n({
+	timeline_value_header:{
+		en:'Value',
+		he:'ערך',
+		tr:'Değer',
+		zh_tw:'值',
+		fr:'Valeur',
+		pt:'Valor',
+	},
 })
 
 $(document).ready(function(){
@@ -18,6 +26,7 @@ $(document).ready(function(){
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
 		initScouting2026()
+		renderTimeline()
 		return true
 	})
 	window.onShowPitScouting = window.onShowPitScouting || []
@@ -27,6 +36,8 @@ $(document).ready(function(){
 
 	window.onInputChanged = window.onInputChanged || []
 	window.onInputChanged.push(inputChanged2026)
+
+	onApplyTranslation.push(renderTimeline)
 
 	function initScouting2026(){
 		matchStartTime = 0
@@ -68,6 +79,7 @@ $(document).ready(function(){
 			}
 			if (!text)initScouting2026()
 			order.val(text)
+			renderTimeline()
 		}
 	}
 
@@ -130,6 +142,19 @@ $(document).ready(function(){
 		if (input.is(":checked")) input.prop('checked',false)
 		if (!text)initScouting2026()
 		order.val(text)
+		renderTimeline()
 		return false
 	})
+
+	function renderTimeline(){
+		if(!$('#timeline').length)return
+		var tl = $('.timeline').html("")
+		$('#timeline').val().split(/ /).forEach(entry => {
+			if (!entry) return
+			var [time,action,value] = entry.split(/:/),
+			min=Math.floor(time/60),
+			sec=("" + time%60).padStart(2,'0')
+			tl.append($('<tr>').append($('<td>').text(`${min}:${sec}`)).append($('<td>').text(translate(action))).append($('<td>').text(value || '')))
+		})
+	}
 })

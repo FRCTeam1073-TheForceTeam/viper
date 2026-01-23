@@ -74,7 +74,7 @@
 
 <form id=scouting class=screen style=display:none>
 
-	<textarea name=timeline placeholder=Timeline… style=width:100%></textarea>
+	<input type=hidden name=timeline>
 
 	<div class=tabs>
 		<div class="tab" data-content=prematch data-i18n=pre_match_tab></div>
@@ -119,11 +119,19 @@
 			<button class="neutral to-alliance" data-end=alliance data-side=outpost data-input=auto_trench_outpost_neutral_to_alliance style=right:26%;top:5%>➡</button>
 			<div class="neutral robot" data-end=alliance style=right:46.5%;top:43%></div>
 		</div>
-		<button class=fuel data-value=1>1</button>
-		<button class=fuel data-value=5>5</button>
-		<button class=fuel data-value=10>10</button>
-		<button class=undo data-i18n=undo_button></button>
-		<table border=1>
+		<div>
+			<div class=side-by-side>
+				<button class=fuel data-value=1>1</button>
+				<button class=fuel data-value=5>5</button>
+				<button class=fuel data-value=10>10</button>
+			</div>
+			<div class=side-by-side>
+				<button class=undo data-i18n=undo_button></button>
+				<div class=collapse data-content=auto-counters data-i18n=values_button></div>
+				<div class=collapse data-content=auto-timeline data-i18n=timeline_button></div>
+			</div>
+		</div>
+		<table id=auto-counters class=collapsable border=1>
 			<tr>
 				<td><input type=text class=num value=0 name=auto_fuel_score size=1 disabled></td>
 				<td><span>Fuel scored in hub</span></td>
@@ -165,6 +173,14 @@
 				<td><span>Trench (outpost side) neutral to alliance</span></td>
 			</tr>
 		</table>
+
+		<table id=auto-timeline class="collapsable timeline-table">
+			<thead><tr><td class=subheader data-i18n=timeline_time_header>
+			</td><td class=subheader data-i18n=timeline_action_header>
+			</td><td class=subheader data-i18n=timeline_value_header>
+			</td></tr></thead>
+			<tbody class=timeline></tbody>
+		</table>
 	</div>
 
 	<div class="teleop tab-content">
@@ -198,11 +214,19 @@
 			<button class="opponent target target-alliance" data-end=alliance data-input=tele_fuel_opponent_alliance_pass style=right:13%;bottom:5%>🎯</button>
 			<button class="opponent target" data-end=opponent data-input=tele_fuel_opponent_neutral_pass style=right:46.5%;bottom:5%>🎯</button>
 		</div>
-		<button class=fuel data-value=1>1</button>
-		<button class=fuel data-value=5>5</button>
-		<button class=fuel data-value=10>10</button>
-		<button class=undo data-i18n=undo_button></button>
-		<table border=1>
+		<div>
+			<div class=side-by-side>
+				<button class=fuel data-value=1>1</button>
+				<button class=fuel data-value=5>5</button>
+				<button class=fuel data-value=10>10</button>
+			</div>
+			<div class=side-by-side>
+				<button class=undo data-i18n=undo_button></button>
+				<div class=collapse data-content=tele-counters data-i18n=values_button></div>
+				<div class=collapse data-content=tele-timeline data-i18n=timeline_button></div>
+			</div>
+		</div>
+		<table id=tele-counters class=collapsable border=1>
 			<tr>
 				<td><input type=text class=num value=0 name=tele_fuel_score size=1 disabled></td>
 				<td><span>Fuel scored in hub</span></td>
@@ -291,6 +315,14 @@
 				<td><input type=text class=num value=0 name=tele_trench_depot_opponent_to_neutral size=1 disabled></td>
 				<td><span>Trench (depot side) opponent to neutral</span></td>
 			</tr>
+		</table>
+
+		<table id=tele-timeline class="collapsable timeline-table">
+			<thead><tr><td class=subheader data-i18n=timeline_time_header>
+			</td><td class=subheader data-i18n=timeline_action_header>
+			</td><td class=subheader data-i18n=timeline_value_header>
+			</td></tr></thead>
+			<tbody class=timeline></tbody>
 		</table>
 	</div>
 
