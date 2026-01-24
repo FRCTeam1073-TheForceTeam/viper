@@ -19,9 +19,10 @@ html body .field-actions span,html body .field-actions img{width:100%;min-width:
 td{text-align:left;padding:0.2em 0.5em}
 .timeline-table{width:100%}
 .counters-table{width:100%}
-.orientLeft .bigimg,body.leftField.redTeam #start-area,body.rightField.blueTeam #start-area,body.leftField .orient-rotate>*{transform:rotate(180deg)}
+.orientLeft .bigimg,body.leftField.redTeam #start-area,body.rightField.blueTeam #start-area,body.leftField .orient-rotate{transform:rotate(180deg)}
 .collapse {margin-right:1em}
 .team-indicator{padding:0.5em}
+.tab-button,.undo,.team-indicator{min-width:7em}
 @media (max-width:400px){
 	.tabs{font-size:80%}
 	.fuel{width:1.75em;height:1.75em;font-size:200%}
