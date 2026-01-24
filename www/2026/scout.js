@@ -9,6 +9,14 @@ addI18n({
 		fr:'Valeur',
 		pt:'Valor',
 	},
+	starting_position:{
+		en:'Click team _TEAMNUM_\'s starting position.',
+		he:'לחץ על עמדת ההתחלה של צוות _TEAMNUM_.',
+		tr:'Takım _TEAMNUM_\'un başlangıç ​​pozisyonuna tıklayın.',
+		zh_tw:'點選隊伍_TEAMNUM_的起始位置。',
+		fr:'Cliquez sur la position de départ de l\'équipe _TEAMNUM_.',
+		pt:'Clique na posição inicial da equipe _TEAMNUM_.',
+	},
 })
 
 $(document).ready(function(){
@@ -25,6 +33,7 @@ $(document).ready(function(){
 	})
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
+		setTimeout(initialRobotStartPosition,500)
 		initScouting2026()
 		renderTimeline()
 		return true
@@ -158,4 +167,47 @@ $(document).ready(function(){
 			tl.append($('<tr>').append($('<td>').text(`${min}:${sec}`)).append($('<td>').text(translate(action))).append($('<td>').text(value || '')))
 		})
 	}
+
+	function initialRobotStartPosition(){
+		moveFloaterToPercentCoordinates(
+			document.getElementById('start-area'),
+			pos.startsWith('R'),
+			$('#auto-start-input').val()||"6x16",
+			document.getElementById('robot-starting-position')
+		)
+	}
+
+	function moveFloaterToPercentCoordinates(mapImage, isRotated, coordinates, floatingImage){
+		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, true, true)
+		if (!c) return
+		floatingImage.style.left=c.x+"px"
+		floatingImage.style.top=c.y+"px"
+	}
+
+	function getPercentCoordinates(event, mapImage, flipX, flipY, rotated){
+		var d = mapImage.getBoundingClientRect(),
+		x = event.clientX - d.left,
+		y = event.clientY - d.top,
+		px = Math.min(99,Math.max(1,Math.round(100 * x / d.width))),
+		py =  Math.min(99,Math.max(1,Math.round(100 * y / d.height)))
+		if (flipY) py = 100 - py
+		if (flipX) px = 100 - px
+		if (rotated) [py,px] = [px,py]
+		return px+"x"+py
+	}
+
+	function setRobotStartPosition(e){
+		var mi = document.getElementById('start-area'),
+		fi = document.getElementById('robot-starting-position'),
+		ir = "none"==(""+getComputedStyle($('#start-area')[0]).transform),
+		co = getPercentCoordinates(e,mi,ir,ir,true)
+		moveFloaterToPercentCoordinates(mi,ir,co,fi)
+		$('#auto-start-input').val(co)
+	}
+
+	$('#start-area').mousemove(function(e){
+		if (e.buttons) setRobotStartPosition(e)
+	})
+
+	$('#start-area').click(setRobotStartPosition)
 })
