@@ -690,6 +690,21 @@ $(document).ready(function(){
 	MATCH_LENGTH_MS=TELE_START_MS+TELE_MS
 	var matchStartTime = 0
 
+	// Kebab menu functionality
+	$('.kebab-button').click(function(e){
+		var dropdown = $(this).siblings('.kebab-dropdown')
+		dropdown.toggleClass('open')
+		return false
+	})
+
+	$('.kebab-dropdown button').click(function(){
+		$('.kebab-dropdown').removeClass('open')
+	})
+
+	$(document).click(function(){
+		$('.kebab-dropdown').removeClass('open')
+	})
+
 	window.onBeforeShowScouting = window.onBeforeShowScouting || []
 	window.onBeforeShowScouting.push(function(){
 		return true

@@ -27,3 +27,14 @@ td{text-align:left;padding:0.2em 0.5em}
 	.tabs{font-size:80%}
 	.fuel{width:1.75em;height:1.75em;font-size:200%}
 }
+.prematch{position:relative}
+.kebab-menu{position:absolute;top:0;right:0;z-index:100}
+.kebab-button{background:none;border:none;font-size:1.5em;padding:0.5em;cursor:pointer;color:inherit}
+.kebab-button:hover{background:var(--button-hover-bg-color)}
+.kebab-dropdown{display:none;position:absolute;top:100%;right:0;background:var(--section-bg-color);border:1px solid var(--main-border-color);z-index:1000;min-width:12em;padding:0.25em;border-radius:0.25em}
+.kebab-dropdown.open{display:flex;flex-direction:column;gap:0.25em}
+.kebab-dropdown button{padding:0.5em 1em;text-align:left;cursor:pointer;width:100%}
+.pre-match-layout{display:flex;gap:1em;align-items:stretch;justify-content:center;margin:0 auto}
+.pre-match-left{flex:0 0 auto;max-width:10em}
+.pre-match-left h3{margin-top:0}
+.pre-match-right{flex:0 0 auto;display:flex;flex-direction:column;justify-content:space-between}

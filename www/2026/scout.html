@@ -78,30 +78,39 @@
 <form id=scouting class=screen style=display:none>
 
 	<div class=tabs>
-		<div class="tab" data-content=prematch data-i18n=pre_match_tab></div>
+		<div class="tab default-tab" data-content=prematch data-i18n=pre_match_tab></div>
 		<div class=tab data-content=auto data-i18n=auto_tab></div>
-		<div class="tab default-tab" data-content=teleop data-i18n=tele_tab></div>
+		<div class="tab" data-content=teleop data-i18n=tele_tab></div>
 		<div class=tab data-content=end-game data-i18n=end_game_tab></div>
 	</div>
 
 	<div class="prematch tab-content">
 		<h1></h1>
-		<div>
-			<button class=showInstructions data-i18n=instructions></button>
-			<button id=teamBtn data-i18n=team_correction_button></button>
-			<button id=matchBtn data-i18n=choose_match_button></button>
-			<button class=robotBtn data-i18n=change_robot_button></button>
-			<button class=fieldRotateBtn data-i18n=rotate_field_button></button>
-			<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+		<div class="kebab-menu">
+			<button class="kebab-button">⋮</button>
+			<div class="kebab-dropdown">
+				<button id=teamBtn data-i18n=team_correction_button></button>
+				<button id=matchBtn data-i18n=choose_match_button></button>
+				<button class=robotBtn data-i18n=change_robot_button></button>
+				<button class=fieldRotateBtn data-i18n=rotate_field_button></button>
+			</div>
 		</div>
+		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
 		<input type=hidden name=event>
 		<input type=hidden name=match>
 		<input type=hidden name=team>
 		<input type=hidden name=timeline id=timeline>
-		<h3 data-i18n=starting_position></h3>
-		<div id=start-area><div id=robot-starting-position></div></div>
+		<div class="pre-match-layout">
+			<div class="pre-match-left">
+				<h3 data-i18n=starting_position></h3>
+				<div id=start-area><div id=robot-starting-position></div></div>
+			</div>
+			<div class="pre-match-right">
+				<button class=showInstructions data-i18n=instructions></button>
+				<button class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
+			</div>
+		</div>
 		<input id=auto-start-input type=hidden name=auto_start>
-		<button class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
 	</div>
 
 	<div class="auto tab-content">
