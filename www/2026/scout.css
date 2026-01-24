@@ -12,8 +12,9 @@ html body .field-actions span,html body .field-actions img{width:100%;min-width:
 .fuel{width:2em;height:2em;max-width:150px;max-height:150px;border-radius:50%;background:#f1ce03;font-size:300%}
 td{text-align:left;padding:0.2em 0.5em}
 .timeline-table{width:100%}
+.counters-table{width:100%}
 .orientLeft .bigimg,body.leftField .orient-rotate,body.blueTeam .orient-rotate>*{transform:rotate(180deg)}
-
+.collapse {margin-right:1em}
 @media (max-width:400px){
 	.tabs{font-size:80%}
 	.fuel{width:1.75em;height:1.75em;font-size:200%}

@@ -17,6 +17,7 @@
 <script src=scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/local.js></script>
+<link rel=preload as=image href=fuel-collect.png>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 
@@ -135,7 +136,9 @@
 			<div><button class=undo data-i18n=undo_button></button></div>
 			<div><button class=tab-button data-content=teleop data-i18n=proceed_tele_button></button></div>
 		</div>
-		<table id=auto-counters class=collapsable border=1>
+		<table id=auto-counters class="collapsable counters-table">
+			<thead><tr><td class=subheader>Count</td><td class=subheader>Description</td></tr></thead>
+			<tbody>
 			<tr>
 				<td><input type=text class=num value=0 name=auto_fuel_score size=1 disabled></td>
 				<td><span>Fuel scored in hub</span></td>
@@ -176,6 +179,7 @@
 				<td><input type=text class=num value=0 name=auto_trench_outpost_neutral_to_alliance size=1 disabled></td>
 				<td><span>Trench (outpost side) neutral to alliance</span></td>
 			</tr>
+			</tbody>
 		</table>
 
 		<table id=auto-timeline class="collapsable timeline-table">
@@ -233,7 +237,9 @@
 			<div><button class=undo data-i18n=undo_button></button></div>
 			<div><button class=tab-button data-content=end-game data-i18n=proceed_end_button></button></div>
 		</div>
-		<table id=tele-counters class=collapsable border=1>
+		<table id=tele-counters class="collapsable counters-table">
+			<thead><tr><td class=subheader>Count</td><td class=subheader>Description</td></tr></thead>
+			<tbody>
 			<tr>
 				<td><input type=text class=num value=0 name=tele_fuel_score size=1 disabled></td>
 				<td><span>Fuel scored in hub</span></td>
@@ -322,6 +328,7 @@
 				<td><input type=text class=num value=0 name=tele_trench_depot_opponent_to_neutral size=1 disabled></td>
 				<td><span>Trench (depot side) opponent to neutral</span></td>
 			</tr>
+			</tbody>
 		</table>
 
 		<table id=tele-timeline class="collapsable timeline-table">
