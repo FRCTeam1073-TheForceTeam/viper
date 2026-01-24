@@ -46,9 +46,10 @@ $(document).ready(function(){
 			isBlue = pos.startsWith('B'),
 			side = $(this).attr('data-side'),
 			end = $(this).attr('data-end'),
+			inp = $(this).attr('data-input'),
 			lOrR = ((!isBlue && end=='alliance') || (isBlue && end=='opponent'))?'right':'left'
 			if (end) $(this).attr('style', $(this).attr('style').replace(/left|right/g,lOrR))
-			if (side) $(this).attr('data-input', $(this).attr('data-input').replace(/depot|outpost/g,side))
+			if (side&&inp) $(this).attr('data-input', inp.replace(/depot|outpost/g,side))
 		})
 	}
 

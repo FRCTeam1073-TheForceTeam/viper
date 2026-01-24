@@ -4,11 +4,17 @@ html{padding:0}
 #select-bot button{font-size:100%}
 .tab-content{border:1px solid var(--main-border-color)}
 .field-actions{background:url(field.png) no-repeat center center;background-size:100%;aspect-ratio:1.875;width:100%;max-width:20em;margin:0 auto;position:relative;}
-.field-actions button,.field-actions .robot{position:absolute;width:7%;min-width:0;padding:0;border-radius:10%;aspect-ratio:1}
+.field-actions>*{position:absolute;width:7%;min-width:7%;max-width:7%;padding:0;border-radius:10%;aspect-ratio:1}
 .field-actions .robot{border:.25em solid var(--red-team-color);background:gray}
 .blueTeam .field-actions .robot{border-color:var(--blue-team-color)}
+html body .field-actions span,html body .field-actions img{width:100%;min-width:100%;max-width:100%;height:100%;border-radius:.1em;margin:0;padding:0}
 .target.active{background:var(--button-selected-bg-color)}
-.fuel{width:2em;height:2em;border-radius:50%;background:#f1ce03;font-size:300%}
+.fuel{width:2em;height:2em;max-width:150px;max-height:150px;border-radius:50%;background:#f1ce03;font-size:300%}
 td{text-align:left;padding:0.2em 0.5em}
 .timeline-table{width:100%}
 .orientLeft .bigimg,body.leftField .orient-rotate,body.blueTeam .orient-rotate>*{transform:rotate(180deg)}
+
+@media (max-width:400px){
+	.tabs{font-size:80%}
+	.fuel{width:1.75em;height:1.75em;font-size:200%}
+}

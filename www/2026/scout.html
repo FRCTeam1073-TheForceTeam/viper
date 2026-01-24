@@ -116,18 +116,24 @@
 			<button class="neutral to-alliance" data-end=alliance data-side=outpost data-input=auto_bump_outpost_neutral_to_alliance style=right:26%;top:21%>➡</button>
 			<button class="neutral to-alliance" data-end=alliance data-side=outpost data-input=auto_trench_outpost_neutral_to_alliance style=right:26%;top:5%>➡</button>
 			<div class="neutral robot" data-end=alliance style=right:46.5%;top:43%></div>
+
+			<label class=alliance data-end=alliance data-side=outpost style=right:0%;top:7%><input type=checkbox name=auto_collect_outpost value=1><span><img class=orient-rotate src=fuel-collect.png></span></label>
+			<label class=alliance data-end=alliance data-side=depot style=right:2%;bottom:20%><input type=checkbox name=auto_collect_depot value=1><span><img class=orient-rotate src=fuel-collect.png></span></label>
 		</div>
-		<div>
-			<div class=side-by-side>
+		<div class=side-by-side>
+			<div>
 				<button class=fuel data-value=1>1</button>
 				<button class=fuel data-value=5>5</button>
 				<button class=fuel data-value=10>10</button>
 			</div>
-			<div class=side-by-side>
-				<button class=undo data-i18n=undo_button></button>
-				<div class=collapse data-content=auto-counters data-i18n=values_button></div>
-				<div class=collapse data-content=auto-timeline data-i18n=timeline_button></div>
+			<div>
+				<span class=collapse data-content=auto-counters data-i18n=values_button></span>
+				<span class=collapse data-content=auto-timeline data-i18n=timeline_button></span>
 			</div>
+		</div>
+		<div class=side-by-side>
+			<div><button class=undo data-i18n=undo_button></button></div>
+			<div><button class=tab-button data-content=teleop data-i18n=proceed_tele_button></button></div>
 		</div>
 		<table id=auto-counters class=collapsable border=1>
 			<tr>
@@ -212,17 +218,20 @@
 			<button class="opponent target target-alliance" data-end=alliance data-input=tele_fuel_opponent_alliance_pass style=right:13%;bottom:5%>🎯</button>
 			<button class="opponent target" data-end=opponent data-input=tele_fuel_opponent_neutral_pass style=right:46.5%;bottom:5%>🎯</button>
 		</div>
-		<div>
-			<div class=side-by-side>
+		<div class=side-by-side>
+			<div>
 				<button class=fuel data-value=1>1</button>
 				<button class=fuel data-value=5>5</button>
 				<button class=fuel data-value=10>10</button>
 			</div>
-			<div class=side-by-side>
-				<button class=undo data-i18n=undo_button></button>
-				<div class=collapse data-content=tele-counters data-i18n=values_button></div>
-				<div class=collapse data-content=tele-timeline data-i18n=timeline_button></div>
+			<div>
+				<span class=collapse data-content=tele-counters data-i18n=values_button></span>
+				<span class=collapse data-content=tele-timeline data-i18n=timeline_button></span>
 			</div>
+		</div>
+		<div class=side-by-side>
+			<div><button class=undo data-i18n=undo_button></button></div>
+			<div><button class=tab-button data-content=end-game data-i18n=proceed_end_button></button></div>
 		</div>
 		<table id=tele-counters class=collapsable border=1>
 			<tr>
@@ -334,6 +343,7 @@
 					<label><input type=checkbox name=shoot_move value=1><span>Shoot on the move</span></label>
 					<label><input type=checkbox name=shoot_collecting value=1><span>Shoot while collecting</span></label>
 					<label><input type=checkbox name=shoot_turret value=1><span>Change shooting direction while moving straight</span></label>
+					<label><input type=checkbox name=shoot_climbing value=1><span>Shoot while climbing</span></label>
 				</div>
 			</fieldset>
 			<fieldset class=full>
@@ -364,8 +374,8 @@
 				<div><label><input type=radio checked name=defended value=''><span>Undefended</span></label> Didn't get defended.</div>
 				<div><label><input type=radio name=defended value=turned-tables><span>Turned tables</span></label> Unaffected and the defender got penalties.</div>
 				<div><label><input type=radio name=defended value=unaffected><span>Unaffected</span></label> Not slowed down by defense.</div>
-				<div><label><input type=radio name=defended value=slowed><span>Slowed</span></label> Prevented by an opponent from scoring some points.</div>
-				<div><label><input type=radio name=defended value=slowed-greatly><span>Slowed greatly</span></label> Mostly shut down by an opponent.</div>
+				<div><label><input type=radio name=defended value=slowed><span>Slowed</span></label> Scored less than they would have.</div>
+				<div><label><input type=radio name=defended value=slowed-greatly><span>Slowed greatly</span></label> Scored very little.</div>
 			</fieldset>
 			<fieldset class=full>
 				<legend>Misses</legend>
