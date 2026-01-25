@@ -393,6 +393,14 @@ addI18n({
 		fr:'Retour à la sélection d\'équipe',
 		zh_tw:'返回球隊選擇',
 	},
+	fuel_capacity_label:{
+		en:'Max fuel:',
+		pt:'Combustível máximo:',
+		fr:'Carburant max :',
+		zh_tw:'最大燃料：',
+		he:'דלק מקסימלי:',
+		tr:'Maksimum yakıt:',
+	},
 })
 
 var pos = "",

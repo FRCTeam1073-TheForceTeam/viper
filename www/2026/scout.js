@@ -912,7 +912,12 @@ $(document).ready(function(){
 	TELE_START_MS=AUTO_MS+AUTO_GAP_MS,
 	TELE_MS=135000,
 	MATCH_LENGTH_MS=TELE_START_MS+TELE_MS
-	var matchStartTime = 0
+	var matchStartTime = 0,
+	pitData = {}
+
+	promisePitScouting().then(function(data){
+		pitData = data
+	})
 
 	// Kebab menu functionality
 	$('.kebab-button').click(function(e){
@@ -965,6 +970,10 @@ $(document).ready(function(){
 			if (end) $(this).attr('style', $(this).attr('style').replace(/left|right/g,lOrR))
 			if (side&&inp) $(this).attr('data-input', inp.replace(/depot|outpost/g,side))
 		})
+	
+		var capacity = (pitData[team] || {fuel_capacity:0}).fuel_capacity
+		$('.fuel-capacity').text(capacity)
+		$('.fuel-capacity-section').toggle(capacity>0)
 	}
 
 	$('.fieldRotateBtn').click(initScouting2026)
