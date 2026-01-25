@@ -7,7 +7,7 @@
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/scout.css>
-<link rel=stylesheet href=/2025/scout.css>
+<link rel=stylesheet href=/2026/scout.css>
 <script src=/jquery.min.js></script>
 <script src=/main.js></script>
 <script src=/pit-scout.js></script>
@@ -15,7 +15,7 @@
 <script src=/scout.js></script>
 <script src=/canvas-path.js></script>
 <script src=/qrcode.min.js></script>
-<script src=/2025/scout.js></script>
+<script src=/2026/scout.js></script>
 <script src=/heartbeat.js></script>
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
@@ -42,11 +42,54 @@
 	</fieldset>
 
 	<fieldset class=full>
+		<legend data-i18n=auto_path_legend></legend>
+
+		<canvas id=auto-paths></canvas>
+		<div>
+			<button id=auto-path-undo data-i18n=auto_path_undo_button></button>
+			<button id=auto-path-next data-i18n=auto_path_next_button></button>
+		</div>
+
+		<input type=hidden class=auto-path name=auto_1_path data-color=green>
+		<input type=hidden class=auto-path name=auto_2_path data-color=blue>
+		<input type=hidden class=auto-path name=auto_3_path data-color=red>
+		<input type=hidden class=auto-path name=auto_4_path data-color=purple>
+		<input type=hidden class=auto-path name=auto_5_path data-color=yellow>
+		<input type=hidden class=auto-path name=auto_6_path data-color=brown>
+		<input type=hidden class=auto-path name=auto_7_path data-color=orange>
+		<input type=hidden class=auto-path name=auto_8_path data-color=cyan>
+		<input type=hidden class=auto-path name=auto_9_path data-color=white>
+	</fieldset>
+
+	<fieldset class=full>
 		<legend data-i18n=robot_legend></legend>
 		<p>
 			<span data-i18n=robot_size_question></span><br>
 			<label><span data-i18n=robot_size_length></span> <input type=number min=12 step=1 max=48 name=frame_length> <span data-i18n=robot_size_unit></span></label><br>
 			<label><span data-i18n=robot_size_width></span> <input type=number min=12 step=1 max=48 name=frame_width> <span data-i18n=robot_size_unit></span></label><br>
+		</p>
+		<p>
+			<span data-i18n=robot_fuel_capacity_question></span><br>
+			<label><input type=number min=0 step=1 max=200 name=fuel_capacity></label>
+		</p>
+		<p>
+			<span data-i18n=intake_count_question></span><br>
+			<label><input type=number min=0 step=1 max=4 name=intake_count></label>
+		</p>
+		<p>
+			<span data-i18n=intake_style_question></span><br>
+			<label><input type=checkbox name=intake_otb value=1><span data-i18n=robot_intake_style_otb></span></label>
+			<label><input type=checkbox name=intake_gap value=1><span data-i18n=robot_intake_style_gap></span></label>
+			<label><input type=checkbox name=intake_reversible value=1><span data-i18n=robot_intake_style_reversible></span></label>
+		</p>
+		<p>
+			<span data-i18n=shooter_count_question></span><br>
+			<label><input type=number min=0 step=1 max=8 name=shooter_count></label>
+		</p>
+		<p>
+			<span data-i18n=shooter_style_question></span><br>
+			<label><input type=checkbox name=shooter_fixed value=1><span data-i18n=robot_shooter_style_fixed></span></label>
+			<label><input type=checkbox name=shooter_turret value=1><span data-i18n=robot_shooter_style_turret></span></label>
 		</p>
 		<p>
 			<span data-i18n=robot_weight_question></span><br>
@@ -68,7 +111,7 @@
 		</p>
 		<p>
 			<span data-i18n=drivetrain_motor_count_question></span><br>
-			<input type=number min=1 step=1 name=motor_count>
+			<input type=number min=1 step=1 max=4 name=motor_count>
 		</p>
 		<p>
 			<span data-i18n=drivetrain_motor_type_question></span><br>
@@ -80,7 +123,7 @@
 		</p>
 		<p>
 			<span data-i18n=wheel_count_question></span><br>
-			<input type=number min=4 step=1 name=wheel_count value=4>
+			<input type=number min=4 step=1 max=99 name=wheel_count value=4>
 		</p>
 		<p>
 			<span data-i18n=wheel_type_question></span><br>

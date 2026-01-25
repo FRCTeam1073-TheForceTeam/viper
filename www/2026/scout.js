@@ -824,6 +824,86 @@ addI18n({
 		fr:'S\'est accroché et a basculé à l\'envers.',
 		pt:'Agarrou-se e virou de cabeça para baixo.',
 	},
+	robot_fuel_capacity_question:{
+		en:'What is the maxiumum amount of fuel _TEAMNUM_\'s robot can hold at once?',
+		he:'מהו הכמות המקסימלית של דלק שהרובוט של _TEAMNUM_ יכול להחזיק בבת אחת?',
+		tr:'_TEAMNUM_ robotunun bir kerede tutabileceği maksimum yakıt miktarı nedir?',
+		zh_tw:'_TEAMNUM_的機器人一次最多可以容納多少燃料?',
+		fr:'Quelle est la quantité maximale de carburant que le robot de l\'équipe _TEAMNUM_ peut contenir à la fois?',
+		pt:'Qual é a quantidade máxima de combustível que o robô da equipe _TEAMNUM_ pode conter de uma vez?',
+	},
+	intake_count_question:{
+		en:'On how many side of the robot can _TEAMNUM_ intake fuel?',
+		he:'באיזו צד של הרובוט יכול _TEAMNUM_ לקבל דלק?',
+		tr:'_TEAMNUM_ robotu yakıtı kaç taraftan alabilir?',
+		zh_tw:'_TEAMNUM_的機器人可以從多少側吸入燃料?',
+		fr:'Sur combien de côtés du robot l\'équipe _TEAMNUM_ peut-elle aspirer du carburant?',
+		pt:'De quantos lados o robô da equipe _TEAMNUM_ pode ingerir combustível?',
+	},
+	intake_style_question:{
+		en:'Which style(s) of intake does _TEAMNUM_ use?',
+		he:'איזה סגנון (ים) של אינטייק משתמש _TEAMNUM_?',
+		tr:'_TEAMNUM_ hangi tarzda emme kullanıyor?',
+		zh_tw:'_TEAMNUM_使用哪種進氣風格?',
+		fr:'Quel(s) style(s) d\'aspiration l\'équipe _TEAMNUM_ utilise-t-elle?',
+		pt:'Qual(is) estilo(s) de ingestão a equipe _TEAMNUM_ usa?',
+	},
+	robot_intake_style_otb:{
+		en:'Over the bumper',
+		he:'מעל המגן',
+		tr:'Tamponun üzerinden',
+		zh_tw:'在保險槓上方',
+		fr:'Au-dessus du pare-chocs',
+		pt:'Acima do para-choque',
+	},
+	robot_intake_style_gap:{
+		en:'Bumper gap',
+		he:'מרווח המגן',
+		tr:'Tampon boşluğu',
+		zh_tw:'保險槓間隙',
+		fr:'Espace du pare-chocs',
+		pt:'Espaço do para-choque',
+	},
+	robot_intake_style_reversible:{
+		en:'Reversible',
+		he:'הפיך',
+		tr:'Tersine çevrilebilir',
+		zh_tw:'可逆',
+		fr:'Réversible',
+		pt:'Reversível',
+	},
+	shooter_count_question:{
+		en:'How many fuel can _TEAMNUM_\'s robot fire simultaneously (side-by-side or with separate shooters)?',
+		he:'כמה דלק יכול הרובוט של _TEAMNUM_ לירות בו זמנית (צד לצד או עם יורים נפרדים)?',
+		tr:'_TEAMNUM_ robotu aynı anda kaç yakıt ateşleyebilir (yan yana veya ayrı atıcılarla)?',
+		zh_tw:'_TEAMNUM_的機器人可以同時發射多少燃料(並排或使用單獨的射手)?',
+		fr:'Combien de carburant le robot de l\'équipe _TEAMNUM_ peut-il tirer simultanément (côte à côte ou avec des tireurs séparés)?',
+		pt:'Quantos combustíveis o robô da equipe _TEAMNUM_ pode disparar simultaneamente (lado a lado ou com atiradores separados)?',
+	},
+	shooter_style_question:{
+		en:'Which style(s) of shooter does _TEAMNUM_ use?',
+		he:'איזה סגנון (ים) של יורה משתמש _TEAMNUM_?',
+		tr:'_TEAMNUM_ hangi tarzda atıcı kullanıyor?',
+		zh_tw:'_TEAMNUM_使用哪種射手風格?',
+		fr:'Quel(s) style(s) de tireur l\'équipe _TEAMNUM_ utilise-t-elle?',
+		pt:'Qual(is) estilo(s) de atirador a equipe _TEAMNUM_ usa?',
+	},
+	robot_shooter_style_fixed:{
+		en:'Fixed',
+		he:'קבוע',
+		tr:'Sabit',
+		zh_tw:'固定',
+		fr:'Fixe',
+		pt:'Fixo',
+	},
+	robot_shooter_style_turret:{
+		en:'Turret',
+		he:'צריח',
+		tr:'Kule',
+		zh_tw:'砲塔',
+		fr:'Tourelle',
+		pt:'Torreta',
+	},
 })
 
 $(document).ready(function(){
@@ -864,6 +944,7 @@ $(document).ready(function(){
 	})
 	window.onShowPitScouting = window.onShowPitScouting || []
 	window.onShowPitScouting.push(function(){
+		setTimeout(drawAutos,0)
 		return true
 	})
 
@@ -1098,4 +1179,47 @@ $(document).ready(function(){
 	})
 
 	$('#tele-climb-area').click(setRobotTeleClimbPosition)
+
+	function getAutoPath(startNew){
+		var chosen
+		$('.auto-path').each(function(p){
+			var p = $(this)
+			if (!chosen) chosen = p
+			if (p.val()) chosen = p
+			if (startNew && chosen.val() && !p.val()) chosen = p
+		})
+		return chosen
+	}
+
+	var startNewAutoPath = false
+
+	$('#auto-paths').click(function(e){
+		var path = getAutoPath(startNewAutoPath),
+		val = path.val()
+		if (val) val += " "
+		val += getPercentCoordinates(e, this, true, false)
+		path.val(val)
+		drawAutos()
+		startNewAutoPath = false
+	})
+
+	$('#auto-path-next').click(function(){
+		startNewAutoPath = true
+		return false
+	})
+
+	$('#auto-path-undo').click(function(){
+		var path = getAutoPath()
+		path.val(path.val().replace(/ ?[^ ]+$/,""))
+		drawAutos()
+		return false
+	})
+
+	function drawAutos(){
+		var canvas = $('#auto-paths')[0]
+		sizeAndClearCanvas(canvas)
+		$('.auto-path').each(function(){
+			drawPath(canvas,$(this).attr('data-color'),$(this).val(),true,false)
+		})
+	}
 })

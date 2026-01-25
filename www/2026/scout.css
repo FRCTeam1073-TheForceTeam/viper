@@ -15,6 +15,7 @@ html{padding:0}
 #robot-auto-climb-position,#robot-tele-climb-position{position:absolute;top:0;left:0;width:2.5em;height:2.5em;border-radius:.3em;}
 .blueTeam #robot-auto-climb-position,.blueTeam #robot-tele-climb-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
 .redTeam #robot-auto-climb-position,.redTeam #robot-tele-climb-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
+#auto-paths {min-width:10em;width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('auto-area-blue.png');background-size:cover}
 .field-actions{background:url(field.png) no-repeat center center;background-size:100%;aspect-ratio:1.875;width:100%;max-width:20em;margin:0 auto;position:relative;}
 .field-actions>*{position:absolute;width:7%;min-width:7%;max-width:7%;padding:0;border-radius:10%;aspect-ratio:1;z-index:2}
 .field-actions .robot{border:.25em solid var(--red-team-color);background:gray}
