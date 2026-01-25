@@ -20,6 +20,8 @@
 <link rel=preload as=image href=fuel-collect.png>
 <link rel=preload as=image href=start-area-blue.png>
 <link rel=preload as=image href=start-area-red.png>
+<link rel=preload as=image href=climb-area-blue.png>
+<link rel=preload as=image href=climb-area-red.png>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 
@@ -102,7 +104,7 @@
 		<div class="pre-match-layout">
 			<div class="pre-match-left">
 				<h3 data-i18n=starting_position></h3>
-				<div id=start-area><div id=robot-starting-position></div></div>
+				<div id=start-area class=position-area><div id=robot-starting-position></div></div>
 			</div>
 			<div class="pre-match-right">
 				<button class=showInstructions data-i18n=instructions></button>
@@ -131,6 +133,8 @@
 
 			<label class=alliance data-end=alliance data-side=outpost style=right:0%;top:7%><input type=checkbox name=auto_collect_outpost value=1><span><img class=orient-rotate src=fuel-collect.png></span></label>
 			<label class=alliance data-end=alliance data-side=depot style=right:2%;bottom:20%><input type=checkbox name=auto_collect_depot value=1><span><img class=orient-rotate src=fuel-collect.png></span></label>
+
+			<input class="alliance climb count num" data-end=alliance style=right:2%;top:40% type=text value=0 max=1 name=auto_climb_level size=1 readonly>
 		</div>
 		<div class=side-by-side>
 			<div>
@@ -205,7 +209,7 @@
 
 	<div class="teleop tab-content">
 		<div class="field-actions orient-rotate">
-			<button class="alliance to-neutral" data-end=alliance data-side=depot data-input=tele_trench_depot_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
+			<button class="al<liance to-neutral" data-end=alliance data-side=depot data-input=tele_trench_depot_alliance_to_neutral style=right:26%;bottom:5%>⬅</button>
 			<button class="alliance to-neutral" data-end=alliance data-side=depot data-input=tele_bump_depot_alliance_to_neutral style=right:26%;bottom:21%>⬅</button>
 			<button class="alliance to-neutral" data-end=alliance data-side=outpost data-input=tele_bump_outpost_alliance_to_neutral style=right:26%;top:21%>⬅</button>
 			<button class="alliance to-neutral" data-end=alliance data-side=outpost data-input=tele_trench_outpost_alliance_to_neutral style=right:26%;top:5%>⬅</button>
@@ -233,6 +237,8 @@
 			<div class="opponent robot" data-end=opponent style=left:13%;top:43%></div>
 			<button class="opponent target target-alliance" data-end=alliance data-input=tele_fuel_opponent_alliance_pass style=right:13%;bottom:5%>🎯</button>
 			<button class="opponent target" data-end=opponent data-input=tele_fuel_opponent_neutral_pass style=right:46.5%;bottom:5%>🎯</button>
+
+			<input class="alliance climb count num" data-end=alliance style=right:2%;top:40% type=text value=0 max=3 name=tele_climb_level size=1 readonly>
 		</div>
 		<div class=side-by-side>
 			<div>
@@ -356,14 +362,28 @@
 	<div class="end-game tab-content">
 		<table><tr><td class=subheader data-i18n=end_game_gameplay_header>
 		</td></tr><tr><td>
+			<fieldset class=full id=auto-climb-position-fieldset>
+				<legend data-i18n=auto_climb_legend></legend>
+				<div id=auto-climb-area class=position-area><div id=robot-auto-climb-position></div></div>
+				<input id=auto-climb-position-input type=hidden name=auto_climb_position>
+			</fieldset>
+			<fieldset class=full id=tele-climb-position-fieldset>
+				<legend data-i18n=tele_climb_legend></legend>
+				<div id=tele-climb-area class=position-area><div id=robot-tele-climb-position></div></div>
+				<input id=tele-climb-position-input type=hidden name=tele_climb_position>
+			</fieldset>
+			<fieldset class=full id=climb-method-fieldset>
+				<legend data-i18n=climb_method_legend></legend>
+				<div><label><input type=radio name=climb_method value=rungs><span data-i18n=climb_method_rungs></span></label> <span data-i18n=climb_method_rungs_desc></span></div>
+				<div><label><input type=radio name=climb_method value=uprights><span data-i18n=climb_method_uprights></span></label> <span data-i18n=climb_method_uprights_desc></span></div>
+				<div><label><input type=radio name=climb_method value=flip><span data-i18n=climb_method_flip></span></label> <span data-i18n=climb_method_flip_desc></span></div>
+			</fieldset>
 			<fieldset class=full>
 				<legend data-i18n=demonstrated_capabilities></legend>
-				<div>
-					<label><input type=checkbox name=shoot_move value=1><span data-i18n=shoot_move_desc></span></label>
-					<label><input type=checkbox name=shoot_collecting value=1><span data-i18n=shoot_collecting_desc></span></label>
-					<label><input type=checkbox name=shoot_turret value=1><span data-i18n=shoot_turret_desc></span></label>
-					<label><input type=checkbox name=shoot_climbing value=1><span data-i18n=shoot_climbing_desc></span></label>
-				</div>
+				<label><input type=checkbox name=shoot_move value=1><span data-i18n=shoot_move_desc></span></label>
+				<label><input type=checkbox name=shoot_collecting value=1><span data-i18n=shoot_collecting_desc></span></label>
+				<label><input type=checkbox name=shoot_turret value=1><span data-i18n=shoot_turret_desc></span></label>
+				<label><input type=checkbox name=shoot_climbing value=1><span data-i18n=shoot_climbing_desc></span></label>
 			</fieldset>
 			<fieldset class=full>
 				<legend data-i18n=fuel_strategy_legend></legend>
@@ -387,6 +407,13 @@
 				<div><label><input type=radio name=defense value=ineffective><span data-i18n=defense_ineffective></span></label> <span data-i18n=defense_ineffective_desc></span></div>
 				<div><label><input type=radio name=defense value=good><span data-i18n=defense_good></span></label> <span data-i18n=defense_good_desc></span></div>
 				<div><label><input type=radio name=defense value=great><span data-i18n=defense_great></span></label> <span data-i18n=defense_great_desc></span></div>
+			</fieldset>
+			<fieldset class=full>
+				<legend data-i18n=defense_methods_legend></legend>
+				<div><label><input type=checkbox name=defense_collected value=1><span data-i18n=defense_collected></span></label> <span data-i18n=defense_collected_desc></span></div>
+				<div><label><input type=checkbox name=defense_hit value=1><span data-i18n=defense_hit></span></label> <span data-i18n=defense_hit_desc></span></div>
+				<div><label><input type=checkbox name=defense_blocked value=1><span data-i18n=defense_blocked></span></label> <span data-i18n=defense_blocked_desc></span></div>
+				<div><label><input type=checkbox name=defense_pinned value=1><span data-i18n=defense_pinned></span></label> <span data-i18n=defense_pinned_desc></span></div>
 			</fieldset>
 			<fieldset class=full>
 				<legend data-i18n=defended_legend></legend>

@@ -401,6 +401,78 @@ addI18n({
 		fr:'Marqué très peu.',
 		pt:'Pontuou muito pouco.',
 	},
+	defense_methods_legend:{
+		en:'What methods did team _TEAMNUM_ use when defending?',
+		he:'אילו שיטות השתמש צוות _TEAMNUM_ בהגנה?',
+		tr:'Takım _TEAMNUM_ savunma yaparken hangi yöntemleri kullanmıştır?',
+		zh_tw:'隊伍_TEAMNUM_防守時使用了哪些方法?',
+		fr:'Quelles méthodes l\'équipe _TEAMNUM_ a-t-elle utilisées pour défendre?',
+		pt:'Quais métodos a equipe _TEAMNUM_ usou ao defender?',
+	},
+	defense_collected:{
+		en:'Collected',
+		he:'אסף',
+		tr:'Topladı',
+		zh_tw:'收集',
+		fr:'Collecté',
+		pt:'Coletou',
+	},
+	defense_collected_desc:{
+		en:'Collected fuel from opponents\' alliance zone.',
+		he:'אסף דלק מאזור הברית של היריבים.',
+		tr:'Rakiplerin ittifak bölgesinden yakıt topladı.',
+		zh_tw:'從對手的聯盟區收集燃料。',
+		fr:'Carburant collecté à partir de la zone d\'alliance des adversaires.',
+		pt:'Coletou combustível da zona de aliança dos oponentes.',
+	},
+	defense_hit:{
+		en:'Hit',
+		he:'פגע',
+		tr:'Vurdu',
+		zh_tw:'碰撞',
+		fr:'Frappé',
+		pt:'Bateu',
+	},
+	defense_hit_desc:{
+		en:'Hit or pushed the opponent to reduce their shooting accuracy.',
+		he:'פגע או דחף את היריב כדי להפחית את דיוק הירי שלהם.',
+		tr:'Muhalifi vurdu veya itti ve atış doğruluğunu azalttı.',
+		zh_tw:'碰撞或推動對手以降低其射擊準確度。',
+		fr:'Frappé ou poussé l\'adversaire pour réduire la précision de tir.',
+		pt:'Bateu ou empurrou o adversário para reduzir sua precisão de tiro.',
+	},
+	defense_blocked:{
+		en:'Blocked',
+		he:'חסם',
+		tr:'Engelledi',
+		zh_tw:'阻擋',
+		fr:'Bloqué',
+		pt:'Bloqueou',
+	},
+	defense_blocked_desc:{
+		en:'Blocked an opponent from entering or leaving the alliance zone.',
+		he:'חסם יריב מלהיכנס או לעזוב את אזור הברית.',
+		tr:'Rakibin ittifak bölgesine girmesini veya ayrılmasını engelledi.',
+		zh_tw:'阻止對手進入或離開聯盟區。',
+		fr:'Bloqué un adversaire pour entrer ou quitter la zone d\'alliance.',
+		pt:'Bloqueou um oponente de entrar ou sair da zona de aliança.',
+	},
+	defense_pinned:{
+		en:'Pinned',
+		he:'תקע',
+		tr:'Sabitlendi',
+		zh_tw:'牢固',
+		fr:'Épinglé',
+		pt:'Prendeu',
+	},
+	defense_pinned_desc:{
+		en:'Pinned an opponent to prevent them from shooting or collecting.',
+		he:'תקע יריב כדי למנוע מהם להיות בגודל או אוספים.',
+		tr:'Rakibi sabitleyerek atış veya toplama yapmasını engelledi.',
+		zh_tw:'牢固對手以防止他們射擊或收集。',
+		fr:'Épinglé un adversaire pour les empêcher de tirer ou de collecter.',
+		pt:'Prendeu um oponente para impedir que disparasse ou coletasse.',
+	},
 	misses_legend:{
 		en:'How often did team _TEAMNUM_ miss their shots?',
 		he:'כמה פעמים צוות _TEAMNUM_ פספסו את הזריקות שלהם?',
@@ -680,6 +752,78 @@ addI18n({
 		fr:'Tranchée (côté avant-poste) neutre à alliance',
 		pt:'Trincheira (lado do avançado) neutro a aliança',
 	},
+	auto_climb_legend:{
+		en:'Where did team _TEAMNUM_ climb during autonomous?',
+		he:'לאיזה גובה טיפס צוות _TEAMNUM_ במהלך אוטונומי?',
+		tr:'Takım _TEAMNUM_ otonom sırasında nereye tırmandı?',
+		zh_tw:'隊伍_TEAMNUM_在自主期間爬到了哪裡?',
+		fr:'Où l\'équipe _TEAMNUM_ a-t-elle grimpé lors de l\'autonome?',
+		pt:'Onde a equipe _TEAMNUM_ escalou durante autônoma?',
+	},
+	tele_climb_legend:{
+		en:'Where did team _TEAMNUM_ climb during teleop?',
+		he:'לאיזה גובה טיפס צוות _TEAMNUM_ במהלך teleop?',
+		tr:'Takım _TEAMNUM_ teleop sırasında nereye tırmandı?',
+		zh_tw:'隊伍_TEAMNUM_在遠程操作期間爬到了哪裡?',
+		fr:'Où l\'équipe _TEAMNUM_ a-t-elle grimpé lors du téléopération?',
+		pt:'Onde a equipe _TEAMNUM_ escalou durante o teleop?',
+	},
+	climb_method_legend:{
+		en:'How did team _TEAMNUM_ climb past level one?',
+		he:'כיצד טיפס צוות _TEAMNUM_ מעבר לרמה אחת?',
+		tr:'Takım _TEAMNUM_ birinci seviyeyi geçerek nasıl tırmandı?',
+		zh_tw:'隊伍_TEAMNUM_如何攀爬過第一級?',
+		fr:'Comment l\'équipe _TEAMNUM_ a-t-elle grimpé au-delà du niveau un?',
+		pt:'Como a equipe _TEAMNUM_ escalou além do nível um?',
+	},
+	climb_method_rungs:{
+		en:'Rungs',
+		he:'שלבים',
+		tr:'Basamaklar',
+		zh_tw:'橫檔',
+		fr:'Barreaux',
+		pt:'Degraus',
+	},
+	climb_method_rungs_desc:{
+		en:'Climbed the rungs.',
+		he:'טיפס על השלבים.',
+		tr:'Basamakları tırmanmıştır.',
+		zh_tw:'攀爬了橫檔。',
+		fr:'Grimpé les barreaux.',
+		pt:'Escalou os degraus.',
+	},
+	climb_method_uprights:{
+		en:'Uprights',
+		he:'עמודים',
+		tr:'Dikey Taşıyıcılar',
+		zh_tw:'豎柱',
+		fr:'Montants',
+		pt:'Colunas',
+	},
+	climb_method_uprights_desc:{
+		en:'Climbed the uprights.',
+		he:'טיפס על העמודים.',
+		tr:'Dikey taşıyıcıları tırmandı.',
+		zh_tw:'攀爬了豎柱。',
+		fr:'Grimpé les montants.',
+		pt:'Escalou as colunas.',
+	},
+	climb_method_flip:{
+		en:'Flip',
+		he:'תפיסה והיפוך',
+		tr:'Çevir',
+		zh_tw:'翻轉',
+		fr:'Basculer',
+		pt:'Virar',
+	},
+	climb_method_flip_desc:{
+		en:'Grabbed on and flipped upside down.',
+		he:'תפס והיפך לאחור.',
+		tr:'Tutundu ve ters çevrildi.',
+		zh_tw:'抓住並翻轉倒立。',
+		fr:'S\'est accroché et a basculé à l\'envers.',
+		pt:'Agarrou-se e virou de cabeça para baixo.',
+	},
 })
 
 $(document).ready(function(){
@@ -712,6 +856,8 @@ $(document).ready(function(){
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
 		setTimeout(initialRobotStartPosition,500)
+		setTimeout(initialRobotAutoClimbPosition,500)
+		setTimeout(initialRobotTeleClimbPosition,500)
 		initScouting2026()
 		renderTimeline()
 		return true
@@ -742,7 +888,17 @@ $(document).ready(function(){
 
 	$('.fieldRotateBtn').click(initScouting2026)
 
+	function toggleClimbPosition(){
+		var a=parseInt($('input[name="auto_climb_level"]').val()),
+		t=parseInt($('input[name="tele_climb_level"]').val())
+		$('#auto-climb-position-fieldset').toggle(a>0)
+		$('#tele-climb-position-fieldset').toggle(t>0)
+		$('#climb-method-fieldset').toggle(t>1)
+	}
+
 	function inputChanged2026(input, change){
+		if(change==0)return
+		toggleClimbPosition()
 		if(input.closest('.auto,.teleop').length){
 			var order = $('[name="timeline"]'),
 			text = order.val(),
@@ -812,6 +968,11 @@ $(document).ready(function(){
 		return countHandler.call(target[0],e)
 	})
 
+	$('.climb').on('click', function(e){
+		countHandler.call(this,e)
+		return false
+	})
+
 	$('.undo').click(function(){
 		var order = $('[name="timeline"]'),
 		text = order.val(),
@@ -831,6 +992,7 @@ $(document).ready(function(){
 		if (!text)initScouting2026()
 		order.val(text)
 		renderTimeline()
+		toggleClimbPosition()
 		return false
 	})
 
@@ -852,6 +1014,24 @@ $(document).ready(function(){
 			pos.startsWith('R'),
 			$('#auto-start-input').val()||"6x16",
 			document.getElementById('robot-starting-position')
+		)
+	}
+
+	function initialRobotAutoClimbPosition(){
+		moveFloaterToPercentCoordinates(
+			document.getElementById('auto-climb-area'),
+			pos.startsWith('R'),
+			$('#auto-climb-position-input').val()||"50x50",
+			document.getElementById('robot-auto-climb-position')
+		)
+	}
+
+	function initialRobotTeleClimbPosition(){
+		moveFloaterToPercentCoordinates(
+			document.getElementById('tele-climb-area'),
+			pos.startsWith('R'),
+			$('#tele-climb-position-input').val()||"50x50",
+			document.getElementById('robot-tele-climb-position')
 		)
 	}
 
@@ -888,4 +1068,34 @@ $(document).ready(function(){
 	})
 
 	$('#start-area').click(setRobotStartPosition)
+
+	function setRobotAutoClimbPosition(e){
+		var mi = document.getElementById('auto-climb-area'),
+		fi = document.getElementById('robot-auto-climb-position'),
+		ir = "none"==(""+getComputedStyle($('#auto-climb-area')[0]).transform),
+		co = getPercentCoordinates(e,mi,ir,ir,true)
+		moveFloaterToPercentCoordinates(mi,ir,co,fi)
+		$('#auto-climb-position-input').val(co)
+	}
+
+	$('#auto-climb-area').mousemove(function(e){
+		if (e.buttons) setRobotAutoClimbPosition(e)
+	})
+
+	$('#auto-climb-area').click(setRobotAutoClimbPosition)
+
+	function setRobotTeleClimbPosition(e){
+		var mi = document.getElementById('tele-climb-area'),
+		fi = document.getElementById('robot-tele-climb-position'),
+		ir = "none"==(""+getComputedStyle($('#tele-climb-area')[0]).transform),
+		co = getPercentCoordinates(e,mi,ir,ir,true)
+		moveFloaterToPercentCoordinates(mi,ir,co,fi)
+		$('#tele-climb-position-input').val(co)
+	}
+
+	$('#tele-climb-area').mousemove(function(e){
+		if (e.buttons) setRobotTeleClimbPosition(e)
+	})
+
+	$('#tele-climb-area').click(setRobotTeleClimbPosition)
 })

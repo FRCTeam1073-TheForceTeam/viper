@@ -800,7 +800,7 @@ function countHandler(e){
 	inputAttr = $(this).attr('data-input'),
 	parent = inputAttr?$(this):findParentFromButton($(this)),
 	count = $(this).is('.count')?$(this):$(this).find('.count').first(),
-	input = inputAttr ? $('input[name="' + inputAttr + '"]') : findInputInEl(parent),
+	input = count.is('input') ? count : (inputAttr ? $('input[name="' + inputAttr + '"]') : findInputInEl(parent)),
 	src = count.attr('src'),
 	dataValue = count.attr('data-value')??$(this).attr('data-value'),
 	val=parseInt(input.val())||0,
@@ -822,7 +822,7 @@ function countHandler(e){
 		animateChangeFloater(change, e)
 		inputChanged(input.val(val),change)
 		parent.find('.count').each(countHandler)
-	} else {
+	} else if (!count.is('input')){
 		if(/down/.test(count.attr('src'))){
 			count.css('visibility', val<=min?'hidden':'visible');
 		} else {
