@@ -947,10 +947,10 @@ addI18n({
 })
 
 $(document).ready(function(){
-	const AUTO_MS=15000,
+	const AUTO_MS=20000,
 	AUTO_GAP_MS=3000,
 	TELE_START_MS=AUTO_MS+AUTO_GAP_MS,
-	TELE_MS=135000,
+	TELE_MS=140000,
 	MATCH_LENGTH_MS=TELE_START_MS+TELE_MS
 	var matchStartTime = 0,
 	pitData = {},
