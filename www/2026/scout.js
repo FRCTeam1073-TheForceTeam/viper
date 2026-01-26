@@ -904,6 +904,46 @@ addI18n({
 		fr:'Tourelle',
 		pt:'Torreta',
 	},
+	auto_alliance_time:{
+		en:'Time spent in alliance zone during autonomous (seconds)',
+		he:'זמן שהייה באזור הברית במהלך אוטונומי (שניות)',
+		tr:'Otonom sırasında ittifak bölgesinde geçirilen süre (saniye)',
+		zh_tw:'自主期間在聯盟區域度過的時間(秒)',
+		fr:'Temps passé dans la zone d\'alliance pendant l\'autonome (secondes)',
+		pt:'Tempo gasto na zona de aliança durante a autônoma (segundos)',
+	},
+	auto_neutral_time:{
+		en:'Time spent in neutral zone during autonomous (seconds)',
+		he:'זמן שהייה באזור הנייטרלי במהלך אוטונומי (שניות)',
+		tr:'Otonom sırasında nötr bölgede geçirilen süre (saniye)',
+		zh_tw:'自主期間在中立區域度過的時間(秒)',
+		fr:'Temps passé dans la zone neutre pendant l\'autonome (secondes)',
+		pt:'Temps passé dans la zone neutre pendant l\'autonome (secondes)',
+	},
+	tele_alliance_time:{
+		en:'Time spent in alliance zone during teleop (seconds)',
+		he:'זמן שהייה באזור הברית במהלך teleop (שניות)',
+		tr:'Teleop sırasında ittifak bölgesinde geçirilen süre (saniye)',
+		zh_tw:'遠程操作期間在聯盟區域度過的時間(秒)',
+		fr:'Temps passé dans la zone d\'alliance pendant le téléopération (secondes)',
+		pt:'Tempo gasto na zona de aliança durante o teleop (segundos)',
+	},
+	tele_neutral_time:{
+		en:'Time spent in neutral zone during teleop (seconds)',
+		he:'זמן שהייה באזור הנייטרלי במהלך teleop (שניות)',
+		tr:'Teleop sırasında nötr bölgede geçirilen süre (saniye)',
+		zh_tw:'遠程操作期間在中立區域度過的時間(秒)',
+		fr:'Temps passé dans la zone neutre pendant le téléopération (secondes)',
+		pt:'Tempo gasto na zona neutra durante o teleop (segundos)',
+	},
+	tele_opponent_time:{
+		en:'Time spent in opponent zone during teleop (seconds)',
+		he:'זמן שהייה באזור של היריב במהלך teleop (שניות)',
+		tr:'Teleop sırasında rakip bölgesinde geçirilen süre (saniye)',
+		zh_tw:'遠程操作期間在對手區域度過的時間(秒)',
+		fr:'Temps passé dans la zone adverse pendant le téléopération (secondes)',
+		pt:'Tempo gasto na zona do oponente durante o teleop (segundos)',
+	},
 })
 
 $(document).ready(function(){
@@ -921,7 +961,6 @@ $(document).ready(function(){
 		pitData = data
 	})
 
-	// Kebab menu functionality
 	$('.kebab-button').click(function(e){
 		var dropdown = $(this).siblings('.kebab-dropdown')
 		dropdown.toggleClass('open')
@@ -999,6 +1038,7 @@ $(document).ready(function(){
 		if (matchStartTime==0) {
 			// start the game timer if not already started
 			var startOffset = 0
+			$(".zone-timer").val("0")
 			if (input.closest('.teleop').length) startOffset = TELE_START_MS
 			else setTimeout(proceedToTele, AUTO_MS)
 			matchStartTime = new Date().getTime()-startOffset
