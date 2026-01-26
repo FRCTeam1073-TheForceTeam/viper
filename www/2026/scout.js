@@ -913,7 +913,9 @@ $(document).ready(function(){
 	TELE_MS=135000,
 	MATCH_LENGTH_MS=TELE_START_MS+TELE_MS
 	var matchStartTime = 0,
-	pitData = {}
+	pitData = {},
+	enteredZoneMS = 0,
+	currentZone = 'alliance'
 
 	promisePitScouting().then(function(data){
 		pitData = data
@@ -947,6 +949,11 @@ $(document).ready(function(){
 		renderTimeline()
 		return true
 	})
+	window.onStore = window.onStore || []
+	window.onStore.push(function(){
+		updateZoneTimer(null, 'end')
+		return true
+	})
 	window.onShowPitScouting = window.onShowPitScouting || []
 	window.onShowPitScouting.push(function(){
 		setTimeout(drawAutos,0)
@@ -960,6 +967,8 @@ $(document).ready(function(){
 
 	function initScouting2026(){
 		matchStartTime = 0
+		enteredZoneMS = 0
+		currentZone = 'alliance'
 		$('.field-actions').find('[style]').each(function(){
 			var c = $(this).attr('class'),
 			isBlue = pos.startsWith('B'),
@@ -970,7 +979,6 @@ $(document).ready(function(){
 			if (end) $(this).attr('style', $(this).attr('style').replace(/left|right/g,lOrR))
 			if (side&&inp) $(this).attr('data-input', inp.replace(/depot|outpost/g,side))
 		})
-	
 		var capacity = (pitData[team] || {fuel_capacity:0}).fuel_capacity
 		$('.fuel-capacity').text(capacity)
 		$('.fuel-capacity-section').toggle(capacity>0)
@@ -986,6 +994,26 @@ $(document).ready(function(){
 		$('#climb-method-fieldset').toggle(t>1)
 	}
 
+	function getGameTimeMS(input){
+		var now = new Date().getTime()
+		if (matchStartTime==0) {
+			// start the game timer if not already started
+			var startOffset = 0
+			if (input.closest('.teleop').length) startOffset = TELE_START_MS
+			else setTimeout(proceedToTele, AUTO_MS)
+			matchStartTime = new Date().getTime()-startOffset
+		}
+		return Math.max(0,now-matchStartTime)
+	}
+
+	function getGameTimeSeconds(input){
+		return Math.floor(getGameTimeMS(input)/1000)
+	}
+
+	function proceedToTele(){
+		if($('.auto.tab-content').is(':visible') && matchStartTime>0 && (new Date().getTime()-matchStartTime)>=AUTO_MS) showTab(null, $('.tab[data-content="teleop"]'))
+	}
+
 	function inputChanged2026(input, change){
 		if(change==0)return
 		toggleClimbPosition()
@@ -994,14 +1022,13 @@ $(document).ready(function(){
 			text = order.val(),
 			name = input.attr('name'),
 			re = name
-			if (matchStartTime==0) matchStartTime = new Date().getTime() - (input.closest('.teleop').length?TELE_START_MS:0)
+			var seconds = getGameTimeSeconds(input)
 			if ('radio'==input.attr('type')){
 				name += `:${input.val()}`
 				text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${re}(?:\:[a-z0-9_]*)?( |$)`),"$1").trim()
 			}
 			if ((input.is('.num') && change>0) || input.is(':checked')){
 				if (text) text += " "
-				var seconds = Math.floor((new Date().getTime() - matchStartTime)/1000)
 				text += `${seconds}:${name}`
 				if (change>1) text += `:${change}`
 			} else {
@@ -1017,11 +1044,24 @@ $(document).ready(function(){
 		}
 	}
 
+	function updateZoneTimer(input, newZone){
+		var gameMS = newZone=="end"?MATCH_LENGTH_MS:Math.min(MATCH_LENGTH_MS,getGameTimeMS(input)),
+		autoElapsedSeconds = Math.floor((enteredZoneMS<AUTO_MS?(gameMS>AUTO_MS?AUTO_MS-enteredZoneMS:gameMS-enteredZoneMS):0)/1000),
+		teleElapsedSeconds = Math.floor((gameMS<TELE_START_MS?0:(enteredZoneMS<TELE_START_MS?gameMS-TELE_START_MS:gameMS-enteredZoneMS))/1000),
+		autoInp = $(`input[name="auto_${currentZone}_time"]`),
+		teleInp = $(`input[name="tele_${currentZone}_time"]`)
+		if(autoElapsedSeconds>0)autoInp.val(autoElapsedSeconds+(parseInt(autoInp.val())||0))
+		if(teleElapsedSeconds>0)teleInp.val(teleElapsedSeconds+(parseInt(teleInp.val())||0))
+		enteredZoneMS = gameMS
+		currentZone = newZone
+	}
+
 	function toAlliance(e){
 		$('.alliance').show()
 		$('.neutral, .opponent').hide()
 		$('.target').removeClass('active')
 		$('.target-hub').addClass('active')
+		updateZoneTimer($(this),'alliance')
 		return countHandler.call(this,e)
 	}
 	function toOpponent(e){
@@ -1029,6 +1069,7 @@ $(document).ready(function(){
 		$('.neutral, .alliance').hide()
 		$('.target').removeClass('active')
 		$('.target-alliance').addClass('active')
+		updateZoneTimer($(this),'opponent')
 		return countHandler.call(this,e)
 	}
 	function toNeutral(e){
@@ -1036,6 +1077,7 @@ $(document).ready(function(){
 		$('.alliance, .opponent').hide()
 		$('.target').removeClass('active')
 		$('.target-alliance').addClass('active')
+		updateZoneTimer($(this),'neutral')
 		return countHandler.call(this,e)
 	}
 	function activateTarget(){
@@ -1043,10 +1085,10 @@ $(document).ready(function(){
 		$(this).addClass('active')
 		return false
 	}
-	$('.to-alliance').on('click',toAlliance)
-	$('.to-neutral').on('click', toNeutral)
-	$('.to-opponent').on('click', toOpponent)
-	$('.target').on('click', activateTarget)
+	$('.to-alliance').click(toAlliance)
+	$('.to-neutral').click(toNeutral)
+	$('.to-opponent').click(toOpponent)
+	$('.target').click(activateTarget)
 	toAlliance()
 
 	$('.fuel').on('click', function(e){

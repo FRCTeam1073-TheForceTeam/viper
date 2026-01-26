@@ -26,6 +26,7 @@ html body .field-actions span,html body .field-actions img{width:100%;min-width:
 td{text-align:left;padding:0.2em 0.5em}
 .timeline-table{width:100%}
 .counters-table{width:100%}
+.counters-table td:first-child{text-align:right}
 .orientLeft .bigimg,body.leftField.redTeam .position-area,body.rightField.blueTeam .position-area,body.leftField .orient-rotate{transform:rotate(180deg)}
 .collapse {margin-left:1em}
 .team-indicator{padding:0.5em}
