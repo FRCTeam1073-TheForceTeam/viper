@@ -171,9 +171,9 @@ sub getInputName(){
 sub getInputType(){
 	my ($input, $name) = @_;
 	return "TIMESTAMP" if ($name eq 'created' or $name eq 'modified');
-	return "TEXT" if ($input=~/^<textarea/i or $input =~ /type[ ="]*hidden/);
-	return "VARCHAR(32)" if ($input =~ /type[ ="]*(checkbox|radio)/);
-	return "VARCHAR(16)" if ($input =~ /type[ ="]*number/ or $input =~ /class[ ="]*num/);
+	return "TEXT" if ($input=~/^<textarea/i or $input =~ /type\s*=\s*["\']?hidden["\']?/i);
+	return "VARCHAR(32)" if ($input =~ /type\s*=\s*["\']?(checkbox|radio)["\']?/i);
+	return "VARCHAR(16)" if ($input =~ /type\s*=\s*["\']?number["\']?/i or $input =~ /class\s*=\s*["\']?([^"\']*\s)?num(\s[^"\']*)?["\']?/i);
 	return "VARCHAR(256)";
 }
 
@@ -188,8 +188,7 @@ sub schema {
 	$dbh->do(
 		"
 			CREATE TABLE IF NOT EXISTS
-				`schedule`
-			(
+				`schedule`			(
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
 				`Match` VARCHAR(8) NOT NULL,
