@@ -1086,8 +1086,8 @@ $(document).ready(function(){
 
 	function updateZoneTimer(input, newZone){
 		var gameMS = newZone=="end"?MATCH_LENGTH_MS:Math.min(MATCH_LENGTH_MS,getGameTimeMS(input)),
-		autoElapsedSeconds = Math.floor((enteredZoneMS<AUTO_MS?(gameMS>AUTO_MS?AUTO_MS-enteredZoneMS:gameMS-enteredZoneMS):0)/1000),
-		teleElapsedSeconds = Math.floor((gameMS<TELE_START_MS?0:(enteredZoneMS<TELE_START_MS?gameMS-TELE_START_MS:gameMS-enteredZoneMS))/1000),
+		autoElapsedSeconds = Math.round((enteredZoneMS<AUTO_MS?(gameMS>AUTO_MS?AUTO_MS-enteredZoneMS:gameMS-enteredZoneMS):0)/1000),
+		teleElapsedSeconds = Math.round((gameMS<TELE_START_MS?0:(enteredZoneMS<TELE_START_MS?gameMS-TELE_START_MS:gameMS-enteredZoneMS))/1000),
 		autoInp = $(`input[name="auto_${currentZone}_time"]`),
 		teleInp = $(`input[name="tele_${currentZone}_time"]`)
 		if(autoElapsedSeconds>0)autoInp.val(autoElapsedSeconds+(parseInt(autoInp.val())||0))
