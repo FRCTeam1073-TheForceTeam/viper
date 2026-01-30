@@ -1008,16 +1008,6 @@ $(document).ready(function(){
 		matchStartTime = 0
 		enteredZoneMS = 0
 		currentZone = 'alliance'
-		$('.field-actions').find('[style]').each(function(){
-			var c = $(this).attr('class'),
-			isBlue = pos.startsWith('B'),
-			side = $(this).attr('data-side'),
-			end = $(this).attr('data-end'),
-			inp = $(this).attr('data-input'),
-			lOrR = ((!isBlue && end=='alliance') || (isBlue && end=='opponent'))?'right':'left'
-			if (end) $(this).attr('style', $(this).attr('style').replace(/left|right/g,lOrR))
-			if (side&&inp) $(this).attr('data-input', inp.replace(/depot|outpost/g,side))
-		})
 		var capacity = (pitData[team] || {fuel_capacity:0}).fuel_capacity
 		$('.fuel-capacity').text(capacity)
 		$('.fuel-capacity-section').toggle(capacity>0)
