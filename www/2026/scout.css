@@ -6,15 +6,18 @@ html{padding:0}
 #start-area{width:8.4em;height:25em;position:relative;margin:0 auto}
 .blueTeam #start-area{background:url(start-area-blue.png) no-repeat center center / 100% 100%}
 .redTeam #start-area{background:url(start-area-red.png) no-repeat center center / 100% 100%}
-#robot-starting-position{position:absolute;top:0;left:0;width:2.5em;height:2.5em;border-radius:.3em;}
-.blueTeam #robot-starting-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
-.redTeam #robot-starting-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
+.robot-position{position:absolute;top:0;left:0;width:2.5em;height:2.5em;border-radius:.3em;}
+.blueTeam .robot-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
+.redTeam .robot-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
 #auto-climb-area,#tele-climb-area{width:8.4em;height:10em;position:relative;margin:0 auto}
 .blueTeam #auto-climb-area,.blueTeam #tele-climb-area{background:url(climb-area-blue.png) no-repeat center center / 100% 100%}
 .redTeam #auto-climb-area,.redTeam #tele-climb-area{background:url(climb-area-red.png) no-repeat center center / 100% 100%}
 #robot-auto-climb-position,#robot-tele-climb-position{position:absolute;top:0;left:0;width:2.5em;height:2.5em;border-radius:.3em;}
 .blueTeam #robot-auto-climb-position,.blueTeam #robot-tele-climb-position{border:.3em solid var(--blue-team-color);background:var(--button-bg-color)}
 .redTeam #robot-auto-climb-position,.redTeam #robot-tele-climb-position{border:.3em solid var(--red-team-color);background:var(--button-bg-color)}
+#shooting-locations{width:16.1em;height:25em;position:relative;margin:0 auto}
+.blueTeam #shooting-locations{background:url(shooting-locations-blue.png) no-repeat center center / 100% 100%}
+.redTeam #shooting-locations{background:url(shooting-locations-red.png) no-repeat center center / 100% 100%}
 #auto-paths {min-width:10em;width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('auto-area-blue.png');background-size:cover}
 .field-actions{background:url(field.png) no-repeat center center;background-size:100%;aspect-ratio:1.875;width:100%;max-width:20em;margin:0 auto;position:relative;}
 .blueTeam .field-actions{background-image:url(field-rotated.png)}
@@ -28,9 +31,7 @@ td{text-align:left;padding:0.2em 0.5em}
 .timeline-table{width:100%}
 .counters-table{width:100%}
 .counters-table td:first-child{text-align:right}
-/* .blueTeam .blue-rotate,.orientLeft .bigimg,body.leftField.redTeam .position-area,body.rightField.blueTeam .position-area,body.leftField .orient-rotate{transform:rotate(180deg)} */
 .orientLeft .bigimg,.blueTeam.rightField .orient-rotate,.redTeam.leftField .orient-rotate{transform:rotate(180deg)}
-
 .collapse {margin-left:1em}
 .team-indicator{padding:0.5em}
 .tab-button,.undo,.team-indicator{min-width:7em}
@@ -52,3 +53,4 @@ td{text-align:left;padding:0.2em 0.5em}
 .climb{padding-right:0.4em;appearance:none;text-align:right;background:var(--button-bg-color);border:1px solid var(--main-border-color);border-style:solid;color:var(--button-fg-color);outline:none}
 .climb:active{background:var(--button-bg-color);border:1px solid var(--main-border-color);border-style:solid;color:var(--button-fg-color);outline:none}
 #auto-climb-position-fieldset,#tele-climb-position-fieldset,#climb-method-fieldset{display:none}
+#shooting-locations-undo{float:right}

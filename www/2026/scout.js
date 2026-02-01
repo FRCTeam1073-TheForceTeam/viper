@@ -824,6 +824,22 @@ addI18n({
 		fr:'S\'est accroché et a basculé à l\'envers.',
 		pt:'Agarrou-se e virou de cabeça para baixo.',
 	},
+	shooting_locations_fieldset:{
+		en:'Shooting Locations',
+		he:'מיקומי ירי',
+		tr:'Atış Konumları',
+		zh_tw:'射擊位置',
+		fr:'Emplacements de tir',
+		pt:'Locais de Tiro',
+	},
+	shooting_locations_legend:{
+		en:'Were there a limited set of locations from which team _TEAMNUM_ could score fuel that could be defended? If so, mark them.',
+		he:'האם היו סט מוגבל של מיקומים מהם צוות _TEAMNUM_ יכול היה לצבור דלק שניתן להגן עליו? אם כן, סמן אותם.',
+		tr:'Takım _TEAMNUM_ savunulabilecek yakıt puanı alabileceği sınırlı bir konum seti var mıydı? Varsa, işaretleyin.',
+		zh_tw:'隊伍_TEAMNUM_是否有一組有限的位置可以得分燃料可以防守?如果是，請標記它們。',
+		fr:'Y avait-il un ensemble limité d\'emplacements à partir desquels l\'équipe _TEAMNUM_ pouvait marquer du carburant qui pouvait être défendu? Si oui, marquez-les.',
+		pt:'Havia um conjunto limitado de locais de onde a equipe _TEAMNUM_ poderia marcar combustível que poderia ser defendido? Se sim, marque-os.',
+	},
 	robot_fuel_capacity_question:{
 		en:'What is the maxiumum amount of fuel _TEAMNUM_\'s robot can hold at once?',
 		he:'מהו הכמות המקסימלית של דלק שהרובוט של _TEAMNUM_ יכול להחזיק בבת אחת?',
@@ -984,6 +1000,7 @@ $(document).ready(function(){
 		setTimeout(initialRobotStartPosition,500)
 		setTimeout(initialRobotAutoClimbPosition,500)
 		setTimeout(initialRobotTeleClimbPosition,500)
+		setTimeout(drawAllShootingLocations,500)
 		initScouting2026()
 		renderTimeline()
 		return true
@@ -1260,6 +1277,37 @@ $(document).ready(function(){
 	})
 
 	$('#tele-climb-area').click(setRobotTeleClimbPosition)
+
+	function drawAllShootingLocations(){
+		var area = $('#shooting-locations').html(""),
+		isRotated = "none"==(""+getComputedStyle($('#shooting-locations')[0]).transform)
+		$('#shooting-locations-input').val().split(" ").forEach(loc => {
+			if (loc){
+				var floater = $('<div class=robot-position></div>')
+				area.append(floater)
+				moveFloaterToPercentCoordinates(area[0],isRotated,loc,floater[0])
+			}
+		});
+		return true
+	}
+
+	$('#shooting-locations').click(function(e){
+		var mi = document.getElementById('shooting-locations'),
+		isRotated = "none"==(""+getComputedStyle(mi).transform),
+		co = getPercentCoordinates(e,mi,isRotated,isRotated,true),
+		val = $('#shooting-locations-input').val()
+		if (val) val += " "
+		val += co
+		$('#shooting-locations-input').val(val)
+		drawAllShootingLocations()
+	})
+
+	$('#shooting-locations-undo').click(function(){
+		var input = $('#shooting-locations-input')
+		input.val(input.val().replace(/ ?[^ ]+$/,""))
+		drawAllShootingLocations()
+		return false
+	})
 
 	function getAutoPath(startNew){
 		var chosen

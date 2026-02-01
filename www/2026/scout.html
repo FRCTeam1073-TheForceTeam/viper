@@ -27,6 +27,8 @@
 <link rel=preload as=image href=start-area-red.png>
 <link rel=preload as=image href=climb-area-blue.png>
 <link rel=preload as=image href=climb-area-red.png>
+<link rel=preload as=image href=shooting-locations-blue.png>
+<link rel=preload as=image href=shooting-locations-red.png>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 
@@ -109,7 +111,7 @@
 		<div class="pre-match-layout">
 			<div class="pre-match-left">
 				<h3 data-i18n=starting_position></h3>
-				<div id=start-area class=orient-rotate><div id=robot-starting-position></div></div>
+				<div id=start-area class=orient-rotate><div class=robot-position id=robot-starting-position></div></div>
 			</div>
 			<div class="pre-match-right">
 				<button class=showInstructions data-i18n=instructions></button>
@@ -424,6 +426,12 @@
 				<div><label><input type=radio name=fuel_to_alliance value=pushed><span data-i18n=fuel_pushed_label></span></label> <span data-i18n=fuel_pushed_desc></span></div>
 				<div><label><input type=radio name=fuel_to_alliance value=passed><span data-i18n=fuel_passed_label></span></label> <span data-i18n=fuel_passed_desc></span></div>
 				<div><label><input type=radio name=fuel_to_alliance value=received><span data-i18n=fuel_received_label></span></label> <span data-i18n=fuel_received_desc></span></div>
+			</fieldset>
+			<fieldset class=full id=shooting_locations_fieldset>
+				<legend data-i18n=shooting_locations_legend></legend>
+				<div id=shooting-locations class=orient-rotate></div>
+				<input id=shooting-locations-input type=hidden name=shooting_locations>
+				<button id=shooting-locations-undo class=undo data-i18n=undo_button></button>
 			</fieldset>
 			<fieldset class=full>
 				<legend data-i18n=bricked_legend></legend>
