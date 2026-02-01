@@ -36,6 +36,10 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 		}
 	})
 
+	scout.auto_fuel_output = scout.auto_fuel_score + scout.auto_fuel_neutral_alliance_pass
+	scout.tele_fuel_output = scout.tele_fuel_score + scout.tele_fuel_alliance_dump + scout.tele_fuel_neutral_alliance_pass + scout.tele_fuel_opponent_alliance_pass + scout.tele_fuel_opponent_neutral_pass
+	scout.fuel_output = scout.auto_fuel_output + scout.tele_fuel_output
+
 	scout.fuel_score = scout.auto_fuel_score + scout.tele_fuel_score
 	scout.bump_depot_alliance_to_neutral = scout.auto_bump_depot_alliance_to_neutral + scout.tele_bump_depot_alliance_to_neutral
 	scout.bump_depot_neutral_to_alliance = scout.auto_bump_depot_neutral_to_alliance + scout.tele_bump_depot_neutral_to_alliance
@@ -1143,6 +1147,33 @@ var statInfo={
 		tr:'Yakıt Skoru',
 		he:'ציון דלק',
 	},
+	auto_fuel_output:{
+		en:'Fuel Output to Target in Auto',
+		type:'avg',
+		fr:'Sortie de carburant en auto',
+		pt:'Saída de Combustível no Auto',
+		zh_tw:'自動燃料輸出',
+		tr:'Otomatik Yakıt Çıkışı',
+		he:'פלט דלק באוטומט',
+	},
+	tele_fuel_output:{
+		en:'Fuel Output to Target in Teleop',
+		type:'avg',
+		fr:'Sortie de carburant en téléop',
+		pt:'Saída de Combustível no Teleop',
+		zh_tw:'遙控燃料輸出',
+		tr:'Teleopta Yakıt Çıkışı',
+		he:'פלט דלק בטליאופ',
+	},
+	fuel_output:{
+		en:'Fuel Output to Target',
+		type:'avg',
+		fr:'Sortie de carburant',
+		pt:'Saída de Combustível',
+		zh_tw:'燃料輸出',
+		tr:'Yakıt Çıkışı',
+		he:'פלט דלק',
+	},
 	max_score:{
 		en:'Max Score',
 		type:'minmax',
@@ -1569,6 +1600,15 @@ var teamGraphs={
 		zh_tw:'遊戲舞台',
 		data:["auto_score","tele_score"],
 	},
+	"Fuel to Target":{
+		graph:"stacked",
+		tr:'Hedefe Yakıt',
+		pt:'Combustível para o Alvo',
+		fr:'Carburant vers la cible',
+		he:'דלק למטרה',
+		zh_tw:'燃料到目標',
+		data:["auto_fuel_output","tele_fuel_output"],
+	},
 	"Fuel vs Climb":{
 		graph:"stacked",
 		data:["fuel_score","tower_score"],
@@ -1589,6 +1629,15 @@ var aggregateGraphs={
 		he:'ציון התאמה',
 		zh_tw:'比賽比分',
 		data:["max_score","score","min_score"],
+	},
+	"Fuel to Target":{
+		graph:"boxplot",
+		tr:'Hedefe Yakıt',
+		pt:'Combustível para o Alvo',
+		fr:'Carburant vers la cible',
+		he:'דלק למטרה',
+		zh_tw:'燃料到目標',
+		data:["fuel_output"],
 	},
 	"Game Stage":{
 		graph:"stacked",
