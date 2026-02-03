@@ -157,7 +157,7 @@ sub cmpRowsVals(){
 
 	}
 
-	return $aval cmp $bval;
+	return ($aval||"") cmp ($bval||"");
 }
 
 sub cmpRows(){
