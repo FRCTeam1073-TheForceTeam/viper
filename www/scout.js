@@ -401,6 +401,14 @@ addI18n({
 		he:'דלק מקסימלי:',
 		tr:'Maksimum yakıt:',
 	},
+	loading_photos:{
+		en:'Loading robot photos…',
+		pt:'Carregando fotos do robô…',
+		fr:'Chargement des photos du robot…',
+		zh_tw:'正在加載機器人照片…',
+		he:'טוען תמונות רובוט…',
+		tr:'Robot fotoğrafları yükleniyor…',
+	},
 })
 
 var pos = "",
@@ -561,13 +569,15 @@ function showPosList(){
 	applyTranslations()
 }
 
+var nextRobotsPhotos = []
+
 function showMatchList(){
 	promiseEventStats().then(resolve=>{
 		var [eventStats] = resolve
 		$('.screen,.init-hide').hide()
 		setHash(pos,orient)
 		window.scrollTo(0,0)
-		$('#match-list').html('')
+		$('#match-list').html('').append($('<div>').text(translate('loading_photos')))
 		$('h1').text(`${eventName} ${pos}`)
 		var alreadyScouted = {}
 		forEachTeamMatch(eventStats, function(team,match){
@@ -583,21 +593,45 @@ function showMatchList(){
 		eventMatches.forEach(m => {
 			var matchTeam = m[pos],
 			matchId = m['Match'],
-			matchName = getShortMatchName(matchId),
-			completeClass=(lastDone&&!seenLastDone)?"complete":"",
-			storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
+			completeClass=(lastDone&&!seenLastDone)?"complete":""
 			if (lastDone == matchId) seenLastDone = true;
-			$('#match-list').append(
-				$('<div class=match>')
-				.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
-					team = $(this).attr('data-team')
-					match=$(this).attr('data-match')
-					setTranslationContext()
-					showScouting()
-				})).append($('<span>').text(' ' + matchName))
-			)
+			if (!completeClass && nextRobotsPhotos.length < 6) {
+				var img = new Image()
+				img.src = `/data/${eventYear}/${matchTeam}.jpg`
+				nextRobotsPhotos.push(img)
+			}
 		})
-		setTeamBG()
+		Promise.all(nextRobotsPhotos.map(img =>
+			new Promise((resolve) => {
+				if (img.complete) {
+					resolve()
+				} else {
+					img.onload = resolve
+					img.onerror = resolve
+				}
+			})
+		)).then(() => {
+			var seenLastDone = false;
+			$('#match-list').html('')
+			eventMatches.forEach(m => {
+				var matchTeam = m[pos],
+				matchId = m['Match'],
+				matchName = getShortMatchName(matchId),
+				completeClass=(lastDone&&!seenLastDone)?"complete":"",
+				storedClass = (localStorage.getItem(getScoutKey(matchTeam, matchId)))?"stored":""
+				if (lastDone == matchId) seenLastDone = true;
+				$('#match-list').append(
+					$('<div class=match>')
+					.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
+						team = $(this).attr('data-team')
+						match=$(this).attr('data-match')
+						setTranslationContext()
+						showScouting()
+					})).append($('<span>').text(' ' + matchName))
+				)
+			})
+			setTeamBG()
+		})
 		$('#select-match').show()
 	})
 }
@@ -879,6 +913,7 @@ function showScouting(){
 		scouting.show()
 		setupButtons()
 		localStorage.setItem("last_scout_type", "scout")
+		$('#robot-photo').attr('src', `/data/${eventYear}/${team}.jpg`)
 		applyTranslations()
 	})
 }

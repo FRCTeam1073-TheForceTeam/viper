@@ -40,3 +40,4 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 .collapsable{display:none}
 .collapse::before{content:'';margin-right:.35em;display:inline-block;width:0;height:0;border-top:.35em solid transparent;border-bottom:.4em solid transparent;border-left:.7em solid var(--main-fg-color);border-right:none}
 .collapse.open::before{border-left:.35em solid transparent;border-right:.35em solid transparent;border-top:.7em solid var(--main-fg-color);border-bottom:none}
+#robot-photo{max-width:calc(100% - 2em);margin:1em}
