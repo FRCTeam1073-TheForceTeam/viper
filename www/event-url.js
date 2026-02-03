@@ -420,6 +420,7 @@ function getMatchNameKey(matchId){
 }
 
 function getMatchName(matchId){
+	if(!matchId)return""
 	return translate(getMatchNameKey(matchId))+getMatchNumber(matchId)
 }
 
@@ -428,5 +429,6 @@ function getShortMatchNameKey(matchId){
 }
 
 function getShortMatchName(matchId){
+	if(!matchId)return""
 	return translate(getShortMatchNameKey(matchId))+getMatchNumber(matchId)
 }
