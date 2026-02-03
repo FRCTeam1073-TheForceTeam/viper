@@ -73,18 +73,18 @@ for my $param ($cgi->param){
 		$webutil->error("Photo is not 'data:image/jpeg;base64,'",$data) if($data !~ /^data:image\/jpeg;base64,/);
 		$data =~ s/^data:image\/jpeg;base64,//g;
 		my $decodedImage = decode_base64($data);
-		my $teamPicFile = "../data/$season/$photo.jpg";
 		if ($dbh){
 			my ($team, $view) = $photo =~ /^([0-9]+)(?:\-([a-z]+))?$/;
 			my $imageData = {
 				year => $season,
-				team => $photo,
+				team => $team,
 				view => $view||"",
 				image => $decodedImage
 			};
 			$db->upsert('images', $imageData);
 			$db->commit();
 		} else {
+			my $teamPicFile = "../data/$season/$photo.jpg";
 			open my $fh, '>:raw', $teamPicFile or die;
 			print $fh $decodedImage;
 			close $fh;
