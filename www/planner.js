@@ -209,6 +209,7 @@ $(document).ready(function(){
 			})
 			$('.configure-stats').click(statsConfig.showConfigDialog.bind(statsConfig))
 			teamList.sort((a,b) => a-b)
+			$('#teamButtons').html('')
 			for (var i=0; i<teamList.length; i++){
 				var team = teamList[i]
 				$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).attr('data-tooltip',getTeamInfo(team)).click(teamButtonClicked))
