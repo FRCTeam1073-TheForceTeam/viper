@@ -89,12 +89,10 @@ for my $param ($cgi->param){
 			print $fh $decodedImage;
 			close $fh;
 		}
-		
 		$savedKeys .= "," if($savedKeys);
 		$savedKeys .= "${season}_photo_${photo}";
 	}
 }
-
 
 sub writeCsvData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
