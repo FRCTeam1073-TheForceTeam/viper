@@ -72,19 +72,27 @@ for my $param ($cgi->param){
 		my $data = $cgi->param($param);
 		$webutil->error("Photo is not 'data:image/jpeg;base64,'",$data) if($data !~ /^data:image\/jpeg;base64,/);
 		$data =~ s/^data:image\/jpeg;base64,//g;
+		my $decodedImage = decode_base64($data);
 		my $teamPicFile = "../data/$season/$photo.jpg";
 		if ($dbh){
-			$teamPicFile = File::Temp->new(TEMPLATE => 'viperXXXXXXX', SUFFIX => '.jpg', TMPDIR => 1, OPEN => 0)->filename;
+			my ($team, $view) = $photo =~ /^([0-9]+)(?:\-([a-z]+))?$/;
+			my $imageData = {
+				year => $season,
+				team => $photo,
+				view => $view||"",
+				image => $decodedImage
+			};
+			$db->upsert('images', $imageData);
+			$db->commit();
+		} else {
+			open my $fh, '>:raw', $teamPicFile or die;
+			print $fh $decodedImage;
+			close $fh;
 		}
-		open my $fh, '>:raw', $teamPicFile or die;
-		print $fh decode_base64($data);
-		close $fh;
-
 		$savedKeys .= "," if($savedKeys);
 		$savedKeys .= "${season}_photo_${photo}";
 	}
 }
-
 
 sub writeCsvData(){
 	my ($eventCsv, $eventHeaders, $type) = @_;
