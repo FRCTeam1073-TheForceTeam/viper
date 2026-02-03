@@ -213,7 +213,7 @@ $(document).ready(function(){
 				var team = teamList[i]
 				$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).attr('data-tooltip',getTeamInfo(team)).click(teamButtonClicked))
 			}
-			$('#matchList').append($('<option selected=1>')).change(function(){
+			$('#matchList').html('').append($('<option selected=1>')).change(function(){
 				matchId = $(this).val()
 				var match = (eventMatches.filter(m=>m.Match==matchId))[0]
 				BOT_POSITIONS.forEach(function(pos){
