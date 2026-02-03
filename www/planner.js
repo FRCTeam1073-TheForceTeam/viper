@@ -233,6 +233,7 @@ $(document).ready(function(){
 				})
 			}
 			sizeWhiteboard()
+			applyTranslations()
 		})
 	}
 
