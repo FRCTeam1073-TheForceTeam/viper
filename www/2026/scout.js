@@ -1025,6 +1025,7 @@ $(document).ready(function(){
 			setTimeout(initialRobotAutoClimbPosition, 0)
 			setTimeout(initialRobotTeleClimbPosition, 0)
 			toggleClimbPosition()
+			toggleDefenseMethods()
 		}
 	})
 
@@ -1045,6 +1046,11 @@ $(document).ready(function(){
 		$('#auto-climb-position-fieldset').toggle(a>0)
 		$('#tele-climb-position-fieldset').toggle(t>0)
 		$('#climb-method-fieldset').toggle(t>1)
+	}
+
+	function toggleDefenseMethods(){
+		var defenseValue = $('input[name="defense"]:checked').val()
+		$('#defense-methods').toggle(defenseValue !== '')
 	}
 
 	function getGameTimeMS(input){
@@ -1071,6 +1077,7 @@ $(document).ready(function(){
 	function inputChanged2026(input, change){
 		if(change==0)return
 		toggleClimbPosition()
+		if(input.attr('name')==='defense') toggleDefenseMethods()
 		if(input.closest('.auto,.teleop').length){
 			var order = $('[name="timeline"]'),
 			text = order.val(),
