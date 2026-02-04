@@ -997,10 +997,7 @@ $(document).ready(function(){
 	})
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
-		setTimeout(initialRobotStartPosition,500)
-		setTimeout(initialRobotAutoClimbPosition,500)
-		setTimeout(initialRobotTeleClimbPosition,500)
-		setTimeout(drawAllShootingLocations,500)
+		setTimeout(initialRobotStartPosition,0)
 		initScouting2026()
 		renderTimeline()
 		return true
@@ -1020,6 +1017,16 @@ $(document).ready(function(){
 	window.onInputChanged.push(inputChanged2026)
 
 	onApplyTranslation.push(renderTimeline)
+
+	window.onShowTab = window.onShowTab || []
+	window.onShowTab.push(function(tabName){
+		if (tabName==='end-game'){
+			setTimeout(drawAllShootingLocations, 0)
+			setTimeout(initialRobotAutoClimbPosition, 0)
+			setTimeout(initialRobotTeleClimbPosition, 0)
+			toggleClimbPosition()
+		}
+	})
 
 	function initScouting2026(){
 		matchStartTime = 0
@@ -1189,28 +1196,28 @@ $(document).ready(function(){
 
 	function initialRobotStartPosition(){
 		moveFloaterToPercentCoordinates(
-			document.getElementById('start-area'),
+			$('#start-area')[0],
 			pos.startsWith('R'),
 			$('#auto-start-input').val()||"6x16",
-			document.getElementById('robot-starting-position')
+			$('#robot-starting-position')[0]
 		)
 	}
 
 	function initialRobotAutoClimbPosition(){
 		moveFloaterToPercentCoordinates(
-			document.getElementById('auto-climb-area'),
+			$('#auto-climb-area')[0],
 			pos.startsWith('R'),
-			$('#auto-climb-position-input').val()||"50x50",
-			document.getElementById('robot-auto-climb-position')
+			$('#auto-climb-position-input').val()||"6x6",
+			$('#robot-auto-climb-position')[0]
 		)
 	}
 
 	function initialRobotTeleClimbPosition(){
 		moveFloaterToPercentCoordinates(
-			document.getElementById('tele-climb-area'),
+			$('#tele-climb-area')[0],
 			pos.startsWith('R'),
-			$('#tele-climb-position-input').val()||"50x50",
-			document.getElementById('robot-tele-climb-position')
+			$('#tele-climb-position-input').val()||"6x6",
+			$('#robot-tele-climb-position')[0]
 		)
 	}
 
@@ -1234,9 +1241,9 @@ $(document).ready(function(){
 	}
 
 	function setRobotStartPosition(e){
-		var mi = document.getElementById('start-area'),
-		fi = document.getElementById('robot-starting-position'),
-		ir = "none"==(""+getComputedStyle($('#start-area')[0]).transform),
+		var mi = $('#start-area')[0],
+		fi = $('#robot-starting-position')[0],
+		ir = "none"==(""+getComputedStyle(mi).transform),
 		co = getPercentCoordinates(e,mi,ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#auto-start-input').val(co)
@@ -1249,9 +1256,9 @@ $(document).ready(function(){
 	$('#start-area').click(setRobotStartPosition)
 
 	function setRobotAutoClimbPosition(e){
-		var mi = document.getElementById('auto-climb-area'),
-		fi = document.getElementById('robot-auto-climb-position'),
-		ir = "none"==(""+getComputedStyle($('#auto-climb-area')[0]).transform),
+		var mi = $('#auto-climb-area')[0],
+		fi = $('#robot-auto-climb-position')[0],
+		ir = "none"==(""+getComputedStyle(mi).transform),
 		co = getPercentCoordinates(e,mi,ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#auto-climb-position-input').val(co)
@@ -1264,9 +1271,9 @@ $(document).ready(function(){
 	$('#auto-climb-area').click(setRobotAutoClimbPosition)
 
 	function setRobotTeleClimbPosition(e){
-		var mi = document.getElementById('tele-climb-area'),
-		fi = document.getElementById('robot-tele-climb-position'),
-		ir = "none"==(""+getComputedStyle($('#tele-climb-area')[0]).transform),
+		var mi = $('#tele-climb-area')[0],
+		fi = $('#robot-tele-climb-position')[0],
+		ir = "none"==(""+getComputedStyle(mi).transform),
 		co = getPercentCoordinates(e,mi,ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#tele-climb-position-input').val(co)
@@ -1292,7 +1299,7 @@ $(document).ready(function(){
 	}
 
 	$('#shooting-locations').click(function(e){
-		var mi = document.getElementById('shooting-locations'),
+		var mi = $('#shooting-locations')[0],
 		isRotated = "none"==(""+getComputedStyle(mi).transform),
 		co = getPercentCoordinates(e,mi,isRotated,isRotated,true),
 		val = $('#shooting-locations-input').val()

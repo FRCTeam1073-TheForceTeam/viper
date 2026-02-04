@@ -1339,6 +1339,11 @@ function showTab(event, tab){
 	$('.tab-content').hide()
 	$(`.${name}`).show()
 	if(button.is('.tab-button')) window.scrollTo(tab.offset())
+	if(window.onShowTab){
+		for(var i=0; i<window.onShowTab.length; i++){
+			if(!window.onShowTab[i](name)) return false
+		}
+	}
 	return false
 }
 

@@ -382,8 +382,11 @@ $(document).ready(function(){
 					char = fieldInfo.whiteboard_char||"&",
 					start = (fieldInfo.whiteboard_start||0)/100,
 					end = (fieldInfo.whiteboard_end||100)/100,
+					sLeft = (fieldInfo.whiteboard_left||0)/100,
+					sRight = (fieldInfo.whiteboard_right||100)/100,
 					invert = !!fieldInfo.whiteboard_invert,
 					height = end - start,
+					width = sRight - sLeft,
 					whiteboard = $('#field'),
 					whiteboardBounds = whiteboard[0].getBoundingClientRect(),
 					source = fieldInfo.source,
@@ -411,11 +414,14 @@ $(document).ready(function(){
 								if (m && m.length){
 									[left, top] = m.slice(1).map(x=>parseInt(x)/100)
 									if (invert)[left, top] = [top, left]
-									if (!atBottom && window.fieldRotationalSymmetry) left = 1 - left
+									if (!atBottom && window.fieldRotationalSymmetry){
+										left=1-left
+										sLeft=1-sRight
+									}
 									var point = $('<div class=overlay>').html(char).css(...style)
 									whiteboard.append(point)
 									var pointBounds = point[0].getBoundingClientRect()
-									left = Math.round(left * whiteboardBounds.width - pointBounds.width/2)
+									left = Math.round(left * whiteboardBounds.width * width + sLeft * whiteboardBounds.width - pointBounds.width/2)
 									top = Math.round(top * whiteboardBounds.height * height + start * whiteboardBounds.height - pointBounds.height/2)
 									point.css(atBottom?"bottom":"top",`${top}px`).css('left',`${left}px`)
 								}

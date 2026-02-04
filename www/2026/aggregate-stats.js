@@ -46,7 +46,6 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.bump_outpost_alliance_to_neutral = scout.auto_bump_outpost_alliance_to_neutral + scout.tele_bump_outpost_alliance_to_neutral
 	scout.bump_outpost_neutral_to_alliance = scout.auto_bump_outpost_neutral_to_alliance + scout.tele_bump_outpost_neutral_to_alliance
 	scout.climb_level = scout.auto_climb_level + scout.tele_climb_level
-	scout.climb_position = scout.auto_climb_position + scout.tele_climb_position
 	scout.collect_depot = scout.auto_collect_depot + scout.tele_fuel_alliance_dump
 	scout.collect_outpost = scout.auto_collect_outpost + scout.tele_fuel_outpost
 	scout.fuel_neutral_alliance_pass = scout.auto_fuel_neutral_alliance_pass + scout.tele_fuel_neutral_alliance_pass
@@ -152,6 +151,12 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.count = (aggregate.count||0)+1
 	aggregate.max_score = Math.max(aggregate.max_score||0,scout.score||0)
 	aggregate.min_score = Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score||0)
+
+	pit.auto_paths=[]
+	for (var i=1; i<=9; i++){
+		var path=pit[`auto_${i}_path`]
+		if (path) pit.auto_paths.push(path)
+	}
 }
 
 var statInfo={
@@ -466,7 +471,15 @@ var statInfo={
 	},
 	auto_climb_position:{
 		en: 'Climb Position in Auto',
-		type: '%',
+		type: 'heatmap',
+		image: "/2026/climb-area-blue.png",
+		aspect_ratio: 1,
+		whiteboard_start: 0,
+		whiteboard_end: 12,
+		whiteboard_left: 35,
+		whiteboard_right: 72,
+		whiteboard_char: "A",
+		whiteboard_us: true,
 		fr:'Position d\'escalade en auto',
 		pt:'Posição de escalada no Auto',
 		zh_tw:'自動攀爬位置',
@@ -510,13 +523,19 @@ var statInfo={
 		he:'ציון דלק באוטומט',
 	},
 	auto_start:{
-		en: 'Start in Auto',
-		type: '%',
-		fr:'Démarrer en auto',
-		pt:'Iniciar no Auto',
-		zh_tw:'自動開始',
-		tr:'Otomatik Başlangıç',
-		he:'התחל באוטומט',
+		name: "Location where the robot starts",
+		type: "heatmap",
+		image: "/2025/start-area-blue.png",
+		aspect_ratio: 3.375,
+		whiteboard_start: 15.5,
+		whiteboard_end: 30.5,
+		whiteboard_char: "□",
+		whiteboard_us: true,
+		fr:'Lieu de départ du robot',
+		pt:'Local onde o robô começa',
+		zh_tw:'機器人啟動的位置',
+		tr:'Robotun başladığı yer',
+		he:'המיקום שבו הרובוט מתחיל',
 	},
 	auto_trench_depot_alliance_to_neutral:{
 		en: 'Trench (Depot Side) Alliance To Neutral in Auto',
@@ -690,7 +709,15 @@ var statInfo={
 	},
 	tele_climb_position:{
 		en: 'Climb Position in Teleop',
-		type: '%',
+		type: 'heatmap',
+		image: "/2026/climb-area-blue.png",
+		aspect_ratio: 1,
+		whiteboard_start: 0,
+		whiteboard_end: 12,
+		whiteboard_left: 35,
+		whiteboard_right: 72,
+		whiteboard_char: "T",
+		whiteboard_us: true,
 		fr:'Position d\'escalade en téléop',
 		pt:'Posição de escalada no Teleop',
 		zh_tw:'遙控攀爬位置',
@@ -1101,15 +1128,6 @@ var statInfo={
 		zh_tw:'攀爬等級',
 		tr:'Tırmanma Seviyesi',
 		he:'רמת טיפוס',
-	},
-	climb_position:{
-		en:'Climb Position',
-		type:'%',
-		fr:'Position d\'escalade',
-		pt:'Posição de Escalada',
-		zh_tw:'攀爬位置',
-		tr:'Tırmanma Pozisyonu',
-		he:'מיקום טיפוס',
 	},
 	collect_depot:{
 		en:'Collected Depot',
@@ -1588,6 +1606,34 @@ var statInfo={
 		tr:'Rakip Zamanı',
 		he:'זמן יריב',
 	},
+	auto_paths:{
+		name: "Auto Paths",
+		type: "pathlist",
+		aspect_ratio: .916,
+		whiteboard_start: 0,
+		whiteboard_end: 55,
+		whiteboard_us: true,
+		source: "pit",
+		fr:'Trajectoires automatiques',
+		pt:'Caminhos Automáticos',
+		zh_tw:'自動路徑',
+		tr:'Otomatik Yollar',
+		he:'נתיבים אוטומטיים',
+	},
+	shooting_locations:{
+		en:'Defendable Shooting Locations',
+		type: "heatmap",
+		aspect_ratio: .916,
+		whiteboard_start: 0,
+		whiteboard_end: 30,
+		whiteboard_us: false,
+		whiteboard_char: 'D',
+		fr:'Emplacements de tir défendables',
+		pt:'Locais de Tiro Defensáveis',
+		zh_tw:'可防守射擊位置',
+		tr:'Savunulabilir Atış Konumları',
+		he:'מיקומי ירי שניתן להגן עליהם',
+	},
 }
 
 var teamGraphs={
@@ -1697,6 +1743,15 @@ var whiteboardStats=[
 	"score",
 	"auto_score",
 	"tele_score",
+	"fuel_output",
+	"tele_alliance_time",
+	"tele_neutral_time",
+	"tele_opponent_time",
+	"shooting_locations",
+	"auto_climb_position",
+	"tele_climb_position",
+	"auto_start",
+	"auto_paths",
 ]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
