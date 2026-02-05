@@ -36,6 +36,17 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 		}
 	})
 
+	// Compute enum counts
+	Object.keys(statInfo).forEach(function(field){
+		if(statInfo[field]['type']=='enum' && statInfo[field]['values']){
+			var value = scout[field]||''
+			if (value){
+				var enumField = `${field}_${value}`
+				scout[enumField] = (scout[enumField]||0)+1
+			}
+		}
+	})
+
 	scout.auto_fuel_output = scout.auto_fuel_score + scout.auto_fuel_neutral_alliance_pass
 	scout.tele_fuel_output = scout.tele_fuel_score + scout.tele_fuel_alliance_dump + scout.tele_fuel_neutral_alliance_pass + scout.tele_fuel_opponent_alliance_pass + scout.tele_fuel_opponent_neutral_pass
 	scout.fuel_output = scout.auto_fuel_output + scout.tele_fuel_output
@@ -131,6 +142,14 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 			aggregate[set] = aggregate[set]||[]
 			aggregate[set].push(scout[field])
 		}
+		if(/^(enum)$/.test(statInfo[field]['type'])){
+			if(statInfo[field]['values']){
+				Object.keys(statInfo[field]['values']).forEach(function(value){
+					var enumField = `${field}_${value}`
+					aggregate[enumField] = (aggregate[enumField]||0)+(scout[enumField]||0)
+				})
+			}
+		}
 		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field] = aggregate[field]||scout[field]||0
 		if(/^text$/.test(statInfo[field]['type'])) aggregate[field] = (!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
 		if(/^heatmap$/.test(statInfo[field]['type'])) aggregate[field] += ((aggregate[field]&&scout[field])?" ":"")+scout[field]
@@ -139,9 +158,31 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 
 	aggregate.count = (aggregate.count||0)+1
 	aggregate.max_score = Math.max(aggregate.max_score||0,scout.score||0)
-	aggregate.min_score = Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score||0)
+	aggregate.min_score = Math.min(aggregate.min_score===undefined?9999:aggregate.min_score,scout.score||0)
+	aggregate.max_fuel_output = Math.max(aggregate.max_fuel_output||0,scout.fuel_output||0)
+	aggregate.max_tele_climb_level = Math.max(aggregate.max_tele_climb_level||0, scout.tele_climb_level||0)
 	aggregate.bump_percent = aggregate.bump / (aggregate.zone_change||1)
 	aggregate.trench_percent = aggregate.trench / (aggregate.zone_change||1)
+
+	// Aggregate the mode for each enum
+	Object.keys(statInfo).forEach(function(field){
+		if(statInfo[field]['type']=='enum' && statInfo[field]['values']){
+			var maxCount = 0
+			var mode = null
+			Object.keys(statInfo[field]['values']).forEach(function(value){
+				var enumField = `${field}_${value}`
+				var count = aggregate[enumField]||0
+				if(count!=0 && count >= maxCount){
+					maxCount = count
+					mode = value
+				}
+			})
+			if(mode !== null){
+				aggregate[`${field}_mode`] = mode
+			}
+		}
+	})
+
 	pit.auto_paths=[]
 	for (var i=1; i<=9; i++){
 		var path=pit[`auto_${i}_path`]
@@ -254,6 +295,51 @@ var statInfo={
 		zh_tw:'防禦',
 		tr:'Savunma',
 		he:'הגנה',
+	},
+	defense_bad:{
+		en: 'Bad Defense',
+		type: '%',
+		fr:'Mauvaise Défense',
+		pt:'Defesa Ruim',
+		zh_tw:'不好的防禦',
+		tr:'Kötü Savunma',
+		he:'הגנה גרועה',
+	},
+	defense_ineffective:{
+		en: 'Ineffective Defense',
+		type: '%',
+		fr:'Défense Inefficace',
+		pt:'Defesa Ineficaz',
+		zh_tw:'無效的防禦',
+		tr:'Etkisiz Savunma',
+		he:'הגנה לא יעילה',
+	},
+	defense_good:{
+		en: 'Good Defense',
+		type: '%',
+		fr:'Bonne Défense',
+		pt:'Defesa Boa',
+		zh_tw:'好的防禦',
+		tr:'İyi Savunma',
+		he:'הגנה טובה',
+	},
+	defense_great:{
+		en: 'Great Defense',
+		type: '%',
+		fr:'Excellente Défense',
+		pt:'Defesa Ótima',
+		zh_tw:'很好的防禦',
+		tr:'Harika Savunma',
+		he:'הגנה מעולה',
+	},
+	defense_mode:{
+		en: 'Most Common Defense Rating',
+		type: 'text',
+		fr:'Évaluation de la défense la plus courante',
+		pt:'Avaliação de defesa mais comum',
+		zh_tw:'最常見的防禦評級',
+		tr:'En Yaygın Savunma Değerlendirmesi',
+		he:'דירוג ההגנה הנפוץ ביותר',
 	},
 	fuel_to_alliance:{
 		en: 'Fuel To Alliance',
@@ -1526,22 +1612,40 @@ var statInfo={
 		he:'מיקומי ירי שניתן להגן עליהם',
 	},
 	bump_percent:{
-		en:'Bump Percent of Zone Crossings',
+		en:'Bump Zone Crossings',
 		type:'ratio',
-		fr:'Pourcentage de chocs des passages de zone',
-		pt:'Percentual de Impacto das Travessias de Zona',
-		zh_tw:'區域穿越碰撞百分比',
-		tr:'Bölge Geçişlerinin Çarpma Yüzdesi',
-		he:'אחוז התנגשויות של חציית אזורים',
+		fr:'Traversées de zone de bosses',
+		pt:'Travessias da Zona de Pancadas',
+		zh_tw:'衝擊區域穿越',
+		tr:'Çarpma Bölgesi Geçişleri',
+		he:'חציות אזור התנגשות',
 	},
 	trench_percent:{
-		en:'Trench Percent of Zone Crossings',
+		en:'Trench Zone Crossings',
 		type:'ratio',
-		fr:'Pourcentage de fossé des passages de zone',
-		pt:'Percentual de Trincheira das Travessias de Zona',
-		zh_tw:'區域穿越壕溝百分比',
-		tr:'Bölge Geçişlerinin Hendek Yüzdesi',
-		he:'אחוז תעלות של חציית אזורים',
+		fr:'Traversées de zone de tranchée',
+		pt:'Travessias da Zona de Trincheira',
+		zh_tw:'壕溝區域穿越',
+		tr:'Hendek Bölgesi Geçişleri',
+		he:'חציות אזור התעלה',
+	},
+	max_tele_climb_level:{
+		en:'Max Teleop Climb Level',
+		type:'minmax',
+		fr:'Niveau d\'escalade maximum en téléop',
+		pt:'Nível Máximo de Escalada no Teleop',
+		zh_tw:'遙控最大攀爬等級',
+		tr:'Maksimum Teleop Tırmanma Seviyesi',
+		he:'רמת טיפוס מקסימלית בטליאופ',
+	},
+	max_fuel_output:{
+		en:'Max Fuel Output to Target',
+		type:'minmax',
+		fr:'Sortie de carburant maximale vers la cible',
+		pt:'Máxima Saída de Combustível para o Alvo',
+		zh_tw:'最大燃料輸出',
+		tr:'Maksimum Yakıt Çıkışı',
+		he:'מקסימום פלט דלק',
 	},
 }
 
@@ -1654,6 +1758,7 @@ var whiteboardStats=[
 	"tele_score",
 	"fuel_output",
 	"trench_percent",
+	"max_tele_climb_level",
 	"tele_alliance_time",
 	"tele_neutral_time",
 	"tele_opponent_time",
@@ -1662,6 +1767,7 @@ var whiteboardStats=[
 	"tele_climb_position",
 	"auto_start",
 	"auto_paths",
+	"defense_mode"
 ]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1

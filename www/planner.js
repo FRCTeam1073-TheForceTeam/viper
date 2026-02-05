@@ -479,6 +479,7 @@ $(document).ready(function(){
 		}
 		if (stats[field] == null) return ""
 		if (statInfo[field].type == 'ratio') return Math.round(100 * (stats[field]))
+		if (statInfo[field].type == 'text') return stats[field].substring(0,4)
 		return stats[field]
 	}
 
