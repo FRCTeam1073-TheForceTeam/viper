@@ -31,7 +31,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 
 	// Convert percentage fields to 0/1 values
 	Object.keys(statInfo).forEach(function(field){
-		if(/^%$/.test(statInfo[field]['type'])){
+		if(/^%$/.test(statInfo[field].type)){
 			scout[field] = bool_1_0(scout[field])
 		}
 	})
@@ -69,12 +69,9 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.score = scout.auto_score + scout.tele_score
 
 	scout.auto_bump_depot_alliance = scout.auto_bump_depot_alliance_to_neutral + scout.auto_bump_depot_neutral_to_alliance
-	scout.auto_bump_depot_opponent = scout.auto_bump_depot_neutral_to_opponent + scout.auto_bump_depot_opponent_to_neutral
 	scout.auto_bump_outpost_alliance = scout.auto_bump_outpost_alliance_to_neutral + scout.auto_bump_outpost_neutral_to_alliance
-	scout.auto_bump_outpost_opponent = scout.auto_bump_outpost_neutral_to_opponent + scout.auto_bump_outpost_opponent_to_neutral
 	scout.auto_bump_alliance = scout.auto_bump_depot_alliance + scout.auto_bump_outpost_alliance
-	scout.auto_bump_opponent = scout.auto_bump_depot_opponent + scout.auto_bump_outpost_opponent
-	scout.auto_bump = scout.auto_bump_alliance + scout.auto_bump_opponent
+	scout.auto_bump = scout.auto_bump_alliance
 
 	scout.tele_bump_depot_alliance = scout.tele_bump_depot_alliance_to_neutral + scout.tele_bump_depot_neutral_to_alliance
 	scout.tele_bump_depot_opponent = scout.tele_bump_depot_neutral_to_opponent + scout.tele_bump_depot_opponent_to_neutral
@@ -85,19 +82,13 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.tele_bump = scout.tele_bump_alliance + scout.tele_bump_opponent
 
 	scout.bump_depot_alliance = scout.auto_bump_depot_alliance + scout.tele_bump_depot_alliance
-	scout.bump_depot_opponent = scout.auto_bump_depot_opponent + scout.tele_bump_depot_opponent
 	scout.bump_outpost_alliance = scout.auto_bump_outpost_alliance + scout.tele_bump_outpost_alliance
-	scout.bump_outpost_opponent = scout.auto_bump_outpost_opponent + scout.tele_bump_outpost_opponent
 	scout.bump_alliance = scout.auto_bump_alliance + scout.tele_bump_alliance
-	scout.bump_opponent = scout.auto_bump_opponent + scout.tele_bump_opponent
 
 	scout.auto_trench_depot_alliance = scout.auto_trench_depot_alliance_to_neutral + scout.auto_trench_depot_neutral_to_alliance
-	scout.auto_trench_depot_opponent = scout.auto_trench_depot_neutral_to_opponent + scout.auto_trench_depot_opponent_to_neutral
 	scout.auto_trench_outpost_alliance = scout.auto_trench_outpost_alliance_to_neutral + scout.auto_trench_outpost_neutral_to_alliance
-	scout.auto_trench_outpost_opponent = scout.auto_trench_outpost_neutral_to_opponent + scout.auto_trench_outpost_opponent_to_neutral
 	scout.auto_trench_alliance = scout.auto_trench_depot_alliance + scout.auto_trench_outpost_alliance
-	scout.auto_trench_opponent = scout.auto_trench_depot_opponent + scout.auto_trench_outpost_opponent
-	scout.auto_trench = scout.auto_trench_alliance + scout.auto_trench_opponent
+	scout.auto_trench = scout.auto_trench_alliance
 
 	scout.tele_trench_depot_alliance = scout.tele_trench_depot_alliance_to_neutral + scout.tele_trench_depot_neutral_to_alliance
 	scout.tele_trench_depot_opponent = scout.tele_trench_depot_neutral_to_opponent + scout.tele_trench_depot_opponent_to_neutral
@@ -108,19 +99,17 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.tele_trench = scout.tele_trench_alliance + scout.tele_trench_opponent
 
 	scout.trench_depot_alliance = scout.auto_trench_depot_alliance + scout.tele_trench_depot_alliance
-	scout.trench_depot_opponent = scout.auto_trench_depot_opponent + scout.tele_trench_depot_opponent
+	scout.trench_depot_opponent = scout.tele_trench_depot_opponent
 	scout.trench_outpost_alliance = scout.auto_trench_outpost_alliance + scout.tele_trench_outpost_alliance
-	scout.trench_outpost_opponent = scout.auto_trench_outpost_opponent + scout.tele_trench_outpost_opponent
+	scout.trench_outpost_opponent = scout.tele_trench_outpost_opponent
 	scout.trench_alliance = scout.auto_trench_alliance + scout.tele_trench_alliance
-	scout.trench_opponent = scout.auto_trench_opponent + scout.tele_trench_opponent
 
 	scout.bump = scout.auto_bump + scout.tele_bump
 	scout.trench = scout.auto_trench + scout.tele_trench
 	scout.zone_change = scout.bump + scout.trench
 
 	scout.auto_to_alliance = scout.auto_bump_depot_neutral_to_alliance + scout.auto_bump_outpost_neutral_to_alliance + scout.auto_trench_depot_neutral_to_alliance + scout.auto_trench_outpost_neutral_to_alliance
-	scout.auto_to_neutral = scout.auto_bump_depot_alliance_to_neutral + scout.auto_bump_outpost_alliance_to_neutral + scout.auto_trench_depot_alliance_to_neutral + scout.auto_trench_outpost_alliance_to_neutral + scout.auto_bump_depot_opponent_to_neutral + scout.auto_bump_outpost_opponent_to_neutral + scout.auto_trench_depot_opponent_to_neutral + scout.auto_trench_outpost_opponent_to_neutral
-	scout.auto_to_opponent = scout.auto_bump_depot_neutral_to_opponent + scout.auto_bump_outpost_neutral_to_opponent + scout.auto_trench_depot_neutral_to_opponent + scout.auto_trench_outpost_neutral_to_opponent + scout.auto_bump_depot_alliance_to_opponent + scout.auto_bump_outpost_alliance_to_opponent + scout.auto_trench_depot_alliance_to_opponent + scout.auto_trench_outpost_alliance_to_opponent
+	scout.auto_to_neutral = scout.auto_bump_depot_alliance_to_neutral + scout.auto_bump_outpost_alliance_to_neutral + scout.auto_trench_depot_alliance_to_neutral + scout.auto_trench_outpost_alliance_to_neutral
 
 	scout.tele_to_alliance = scout.tele_bump_depot_neutral_to_alliance + scout.tele_bump_outpost_neutral_to_alliance + scout.tele_trench_depot_neutral_to_alliance + scout.tele_trench_outpost_neutral_to_alliance
 	scout.tele_to_neutral = scout.tele_bump_depot_alliance_to_neutral + scout.tele_bump_outpost_alliance_to_neutral + scout.tele_trench_depot_alliance_to_neutral + scout.tele_trench_outpost_alliance_to_neutral + scout.tele_bump_depot_opponent_to_neutral + scout.tele_bump_outpost_opponent_to_neutral + scout.tele_trench_depot_opponent_to_neutral + scout.tele_trench_outpost_opponent_to_neutral
@@ -128,7 +117,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 
 	scout.to_alliance = scout.auto_to_alliance + scout.tele_to_alliance
 	scout.to_neutral = scout.auto_to_neutral + scout.tele_to_neutral
-	scout.to_opponent = scout.auto_to_opponent + scout.tele_to_opponent
+	scout.to_opponent = scout.tele_to_opponent
 
 	scout.alliance_time = scout.auto_alliance_time + scout.tele_alliance_time
 	scout.neutral_time = scout.auto_neutral_time + scout.tele_neutral_time
@@ -151,7 +140,8 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.count = (aggregate.count||0)+1
 	aggregate.max_score = Math.max(aggregate.max_score||0,scout.score||0)
 	aggregate.min_score = Math.min(aggregate.min_score===undefined?999:aggregate.min_score,scout.score||0)
-
+	aggregate.bump_percent = aggregate.bump / (aggregate.zone_change||1)
+	aggregate.trench_percent = aggregate.trench / (aggregate.zone_change||1)
 	pit.auto_paths=[]
 	for (var i=1; i<=9; i++){
 		var path=pit[`auto_${i}_path`]
@@ -877,24 +867,6 @@ var statInfo={
 		tr:'Otomatik İttifak Vuruşu (Depo Tarafı)',
 		he:'דחיפת ברית דיפו באוטומט',
 	},
-	auto_bump_depot_opponent:{
-		en:'Bump (Depot Side) Opponent in Auto',
-		type:'%',
-		fr:'Pousser l\'adversaire (dépôt) en auto',
-		pt:'Empurrar Oponente (Lado Depósito) no Auto',
-		zh_tw:'自動撞擊對手(倉庫側)',
-		tr:'Otomatik Rakip Vuruşu (Depo Tarafı)',
-		he:'דחיפת יריב דיפו באוטומט',
-	},
-	auto_bump_opponent:{
-		en:'Bump Opponent in Auto',
-		type:'%',
-		fr:'Pousser l\'adversaire en auto',
-		pt:'Empurrar Oponente no Auto',
-		zh_tw:'自動撞擊對手',
-		tr:'Otomatik Rakip Vuruşu',
-		he:'דחיפת יריב באוטומט',
-	},
 	auto_bump_outpost_alliance:{
 		en:'Bump (Outpost Side) Alliance in Auto',
 		type:'%',
@@ -903,15 +875,6 @@ var statInfo={
 		zh_tw:'自動撞擊聯盟(前哨側)',
 		tr:'Otomatik İttifak Vuruşu (Karakol Tarafı)',
 		he:'דחיפת ברית חוסן באוטומט',
-	},
-	auto_bump_outpost_opponent:{
-		en:'Bump (Outpost Side) Opponent in Auto',
-		type:'%',
-		fr:'Pousser l\'adversaire (avant-poste) en auto',
-		pt:'Empurrar Oponente (Lado Posto Avançado) no Auto',
-		zh_tw:'自動撞擊對手(前哨側)',
-		tr:'Otomatik Rakip Vuruşu (Karakol Tarafı)',
-		he:'דחיפת יריב חוסן באוטומט',
 	},
 	auto_score:{
 		en:'Score in Auto',
@@ -939,15 +902,6 @@ var statInfo={
 		zh_tw:'自動進入中立',
 		tr:'Otomatik Nötr Hedefi',
 		he:'לנייטרלי באוטומט',
-	},
-	auto_to_opponent:{
-		en:'To Opponent in Auto',
-		type:'%',
-		fr:'Vers l\'adversaire en auto',
-		pt:'Para o Oponente no Auto',
-		zh_tw:'自動進入對手',
-		tr:'Otomatik Rakip Hedefi',
-		he:'ליריב באוטומט',
 	},
 	auto_tower_score:{
 		en:'Tower Score in Auto',
@@ -985,24 +939,6 @@ var statInfo={
 		tr:'Otomatik İttifak Hendeği (Depo Tarafı)',
 		he:'תעלת ברית דיפו באוטומט',
 	},
-	auto_trench_depot_opponent:{
-		en:'Trench (Depot Side) Opponent in Auto',
-		type:'%',
-		fr:'Tranchée adversaire (dépôt) en auto',
-		pt:'Trincheira Oponente (Lado Depósito) no Auto',
-		zh_tw:'自動壕溝對手(倉庫側)',
-		tr:'Otomatik Rakip Hendeği (Depo Tarafı)',
-		he:'תעלת יריב דיפו באוטומט',
-	},
-	auto_trench_opponent:{
-		en:'Trench Opponent in Auto',
-		type:'%',
-		fr:'Tranchée adversaire en auto',
-		pt:'Trincheira Oponente no Auto',
-		zh_tw:'自動壕溝對手',
-		tr:'Otomatik Rakip Hendeği',
-		he:'תעלת יריב באוטומט',
-	},
 	auto_trench_outpost_alliance:{
 		en:'Trench (Outpost Side) Alliance in Auto',
 		type:'%',
@@ -1011,15 +947,6 @@ var statInfo={
 		zh_tw:'自動壕溝聯盟(前哨側)',
 		tr:'Otomatik İttifak Hendeği (Karakol Tarafı)',
 		he:'תעלת ברית חוסן באוטומט',
-	},
-	auto_trench_outpost_opponent:{
-		en:'Trench (Outpost Side) Opponent in Auto',
-		type:'%',
-		fr:'Tranchée adversaire (avant-poste) en auto',
-		pt:'Trincheira Oponente (Lado Posto Avançado) no Auto',
-		zh_tw:'自動壕溝對手(前哨側)',
-		tr:'Otomatik Rakip Hendeği (Karakol Tarafı)',
-		he:'תעלת יריב חוסן באוטומט',
 	},
 	bump:{
 		en:'Bump',
@@ -1066,24 +993,6 @@ var statInfo={
 		tr:'Nötr Vuruşunu İttifak Yap (Depo Tarafı)',
 		he:'דחיפת נייטרלי לברית דיפו',
 	},
-	bump_depot_opponent:{
-		en:'Bump (Depot Side) Opponent',
-		type:'%',
-		fr:'Pousser l\'adversaire (dépôt)',
-		pt:'Empurrar Oponente (Lado Depósito)',
-		zh_tw:'撞擊對手(倉庫側)',
-		tr:'Rakip Vuruşu (Depo Tarafı)',
-		he:'דחיפת יריב דיפו',
-	},
-	bump_opponent:{
-		en:'Bump Opponent',
-		type:'%',
-		fr:'Pousser l\'adversaire',
-		pt:'Empurrar Oponente',
-		zh_tw:'撞擊對手',
-		tr:'Rakip Vuruşu',
-		he:'דחיפת יריב',
-	},
 	bump_outpost_alliance:{
 		en:'Bump (Outpost Side) Alliance',
 		type:'%',
@@ -1110,15 +1019,6 @@ var statInfo={
 		zh_tw:'撞擊中立至聯盟(前哨側)',
 		tr:'Nötr Vuruşunu İttifak Yap (Karakol Tarafı)',
 		he:'דחיפת נייטרלי לברית חוסן',
-	},
-	bump_outpost_opponent:{
-		en:'Bump (Outpost Side) Opponent',
-		type:'%',
-		fr:'Pousser l\'adversaire (avant-poste)',
-		pt:'Empurrar Oponente (Lado Posto Avançado)',
-		zh_tw:'撞擊對手(前哨側)',
-		tr:'Rakip Vuruşu (Karakol Tarafı)',
-		he:'דחיפת יריב חוסן',
 	},
 	climb_level:{
 		en:'Climb Level',
@@ -1480,15 +1380,6 @@ var statInfo={
 		tr:'Rakip Hendeği (Depo Tarafı)',
 		he:'תעלת יריב דיפו',
 	},
-	trench_opponent:{
-		en:'Trench Opponent',
-		type:'%',
-		fr:'Tranchée adversaire',
-		pt:'Trincheira Oponente',
-		zh_tw:'壕溝對手',
-		tr:'Rakip Hendeği',
-		he:'תעלת יריב',
-	},
 	trench_outpost_alliance:{
 		en:'Trench (Outpost Side) Alliance',
 		type:'%',
@@ -1634,6 +1525,24 @@ var statInfo={
 		tr:'Savunulabilir Atış Konumları',
 		he:'מיקומי ירי שניתן להגן עליהם',
 	},
+	bump_percent:{
+		en:'Bump Percent of Zone Crossings',
+		type:'ratio',
+		fr:'Pourcentage de chocs des passages de zone',
+		pt:'Percentual de Impacto das Travessias de Zona',
+		zh_tw:'區域穿越碰撞百分比',
+		tr:'Bölge Geçişlerinin Çarpma Yüzdesi',
+		he:'אחוז התנגשויות של חציית אזורים',
+	},
+	trench_percent:{
+		en:'Trench Percent of Zone Crossings',
+		type:'ratio',
+		fr:'Pourcentage de fossé des passages de zone',
+		pt:'Percentual de Trincheira das Travessias de Zona',
+		zh_tw:'區域穿越壕溝百分比',
+		tr:'Bölge Geçişlerinin Hendek Yüzdesi',
+		he:'אחוז תעלות של חציית אזורים',
+	},
 }
 
 var teamGraphs={
@@ -1744,6 +1653,7 @@ var whiteboardStats=[
 	"auto_score",
 	"tele_score",
 	"fuel_output",
+	"trench_percent",
 	"tele_alliance_time",
 	"tele_neutral_time",
 	"tele_opponent_time",
