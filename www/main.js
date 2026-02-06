@@ -556,7 +556,7 @@ function inIframe(){
 	}
 }
 
-window.console=(function (oc){
+window.console=(function(oc){
 	if (!oc)oc={}
 	return{
 		history:{
@@ -566,7 +566,7 @@ window.console=(function (oc){
 			error: [],
 		},
 		x:function(l,a){
-			$('#error-logs-link').parent().show()
+			$('#error-logs-link').closest('li').show()
 			$('#hamburger').addClass('error').removeClass('show-only-when-connected')
 			this.history[l].push(a)
 			oc.hasOwnProperty(l)&&oc[l].apply(oc,a)
