@@ -855,22 +855,20 @@ $(document).ready(function(){
 			var row = $($('template#matchRow').html()),
 			redPrediction = 0, bluePrediction=0,
 			redScouting = 0, blueScouting=0,
-			isRedScouted = true, isBlueScouted = true
+			isRedScouted = false, isBlueScouted = false
 			if ("ftc"==eventCompetition) row.find('.noftc').hide()
 			BOT_POSITIONS.forEach(pos=>{
 				var scouted=eventStatsByMatchTeam[`${match.Match}-${match[pos]}`]||0,
 				isScouted=((typeof scouted)=='object')
 				if(/^R/.test(pos)){
-					if (!isScouted){
-						isRedScouted=false
-					} else {
+					if (isScouted){
+						isRedScouted=true
 						redScouting += scouted.score||0
 					}
 					redPrediction += getScore(eventStatsByTeam, match[pos])
 				} else {
-					if (!isScouted){
-						isBlueScouted=false
-					} else {
+					if (isScouted){
+						isBlueScouted=true
 						blueScouting += scouted.score||0
 					}
 					bluePrediction += getScore(eventStatsByTeam, match[pos])

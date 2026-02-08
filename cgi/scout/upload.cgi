@@ -84,6 +84,7 @@ for my $param ($cgi->param){
 			$db->upsert('images', $imageData);
 			$db->commit();
 		} else {
+			mkdir "../data/$season" unless -d "../data/$season";
 			my $teamPicFile = "../data/$season/$photo.jpg";
 			open my $fh, '>:raw', $teamPicFile or die;
 			print $fh $decodedImage;

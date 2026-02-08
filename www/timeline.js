@@ -60,11 +60,10 @@ function drawTimeline(canvas, data){
 		ctx.font = rowHeight/1.5 +"px sans-serif"
 		ctx.lineWidth = rowHeight/12
 		row.events.forEach(event=>{
-			var conf = data.points[event.event]||{}
-			ctx.strokeStyle = conf.outline||"gray"
-			ctx.fillStyle = conf.fill||"gray"
-			ctx.strokeText(conf.stamp||"?", getX(event.time), rowMid)
-			ctx.fillText(conf.stamp||"?", getX(event.time), rowMid)
+			ctx.strokeStyle = event.outline||"gray"
+			ctx.fillStyle = event.fill||"gray"
+			ctx.strokeText(event.stamp||"?", getX(event.time), rowMid)
+			ctx.fillText(event.stamp||"?", getX(event.time), rowMid)
 		})
 
 		// Match name
