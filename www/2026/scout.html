@@ -115,10 +115,13 @@
 				<div id=start-area class=orient-rotate><div class=robot-position id=robot-starting-position></div></div>
 			</div>
 			<div class="pre-match-right">
-				<button class=showInstructions data-i18n=instructions></button>
+				<div class=brief-instructions>
+					<p data-i18n=brief_instructions></p>
+					<button class='showInstructions full' data-i18n=full_instructions></button>
+					<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+				</div>
 				<label><input type=checkbox name=no_show value=1><span data-i18n=no_show></span></label>
-				<button class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
-				<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+				<button class=tab-button data-content=auto data-i18n=proceed_auto_button></button><
 			</div>
 		</div>
 		<input id=auto-start-input type=hidden name=auto_start>

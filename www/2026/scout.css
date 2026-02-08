@@ -49,6 +49,7 @@ td{text-align:left;padding:0.2em 0.5em}
 	.tabs{font-size:80%}
 	.field-actions{max-height:55vh}
 }
+.brief-instructions{max-width:15em}
 .prematch{position:relative}
 .kebab-menu{position:absolute;top:0;right:0;z-index:100}
 .kebab-button{background:none;border:none;font-size:1.5em;padding:0.5em;cursor:pointer;color:inherit}

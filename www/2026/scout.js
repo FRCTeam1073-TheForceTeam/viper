@@ -1,6 +1,22 @@
 "use strict"
 
 addI18n({
+	brief_instructions:{
+		en:'Scout fuel shot, bulldozed, or placed, but not misses. Track fuel target. Record which zone the robot is in. Mark depot and outpost collection in auto. Click climb level in auto and teleop.',
+		he:'סקור דלק שנורה, בולדוזר, או הוצב, אך לא טעויות. עקוב אחר יעד הדלק. רשום באיזה אזור הרובוט נמצא. סמן אוסף מחסנים ו-outpost בחודש אוגוסט. לחץ על רמת טיפוס בחודש אוגוסט וטלאופ.',
+		tr:'Yakıtı ateşlenen, buldozer veya yerleştirilen, ancak özlü değildir. Yakıt hedefini takip edin. Robotun hangi alanda olduğunu kaydedin. Oto\'da depo ve ileri görev koleksiyonunu işaretleyin. Oto\'da ve teleop\'ta tırmanma seviyesine tıklayın.',
+		zh_tw:'偵查燃料射擊、推土或放置，但不是錯誤。追蹤燃料目標。記錄機器人所在的區域。在自動中標記倉庫和前哨站收集。在自動和遠程操作中點擊攀爬級別。',
+		fr:'Scout carburant tiré, bulldozé ou placé, mais pas des ratés. Suivez la cible de carburant. Enregistrez dans quelle zone se trouve le robot. Marquez la collecte du dépôt et du poste avancé en auto. Cliquez sur le niveau de grimpe en auto et en téléopération.',
+		pt:'Scout de combustível atirado, empurrado com escavadeira ou colocado, mas não erros. Acompanhe o alvo de combustível. Registre em qual zona o robô está. Marque a coleta de depósito e avançado em automático. Clique no nível de escalada em automático e teleop.',
+	},
+	full_instructions:{
+		en:'Full Instructions',
+		he:'הוראות מלאות',
+		tr:'Tam Talimatlar',
+		zh_tw:'完整說明',
+		fr:'Instructions complètes',
+		pt:'Instruções completas',
+	},
 	timeline_value_header:{
 		en:'Value',
 		he:'ערך',
