@@ -307,7 +307,7 @@ function showGraphs(matchList, matchNames){
 				return (el[statName]||"")
 			}))
 		} else if (sections[section].graph=='timeline'){
-			var height = (matchList.length)*30 + "px",
+			var height = ((matchList.length)*55+20) + "px",
 			chart = $('<canvas>').css('width', Math.max($('#stats').width()-100,1150)).css('max-height',height).css('height',height),
 			data = {
 				timelines: [],
@@ -318,18 +318,21 @@ function showGraphs(matchList, matchNames){
 				for (var k=0; k<matchList.length; k++){
 					var events = []
 					matchList[k][field].split(" ").forEach(t=>{
-						var pair = t.split(/:/),
-						time = parseInt(pair[0]),
-						field = pair[1]||"",
-						info = statInfo[field]||{name:field}
-						data.points[translate(info.name)] = {
-							stamp: info.timeline_stamp,
-							fill: info.timeline_fill,
-							outline: info.timeline_outline
-						}
+						var [time, field, value]=t.split(/:/)
+						time=parseInt(time)
+						field||=""
+						var info=statInfo[field]||{name:field},
+						name=translate(field),
+						stamp=info.timeline_stamp
+						value=value||"1"
+						if (value!="1") name+=` (${value})`
+						if (typeof stamp==="object")stamp=stamp[value]
 						events.push({
 							time: time,
-							event: translate(info.name)
+							event: name,
+							stamp: stamp,
+							fill: info.timeline_fill,
+							outline: info.timeline_outline,
 						})
 					})
 					data.timelines.push({
