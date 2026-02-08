@@ -1,4 +1,4 @@
-#scouting{max-width:30em;margin:0 auto}
+#scouting{max-width:1080px;margin:0 auto}
 html{padding:0}
 #nextButtons{margin-bottom:50vh}
 #select-bot button{font-size:100%}
@@ -19,14 +19,16 @@ html{padding:0}
 .blueTeam #shooting-locations{background:url(shooting-locations-blue.png) no-repeat center center / 100% 100%}
 .redTeam #shooting-locations{background:url(shooting-locations-red.png) no-repeat center center / 100% 100%}
 #auto-paths {min-width:10em;width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('auto-area-blue.png');background-size:cover}
-.field-actions{background:url(field.png) no-repeat center center;background-size:100%;aspect-ratio:1.875;width:100%;max-width:20em;margin:0 auto;position:relative;}
+.field-actions{background:url(field.png) no-repeat center center;background-size:100%;max-width:95vw;max-height:70vh;width:auto;height:100%;aspect-ratio:1.875;margin:0 auto;position:relative;}
 .blueTeam .field-actions{background-image:url(field-rotated.png)}
 .field-actions>*{position:absolute;width:7%;min-width:7%;max-width:7%;padding:0;border-radius:10%;aspect-ratio:1;z-index:2}
 .field-actions .robot{border:.25em solid var(--red-team-color);background:gray}
 .blueTeam .field-actions .robot{border-color:var(--blue-team-color)}
 html body .field-actions span,html body .field-actions img{display:block;width:100%;min-width:100%;max-width:100%;height:100%;border-radius:.1em;margin:0;padding:0}
 .target.active{background:var(--button-selected-bg-color)}
-.fuel{width:2em;height:2em;max-width:150px;max-height:150px;border-radius:50%;background:#f1ce03;font-size:300%}
+.fuel-container{display:block;width:fit-content;max-width:fit-content;margin:0;text-align:right;flex:0 0 auto}
+.fuel{width:2em;height:2em;max-width:2em;min-width:2em;padding:0;border:none;margin:0.1em;aspect-ratio:1;border-radius:50%;background:#f1ce03;font-size:300%;display:inline-block;box-sizing:border-box;line-height:1;flex:0 0 auto}
+.climb{font-size:250%;text-align:center;font-weight:bold;}
 td{text-align:left;padding:0.2em 0.5em}
 .timeline-table{width:100%}
 .counters-table{width:100%}
@@ -38,6 +40,13 @@ td{text-align:left;padding:0.2em 0.5em}
 @media (max-width:400px){
 	.tabs{font-size:80%}
 	.fuel{width:1.75em;height:1.75em;font-size:200%}
+}
+@media (max-height:800px) and (orientation:landscape){
+	.tabs{font-size:80%}
+}
+@media (max-height:600px) and (orientation:landscape){
+	.tabs{font-size:80%}
+	.field-actions{max-height:55vh}
 }
 .prematch{position:relative}
 .kebab-menu{position:absolute;top:0;right:0;z-index:100}
