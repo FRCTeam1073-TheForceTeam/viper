@@ -25,10 +25,11 @@ html{padding:0}
 .field-actions .robot{border:.25em solid var(--red-team-color);background:gray}
 .blueTeam .field-actions .robot{border-color:var(--blue-team-color)}
 html body .field-actions span,html body .field-actions img{display:block;width:100%;min-width:100%;max-width:100%;height:100%;border-radius:.1em;margin:0;padding:0}
-.target.active{background:var(--button-selected-bg-color)}
 .fuel-container{display:block;width:fit-content;max-width:fit-content;margin:0;text-align:right;flex:0 0 auto}
 .fuel{width:2em;height:2em;max-width:2em;min-width:2em;padding:0;border:none;margin:0.1em;aspect-ratio:1;border-radius:50%;background:#f1ce03;font-size:300%;display:inline-block;box-sizing:border-box;line-height:1;flex:0 0 auto}
 .climb{font-size:250%;text-align:center;font-weight:bold;}
+.target{border:none;background:url(fuel-target.png) no-repeat center center / 100% 100%;}
+.target.active{background:url(fuel-target-active.png) no-repeat center center / 100% 100%;}
 td{text-align:left;padding:0.2em 0.5em}
 .timeline-table{width:100%}
 .counters-table{width:100%}

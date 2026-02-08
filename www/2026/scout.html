@@ -21,6 +21,7 @@
 <link rel=preload as=image href=field-rotated.png>
 <link rel=preload as=image href=fuel-collect.png>
 <link rel=preload as=image href=fuel-target.png>
+<link rel=preload as=image href=fuel-target-active.png>
 <link rel=preload as=image href=arrow-left.png>
 <link rel=preload as=image href=arrow-right.png>
 <link rel=preload as=image href=start-area-blue.png>
@@ -132,14 +133,14 @@
 			<button class="alliance to-neutral orient-rotate" data-end=alliance data-side=outpost data-input=auto_bump_outpost_alliance_to_neutral style=right:26%;top:21%><img class=orient-rotate src=arrow-left.png></button>
 			<button class="alliance to-neutral orient-rotate" data-end=alliance data-side=outpost data-input=auto_trench_outpost_alliance_to_neutral style=right:26%;top:5%><img class=orient-rotate src=arrow-left.png></button>
 			<div class="alliance robot" data-end=alliance style=right:13%;top:43%></div>
-			<button class="alliance target target-hub" data-end=alliance data-input=auto_fuel_score style=right:26%;top:41%><img src=fuel-target.png></button>
+			<button class="alliance target target-hub" data-end=alliance data-input=auto_fuel_score style=right:26%;top:42%></button>
 
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=depot  data-input=auto_trench_depot_neutral_to_alliance style=right:26%;bottom:5%><img class=orient-rotate src=arrow-right.png></button>
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=depot data-input=auto_bump_depot_neutral_to_alliance style=right:26%;bottom:21%><img class=orient-rotate src=arrow-right.png></button>
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=outpost data-input=auto_bump_outpost_neutral_to_alliance style=right:26%;top:21%><img class=orient-rotate src=arrow-right.png></button>
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=outpost data-input=auto_trench_outpost_neutral_to_alliance style=right:26%;top:5%><img class=orient-rotate src=arrow-right.png></button>
 			<div class="neutral robot" data-end=alliance style=right:46.5%;top:43%></div>
-			<button class="neutral target target-alliance" data-end=alliance data-input=auto_fuel_neutral_alliance_pass style=right:13%;bottom:5%><img src=fuel-target.png></button>
+			<button class="neutral target target-alliance" data-end=alliance data-input=auto_fuel_neutral_alliance_pass style=right:13%;bottom:7%></button>
 
 			<label class=alliance data-end=alliance data-side=outpost style=right:0%;top:7%><input type=checkbox name=auto_collect_outpost value=1><span><img class=orient-rotate src=fuel-collect.png></span></label>
 			<label class=alliance data-end=alliance data-side=depot style=right:2%;bottom:22%><input type=checkbox name=auto_collect_depot value=1><span><img class=orient-rotate src=fuel-collect.png></span></label>
@@ -236,15 +237,15 @@
 			<button class="alliance to-neutral orient-rotate" data-end=alliance data-side=outpost data-input=tele_bump_outpost_alliance_to_neutral style=right:26%;top:21%><img class=orient-rotate src=arrow-left.png></button>
 			<button class="alliance to-neutral orient-rotate" data-end=alliance data-side=outpost data-input=tele_trench_outpost_alliance_to_neutral style=right:26%;top:5%><img class=orient-rotate src=arrow-left.png></button>
 			<div class="alliance robot" data-end=alliance style=right:13%;top:43%></div>
-			<button class="alliance target target-hub" data-end=alliance data-input=tele_fuel_score style=right:26%;top:41%><img src=fuel-target.png></button>
-			<button class="alliance target target-alliance" data-end=alliance data-input=tele_fuel_alliance_dump style=right:13%;bottom:5%><img src=fuel-target.png></button>
-			<button class="alliance target" data-end=alliance data-input=tele_fuel_outpost style=right:0%;top:4%><img src=fuel-target.png></button>
+			<button class="alliance target target-hub" data-end=alliance data-input=tele_fuel_score style=right:26%;top:42%></button>
+			<button class="alliance target target-alliance" data-end=alliance data-input=tele_fuel_alliance_dump style=right:13%;bottom:7%></button>
+			<button class="alliance target" data-end=alliance data-input=tele_fuel_outpost style=right:0%;top:6%></button>
 
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=depot data-input=tele_trench_depot_neutral_to_alliance style=right:26%;bottom:5%><img class=orient-rotate src=arrow-right.png></button>
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=depot data-input=tele_bump_depot_neutral_to_alliance style=right:26%;bottom:21%><img class=orient-rotate src=arrow-right.png></button>
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=outpost data-input=tele_bump_outpost_neutral_to_alliance style=right:26%;top:21%><img class=orient-rotate src=arrow-right.png></button>
 			<button class="neutral to-alliance orient-rotate" data-end=alliance data-side=outpost data-input=tele_trench_outpost_neutral_to_alliance style=right:26%;top:5%><img class=orient-rotate src=arrow-right.png></button>
-			<button class="neutral target target-alliance" data-end=alliance data-input=tele_fuel_neutral_alliance_pass style=right:13%;bottom:5%><img src=fuel-target.png></button>
+			<button class="neutral target target-alliance" data-end=alliance data-input=tele_fuel_neutral_alliance_pass style=right:13%;bottom:7%></button>
 			<div class="neutral robot" data-end=alliance style=right:46.5%;top:43%></div>
 
 			<button class="neutral to-opponent orient-rotate" data-end=opponent data-side=outpost data-input=tele_trench_outpost_neutral_to_opponent style=left:26%;bottom:5%><img class=orient-rotate src=arrow-left.png></button>
@@ -257,8 +258,8 @@
 			<button class="opponent to-neutral orient-rotate" data-end=opponent data-side=depot data-input=tele_bump_depot_opponent_to_neutral style=left:26%;top:21%><img class=orient-rotate src=arrow-right.png></button>
 			<button class="opponent to-neutral orient-rotate" data-end=opponent data-side=depot data-input=tele_trench_depot_opponent_to_neutral style=left:26%;top:5%><img class=orient-rotate src=arrow-right.png></button>
 			<div class="opponent robot" data-end=opponent style=left:13%;top:43%></div>
-			<button class="opponent target target-alliance" data-end=alliance data-input=tele_fuel_opponent_alliance_pass style=right:13%;bottom:5%><img src=fuel-target.png></button>
-			<button class="opponent target" data-end=opponent data-input=tele_fuel_opponent_neutral_pass style=right:46.5%;bottom:5%><img src=fuel-target.png></button>
+			<button class="opponent target target-alliance" data-end=alliance data-input=tele_fuel_opponent_alliance_pass style=right:13%;bottom:7%></button>
+			<button class="opponent target" data-end=opponent data-input=tele_fuel_opponent_neutral_pass style=right:46.5%;bottom:7%></button>
 
 			<input class="alliance climb count num orient-rotate" data-end=alliance style=right:3%;top:40% type=text value=0 max=3 name=tele_climb_level size=1 readonly>
 		</div>
