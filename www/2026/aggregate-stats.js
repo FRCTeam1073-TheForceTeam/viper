@@ -1802,15 +1802,6 @@ var statInfo={
 }
 
 var teamGraphs={
-	"Match Timeline":{
-		graph:"timeline",
-		tr:'Maç Zaman Çizelgesi',
-		pt:'Linha do tempo da partida',
-		fr:'Chronologie du match',
-		he:'התאם ציר זמן',
-		zh_tw:'比賽時間表',
-		data:['timeline'],
-	},
 	"Game Stage":{
 		graph:"stacked",
 		tr:'Oyun Aşaması',
@@ -1828,6 +1819,15 @@ var teamGraphs={
 		he:'דלק למטרה',
 		zh_tw:'燃料到目標',
 		data:["auto_fuel_output","tele_fuel_output"],
+	},
+	"Match Timeline":{
+		graph:"timeline",
+		tr:'Maç Zaman Çizelgesi',
+		pt:'Linha do tempo da partida',
+		fr:'Chronologie du match',
+		he:'התאם ציר זמן',
+		zh_tw:'比賽時間表',
+		data:['timeline'],
 	},
 	"Fuel vs Climb":{
 		graph:"stacked",
