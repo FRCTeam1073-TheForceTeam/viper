@@ -164,6 +164,30 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.bump_percent = aggregate.bump / (aggregate.zone_change||1)
 	aggregate.trench_percent = aggregate.trench / (aggregate.zone_change||1)
 
+	for (var stage of ["auto","tele"]){
+		for (var out of [true,false]){
+			for (var trench of [true,false]){
+				for (var near of [true,false]){
+					for (var depot of [true,false]){
+						var to=near?(out?'neutral':'alliance'):(out?'opponent':'neutral'),
+						from=near?(out?'alliance':'neutral'):(out?'neutral':'opponent'),
+						f=`${stage}_${trench?'trench':'bump'}_${depot?'depot':'outpost'}_${from}_to_${to}`,
+						x=trench?7:30,
+						y=near?3:97,
+						fp=`${stage}_zone_change_${out?'out':'in'}`
+						if(near^depot)x=100-x
+						aggregate[fp]??=""
+						for(var i=0; i<aggregate[f]||0; i++){
+							var dx=Math.floor(Math.random()*11)-5,
+							dy=Math.floor(Math.random()*7)-3
+							aggregate[fp] += `${x+dx}x${y+dy} `
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// Aggregate the mode for each enum
 	Object.keys(statInfo).forEach(function(field){
 		if(statInfo[field]['type']=='enum' && statInfo[field]['values']){
@@ -1799,6 +1823,42 @@ var statInfo={
 		tr:'Maksimum Yakıt Çıkışı',
 		he:'מקסימום פלט דלק',
 	},
+	'auto_zone_change_out':{
+		en:'Zone Change Away in Auto',
+		type:'heatmap',
+		aspect_ratio: 1,
+		whiteboard_start: 26.5,
+		whiteboard_end: 73.5,
+		whiteboard_char:"O",
+		whiteboard_us: true,
+	},
+	'auto_zone_change_in':{
+		en:'Zone Change Back in Auto',
+		type:'heatmap',
+		aspect_ratio: 1,
+		whiteboard_start: 26.5,
+		whiteboard_end: 73.5,
+		whiteboard_char:"B",
+		whiteboard_us: true,
+	},
+	'tele_zone_change_in':{
+		en:'Zone Change Back in Teleop',
+		type:'heatmap',
+		aspect_ratio: 1,
+		whiteboard_start: 26.5,
+		whiteboard_end: 73.5,
+		whiteboard_char:"b",
+		whiteboard_us: false,
+	},
+	'tele_zone_change_out':{
+		en:'Zone Change Away in Teleop',
+		type:'heatmap',
+		aspect_ratio: 1,
+		whiteboard_start: 26.5,
+		whiteboard_end: 73.5,
+		whiteboard_char:"o",
+		whiteboard_us: false,
+	},
 }
 
 var teamGraphs={
@@ -1923,12 +1983,16 @@ var whiteboardStats=[
 	"tele_alliance_time",
 	"tele_neutral_time",
 	"tele_opponent_time",
-	"shooting_locations",
-	"auto_climb_position",
-	"tele_climb_position",
+	"defense_mode",
 	"auto_start",
 	"auto_paths",
-	"defense_mode"
+	"auto_climb_position",
+	"tele_climb_position",
+	'auto_zone_change_out',
+	'auto_zone_change_in',
+	'tele_zone_change_out',
+	'tele_zone_change_in',
+	"shooting_locations",
 ]
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
