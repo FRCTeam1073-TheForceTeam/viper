@@ -24,4 +24,5 @@ button.team{width:3em;height:1.5em;margin:0.25em}
 .footnote{font-size:75%}
 .icon-button{width:1.8em;height:1.8em}
 #field,#stats{position:absolute;left:0;top:0}
+#stats{max-height:98vh;overflow:auto}
 body{text-align:start}
