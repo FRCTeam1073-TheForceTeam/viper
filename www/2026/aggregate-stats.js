@@ -164,6 +164,15 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.bump_percent = aggregate.bump / (aggregate.zone_change||1)
 	aggregate.trench_percent = aggregate.trench / (aggregate.zone_change||1)
 
+	function randomPositions(aggregate, pos, count, x, y, xRadius, yRadius){
+		aggregate[pos]??=""
+		for(var i=0; i<count||0; i++){
+			var dx=Math.floor(Math.random()*(2*xRadius+1))-xRadius,
+			dy=Math.floor(Math.random()*(2*yRadius+1))-yRadius
+			aggregate[pos] += `${x+dx}x${y+dy} `
+		}
+	}
+
 	for (var stage of ["auto","tele"]){
 		for (var out of [true,false]){
 			for (var trench of [true,false]){
@@ -176,17 +185,14 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 						y=near?3:97,
 						fp=`${stage}_zone_change_${out?'out':'in'}`
 						if(near^depot)x=100-x
-						aggregate[fp]??=""
-						for(var i=0; i<aggregate[f]||0; i++){
-							var dx=Math.floor(Math.random()*11)-5,
-							dy=Math.floor(Math.random()*7)-3
-							aggregate[fp] += `${x+dx}x${y+dy} `
-						}
+						randomPositions(aggregate,fp,scout[f],x,y,5,3)
 					}
 				}
 			}
 		}
 	}
+	randomPositions(aggregate,'auto_collect_depot_position',scout.auto_collect_depot, 26, 8, 5, 3)
+	randomPositions(aggregate,'auto_collect_outpost_position',scout.auto_collect_outpost, 90, 6, 5, 3)
 
 	// Aggregate the mode for each enum
 	Object.keys(statInfo).forEach(function(field){
@@ -1831,6 +1837,11 @@ var statInfo={
 		whiteboard_end: 73.5,
 		whiteboard_char:"O",
 		whiteboard_us: true,
+		fr:'Changement de zone loin en Auto',
+		pt:'Mudança de zona longe em Auto',
+		zh_tw:'自動區域變化外',
+		tr:'Oto Modu Dış Bölge Değişimi',
+		he:'שינוי אזור הרחק באוטומט',
 	},
 	'auto_zone_change_in':{
 		en:'Zone Change Back in Auto',
@@ -1840,6 +1851,11 @@ var statInfo={
 		whiteboard_end: 73.5,
 		whiteboard_char:"B",
 		whiteboard_us: true,
+		fr:'Changement de zone retour en Auto',
+		pt:'Mudança de zona de volta em Auto',
+		zh_tw:'自動區域變化回',
+		tr:'Oto Modu İç Bölge Değişimi',
+		he:'שינוי אזור חזרה באוטומט',
 	},
 	'tele_zone_change_in':{
 		en:'Zone Change Back in Teleop',
@@ -1849,6 +1865,11 @@ var statInfo={
 		whiteboard_end: 73.5,
 		whiteboard_char:"b",
 		whiteboard_us: false,
+		fr:'Changement de zone retour en Téléop',
+		pt:'Mudança de zona de volta em Teleop',
+		zh_tw:'遙控區域變化回',
+		tr:'Teleop İç Bölge Değişimi',
+		he:'שינוי אזור חזרה בטליאופ',
 	},
 	'tele_zone_change_out':{
 		en:'Zone Change Away in Teleop',
@@ -1858,6 +1879,39 @@ var statInfo={
 		whiteboard_end: 73.5,
 		whiteboard_char:"o",
 		whiteboard_us: false,
+		fr:'Changement de zone loin en Téléop',
+		pt:'Mudança de zona longe em Teleop',
+		zh_tw:'遙控區域變化外',
+		tr:'Teleop Dış Bölge Değişimi',
+		he:'שינוי אזור הרחק בטליאופ',
+	},
+	'auto_collect_depot_position':{
+		en:'Collect from Depot in Auto',
+		type:'heatmap',
+		aspect_ratio: 1,
+		whiteboard_start: 0,
+		whiteboard_end: 25,
+		whiteboard_char:"E",
+		whiteboard_us: true,
+		fr:'Collecte du dépôt en Auto',
+		pt:'Coleta do Depósito em Auto',
+		zh_tw:'自動收集倉庫位置',
+		tr:'Oto Modda Depodan Topla',
+		he:'אוסף מחסן באוטומט',
+	},
+	'auto_collect_outpost_position':{
+		en:'Collect from Outpost in Auto',
+		type:'heatmap',
+		aspect_ratio: 1,
+		whiteboard_start: 0,
+		whiteboard_end: 25,
+		whiteboard_char:"U",
+		whiteboard_us: true,
+		fr:'Collecte de l\'avant-poste en Auto',
+		pt:'Coleta do Posto Avançado em Auto',
+		zh_tw:'自動收集前哨位置',
+		tr:'Oto Modda Karakoldan Topla',
+		he:'אוסף מוצב באוטומט',
 	},
 }
 
@@ -1988,6 +2042,8 @@ var whiteboardStats=[
 	"auto_paths",
 	"auto_climb_position",
 	"tele_climb_position",
+	'auto_collect_depot_position',
+	'auto_collect_outpost_position',
 	'auto_zone_change_out',
 	'auto_zone_change_in',
 	'tele_zone_change_out',
