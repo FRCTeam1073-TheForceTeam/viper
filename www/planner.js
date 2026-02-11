@@ -357,7 +357,11 @@ $(document).ready(function(){
 						var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
 						checkbox = $(`<input id="${field}_${team}" type=checkbox>`).change(drawOverlays)
 						if ((forUs==!$('#fieldBG').is('.rotated')) == (i<BOT_POSITIONS.length/2)) checkbox.attr('checked',"")
-						row.append($(`<td class="${color}TeamBG">`).append(checkbox))
+						row.append($(`<td class="${color}TeamBG">`).append(checkbox).click(function(e){
+							if ($(e.target).is('input[type=checkbox]')) return
+							const cb = $(this).find('input[type=checkbox]')
+							cb.prop('checked',!cb.prop('checked')).change()
+						}))
 					})
 					row.append($('<th>').text(name))
 					tbody.append(row)
