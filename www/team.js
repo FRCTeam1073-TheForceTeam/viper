@@ -235,8 +235,7 @@ function showTables(matchList, matchNames){
 			}
 			table.append(hr)
 			sections[section].data.forEach(function(field){
-				var info = statInfo[field]||{},
-				tr = $('<tr class=statRow>').append($('<th>').attr('data-i18n',field))
+				var tr = $('<tr class=statRow>').append($('<th>').attr('data-i18n',field))
 				matchList.forEach(function(match){
 					tr.append($('<td>').text(match[field]||0))
 				})
@@ -261,10 +260,10 @@ function displayHeatMap(parent,imageUrl,aspectRatio,max,data){
 	})
 	data.forEach(function(row){
 		(row.match(/[0-9]{1,2}x[0-9]{1,2}/g)||[]).forEach(function(point){
-			var m = point.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+			var [_,x,y] = point.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
 			points.push({
-				x:Math.round(parseInt(m[1]) * width / 100),
-				y:Math.round(parseInt(m[2]) * height / 100),
+				x:Math.round((parseInt(x))*width/100),
+				y:Math.round((parseInt(y))*height/100),
 				value:1
 			})
 		})

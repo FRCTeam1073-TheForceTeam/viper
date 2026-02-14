@@ -134,6 +134,35 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	scout.neutral_time = scout.auto_neutral_time + scout.tele_neutral_time
 	scout.opponent_time = scout.tele_opponent_time
 
+	function randomPositions(arr, pos, count, x, y, xRadius, yRadius){
+		for(var i=0; i<count||0; i++){
+			var dx=Math.floor(Math.random()*(2*xRadius+1))-xRadius,
+			dy=Math.floor(Math.random()*(2*yRadius+1))-yRadius
+			arr[pos] += `${x+dx}x${y+dy} `
+		}
+	}
+
+	for (var stage of ["auto","tele"]){
+		for (var out of [true,false]){
+			for (var trench of [true,false]){
+				for (var near of [true,false]){
+					for (var outpost of [true,false]){
+						var to=near?(out?'neutral':'alliance'):(out?'opponent':'neutral'),
+						from=near?(out?'alliance':'neutral'):(out?'neutral':'opponent'),
+						f=`${stage}_${trench?'trench':'bump'}_${outpost?'outpost':'depot'}_${from}_to_${to}`,
+						x=trench?7:30,
+						y=near?92:8,
+						fp=`${stage}_zone_change_${out?'out':'in'}`
+						if(near^outpost)x=100-x
+						randomPositions(scout,fp,scout[f],x,y,3,5)
+					}
+				}
+			}
+		}
+	}
+	randomPositions(scout,'auto_collect_position',scout.auto_collect_depot,26,92,3,5)
+	randomPositions(scout,'auto_collect_position',scout.auto_collect_outpost,92,94,3,5)
+
 	// Accumulate scout data into aggregate
 	Object.keys(statInfo).forEach(function(field){
 		if(/^(\%|avg|count)$/.test(statInfo[field]['type'])){
@@ -163,36 +192,6 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	aggregate.max_tele_climb_level = Math.max(aggregate.max_tele_climb_level||0, scout.tele_climb_level||0)
 	aggregate.bump_percent = aggregate.bump / (aggregate.zone_change||1)
 	aggregate.trench_percent = aggregate.trench / (aggregate.zone_change||1)
-
-	function randomPositions(aggregate, pos, count, x, y, xRadius, yRadius){
-		aggregate[pos]??=""
-		for(var i=0; i<count||0; i++){
-			var dx=Math.floor(Math.random()*(2*xRadius+1))-xRadius,
-			dy=Math.floor(Math.random()*(2*yRadius+1))-yRadius
-			aggregate[pos] += `${x+dx}x${y+dy} `
-		}
-	}
-
-	for (var stage of ["auto","tele"]){
-		for (var out of [true,false]){
-			for (var trench of [true,false]){
-				for (var near of [true,false]){
-					for (var depot of [true,false]){
-						var to=near?(out?'neutral':'alliance'):(out?'opponent':'neutral'),
-						from=near?(out?'alliance':'neutral'):(out?'neutral':'opponent'),
-						f=`${stage}_${trench?'trench':'bump'}_${depot?'depot':'outpost'}_${from}_to_${to}`,
-						x=trench?7:30,
-						y=near?3:97,
-						fp=`${stage}_zone_change_${out?'out':'in'}`
-						if(near^depot)x=100-x
-						randomPositions(aggregate,fp,scout[f],x,y,5,3)
-					}
-				}
-			}
-		}
-	}
-	randomPositions(aggregate,'auto_collect_depot_position',scout.auto_collect_depot, 26, 8, 5, 3)
-	randomPositions(aggregate,'auto_collect_outpost_position',scout.auto_collect_outpost, 90, 6, 5, 3)
 
 	// Aggregate the mode for each enum
 	Object.keys(statInfo).forEach(function(field){
@@ -593,14 +592,14 @@ var statInfo={
 	auto_climb_position:{
 		en:'Climb Position in Auto',
 		type:'heatmap',
-		image:"/2026/climb-area-blue.png",
-		aspect_ratio: 1,
-		whiteboard_start: 0,
-		whiteboard_end: 12,
-		whiteboard_left: 35,
-		whiteboard_right: 72,
+		image:"/2026/climb-area.png",
+		aspect_ratio:1.271,
+		whiteboard_start:12,
+		whiteboard_end:0,
+		whiteboard_left:35,
+		whiteboard_right:72,
 		whiteboard_char:"A",
-		whiteboard_us: true,
+		whiteboard_us:true,
 		fr:'Position d\'escalade en auto',
 		pt:'Posição de escalada no Auto',
 		zh_tw:'自動攀爬位置',
@@ -666,12 +665,12 @@ var statInfo={
 	auto_start:{
 		name:"Location where the robot starts",
 		type:"heatmap",
-		image:"/2025/start-area-blue.png",
-		aspect_ratio: 3.375,
-		whiteboard_start: 15.5,
-		whiteboard_end: 30.5,
+		image:"/2026/start-area.png",
+		aspect_ratio:2.644,
+		whiteboard_start:30.5,
+		whiteboard_end:15.5,
 		whiteboard_char:"□",
-		whiteboard_us: true,
+		whiteboard_us:true,
 		fr:'Lieu de départ du robot',
 		pt:'Local onde o robô começa',
 		zh_tw:'機器人啟動的位置',
@@ -890,14 +889,14 @@ var statInfo={
 	tele_climb_position:{
 		en:'Climb Position in Teleop',
 		type:'heatmap',
-		image:"/2026/climb-area-blue.png",
-		aspect_ratio: 1,
-		whiteboard_start: 0,
-		whiteboard_end: 12,
-		whiteboard_left: 35,
-		whiteboard_right: 72,
+		image:"/2026/climb-area.png",
+		aspect_ratio:1.271,
+		whiteboard_start:12,
+		whiteboard_end:0,
+		whiteboard_left:35,
+		whiteboard_right:72,
 		whiteboard_char:"T",
-		whiteboard_us: true,
+		whiteboard_us:true,
 		fr:'Position d\'escalade en téléop',
 		pt:'Posição de escalada no Teleop',
 		zh_tw:'遙控攀爬位置',
@@ -1768,10 +1767,10 @@ var statInfo={
 	auto_paths:{
 		name:"Auto Paths",
 		type:"pathlist",
-		aspect_ratio: .916,
-		whiteboard_start: 0,
-		whiteboard_end: 55,
-		whiteboard_us: true,
+		aspect_ratio:.916,
+		whiteboard_start:0,
+		whiteboard_end:55,
+		whiteboard_us:true,
 		source:"pit",
 		fr:'Trajectoires automatiques',
 		pt:'Caminhos Automáticos',
@@ -1782,10 +1781,11 @@ var statInfo={
 	shooting_locations:{
 		en:'Defendable Shooting Locations',
 		type:"heatmap",
-		aspect_ratio: .916,
-		whiteboard_start: 0,
-		whiteboard_end: 30,
-		whiteboard_us: false,
+		image:'2026/alliance-area.png',
+		aspect_ratio:1.55,
+		whiteboard_start:0,
+		whiteboard_end:30,
+		whiteboard_us:false,
 		whiteboard_char:'D',
 		fr:'Emplacements de tir défendables',
 		pt:'Locais de Tiro Defensáveis',
@@ -1832,11 +1832,12 @@ var statInfo={
 	'auto_zone_change_out':{
 		en:'Zone Change Away in Auto',
 		type:'heatmap',
-		aspect_ratio: 1,
-		whiteboard_start: 26.5,
-		whiteboard_end: 73.5,
+		image:'2026/zone-change.png',
+		aspect_ratio:.942,
+		whiteboard_start:76,
+		whiteboard_end:24,
 		whiteboard_char:"O",
-		whiteboard_us: true,
+		whiteboard_us:true,
 		fr:'Changement de zone loin en Auto',
 		pt:'Mudança de zona longe em Auto',
 		zh_tw:'自動區域變化外',
@@ -1846,11 +1847,12 @@ var statInfo={
 	'auto_zone_change_in':{
 		en:'Zone Change Back in Auto',
 		type:'heatmap',
-		aspect_ratio: 1,
-		whiteboard_start: 26.5,
-		whiteboard_end: 73.5,
+		image:'2026/zone-change.png',
+		aspect_ratio:.942,
+		whiteboard_start:76,
+		whiteboard_end:24,
 		whiteboard_char:"B",
-		whiteboard_us: true,
+		whiteboard_us:true,
 		fr:'Changement de zone retour en Auto',
 		pt:'Mudança de zona de volta em Auto',
 		zh_tw:'自動區域變化回',
@@ -1860,11 +1862,12 @@ var statInfo={
 	'tele_zone_change_in':{
 		en:'Zone Change Back in Teleop',
 		type:'heatmap',
-		aspect_ratio: 1,
-		whiteboard_start: 26.5,
-		whiteboard_end: 73.5,
+		image:'2026/zone-change.png',
+		aspect_ratio:.942,
+		whiteboard_start:76,
+		whiteboard_end:24,
 		whiteboard_char:"b",
-		whiteboard_us: false,
+		whiteboard_us:false,
 		fr:'Changement de zone retour en Téléop',
 		pt:'Mudança de zona de volta em Teleop',
 		zh_tw:'遙控區域變化回',
@@ -1874,44 +1877,27 @@ var statInfo={
 	'tele_zone_change_out':{
 		en:'Zone Change Away in Teleop',
 		type:'heatmap',
-		aspect_ratio: 1,
-		whiteboard_start: 26.5,
-		whiteboard_end: 73.5,
+		image:'2026/zone-change.png',
+		aspect_ratio:.942,
+		whiteboard_start:76,
+		whiteboard_end:24,
 		whiteboard_char:"o",
-		whiteboard_us: false,
+		whiteboard_us:false,
 		fr:'Changement de zone loin en Téléop',
 		pt:'Mudança de zona longe em Teleop',
 		zh_tw:'遙控區域變化外',
 		tr:'Teleop Dış Bölge Değişimi',
 		he:'שינוי אזור הרחק בטליאופ',
 	},
-	'auto_collect_depot_position':{
-		en:'Collect from Depot in Auto',
+	'auto_collect_position':{
+		en:'Collect in Auto',
 		type:'heatmap',
-		aspect_ratio: 1,
-		whiteboard_start: 0,
-		whiteboard_end: 25,
-		whiteboard_char:"E",
-		whiteboard_us: true,
-		fr:'Collecte du dépôt en Auto',
-		pt:'Coleta do Depósito em Auto',
-		zh_tw:'自動收集倉庫位置',
-		tr:'Oto Modda Depodan Topla',
-		he:'אוסף מחסן באוטומט',
-	},
-	'auto_collect_outpost_position':{
-		en:'Collect from Outpost in Auto',
-		type:'heatmap',
-		aspect_ratio: 1,
-		whiteboard_start: 0,
-		whiteboard_end: 25,
-		whiteboard_char:"U",
-		whiteboard_us: true,
-		fr:'Collecte de l\'avant-poste en Auto',
-		pt:'Coleta do Posto Avançado em Auto',
-		zh_tw:'自動收集前哨位置',
-		tr:'Oto Modda Karakoldan Topla',
-		he:'אוסף מוצב באוטומט',
+		image:'2026/alliance-area.png',
+		aspect_ratio:1.55,
+		whiteboard_start:25,
+		whiteboard_end:1,
+		whiteboard_char:"C",
+		whiteboard_us:true,
 	},
 }
 
@@ -1951,6 +1937,42 @@ var teamGraphs={
 		fr:'Carburant vs Escalade',
 		he:'דלק לעומת טיפוס',
 		zh_tw:'燃料與攀登',
+	},
+	"Start Location":{
+		graph:"heatmap",
+		data:['auto_start']
+	},
+	"Collect in Auto":{
+		graph:"heatmap",
+		data:['auto_collect_position']
+	},
+	"Zone Change Away in Auto":{
+		graph:"heatmap",
+		data:['auto_zone_change_out']
+	},
+	"Zone Change Back in Auto":{
+		graph:"heatmap",
+		data:['auto_zone_change_in']
+	},
+	"Climb Position in Auto":{
+		graph:"heatmap",
+		data:['auto_climb_position']
+	},
+	"Zone Change Away in Teleop":{
+		graph:"heatmap",
+		data:['tele_zone_change_out']
+	},
+	"Zone Change Back in Teleop":{
+		graph:"heatmap",
+		data:['tele_zone_change_in']
+	},
+	"Defendable Shooting Locations":{
+		graph:"heatmap",
+		data:['shooting_locations']
+	},
+	"Climb Position in Teleop":{
+		graph:"heatmap",
+		data:['tele_climb_position']
 	},
 }
 
@@ -2042,8 +2064,7 @@ var whiteboardStats=[
 	"auto_paths",
 	"auto_climb_position",
 	"tele_climb_position",
-	'auto_collect_depot_position',
-	'auto_collect_outpost_position',
+	"auto_collect_position",
 	'auto_zone_change_out',
 	'auto_zone_change_in',
 	'tele_zone_change_out',

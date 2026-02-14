@@ -1245,7 +1245,7 @@ $(document).ready(function(){
 	}
 
 	function moveFloaterToPercentCoordinates(mapImage, isRotated, coordinates, floatingImage){
-		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, true, true)
+		var c = getPixelCoordinates(mapImage, true, coordinates, floatingImage, false, true)
 		if (!c) return
 		floatingImage.style.left=c.x+"px"
 		floatingImage.style.top=c.y+"px"
@@ -1267,7 +1267,7 @@ $(document).ready(function(){
 		var mi = $('#start-area')[0],
 		fi = $('#robot-starting-position')[0],
 		ir = "none"==(""+getComputedStyle(mi).transform),
-		co = getPercentCoordinates(e,mi,ir,ir,true)
+		co = getPercentCoordinates(e,mi,!ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#auto-start-input').val(co)
 	}
@@ -1282,7 +1282,7 @@ $(document).ready(function(){
 		var mi = $('#auto-climb-area')[0],
 		fi = $('#robot-auto-climb-position')[0],
 		ir = "none"==(""+getComputedStyle(mi).transform),
-		co = getPercentCoordinates(e,mi,ir,ir,true)
+		co = getPercentCoordinates(e,mi,!ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#auto-climb-position-input').val(co)
 	}
@@ -1297,7 +1297,7 @@ $(document).ready(function(){
 		var mi = $('#tele-climb-area')[0],
 		fi = $('#robot-tele-climb-position')[0],
 		ir = "none"==(""+getComputedStyle(mi).transform),
-		co = getPercentCoordinates(e,mi,ir,ir,true)
+		co = getPercentCoordinates(e,mi,!ir,ir,true)
 		moveFloaterToPercentCoordinates(mi,ir,co,fi)
 		$('#tele-climb-position-input').val(co)
 	}
@@ -1324,7 +1324,7 @@ $(document).ready(function(){
 	$('#shooting-locations').click(function(e){
 		var mi = $('#shooting-locations')[0],
 		isRotated = "none"==(""+getComputedStyle(mi).transform),
-		co = getPercentCoordinates(e,mi,isRotated,isRotated,true),
+		co = getPercentCoordinates(e,mi,!isRotated,isRotated,true),
 		val = $('#shooting-locations-input').val()
 		if (val) val += " "
 		val += co

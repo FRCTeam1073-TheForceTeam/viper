@@ -326,7 +326,7 @@ $(document).ready(function(){
 			statsConfig.getStatsConfig().forEach(field=>{
 				var info = statInfo[field]||{},
 				name = translate(field)
-				if (!info.whiteboard_end){
+				if (info.whiteboard_end === undefined){
 					row = $("<tr>")
 					var best=info.good=='low'?99999999:-99999999,
 					worst=-best
@@ -376,7 +376,7 @@ $(document).ready(function(){
 		var teamList = $('.team-input').get().map(inp=>parseInt(inp.value))
 		statsConfig.getStatsConfig().forEach(field=>{
 			var	fieldInfo = statInfo[field]||{}
-			if (fieldInfo.whiteboard_end){
+			if (fieldInfo.whiteboard_end !== undefined){
 				teamList.forEach(function(team,i){
 					var enabled = $(`#${field}_${team}`).prop('checked'),
 					style = $(`#bot-${i}-pen`).attr('style').split(/[:;]/),
@@ -384,10 +384,10 @@ $(document).ready(function(){
 					isRed = i<BOT_POSITIONS.length/2,
 					atBottom = rotated != isRed,
 					char = fieldInfo.whiteboard_char||"&",
-					start = (fieldInfo.whiteboard_start||0)/100,
-					end = (fieldInfo.whiteboard_end||100)/100,
-					sLeft = (fieldInfo.whiteboard_left||0)/100,
-					sRight = (fieldInfo.whiteboard_right||100)/100,
+					start = (fieldInfo.whiteboard_start??0)/100,
+					end = (fieldInfo.whiteboard_end??100)/100,
+					sLeft = (fieldInfo.whiteboard_left??0)/100,
+					sRight = (fieldInfo.whiteboard_right??100)/100,
 					invert = !!fieldInfo.whiteboard_invert,
 					height = end - start,
 					width = sRight - sLeft,
