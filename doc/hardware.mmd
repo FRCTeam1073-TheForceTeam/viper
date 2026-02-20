@@ -1,0 +1,76 @@
+graph LR
+    Battery[Battery - USB Power Bank]
+    OnOffSwitch[USB On/Off Switch]
+    Splitter[3-Way USB Splitter]
+    Router[Network Router]
+    ServerUSBDongle[Micro-USB Ethernet Dongle]
+    Switch[Network Switch]
+    Server[Viper Server - Raspberry Pi Zero W]
+    ClientDongle1[USB-C Ethernet Dongle]
+    ClientDongle2[USB-C Ethernet Dongle]
+    ClientDongle3[USB-C Ethernet Dongle]
+    ClientDongle4[USB-C Ethernet Dongle]
+    Client1[Scouting Device]
+    Client2[Scouting Device]
+    Client3[Scouting Device]
+    Client4[Scouting Device]
+    Tether[Android USB Tethering]
+
+    subgraph Case["Inside the Case"]
+        Battery
+        OnOffSwitch
+        Splitter
+        Router
+        ServerUSBDongle
+        Switch
+        Server
+    end
+
+    subgraph Outside["Outside the Case"]
+		ClientDongle1
+		ClientDongle2
+		ClientDongle3
+		ClientDongle4
+		Client1
+		Client2
+		Client3
+		Client4
+		Tether
+    end
+
+    Battery -->|USB Power| OnOffSwitch
+    OnOffSwitch -->|USB Power| Splitter
+    Splitter -->|USB Power| Router
+    Splitter -->|USB Power| Switch
+    Splitter -->|USB Power| Server
+    Switch <-->|Ethernet| Router
+    Server <-->|USB| ServerUSBDongle
+    ServerUSBDongle <-->|Ethernet| Switch
+    Switch <-->|Ethernet| ClientDongle1
+    Switch <-->|Ethernet| ClientDongle2
+    Switch <-->|Ethernet| ClientDongle3
+    Switch <-->|Ethernet| ClientDongle4
+    ClientDongle1 <-->|USB| Client1
+    ClientDongle2 <-->|USB| Client2
+    ClientDongle3 <-->|USB| Client3
+    ClientDongle4 <-->|USB| Client4
+    Router <-->|USB| Tether
+
+    style Battery fill:#FFCCCC
+    style OnOffSwitch fill:#FFCCCC
+    style Splitter fill:#FFCCCC
+    style Router fill:#B3E8D3
+    style ServerUSBDongle fill:#B3E8D3
+    style Switch fill:#B3E8D3
+    style Server fill:#B3E8D3
+    style ClientDongle1 fill:#B3D9FF
+    style ClientDongle2 fill:#B3D9FF
+    style ClientDongle3 fill:#B3D9FF
+    style ClientDongle4 fill:#B3D9FF
+    style Client1 fill:#B3D9FF
+    style Client2 fill:#B3D9FF
+    style Client3 fill:#B3D9FF
+    style Client4 fill:#B3D9FF
+    style Tether fill:#D4BFEF
+
+	linkStyle 0,1,2,3,4 stroke:#FF6B6B,stroke-width:2px
