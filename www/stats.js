@@ -233,8 +233,9 @@ function showStats(){
 		Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
 		var charts = {}
 		for (var i=0; i<sections.length; i++){
-			var section = sections[i],
-			statName = graphList[section].data[0],
+			var section = sections[i]
+			if (!graphList[section].data || !graphList[section].data.length) continue
+			var statName = graphList[section].data[0],
 			stat=statInfo[statName],
 			graphType=graphList[section].graph,
 			source=stat.source||"",
