@@ -2074,6 +2074,10 @@ var whiteboardStats=[
 
 // https://www.postman.com/firstrobotics/workspace/frc-fms-public-published-workspace/example/13920602-f345156c-f083-4572-8d4a-bee22a3fdea1
 var fmsMapping=[
+	[["hubScore.autoPoints"],["auto_fuel_score"]],
+	[["autoTowerPoints"],["auto_tower_score"]],
+	[["hubScore.transitionPoints","hubScore.shift1Points","hubScore.shift2Points","hubScore.shift3Points","hubScore.shift4Points"],["tele_fuel_score"]],
+	[["teleTowerPoints"],["tele_tower_score"]],
 ]
 
 function showPitScouting(el,team){

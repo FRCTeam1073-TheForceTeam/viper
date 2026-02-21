@@ -56,8 +56,13 @@ function getScoreDifference(scoutData, scoreData){
 	window.fmsMapping.forEach(map=>{
 		var dat = {fms:{},scout:{},diff:0}
 		map[0].forEach(fms=>{
-			dat.fms[fms]=scoreData[fms]||0
-			dat.diff+=scoreData[fms]||0
+			var value = scoreData
+			fms.split('.').forEach(key => {
+				value = (value && typeof value === 'object') ? value[key] : undefined
+			})
+			value = value || 0
+			dat.fms[fms]=value
+			dat.diff+=value
 		})
 		map[1].forEach(scout=>{
 			dat.scout[scout]={total:0,teams:[]}
