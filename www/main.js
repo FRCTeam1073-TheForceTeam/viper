@@ -408,6 +408,14 @@ function applyTranslations(node){
 }
 
 $(document).ready(function(){
+	$('link[rel="preload"]').each(function(){
+		var href = $(this).attr('href')
+		if (/\.(png|jpg|jpeg|gif|webp)$/i.test(href??'')){
+			var img = new Image()
+			img.src = href
+		}
+	})
+
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
 		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')

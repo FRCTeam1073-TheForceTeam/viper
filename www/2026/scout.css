@@ -18,7 +18,7 @@ html{padding:0}
 #shooting-locations{width:16.1em;height:25em;position:relative;margin:0 auto}
 .blueTeam #shooting-locations{background:url(shooting-locations-blue.png) no-repeat center center / 100% 100%}
 .redTeam #shooting-locations{background:url(shooting-locations-red.png) no-repeat center center / 100% 100%}
-#auto-paths {min-width:10em;width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('auto-area-blue.png');background-size:cover}
+#auto-paths {min-width:10em;width:60%;max-width:40em;height:auto;aspect-ratio:.916;background:url('/2026/auto-area-blue.png');background-size:cover}
 .field-actions{background:url(field.png) no-repeat center center;background-size:100%;max-width:95vw;max-height:70vh;width:auto;height:100%;aspect-ratio:1.875;margin:0 auto;position:relative;}
 .blueTeam .field-actions{background-image:url(field-rotated.png)}
 .field-actions>*{position:absolute;width:7%;min-width:7%;max-width:7%;padding:0;border-radius:10%;aspect-ratio:1;z-index:2}
