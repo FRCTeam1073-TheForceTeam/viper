@@ -1016,6 +1016,7 @@ $(document).ready(function(){
 		setTimeout(initialRobotStartPosition,0)
 		initScouting2026()
 		renderTimeline()
+		toAlliance()
 		return true
 	})
 	window.onStore = window.onStore || []
@@ -1197,6 +1198,9 @@ $(document).ready(function(){
 			input.val(Math.max(0,parseInt(input.val())-value))
 			animateChangeFloater(-value, dataInput.length ? dataInput : input)
 		}
+		if(/alliance_to/.test(field))toAlliance()
+		if(/opponent_to/.test(field))toOpponent()
+		if(/neutral_to/.test(field))toNeutral()
 		if (input.is(":checked")) input.prop('checked',false)
 		if (!text)initScouting2026()
 		order.val(text)
