@@ -16,6 +16,7 @@
 <script src=/canvas-path.js></script>
 <script src=/qrcode.min.js></script>
 <script src=/2026/scout.js></script>
+<script src=/photo-db.js></script>
 <script src=/heartbeat.js></script>
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
@@ -148,7 +149,13 @@
 	<span data-i18n=scouter_header></span><br>
 	<span data-i18n=scouter_name_question></span> <div class=full><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></div>
 	<p><textarea name=notes  data-i18n-placeholder=pit_scout_notes_placeholder></textarea></p>
-	<p data-i18n=pit_scout_photo_reminder></p>
+
+	<fieldset class=full>
+		<legend data-i18n=bot_photos_legend></legend>
+		<table id=pit-scout-photos border=1>
+			<tr><th data-i18n=side_view_header></th><th data-i18n=top_view_header></th></tr>
+		</table>
+	</fieldset>
 
 	<input type=hidden name=created value="">
 	<input type=hidden name=modified value="">
@@ -157,5 +164,6 @@
 		<div id=doneButtons></div>
 	</fieldset>
 </form>
+<iframe id=photoEdit class=lightBoxFullContent src=/photo-edit.html></iframe>
 </body>
 </html>

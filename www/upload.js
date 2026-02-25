@@ -17,6 +17,14 @@ addI18n({
 		fr:'Importer toutes les données',
 		pt:'Carregar todos os dados',
 	},
+	upload_limited_button:{
+		en:'Upload first 4 photos and 10 scoutings',
+		tr:'İlk 4 fotoğrafı ve 10 scouting yükle',
+		he:'העלה את 4 התמונות הראשונות ו-10 scouting',
+		zh_tw:'上傳前4張照片和10次偵測',
+		fr:'Importer les 4 premières photos et 10 explorations',
+		pt:'Carregar os primeiros 4 fotos e 10 scouting',
+	},
 	no_uploads:{
 		en:'There is no data to upload.',
 		tr:'Yüklenecek veri yok.',
@@ -64,6 +72,14 @@ addI18n({
 		zh_tw:'要上傳的資料 (_UPLOADCOUNT_)',
 		fr:'Données à importer (_UPLOADCOUNT_)',
 		pt:'Dados para carregar (_UPLOADCOUNT_)',
+	},
+	uploads_later_heading:{
+		en:'Data to Upload Later (_LATERCOUNT_)',
+		tr:'Daha Sonra Yüklenecek Veriler (_LATERCOUNT_)',
+		he:'נתונים להעלאה בהמשך (_LATERCOUNT_)',
+		zh_tw:'稍後要上傳的資料 (_LATERCOUNT_)',
+		fr:'Données à importer plus tard (_LATERCOUNT_)',
+		pt:'Dados para carregar mais tarde (_LATERCOUNT_)',
 	},
 	history_heading:{
 		en:'History (_HISTORYCOUNT_)',
@@ -143,9 +159,14 @@ function uploadComparator(i){
 
 function showUploads(){
 	var up = $('#uploads').html(""),
+	upLater = $('#uploads-later').html(""),
 	his = $('#history').html(""),
 	count = 0,
-	historyCount = 0
+	laterCount = 0,
+	historyCount = 0,
+	photoCount = 0,
+	scoutingCount = 0,
+	limitedUpload = false
 	scoutCsv = {}
 	pitCsv = {}
 	subjectiveCsv = {}
@@ -153,60 +174,90 @@ function showUploads(){
 	his.append($('<button data-i18n=clear_history_button>').click(clearHistory))
 	Object.keys(localStorage).toSorted((a,b)=>uploadComparator(b).localeCompare(uploadComparator(a))).forEach(i=>{
 		if (/^20[0-9]{2}(-[0-9]{2})?_photo_[0-9]+/.test(i)){
+			photoCount++
+			if (photoCount > 4) limitedUpload = true
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
 			name=i.replace(/.*_photo_/,''),
 			img=$('<img class=photo-upload>'),
-			input=$('<input type=hidden class=image>').attr('name',`${year}/${name}`)
+			section = photoCount <= 4 ? up : upLater
 			pdb.get(i,p=>{
 				img.attr('src',p)
-				input.attr('value',p)
 			})
-			up.append($('<hr>'))
+			section.append($('<hr>'))
 			.append($('<h4>').text(i))
 			.append(img)
 			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
 			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
-			count++
-			$('#upload').append(input)
+			if (photoCount <= 4){
+				var input=$('<input type=hidden class=image>').attr('name',`${year}/${name}`)
+				pdb.get(i,p=>{
+					input.attr('value',p)
+				})
+				$('#upload').append(input)
+				count++
+			} else {
+				laterCount++
+			}
 		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i)){
+			scoutingCount++
+			if (scoutingCount > 10) limitedUpload = true
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
-			header = localStorage.getItem(`${year}_subjectiveheaders`)
+			header = localStorage.getItem(`${year}_subjectiveheaders`),
+			section = scoutingCount <= 10 ? up : upLater
 			if (!subjectiveCsv[year]){
 				subjectiveCsv[year] = header
 			}
-			subjectiveCsv[year] += localStorage[i]
-			up.append($('<hr>'))
+			if (scoutingCount <= 10){
+				subjectiveCsv[year] += localStorage[i]
+				count++
+			} else {
+				laterCount++
+			}
+			section.append($('<hr>'))
 			.append($('<h4>').text(i))
 			.append($('<pre>').text(header + localStorage[i]))
 			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
 			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
-			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?.*_.*_/.test(i)){
+			scoutingCount++
+			if (scoutingCount > 10) limitedUpload = true
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
-			header = localStorage.getItem(`${year}_headers`)
+			header = localStorage.getItem(`${year}_headers`),
+			section = scoutingCount <= 10 ? up : upLater
 			if (!scoutCsv[year]){
 				scoutCsv[year] = header
 			}
-			scoutCsv[year] += localStorage[i]
-			up.append($('<hr>'))
+			if (scoutingCount <= 10){
+				scoutCsv[year] += localStorage[i]
+				count++
+			} else {
+				laterCount++
+			}
+			section.append($('<hr>'))
 			.append($('<h4>').text(i))
 			.append($('<pre>').text(header + localStorage[i]))
 			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
 			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
-			count++
 		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_[0-9]+/.test(i)){
+			scoutingCount++
+			if (scoutingCount > 10) limitedUpload = true
 			var year = i.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1"),
-			header = localStorage.getItem(`${year}_pitheaders`)
+			header = localStorage.getItem(`${year}_pitheaders`),
+			section = scoutingCount <= 10 ? up : upLater
 			if (!pitCsv[year]){
 				pitCsv[year] = header
 			}
-			pitCsv[year] += localStorage[i]
-			up.append($('<hr>'))
+			if (scoutingCount <= 10){
+				pitCsv[year] += localStorage[i]
+				count++
+			} else {
+				laterCount++
+			}
+			section.append($('<hr>'))
 			.append($('<h4>').text(i))
 			.append($('<pre>').text(header + localStorage[i]))
 			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
 			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
-			count++
 		} else if (/^(deleted|uploaded)_20/.test(i)){
 			var date=localStorage[i].match(/(20\d\d-[01]\d-[0-3]\dT[0-2]\d[^,\n]*)/g)||[""]
 			date=date[date.length-1]
@@ -230,9 +281,11 @@ function showUploads(){
 	$('#upload-description').attr('data-i18n',!count?'no_uploads':'')
 	addTranslationContext({
 		uploadCount:count,
+		laterCount:laterCount,
 		historyCount:historyCount,
 	})
 	$('.uploads').toggle(!!count)
+	$('.uploads-later').toggle(!!laterCount)
 	$('.history').toggle(!!historyCount)
 	var years = Object.keys(scoutCsv);
 	var text = ""
@@ -249,7 +302,8 @@ function showUploads(){
 	}
 	$('#csv').val(text)
 
-	$('#upload-all').click(function(){
+	var buttonKey = limitedUpload ? 'upload_limited_button' : 'upload_all_button'
+	$('#upload-all').attr('data-i18n', buttonKey).click(function(){
 		$(this).text(translate('uploading_button'))
 		if ($('button').prop('disabled') != 'true'){
 			$('button').prop('disabled', 'true')
@@ -261,6 +315,11 @@ function showUploads(){
 	$('#show-uploads').click(function(){
 		$(this).hide()
 		$('#uploads').show()
+	})
+
+	$('#show-uploads-later').click(function(){
+		$(this).hide()
+		$('#uploads-later').show()
 	})
 
 	$('#show-history').click(function(){

@@ -1,6 +1,30 @@
 "use strict"
 
 addI18n({
+	bot_photos_legend:{
+		en:'Bot Photos',
+		pt:'Fotos de Bot',
+		tr:'Bot Fotoğrafları',
+		he:'תמונות בוט',
+		fr:'Photos du robot',
+		zh_tw:'機器人照片',
+	},
+	side_view_header:{
+		en:'Side View',
+		pt:'Vista lateral',
+		he:'מבט מהצד',
+		tr:'Yan Görünüm',
+		zh_tw:'側面圖',
+		fr:'Vue latérale',
+	},
+	top_view_header:{
+		en:'Top View',
+		pt:'Vista superior',
+		he:'תצוגה למעלה',
+		tr:'Üst Görünüm',
+		zh_tw:'頂視圖',
+		fr:'Vue de dessus',
+	},
 	team_info_legend:{
 		en:'_TEAMNUM_ Team info',
 		pt:'_TEAMNUM_ Informações da equipe',
@@ -457,4 +481,158 @@ addI18n({
 		zh_tw:'未知',
 		fr:'Inconnu',
 	},
+	localstorage_full:{
+		en:'Local photo storage is full, upload now',
+		tr:'Yerel fotoğraf depolama alanı doldu, şimdi yükleyin',
+		pt:'O armazenamento local de fotos está cheio, faça upload agora',
+		he:'אחסון התמונות המקומי מלא, העלה עכשיו',
+		zh_tw:'本地照片儲存已滿，請立即上傳',
+		fr:'Le stockage local des photos est plein, téléchargez-les maintenant',
+	},
 })
+
+var pitScoutPhotosPreloaded = false
+var preloadedPhotos = {} // Map to store preloaded photos as data URLs
+
+// Hook into scout.js onShowPitScouting to load and display team photos
+window.onShowPitScouting = window.onShowPitScouting || []
+window.onShowPitScouting.push(function(){
+	loadPitScoutPhotos()
+	if (!pitScoutPhotosPreloaded) {
+		preloadAllTeamPhotos()
+		pitScoutPhotosPreloaded = true
+	}
+	return true
+})
+
+function preloadAllTeamPhotos(){
+	if (!eventYear) return
+	promiseEventTeams().then(eventTeams => {
+		eventTeams.forEach(teamNum => {
+			preloadTeamPhoto(teamNum, '')
+			preloadTeamPhoto(teamNum, '-top')
+		})
+	})
+}
+
+function preloadTeamPhoto(teamNum, suffix){
+	var photoKey = `${eventYear}_photo_${teamNum}${suffix}`,
+	photoUrl = `/data/${eventYear}/${teamNum}${suffix}.jpg`,
+	img = new Image()
+
+	img.onload = function() {
+		// Store the URL - image is now cached by browser
+		preloadedPhotos[photoKey] = photoUrl
+	}
+	img.onerror = function() {
+		// Silently fail if photo doesn't exist
+	}
+	img.src = photoUrl
+}
+
+function loadPitScoutPhotos(){
+	if (!eventYear || !team) return
+
+	var tbody = $('#pit-scout-photos tbody')
+	if (!tbody.length) tbody = $('#pit-scout-photos')
+
+	// Clear existing photos (keep header row)
+	$('tr:not(:first)', tbody).remove()
+
+	var tr = $('<tr>').append(photoCell(team, '')).append(photoCell(team, '-top'))
+	tbody.append(tr)
+	applyTranslations(tr)
+}
+
+function photoCell(teamNum, suffix){
+	var season = eventYear,
+	imgName = `${teamNum}${suffix}`,
+	photoKey = `${season}_photo_${imgName}`,
+	td = $('<td class=upload-cell>'),
+	img = $(`<img class=photoPreview>`).on('error', function(){
+		$(this).parent().find('.edit-link,img').hide()
+	}).each(function(){
+		if(this.error) $(this).error()
+	})
+
+	// Try preloaded photos first, then IndexedDB, then network
+	var photoSrc = preloadedPhotos[photoKey]
+	if (!photoSrc) {
+		pdb.get(photoKey, p => {
+			if (p) photoSrc = p
+			img.attr('src', photoSrc || `/data/${season}/${imgName}.jpg`)
+		})
+	} else {
+		img.attr('src', photoSrc)
+	}
+
+	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
+	.append(img)
+
+	if(hasLocalStorageCapacity()) {
+		td.append($(`<input type=file name=${season}_photo_${imgName} accept="image/*">`).change(resizeAndStoreImageUpload))
+	} else {
+		td.append($('<div data-i18n=localstorage_full>'))
+	}
+
+	return td
+}
+
+function photoEditLightBox(){
+	showLightBox($('#photoEdit').attr('src', $(this).find('a').attr('href')))
+	return false
+}
+
+// Based on https://stackoverflow.com/a/24015367/1145388
+function resizeAndStoreImageUpload(e){
+	var file = e.target.files[0]
+	if(/^image/.test(file.type)){
+		var reader = new FileReader()
+		reader.onload = function(re){
+			var image = new Image()
+			image.onload = function(){
+				var canvas = document.createElement('canvas'),
+				max_size = 1000,
+				width = image.width,
+				height = image.height
+				if (width > height && width > max_size){
+					height *= max_size / width
+					width = max_size
+				} else if (height > max_size){
+					width *= max_size / height
+					height = max_size
+				}
+				canvas.width = width
+				canvas.height = height
+				canvas.getContext('2d').drawImage(image, 0, 0, width, height)
+				var dataUrl = canvas.toDataURL('image/jpeg')
+				pdb.put(e.target.name, dataUrl)
+				var parent = $(e.target).parent(),
+				img = parent.find('img')
+				img.attr('src', dataUrl).show()
+				localStorage.last_scout_type = 'photos'
+				showMainMenuUploads()
+				ifNoRoom()
+			}
+			image.src = re.target.result
+		}
+		reader.readAsDataURL(file)
+	}
+}
+
+function ifNoRoom(){
+	if(!hasLocalStorageCapacity()){
+		$('input[type="file"]').remove()
+		applyTranslations($('.upload-cell').append($('<div data-i18n=localstorage_full>')))
+	}
+}
+
+function hasLocalStorageCapacity(){
+	try {
+		localStorage['x'] = 'x'.repeat(800000)
+	} catch (e){
+		return false
+	}
+	localStorage.removeItem('x')
+	return true
+}

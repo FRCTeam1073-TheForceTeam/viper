@@ -20,17 +20,34 @@ addI18n({
 })
 
 $(document).ready(function(){
+	var keysToRename = []
 	if (location.hash){
-		var keys = location.hash.replace(/^\#/,"").replace(/\#.*/,"").split(/,/)
-		for (var i=0; i<keys.length; i++){
-			var key = keys[i]
+		keysToRename = location.hash.replace(/^\#/,"").replace(/\#.*/,"").split(/,/)
+		for (var i=0; i<keysToRename.length; i++){
+			var key = keysToRename[i]
 			if (/^20\d\d/.test(key))pdb.rename(key,`uploaded_${key}`)
 		}
 	}
-	redirect()
+	redirect(keysToRename)
 })
 
-function redirect(){
+function redirect(keysToRename){
+	keysToRename = keysToRename || []
+	// Check if there's more data to upload
+	for (var i in localStorage){
+		// Skip items that are being renamed, or have already been uploaded or deleted
+		if (keysToRename.indexOf(i) !== -1 || i.match(/^(uploaded_|deleted_)/)) continue
+
+		if (
+			/^20[0-9]{2}(-[0-9]{2})?_photo_[0-9]+/.test(i) ||
+			/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_subjective_[0-9]+/.test(i) ||
+			/^20[0-9]{2}(-[0-9]{2})?.*_.*_/.test(i) ||
+			/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_[0-9]+/.test(i)
+		){
+			return delayRedirect(`/upload.html`)
+		}
+	}
+
 	var eId = localStorage.getItem('last_event_id'),
 	eYear = localStorage.getItem('last_event_year'),
 	ePos = localStorage.getItem('last_pos'),

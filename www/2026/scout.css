@@ -64,4 +64,11 @@ td{text-align:left;padding:0.2em 0.5em}
 .climb{padding-right:0.4em;appearance:none;text-align:right;background:var(--button-bg-color);border:1px solid var(--main-border-color);border-style:solid;color:var(--button-fg-color);outline:none}
 .climb:active{background:var(--button-bg-color);border:1px solid var(--main-border-color);border-style:solid;color:var(--button-fg-color);outline:none}
 #auto-climb-position-fieldset,#tele-climb-position-fieldset,#climb-method-fieldset{display:none}
-#shooting-locations-undo{float:right}
+#shooting-locations-undo{float:right}#pit-scout-photos,#pit-scout-photos td{border-collapse:collapse}
+#pit-scout-photos td{padding:0.5em;text-align:center}
+#pit-scout-photos img{max-width:100%;max-height:300px;margin:0.5em 0;cursor:pointer}
+.upload-cell{border:1px solid var(--main-border-color);padding:1em}
+.upload-cell input[type="file"]{display:block;margin:0.5em auto}
+.upload-cell div[data-i18n]{color:var(--button-disabled-decoration-color);font-weight:bold;margin:0.5em}
+.edit-link{margin:0.5em 0}
+.edit-link a{color:var(--highlight-fg-color);cursor:pointer}
