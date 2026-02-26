@@ -20,6 +20,7 @@ h3{margin:0 0 .25em 0;padding:0}
 #pitScoutSetup img{width:2em;display:block}
 #pitScoutSetup{text-align:start}
 #pitScoutSetup .side-by-side{margin:.5em .1em}
+#pitScoutSetupButtons a{display:inline-block;padding:0.1em 0.3em;margin:0.1em;background-color:var(--button-bg-color);color:var(--button-fg-color);border:1px solid var(--button-border-color);border-radius:0.25em;text-decoration:none;cursor:pointer;font-weight:500}
 .ourTeam{text-decoration:solid underline var(--highlight-fg-color) 4px}
 .needed{text-decoration:solid underline var(--highlight2-fg-color) 4px}
 #jsonLightBox{text-align:start;overflow:auto}

@@ -765,8 +765,9 @@ $(document).ready(function(){
 		promisePitScouting(),
 		promiseTeamsInfo(),
 		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
+		promiseEventTeams(),
 	]).then(values =>{
-		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles] = values
+		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles, pitScoutEventTeams] = values
 		var lastDone,
 		nextToScout,
 		lastMatch,
@@ -939,6 +940,7 @@ $(document).ready(function(){
 			})
 		}
 		applyTranslations()
+		drawPitScoutSetupButtons()
 		$('#main').show()
 	})
 
@@ -993,32 +995,27 @@ $(document).ready(function(){
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
 	})
-	var pitScoutSetupButtonCount=6
+	var pitScoutSetupButtonCount=6,
+	pitScoutEventTeams=[]
 	function drawPitScoutSetupButtons(){
 		$('#pitScoutSetupButtons').html("")
 		for (var i=1; i<=pitScoutSetupButtonCount; i++){
-			$('#pitScoutSetupButtons').append($(`<button>${i}</button>`).click(openPitBotScout))
+			var squad = i-1,
+			perSquad = Math.floor(pitScoutEventTeams.length/(pitScoutSetupButtonCount)),
+			extras = pitScoutEventTeams.length%(pitScoutSetupButtonCount),
+			start = squad*perSquad+Math.min(squad,extras),
+			end = start+perSquad+((squad+1>extras)?0:1),
+			teamList=pitScoutEventTeams.slice(start,end).join(","),
+			href=`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`
+			$('#pitScoutSetupButtons').append($(`<a href="${href}">${i}</a>`))
 		}
 	}
-	drawPitScoutSetupButtons()
 	$('#pitScoutSetup img').click(function(){
 		pitScoutSetupButtonCount+=/up/.test($(this).attr('src'))?1:-1
 		if (pitScoutSetupButtonCount < 1) pitScoutSetupButtonCount = 1
 		if (pitScoutSetupButtonCount > 10) pitScoutSetupButtonCount = 10
 		drawPitScoutSetupButtons()
 	})
-	function openPitBotScout(){
-		promiseEventTeams().then(eventTeams => {
-			var squad = parseInt($(this).text())-1
-			var perSquad = Math.floor(eventTeams.length/(pitScoutSetupButtonCount)),
-			extras = eventTeams.length%(pitScoutSetupButtonCount),
-			start = squad*perSquad+Math.min(squad,extras),
-			end = start+perSquad+((squad+1>extras)?0:1),
-			teamList=eventTeams.slice(start,end).join(",")
-			window.open(`/bot-photos.html#event=${eventId}&teams=${teamList}`)
-			location.href=(`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`)
-		})
-	}
 })
 
 var blueAllianceId = eventId
