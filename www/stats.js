@@ -311,11 +311,11 @@ function showStats(){
 						if (info.type=='%'||stackedPercent) percent=true
 					}
 				}
-				var stacked = graphType.includes("stacked")
-				var yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
+				var stacked = graphType.includes("stacked"),
+				yScale = {beginAtZero:true,stacked:stacked,bounds:percent?'data':'ticks'}
 				if (percent)yScale.suggestedMax = 100
 				charts[section] = new Chart(canvas,{
-					type: boxplot?'boxplot':'bar',
+					type: graphType.replace(/stacked(_percent)?/,'bar'),
 					data: {
 						labels: teamList,
 						datasets: data

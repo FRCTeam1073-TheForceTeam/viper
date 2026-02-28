@@ -365,7 +365,7 @@ function showGraphs(matchList, matchNames){
 			})
 			var stacked = sections[section].graph=="stacked"
 			new Chart(chart,{
-				type: boxplot?'boxplot':'bar',
+				type: graphType.replace(/stacked(_percent)?/,'bar'),
 				data: {
 					labels: matchNames,
 					datasets: data

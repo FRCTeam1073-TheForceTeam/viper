@@ -121,6 +121,14 @@ addI18n({
 		he:'תרשים עמודות',
 		tr:'Çubuk grafik',
 	},
+	graph_line:{
+		en:'Line Graph',
+		fr:'Graphique linéaire',
+		zh_tw:'折線圖',
+		pt:'Gráfico de linhas',
+		he:'גרף קווי',
+		tr:'Çizgi grafiği',
+	},
 	graph_boxplot:{
 		en:'Box plot',
 		fr:'Box plot',
@@ -322,6 +330,17 @@ var graphTypes={
 		types: new Set(['timeline']),
 		modes: new Set(['team'])
 	},
+	"line":{
+		types: numericGraphTypes,
+		modes: new Set(['aggregate','team'])
+	},
+}
+
+function getGraphType(name){
+	return graphTypes[name]||{
+		types: new Set(),
+		modes: new Set(),
+	}
 }
 
 class StatsConfig {
@@ -603,7 +622,7 @@ class StatsConfig {
 	populateAddFields(){
 		var select=$('#stats-config-add-field'),
 		config=this,
-		types=config.hasGraphs? new Set(graphTypes[$('#stats-config-graph-type').val()].types):new Set(numericGraphTypes),
+		types=config.hasGraphs? new Set(getGraphType($('#stats-config-graph-type').val()).types):new Set(numericGraphTypes),
 		statNames=Object.keys(statInfo)
 		statNames.sort((a,b)=>translate(a).localeCompare(translate(b)))
 		select.html("")
