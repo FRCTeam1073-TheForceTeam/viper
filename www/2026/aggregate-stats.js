@@ -2043,7 +2043,9 @@ var matchPredictorSections={
 	},
 }
 
-var whiteboardStamps=[]
+var whiteboardStamps = [
+	"/2026/fuel-stamp.png"
+]
 
 var fieldRotationalSymmetry=true
 
