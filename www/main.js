@@ -544,7 +544,7 @@ function toggleFullScreen() {
 function hasUploads(){
 	if (location.pathname == '/upload.html') return false
 	for (var i in localStorage){
-		if (/^20[0-9]{2}(([A-Za-z0-9\-]+)|_photo)_[_A-Za-z0-9\-]+/.test(i)&&!/(headers|AggregateGraphs|TeamStats|WhiteboardStats)$/.test(i))return true
+		if (/^20[0-9]{2}(([A-Za-z0-9\-]+)|_photo)_[_A-Za-z0-9\-]+/.test(i)&&!/(headers|AggregateGraphs|TeamStats|WhiteboardStats|PredictorStats)$/.test(i))return true
 	}
 	return false
 }
