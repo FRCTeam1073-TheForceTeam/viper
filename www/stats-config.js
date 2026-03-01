@@ -289,6 +289,22 @@ addI18n({
 		he:'האם אתה בטוח שברצונך למחוק את כל תצורת הגרפים האישיים שלך ושל הצוות שלך?',
 		tr:'TÜM kişisel ve ekibinizin özel grafik yapılandırmasını silmek istediğinizden emin misiniz?',
 	},
+	reorder_link:{
+		en:'Reorder',
+		fr:'Réorganiser',
+		zh_tw:'重新排序',
+		pt:'Reordenar',
+		he:'סדר מחדש',
+		tr:'Yeniden Sırala',
+	},
+	reorder_header:{
+		en:'Drag to Reorder',
+		fr:'Glisser pour réorganiser',
+		zh_tw:'拖動以重新排序',
+		pt:'Arrastar para reordenar',
+		he:'גרור כדי לסדר מחדש',
+		tr:'Sürükleyerek Yeniden Sırala',
+	},
 })
 
 function isArray(o){
@@ -454,6 +470,116 @@ class StatsConfig {
 		applyTranslations(dialog)
 		showLightBox(dialog)
 		return false
+	}
+
+
+	showReorderDialog(){
+		var me=this
+		var dialog=$('#stats-reorder')
+		if (!dialog.length){
+			dialog=$('<div id=stats-reorder class=lightBoxCenterContent>')
+			.append($('<p data-i18n=reorder_header></p>'))
+			.append($('<ul id=stats-reorder-list>'))
+			.append($('<p>')
+				.append($('<button data-i18n=save_button></button>').click(function(){me.saveReorderDialog()}))
+				.append(" ")
+				.append($('<button data-i18n=cancel_button></button>').click(closeLightBox))
+			)
+			$('body').append(dialog)
+
+			var draggedElement=null
+			var list=$('#stats-reorder-list')
+			list.on('dragstart', 'li', function(e){
+				draggedElement=$(this)
+				e.originalEvent.dataTransfer.effectAllowed='move'
+				$(this).css('opacity','0.5')
+			})
+			.on('dragend', 'li', function(e){
+				$('#stats-reorder-list li').css('opacity','1')
+				draggedElement=null
+			})
+			.on('dragover', function(e){
+				if (draggedElement){
+					e.preventDefault()
+					e.originalEvent.dataTransfer.dropEffect='move'
+					var dragY=e.originalEvent.clientY
+					var $target=$(e.target).closest('li')
+					if ($target.length && $target[0]!==draggedElement[0]){
+						var targetRect=$target[0].getBoundingClientRect()
+						var targetMidpoint=targetRect.top+targetRect.height/2
+						if (dragY<targetMidpoint){
+							$target.before(draggedElement)
+						} else {
+							$target.after(draggedElement)
+						}
+					} else if (!$target.length){
+						var items=list.find('li')
+						if (items.length>0){
+							var firstItemRect=items[0].getBoundingClientRect()
+							var lastItemRect=items[items.length-1].getBoundingClientRect()
+							if (dragY<firstItemRect.top){
+								list.prepend(draggedElement)
+							} else if (dragY>lastItemRect.bottom){
+								list.append(draggedElement)
+							}
+						}
+					}
+				}
+			})
+			.on('drop', function(e){
+				if (draggedElement){
+					e.preventDefault()
+				}
+			})
+		}
+
+		var config=this.getStatsConfig()
+		var items=[]
+
+		if (this.hasSections){
+			items=Object.keys(config)
+		} else {
+			items=config
+		}
+
+		var list=$('#stats-reorder-list').html('')
+		items.forEach(function(item){
+			list.append(
+				$('<li>')
+				.attr('data-item',item)
+				.attr('draggable','true')
+				.css({
+					'cursor':'move',
+					'user-select':'none'
+				})
+				.text(item)
+			)
+		})
+
+		applyTranslations(dialog)
+		showLightBox(dialog)
+		return false
+	}
+
+	saveReorderDialog(){
+		var config=this.getStatsConfig()
+		var newOrder=$('#stats-reorder-list li').map(function(){
+			return $(this).attr('data-item')
+		}).get()
+
+		var newConfig
+		if (this.hasSections){
+			newConfig={}
+			newOrder.forEach(function(section){
+				newConfig[section]=config[section]
+			})
+		} else {
+			newConfig=newOrder
+		}
+
+		localStorage.setItem(this.statsConfigKey, JSON.stringify(newConfig))
+		closeLightBox()
+		this.drawFunction()
 	}
 
 	ui2Json(){
@@ -659,6 +785,7 @@ class StatsConfig {
 			if (this.hasSections)manageAllList.append($('<li>').append($(`<a href=#edit-json data-i18n=${this.hasGraphs?"add_graph_link":"add_section_link"}></a>`).click(this.showEditSectionDialog.bind(this))))
 
 			manageAllList
+			.append($('<li>').append($('<a href=#reorder data-i18n=reorder_link></a>').click(this.showReorderDialog.bind(this))))
 			.append($('<li>').append($('<a href=#edit-json data-i18n=edit_json_link></a>').click(this.showExportDialog.bind(this))))
 			.append($('<li>').append($('<a href=#save-server data-i18n=save_to_server_link></a>').click(this.saveToServer.bind(this))))
 			.append($('<li>').append($('<a href=#revert-personal data-i18n=revert_personal_link></a>').click(this.revertPersonalCustomizations.bind(this))))
