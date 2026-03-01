@@ -49,24 +49,40 @@ $(document).ready(function(){
 		}
 		seasons = Object.keys(seasons)
 		seasons.sort((a,b) => {return b.localeCompare(a)})
+		var hasFrc = false, hasFtc = false,
+		latestFrc = new Date().getFullYear(),
+		latestFtc = new Date().getMonth() >= 9 ? new Date().getFullYear() + "-"+(new Date().getFullYear()+1).toString().slice(2) : (new Date().getFullYear()-1) + "-"+(new Date().getFullYear()).toString().slice(2)
+		var recentSeason = ''
 		for (var i=0; i<seasons.length; i++){
 			var season = seasons[i],
 			comp = /-/.test(season)?"FTC":"FRC"
+			if(!recentSeason) recentSeason = season
+			if (comp == "FRC") hasFrc = true
+			else hasFtc = true
+			if (season == latestFrc) latestFrc = ''
+			if (season == latestFtc) latestFtc = ''
 			$('#seasons').append($(`<option value=${season}>${season} ${comp}</option>`))
+		}
+		var firstOption = $('#seasons option:first')
+		if (hasFrc && latestFrc) {
+			firstOption.after($(`<option value=${latestFrc}>${latestFrc} FRC</option>`))
+		}
+		if (hasFtc && latestFtc) {
+			firstOption.after($(`<option value=${latestFtc}>${latestFtc} FTC</option>`))
 		}
 		$('#seasons').toggle(seasons.length > 1)
 		events = events.sort(dateCompare)
-		showEvents()
+		showEvents(recentSeason)
 	})
-	function showEvents(){
+	function showEvents(recentSeason){
 		var list = $('#events-list')
 		list.html('');
 		var filter = location.hash.replace(/^\#/,""),
 		eventsShown = 0
-		if (!filter) filter = $('#seasons option:nth-child(2)').attr('value')
+		if (!filter) filter = recentSeason
 		for (var i=0; i<events.length; i++){
 			var season = ((events[i].match(/^[0-9]{4}(-[0-9]{2})?/))||[""])[0]
-			if (season == filter){
+			if (season && season == filter){
 				var [id, name] = events[i].split(/,/)
 				if (!name) name = id
 				list.append($(`<li><a href=/event.html#${id}>${unescapeField(name)}</a></li>`))
