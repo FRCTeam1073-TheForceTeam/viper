@@ -552,7 +552,7 @@ class StatsConfig {
 					'cursor':'move',
 					'user-select':'none'
 				})
-				.text(item)
+				.text(me.hasSections ? item : translate(item))
 			)
 		})
 
