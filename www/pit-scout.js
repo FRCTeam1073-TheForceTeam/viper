@@ -2,12 +2,12 @@
 
 addI18n({
 	bot_photos_legend:{
-		en:'Bot Photos',
-		pt:'Fotos de Bot',
-		tr:'Bot Fotoğrafları',
-		he:'תמונות בוט',
-		fr:'Photos du robot',
-		zh_tw:'機器人照片',
+		en:'_TEAMNUM_ Bot Photos',
+		pt:'_TEAMNUM_ Fotos do Bot',
+		he:'_TEAMNUM_ תמונות בוט',
+		tr:'_TEAMNUM_ Bot Fotoğrafları',
+		zh_tw:'_TEAMNUM_ 機器人照片',
+		fr:'_TEAMNUM_ Photos du robot',
 	},
 	side_view_header:{
 		en:'Side View',
@@ -491,57 +491,42 @@ addI18n({
 	},
 })
 
-var pitScoutPhotosPreloaded = false
-var preloadedPhotos = {} // Map to store preloaded photos as data URLs
-
 // Hook into scout.js onShowPitScouting to load and display team photos
-window.onShowPitScouting = window.onShowPitScouting || []
-window.onShowPitScouting.push(function(){
-	loadPitScoutPhotos()
-	if (!pitScoutPhotosPreloaded) {
-		preloadAllTeamPhotos()
-		pitScoutPhotosPreloaded = true
-	}
+window.onShowTeamList = window.onShowTeamList || []
+window.onShowTeamList.push(function(){
+	promiseAllTeamPhotos()
 	return true
 })
 
-function preloadAllTeamPhotos(){
-	if (!eventYear) return
-	promiseEventTeams().then(eventTeams => {
+window.onShowPitScouting = window.onShowPitScouting || []
+window.onShowPitScouting.push(function(){
+	promiseAllTeamPhotos().then(() => {
+		showPitScoutPhotos()
+	})
+	return true
+})
+
+function promiseAllTeamPhotos(){
+	if (!eventYear) return Promise.resolve()
+	return promiseEventTeams().then(eventTeams => {
+		var tbody = $('#pit-scout-photos tbody')
+		if (!tbody.length || tbody.children().length > 0) return
+
+		// Create hidden rows for each team's photos
 		eventTeams.forEach(teamNum => {
-			preloadTeamPhoto(teamNum, '')
-			preloadTeamPhoto(teamNum, '-top')
+			var tr = $('<tr>').addClass(`team-photos team-photos-${teamNum}`)
+				.append(photoCell(teamNum, ''))
+				.append(photoCell(teamNum, '-top'))
+			tbody.append(tr)
+			applyTranslations(tr)
 		})
 	})
 }
 
-function preloadTeamPhoto(teamNum, suffix){
-	var photoKey = `${eventYear}_photo_${teamNum}${suffix}`,
-	photoUrl = `/data/${eventYear}/${teamNum}${suffix}.jpg`,
-	img = new Image()
-
-	img.onload = function() {
-		// Store the URL - image is now cached by browser
-		preloadedPhotos[photoKey] = photoUrl
-	}
-	img.onerror = function() {
-		// Silently fail if photo doesn't exist
-	}
-	img.src = photoUrl
-}
-
-function loadPitScoutPhotos(){
+function showPitScoutPhotos(){
 	if (!eventYear || !team) return
-
-	var tbody = $('#pit-scout-photos tbody')
-	if (!tbody.length) tbody = $('#pit-scout-photos')
-
-	// Clear existing photos (keep header row)
-	$('tr:not(:first)', tbody).remove()
-
-	var tr = $('<tr>').append(photoCell(team, '')).append(photoCell(team, '-top'))
-	tbody.append(tr)
-	applyTranslations(tr)
+	$('.team-photos').hide()
+	$(`.team-photos-${team}`).show()
 }
 
 function photoCell(teamNum, suffix){
@@ -555,16 +540,14 @@ function photoCell(teamNum, suffix){
 		if(this.error) $(this).error()
 	})
 
-	// Try preloaded photos first, then IndexedDB, then network
-	var photoSrc = preloadedPhotos[photoKey]
-	if (!photoSrc) {
-		pdb.get(photoKey, p => {
-			if (p) photoSrc = p
-			img.attr('src', photoSrc || `/data/${season}/${imgName}.jpg`)
-		})
-	} else {
-		img.attr('src', photoSrc)
-	}
+	// Try IndexedDB first, then network
+	pdb.get(photoKey, p => {
+		if (p) {
+			img.attr('src', p)
+		} else {
+			img.attr('src', `/data/${season}/${imgName}.jpg`)
+		}
+	})
 
 	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
 	.append(img)

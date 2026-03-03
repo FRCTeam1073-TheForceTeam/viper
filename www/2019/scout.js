@@ -34,10 +34,11 @@ $(document).ready(function(){
 	})
 })
 
-function beforeShowScouting(){
+window.onBeforeShowScouting = window.onBeforeShowScouting || []
+window.onBeforeShowScouting.push(function(){
 	$('.toggle > *').hide()
 	$('.toggle > *:first-child').show()
-}
+})
 
 function addToFields(fields, amount){
 	if (!fields) return

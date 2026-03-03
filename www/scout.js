@@ -495,6 +495,9 @@ function showSelectPitScoutTeam(){
 		}
 		$('#select-team').show()
 		applyTranslations()
+		for (var i=0; i<window.onShowTeamList.length; i++){
+			if(!window.onShowTeamList[i]()) return false
+		}
 	}).catch(err=>{
 		alert(err)
 	})
@@ -523,6 +526,9 @@ function showSelectSubjectiveScoutTeam(){
 		}
 		$('#select-team').show()
 		applyTranslations()
+		for (var i=0; i<window.onShowTeamList.length; i++){
+			if(!window.onShowTeamList[i]()) return false
+		}
 	})
 }
 
@@ -895,7 +901,6 @@ function showScouting(){
 		resetInitialValues(scouting)
 		setHash(pos,orient,team,match)
 		window.scrollTo(0,0)
-		if (typeof beforeShowScouting == 'function') beforeShowScouting()
 		h1Key='scouting_heading'
 		titleKey='scouting_title'
 		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
@@ -993,6 +998,7 @@ function formHasChanges(f){
 window.onStore = window.onStore || []
 window.onShowScouting = window.onShowScouting || []
 window.onBeforeShowScouting = window.onBeforeShowScouting || []
+window.onShowTeamList = window.onShowTeamList || []
 window.onShowPitScouting = window.onShowPitScouting || []
 window.onShowSubjectiveScouting = window.onShowSubjectiveScouting || []
 window.onInputChanged = window.onInputChanged || []

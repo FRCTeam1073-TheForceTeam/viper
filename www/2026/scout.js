@@ -1006,11 +1006,6 @@ $(document).ready(function(){
 	$(document).click(function(){
 		$('.kebab-dropdown').removeClass('open')
 	})
-
-	window.onBeforeShowScouting = window.onBeforeShowScouting || []
-	window.onBeforeShowScouting.push(function(){
-		return true
-	})
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
 		setTimeout(initialRobotStartPosition,0)
