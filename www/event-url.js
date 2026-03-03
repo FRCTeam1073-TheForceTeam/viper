@@ -68,19 +68,26 @@ MATCH_TYPE_SORT = {
 }
 
 function eventFromHash(){
-	eventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}(?:-[0-9]{2})?[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1]
-	eventYear = eventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1')
-	eventVenue = eventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1')
-	eventName = eventYear+(eventYear?" ":"")+eventVenue
-	eventCompetition = (/^20[0-9]{2}$/.test(eventYear)||location.hash=='#frc')?"frc":"ftc"
-	promiseCache = {}
-	if (eventId && !/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eventId)){
-		if (localStorage.last_event_id==eventId)eventName=localStorage.last_event_name||eventName
-		localStorage.last_event_id=eventId
-		localStorage.last_event_year=eventYear
-		localStorage.last_event_name=eventName
+	var newEventId=(location.hash.match(/^\#(?:(?:.*\&)?(?:(?:file|event)\=))?(20[0-9]{2}(?:-[0-9]{2})?[a-zA-Z0-9\-]+)(?:\.[a-z\.]+)?(?:\&.*)?$/)||["",""])[1],
+	newEventYear = newEventId.replace(/([0-9]{4}(?:-[0-9]{2})?).*/,'$1'),
+	newEventVenue = newEventId.replace(/[0-9]{4}(?:-[0-9]{2})?(.*)/,'$1'),
+	newEventName = newEventYear+(newEventYear?" ":"")+newEventVenue,
+	newEventCompetition = (/^20[0-9]{2}$/.test(newEventYear)||location.hash=='#frc')?"frc":"ftc"
+	if (newEventId!=eventId||newEventYear!=eventYear||newEventVenue!=eventVenue||newEventName!=eventName||newEventCompetition!=eventCompetition){
+		eventId=newEventId
+		eventYear=newEventYear
+		eventVenue=newEventVenue
+		eventName=newEventName
+		eventCompetition=newEventCompetition
+		promiseCache = {}
+		if (eventId && !/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eventId)){
+			if (localStorage.last_event_id==eventId)eventName=localStorage.last_event_name||eventName
+			localStorage.last_event_id=eventId
+			localStorage.last_event_year=eventYear
+			localStorage.last_event_name=eventName
+		}
+		BOT_POSITIONS = eventCompetition=='frc'?FRC_BOT_POSITIONS:FTC_BOT_POSITIONS
 	}
-	BOT_POSITIONS = eventCompetition=='frc'?FRC_BOT_POSITIONS:FTC_BOT_POSITIONS
 }
 
 $(window).on('hashchange', eventFromHash)
