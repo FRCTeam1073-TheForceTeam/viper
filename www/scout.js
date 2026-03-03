@@ -437,7 +437,7 @@ function parseHash(){
 	team = (location.hash.match(/^\#(?:.*\&)?(?:team\=)([0-9]+)(?:\&.*)?$/)||["",""])[1]
 	orient = (location.hash.match(/^\#(?:.*\&)?(?:orient\=)(left|right)(?:\&.*)?$/)||["",orient])[1]
 	match=(location.hash.match(/^\#(?:.*\&)?(?:match\=)((?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+)(?:\&.*)?$/)||["",""])[1]
-	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1]
+	teamList = (location.hash.match(/^\#(?:.*\&)?(?:teams\=)([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1].split(/,/).map(s=>parseInt(s)).filter(n=>!isNaN(n))
 	go = (location.hash.match(/^\#(?:.*\&)?(?:go\=)(back)(?:\&.*)?$/)||["",""])[1]
 	setTranslationContext()
 }
@@ -486,7 +486,7 @@ function showSelectPitScoutTeam(){
 		h1Key='pit_scouting_select_team_heading'
 		var el = $('#teamList').html(""),
 		withData = getTeamsWithPitData(),
-		showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+		showTeams = teamList.length?teamList:eventTeams
 		$('.location-pointer').remove()
 		for (var i=0; i<showTeams.length;i++){
 			var button = $('<button>').text(showTeams[i]).click(showPitScoutingForm)
@@ -495,6 +495,8 @@ function showSelectPitScoutTeam(){
 		}
 		$('#select-team').show()
 		applyTranslations()
+	}).catch(err=>{
+		alert(err)
 	})
 }
 
@@ -512,7 +514,7 @@ function showSelectSubjectiveScoutTeam(){
 		h1Key='subjective_scouting_select_team_heading'
 		var el = $('#teamList').html(""),
 		withData = getTeamsWithSubjectiveData(),
-		showTeams = teamList?teamList.split(/,/).map(s=>parseInt(s)):eventTeams
+		showTeams = teamList.length?teamList:eventTeams
 		$('.location-pointer').remove()
 		for (var i=0; i<showTeams.length;i++){
 			var button = $('<button>').text(showTeams[i]).click(showSubjectiveScoutingForm)
