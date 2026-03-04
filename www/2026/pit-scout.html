@@ -28,127 +28,132 @@
 	<div id=teamList></div>
 </div>
 
-<form id=pit-scouting class="sequential-input-series init-hide screen">
+<div id=pit-scouting class="sequential-input-series init-hide screen">
+	<form>
 
-	<button id=pitTeamButton data-i18n=back_team_select_button></button>
+		<button id=pitTeamButton data-i18n=back_team_select_button></button>
 
-	<input type=hidden name=event>
-	<input type=hidden name=team>
+		<input type=hidden name=event>
+		<input type=hidden name=team>
 
-	<fieldset class=full>
-		<legend data-i18n=team_info_legend></legend>
-		<p><span data-i18n=team_name_label></span> <input name=team_name type=text data-i18n-placeholder=team_name_placeholder></p>
-		<p><span data-i18n=team_location_label></span> <input name=team_location type=text  data-i18n-placeholder=team_location_placeholder></p>
-		<p><span data-i18n=bot_name_label></span> <input name=bot_name type=text></p>
-	</fieldset>
+		<fieldset class=full>
+			<legend data-i18n=team_info_legend></legend>
+			<p><span data-i18n=team_name_label></span> <input name=team_name type=text data-i18n-placeholder=team_name_placeholder></p>
+			<p><span data-i18n=team_location_label></span> <input name=team_location type=text  data-i18n-placeholder=team_location_placeholder></p>
+			<p><span data-i18n=bot_name_label></span> <input name=bot_name type=text></p>
+		</fieldset>
 
-	<fieldset class=full>
-		<legend data-i18n=auto_path_legend></legend>
+		<fieldset class=full>
+			<legend data-i18n=auto_path_legend></legend>
 
-		<canvas id=auto-paths></canvas>
-		<div>
-			<button id=auto-path-undo data-i18n=auto_path_undo_button></button>
-			<button id=auto-path-next data-i18n=auto_path_next_button></button>
-		</div>
+			<canvas id=auto-paths></canvas>
+			<div>
+				<button id=auto-path-undo data-i18n=auto_path_undo_button></button>
+				<button id=auto-path-next data-i18n=auto_path_next_button></button>
+			</div>
 
-		<input type=hidden class=auto-path name=auto_1_path data-color=green>
-		<input type=hidden class=auto-path name=auto_2_path data-color=blue>
-		<input type=hidden class=auto-path name=auto_3_path data-color=red>
-		<input type=hidden class=auto-path name=auto_4_path data-color=purple>
-		<input type=hidden class=auto-path name=auto_5_path data-color=yellow>
-		<input type=hidden class=auto-path name=auto_6_path data-color=brown>
-		<input type=hidden class=auto-path name=auto_7_path data-color=orange>
-		<input type=hidden class=auto-path name=auto_8_path data-color=cyan>
-		<input type=hidden class=auto-path name=auto_9_path data-color=white>
-	</fieldset>
+			<input type=hidden class=auto-path name=auto_1_path data-color=green>
+			<input type=hidden class=auto-path name=auto_2_path data-color=blue>
+			<input type=hidden class=auto-path name=auto_3_path data-color=red>
+			<input type=hidden class=auto-path name=auto_4_path data-color=purple>
+			<input type=hidden class=auto-path name=auto_5_path data-color=yellow>
+			<input type=hidden class=auto-path name=auto_6_path data-color=brown>
+			<input type=hidden class=auto-path name=auto_7_path data-color=orange>
+			<input type=hidden class=auto-path name=auto_8_path data-color=cyan>
+			<input type=hidden class=auto-path name=auto_9_path data-color=white>
+		</fieldset>
 
-	<fieldset class=full>
-		<legend data-i18n=robot_legend></legend>
-		<p>
-			<span data-i18n=robot_size_question></span><br>
-			<label><span data-i18n=robot_size_length></span> <input type=number min=12 step=1 max=48 name=frame_length> <span data-i18n=robot_size_unit></span></label><br>
-			<label><span data-i18n=robot_size_width></span> <input type=number min=12 step=1 max=48 name=frame_width> <span data-i18n=robot_size_unit></span></label><br>
-		</p>
-		<p>
-			<span data-i18n=robot_fuel_capacity_question></span><br>
-			<label><input type=number min=0 step=1 max=200 name=fuel_capacity></label>
-		</p>
-		<p>
-			<span data-i18n=intake_count_question></span><br>
-			<label><input type=number min=0 step=1 max=4 name=intake_count></label>
-		</p>
-		<p>
-			<span data-i18n=intake_style_question></span><br>
-			<label><input type=checkbox name=intake_otb value=1><span data-i18n=robot_intake_style_otb></span></label>
-			<label><input type=checkbox name=intake_gap value=1><span data-i18n=robot_intake_style_gap></span></label>
-			<label><input type=checkbox name=intake_reversible value=1><span data-i18n=robot_intake_style_reversible></span></label>
-		</p>
-		<p>
-			<span data-i18n=shooter_count_question></span><br>
-			<label><input type=number min=0 step=1 max=8 name=shooter_count></label>
-		</p>
-		<p>
-			<span data-i18n=shooter_style_question></span><br>
-			<label><input type=checkbox name=shooter_fixed value=1><span data-i18n=robot_shooter_style_fixed></span></label>
-			<label><input type=checkbox name=shooter_turret value=1><span data-i18n=robot_shooter_style_turret></span></label>
-		</p>
-		<p>
-			<span data-i18n=robot_weight_question></span><br>
-			<label><input type=number min=30 step=1 max=200 name=weight> <span data-i18n=robot_weight_unit></label><br>
-		</p>
-		<p>
-			<span data-i18n=robot_drivetrain_question></span><br>
-			<label><input type=radio name=drivetrain value=tank><span data-i18n=robot_drivetrain_tank>Tank</span></label>
-			<label><input type=radio name=drivetrain value=swerve><span data-i18n=robot_drivetrain_swerve>Swerve</span></label>
-			<label><input type=radio name=drivetrain value=other><span data-i18n=robot_drivetrain_other>Other</span></label>
-		</p>
-		<p>
-			<span data-i18n=robot_swerve_question></span><br>
-			<label><input type=radio name=swerve value=swerve-drive-specialties><span data-i18n=robot_swerve_sds></span></label>
-			<label><input type=radio name=swerve value=andymark><span data-i18n=robot_swerve_am></span></label>
-			<label><input type=radio name=swerve value=rev-robotics><span data-i18n=robot_swerve_rev></span></label>
-			<label><input type=radio name=swerve value=westcoast-products><span data-i18n=robot_swerve_wcp></span></label>
-			<label><input type=radio name=swerve value=other><span data-i18n=robot_swerve_other></span></label>
-		</p>
-		<p>
-			<span data-i18n=drivetrain_motor_count_question></span><br>
-			<input type=number min=1 step=1 max=4 name=motor_count>
-		</p>
-		<p>
-			<span data-i18n=drivetrain_motor_type_question></span><br>
-			<label><input type=radio name=motors value=neo><span data-i18n=motor_type_neo></span></label>
-			<label><input type=radio name=motors value=falcon_500><span data-i18n=motor_type_f500></span></label>
-			<label><input type=radio name=motors value=full_size_cim><span data-i18n=motor_type_cim></span></label>
-			<label><input type=radio name=motors value=kraken><span data-i18n=motor_type_kraken></span></label>
-			<label><input type=radio name=motors value=other><span data-i18n=motor_type_other></span></label>
-		</p>
-		<p>
-			<span data-i18n=wheel_count_question></span><br>
-			<input type=number min=4 step=1 max=99 name=wheel_count value=4>
-		</p>
-		<p>
-			<span data-i18n=wheel_type_question></span><br>
-			<label><input type=radio name=wheels value=traction><span><img src=/wheel-traction.png><br><span data-i18n=wheel_type_traction></span></span></label>
-			<label><input type=radio name=wheels value=high-traction><span><img src=/wheel-high-traction.png><br><span data-i18n=wheel_type_high_traction></span></span></label>
-			<label><input type=radio name=wheels value=pneumatic><span><img src=/wheel-pneumatic.png><br><span data-i18n=wheel_type_pneumatic></span></span></label>
-			<label><input type=radio name=wheels value=mechanum><span><img src=/wheel-mechanum.png><br><span data-i18n=wheel_type_mechanum></span></span></label>
-			<label><input type=radio name=wheels value=omni><span><img src=/wheel-omni.png><br><span data-i18n=wheel_type_omni></span></span></label>
-			<label><input type=radio name=wheels value=untreaded><span><img src=/wheel-colson.png><br><span data-i18n=wheel_type_untreaded></span></span></label>
-			<label><input type=radio name=wheels value=mixed><span><span data-i18n=wheel_type_mixed></span></span></label>
-			<label><input type=radio name=wheels value=other><span><span data-i18n=wheel_type_other></span></span></label>
-		</p>
-		<p>
-			<span data-i18n=vision_question></span><br>
-			<label><input type=checkbox name=vision_auto value=yes><span data-i18n=vision_auto></span></label>
-			<label><input type=checkbox name=vision_collecting value=yes><span data-i18n=vision_collecting></span></label>
-			<label><input type=checkbox name=vision_placing value=yes><span data-i18n=vision_placing></span></label>
-			<label><input type=checkbox name=vision_localization value=yes><span data-i18n=vision_localization></span></label>
-		</p>
-	</fieldset>
+		<fieldset class=full>
+			<legend data-i18n=robot_legend></legend>
+			<p>
+				<span data-i18n=robot_size_question></span><br>
+				<label><span data-i18n=robot_size_length></span> <input type=number min=12 step=1 max=48 name=frame_length> <span data-i18n=robot_size_unit></span></label><br>
+				<label><span data-i18n=robot_size_width></span> <input type=number min=12 step=1 max=48 name=frame_width> <span data-i18n=robot_size_unit></span></label><br>
+			</p>
+			<p>
+				<span data-i18n=robot_fuel_capacity_question></span><br>
+				<label><input type=number min=0 step=1 max=200 name=fuel_capacity></label>
+			</p>
+			<p>
+				<span data-i18n=intake_count_question></span><br>
+				<label><input type=number min=0 step=1 max=4 name=intake_count></label>
+			</p>
+			<p>
+				<span data-i18n=intake_style_question></span><br>
+				<label><input type=checkbox name=intake_otb value=1><span data-i18n=robot_intake_style_otb></span></label>
+				<label><input type=checkbox name=intake_gap value=1><span data-i18n=robot_intake_style_gap></span></label>
+				<label><input type=checkbox name=intake_reversible value=1><span data-i18n=robot_intake_style_reversible></span></label>
+			</p>
+			<p>
+				<span data-i18n=shooter_count_question></span><br>
+				<label><input type=number min=0 step=1 max=8 name=shooter_count></label>
+			</p>
+			<p>
+				<span data-i18n=shooter_style_question></span><br>
+				<label><input type=checkbox name=shooter_fixed value=1><span data-i18n=robot_shooter_style_fixed></span></label>
+				<label><input type=checkbox name=shooter_turret value=1><span data-i18n=robot_shooter_style_turret></span></label>
+			</p>
+			<p>
+				<span data-i18n=robot_weight_question></span><br>
+				<label><input type=number min=30 step=1 max=200 name=weight> <span data-i18n=robot_weight_unit></label><br>
+			</p>
+			<p>
+				<span data-i18n=robot_drivetrain_question></span><br>
+				<label><input type=radio name=drivetrain value=tank><span data-i18n=robot_drivetrain_tank>Tank</span></label>
+				<label><input type=radio name=drivetrain value=swerve><span data-i18n=robot_drivetrain_swerve>Swerve</span></label>
+				<label><input type=radio name=drivetrain value=other><span data-i18n=robot_drivetrain_other>Other</span></label>
+			</p>
+			<p>
+				<span data-i18n=robot_swerve_question></span><br>
+				<label><input type=radio name=swerve value=swerve-drive-specialties><span data-i18n=robot_swerve_sds></span></label>
+				<label><input type=radio name=swerve value=andymark><span data-i18n=robot_swerve_am></span></label>
+				<label><input type=radio name=swerve value=rev-robotics><span data-i18n=robot_swerve_rev></span></label>
+				<label><input type=radio name=swerve value=westcoast-products><span data-i18n=robot_swerve_wcp></span></label>
+				<label><input type=radio name=swerve value=other><span data-i18n=robot_swerve_other></span></label>
+			</p>
+			<p>
+				<span data-i18n=drivetrain_motor_count_question></span><br>
+				<input type=number min=1 step=1 max=4 name=motor_count>
+			</p>
+			<p>
+				<span data-i18n=drivetrain_motor_type_question></span><br>
+				<label><input type=radio name=motors value=neo><span data-i18n=motor_type_neo></span></label>
+				<label><input type=radio name=motors value=falcon_500><span data-i18n=motor_type_f500></span></label>
+				<label><input type=radio name=motors value=full_size_cim><span data-i18n=motor_type_cim></span></label>
+				<label><input type=radio name=motors value=kraken><span data-i18n=motor_type_kraken></span></label>
+				<label><input type=radio name=motors value=other><span data-i18n=motor_type_other></span></label>
+			</p>
+			<p>
+				<span data-i18n=wheel_count_question></span><br>
+				<input type=number min=4 step=1 max=99 name=wheel_count value=4>
+			</p>
+			<p>
+				<span data-i18n=wheel_type_question></span><br>
+				<label><input type=radio name=wheels value=traction><span><img src=/wheel-traction.png><br><span data-i18n=wheel_type_traction></span></span></label>
+				<label><input type=radio name=wheels value=high-traction><span><img src=/wheel-high-traction.png><br><span data-i18n=wheel_type_high_traction></span></span></label>
+				<label><input type=radio name=wheels value=pneumatic><span><img src=/wheel-pneumatic.png><br><span data-i18n=wheel_type_pneumatic></span></span></label>
+				<label><input type=radio name=wheels value=mechanum><span><img src=/wheel-mechanum.png><br><span data-i18n=wheel_type_mechanum></span></span></label>
+				<label><input type=radio name=wheels value=omni><span><img src=/wheel-omni.png><br><span data-i18n=wheel_type_omni></span></span></label>
+				<label><input type=radio name=wheels value=untreaded><span><img src=/wheel-colson.png><br><span data-i18n=wheel_type_untreaded></span></span></label>
+				<label><input type=radio name=wheels value=mixed><span><span data-i18n=wheel_type_mixed></span></span></label>
+				<label><input type=radio name=wheels value=other><span><span data-i18n=wheel_type_other></span></span></label>
+			</p>
+			<p>
+				<span data-i18n=vision_question></span><br>
+				<label><input type=checkbox name=vision_auto value=yes><span data-i18n=vision_auto></span></label>
+				<label><input type=checkbox name=vision_collecting value=yes><span data-i18n=vision_collecting></span></label>
+				<label><input type=checkbox name=vision_placing value=yes><span data-i18n=vision_placing></span></label>
+				<label><input type=checkbox name=vision_localization value=yes><span data-i18n=vision_localization></span></label>
+			</p>
+		</fieldset>
 
-	<span data-i18n=scouter_header></span><br>
-	<span data-i18n=scouter_name_question></span> <div class=full><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></div>
-	<p><textarea name=notes  data-i18n-placeholder=pit_scout_notes_placeholder></textarea></p>
+		<span data-i18n=scouter_header></span><br>
+		<span data-i18n=scouter_name_question></span> <div class=full><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></div>
+		<p><textarea name=notes  data-i18n-placeholder=pit_scout_notes_placeholder></textarea></p>
+
+		<input type=hidden name=created value="">
+		<input type=hidden name=modified value="">
+	</form>
 
 	<fieldset class=full>
 		<legend data-i18n=bot_photos_legend></legend>
@@ -158,13 +163,12 @@
 		</table>
 	</fieldset>
 
-	<input type=hidden name=created value="">
-	<input type=hidden name=modified value="">
-	<fieldset class=full id=nextButtons>
+	<fieldset id=nextButtons class=full>
 		<legend data-i18n=save_data_legend></legend>
 		<div id=doneButtons></div>
 	</fieldset>
-</form>
+</div>
+
 <iframe id=photoEdit class=lightBoxFullContent src=/photo-edit.html></iframe>
 </body>
 </html>

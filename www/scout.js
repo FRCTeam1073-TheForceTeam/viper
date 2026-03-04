@@ -965,6 +965,13 @@ function toCSV(form){
 	]
 }
 
+function getFormIn(f){
+	if (f && !f.is('form')) {
+		f = f.find('form').first()
+	}
+	return f
+}
+
 function getActiveForm(){
 	if (window.scouting && scouting.length && scouting.is(':visible')) return scouting
 	if (window.pitScouting && pitScouting.length && pitScouting.is(':visible')) return pitScouting
@@ -1032,28 +1039,29 @@ function getUploadedPrefix(uploaded){
 }
 
 function storeScouting(uploaded){
-	if (formHasChanges(scouting)){
+	var f=getFormIn(scouting)
+	if (formHasChanges(f)){
 		for (var i=0; i<window.onStore.length; i++){
 			if(!window.onStore[i]()) return false
 		}
-		setTimeStamps(scouting)
+		setTimeStamps(f)
 		localStorage.setItem("last_match_"+eventId, match)
 		localStorage.setItem("last_pos", pos)
 		localStorage.setItem("last_orient", orient)
-		var csv = toCSV(scouting)
+		var csv = toCSV(f)
 		localStorage.setItem(`${eventYear}_headers`, csv[0])
 		localStorage.setItem(getUploadedPrefix(uploaded)+getScoutKey(), csv[1])
 		storeTime = new Date().getTime()
-		storeScouter(scouting)
+		storeScouter(f)
 	}
 	return true
 }
 
 function storePitScouting(uploaded){
-	var f=pitScouting
+	var f=getFormIn(pitScouting)
 	if (formHasChanges(f)){
 		setTimeStamps(f)
-		var csv = toCSV(pitScouting)
+		var csv = toCSV(f)
 		localStorage.setItem(`${eventYear}_pitheaders`, csv[0])
 		localStorage.setItem(getUploadedPrefix(uploaded)+getPitScoutKey(), csv[1])
 		storeTime = new Date().getTime()
@@ -1061,10 +1069,10 @@ function storePitScouting(uploaded){
 	}
 }
 function storeSubjectiveScouting(uploaded){
-	var f=subjectiveScouting
+	var f=getFormIn(subjectiveScouting)
 	if (formHasChanges(f)){
 		setTimeStamps(f)
-		var csv = toCSV(subjectiveScouting)
+		var csv = toCSV(f)
 		localStorage.setItem(`${eventYear}_subjectiveheaders`, csv[0])
 		localStorage.setItem(getUploadedPrefix(uploaded)+getSubjectiveScoutKey(), csv[1])
 		storeTime = new Date().getTime()
@@ -1178,9 +1186,9 @@ function goChangeTeam(){
 function goNext(uploaded){
 	if (uploaded!="uploaded") localStorage.setItem("last_scout_action","next")
 	var form=getActiveForm()
-	if (form===scouting)return goNextMatch(uploaded)
-	if (form===pitScouting)return pitScoutNext(uploaded)
-	if (form===subjectiveScouting)return subjectiveScoutNext(uploaded)
+	if (form.closest('#scouting').length)return goNextMatch(uploaded)
+	if (form.closest('#pit-scouting').length)return pitScoutNext(uploaded)
+	if (form.closest('#subjective-scouting').length)return subjectiveScoutNext(uploaded)
 }
 
 function goNextMatch(uploaded){
