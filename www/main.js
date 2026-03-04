@@ -596,4 +596,4 @@ window.onerror=(message,file,line,col,error)=>{
 	}))
 	return false
 }
-window.addEventListener("unhandledrejection",e=>{throw e})
+window.addEventListener("unhandledrejection",e=>{throw e.reason})
