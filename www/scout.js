@@ -99,7 +99,7 @@ addI18n({
 	},
 	no_show:{
 		en:'No Show',
-		pt:'Não aparecer',
+		pt:'Sem presença',
 		fr:'Non présent',
 		zh_tw:'沒有出席',
 		he:'אין הופעה',

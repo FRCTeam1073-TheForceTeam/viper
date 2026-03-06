@@ -1,6 +1,6 @@
 # Hardware for Viper Scouting System
 
-The total cost of all the recommend hardware is around $930 (as of 2025), two thirds of which is the clients. The system is flexible and will run on a wide variety of hardware, so feel free to make substitutions or reuse hardware you may already own.
+The total cost of all the recommended hardware is around $930 (as of 2025), two thirds of which is the clients. The system is flexible and will run on a wide variety of hardware, so feel free to make substitutions or reuse hardware you may already own.
 
 ## Server
 

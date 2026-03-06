@@ -84,4 +84,4 @@ Be careful editing CSV files directly. There is data validation on changed data.
 
 ### Edit Event
 
-You must be logged in as "admin" to be able save edited event or CSV data.
+You must be logged in as "admin" to be able to save edited event or CSV data.

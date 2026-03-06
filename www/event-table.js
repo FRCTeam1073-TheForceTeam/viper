@@ -11,7 +11,7 @@ addI18n({
 	},
 	event_table_title:{
 		en:'Enter Event Practice and Qualification Matches',
-		pt:'Coloque eventos de pratica',
+		pt:'Coloque eventos de prática',
 		fr:'Saisir les matchs d\'entraînement et de qualification',
 		tr:'Etkinlik Uygulama ve Eleme Maçlarına Girin',
 		zh_tw:'參加賽事練習和資格賽',
@@ -43,7 +43,7 @@ addI18n({
 	},
 	event_start:{
 		en:'Start date:',
-		pt:'Data de inicio:',
+		pt:'Data de início:',
 		fr:'Date de début :',
 		tr:'Başlangıç ​​tarihi:',
 		zh_tw:'開始日期：',
@@ -83,7 +83,7 @@ addI18n({
 	},
 	event_id_placeholder:{
 		en:'No spaces or punctuation',
-		pt:'Sem espaços ou simbulos',
+		pt:'Sem espaços ou símbolos',
 		fr:'Sans espaces ni ponctuation',
 		tr:'Boşluk veya noktalama işareti yok',
 		zh_tw:'沒有空格或標點',
@@ -91,7 +91,7 @@ addI18n({
 	},
 	event_table_practice:{
 		en:'Practice Matches',
-		pt:'Partidas de praticas',
+		pt:'Partidas de prática',
 		fr:'Matchs d\'entraînement',
 		tr:'Uygulama Maçları',
 		zh_tw:'練習賽',
@@ -99,7 +99,7 @@ addI18n({
 	},
 	event_table_qualification:{
 		en:'Qualification Matches',
-		pt:'Qualificatorias',
+		pt:'Qualificações',
 		fr:'Matchs de qualification',
 		tr:'Eleme Maçları',
 		zh_tw:'資格賽',
@@ -115,7 +115,7 @@ addI18n({
 	},
 	clear_row:{
 		en:'Clear Row',
-		pt:'Limpar Coluna',
+		pt:'Limpar Linha',
 		fr:'Effacer la ligne',
 		tr:'Satırı Temizle',
 		zh_tw:'清除行',

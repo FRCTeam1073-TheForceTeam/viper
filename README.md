@@ -3,7 +3,7 @@
 This is a scouting app designed and used by FRC 1073, The Force Team from Hollis and Brookline, New Hampshire.
 It is designed to collect data about each of the robots as they compete in the tournament.
 The data, such as the number of each type of point scored by each bot, is then used to inform alliance selection decisions.
-It runs on as a web app on a server that can be taken to events and powered by a battery while watching matches.
+It runs as a web app on a server that can be taken to events and powered by a battery while watching matches.
 
 ## Website
 
