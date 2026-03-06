@@ -229,6 +229,7 @@ $(document).ready(function(){
 			fillStats()
 
 			if (window.whiteboardStamps){
+				$('#stamps').html('')
 				window.whiteboardStamps.forEach(function(stamp){
 					$('#stamps').append(" ").append($(`<button class="stamp icon-button draw-mode" data-i18n-tooltip=stamp_tooltip><img src=${stamp}></button>`).click(stampWhiteboard).click(showDrawMode))
 				})
