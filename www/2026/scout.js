@@ -864,6 +864,22 @@ addI18n({
 		fr:'Quelle est la quantité maximale de carburant que le robot de l\'équipe _TEAMNUM_ peut contenir à la fois?',
 		pt:'Qual é a quantidade máxima de combustível que o robô da equipe _TEAMNUM_ pode conter de uma vez?',
 	},
+	trenchbot_question:{
+			en:'Trench ability:',
+			he:'יכולת תעלה:',
+			tr:'Yetenek hendek:',
+			zh_tw:'戰壕能力:',
+			fr:'Capacité de tranchée:',
+			pt:'Capacidade de trincheira:',
+	},
+	trenchbot_option:{
+		en:'Fits under trench',
+		he:'מתאים מתחת לתעלה',
+		tr:'Hendeğin altına sığar',
+		zh_tw:'適合在戰壕下',
+		fr:'S\'adapte sous la tranchée',
+		pt:'Cabe sob a trincheira',
+	},
 	intake_count_question:{
 		en:'On how many side of the robot can _TEAMNUM_ intake fuel?',
 		he:'באיזו צד של הרובוט יכול _TEAMNUM_ לקבל דלק?',
