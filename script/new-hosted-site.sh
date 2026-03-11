@@ -42,7 +42,14 @@ git add .
 git commit -m 'initial setup' || true
 git push || true
 
-foreachserver live "cd sites/viper/local.data; if [ ! -e $team ]; then git clone source.ostermiller.org:/git/viper${team}data.git $team; fi; cd $team; git pull; sudo cp .htsite /etc/apache2/sites-available/viper$team.conf; sudo a2ensite viper$team; sudo service apache2 reload"
+cd ../..
+for server in `foreachserver --list --quiet live`
+do
+	echo $server
+    rsync local.data/viper$team/ $server:sites/viper/local.data/$team -avz --delete
+done
+foreachserver live "cd sites/viper/local.data/$team; sudo cp .htsite /etc/apache2/sites-available/viper$team.conf; sudo a2ensite viper$team; sudo service apache2 reload"
+
 ssh web1 "cd sites/viper/; ./script/db-import-site.sh local.data/$team"
 cd ../..
 echo "Your team's cloud hosted viper site is ready:
