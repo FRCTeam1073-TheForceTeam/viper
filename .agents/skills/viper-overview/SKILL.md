@@ -260,11 +260,19 @@ Strings used in JavaScript code are translated within the code files themselves,
 - Or to specialized shared files like `event-url.js` for event/competition-specific strings
 - Use the same language code property convention
 
-### Common Translation Task
-When adding a new feature with user-visible text:
-1. Add the English string to the appropriate `.js` file with all six language translations
-2. For documentation, create or update `.md` files for all six languages
-3. Follow the existing translation patterns in the codebase
+### Adding New Translation Keys
+When adding a new feature with user-visible text to an existing set of supported languages:
+1. **Code translations**: Add the English string to the appropriate `.js` file with translations for all six currently supported languages using the language code property keys (`en:`, `fr:`, `pt:`, `zh_tw:`, `tr:`, `he:`)
+2. **Documentation translations**: For user-facing docs, create or update `.md` files for all six languages (e.g., `feature.md`, `feature.fr.md`, `feature.pt.md`, etc.)
+3. Use the extraction tool `script/translations-extract.pl` to track what needs translation
+4. Verify completeness by ensuring all supported language codes have corresponding values
+
+### Adding a Newly Translated Language
+When adding support for a new language to the entire project:
+1. **Update supported languages list**: Add the new language code to the configuration and update documentation in this SKILL
+2. **Add language to all existing code strings**: Find all `.js` files with translations by searching for `zh_tw:` to locate all translation blocks (use `zh_tw:` rather than other language codes as it's more complex and avoids substring false positives). Then add the new language code property to each translation block across the codebase.
+3. **Update language selector**: Add a new option to the language dropdown in `/www/main-menu.html` for the new language
+4. **Create documentation translations**: For all existing `.md` files, create corresponding files with the new language suffix
 
 ## Related Resources
 
@@ -290,4 +298,6 @@ When helping with Viper:
 - **Fixing backend issue**: Check `/cgi/` Perl scripts
 - **Updating installation**: Modify `/script/install.sh` and related scripts
 - **Changing database schema**: The `/script/db-schema.pl` script automatically parses `scouting`, `pit-scouting`, and `subjective-scouting` html files from each season to determine which database columns to create in the corresponding tables. When adding new fields to scouting forms, there is usually no need to modify the script itself—just add the fields to the season-specific form files and the schema will be generated correctly.
-- **Adding internationalization**: Follow the patterns for agents documented in the "Internationalization (i18n) Translations" section of this skill
+- **Reviewing all translations for a language**: To comprehensively review or audit all translations for a specific language (e.g., Portuguese, French, etc.):
+  1. **Find markdown documentation translations**: Search for files matching the pattern `**/*.LANGCODE.md` (e.g., `**/*.pt.md` for Portuguese). These files contain user-facing documentation and instructions.
+  2. **Find code translations**: Search with regex pattern `LANGCODE:\s*['\"]` to find all JavaScript i18n entries (e.g., `pt:\s*['\"]` for Portuguese). This captures all inline translations in `.js` files.
