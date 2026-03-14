@@ -187,6 +187,7 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 
 	aggregate.count = (aggregate.count||0)+1
 	aggregate.max_score = Math.max(aggregate.max_score||0,scout.score||0)
+	aggregate.max_auto_score = Math.max(aggregate.max_auto_score||0,scout.auto_score||0)
 	aggregate.min_score = Math.min(aggregate.min_score===undefined?9999:aggregate.min_score,scout.score||0)
 	aggregate.max_fuel_output = Math.max(aggregate.max_fuel_output||0,scout.fuel_output||0)
 	aggregate.max_tele_climb_level = Math.max(aggregate.max_tele_climb_level||0, scout.tele_climb_level||0)
@@ -1132,6 +1133,15 @@ var statInfo={
 		zh_tw:'自動得分',
 		tr:'Otomatik Skor',
 		he:'ציון באוטומט',
+	},
+	max_auto_score:{
+		en:'Max Auto Score',
+		type:'minmax',
+		fr:'Score max en auto',
+		pt:'Pontuação máxima no Auto',
+		zh_tw:'自動最高得分',
+		tr:'Maksimum Otomatik Skor',
+		he:'ציון מקסימלי באוטומט',
 	},
 	auto_to_alliance:{
 		en:'To Alliance in Auto',
