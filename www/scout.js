@@ -712,8 +712,8 @@ function fillPreviousFormData(form,data){
 				else  input.removeAttr('checked')
 				input.prop('checked',checked)
 				input.attr('data-at-scout-start',checked?"checked":"unchecked")
-			} else if (!/^submit$/.test(type) && val){
-				input.attr('data-at-scout-start',val)
+			} else if (!/^submit$/.test(type)){
+				input.attr('data-at-scout-start',val||"")
 				input.val(val)
 			}
 		}
@@ -899,6 +899,7 @@ function showScouting(){
 		}
 		$('.screen,.init-hide').hide()
 		resetInitialValues(scouting)
+		skipHashChangeSave = true
 		setHash(pos,orient,team,match)
 		window.scrollTo(0,0)
 		h1Key='scouting_heading'
@@ -909,6 +910,7 @@ function showScouting(){
 		fillDefaultFormFields()
 		setTeamBG()
 		fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
+		skipHashChangeSave = false
 		$('.count').each(countHandler)
 		resetSequentialInputSeries()
 		$('#scouting-comments').toggle(!!window.showScoutingComments)
