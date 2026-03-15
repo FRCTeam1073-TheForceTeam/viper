@@ -2094,9 +2094,81 @@ var fmsMapping=[
 
 function showPitScouting(el,team){
 	promisePitScouting().then(pitData => {
+		var dat=pitData[team]||{},
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','team_info_legend')),
+		ti=(window.eventTeamsInfo||{})[team]||{}
+		dlText(section,'team_name_label',dat.team_name||ti.nameShort)
+		dlText(section,'team_location_label',dat.team_location||ti.city?`${ti.city}, ${ti.stateProv}, ${ti.country}`:'')
+		dlText(section,'bot_name_label',dat.bot_name||ti.robotName)
+		el.append(section)
+
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','robot_legend'))
+		dlText(section,'robot_size_question',`${dat.frame_length}x${dat.frame_width}`,'robot_size_unit')
+		dlText(section,'robot_fuel_capacity_question',dat.fuel_capacity)
+		divCheckbox(section,'trenchbot_question',dat.trenchbot)
+		dlText(section,'intake_count_question',dat.intake_count)
+		divCheckbox(section,'robot_intake_style_otb',dat.intake_otb)
+		divCheckbox(section,'robot_intake_style_gap',dat.intake_gap)
+		divCheckbox(section,'robot_intake_style_reversible',dat.intake_reversible)
+		dlText(section,'shooter_count_question',dat.shooter_count)
+		divCheckbox(section,'robot_shooter_style_fixed',dat.shooter_fixed)
+		divCheckbox(section,'robot_shooter_style_turret',dat.shooter_turret)
+		dlText(section,'robot_weight_question',dat.weight,'robot_weight_unit')
+		dlTranslation(section,'robot_drivetrain_question',dat.drivetrain,'robot_drivetrain_')
+		dlTranslation(section,'robot_swerve_question',dat.swerve,'robot_swerve_')
+		dlText(section,'drivetrain_motor_count_question',dat.motor_count)
+		dlTranslation(section,'drivetrain_motor_type_question',dat.motors,'motor_type_')
+		dlText(section,'wheel_count_question',dat.wheel_count)
+		dlTranslation(section,'wheel_type_question',dat.wheels,'wheel_type_')
+		el.append(section)
+
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','vision_question'))
+		divCheckbox(section,'vision_auto',dat.vision_auto)
+		divCheckbox(section,'vision_collecting',dat.vision_collecting)
+		divCheckbox(section,'vision_placing',dat.vision_placing)
+		divCheckbox(section,'vision_localization',dat.vision_localization)
+		el.append(section)
+
+		if(dat.scouter||dat.notes){
+			section=$('<fieldset>').append($('<legend>').attr('data-i18n','scouter_header'))
+			dlText(section,'scouter_name_question',dat.scouter)
+			if(dat.notes)section.append($("<dl>").append($('<dt>').attr('data-i18n','pit_scout_notes_placeholder')).append($('<dd>').append($('<div style=white-space:pre-wrap>').text(dat.notes))))
+			el.append(section)
+		}
+
 		applyTranslations()
 	})
 
+	function divCheckbox(parent,key,value){
+		parent.append($('<div>').attr('data-i18n',key).toggleClass('unused',!is(value)))
+	}
+
+	function dlText(parent,question,s,unit){
+		parent.append($("<dl>").append($('<dt>').attr('data-i18n',question)).append(text($('<dd>'),s,unit)))
+	}
+
+	function text(node,s,unit){
+		if (is(s)){
+			node.text(s)
+			if (unit)node.append(' ').append($('<span>').attr('data-i18n',unit))
+		}else node.attr('data-i18n','pit_scout_not_answered')
+		return node
+	}
+
+	function dlTranslation(parent,question,s,prefix){
+		parent.append($("<dl>").append($('<dt>').attr('data-i18n',question)).append(translation($('<dd>'),s,prefix)))
+	}
+
+	function translation(node,s,prefix){
+		var swerveMap={'swerve-drive-specialties':'sds','andymark':'am','rev-robotics':'rev','westcoast-products':'wcp','other':'other'}
+		var key=s
+		if(prefix==='robot_swerve_'&&swerveMap[s])key=swerveMap[s]
+		return node.attr('data-i18n',is(s)?`${prefix}${key}`.replace(/-/g,'_'):'pit_scout_not_answered')
+	}
+
+	function is(s){
+		return s&&s!="0"&&!/^undefined/.test(s)
+	}
 }
 
 function showSubjectiveScouting(el,team){
