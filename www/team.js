@@ -68,6 +68,12 @@ statsConfig = new StatsConfig({
 	hasGraphs:true,
 	downloadBlobs:downloadBlobs,
 })
+
+// Stubs for functions defined in scout.js and canvas-path.js but not loaded on team.html
+if (typeof countHandler === 'undefined') {
+	window.countHandler = function() {}
+}
+
 $(document).ready(function(){
 	Promise.all([
 		promiseEventStats(),

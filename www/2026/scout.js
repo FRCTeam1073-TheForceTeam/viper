@@ -1391,6 +1391,7 @@ $(document).ready(function(){
 
 	function drawAutos(){
 		var canvas = $('#auto-paths')[0]
+		if (!canvas) return
 		sizeAndClearCanvas(canvas)
 		$('.auto-path').each(function(){
 			drawPath(canvas,$(this).attr('data-color'),$(this).val(),true,false)
