@@ -2105,14 +2105,8 @@ function showPitScouting(el,team){
 		section=$('<fieldset>').append($('<legend>').attr('data-i18n','robot_legend'))
 		dlText(section,'robot_size_question',`${dat.frame_length}x${dat.frame_width}`,'robot_size_unit')
 		dlText(section,'robot_fuel_capacity_question',dat.fuel_capacity)
-		divCheckbox(section,'trenchbot_question',dat.trenchbot)
+		dlCheckboxes(section,'trenchbot_question',['trenchbot_option'],[dat.trenchbot])
 		dlText(section,'intake_count_question',dat.intake_count)
-		divCheckbox(section,'robot_intake_style_otb',dat.intake_otb)
-		divCheckbox(section,'robot_intake_style_gap',dat.intake_gap)
-		divCheckbox(section,'robot_intake_style_reversible',dat.intake_reversible)
-		dlText(section,'shooter_count_question',dat.shooter_count)
-		divCheckbox(section,'robot_shooter_style_fixed',dat.shooter_fixed)
-		divCheckbox(section,'robot_shooter_style_turret',dat.shooter_turret)
 		dlText(section,'robot_weight_question',dat.weight,'robot_weight_unit')
 		dlTranslation(section,'robot_drivetrain_question',dat.drivetrain,'robot_drivetrain_')
 		dlTranslation(section,'robot_swerve_question',dat.swerve,'robot_swerve_')
@@ -2120,6 +2114,18 @@ function showPitScouting(el,team){
 		dlTranslation(section,'drivetrain_motor_type_question',dat.motors,'motor_type_')
 		dlText(section,'wheel_count_question',dat.wheel_count)
 		dlTranslation(section,'wheel_type_question',dat.wheels,'wheel_type_')
+		el.append(section)
+
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','intake_style_question'))
+		divCheckbox(section,'robot_intake_style_otb',dat.intake_otb)
+		divCheckbox(section,'robot_intake_style_gap',dat.intake_gap)
+		divCheckbox(section,'robot_intake_style_reversible',dat.intake_reversible)
+		el.append(section)
+
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','shooter_style_question'))
+		dlText(section,'shooter_count_question',dat.shooter_count)
+		divCheckbox(section,'robot_shooter_style_fixed',dat.shooter_fixed)
+		divCheckbox(section,'robot_shooter_style_turret',dat.shooter_turret)
 		el.append(section)
 
 		section=$('<fieldset>').append($('<legend>').attr('data-i18n','vision_question'))
@@ -2145,6 +2151,14 @@ function showPitScouting(el,team){
 
 	function dlText(parent,question,s,unit){
 		parent.append($("<dl>").append($('<dt>').attr('data-i18n',question)).append(text($('<dd>'),s,unit)))
+	}
+
+	function dlCheckboxes(parent,question,checkboxKeys,values){
+		var dl=$("<dl>").append($('<dt>').attr('data-i18n',question))
+		checkboxKeys.forEach(function(key,i){
+			dl.append($('<dt>').attr('data-i18n',key).toggleClass('unused',!is(values?values[i]:null)))
+		})
+		parent.append(dl)
 	}
 
 	function text(node,s,unit){
