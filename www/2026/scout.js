@@ -1005,6 +1005,39 @@ $(document).ready(function(){
 	enteredZoneMS = 0,
 	currentZone = 'alliance'
 
+	// Create and style the match timer display
+	const timerDisplay = $('<div id="match-timer-display"></div>')
+	timerDisplay.css({
+		position: 'absolute',
+		top: '.3em',
+		left: '.6em',
+		fontWeight: 'bold',
+		fontFamily: 'monospace'
+	})
+	$('body').prepend(timerDisplay)
+
+	// Function to format milliseconds as MM:SS.d format
+	function formatGameTime(ms) {
+		const totalSeconds = Math.floor(ms / 1000)
+		const minutes = Math.floor(totalSeconds / 60)
+		const seconds = totalSeconds % 60
+		return `${minutes}:${String(seconds).padStart(2, '0')}`
+	}
+
+	// Function to update timer display
+	function updateTimerDisplay() {
+		if (matchStartTime > 0) {
+			const gameTimeMs = Math.max(0, new Date().getTime() - matchStartTime)
+			const displayTime = formatGameTime(gameTimeMs)
+			timerDisplay.text(displayTime)
+		} else {
+			timerDisplay.text('0:00')
+		}
+	}
+
+	// Update timer every 100ms
+	setInterval(updateTimerDisplay, 100)
+
 	promisePitScouting().then(function(data){
 		pitData = data
 	})
@@ -1084,6 +1117,9 @@ $(document).ready(function(){
 	function getGameTimeMS(input){
 		var now = new Date().getTime()
 		if (matchStartTime==0) {
+			if (!input || !input.closest || !input.closest('.auto, .teleop').length) {
+				return 0
+			}
 			// start the game timer if not already started
 			var startOffset = 0
 			$(".zone-timer").val("0")
@@ -1150,6 +1186,7 @@ $(document).ready(function(){
 		$('.neutral, .opponent').hide()
 		$('.target').removeClass('active')
 		$('.target-hub').addClass('active')
+		if (e && e.jquery)return animateChangeFloater(-1, e)
 		updateZoneTimer($(this),'alliance')
 		return countHandler.call(this,e)
 	}
@@ -1158,6 +1195,7 @@ $(document).ready(function(){
 		$('.neutral, .alliance').hide()
 		$('.target').removeClass('active')
 		$('.target-alliance').addClass('active')
+		if (e && e.jquery)return animateChangeFloater(-1, e)
 		updateZoneTimer($(this),'opponent')
 		return countHandler.call(this,e)
 	}
@@ -1166,6 +1204,7 @@ $(document).ready(function(){
 		$('.alliance, .opponent').hide()
 		$('.target').removeClass('active')
 		$('.target-alliance').addClass('active')
+		if (e && e.jquery)return animateChangeFloater(-1, e)
 		updateZoneTimer($(this),'neutral')
 		return countHandler.call(this,e)
 	}
@@ -1209,9 +1248,9 @@ $(document).ready(function(){
 			input.val(Math.max(0,parseInt(input.val())-value))
 			animateChangeFloater(-value, dataInput.length ? dataInput : input)
 		}
-		if(/alliance_to/.test(field))toAlliance()
-		if(/opponent_to/.test(field))toOpponent()
-		if(/neutral_to/.test(field))toNeutral()
+		if(/alliance_to/.test(field))toAlliance(dataInput)
+		if(/opponent_to/.test(field))toOpponent(dataInput)
+		if(/neutral_to/.test(field))toNeutral(dataInput)
 		if (input.is(":checked")) input.prop('checked',false)
 		if (!text)initScouting2026()
 		order.val(text)
