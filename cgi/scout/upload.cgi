@@ -105,6 +105,19 @@ sub writeCsvData(){
 		open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 		my $csv = csv->new(-f $fileName?scalar(read_file($fileName)):"");
+
+		# Remove existing rows that match the composite key based on type
+		my $keyColumns = $type eq 'scouting' ? ['match', 'team', 'scouter'] : ['team', 'scouter'];
+		my $keysToRemove = {};
+		for my $newRowNum (1..$newCsv->getRowCount()){
+			my $key = join("|", map { $newCsv->getByName($newRowNum, $_) } @{$keyColumns});
+			$keysToRemove->{$key} = 1;
+		}
+		$csv->{_data} = [ grep {
+			my $key = join("|", map { $csv->getByName($_, $_) } @{$keyColumns});
+			!exists $keysToRemove->{$key};
+		} @{$csv->{_data}} ];
+
 		$csv->append($newCsv);
 		open my $fh, '>', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
 		$fh->print($csv->toString());
