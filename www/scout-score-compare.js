@@ -48,13 +48,13 @@ function promiseScoutScoreCompare(callback){
 
 function getScoreDifference(scoutData, scoreData){
 	if (!window.fmsMapping) return 0
-	var diff = {diff:0,dat:[],teams:[],scouters:[]}
+	var diff = {diff:0,score:0,dat:[],teams:[],scouters:[]}
 	scoutData.forEach(scoutDat => {
 		diff.teams.push(scoutDat.team)
 		diff.scouters.push(scoutDat.scouter)
 	})
 	window.fmsMapping.forEach(map=>{
-		var dat = {fms:{},scout:{},diff:0}
+		var dat = {fms:{},scout:{},diff:0,score:0}
 		map[0].forEach(fms=>{
 			var value = scoreData
 			fms.split('.').forEach(key => {
@@ -63,6 +63,7 @@ function getScoreDifference(scoutData, scoreData){
 			value = value || 0
 			dat.fms[fms]=value
 			dat.diff+=value
+			dat.score+=value
 		})
 		map[1].forEach(scout=>{
 			dat.scout[scout]={total:0,teams:[]}
@@ -80,6 +81,7 @@ function getScoreDifference(scoutData, scoreData){
 		dat.diff=Math.abs(dat.diff)
 		diff.dat.push(dat)
 		diff.diff+=dat.diff
+		diff.score+=dat.score
 	})
 	return diff
 }

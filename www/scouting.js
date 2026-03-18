@@ -85,7 +85,11 @@ $(document).ready(function(){
 			if (match.Red) allianceStats.push(match.Red)
 			if (match.Blue) allianceStats.push(match.Blue)
 		})
-		allianceStats = allianceStats.sort((a,b)=>b.diff-a.diff)
+		allianceStats = allianceStats.sort((a,b)=>{
+			const aPercent = a.diff / (a.score || 0.1)
+			const bPercent = b.diff / (b.score || 0.1)
+			return bPercent - aPercent
+		})
 		allianceStats.forEach(alliance=>{
 			var details = $('<table>'),
 			dh1 = $('<tr>'),
@@ -137,7 +141,7 @@ $(document).ready(function(){
 						$('<td>')
 						.append($('<span>').attr('data-translate-match-type',getShortMatchNameKey(alliance.match)).attr('data-match-num',getMatchNumber(alliance.match)).attr('data-translate-alliance',alliance.alliance.toLowerCase()+"_heading").attr('data-i18n','match_alliance'))
 						.append('<br>')
-						.append(`<span class=mainDiff>${alliance.diff}</span>`)
+						.append(`<span class=mainDiff>${Math.round((alliance.diff / (alliance.score || 0.1)) * 100)}%<br>${alliance.diff}</span>`)
 					)
 					.append(details)
 
