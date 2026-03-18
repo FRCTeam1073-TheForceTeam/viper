@@ -466,7 +466,6 @@ $(window).on('hashchange', function(){
 	if (!skipHashChangeSave) {
 		maybeSaveFirst()
 	}
-	skipHashChangeSave = false
 	parseHash()
 	showScreen()
 	window.scrollTo(0,0)
@@ -699,22 +698,23 @@ function buildHash(pos,orient,team,match,teamList){
 }
 
 function fillPreviousFormData(form,data){
-	if (!data) return
 	form.find('input,textarea').each(function(){
 		var input = $(this),
 		type = input.attr('type'),
 		name = input.attr('name'),
-		val = data[name]
+		val = data?data[name]:undefined
 		if (name){
 			if (/^radio|checkbox$/.test(type)){
-				var checked = input.attr('value')==val
-				if(checked) input.attr('checked',"")
-				else  input.removeAttr('checked')
-				input.prop('checked',checked)
-				input.attr('data-at-scout-start',checked?"checked":"unchecked")
+				if (data){
+					var checked = input.attr('value')==val
+					if(checked) input.attr('checked',"")
+					else  input.removeAttr('checked')
+					input.prop('checked',checked)
+				}
+				input.attr('data-at-scout-start',input.prop('checked')?"checked":"unchecked")
 			} else if (!/^submit$/.test(type)){
-				input.attr('data-at-scout-start',val||"")
-				input.val(val)
+				if (data) input.val(val)
+				input.attr('data-at-scout-start',input.val()||"")
 			}
 		}
 	})
@@ -764,6 +764,7 @@ function resetInitialValues(form){
 }
 
 function showPitScoutingForm(t){
+	skipHashChangeSave = true
 	promisePitScouting().then(pitData=>{
 		if (t && typeof t != 'number') t = parseInt($(this).text())
 		if (t) team = t
@@ -790,6 +791,7 @@ function showPitScoutingForm(t){
 		}
 		pitScouting.show()
 		setupButtons()
+		skipHashChangeSave = false
 		localStorage.setItem("last_scout_type", "pit-scout")
 		applyTranslations()
 	})
@@ -797,6 +799,7 @@ function showPitScoutingForm(t){
 
 
 function showSubjectiveScoutingForm(t){
+	skipHashChangeSave = true
 	promiseSubjectiveScouting().then(subjectiveData=>{
 		if (t && typeof t != 'number') t = parseInt($(this).text())
 		if (t) team = t
@@ -816,6 +819,7 @@ function showSubjectiveScoutingForm(t){
 		}
 		form.show()
 		setupButtons()
+		skipHashChangeSave = false
 		localStorage.setItem("last_scout_type", "subjective-scout")
 		applyTranslations()
 	})
@@ -892,6 +896,7 @@ function animateChangeFloater(change, relative){
 }
 
 function showScouting(){
+	skipHashChangeSave = true
 	promiseEventStats().then(resolve=>{
 		var [_, _, eventStatsByMatchTeam] = resolve
 		for (var i=0; i<window.onBeforeShowScouting.length; i++){
@@ -899,7 +904,6 @@ function showScouting(){
 		}
 		$('.screen,.init-hide').hide()
 		resetInitialValues(scouting)
-		skipHashChangeSave = true
 		setHash(pos,orient,team,match)
 		window.scrollTo(0,0)
 		h1Key='scouting_heading'
