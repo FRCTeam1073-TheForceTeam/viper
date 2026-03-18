@@ -114,7 +114,8 @@ sub writeCsvData(){
 			$keysToRemove->{$key} = 1;
 		}
 		$csv->{_data} = [ grep {
-			my $key = join("|", map { $csv->getByName($_, $_) } @{$keyColumns});
+			my $row = $_;
+			my $key = join("|", map { $csv->getByName($row, $_) } @{$keyColumns});
 			!exists $keysToRemove->{$key};
 		} @{$csv->{_data}} ];
 
