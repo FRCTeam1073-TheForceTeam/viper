@@ -774,8 +774,8 @@ function showPitScoutingForm(t){
 		setHash(null,null,team,null,teamList)
 		resetInitialValues(pitScouting)
 		$('.location-pointer').remove()
-		fillDefaultFormFields()
 		fillPreviousFormData(pitScouting, localPitScoutingData(team)||pitData[team])
+		fillDefaultFormFields()
 		promiseTeamsInfo().then(ti => {
 			if (ti[team]){
 				$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
@@ -807,8 +807,8 @@ function showSubjectiveScoutingForm(t){
 		var form = $('#subjective-scouting')
 		resetInitialValues(form)
 		$('.location-pointer').remove()
-		fillDefaultFormFields()
 		fillPreviousFormData(form, localSubjectiveScoutingData(team)||subjectiveData[team])
+		fillDefaultFormFields()
 		resetSequentialInputSeries()
 		$('.count').each(countHandler)
 		for (var i=0; i<window.onShowSubjectiveScouting.length; i++){
@@ -907,9 +907,9 @@ function showScouting(){
 		$('.teamColor').text(pos.startsWith('R')?"red":"blue")
 		$('.teamColorCaps').text(pos.startsWith('R')?"Red":"Blue")
 		$('input[name="match"]').val(match).attr('data-at-scout-start',match)
-		fillDefaultFormFields()
 		setTeamBG()
 		fillPreviousFormData(scouting, localScoutingData(team,match)||eventStatsByMatchTeam[`${match}-${team}`])
+		fillDefaultFormFields()
 		skipHashChangeSave = false
 		$('.count').each(countHandler)
 		resetSequentialInputSeries()
@@ -931,8 +931,11 @@ function fillDefaultFormFields(){
 	$('.team').text(team)
 	$('input[name="event"]').val(eventId).attr('data-at-scout-start',eventId)
 	$('input[name="team"]').val(team).attr('data-at-scout-start',team)
-	var lastScouter = (localStorage.getItem("last_scouter")||"").replace(/^(null|undefined)$/,"")
-	$('input[name="scouter"]').val(lastScouter).attr('data-at-scout-start',lastScouter)
+	var scouterInput = $('input[name="scouter"]')
+	if (!scouterInput.val()){
+		var lastScouter = (localStorage.getItem("last_scouter")||"").replace(/^(null|undefined)$/,"")
+		scouterInput.val(lastScouter).attr('data-at-scout-start',lastScouter)
+	}
 }
 
 function setTeamBG(){
@@ -1400,7 +1403,6 @@ $(document).ready(function(){
 	$('.collapse').click(toggleCollapse)
 
 	$('title').text($('title').text().replace(/EVENT/g, eventName))
-
 
 	promiseEventMatches().then(em => {
 		eventMatches = em
