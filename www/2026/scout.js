@@ -17,6 +17,14 @@ addI18n({
 		fr:'Instructions complètes',
 		pt:'Instruções completas',
 	},
+	start_auto_button:{
+		en:'Start Auto',
+		he:'התחל אוטומטי',
+		tr:'Otomatiği Başlat',
+		zh_tw:'開始自動',
+		fr:'Démarrer Auto',
+		pt:'Iniciar Auto',
+	},
 	timeline_value_header:{
 		en:'Value',
 		he:'ערך',
@@ -1030,8 +1038,10 @@ $(document).ready(function(){
 			const gameTimeMs = Math.max(0, new Date().getTime() - matchStartTime)
 			const displayTime = formatGameTime(gameTimeMs)
 			timerDisplay.text(displayTime)
+			$('.start-auto').hide()
 		} else {
 			timerDisplay.text('0:00')
+			$('.start-auto').show()
 		}
 	}
 
@@ -1124,7 +1134,7 @@ $(document).ready(function(){
 			var startOffset = 0
 			$(".zone-timer").val("0")
 			if (input.closest('.teleop').length) startOffset = TELE_START_MS
-			else setTimeout(proceedToTele, AUTO_MS)
+			else setTimeout(proceedToTele, AUTO_MS+AUTO_GAP_MS)
 			matchStartTime = new Date().getTime()-startOffset
 		}
 		return Math.max(0,now-matchStartTime)
@@ -1233,11 +1243,20 @@ $(document).ready(function(){
 		return false
 	})
 
+	$('.start-auto').click(function(){
+		matchStartTime = new Date().getTime()
+		setTimeout(proceedToTele, AUTO_MS+AUTO_GAP_MS)
+		return false
+	})
+
 	$('.undo').click(function(){
 		var order = $('[name="timeline"]'),
 		text = order.val(),
 		m = text.match(/(.*(?: |^))[0-9]+\:([a-z0-9_]+)(?:\:([a-z0-9_]+))?$/)
-		if (!m) return false
+		if (!m) {
+			matchStartTime = 0
+			return false
+		}
 		text = m[1].trim()
 		var field = m[2],
 		valueStr = m[3],
