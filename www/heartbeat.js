@@ -77,7 +77,7 @@ function createUploadStatusUI() {
 			$('<div id="auto-upload-status" style="'+
 				'position:fixed;'+
 				'top:1em;'+
-				'right:1em;'+
+				'left:1em;'+
 				'background-color:var(--section-bg-color);'+
 				'border:1px solid var(--main-border-color);'+
 				'padding:1em;'+
