@@ -1292,14 +1292,15 @@ function copyTitleAttr(){
 }
 
 function setupButtons(){
-	var featured=$('#hamburger').is(':visible')?'upload':'next',
+	var featured='next',
 	doneButtons=$('#doneButtons'),
 	featuredButton=$('<div id=featuredButton>'),
 	otherButtons=$('<div id=otherButtons>')
 	if("qr"==localStorage.getItem("last_scout_action")) featured="qr"
 	else if(getActiveForm()===scouting){
 		var next = getNextMatch()
-		if(!next || haveDataForMatch(next) || haveAllDataForOurNextMatch()) featured='upload'
+		// Feature upload if: no next match, OR no heartbeat and we have collected data needed for next match
+		if(!next || (!window.hasHeartbeat && (haveDataForMatch(next) || haveAllDataForOurNextMatch()))) featured='upload'
 	}
 	addButtons(featuredButton,featured,true)
 	addButtons(otherButtons,featured,false)

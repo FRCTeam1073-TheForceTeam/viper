@@ -340,7 +340,9 @@ function clearHistory(){
 function deleteMatch(){
 	var match = $(this).attr("data-match")
 	if (confirm(translate('delete_match_confirm',{match:match}))){
-		pdb.rename(match,`deleted_${match}`,showUploads)
+		localStorage['deleted_' + match] = localStorage[match]
+		delete localStorage[match]
+		showUploads()
 	}
 }
 
@@ -353,7 +355,10 @@ function removeMatch(){
 
 function undeleteMatch(){
 	var match = $(this).attr("data-match")
-	pdb.rename(match,match.replace(/^(deleted|uploaded)_/,''),showUploads)
+	var originalKey = match.replace(/^(deleted|uploaded)_/, '')
+	localStorage[originalKey] = localStorage[match]
+	delete localStorage[match]
+	showUploads()
 }
 
 function getQrUrls(key,csv){
@@ -396,11 +401,11 @@ function showQrCode(num){
 	qrNum=num
 	if (num>qrUrls.length){
 		closeLightBox()
-		pdb.rename(qrMatch,`uploaded_${qrMatch}`,_=>{
-			showUploads()
-			$('#show-uploads').hide()
-			$('#uploads').show()
-		})
+		localStorage['uploaded_' + qrMatch] = localStorage[qrMatch]
+		delete localStorage[qrMatch]
+		showUploads()
+		$('#show-uploads').hide()
+		$('#uploads').show()
 		return false
 	}
 	var dialog=$('#qr-code-dialog')

@@ -15,9 +15,30 @@ class PhotoDB{
 		return this.idb.transaction("photos","readwrite").objectStore("photos")
 	}
 
+	resolveIdbKey(key,cb){
+		// Try to find key in IndexedDB, with or without prefix
+		var r=this.transaction().get(key)
+		r.onsuccess=e=>{
+			if(e.target.result){
+				cb(key) // Found with original key
+			} else {
+				// Try without prefix (backwards compatibility for prefixed stored photos)
+				var idbKey = key.replace(/^(deleted|uploaded)_/, '')
+				if(idbKey !== key){
+					var r2=this.transaction().get(idbKey)
+					r2.onsuccess=e2=>cb(e2.target.result ? idbKey : null)
+					r2.onerror=e2=>cb(null)
+				} else {
+					cb(null)
+				}
+			}
+		}
+		r.onerror=e=>cb(null)
+	}
+
 	put(key,data,cb){
 		cb??=(_=>{})
-		if(/^(deleted|uploaded)_20[0-9]{2}_photo_/.test(key)||/_photo_/.test(key)){
+		if(/_photo_/.test(key)){
 			this.ready.then(()=>{
 				if(!this.idb)return cb()
 				localStorage[key]='idb'+new Date().toISOString().replace(/\..*/,"+00:00")
@@ -36,9 +57,12 @@ class PhotoDB{
 		if(!/^idb(20|$)/.test(l))return cb(l)
 		this.ready.then(()=>{
 			if(!this.idb)return cb()
-			var r=this.transaction().get(key)
-			r.onsuccess=e=>cb(e.target.result.data)
-			r.onerror=e=>{console.error(e);cb(e)}
+			this.resolveIdbKey(key, idbKey => {
+				if(!idbKey) return cb()
+				var r=this.transaction().get(idbKey)
+				r.onsuccess=e=>cb(e.target.result?.data)
+				r.onerror=e=>{console.error(e);cb()}
+			})
 		}).catch(e=>cb())
 	}
 
@@ -47,14 +71,13 @@ class PhotoDB{
 		localStorage.removeItem(key)
 		this.ready.then(()=>{
 			if(!this.idb)return cb()
-			var r=this.transaction().delete(key)
-			r.onsuccess=e=>cb(e)
-			r.onerror=e=>{console.error(e);cb(e)}
+			this.resolveIdbKey(key, idbKey => {
+				if(!idbKey) return cb()
+				var r=this.transaction().delete(idbKey)
+				r.onsuccess=e=>cb(e)
+				r.onerror=e=>{console.error(e);cb()}
+			})
 		}).catch(e=>cb())
-	}
-
-	rename(oldKey,newKey,cb){
-		this.get(oldKey,d=>this.put(newKey,d,_=>this.delete(oldKey,cb)))
 	}
 }
 var pdb=new PhotoDB()

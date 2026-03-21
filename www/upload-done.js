@@ -25,7 +25,10 @@ $(document).ready(function(){
 		keysToRename = location.hash.replace(/^\#/,"").replace(/\#.*/,"").split(/,/)
 		for (var i=0; i<keysToRename.length; i++){
 			var key = keysToRename[i]
-			if (/^20\d\d/.test(key))pdb.rename(key,`uploaded_${key}`)
+			if (/^20\d\d/.test(key)){
+				localStorage['uploaded_' + key] = localStorage[key]
+				delete localStorage[key]
+			}
 		}
 	}
 	redirect(keysToRename)
