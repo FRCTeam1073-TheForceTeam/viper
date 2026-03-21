@@ -1,46 +1,6 @@
 "use strict"
 
 addI18n({
-	validate_error_only_graph:{
-		en:'Expected only data in "_PROBLEMTEXT_"',
-		tr:'Yalnızca "_PROBLEMTEXT_" içindeki veriler bekleniyor',
-		pt:'Esperados apenas dados em "_PROBLEMTEXT_"',
-		fr:'Données attendues uniquement dans « _PROBLEMTEXT_ »',
-		he:'צפוי רק נתונים ב-"_PROBLEMTEXT_"',
-		zh_tw:'僅需“_PROBLEMTEXT_”中的數據',
-	},
-	remove_section_confirm:{
-		en:'Are you sure you want to remove this section?',
-		tr:'Bu bölümü kaldırmak istediğinizden emin misiniz?',
-		pt:'Tem certeza de que deseja remover esta seção?',
-		fr:'Voulez-vous vraiment supprimer cette section ?',
-		he:'האם אתה בטוח שברצונך להסיר את הקטע הזה?',
-		zh_tw:'您確實要刪除此部分嗎？',
-	},
-	validate_error_json_not_array:{
-		en:'JSON is not an array',
-		fr:'JSON n\'est pas un tableau',
-		he:'JSON אינו מערך',
-		pt:'JSON não é um array',
-		zh_tw:'JSON 不是數組',
-		tr:'JSON bir dizi değil',
-	},
-	validate_error_json_not_map:{
-		en:'JSON is not a map',
-		fr:'JSON n\'est pas une carte',
-		he:'JSON אינו מפה',
-		pt:'JSON não é um mapa',
-		zh_tw:'JSON 不是地圖',
-		tr:'JSON bir harita değil',
-	},
-	validate_error_no_fields:{
-		en:'Error: No fields in list',
-		fr:'Erreur : Aucun champ dans la liste',
-		he:'שגיאה: אין שדות ברשימה',
-		pt:'Erro: Nenhum campo na lista',
-		zh_tw:'錯誤：清單中沒有字段',
-		tr:'Hata: Listede alan yok',
-	},
 	validate_error_no_name:{
 		en:'Error: Name not specified',
 		fr:'Erreur : Nom non spécifié',
@@ -48,62 +8,6 @@ addI18n({
 		pt:'Erro: Nome não especificado',
 		zh_tw:'錯誤：未指定名稱',
 		tr:'Hata: Ad belirtilmemiş',
-	},
-	validate_error_not_string:{
-		en:'_PROBLEMTEXT_ is not a string',
-		fr:'_PROBLEMTEXT_ n\'est pas une chaîne',
-		zh_tw:'_PROBLEMTEXT_ 不是字串',
-		pt:'_PROBLEMTEXT_ não é uma sequência',
-		he:'_PROBLEMTEXT_ אינו מחרוזת',
-		tr:'_PROBLEMTEXT_ bir dize değil',
-	},
-	validate_error_unknown_data:{
-		en:'Unknown data: _PROBLEMTEXT_',
-		fr:'Données inconnues : _PROBLEMTEXT_',
-		zh_tw:'未知資料：_PROBLEMTEXT_',
-		pt:'Dados desconhecidos: _PROBLEMTEXT_',
-		he:'נתונים לא ידועים: _PROBLEMTEXT_',
-		tr:'Bilinmeyen veri: _PROBLEMTEXT_',
-	},
-	validate_error_need_symbol:{
-		en:'Expected _EXPECTEDTEXT_ following _PROBLEMTEXT_',
-		fr:'_EXPECTEDTEXT_ attendu après _PROBLEMTEXT_',
-		zh_tw:'_PROBLEMTEXT_ 之後應為 _EXPECTEDTEXT_',
-		pt:'Esperado _EXPECTEDTEXT_ seguindo _PROBLEMTEXT_',
-		he:'צפוי _EXPECTEDTEXT_ בעקבות _PROBLEMTEXT_',
-		tr:'_PROBLEMTEXT_\'i takip eden _EXPECTEDTEXT_ bekleniyor',
-	},
-	validate_error_not_all_strings:{
-		en:'_PROBLEMTEXT_ is not all strings',
-		fr:'_PROBLEMTEXT_ n\'est pas composé uniquement de chaînes',
-		zh_tw:'_PROBLEMTEXT_ 並非全部都是字串',
-		pt:'_PROBLEMTEXT_ não é todas as sequências',
-		he:'_PROBLEMTEXT_ אינו הכל מחרוזות',
-		tr:'_PROBLEMTEXT_ tüm dizeler değil',
-	},
-	validate_error_not_array:{
-		en:'_PROBLEMTEXT_ is not an array',
-		fr:'_PROBLEMTEXT_ n\'est pas un tableau',
-		zh_tw:'_PROBLEMTEXT_ 不是數組',
-		pt:'_PROBLEMTEXT_ não é uma matriz',
-		he:'_PROBLEMTEXT_ אינו מערך',
-		tr:'_PROBLEMTEXT_ bir dizi değil',
-	},
-	validate_error_empty:{
-		en:'_PROBLEMTEXT_ is empty',
-		fr:'_PROBLEMTEXT_ est vide',
-		zh_tw:'_PROBLEMTEXT_ 為空',
-		pt:'_PROBLEMTEXT_ está vazio',
-		he:'_PROBLEMTEXT_ ריק',
-		tr:'_PROBLEMTEXT_ boş',
-	},
-	validate_error_only_graph:{
-		en:'Expected only graph and data in "_PROBLEMTEXT_"',
-		fr:'Seulement le graphique et les données attendus dans « _PROBLEMTEXT_ »',
-		zh_tw:'“_PROBLEMTEXT_”中僅應包含圖表和數據',
-		pt:'Esperado apenas gráfico e dados em "_PROBLEMTEXT_"',
-		he:'צפוי רק גרף ונתונים ב-"_PROBLEMTEXT_"',
-		tr:'Yalnızca "_PROBLEMTEXT_" içindeki grafik ve veriler bekleniyor',
 	},
 	add_label:{
 		en:'Add:',
@@ -217,14 +121,6 @@ addI18n({
 		he:'נהל סטטיסטיקות',
 		tr:'İstatistikleri Yönet',
 	},
-	edit_json_link:{
-		en:'Edit JSON',
-		fr:'Modifier le JSON',
-		zh_tw:'編輯 JSON',
-		pt:'Editar JSON',
-		he:'ערוך את JSON',
-		tr:'JSON\'u Düzenle',
-	},
 	download_data_link:{
 		en:'Download Data',
 		fr:'Télécharger les données',
@@ -257,38 +153,6 @@ addI18n({
 		he:'שמור בשרת',
 		tr:'Sunucuya Kaydet',
 	},
-	revert_personal_link:{
-		en:'Revert Personal Customizations',
-		fr:'Annuler les personnalisations personnelles',
-		zh_tw:'恢復個人自訂',
-		pt:'Reverter personalizações pessoais',
-		he:'החזר התאמות אישיות',
-		tr:'Kişisel Özelleştirmeleri Geri Al',
-	},
-	revert_personal_confirm:{
-		en:'Are you sure you want delete ALL your personal custom graph configuration?',
-		fr:'Voulez-vous vraiment supprimer TOUTES vos configurations de graphiques personnalisées ?',
-		zh_tw:'您確定要刪除所有個人自訂圖形配置嗎？',
-		pt:'Tem certeza de que deseja excluir TODAS as suas configurações de gráfico personalizado pessoal?',
-		he:'האם אתה בטוח שברצונך למחוק את כל תצורת הגרפים המותאמים אישית שלך?',
-		tr:'TÜM kişisel özel grafik yapılandırmanızı silmek istediğinizden emin misiniz?',
-	},
-	revert_all_link:{
-		en:'Revert All Customizations',
-		fr:'Annuler toutes les personnalisations',
-		zh_tw:'恢復所有自訂',
-		pt:'Reverter todas as personalizações',
-		he:'החזר את כל ההתאמות האישיות',
-		tr:'Tüm Özelleştirmeleri Geri Al',
-	},
-	revert_all_confirm:{
-		en:'Are you sure you want delete ALL your personal AND team\'s custom graph configuration?',
-		fr:'Voulez-vous vraiment supprimer TOUTES vos configurations de graphiques personnalisées personnelles ET celles de votre équipe ?',
-		zh_tw:'您確定要刪除您個人和團隊的所有自訂圖表配置嗎？',
-		pt:'Tem certeza de que deseja excluir TODAS as suas configurações de gráfico personalizado pessoal E da equipe?',
-		he:'האם אתה בטוח שברצונך למחוק את כל תצורת הגרפים האישיים שלך ושל הצוות שלך?',
-		tr:'TÜM kişisel ve ekibinizin özel grafik yapılandırmasını silmek istediğinizden emin misiniz?',
-	},
 	reorder_link:{
 		en:'Reorder',
 		fr:'Réorganiser',
@@ -304,6 +168,78 @@ addI18n({
 		pt:'Arrastar para reordenar',
 		he:'גרור כדי לסדר מחדש',
 		tr:'Sürükleyerek Yeniden Sırala',
+	},
+	profile_selector_label:{
+		en:'Profile:',
+		fr:'Profil :',
+		zh_tw:'個人資料：',
+		pt:'Perfil:',
+		he:'פרופיל:',
+		tr:'Profil:',
+	},
+	profile_name_prompt:{
+		en:'Enter profile name:',
+		fr:'Entrez le nom du profil :',
+		zh_tw:'輸入個人資料名稱：',
+		pt:'Digite o nome do perfil:',
+		he:'הזן שם פרופיל:',
+		tr:'Profil adını girin:',
+	},
+	profile_name_error_empty:{
+		en:'Profile name cannot be empty',
+		fr:'Le nom du profil ne peut pas être vide',
+		zh_tw:'個人資料名稱不能為空',
+		pt:'O nome do perfil não pode estar vazio',
+		he:'שם הפרופיל לא יכול להיות ריק',
+		tr:'Profil adı boş olamaz',
+	},
+	profile_name_error_duplicate:{
+		en:'Profile "_PROFILENAME_" already exists',
+		fr:'Le profil « _PROFILENAME_ » existe déjà',
+		zh_tw:'個人資料"_PROFILENAME_"已存在',
+		pt:'O perfil "_PROFILENAME_" já existe',
+		he:'הפרופיל "_PROFILENAME_" כבר קיים',
+		tr:'Profil "_PROFILENAME_" zaten var',
+	},
+	delete_profile_confirm:{
+		en:'Are you sure you want to delete the "_PROFILENAME_" profile?',
+		fr:'Voulez-vous vraiment supprimer le profil « _PROFILENAME_ » ?',
+		zh_tw:'您確定要刪除"_PROFILENAME_"個人資料嗎？',
+		pt:'Tem certeza de que deseja excluir o perfil "_PROFILENAME_"?',
+		he:'האם אתה בטוח שברצונך למחוק את הפרופיל "_PROFILENAME_"?',
+		tr:'Profil "_PROFILENAME_"yi silmek istediğinizden emin misiniz?',
+	},
+	cannot_delete_only_profile:{
+		en:'Cannot delete the only profile. Create another profile first.',
+		fr:'Impossible de supprimer le seul profil. Créez d\'abord un autre profil.',
+		zh_tw:'無法刪除唯一的個人資料。請先建立另一個個人資料。',
+		pt:'Não é possível excluir o único perfil. Primeiro, crie outro perfil.',
+		he:'לא ניתן למחוק את הפרופיל היחיד. תחילה צור פרופיל אחר.',
+		tr:'Tek profil silinemez. Önce başka bir profil oluşturun.',
+	},
+	new_profile_tooltip:{
+		en:'New Profile',
+		fr:'Nouveau profil',
+		zh_tw:'新個人資料',
+		pt:'Novo perfil',
+		he:'פרופיל חדש',
+		tr:'Yeni Profil',
+	},
+	delete_profile_tooltip:{
+		en:'Delete Profile',
+		fr:'Supprimer le profil',
+		zh_tw:'刪除個人資料',
+		pt:'Excluir perfil',
+		he:'מחק פרופיל',
+		tr:'Profili Sil',
+	},
+	rename_profile_tooltip:{
+		en:'Rename Profile',
+		fr:'Renommer le profil',
+		zh_tw:'重新命名個人資料',
+		pt:'Renomear perfil',
+		he:'שינוי שם פרופיל',
+		tr:'Profili Yeniden Adlandır',
 	},
 })
 
@@ -372,61 +308,202 @@ class StatsConfig {
 		this.downloadBlobs=conf.downloadBlobs
 		this.mode=conf.mode
 		this.team=conf.team
+		this.activeProfile='Default'
+		this._performMigrationIfNeeded()
 	}
 
-	validateJson(json){
-		if (!this.hasSections){
-			if (!isArray(json)) throw(translate('validate_error_json_not_array'))
-			json.forEach(this.validateItem.bind(this))
-		} else {
-			if (!isMap(json)) throw(translate('validate_error_json_not_map'))
-			Object.keys(json).forEach(section=>this.validateItem(json[section],section))
-		}
-	}
+	// ==================== Profile Management ====================
 
-	validateItem(item, name){
-		if (!this.hasSections){
-			if (!isString(item))throw(translate('validate_error_not_string',{problemText:item}))
-			if (!statInfo[item])throw(translate('validate_error_unknown_data',{problemText:item}))
-		} else {
-			if (!isMap(item))throw(translate('validate_error_need_symbol',{expectedText:':{',problemText:name}))
-			if (this.hasGraphs&&!isString(item.graph))throw(translate('validate_error_not_string',{problemText:`${name}.graph`}))
-			if (!isArray(item.data))throw(translate('validate_error_not_string',{problemText:`${name}.data`}))
-			if (item.data.length==0)throw(translate('validate_error_empty',{problemText:`${name}.data`}))
-			item.data.forEach(function(field){
-				if (!isString(field))throw(translate('validate_error_not_all_strings',{problemText:`${name}.data`}))
-				if (!statInfo[field])throw(translate('validate_error_unknown_data',{problemText:field}))
-			})
-			if (this.hasGraphs&&Object.keys(item).length!=2)throw(translate('validate_error_only_graph',{problemText:name}))
-			if (!this.hasGraphs&&Object.keys(item).length!=1)throw(translate('validate_error_only_data',{problemText:name}))
-		}
-	}
-
-	getLocalStatsConfig(){
-		var s=localStorage.getItem(this.statsConfigKey)
-		if (s && s != 'undefined'){
-			try {
-				s=JSON.parse(s)
-				if (Object.keys(s).length) return s
-			} catch (e){
-				console.error(e)
+	_performMigrationIfNeeded(){
+		var stored=localStorage.getItem(this.statsConfigKey)
+		if (!stored || stored==='undefined') return
+		try {
+			var data=JSON.parse(stored)
+			if (data && typeof data==='object' && !this._isWrappedFormat(data)){
+				this._migrateToWrappedFormat(data)
 			}
+		} catch (e){
+			console.error('Migration check error:', e)
+		}
+	}
+
+	_isWrappedFormat(data){
+		return data && typeof data==='object' && data._version && data.profiles && typeof data.profiles==='object'
+	}
+
+	_migrateToWrappedFormat(legacyConfig){
+		var wrapped={
+			_version: 1,
+			profiles: {
+				'Default': legacyConfig
+			},
+			activeProfile: 'Default',
+			metadata: {
+				createdAt: new Date().toISOString(),
+				migratedAt: new Date().toISOString()
+			}
+		}
+		localStorage.setItem(this.statsConfigKey, JSON.stringify(wrapped))
+		this.activeProfile='Default'
+	}
+
+	_loadWrappedData(){
+		var stored=localStorage.getItem(this.statsConfigKey)
+		if (!stored || stored==='undefined') return null
+		try {
+			var data=JSON.parse(stored)
+			if (this._isWrappedFormat(data)){
+				this.activeProfile=data.activeProfile||'Default'
+				return data
+			}
+		} catch (e){
+			console.error('Error loading wrapped data:', e)
 		}
 		return null
 	}
 
-	saveJson(){
-		try{
-			var json=JSON.parse($('#stats-export-json').val())
-			this.validateJson(json)
-			localStorage.setItem(this.statsConfigKey, JSON.stringify(json))
-		} catch(e){
-			alert(e)
+	_ensureWrappedFormat(){
+		var wrapped=this._loadWrappedData()
+		if (!wrapped){
+			wrapped={
+				_version: 1,
+				profiles: {
+					'Default': this.hasSections ? {} : []
+				},
+				activeProfile: 'Default',
+				metadata: {
+					createdAt: new Date().toISOString()
+				}
+			}
+			localStorage.setItem(this.statsConfigKey, JSON.stringify(wrapped))
+		}
+		return wrapped
+	}
+
+	getActiveProfile(){
+		return this.activeProfile
+	}
+
+	setActiveProfile(profileName){
+		var wrapped=this._ensureWrappedFormat()
+		if (wrapped.profiles && wrapped.profiles[profileName]){
+			this.activeProfile=profileName
+			wrapped.activeProfile=profileName
+			localStorage.setItem(this.statsConfigKey, JSON.stringify(wrapped))
+			return true
+		}
+		return false
+	}
+
+	getProfileData(profileName){
+		profileName=profileName||this.activeProfile
+		var wrapped=this._loadWrappedData()
+		if (wrapped && wrapped.profiles && wrapped.profiles[profileName]){
+			return wrapped.profiles[profileName]
+		}
+		return null
+	}
+
+	setProfileData(profileName, configData){
+		var wrapped=this._ensureWrappedFormat()
+		if (!wrapped.profiles[profileName]){
+			throw new Error(`Profile "${profileName}" does not exist`)
+		}
+		wrapped.profiles[profileName]=configData
+		localStorage.setItem(this.statsConfigKey, JSON.stringify(wrapped))
+	}
+
+	getAllProfiles(){
+		var wrapped=this._ensureWrappedFormat()
+		return Object.keys(wrapped.profiles||{})
+	}
+
+	createProfile(profileName, baseConfig){
+		if (!profileName || !profileName.trim()){
+			throw new Error(translate('profile_name_error_empty'))
+		}
+		var wrapped=this._ensureWrappedFormat()
+		if (wrapped.profiles[profileName]){
+			throw new Error(translate('profile_name_error_duplicate', {profileName: profileName}))
+		}
+		wrapped.profiles[profileName]=baseConfig||this._getDefaultProfileConfig()
+		localStorage.setItem(this.statsConfigKey, JSON.stringify(wrapped))
+		return true
+	}
+
+	deleteProfile(profileName){
+		var wrapped=this._ensureWrappedFormat()
+		var profiles=Object.keys(wrapped.profiles||{})
+		if (profiles.length<=1){
+			throw new Error(translate('cannot_delete_only_profile'))
+		}
+		delete wrapped.profiles[profileName]
+		if (wrapped.activeProfile===profileName){
+			var remainingProfiles=Object.keys(wrapped.profiles)
+			wrapped.activeProfile=remainingProfiles[0]
+			this.activeProfile=remainingProfiles[0]
+		}
+		localStorage.setItem(this.statsConfigKey, JSON.stringify(wrapped))
+		return true
+	}
+
+	renameProfile(oldName, newName){
+		if (!newName || !newName.trim()){
+			throw new Error(translate('profile_name_error_empty'))
+		}
+		var wrapped=this._ensureWrappedFormat()
+		if (!wrapped.profiles[oldName]){
+			throw new Error(`Profile "${oldName}" does not exist`)
+		}
+		if (wrapped.profiles[newName] && newName!==oldName){
+			throw new Error(translate('profile_name_error_duplicate', {profileName: newName}))
+		}
+		wrapped.profiles[newName]=wrapped.profiles[oldName]
+		delete wrapped.profiles[oldName]
+		if (wrapped.activeProfile===oldName){
+			wrapped.activeProfile=newName
+			this.activeProfile=newName
+		}
+		localStorage.setItem(this.statsConfigKey, JSON.stringify(wrapped))
+		return true
+	}
+
+	_getDefaultProfileConfig(){
+		if (this.hasSections){
+			return {}
+		} else {
+			return []
+		}
+	}
+
+	_saveCurrentProfile(configData){
+		try {
+			this.setProfileData(this.activeProfile, configData)
+		} catch (e){
+			console.error('Error saving profile:', e)
 			throw e
 		}
-		closeLightBox()
-		this.drawFunction()
-		return false
+	}
+
+	getLocalStatsConfig(){
+		var wrapped=this._loadWrappedData()
+		if (wrapped){
+			var activeProfileData=wrapped.profiles[this.activeProfile]
+			if (activeProfileData && Object.keys(activeProfileData).length){
+				return activeProfileData
+			}
+		} else {
+			var s=localStorage.getItem(this.statsConfigKey)
+			if (s && s != 'undefined'){
+				try {
+					s=JSON.parse(s)
+					if (Object.keys(s).length) return s
+				} catch (e){
+					console.error(e)
+				}
+			}
+		}
+		return null
 	}
 
 	cleanConfig(json){
@@ -444,34 +521,11 @@ class StatsConfig {
 		})
 	}
 
-	translateConfig(json){
-		if (this.hasSections){
-			Object.keys(json).forEach(name=>{
-				var x=json[name]
-				delete json[name]
-				json[translate(name)]=x
-			})
-		}
-		return json
-	}
-
-	showExportDialog(){
-		if(!this.hasSections)this.ui2Json()
-		var dialog=$('#stats-export')
-		if (!dialog.length){
-			dialog=$('<div id=stats-export class=lightBoxCenterContent>')
-			.append(
-				$('<textarea id=stats-export-json style=display:block;width:98vw;max-width:30em;height:90vh;max-height:60em>')
-			).append($('<button data-i18n=save_button></button>').click(this.saveJson.bind(this))).append(" ")
-			.append($('<button data-i18n=cancel_button></button>').click(closeLightBox))
-			$('body').append(dialog)
-		}
-		$('#stats-export-json').val(JSON.stringify(this.translateConfig(this.cleanConfig(this.getStatsConfig())),null,2))
-		applyTranslations(dialog)
-		showLightBox(dialog)
+	handleShowReorderDialog(){
+		this.ui2Json()
+		this.showReorderDialog()
 		return false
 	}
-
 
 	showReorderDialog(){
 		var me=this
@@ -577,7 +631,7 @@ class StatsConfig {
 			newConfig=newOrder
 		}
 
-		localStorage.setItem(this.statsConfigKey, JSON.stringify(newConfig))
+		this._saveCurrentProfile(newConfig)
 		closeLightBox()
 		this.drawFunction()
 	}
@@ -603,7 +657,7 @@ class StatsConfig {
 		} else {
 			stats=fields
 		}
-		localStorage.setItem(this.statsConfigKey, JSON.stringify(stats))
+		this._saveCurrentProfile(stats)
 
 	}
 
@@ -641,24 +695,6 @@ class StatsConfig {
 		}
 		form.find('[name="conf"]').val(JSON.stringify(this.cleanConfig((this.getStatsConfig()))))
 		form.submit()
-		return false
-	}
-
-	revertPersonalCustomizations(){
-		if (confirm(translate('revert_personal_confirm'))){
-			localStorage.removeItem(this.statsConfigKey)
-			closeLightBox()
-			this.drawFunction()
-		}
-		return false
-	}
-
-	revertAllCustomizations(){
-		if (confirm(translate('revert_all_confirm'))){
-			localStorage.setItem(this.statsConfigKey, this.cleanConfig(JSON.stringify(this.defaultConfig)))
-			closeLightBox()
-			this.drawFunction()
-		}
 		return false
 	}
 
@@ -720,7 +756,7 @@ class StatsConfig {
 		if (confirm(translate(this.hasGraphs?'remove_graph_confirm':'remove_section_confirm'))){
 			var stats=this.getStatsConfig()
 			delete stats[section]
-			localStorage.setItem(this.statsConfigKey, JSON.stringify(stats))
+			this._saveCurrentProfile(stats)
 			closeLightBox()
 			this.drawFunction()
 		}
@@ -765,11 +801,108 @@ class StatsConfig {
 		this.team=team
 	}
 
+	// ==================== Profile UI Handlers ====================
+
+	_clearConfigDialog(){
+		$('#stats-config').remove()
+	}
+
+	handleProfileChange(e){
+		var me=this
+		var newProfile=$(e.target).val()
+		if (newProfile && newProfile!==this.activeProfile){
+			if (this.setActiveProfile(newProfile)){
+				this._clearConfigDialog()
+				var fakeTarget=$('<div>').attr('data-section', '')
+				var fakeEvent={target: fakeTarget[0]}
+				this.showConfigDialog(fakeEvent)
+			}
+		}
+	}
+
+	handleCreateNewProfile(){
+		var me=this
+		var profileName=prompt(translate('profile_name_prompt'))
+		if (!profileName) return
+		try {
+			var baseCopy=JSON.parse(JSON.stringify(this.defaultConfig))
+			this.createProfile(profileName, baseCopy)
+			this.setActiveProfile(profileName)
+			this._clearConfigDialog()
+			var fakeTarget=$('<div>').attr('data-section', '')
+			var fakeEvent={target: fakeTarget[0]}
+			this.showConfigDialog(fakeEvent)
+		} catch (e){
+			alert(e)
+		}
+	}
+
+	handleDeleteProfile(){
+		var me=this
+		try {
+			if (confirm(translate('delete_profile_confirm', {profilename: this.activeProfile}))){
+				this.deleteProfile(this.activeProfile)
+				this._clearConfigDialog()
+				var fakeTarget=$('<div>').attr('data-section', '')
+				var fakeEvent={target: fakeTarget[0]}
+				this.showConfigDialog(fakeEvent)
+			}
+		} catch (e){
+			alert(e)
+		}
+	}
+
+	handleRenameProfile(){
+		var me=this
+		var newName=prompt(translate('profile_name_prompt'), this.activeProfile)
+		if (!newName || newName===this.activeProfile) return
+		try {
+			this.renameProfile(this.activeProfile, newName)
+			this._clearConfigDialog()
+			var fakeTarget=$('<div>').attr('data-section', '')
+			var fakeEvent={target: fakeTarget[0]}
+			this.showConfigDialog(fakeEvent)
+		} catch (e){
+			alert(e)
+		}
+	}
+
+	buildProfileSelector(){
+		var me=this
+		var profiles=this.getAllProfiles()
+		var activeProfile=this.getActiveProfile()
+
+		var profileControl=$('<div style="margin-bottom:0.9375em;padding:0.625em">')
+
+		var profileRow=$('<div style="display:flex;gap:0.625em;align-items:center;">')
+		profileRow.append($('<label style="font-weight:bold;min-width:3.75em;" data-i18n=profile_selector_label>'))
+
+		var select=$('<select id=stats-profile-selector style="flex:1;">').change(function(e){me.handleProfileChange(e)})
+		profiles.forEach(function(profile){
+			select.append(
+				$('<option>').attr('value', profile).text(profile).attr('selected', profile===activeProfile)
+			)
+		})
+		profileRow.append(select)
+
+		var buttonContainer=$('<div style="display:flex;gap:0.1875em;">')
+		buttonContainer.append($('<button style="display:flex;align-items:center;justify-content:center;" data-i18n-tooltip="new_profile_tooltip">➕</button>').click(function(){me.handleCreateNewProfile()}))
+		if (profiles.length>1){
+			buttonContainer.append($('<button style="display:flex;align-items:center;justify-content:center;" data-i18n-tooltip="delete_profile_tooltip">🗑</button>').click(function(){me.handleDeleteProfile()}))
+		}
+		buttonContainer.append($('<button style="display:flex;align-items:center;justify-content:center;" data-i18n-tooltip="rename_profile_tooltip">✎</button>').click(function(){me.handleRenameProfile()}))
+		profileRow.append(buttonContainer)
+
+		profileControl.append(profileRow)
+		return profileControl
+	}
+
 	showConfigDialog(e){
 		var section=$(e.target).attr('data-section'),
 		dialog=$('#stats-config')
 		if (!dialog.length){
 			dialog=$('<div id=stats-config class=lightBoxCenterContent style=display:none>')
+			dialog.append(this.buildProfileSelector())
 			if(this.hasSections){
 				var sectionLinks=$('<ul>')
 				if (this.hasGraphs && this.downloadBlobs)sectionLinks.append($('<li>').append($('<a id=download-data-link data-i18n=download_data_link></a>')))
@@ -785,11 +918,8 @@ class StatsConfig {
 			if (this.hasSections)manageAllList.append($('<li>').append($(`<a href=#edit-json data-i18n=${this.hasGraphs?"add_graph_link":"add_section_link"}></a>`).click(this.showEditSectionDialog.bind(this))))
 
 			manageAllList
-			.append($('<li>').append($('<a href=#reorder data-i18n=reorder_link></a>').click(this.showReorderDialog.bind(this))))
-			.append($('<li>').append($('<a href=#edit-json data-i18n=edit_json_link></a>').click(this.showExportDialog.bind(this))))
+			.append($('<li>').append($('<a href=#reorder data-i18n=reorder_link></a>').click(this.handleShowReorderDialog.bind(this))))
 			.append($('<li>').append($('<a href=#save-server data-i18n=save_to_server_link></a>').click(this.saveToServer.bind(this))))
-			.append($('<li>').append($('<a href=#revert-personal data-i18n=revert_personal_link></a>').click(this.revertPersonalCustomizations.bind(this))))
-			.append($('<li>').append($('<a href=#revert-all data-i18n=revert_all_link></a>').click(this.revertAllCustomizations.bind(this))))
 			dialog.append(manageAllList)
 			$('body').append(dialog)
 		}
@@ -808,6 +938,7 @@ class StatsConfig {
 				`${eventId}.${this.team?this.team+".":""}${section.toLowerCase().replace(/[^a-zA-Z0-9 ]/,"").replace(" ","_")}.csv`
 			)
 		}
+		$('#stats-profile-selector').val(this.activeProfile)
 		applyTranslations(dialog)
 		showLightBox(dialog)
 	}
