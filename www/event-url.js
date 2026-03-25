@@ -146,6 +146,9 @@ function promiseEventMatches(){
 		var eventMatches=csvToArrayOfMaps(text)
 		eventMatches.sort((a,b)=>scheduleSortKey(a).localeCompare(scheduleSortKey(b)))
 		return eventMatches
+	}).catch(e=>{
+		console.error(e)
+		return []
 	})
 	return promiseCache.eventMatches
 }
@@ -159,6 +162,9 @@ function promiseEventTeams(){
 			}
 		}
 		return Object.keys(teams).map(t=>parseInt(t)).sort((a,b)=>{a-b})
+	}).catch(e=>{
+		console.error(e)
+		return []
 	})
 	return promiseCache.eventTeams
 }
@@ -187,6 +193,9 @@ function promiseTeamsInfo(){
 			eventTeamsInfo[parseInt(team.teamNumber)] = team
 		})
 		return eventTeamsInfo
+	}).catch(e=>{
+		console.error(e)
+		return {}
 	})
 	return promiseCache.teamsInfo
 }
@@ -220,6 +229,9 @@ function promiseEventScores(){
 			}
 		})
 		return scores
+	}).catch(e=>{
+		console.error(e)
+		return {}
 	})
 	return promiseCache.eventScores
 }
@@ -227,6 +239,9 @@ function promiseEventScores(){
 function promiseAlliances(){
 	if (!promiseCache.eventAlliances) promiseCache.eventAlliances = promiseEventAjax(`/data/${eventId}.alliances.csv`).then(text=>{
 		return csvToArrayOfMaps(text)
+	}).catch(e=>{
+		console.error(e)
+		return []
 	})
 	return promiseCache.eventAlliances
 }
@@ -234,6 +249,9 @@ function promiseAlliances(){
 function promiseScouting(){
 	if (!promiseCache.scouting) promiseCache.scouting = promiseEventAjax(`/data/${eventId}.scouting.csv`).then(text=>{
 		return csvToArrayOfMaps(text)
+	}).catch(e=>{
+		console.error(e)
+		return []
 	})
 	return promiseCache.scouting
 }
@@ -295,6 +313,9 @@ function promiseEventStats(startMatch, includeReviewRequested){
 			eventStatsByMatchTeam[mt]=scout
 		})
 		return [eventStats, eventStatsByTeam, eventStatsByMatchTeam]
+	}).catch(e=>{
+		console.error(e)
+		return [[],{},{}]
 	})
 }
 
@@ -355,22 +376,25 @@ function promiseEventFiles(){
 			return a.localeCompare(b)
 		})
 		return fileList
+	}).catch(e=>{
+		console.error(e)
+		return []
 	})
 	return promiseCache.eventFiles
 }
 
 function promiseEventInfo(){
 	if (!promiseCache.eventInfo) promiseCache.eventInfo = promiseEventAjax(`/data/${eventId}.event.csv`).then(text => {
-		if (text){
-			var eventInfo = csvToArrayOfMaps(text)[0]
-			if (eventInfo.name)	{
-				eventName = (eventInfo.name.includes(eventYear)?"":`${eventYear} `)+eventInfo.name
-				localStorage.last_event_name=eventName
-			}
-		} else {
-			eventInfo = []
+		if (!text) return {}
+		var eventInfo = csvToArrayOfMaps(text)[0]||{}
+		if (eventInfo.name)	{
+			eventName = (eventInfo.name.includes(eventYear)?"":`${eventYear} `)+eventInfo.name
+			localStorage.last_event_name=eventName
 		}
 		return eventInfo
+	}).catch(e=>{
+		console.error(e)
+		return {}
 	})
 	return promiseCache.eventInfo
 }
@@ -385,7 +409,7 @@ function promisePitScouting(){
 		return data
 	}).catch(e=>{
 		console.error(e)
-		return Promise.resolve([])
+		return {}
 	})
 	return promiseCache.pitScouting
 }
@@ -399,7 +423,7 @@ function promiseSubjectiveScouting(){
 		return data
 	}).catch(e=>{
 		console.error(e)
-		return Promise.resolve([])
+		return {}
 	})
 	return promiseCache.subjectiveScouting
 }

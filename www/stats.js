@@ -152,6 +152,8 @@ $(document).ready(function(){
 		parseHash()
 		showStats()
 		applyTranslations()
+	}).catch(e=>{
+		console.error(e)
 	})
 	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
@@ -175,6 +177,8 @@ $(document).ready(function(){
 		promiseEventStats($('#startingMatch').val(),$('#includeReviewRequested').is(':checked')).then(value=>{
 			[window.eventStats, window.eventStatsByTeam]=value
 			showStats()
+		}).catch(e=>{
+			console.error(e)
 		})
 	})
 })

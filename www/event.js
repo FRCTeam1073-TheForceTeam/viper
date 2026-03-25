@@ -942,6 +942,8 @@ $(document).ready(function(){
 		applyTranslations()
 		drawPitScoutSetupButtons()
 		$('#main').show()
+	}).catch(e=>{
+		console.error(e)
 	})
 
 	function getScore(eventStatsByTeam, team){

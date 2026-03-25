@@ -426,8 +426,8 @@ $(document).ready(function(){
 
 		function populateMainMenu(){
 			Promise.all([
-				fetch('/main-menu.html').then(response=>response.text()),
-				fetch('/user.cgi').then(response=>response.text())
+				fetch('/main-menu.html').then(response=>response.text()).catch(()=>''),
+				fetch('/user.cgi').then(response=>response.text()).catch(()=>'')
 			]).then(values =>{
 				var [menuHtml, userName] = values,
 				lastEventId=localStorage.getItem('last_event_id'),
@@ -481,6 +481,8 @@ $(document).ready(function(){
 					showLightBox(p)
 					return false
 				})
+			}).catch(e=>{
+				console.error(e)
 			})
 		}
 		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
