@@ -2124,15 +2124,13 @@ function showPitScouting(el,team){
 
 		section=$('<fieldset>').append($('<legend>').attr('data-i18n','shooter_style_question'))
 		dlText(section,'shooter_count_question',dat.shooter_count)
-		divCheckbox(section,'robot_shooter_style_fixed',dat.shooter_fixed)
-		divCheckbox(section,'robot_shooter_style_turret',dat.shooter_turret)
+		dlCheckboxes(section,'shooter_style_question',['robot_shooter_style_fixed','robot_shooter_style_turret'],[dat.shooter_fixed,dat.shooter_turret])
 		el.append(section)
 
-		section=$('<fieldset>').append($('<legend>').attr('data-i18n','vision_question'))
-		divCheckbox(section,'vision_auto',dat.vision_auto)
-		divCheckbox(section,'vision_collecting',dat.vision_collecting)
-		divCheckbox(section,'vision_placing',dat.vision_placing)
-		divCheckbox(section,'vision_localization',dat.vision_localization)
+		section=$('<fieldset>').append($('<legend>').attr('data-i18n','software_section'))
+		dlText(section,'programming_language_question',dat.programming_language)
+		dlText(section,'auto_software_question',dat.auto_software)
+		dlCheckboxes(section,'vision_question',['vision_auto','vision_collecting','vision_placing','vision_localization'],[dat.vision_auto,dat.vision_collecting,dat.vision_placing,dat.vision_localization])
 		el.append(section)
 
 		if(dat.scouter||dat.notes){
