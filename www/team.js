@@ -323,7 +323,7 @@ function showGraphs(matchList, matchNames){
 			sections[section].data.forEach(function(field,j){
 				for (var k=0; k<matchList.length; k++){
 					var events = []
-					matchList[k][field].split(" ").forEach(t=>{
+					;(matchList[k][field]||"").split(" ").forEach(t=>{
 						var [time, field, value]=t.split(/:/)
 						time=parseInt(time)
 						field||=""

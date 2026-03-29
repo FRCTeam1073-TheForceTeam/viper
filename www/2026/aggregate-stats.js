@@ -2190,4 +2190,70 @@ function showSubjectiveScouting(el,team){
 }
 
 var importFunctions={
+	"195":{
+		example:"/2026/195.csv",
+		convert:importScouting195,
+	},
+}
+
+function importScouting195(text){
+	var rows=csvToArrayOfMaps(text)
+	rows.forEach(row=>{
+		row.match="qm" + row.matchNum
+		row.no_show=row.preNoShow
+
+		// Map starting position (preStartPosID) to auto_start percentage coordinates
+		// Positions: 1=left, 2=left-center, 3=center, 4=right-center, 5=right
+		row.auto_start=''
+		switch(((""+row.preStartPosID)||"0")[0]){
+			case "1":row.auto_start='10x50';break
+			case "2":row.auto_start='30x50';break
+			case "3":row.auto_start='50x50';break
+			case "4":row.auto_start='70x50';break
+			case "5":row.auto_start='90x50';break
+		}
+
+		// Auto fuel scoring
+		row.auto_fuel_score=row.autoFuelTotal||0
+
+		// Auto climb level (0=Fail, 1=Success, 5 or null=No attempt)
+		// Map: 1=success (L1+), else=0 (fail or no attempt)
+		row.auto_climb_level = (row.autoClimbTypeID=='1')?1:0
+
+		// Auto climb position (1=Outer Left, 2=Left, 3=Center, 4=Right, 5=Outer Right)
+		row.auto_climb_position=''
+		switch(((""+row.autoClimbLocID)||"0")[0]){
+			case "1":row.auto_climb_position='20x40';break
+			case "2":row.auto_climb_position='35x40';break
+			case "3":row.auto_climb_position='50x40';break
+			case "4":row.auto_climb_position='65x40';break
+			case "5":row.auto_climb_position='80x40';break
+		}
+
+		// Teleop fuel scoring
+		row.tele_fuel_score=row.teleFuelTotal||0
+
+		// Teleop climb level (1=L1, 2=L2, 3=L3, 4=Failed, 5 or null=No Attempt)
+		// Map to Viper levels: 1=L1, 2=L2, 3=L3, else=0
+		row.tele_climb_level = parseInt(row.climbTypeID)||0
+		if(row.tele_climb_level>=4)row.tele_climb_level=0
+
+		// Teleop climb position (same mapping as auto climb)
+		row.tele_climb_position=''
+		switch(((""+row.climbLocID)||"0")[0]){
+			case "1":row.tele_climb_position='20x40';break
+			case "2":row.tele_climb_position='35x40';break
+			case "3":row.tele_climb_position='50x40';break
+			case "4":row.tele_climb_position='65x40';break
+			case "5":row.tele_climb_position='80x40';break
+		}
+
+		// Defense: postDef=0 (no), 1 (yes) → maps to '' or 'good'
+		row.defense = row.postDef=='1'?'good':''
+
+		// Defended: postWasDef=0 (no), 1 (yes) → maps to '' or 'slowed'
+		row.defended = row.postWasDef=='1'?'slowed':''
+		row.scouter="195"
+	})
+	return rows
 }
