@@ -2198,6 +2198,7 @@ var importFunctions={
 
 function importScouting195(text){
 	var rows=csvToArrayOfMaps(text)
+	rows=rows.filter(row=>row.preNoShow !== '')
 	rows.forEach(row=>{
 		row.match="qm" + row.matchNum
 		row.no_show=row.preNoShow
