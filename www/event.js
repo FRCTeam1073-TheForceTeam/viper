@@ -25,6 +25,14 @@ addI18n({
 		he:'חזוי:',
 		zh_tw:'預測：',
 	},
+	score_contribution_label:{
+		en:'Score Contribution:',
+		tr:'Skor Katkısı:',
+		pt:'Contribuição de Pontuação:',
+		fr:'Contribution au score :',
+		he:'תרומה לציון:',
+		zh_tw:'得分貢獻：',
+	},
 	history_link:{
 		en:'History',
 		pt:'Histórico',
@@ -918,7 +926,15 @@ $(document).ready(function(){
 					.toggleClass("review",isScouted&&(scouted.review_requested==1||scouted.review_requested=="1"))
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
 					.toggleClass("tooltip-before",/^B/.test(pos))
-					.attr('data-tooltip',getTeamInfo(match[pos])||null)
+					.attr('data-team-info',getTeamInfo(match[pos])||null)
+					.attr('data-tooltip',(function(){
+						var tooltip = getTeamInfo(match[pos])||""
+						var score = getScore(eventStatsByTeam, match[pos])
+						var epa = epaByTeam[match[pos]]?.epa.total_points?.mean
+						if (score) tooltip += (tooltip?"\n":"") + `${translate('prediction_label')} ${Math.round(score)}`
+						if (epa) tooltip += (tooltip?"\n":"") + `${translate('epa_label')} ${Math.round(epa)}`
+						return tooltip||null
+					})())
 			})
 			redPrediction=Math.round(redPrediction)
 			bluePrediction=Math.round(bluePrediction)
@@ -937,8 +953,8 @@ $(document).ready(function(){
 			}
 			var redPoints=hasScores?redScore:(isRedScouted?redScouting:(!isRedScouted&&redPrediction===0?redEpa:redPrediction)),
 			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:(!isBlueScouted&&bluePrediction===0?blueEpa:bluePrediction)),
-			redTooltip=(hasScores?`${translate('score_label')} ${redScore}\n`:"")+(isRedScouted?`${translate('scouted_label')} ${redScouting}\n`:"")+`${translate('prediction_label')} ${redPrediction}`+(redEpa?`\n${translate('epa_label')} ${redEpa}`:""),
-			blueTooltip=(hasScores?`${translate('score_label')} ${blueScore}\n`:"")+(isBlueScouted?`${translate('scouted_label')} ${blueScouting}\n`:"")+`${translate('prediction_label')} ${bluePrediction}`+(blueEpa?`\n${translate('epa_label')} ${blueEpa}`:"")
+			redTooltip=(redPrediction===0 && !redEpa) ? null : ((hasScores?`${translate('score_label')} ${redScore}\n`:"")+(isRedScouted?`${translate('scouted_label')} ${redScouting}\n`:"")+(redPrediction?`${translate('prediction_label')} ${redPrediction}\n`:"")+(redEpa?`${translate('epa_label')} ${redEpa}`:"")),
+			blueTooltip=(bluePrediction===0 && !blueEpa) ? null : ((hasScores?`${translate('score_label')} ${blueScore}\n`:"")+(isBlueScouted?`${translate('scouted_label')} ${blueScouting}\n`:"")+(bluePrediction?`${translate('prediction_label')} ${bluePrediction}\n`:"")+(blueEpa?`${translate('epa_label')} ${blueEpa}`:""))
 			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':(!isRedScouted&&redPrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction).attr('data-epa',redEpa)
 			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':(!isBlueScouted&&bluePrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).attr('data-epa',blueEpa).addClass('tooltip-before')
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
@@ -1098,7 +1114,7 @@ function showLinks(e){
 		if (el.attr('class') && /\b[RB][1-3]\b/.test(el.attr('class'))){
 			pos=el.attr('class').match(/\b[RB][1-3]\b/)[0]
 			team=el.text()
-			teamName=el.attr('data-tooltip')
+			teamName=el.attr('data-team-info')
 		}
 	}
 	var html = $('#matchActionsTemplate').html()
