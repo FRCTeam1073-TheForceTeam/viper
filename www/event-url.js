@@ -463,3 +463,19 @@ function getShortMatchName(matchId){
 	if(!matchId)return""
 	return translate(getShortMatchNameKey(matchId))+getMatchNumber(matchId)
 }
+
+function promiseEpa(){
+	if (!promiseCache.epa) promiseCache.epa = promiseJson(`/data/${eventId}.epa.json`).then(epaArray=>{
+		var epaByTeam = {}
+		if (Array.isArray(epaArray)){
+			epaArray.forEach(function(teamEvent){
+				epaByTeam[teamEvent.team] = teamEvent
+			})
+		}
+		return epaByTeam
+	}).catch(e=>{
+		console.error(e)
+		return {}
+	})
+	return promiseCache.epa
+}

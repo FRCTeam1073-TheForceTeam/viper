@@ -233,6 +233,22 @@ addI18n({
 		fr:'Récupérer le calendrier et les scores officiels les plus récents depuis l\'API FIRST',
 		tr:'FIRST API\'den en son programı ve resmi skorları al',
 	},
+	statbotics_epa_link:{
+		en:'Fetch Statbotics EPAs for this event',
+		he:'קבל Statbotics EPAs לאירוע זה',
+		zh_tw:'為此賽事取得 Statbotics EPA',
+		pt:'Obter Statbotics EPAs para este evento',
+		fr:'Récupérer les EPAs Statbotics pour cet événement',
+		tr:'Bu etkinlik için Statbotics EPA\'larını al',
+	},
+	epa_label:{
+		en:'EPA:',
+		tr:'EPA:',
+		pt:'EPA:',
+		fr:'EPA :',
+		he:'EPA:',
+		zh_tw:'EPA：',
+	},
 	import_link:{
 		en:'Import data from another app',
 		he:'ייבא נתונים מאפליקציה אחרת',
@@ -416,6 +432,14 @@ addI18n({
 		fr:'Alliances API',
 		he:'בריתות API',
 		zh_tw:'API 聯盟',
+	},
+	json_epa:{
+		en:'Statbotics EPA',
+		tr:'Statbotics EPA',
+		pt:'Statbotics EPA',
+		fr:'Statbotics EPA',
+		he:'Statbotics EPA',
+		zh_tw:'Statbotics EPA',
 	},
 	csv_alliances:{
 		en:'Alliances CSV',
@@ -617,6 +641,14 @@ addI18n({
 		fr:'Score prévu',
 		tr:'Tahmin Edilen Skor',
 	},
+	score_header_epa:{
+		en:'EPA',
+		he:'EPA',
+		zh_tw:'EPA',
+		pt:'EPA',
+		fr:'EPA',
+		tr:'EPA',
+	},
 	aggregation_includes_practice:{
 		en:'* Aggregation includes practice matches',
 		he:'* צבירה כוללת משחקי אימון',
@@ -653,6 +685,7 @@ onApplyTranslation.push(function(){
 		"scores.qualification.json":['dependScores',translate('json_scores_qualification')],
 		"scores.playoff.json":['dependScores',translate('json_scores_playoff')],
 		"alliances.json":['dependAlliances',translate('json_alliances')],
+		"epa.json":['',translate('json_epa')],
 	}
 	fileList.forEach(file=>{
 		var extension = file.replace(/[^\.]+\./,"").replace(/\.[0-9]+\./,"."),
@@ -761,13 +794,14 @@ $(document).ready(function(){
 		promiseEventScores(),
 		promiseEventFiles(),
 		promiseEventInfo(),
+		promiseEpa(),
 		promiseSubjectiveScouting(),
 		promisePitScouting(),
 		promiseTeamsInfo(),
 		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
 		promiseEventTeams(),
 	]).then(values =>{
-		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles, pitScoutEventTeams] = values
+		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.epaByTeam, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles, pitScoutEventTeams] = values
 		var lastDone,
 		nextToScout,
 		lastMatch,
@@ -856,6 +890,7 @@ $(document).ready(function(){
 			var row = $($('template#matchRow').html()),
 			redPrediction = 0, bluePrediction=0,
 			redScouting = 0, blueScouting=0,
+			redEpa = 0, blueEpa=0,
 			isRedScouted = false, isBlueScouted = false
 			if ("ftc"==eventCompetition) row.find('.noftc').hide()
 			BOT_POSITIONS.forEach(pos=>{
@@ -867,12 +902,14 @@ $(document).ready(function(){
 						redScouting += scouted.score||0
 					}
 					redPrediction += getScore(eventStatsByTeam, match[pos])
+					redEpa += (epaByTeam[match[pos]]?.epa.total_points?.mean) || 0
 				} else {
 					if (isScouted){
 						isBlueScouted=true
 						blueScouting += scouted.score||0
 					}
 					bluePrediction += getScore(eventStatsByTeam, match[pos])
+					blueEpa += (epaByTeam[match[pos]]?.epa.total_points?.mean) || 0
 				}
 				row.find(`.${pos}`).text(match[pos])
 					.toggleClass("scouted",isScouted)
@@ -885,6 +922,8 @@ $(document).ready(function(){
 			})
 			redPrediction=Math.round(redPrediction)
 			bluePrediction=Math.round(bluePrediction)
+			redEpa=Math.round(redEpa)
+			blueEpa=Math.round(blueEpa)
 			var hasScores = !!eventScores[match.Match],
 			redScore=0, blueScore=0
 			if (hasScores){
@@ -896,12 +935,12 @@ $(document).ready(function(){
 					}
 				})
 			}
-			var redPoints=hasScores?redScore:(isRedScouted?redScouting:redPrediction),
-			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:bluePrediction),
-			redTooltip=(hasScores?`${translate('score_label')} ${redScore}\n`:"")+(isRedScouted?`${translate('scouted_label')} ${redScouting}\n`:"")+`${translate('prediction_label')} ${redPrediction}`,
-			blueTooltip=(hasScores?`${translate('score_label')} ${blueScore}\n`:"")+(isBlueScouted?`${translate('scouted_label')} ${blueScouting}\n`:"")+`${translate('prediction_label')} ${bluePrediction}`
-			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':'prediction')).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction)
-			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':'prediction')).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).addClass('tooltip-before')
+			var redPoints=hasScores?redScore:(isRedScouted?redScouting:(!isRedScouted&&redPrediction===0?redEpa:redPrediction)),
+			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:(!isBlueScouted&&bluePrediction===0?blueEpa:bluePrediction)),
+			redTooltip=(hasScores?`${translate('score_label')} ${redScore}\n`:"")+(isRedScouted?`${translate('scouted_label')} ${redScouting}\n`:"")+`${translate('prediction_label')} ${redPrediction}`+(redEpa?`\n${translate('epa_label')} ${redEpa}`:""),
+			blueTooltip=(hasScores?`${translate('score_label')} ${blueScore}\n`:"")+(isBlueScouted?`${translate('scouted_label')} ${blueScouting}\n`:"")+`${translate('prediction_label')} ${bluePrediction}`+(blueEpa?`\n${translate('epa_label')} ${blueEpa}`:"")
+			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':(!isRedScouted&&redPrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction).attr('data-epa',redEpa)
+			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':(!isBlueScouted&&bluePrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).attr('data-epa',blueEpa).addClass('tooltip-before')
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
 			row.click(showLinks)
 			$('#matches').append(row)
@@ -1074,7 +1113,9 @@ function showLinks(e){
 		.replace(/_REDSCOUTED_/g, redScore.attr('data-scouted'))
 		.replace(/_BLUESCOUTED_/g, blueScore.attr('data-scouted'))
 		.replace(/_REDPREDICTION_/g, redScore.attr('data-prediction'))
-		.replace(/_BLUEPREDICTION_/g, blueScore.attr('data-prediction')),
+		.replace(/_BLUEPREDICTION_/g, blueScore.attr('data-prediction'))
+		.replace(/_REDEPA_/g, redScore.attr('data-epa'))
+		.replace(/_BLUEEPA_/g, blueScore.attr('data-epa')),
 	ma = $('#matchActions')
 	ma.html(html).find('.dependTeam').toggle(!!team)
 	showLightBox(ma)
