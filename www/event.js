@@ -838,7 +838,7 @@ $(document).ready(function(){
 		if (eventInfo['orange_alliance_id']) orangeAllianceId = eventInfo['orange_alliance_id']
 		if (eventInfo['first_inspires_id']) firstInspiresId = eventInfo['first_inspires_id']
 		if(!/\//.test(firstInspiresId)) firstInspiresId = firstInspiresId.replace(/^(20[0-9]{2})/,"$1/")
-		if ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]+/.test(blueAllianceId)) dependencySatisfied('dependBlueAlliance')
+		if ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]{3,6}$/.test(blueAllianceId)) dependencySatisfied('dependBlueAlliance')
 		if ("ftc"==eventCompetition && /^[0-9]{4}[A-Za-z0-9\-]+/.test(orangeAllianceId)) dependencySatisfied('dependOrangeAlliance')
 		if ("frc"==eventCompetition && /^20[0-9]{2}\/?[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFrc')
 		if ("ftc"==eventCompetition && /^20[0-9]{2}\/?[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFtc')
@@ -880,6 +880,10 @@ $(document).ready(function(){
 		if(!lastMatch||lastMatch&&/^pm/.test(lastMatch.Match)){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('#edit-match-link,.fetch-api-link'))
+		}
+		if(!Object.keys(epaByTeam).length && ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]{3,6}$/.test(blueAllianceId))){
+			$('#edit-event-section').prepend($('#edit-event-header'))
+			$('#edit-event-section>ul').append($('.fetch-statbotics-link'))
 		}
 		function getTeamInfo(teamNum){
 			var info=eventTeamsInfo[teamNum]
