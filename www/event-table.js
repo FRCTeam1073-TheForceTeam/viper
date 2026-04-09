@@ -224,6 +224,7 @@ function lf(){
 	return $('#schedule input.lastFocus')
 }
 function venueNameToId(){
+	if ($('#idInp').attr('data-existing')=='true') return
 	var safeName = $('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,"")
 	var year = parseInt($('#startInp').val().slice(0,4))||new Date().getFullYear()
 	if (comp == 'ftc'){
@@ -342,7 +343,7 @@ $(document).ready(function(){
 		$('#comp').val(/^20[0-9]{2}-[0-9]{2}/.test(eventId)?'ftc':'frc')
 		setComp()
 		$('#comp-type-section').hide()
-		$('#idInp').val(eventId)
+		$('#idInp').val(eventId).attr('data-existing', 'true')
 		promiseEventMatches().then(eventMatches => {
 			for (var i=1; i<=eventMatches.length; i++){
 				var match = eventMatches[i-1],
@@ -375,4 +376,7 @@ $(document).ready(function(){
 	$('#comp').change(setComp)
 	setTimeout(focusFirst,100)
 	$('#swap-red-blue').click(swapRedBlue)
+	$('#idInp').change(function(){
+		$(this).attr('data-existing','true')
+	})
 })
