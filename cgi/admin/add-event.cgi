@@ -43,8 +43,8 @@ $webutil->error("Malformed end", $end) if ($end !~ /^20[0-9]{2}\-[0-9]{2}\-[0-9]
 $name = &escapeCsv($name);
 $location = &escapeCsv($location);
 $schedule =~ s/\r\n|\r/\n/g;
-$webutil->error("Malformed FRC CSV", $schedule) if ($comp eq 'frc' && $schedule !~ /\A(Match,R1,R2,R3,B1,B2,B3\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){6}\n)+)?\Z/g);
-$webutil->error("Malformed FTC CSV", $schedule) if ($comp eq 'ftc' && $schedule !~ /\A(Match,R1,R2,B1,B2\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){4}\n)+)?\Z/g);
+$webutil->error("Malformed FRC CSV", $schedule) if ($comp eq 'frc' && $schedule !~ /\A(Match,R1,R2,R3,B1,B2,B3\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){6}\n)*)?\Z/g);
+$webutil->error("Malformed FTC CSV", $schedule) if ($comp eq 'ftc' && $schedule !~ /\A(Match,R1,R2,B1,B2\n(?:(?:pm|qm|qf|sf|([1-5]p)|f)[0-9]+(?:,[0-9]+){4}\n)*)?\Z/g);
 
 my $alliancesCsv = $cgi->param('alliancesCsv');
 if ($alliancesCsv){
