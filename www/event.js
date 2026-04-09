@@ -881,7 +881,7 @@ $(document).ready(function(){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('#edit-match-link,.fetch-api-link'))
 		}
-		if(!Object.keys(epaByTeam).length && ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]{3,6}$/.test(blueAllianceId))){
+		if(!Object.keys(epaByTeam).length && ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]{3,6}$/.test(blueAllianceId)) && eventMatches.length){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('.fetch-statbotics-link'))
 		}
