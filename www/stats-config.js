@@ -543,21 +543,12 @@ class StatsConfig {
 
 			var draggedElement=null
 			var list=$('#stats-reorder-list')
-			list.on('dragstart', 'li', function(e){
-				draggedElement=$(this)
-				e.originalEvent.dataTransfer.effectAllowed='move'
-				$(this).css('opacity','0.5')
-			})
-			.on('dragend', 'li', function(e){
-				$('#stats-reorder-list li').css('opacity','1')
-				draggedElement=null
-			})
-			.on('dragover', function(e){
+			var dragImage=null
+
+			// Helper function to handle reordering logic
+			var handleDragReorder=function(dragY){
 				if (draggedElement){
-					e.preventDefault()
-					e.originalEvent.dataTransfer.dropEffect='move'
-					var dragY=e.originalEvent.clientY
-					var $target=$(e.target).closest('li')
+					var $target=$(document.elementFromPoint(window.innerWidth/2, dragY)).closest('li')
 					if ($target.length && $target[0]!==draggedElement[0]){
 						var targetRect=$target[0].getBoundingClientRect()
 						var targetMidpoint=targetRect.top+targetRect.height/2
@@ -579,12 +570,115 @@ class StatsConfig {
 						}
 					}
 				}
-			})
-			.on('drop', function(e){
-				if (draggedElement){
+			}
+
+			// Combined handler for dragstart and touchstart
+			var handleStartDrag=function(e){
+				draggedElement=$(this)
+				var maxChars=30
+
+				// Get font from document
+				var computedStyle=window.getComputedStyle(document.body)
+				var fontSize=parseInt(computedStyle.fontSize)
+				var fontFamily=computedStyle.fontFamily
+
+				// Estimate canvas size using heuristic: average character width ≈ 60% of font size
+				var avgCharWidth=fontSize*0.6
+				var estimatedWidth=Math.ceil(maxChars*avgCharWidth)+16
+				var estimatedHeight=fontSize+16
+
+				// Create canvas with estimated dimensions
+				var canvas=document.createElement('canvas')
+				canvas.width=estimatedWidth
+				canvas.height=estimatedHeight
+
+				var ctx=canvas.getContext('2d')
+				ctx.fillStyle='#0066cc'
+				ctx.fillRect(0, 0, canvas.width, canvas.height)
+				ctx.fillStyle='white'
+				ctx.textAlign='left'
+				ctx.textBaseline='middle'
+				ctx.font=fontSize+'px '+fontFamily
+				var text=draggedElement.text().substring(0, maxChars)
+				ctx.fillText(text, 8, canvas.height/2)
+
+				if (e.originalEvent.dataTransfer){
+					// Mouse drag event - use native setDragImage
+					e.originalEvent.dataTransfer.effectAllowed='move'
+					e.originalEvent.dataTransfer.setDragImage(canvas, 0, canvas.height/2)
+				} else if (e.originalEvent.touches){
+					// Touch event - use canvas as positioned element
 					e.preventDefault()
+					dragImage=$(canvas).css({
+						'position': 'fixed',
+						'pointer-events': 'none',
+						'z-index': '10000'
+					})
+					$('body').append(dragImage)
 				}
-			})
+
+				draggedElement.addClass('dragging-item')
+			}
+
+			// Combined handler for dragend and touchend
+			var handleEndDrag=function(e){
+				$('#stats-reorder-list li').removeClass('dragging-item')
+				if (dragImage){
+					dragImage.remove()
+					dragImage=null
+				}
+				draggedElement=null
+			}
+
+			// Add styles for dragging state
+			if (!$('#dragging-style').length){
+				$('head').append(
+					$('<style id=dragging-style>').text(
+						'#stats-reorder-list li.dragging-item {' +
+							'background-color: #0066cc !important;' +
+							'color: white !important;' +
+							'border: 2px solid #004499 !important;' +
+							'box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;' +
+							'transform: scale(1.02) !important;' +
+							'opacity: 1 !important;' +
+							'transition: none !important;' +
+						'}'
+					)
+				)
+			}
+
+			// Combined handler for dragover and touchmove
+			var handleDragMove=function(e){
+				e.preventDefault()
+				if (draggedElement){
+					var dragY
+					if (e.originalEvent.dataTransfer){
+						dragY=e.originalEvent.clientY
+						e.originalEvent.dataTransfer.dropEffect='move'
+					} else if (e.originalEvent.touches){
+						dragY=e.originalEvent.touches[0].clientY
+						// Update drag image position for touch
+						if (dragImage){
+							var offsetX=dragImage.width()/2
+							var offsetY=dragImage.height()/2
+							dragImage.css({
+								'left': (e.originalEvent.touches[0].clientX - offsetX)+'px',
+								'top': (dragY - offsetY)+'px'
+							})
+						}
+					}
+					handleDragReorder(dragY)
+				}
+			}
+
+			list.on('dragstart touchstart', 'li', handleStartDrag)
+				.on('dragend touchend', 'li', handleEndDrag)
+				.on('dragover touchmove', handleDragMove)
+				.on('drop', function(e){
+					if (draggedElement){
+						e.preventDefault()
+					}
+				})
 		}
 
 		var config=this.getStatsConfig()
