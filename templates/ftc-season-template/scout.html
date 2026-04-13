@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scout EVENT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.min.js></script>
+<script src=/main.js></script>
+<script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
+<script src=/scout.js></script>
+<script src=scout.js></script>
+<script src=/photo-db.js></script>
+<script src=/heartbeat.js></script>
+<script src=/local.js></script>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+
+<body>
+<h1></h1>
+<div id=select-bot class=screen style=display:none>
+	<h2 data-i18n=choose_pos_heading></h2>
+	<div class=blueTeamBG>
+		<button>B1</button>
+		<button>B2</button>
+	</div>
+	<div class=redTeamBG>
+		<button>R1</button>
+		<button>R2</button>
+	</div>
+	<button class=showInstructions data-i18n=instructions></button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
+</div>
+
+<div id=select-match class=screen style=display:none>
+	<h1></h1>
+	<button class=showInstructions data-i18n=instructions></button>
+	<button class=robotBtn data-i18n=change_robot_button></button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
+	<div id=match-list></div>
+</div>
+
+<div id=change-team class=screen style=display:none>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn data-i18n=cancel_button></button>
+</div>
+
+<form id=scouting class=screen style=display:none>
+	<div>
+		<button class=showInstructions data-i18n=instructions></button>
+		<button id=teamBtn data-i18n=team_correction_button></button>
+		<button id=matchBtn data-i18n=choose_match_button></button>
+		<button class=robotBtn data-i18n=change_robot_button></button>
+		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+	</div>
+	<input type=hidden name=event>
+	<input type=hidden name=match>
+	<input type=hidden name=team>
+	<input type=hidden name=timeline id=timeline>
+
+	<div class=tabs>
+		<div class="tab default-tab" data-content=pre data-i18n=pre_match_tab></div>
+		<div class="tab" data-content=auto data-i18n=auto_tab></div>
+		<div class=tab data-content=teleop data-i18n=tele_tab></div>
+		<div class=tab data-content=end data-i18n=end_game_tab></div>
+	</div>
+
+	<div class="pre tab-content">
+		<fieldset class=full id=no-show-area>
+			<label><input type=checkbox name=no_show value=1><span data-i18n=no_show></span></label>
+		</fieldset>
+		<!-- Add game-specific pre-match controls here -->
+		<button id=to-auto-button class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
+	</div>
+
+	<div class="auto tab-content">
+		<button class=undo data-i18n=undo_button></button>
+		<!-- Add game-specific autonomous period controls here -->
+		<button id=to-tele-button class=tab-button data-content=teleop data-i18n=proceed_tele_button></button>
+	</div>
+
+	<div class="teleop tab-content">
+		<button class=undo data-i18n=undo_button></button>
+		<!-- Add game-specific teleop controls here -->
+		<button id=to-end-button class=tab-button data-content=end data-i18n=proceed_end_button></button>
+	</div>
+
+	<div class="end tab-content">
+		<!-- Add game-specific end-game controls here -->
+		<fieldset class="left full" id=review-request>
+			<legend data-i18n=review_requested_legend></legend>
+			<div><label><input type=checkbox name=review_requested value=1><span data-i18n=review_requested_button></span></label></div>
+		</fieldset>
+		<fieldset class="left full">
+			<legend data-i18n=scouter_name_question></legend>
+			<input class=full type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder>
+		</fieldset>
+		<fieldset class="left full" id=scouting-comments>
+			<legend data-i18n=comments_question></legend>
+			<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
+		</fieldset>
+		<input type=hidden name=created value="">
+		<input type=hidden name=modified value="">
+		<fieldset class=full id=nextButtons>
+			<legend data-i18n=save_data_question></legend>
+			<div id=doneButtons></div>
+		</fieldset>
+	</div>
+</form>
+
+</body>
+</html>
