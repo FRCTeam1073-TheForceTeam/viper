@@ -1204,7 +1204,7 @@ $(document).ready(function(){
 		$('.opponent').show()
 		$('.neutral, .alliance').hide()
 		$('.target').removeClass('active')
-		$('.target-alliance').addClass('active')
+		$('.target-neutral').addClass('active')
 		if (e && e.jquery)return animateChangeFloater(-1, e)
 		updateZoneTimer($(this),'opponent')
 		return countHandler.call(this,e)
