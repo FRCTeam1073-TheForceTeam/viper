@@ -144,4 +144,69 @@ foreach my $var (@vars) {
 	}
 }
 
+# Check enum fields from scouting (not pit scouting)
+my @enum_issues;
+my @enum_suggestions;
+
+# Read scout.html to see which enums are actually used in match scouting
+my $scout_content = '';
+if (-e $scout_file) {
+	open(my $sh, '<', $scout_file) or die "Cannot open $scout_file: $!\n";
+	$scout_content = do { local $/; <$sh> };
+	close($sh);
+}
+
+# Extract all enum definitions - look for type:'enum' then values: { ... }
+while ($content =~ /^\s*([a-z0-9_]+):\s*\{[^}]*type:\s*['"]enum['"][^}]*values:\s*\{\s*([^}]*)\s*\}/gm) {
+	my $enum_name = $1;
+	my $values_block = $2;
+
+	# Skip enums that are not used in scout.html (pit-only enums)
+	next unless $scout_content =~ /name\s*=\s*['"]?$enum_name['"]?/i;
+
+	# Track if we found any valid variant fields for this enum
+	my $found_variants = 0;
+
+	# Extract all values from the enum
+	while ($values_block =~ /'([^']*)':\s*'([a-z0-9_]+)'/g) {
+		my $value = $1;
+		my $variant_name = $2;
+
+		# Check if this variant field exists in statInfo
+		unless ($content =~ /^\s*$variant_name\s*:\s*\{/m) {
+			push @enum_issues, "Missing: $variant_name (enum value '$value' of $enum_name)";
+			push @enum_suggestions, "$variant_name";
+			$found_variants = 1;
+		}
+	}
+
+	# Only check for _mode if we found actual enum variants
+	if ($found_variants) {
+		my $mode_name = "${enum_name}_mode";
+		unless ($content =~ /^\s*$mode_name\s*:\s*\{/m) {
+			push @enum_issues, "Missing: $mode_name (mode for enum $enum_name)";
+			push @enum_suggestions, "$mode_name";
+		}
+	}
+}
+
+# Print enum issues with suggested code blocks
+if (@enum_issues) {
+	print "\nEnum validation issues:\n";
+	foreach my $issue (@enum_issues) {
+		print "\t$issue\n";
+	}
+
+	if (@enum_suggestions) {
+		print "\nSuggested additions to statInfo:\n";
+		foreach my $field (@enum_suggestions) {
+			my $name = format_name($field);
+			print "\t$field:{\n";
+			print "\t\ten:'$name',\n";
+			print "\t\ttype:'%',\n";
+			print "\t},\n";
+		}
+	}
+}
+
 exit 0;
