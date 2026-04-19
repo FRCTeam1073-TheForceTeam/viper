@@ -63,7 +63,7 @@ if ($dbh){
 
 # list all of the event files
 foreach my $name (glob("data/$event.*")){
-	print "/$name\n"
+	print "/$name\n" if $name !~ /\.lock$/;
 }
 
 if ( -e "data/$event.schedule.csv" ){
