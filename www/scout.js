@@ -779,9 +779,12 @@ function showPitScoutingForm(t){
 		fillDefaultFormFields()
 		promiseTeamsInfo().then(ti => {
 			if (ti[team]){
-				$('input[name="team_name"]').val(ti[team].nameShort).attr('value',ti[team].nameShort)
-				var loc = `${ti[team].city}, ${ti[team].stateProv}, ${ti[team].country}`
-				$('input[name="team_location"]').val(loc).attr('value',loc)
+				var name=ti[team].nameShort,
+				nameI = $('input[name="team_name"]'),
+				loc = `${ti[team].city}, ${ti[team].stateProv}, ${ti[team].country}`,
+				locI = $('input[name="team_location"]')
+				if (!nameI.val())nameI.val(name).attr('value',name).attr('data-at-scout-start',name)
+				if (!locI.val())locI.val(loc).attr('value',loc).attr('data-at-scout-start',loc)
 			}
 		})
 		resetSequentialInputSeries()
