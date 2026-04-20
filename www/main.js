@@ -589,6 +589,7 @@ window.console=(function(oc){
 	}
 }(window.console))
 window.onerror=(message,file,line,col,error)=>{
+	if (message.includes('getLabelAndValue')) return true
 	console.error(JSON.stringify({
 		message:message,
 		file:file,

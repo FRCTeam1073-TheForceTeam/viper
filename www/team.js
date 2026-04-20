@@ -309,9 +309,11 @@ function showGraphs(matchList, matchNames){
 		if (sections[section].graph=='heatmap'){
 			var statName = sections[section].data[0],
 			stat=statInfo[statName]
-			displayHeatMap(graph,stat.image,stat.aspect_ratio,2,matchList.map(function(el){
-				return (el[statName]||"")
-			}))
+			setTimeout(function(){
+				displayHeatMap(graph,stat.image,stat.aspect_ratio,2,matchList.map(function(el){
+					return (el[statName]||"")
+				}))
+			},0)
 		} else if (sections[section].graph=='timeline'){
 			var height = ((matchList.length)*55+20) + "px",
 			chart = $('<canvas>').css('width', Math.max($('#stats').width()-100,1150)).css('max-height',height).css('height',height),
@@ -347,7 +349,9 @@ function showGraphs(matchList, matchNames){
 					})
 				}
 			})
-			drawTimeline(chart, data)
+			setTimeout(function(){
+				drawTimeline(chart, data)
+			},0)
 		} else {
 			var chart = $('<canvas>'),
 			boxplot = sections[section].graph=="boxplot",

@@ -2,7 +2,7 @@
 .scouter{text-align:end}
 .scouter::before{content:"-- "}
 .chart canvas{height:20em}
-.graph{display:inline-block;max-width:100%}
+.graph{display:inline-block;max-width:100%;overflow-x:auto}
 .chart,.heatmap{padding:0 1em;display:inline-block}
 .comments{white-space:pre-wrap}
 .imagePreview img{height:320px}

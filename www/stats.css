@@ -2,7 +2,7 @@
 .statRow{text-align: end}
 .best{background:var(--highlight-bg-color)}
 td,th{padding:0.2em}
-.graph{display:inline-block;max-width:100%}
+.graph{display:inline-block;max-width:100%;overflow-x:auto}
 .chart,.heatmap{padding:0 1em;display:inline-block}
 .chart canvas{height:20em}
 #teamPicker{padding:2em}
