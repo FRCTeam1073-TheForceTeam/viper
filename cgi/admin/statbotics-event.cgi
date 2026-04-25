@@ -14,15 +14,18 @@ my $webutil = webutil->new;
 my $db = db->new();
 my $cgi = CGI->new;
 my $event = $cgi->param('event');
+my $sbevent = $cgi->param('sbevent');
 
 $webutil->error("Missing event ID") if (!$event);
 $webutil->error("Malformed event ID", $event) if ($event !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
-$event = lc($event);
+$webutil->error("Missing sbevent ID") if (!$sbevent);
+$webutil->error("Malformed sbevent ID", $sbevent) if ($sbevent !~ /^20[0-9]{2}[a-zA-Z0-9\-]+$/);
+$sbevent = lc($sbevent);
 
 my $ua = LWP::UserAgent->new;
 $ua->agent('Viper Scouting');
 
-my $url = "https://api.statbotics.io/v3/team_events?event=$event&limit=1000";
+my $url = "https://api.statbotics.io/v3/team_events?event=$sbevent&limit=1000";
 
 my $req = HTTP::Request->new('GET', $url);
 my $response = $ua->request($req);
@@ -37,7 +40,7 @@ $webutil->error("Statbotics API Error", "Invalid JSON response from Statbotics A
 	if ($@);
 
 if (!defined $data || (ref($data) eq 'ARRAY' && scalar(@$data) == 0)) {
-	$webutil->error("Statbotics API Error", "No data returned for event $event from Statbotics API. Verify the event code is correct.");
+	$webutil->error("Statbotics API Error", "No data returned for event $sbevent from Statbotics API. Verify the event code is correct.");
 }
 
 # Write the EPA data to database or file

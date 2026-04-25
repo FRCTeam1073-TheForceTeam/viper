@@ -187,12 +187,30 @@ function promiseJson(file,defaultResponse){
 
 function promiseTeamsInfo(){
 	if (!promiseCache.teamsInfo) promiseCache.teamsInfo = promiseJson(`/data/${eventId}.teams.json`).then(function(json){
-		var eventTeamsInfo={}
-		json.teams = json.teams||[]
-		json.teams.forEach(function(team){
-			eventTeamsInfo[parseInt(team.teamNumber)] = team
+		var pageTotal = json.pageTotal || 1
+		if (pageTotal <= 1) {
+			// Single page - process directly
+			var eventTeamsInfo = {}
+			json.teams = json.teams || []
+			json.teams.forEach(function(team){
+				eventTeamsInfo[parseInt(team.teamNumber)] = team
+			})
+			return eventTeamsInfo
+		}
+		var pagePromises = []
+		for (var i = 1; i <= pageTotal; i++){
+			pagePromises.push(promiseJson(`/data/${eventId}.teams.${i}.json`))
+		}
+		return Promise.all(pagePromises).then(function(pages){
+			var eventTeamsInfo = {}
+			pages.forEach(function(pageJson){
+				pageJson.teams = pageJson.teams || []
+				pageJson.teams.forEach(function(team){
+					eventTeamsInfo[parseInt(team.teamNumber)] = team
+				})
+			})
+			return eventTeamsInfo
 		})
-		return eventTeamsInfo
 	}).catch(e=>{
 		console.error(e)
 		return {}
