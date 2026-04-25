@@ -220,7 +220,7 @@ function showStats(){
 	})
 	if (!matchList.length) return;
 
-	if ($('#displayType').val() == 'graph')	showGraphs(matchList, matchNames)
+	if ($('#displayType').val() == 'graph')	setTimeout(function(){showGraphs(matchList, matchNames)},0)
 	else showTables(matchList, matchNames)
 	showComments(matchList, matchNames)
 }
@@ -309,11 +309,9 @@ function showGraphs(matchList, matchNames){
 		if (sections[section].graph=='heatmap'){
 			var statName = sections[section].data[0],
 			stat=statInfo[statName]
-			setTimeout(function(){
-				displayHeatMap(graph,stat.image,stat.aspect_ratio,2,matchList.map(function(el){
-					return (el[statName]||"")
-				}))
-			},0)
+			displayHeatMap(graph,stat.image,stat.aspect_ratio,2,matchList.map(function(el){
+				return (el[statName]||"")
+			}))
 		} else if (sections[section].graph=='timeline'){
 			var height = ((matchList.length)*55+20) + "px",
 			chart = $('<canvas>').css('width', Math.max($('#stats').width()-100,1150)).css('max-height',height).css('height',height),
@@ -349,9 +347,7 @@ function showGraphs(matchList, matchNames){
 					})
 				}
 			})
-			setTimeout(function(){
-				drawTimeline(chart, data)
-			},0)
+			drawTimeline(chart, data)
 		} else {
 			var chart = $('<canvas>'),
 			boxplot = sections[section].graph=="boxplot",
