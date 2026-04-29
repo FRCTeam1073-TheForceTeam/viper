@@ -40,10 +40,10 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 	Object.keys(statInfo).forEach(function(field){
 		if(statInfo[field]['type']=='enum' && statInfo[field]['values']){
 			var value = scout[field]||''
-			// Set each enum variant to 1 if it matches, 0 otherwise
-			Object.keys(statInfo[field]['values']).forEach(function(v){
-				scout[`${field}_${v}`] = (v === value) ? 1 : 0
-			})
+			if (value){
+				var enumField = `${field}_${value}`
+				scout[enumField] = (scout[enumField]||0)+1
+			}
 		}
 	})
 
@@ -171,6 +171,14 @@ function aggregateStats(scout, aggregate, apiScores, subjective, pit, eventStats
 			aggregate[set] = aggregate[set]||[]
 			aggregate[set].push(scout[field])
 		}
+		if(/^(enum)$/.test(statInfo[field]['type'])){
+			if(statInfo[field]['values']){
+				Object.keys(statInfo[field]['values']).forEach(function(value){
+					var enumField = `${field}_${value}`
+					aggregate[enumField] = (aggregate[enumField]||0)+(scout[enumField]||0)
+				})
+			}
+		}
 		if(/^capability$/.test(statInfo[field]['type'])) aggregate[field] = aggregate[field]||scout[field]||0
 		if(/^text$/.test(statInfo[field]['type'])) aggregate[field] = (!aggregate[field]||aggregate[field]==scout[field])?scout[field]:"various"
 		if(/^heatmap$/.test(statInfo[field]['type'])) aggregate[field] += ((aggregate[field]&&scout[field])?" ":"")+scout[field]
@@ -268,69 +276,6 @@ var statInfo={
 			'flip':'climb_method_flip'
 		}
 	},
-	climb_method_rungs:{
-		en:'Climb Using Rungs',
-		type:'%',
-		fr:'Escalade Via les Échelons',
-		pt:'Escalada Via Degraus',
-		zh_tw:'通過梯級攀爬',
-		tr:'Basamaklar Aracılığıyla Tırman',
-		he:'קליימבה דרך סולמות',
-	},
-	climb_method_uprights:{
-		en:'Climb Using Uprights',
-		type:'%',
-		fr:'Escalade Via Montants',
-		pt:'Escalada Via Montantes',
-		zh_tw:'通過豎桿攀爬',
-		tr:'Dikmeler Aracılığıyla Tırman',
-		he:'קליימבה דרך עמודים',
-	},
-	climb_method_flip:{
-		en:'Climb Using Flip',
-		type:'%',
-		fr:'Escalade Via Retournement',
-		pt:'Escalada Via Flip',
-		zh_tw:'通過翻轉攀爬',
-		tr:'Çevirerek Tırman',
-		he:'קליימבה דרך הפיכה',
-	},
-	climb_method_rungs:{
-		en:'Climb Using Rungs',
-		type:'%',
-		fr:'Escalade Via les Échelons',
-		pt:'Escalada Via Degraus',
-		zh_tw:'通過梯級攀爬',
-		tr:'Basamaklar Aracılığıyla Tırman',
-		he:'קליימבה דרך סולמות',
-	},
-	climb_method_uprights:{
-		en:'Climb Using Uprights',
-		type:'%',
-		fr:'Escalade Via Montants',
-		pt:'Escalada Via Montantes',
-		zh_tw:'通過豎桿攀爬',
-		tr:'Dikmeler Aracılığıyla Tırman',
-		he:'קליימבה דרך עמודים',
-	},
-	climb_method_flip:{
-		en:'Climb Using Flip',
-		type:'%',
-		fr:'Escalade Via Retournement',
-		pt:'Escalada Via Flip',
-		zh_tw:'通過翻轉攀爬',
-		tr:'Çevirerek Tırman',
-		he:'קליימבה דרך הפיכה',
-	},
-	climb_method_mode:{
-		en:'Most Common Climb Method',
-		type:'text',
-		fr:'Méthode d\'escalade la plus courante',
-		pt:'Método de escalada mais comum',
-		zh_tw:'最常見的攀爬方法',
-		tr:'En Yaygın Tırmanma Yöntemi',
-		he:'שיטת קליימבה הנפוצה ביותר',
-	},
 	comments:{
 		en:'Comments',
 		type:'text',
@@ -365,105 +310,6 @@ var statInfo={
 		tr:'Savunulan',
 		he:'הגן',
 	},
-	defended_undefended:{
-		en:'Undefended',
-		type:'%',
-		fr:'Non Défendu',
-		pt:'Não Defendido',
-		zh_tw:'未受保護',
-		tr:'Savunmasız',
-		he:'לא הגן',
-	},
-	defended_turned_tables:{
-		en:'Turned Tables',
-		type:'%',
-		fr:'Retournement de Situation',
-		pt:'Virou a Mesa',
-		zh_tw:'局勢逆轉',
-		tr:'Durum Tersine Döndü',
-		he:'הפכו את השולחן',
-	},
-	defended_unaffected:{
-		en:'Unaffected',
-		type:'%',
-		fr:'Non Affecté',
-		pt:'Não Afetado',
-		zh_tw:'不受影響',
-		tr:'Etkilenmedi',
-		he:'לא הושפע',
-	},
-	defended_slowed:{
-		en:'Slowed',
-		type:'%',
-		fr:'Ralenti',
-		pt:'Desacelerado',
-		zh_tw:'減速',
-		tr:'Yavaşlatıldı',
-		he:'הואט',
-	},
-	defended_slowed_greatly:{
-		en:'Greatly Slowed',
-		type:'%',
-		fr:'Fortement Ralenti',
-		pt:'Muito Desacelerado',
-		zh_tw:'大幅減速',
-		tr:'Büyük Ölçüde Yavaşlatıldı',
-		he:'הואט מאוד',
-	},
-	defended_undefended:{
-		en:'Undefended',
-		type:'%',
-		fr:'Non Défendu',
-		pt:'Não Defendido',
-		zh_tw:'未受保護',
-		tr:'Savunmasız',
-		he:'לא הגן',
-	},
-	defended_turned_tables:{
-		en:'Turned Tables',
-		type:'%',
-		fr:'Retournement de Situation',
-		pt:'Virou a Mesa',
-		zh_tw:'局勢逆轉',
-		tr:'Durum Tersine Döndü',
-		he:'הפכו את השולחן',
-	},
-	defended_unaffected:{
-		en:'Unaffected',
-		type:'%',
-		fr:'Non Affecté',
-		pt:'Não Afetado',
-		zh_tw:'不受影響',
-		tr:'Etkilenmedi',
-		he:'לא הושפע',
-	},
-	defended_slowed:{
-		en:'Slowed',
-		type:'%',
-		fr:'Ralenti',
-		pt:'Desacelerado',
-		zh_tw:'減速',
-		tr:'Yavaşlatıldı',
-		he:'הואט',
-	},
-	defended_slowed_greatly:{
-		en:'Greatly Slowed',
-		type:'%',
-		fr:'Fortement Ralenti',
-		pt:'Muito Desacelerado',
-		zh_tw:'大幅減速',
-		tr:'Büyük Ölçüde Yavaşlatıldı',
-		he:'הואט מאוד',
-	},
-	defended_mode:{
-		en:'Most Common Defense Response',
-		type:'text',
-		fr:'Réaction de défense la plus courante',
-		pt:'Resposta de defesa mais comum',
-		zh_tw:'最常見的防禦反應',
-		tr:'En Yaygın Savunma Tepkisi',
-		he:'התגובה ההגנה הנפוצה ביותר',
-	},
 	defense:{
 		en:'Defense',
 		type:'enum',
@@ -479,15 +325,6 @@ var statInfo={
 		zh_tw:'防禦',
 		tr:'Savunma',
 		he:'הגנה',
-	},
-	defense_none:{
-		en:'Didn\'t play defense',
-		type:'%',
-		fr:'N\'a pas joué la défense',
-		pt:'Não jogou defesa',
-		zh_tw:'沒有玩防禦',
-		tr:'Savunma oynamadı',
-		he:'לא שיחק הגנה',
 	},
 	defense_bad:{
 		en:'Bad Defense',
@@ -534,182 +371,20 @@ var statInfo={
 		tr:'En Yaygın Savunma Değerlendirmesi',
 		he:'דירוג ההגנה הנפוץ ביותר',
 	},
-	bricked_some:{
-		en:'Disabled Some',
-		type:'%',
-		fr:'Désactivé quelque',
-		pt:'Desabilitado Alguns',
-		zh_tw:'禁用一些',
-		tr:'Devre Dışı Bazıları',
-		he:'מבוטל כמה',
-	},
-	bricked_half:{
-		en:'Disabled Half the Match',
-		type:'%',
-		fr:'Désactivé la Moitié du Match',
-		pt:'Desabilitado Metade da Partida',
-		zh_tw:'禁用比賽的一半',
-		tr:'Maçın Yarısı Devre Dışı',
-		he:'מבוטל חצי מהמשחק',
-	},
-	bricked_most:{
-		en:'Disabled Most of the Match',
-		type:'%',
-		fr:'Désactivé la Plupart du Match',
-		pt:'Desabilitado a Maior Parte da Partida',
-		zh_tw:'禁用比賽的大部分',
-		tr:'Maçın Çoğu Devre Dışı',
-		he:'מבוטל רוב המשחק',
-	},
-	bricked_all:{
-		en:'Disabled Whole Match',
-		type:'%',
-		fr:'Désactivé le Match Entier',
-		pt:'Desabilitado o Inteiro Match',
-		zh_tw:'禁用整個比賽',
-		tr:'Tüm Maç Devre Dışı',
-		he:'מבוטל הכל משחק',
-	},
-	bricked_some:{
-		en:'Disabled Some',
-		type:'%',
-		fr:'Désactivé quelque',
-		pt:'Desabilitado Alguns',
-		zh_tw:'禁用一些',
-		tr:'Devre Dışı Bazıları',
-		he:'מבוטל כמה',
-	},
-	bricked_half:{
-		en:'Disabled Half the Match',
-		type:'%',
-		fr:'Désactivé la Moitié du Match',
-		pt:'Desabilitado Metade da Partida',
-		zh_tw:'禁用比賽的一半',
-		tr:'Maçın Yarısı Devre Dışı',
-		he:'מבוטל חצי מהמשחק',
-	},
-	bricked_most:{
-		en:'Disabled Most of the Match',
-		type:'%',
-		fr:'Désactivé la Plupart du Match',
-		pt:'Desabilitado a Maior Parte da Partida',
-		zh_tw:'禁用比賽的大部分',
-		tr:'Maçın Çoğu Devre Dışı',
-		he:'מבוטל רוב המשחק',
-	},
-	bricked_all:{
-		en:'Disabled Whole Match',
-		type:'%',
-		fr:'Désactivé le Match Entier',
-		pt:'Desabilitado o Inteiro Match',
-		zh_tw:'禁用整個比賽',
-		tr:'Tüm Maç Devre Dışı',
-		he:'מבוטל הכל משחק',
-	},
-	bricked_mode:{
-		en:'Most Common Disabled Level',
-		type:'text',
-		fr:'Niveau de désactivation le plus courant',
-		pt:'Nível de desabilitação mais comum',
-		zh_tw:'最常見的禁用級別',
-		tr:'En Yaygın Devre Dışı Seviyesi',
-		he:'רמת הביטול הנפוצה ביותר',
-	},
-	fuel_carried:{
-		en:'Fuel Carried',
-		type:'%',
-		fr:'Carburant Transporté',
-		pt:'Combustível Transportado',
-		zh_tw:'攜帶燃料',
-		tr:'Taşınan Yakıt',
-		he:'דלק שהובא',
-	},
-	fuel_pushed:{
-		en:'Fuel Pushed',
-		type:'%',
-		fr:'Carburant Poussé',
-		pt:'Combustível Empurrado',
-		zh_tw:'推進的燃料',
-		tr:'İtilen Yakıt',
-		he:'דלק דחוף',
-	},
-	fuel_passed:{
-		en:'Fuel Passed',
-		type:'%',
-		fr:'Carburant Transmis',
-		pt:'Combustível Passado',
-		zh_tw:'傳遞燃料',
-		tr:'Geçirilen Yakıt',
-		he:'דלק שהועבר',
-	},
-	fuel_received:{
-		en:'Fuel Received',
-		type:'%',
-		fr:'Carburant Reçu',
-		pt:'Combustível Recebido',
-		zh_tw:'收到的燃料',
-		tr:'Alınan Yakıt',
-		he:'דלק שהתקבל',
-	},
 	fuel_to_alliance:{
 		en:'Fuel To Alliance',
 		type:'enum',
 		values: {
-			'carried':'fuel_carried',
-			'pushed':'fuel_pushed',
-			'passed':'fuel_passed',
-			'received':'fuel_received'
+			'carried':'fuel_carried_label',
+			'pushed':'fuel_pushed_label',
+			'passed':'fuel_passed_label',
+			'received':'fuel_received_label'
 		},
 		fr:'Carburant à l\'alliance',
 		pt:'Combustível para a aliança',
 		zh_tw:'燃料聯盟',
 		tr:'Yakıt İttifakı',
 		he:'דלק לברית',
-	},
-	fuel_to_alliance_carried:{
-		en:'Fuel Carried',
-		type:'%',
-		fr:'Carburant Transporté',
-		pt:'Combustível Transportado',
-		zh_tw:'攜帶燃料',
-		tr:'Taşınan Yakıt',
-		he:'דלק שהובא',
-	},
-	fuel_to_alliance_pushed:{
-		en:'Fuel Pushed',
-		type:'%',
-		fr:'Carburant Poussé',
-		pt:'Combustível Empurrado',
-		zh_tw:'推進的燃料',
-		tr:'İtilen Yakıt',
-		he:'דלק דחוף',
-	},
-	fuel_to_alliance_passed:{
-		en:'Fuel Passed',
-		type:'%',
-		fr:'Carburant Transmis',
-		pt:'Combustível Passado',
-		zh_tw:'傳遞燃料',
-		tr:'Geçirilen Yakıt',
-		he:'דלק שהועבר',
-	},
-	fuel_to_alliance_received:{
-		en:'Fuel Received',
-		type:'%',
-		fr:'Carburant Reçu',
-		pt:'Combustível Recebido',
-		zh_tw:'接收燃料',
-		tr:'Alınan Yakıt',
-		he:'דלק שנקבל',
-	},
-	fuel_to_alliance_mode:{
-		en:'Most Common Fuel Delivery Method',
-		type:'text',
-		fr:'Méthode de livraison de carburant la plus courante',
-		pt:'Método de entrega de combustível mais comum',
-		zh_tw:'最常見的燃料輸送方法',
-		tr:'En Yaygın Yakıt Teslim Yöntemi',
-		he:'שיטת הסיור הדלק הנפוצה ביותר',
 	},
 	misses:{
 		en:'Misses',
@@ -726,60 +401,6 @@ var statInfo={
 		zh_tw:'錯過',
 		tr:'Kaçırmalar',
 		he:'חִסרוֹן',
-	},
-	misses_0_1:{
-		en:'0-1 Misses',
-		type:'%',
-		fr:'0-1 Manques',
-		pt:'0-1 Erros',
-		zh_tw:'0-1 錯過',
-		tr:'0-1 Kaçırmalar',
-		he:'0-1 חסרונות',
-	},
-	misses_1_10:{
-		en:'1-10 Misses',
-		type:'%',
-		fr:'1-10 Manques',
-		pt:'1-10 Erros',
-		zh_tw:'1-10 錯過',
-		tr:'1-10 Kaçırmalar',
-		he:'1-10 חסרונות',
-	},
-	misses_10_30:{
-		en:'10-30 Misses',
-		type:'%',
-		fr:'10-30 Manques',
-		pt:'10-30 Erros',
-		zh_tw:'10-30 錯過',
-		tr:'10-30 Kaçırmalar',
-		he:'10-30 חסרונות',
-	},
-	misses_30_60:{
-		en:'30-60 Misses',
-		type:'%',
-		fr:'30-60 Manques',
-		pt:'30-60 Erros',
-		zh_tw:'30-60 錯過',
-		tr:'30-60 Kaçırmalar',
-		he:'30-60 חסרונות',
-	},
-	misses_60_100:{
-		en:'60-100 Misses',
-		type:'%',
-		fr:'60-100 Manques',
-		pt:'60-100 Erros',
-		zh_tw:'60-100 錯過',
-		tr:'60-100 Kaçırmalar',
-		he:'60-100 חסרונות',
-	},
-	misses_mode:{
-		en:'Most Common Miss Range',
-		type:'text',
-		fr:'Plage de manques la plus courante',
-		pt:'Faixa de erros mais comum',
-		zh_tw:'最常見的錯過範圍',
-		tr:'En Yaygın Kaçırma Aralığı',
-		he:'טווח החסרונות הנפוץ ביותר',
 	},
 	modified:{
 		en:'Modified',
@@ -2573,6 +2194,10 @@ var importFunctions={
 		example:"/2026/195.csv",
 		convert:importScouting195,
 	},
+	"lovat":{
+		example:"/2026/lovat.csv",
+		convert:importScouting_lovat,
+	},
 }
 
 function importScouting195(text){
@@ -2634,6 +2259,57 @@ function importScouting195(text){
 		// Defended: postWasDef=0 (no), 1 (yes) → maps to '' or 'slowed'
 		row.defended = row.postWasDef=='1'?'slowed':''
 		row.scouter="195"
+	})
+	return rows
+}
+
+function importScouting_lovat(text){
+	var rows=csvToArrayOfMaps(text)
+	rows.forEach(row=>{
+		row.team=row.teamNumber
+
+		// Map match number format (Q2 → qm2)
+		row.match = row.match.replace(/^Q/, 'qm')
+
+		// Map autoClimb value to auto_climb_level
+		// NOT_ATTEMPTED = 0, otherwise parse as integer
+		if(row.autoClimb === 'NOT_ATTEMPTED' || !row.autoClimb){
+			row.auto_climb_level = 0
+		} else {
+			row.auto_climb_level = parseInt(row.autoClimb)||0
+		}
+
+		// Map endgameClimb value to tele_climb_level
+		// NOT_ATTEMPTED = 0, otherwise parse as integer
+		if(row.endgameClimb === 'NOT_ATTEMPTED' || !row.endgameClimb){
+			row.tele_climb_level = 0
+		} else {
+			row.tele_climb_level = parseInt(row.endgameClimb)||0
+		}
+
+		// Map fuel/scoring points
+		row.auto_fuel_score = parseInt(row.autoPoints)||0
+		row.tele_fuel_score = parseInt(row.teleopPoints)||0
+
+		// Map defense effectiveness to defense rating
+		var defRating = parseInt(row.defenseEffectiveness)||0
+		if(defRating >= 4){
+			row.defense = 'great'
+		} else if(defRating === 3){
+			row.defense = 'good'
+		} else if(defRating === 2){
+			row.defense = 'ineffective'
+		} else if(defRating === 1){
+			row.defense = 'bad'
+		} else {
+			row.defense = ''
+		}
+
+		// Map comments/notes
+		row.comments = row.notes||''
+
+		// Set scouter
+		row.scouter = row.scouter || 'lovat'
 	})
 	return rows
 }
