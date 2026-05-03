@@ -40,9 +40,10 @@ sub deleteCsvFile(){
 }
 
 sub importCsvFile(){
-	my ($self, $file, $contents) = @_;
+	my ($self, $file, $contents, $shouldDelete) = @_;
+	$shouldDelete = 1 unless defined $shouldDelete;  # default to true for backward compatibility
 	my ($event, $table) = $self->getEventAndTable($file);
-	$self->deleteCsvFile($file, 0);
+	$self->deleteCsvFile($file, 0) if $shouldDelete;
 	my $csv = csv->new($contents);
 
 	for my $row (1..$csv->getRowCount()){
@@ -62,6 +63,11 @@ sub importCsvFile(){
 		}
 	}
 	$dbimport::db->commit();
+}
+
+sub mergeImportCsvFile(){
+	my ($self, $file, $contents) = @_;
+	$self->importCsvFile($file, $contents, 0);  # 0 = don't delete, just merge
 }
 
 sub importImageFile(){

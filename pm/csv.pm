@@ -4,6 +4,7 @@ use strict;
 package csv;
 
 use Data::Dumper;
+use File::Slurp;
 
 sub new {
 	my ($class, $data) = @_;
@@ -196,6 +197,62 @@ sub toString(){
 		$s = "$s$row_text\n" if $hasData;
 	}
 	return $s;
+}
+
+sub getPrimaryKeyColumns(){
+	my ($self, $type) = @_;
+
+	return ['match', 'team', 'scouter'] if $type eq 'scouting';
+	return ['team', 'scouter'] if $type eq 'pit';
+	return ['team', 'scouter'] if $type eq 'subjective';
+	return undef;
+}
+
+sub removeMatchingRows(){
+	my ($self, $newCsv, $keyColumns) = @_;
+
+	# Build set of keys from new data
+	my $keysToRemove = {};
+	for my $newRowNum (1..$newCsv->getRowCount()) {
+		my @keyParts = map { $newCsv->getByName($newRowNum, $_) } @{$keyColumns};
+		my $key = join("|", @keyParts);
+		$keysToRemove->{$key} = 1;
+	}
+
+	# Remove rows from self that match keys from new
+	$self->{_data} = [
+		grep {
+			my $rowArray = $_;
+			my $key = join("|", map { $rowArray->[$self->{_headerMap}->{$_}] } @{$keyColumns});
+			!exists $keysToRemove->{$key};
+		} @{$self->{_data}}
+	];
+
+	return $self;
+}
+
+sub mergeFile(){
+	my ($self, $filePath, $newCsvContents) = @_;
+
+	# Extract type from filename (e.g., "2024cmp.scouting.csv" -> "scouting")
+	my ($type) = $filePath =~ /\.([a-z]+)\.csv$/;
+	die "Cannot determine CSV type from filename: $filePath" unless $type;
+
+	my $keyColumns = $self->getPrimaryKeyColumns($type);
+	die "Unknown CSV type: $type in file: $filePath" unless $keyColumns;
+
+	# Read existing CSV or create empty one
+	my $existingCsvData = -f $filePath ? scalar(read_file($filePath)) : "";
+	my $existingCsv = csv->new($existingCsvData);
+	my $newCsv = csv->new($newCsvContents);
+
+	# Remove rows from existing that match new data's primary keys
+	$existingCsv->removeMatchingRows($newCsv, $keyColumns);
+
+	# Append new rows
+	$existingCsv->append($newCsv);
+
+	return $existingCsv->toString();
 }
 
 1;

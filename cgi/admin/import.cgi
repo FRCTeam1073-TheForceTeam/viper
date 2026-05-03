@@ -10,6 +10,7 @@ use File::Slurp;
 use File::Path 'make_path';
 use Fcntl qw(:flock SEEK_END);
 use lib '../../pm';
+use csv;
 use webutil;
 use db;
 use dbimport;
@@ -48,17 +49,29 @@ sub writeFileData(){
 	my $lockFile = "$fileName.lock";
 	open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 	flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
-	$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$openMode", $fileName);
-	print $fh $fileContents;
-	close $fh;
-	$webutil->commitDataFile($fileName, "import") if ($fileName =~ /\.csv$/);
+	
+	if ($fileName =~ /\.csv$/) {
+		# For CSV files, merge based on primary keys
+		$fileContents = csv->mergeFile($fileName, $fileContents);
+		
+		$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$openMode", $fileName);
+		print $fh $fileContents;
+		close $fh;
+		$webutil->commitDataFile($fileName, "import");
+	} else {
+		# For non-CSV files (images, json), just overwrite
+		$webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">$openMode", $fileName);
+		print $fh $fileContents;
+		close $fh;
+	}
+	
 	close $lock;
 	unlink($lockFile);
 }
 
 sub writeDbData(){
 	my ($fileName, $fileContents) = @_;
-	$dbimport->importCsvFile($fileName, $fileContents) if ($fileName =~ /\.csv$/);
+	$dbimport->mergeImportCsvFile($fileName, $fileContents) if ($fileName =~ /\.csv$/);
 	$dbimport->importImageFile($fileName, $fileContents) if ($fileName =~ /\.jpg$/);
 }
 
