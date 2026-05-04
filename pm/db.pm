@@ -86,6 +86,8 @@ sub dbConnection {
 		}
 	);
 	$db::dbh->prepare_cached("SET time_zone = '+00:00';")->execute();
+	# Allow data truncation while preserving strict checks for dates.
+	$db::dbh->prepare_cached("SET SESSION sql_mode='NO_ZERO_DATE,NO_ZERO_IN_DATE';")->execute();
 	return $db::dbh;
 }
 
