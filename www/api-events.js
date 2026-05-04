@@ -8,6 +8,7 @@ addI18n({
 		tr:'İLK API Etkinlik Listesi',
 		zh_tw:'FIRST API 事件列表',
 		fr:'Liste des événements API FIRST',
+		es:'Lista de eventos de API FIRST',
 	},
 	api_events_instruction:{
 		en:'Click on an event to download the official data for it.',
@@ -16,6 +17,7 @@ addI18n({
 		tr:'Resmi verilerini indirmek için bir etkinliğe tıklayın.',
 		zh_tw:'點擊某個事件即可下載該事件的官方資料。',
 		fr:'Cliquez sur un événement pour télécharger ses données officielles.',
+		es:'Haga clic en un evento para descargar sus datos oficiales.',
 	},
 	api_events_refresh_link:{
 		en:'Refresh event list',
@@ -24,6 +26,7 @@ addI18n({
 		tr:'Etkinlik listesini yenile',
 		zh_tw:'刷新事件列表',
 		fr:'Actualiser la liste des événements',
+		es:'Actualizar lista de eventos',
 	},
 	season_label:{
 		en:'Season:',
@@ -31,7 +34,8 @@ addI18n({
 		pt:'Temporada:',
 		tr:'Sezon:',
 		zh_tw:'季節：',
-		fr:'Saison :',
+		fr:'Saison :',
+		es:'Temporada:',
 	},
 	filter_label:{
 		en:'Show:',
@@ -39,7 +43,8 @@ addI18n({
 		pt:'Mostrar:',
 		tr:'Göster:',
 		zh_tw:'展示：',
-		fr:'Afficher :',
+		fr:'Afficher :',
+		es:'Mostrar:',
 	},
 	filter_all:{
 		en:'All',
@@ -48,6 +53,7 @@ addI18n({
 		tr:'Tümü',
 		zh_tw:'全部',
 		fr:'Tous',
+		es:'Todos',
 	},
 	filter_upcoming:{
 		en:'Upcoming',
@@ -56,6 +62,7 @@ addI18n({
 		tr:'Yaklaşan',
 		zh_tw:'即將推出',
 		fr:'À venir',
+		es:'Próximamente',
 	},
 	cached_heading:{
 		en:'Cached API Data Found',
@@ -64,6 +71,7 @@ addI18n({
 		tr:'Önbelleğe Alınan API Verileri Bulundu',
 		zh_tw:'找到快取的 API 數據',
 		fr:'Données API en cache trouvées',
+		es:'Datos de API almacenados en caché encontrados',
 	},
 	cache_create_link:{
 		en:'Create event from cached data',
@@ -72,6 +80,7 @@ addI18n({
 		tr:'Önbelleğe alınan verilerden etkinlik oluştur',
 		zh_tw:'根據快取資料建立事件',
 		fr:'Créer un événement à partir des données en cache',
+		es:'Crear evento a partir de datos en caché',
 	},
 	cached_refresh_link:{
 		en:'Fetch latest from API first',
@@ -80,6 +89,7 @@ addI18n({
 		tr:'Önce API\'den son haberleri al',
 		zh_tw:'首先從 API 取得最新內容',
 		fr:'Récupérer les dernières données de l\'API en premier',
+		es:'Obtener lo último de la API primero',
 	},
 })
 

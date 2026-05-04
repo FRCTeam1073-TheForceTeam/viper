@@ -7,6 +7,7 @@ addI18n({
 		fr:'Statistiques de la saison complète de _YEAR_',
 		zh_tw:'_YEAR_ 完整賽季統計數據',
 		he:'_YEAR_ נתונים סטטיסטיים של העונה המלאה',
+		es:'Estadísticas de temporada completa de _YEAR_',
 	},
 	add_event_button:{
 		en:'+ Add an event',
@@ -15,10 +16,12 @@ addI18n({
 		tr:'+ Bir etkinlik ekle',
 		zh_tw:'+ 新增活動',
 		he:'+ הוסף אירוע',
+		es:'+ Añadir un evento',
 	},
 	choose_season_option:{
 		en:'Choose season…',
 		pt:'Escolha a temporada…',
+		es:'Elige una temporada',
 		fr:'Choisir la saison…',
 		tr:'Sezonu seç...',
 		zh_tw:'選擇季節…',
@@ -27,6 +30,7 @@ addI18n({
 	index_h1:{
 		en:'Viper — Scouting App',
 		pt:'Viper — Scouting App',
+		es:'Viper',
 		fr:'Viper — Application de repérage',
 		tr:'Viper — İzcilik Uygulaması',
 		zh_tw:'Viper——偵察應用程式',

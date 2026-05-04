@@ -8,6 +8,7 @@ addI18n({
 		pt:'Use estatísticas completas da temporada',
 		he:'השתמש בסטטיסטיקה מלאה של העונה',
 		tr:'Tam sezon istatistiklerini kullan',
+		es:'Usar estadísticas de la temporada completa',
 	},
 	eraser_tooltip:{
 		en:'Whiteboard eraser',
@@ -16,6 +17,7 @@ addI18n({
 		pt:'Apagador de quadro branco',
 		zh_tw:'白板擦',
 		fr:'Effaceur de tableau blanc',
+		es:'Borrador',
 	},
 	undo_tooltip:{
 		en:'Whiteboard undo',
@@ -24,9 +26,11 @@ addI18n({
 		pt:'Desfazer quadro branco',
 		zh_tw:'白板撤銷',
 		fr:'Annulation du tableau blanc',
+		es:'Deshacer',
 	},
 	clear_tooltip:{
 		en:'Whiteboard clear',
+		es:'Borrar',
 		tr:'Beyaz tahta temizle',
 		he:'לוח לבן ברור',
 		pt:'Limpar quadro branco',
@@ -35,6 +39,7 @@ addI18n({
 	},
 	rotate_tooltip:{
 		en:'Whiteboard rotate',
+		es:'Girar',
 		tr:'Beyaz tahta döndür',
 		he:'סיבוב לוח לבן',
 		pt:'Girar quadro branco',
@@ -43,6 +48,7 @@ addI18n({
 	},
 	print_tooltip:{
 		en:'Print, save page',
+		es:'Imprimir',
 		tr:'Sayfayı yazdır, kaydet',
 		he:'הדפס, שמור עמוד',
 		pt:'Imprimir, salvar página',
@@ -56,6 +62,7 @@ addI18n({
 		pt:'Escolher equipes',
 		zh_tw:'選擇團隊',
 		fr:'Choisir les équipes',
+		es:'Elegir equipos',
 	},
 	configure_tooltip:{
 		en:'Configure stats',
@@ -64,9 +71,11 @@ addI18n({
 		pt:'Configurar estatísticas',
 		zh_tw:'配置統計數據',
 		fr:'Configurer les statistiques',
+		es:'Configurar',
 	},
 	instructions_tooltip:{
 		en:'Show instructions',
+		es:'Instrucciones',
 		tr:'Talimatları göster',
 		he:'הצג הוראות',
 		pt:'Mostrar instruções',
@@ -80,6 +89,7 @@ addI18n({
 		pt:'Caneta de quadro branco, preta',
 		zh_tw:'白板筆 黑色',
 		fr:'Stylo pour tableau blanc, noir',
+		es:'Bolígrafo negro',
 	},
 	robot_pen_tooltip:{
 		en:'Whiteboard pen, colored for this robot',
@@ -88,9 +98,11 @@ addI18n({
 		pt:'Caneta de quadro branco, colorida para este robô',
 		zh_tw:'為這款機器人配色的白板筆',
 		fr:'Stylo pour tableau blanc, couleur pour ce robot',
+		es:'Bolígrafo de robot',
 	},
 	stamp_tooltip:{
 		en:'Whiteboard stamp',
+		es:'Sello',
 		tr:'Beyaz tahta damgası',
 		he:'חותמת לוח לבן',
 		pt:'Carimbo de quadro branco',
@@ -104,6 +116,7 @@ addI18n({
 		pt:'Exibir estatísticas de equipe',
 		zh_tw:'查看球隊統計數據',
 		fr:'Afficher les statistiques de l\'équipe',
+		es:'Estadísticas del equipo',
 	},
 	planner_title:{
 		en:'Match Planner _EVENT_',
@@ -112,9 +125,11 @@ addI18n({
 		pt:'Planejador de Partidas _EVENT_',
 		zh_tw:'比賽規劃師 _EVENT_',
 		fr:'Planificateur de match _EVENT_',
+		es:'Planificador',
 	},
 	planner_heading:{
 		en:'_EVENT_ _MATCHSHORT_',
+		es:'Planificador de campo',
 		fr:'_EVENT_ _MATCHSHORT_',
 		pt:'_EVENT_ _MATCHSHORT_',
 		tr:'_EVENT_ _MATCHSHORT_',

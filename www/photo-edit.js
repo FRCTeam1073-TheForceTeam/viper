@@ -8,6 +8,7 @@ addI18n({
 		pt:'Editar foto',
 		he:'ערוך תמונה',
 		zh_tw:'編輯照片',
+		es:'Editar foto',
 	},
 	photo_deleted:{
 		en:'Photo Deleted',
@@ -16,6 +17,7 @@ addI18n({
 		pt:'Foto excluída',
 		he:'התמונה נמחקה',
 		zh_tw:'照片已刪除',
+		es:'Foto eliminada',
 	},
 	delete_photo_confirm:{
 		en:'Really delete photo?',
@@ -24,6 +26,7 @@ addI18n({
 		pt:'Realmente excluir foto?',
 		he:'באמת למחוק תמונה?',
 		zh_tw:'真的刪除照片嗎？',
+		es:'¿Realmente eliminar foto?',
 	},
 })
 

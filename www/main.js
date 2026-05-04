@@ -12,6 +12,7 @@ addI18n({
 		fr:'ltr',
 		tr:'ltr',
 		zh_tw:'ltr',
+		es:'ltr',
 	},
 	date_locale:{
 		en:'en-US',
@@ -20,6 +21,7 @@ addI18n({
 		fr:'fr-CA',
 		tr:'tr-TR',
 		zh_tw:'zh-TW',
+		es:'es-ES',
 	},
 	home_link:{
 		en:'Event List',
@@ -28,6 +30,7 @@ addI18n({
 		fr:'Liste des événements',
 		tr:'Etkinlik Listesi',
 		zh_tw:'事件列表',
+		es:'Lista de Eventos',
 	},
 	upload_data_link:{
 		en:'Upload Data',
@@ -36,6 +39,7 @@ addI18n({
 		fr:'Télécharger des données',
 		tr:'Veri Yükle',
 		zh_tw:'上傳數據',
+		es:'Cargar Datos',
 	},
 	about_link:{
 		en:'About this app',
@@ -44,6 +48,7 @@ addI18n({
 		fr:'À propos de cette application',
 		tr:'Bu uygulama hakkında',
 		zh_tw:'關於此應用程式',
+		es:'Acerca de esta aplicación',
 	},
 	my_team_num:{
 		en:'My team #',
@@ -52,6 +57,7 @@ addI18n({
 		fr:'Mon équipe #',
 		tr:'Takımım #',
 		zh_tw:'我的團隊',
+		es:'Mi equipo #',
 	},
 	instructions:{
 		en:'Instructions',
@@ -60,6 +66,7 @@ addI18n({
 		fr:'Instructions',
 		tr:'Talimatlar',
 		zh_tw:'指示',
+		es:'Instrucciones',
 	},
 	match:{
 		en:'Match',
@@ -68,6 +75,7 @@ addI18n({
 		fr:'Match',
 		tr:'Maç',
 		zh_tw:'匹配',
+		es:'Partido',
 	},
 	mt_pm:{
 		en:'Prac­tice ',
@@ -76,6 +84,7 @@ addI18n({
 		fr:'Ent­raîn­ement ',
 		tr:'Uygulama ',
 		zh_tw:'實踐',
+		es:'Práctica ',
 	},
 	mt_qm:{
 		en:'Qual­ific­ation ',
@@ -84,6 +93,7 @@ addI18n({
 		fr:'Qual­ific­ation ',
 		tr:'Eleme ',
 		zh_tw:'資格',
+		es:'Clasificación ',
 	},
 	mt_qf:{
 		en:'Quar­ter-final ',
@@ -92,6 +102,7 @@ addI18n({
 		fr:'Quart de finale ',
 		tr:'Çeyrek final ',
 		zh_tw:'四分之一決賽',
+		es:'Cuartos de Final ',
 	},
 	mt_sf:{
 		en:'Semi-final ',
@@ -100,6 +111,7 @@ addI18n({
 		fr:'Demi-finale ',
 		tr:'Yarı final ',
 		zh_tw:'準決賽',
+		es:'Semifinal ',
 	},
 	mt_1p:{
 		en:'Play­offs first round ',
@@ -108,6 +120,7 @@ addI18n({
 		fr:'Prem­ier tour des play­offs ',
 		tr:'Playoff birinci tur ',
 		zh_tw:'季後賽第一輪',
+		es:'Primera ronda de Playoffs ',
 	},
 	mt_2p:{
 		en:'Play­offs second round ',
@@ -116,6 +129,7 @@ addI18n({
 		fr:'Deux­ième tour des play­offs ',
 		tr:'Playoff ikinci tur ',
 		zh_tw:'季後賽第二輪',
+		es:'Segunda ronda de Playoffs ',
 	},
 	mt_3p:{
 		en:'Play­offs third round ',
@@ -124,6 +138,7 @@ addI18n({
 		fr:'Trois­ième tour des play­offs ',
 		tr:'Playoff üçüncü tur ',
 		zh_tw:'季後賽第三輪',
+		es:'Tercera ronda de Playoffs ',
 	},
 	mt_4p:{
 		en:'Play­offs fourth round ',
@@ -132,6 +147,7 @@ addI18n({
 		fr:'Quat­rième tour des play­offs ',
 		tr:'Playoff dördüncü tur ',
 		zh_tw:'季後賽第四輪',
+		es:'Cuarta ronda de Playoffs ',
 	},
 	mt_5p:{
 		en:'Play­offs fifth round ',
@@ -140,6 +156,7 @@ addI18n({
 		fr:'Cinq­uième tour des play­offs ',
 		tr:'Playoff beşinci tur ',
 		zh_tw:'季後賽第五輪',
+		es:'Quinta ronda de Playoffs ',
 	},
 	mt_f:{
 		en:'Final ',
@@ -148,6 +165,7 @@ addI18n({
 		fr:'Finale ',
 		tr:'Final ',
 		zh_tw:'最終的',
+		es:'Final ',
 	},
 	mts_pm:{
 		en:'Prac ',
@@ -156,6 +174,7 @@ addI18n({
 		fr:'Ent ',
 		tr:'Uyg ',
 		zh_tw:'實踐',
+		es:'Prác. ',
 	},
 	mts_qm:{
 		en:'Qual ',
@@ -164,6 +183,7 @@ addI18n({
 		fr:'Qual ',
 		tr:'Elem ',
 		zh_tw:'資格',
+		es:'Clsf. ',
 	},
 	mts_qf:{
 		en:'QF ',
@@ -172,6 +192,7 @@ addI18n({
 		fr:'QF ',
 		tr:'ÇF ',
 		zh_tw:'四分之一決賽',
+		es:'CF ',
 	},
 	mts_sf:{
 		en:'SF ',
@@ -180,6 +201,7 @@ addI18n({
 		fr:'DF ',
 		tr:'YF',
 		zh_tw:'準決賽',
+		es:'SF ',
 	},
 	mts_1p:{
 		en:'Play­off R1 M',
@@ -188,6 +210,7 @@ addI18n({
 		fr:'Prem­ier tour des play­offs ',
 		tr:'Play­off R1 M',
 		zh_tw:'季後賽 R1 M',
+		es:'Playoff R1 P',
 	},
 	mts_2p:{
 		en:'Play­off R2 M',
@@ -196,6 +219,7 @@ addI18n({
 		fr:'Deux­ième tour des play­offs ',
 		tr:'Play­off R2 M',
 		zh_tw:'季後賽 R2 M',
+		es:'Playoff R2 P',
 	},
 	mts_3p:{
 		en:'Play­off R3 M',
@@ -204,6 +228,7 @@ addI18n({
 		fr:'Trois­ième tour des play­offs ',
 		tr:'Play­off R3 M',
 		zh_tw:'季後賽 R3 M',
+		es:'Playoff R3 P',
 	},
 	mts_4p:{
 		en:'Play­off R4 M',
@@ -212,6 +237,7 @@ addI18n({
 		fr:'Quat­rième tour des play­offs ',
 		tr:'Play­off R4 M',
 		zh_tw:'季後賽 R4 M',
+		es:'Playoff R4 P',
 	},
 	mts_5p:{
 		en:'Play­off R5 M',
@@ -220,6 +246,7 @@ addI18n({
 		fr:'Cinq­uième tour des play­offs ',
 		tr:'Play­off R5 M',
 		zh_tw:'季後賽 R5 M',
+		es:'Playoff R5 P',
 	},
 	mts_f:{
 		en:'Final ',
@@ -228,6 +255,7 @@ addI18n({
 		fr:'Finale ',
 		tr:'Final ',
 		zh_tw:'最終的',
+		es:'F ',
 	},
 	cancel_button:{
 		en:'Cancel',
@@ -236,6 +264,7 @@ addI18n({
 		fr:'Annuler',
 		tr:'İptal etmek',
 		zh_tw:'取消',
+		es:'Cancelar',
 	},
 	save_button:{
 		en:'Save',
@@ -244,6 +273,7 @@ addI18n({
 		zh_tw:'節省',
 		he:'לְהַצִיל',
 		tr:'Kaydet',
+		es:'Guardar',
 	},
 	next_button:{
 		en:'Next',
@@ -252,6 +282,7 @@ addI18n({
 		fr:'Aller ensuite',
 		tr:'Sonraki',
 		zh_tw:'下一個',
+		es:'Siguiente',
 	},
 	edit_link:{
 		en:'Edit',
@@ -260,6 +291,7 @@ addI18n({
 		tr:'Düzenle',
 		fr:'Modifier',
 		zh_tw:'編輯',
+		es:'Editar',
 	},
 	delete_button:{
 		en:'Delete',
@@ -268,6 +300,7 @@ addI18n({
 		zh_tw:'刪除',
 		fr:'Supprimer',
 		pt:'Excluir',
+		es:'Eliminar',
 	},
 	stats_include_practice:{
 		en:'Stats include practice matches',
@@ -276,6 +309,7 @@ addI18n({
 		tr:'İstatistikler, antrenman maçlarını içerir',
 		zh_tw:'統計數據包括練習賽',
 		fr:'Statistiques incluant les matchs d\'entraînement',
+		es:'Las estadísticas incluyen partidos de práctica',
 	},
 	stats_exclude_practice:{
 		en:'Stats exclude practice matches',
@@ -284,6 +318,7 @@ addI18n({
 		tr:'İstatistikler, antrenman maçlarını hariç tutar',
 		zh_tw:'數據不包括練習賽',
 		fr:'Statistiques excluant les matchs d\'entraînement',
+		es:'Las estadísticas excluyen partidos de práctica',
 	},
 	display_graphs:{
 		en:'Graphs',
@@ -292,6 +327,7 @@ addI18n({
 		tr:'Grafikler',
 		zh_tw:'圖表',
 		fr:'Graphiques',
+		es:'Gráficos',
 	},
 	display_table:{
 		en:'Table',
@@ -300,6 +336,7 @@ addI18n({
 		tr:'Tablo',
 		zh_tw:'桌子',
 		fr:'Tableau',
+		es:'Tabla',
 	},
 	red_heading:{
 		en:'Red',
@@ -308,6 +345,7 @@ addI18n({
 		zh_tw:'紅色的',
 		pt:'Vermelho',
 		fr:'Rouge',
+		es:'Rojo',
 	},
 	blue_heading:{
 		en:'Blue',
@@ -316,6 +354,7 @@ addI18n({
 		zh_tw:'藍色的',
 		pt:'Azul',
 		fr:'Bleu',
+		es:'Azul',
 	},
 })
 var locale=computeLocale()

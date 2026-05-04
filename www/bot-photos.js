@@ -8,6 +8,7 @@ addI18n({
 		he:'אחסון התמונות המקומי מלא, העלה עכשיו',
 		zh_tw:'本地照片儲存已滿，請立即上傳',
 		fr:'Le stockage local des photos est plein, téléchargez-les maintenant',
+		es:'El almacenamiento local de fotos está lleno, cArgue ahora',
 	},
 	bot_photo_title:{
 		en:'Bot Photos for _EVENT_',
@@ -16,6 +17,7 @@ addI18n({
 		tr:'_EVENT_ için Bot Fotoğrafları',
 		zh_tw:'_EVENT_ 的機器人照片',
 		fr:'Photos du robot pour _EVENT_',
+		es:'Fotos de robot para _EVENT_',
 	},
 	season_label:{
 		en:'Season:',
@@ -23,7 +25,8 @@ addI18n({
 		he:'עוֹנָה:',
 		tr:'Sezon:',
 		zh_tw:'季節：',
-		fr:'Saison :',
+		fr:'Saison :',
+		es:'Temporada:',
 	},
 	team_header:{
 		en:'Team',
@@ -32,6 +35,7 @@ addI18n({
 		tr:'Takım',
 		zh_tw:'團隊',
 		fr:'Équipe',
+		es:'Equipo',
 	},
 	side_view_header:{
 		en:'Side View',
@@ -40,6 +44,7 @@ addI18n({
 		tr:'Yan Görünüm',
 		zh_tw:'側面圖',
 		fr:'Vue latérale',
+		es:'Vista lateral',
 	},
 	top_view_header:{
 		en:'Top View',
@@ -48,6 +53,7 @@ addI18n({
 		tr:'Üst Görünüm',
 		zh_tw:'頂視圖',
 		fr:'Vue de dessus',
+		es:'Vista superior',
 	},
 	add_team_button:{
 		en:'Add Team',
@@ -56,6 +62,7 @@ addI18n({
 		tr:'Takım Ekle',
 		zh_tw:'新增團隊',
 		fr:'Ajouter une équipe',
+		es:'Añadir equipo',
 	},
 	upload_all_button:{
 		en:'Upload All',
@@ -64,6 +71,7 @@ addI18n({
 		tr:'Tümünü Yükle',
 		zh_tw:'全部上傳',
 		fr:'Télécharger tout',
+		es:'Cargar todo',
 	},
 	team_num_heading:{
 		en:'Team _TEAMNUM_',
@@ -72,6 +80,7 @@ addI18n({
 		tr:'Takım _TEAMNUM_',
 		zh_tw:'團隊 _TEAMNUM_',
 		fr:'Équipe _TEAMNUM_',
+		es:'Equipo _TEAMNUM_',
 	},
 	team_num_placeholder:{
 		en:'Team #',
@@ -80,6 +89,7 @@ addI18n({
 		tr:'Takım #',
 		zh_tw:'團隊 ＃',
 		fr:'Équipe n°',
+		es:'Equipo #',
 	},
 })
 

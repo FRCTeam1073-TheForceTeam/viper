@@ -8,6 +8,7 @@ addI18n({
 		tr:'_FILE_ dosyasını silmek istediğinizden emin misiniz?',
 		pt:'Você tem certeza de que deseja excluir _FILE_?',
 		he:'האם אתה בטוח שברצונך למחוק את _FILE_?',
+		es:'¿Estás seguro de que deseas eliminar _FILE_?',
 	},
 })
 

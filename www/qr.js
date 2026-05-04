@@ -8,9 +8,11 @@ addI18n({
 		zh_tw:'正在處理二維碼',
 		he:'מעבד קוד QR',
 		pt:'Processando código QR',
+		es:'Procesando código QR',
 	},
 	qr_format_error:{
 		en:'Data not in expected format',
+		es:'Error de formato de código QR',
 		zh_tw:'數據不符合預期格式',
 		he:'הנתונים אינם בפורמט הצפוי',
 		pt:'Dados fora do formato esperado',
@@ -24,9 +26,11 @@ addI18n({
 		pt:'Nenhum dado',
 		tr:'Veri yok',
 		fr:'Aucune donnée',
+		es:'El código QR no tiene datos',
 	},
 	qr_partial_error:{
 		en:'Could not append to last QR code: no previously uploaded data found',
+		es:'Entrada parcial',
 		zh_tw:'無法附加到最後一個二維碼：未找到先前上傳的數據',
 		he:'לא ניתן לצרף לקוד QR האחרון: לא נמצאו נתונים שהועלו בעבר',
 		pt:'Não foi possível anexar ao último código QR: nenhum dado carregado anteriormente foi encontrado',
@@ -40,6 +44,7 @@ addI18n({
 		pt:'Código QR armazenado anteriormente corrompido',
 		tr:'Önceden depolanan QR kodu bozuldu',
 		fr:'Code QR précédemment enregistré corrompu.',
+		es:'Datos QR corruptos',
 	},
 	qr_sequence_error:{
 		en:'Expected QR code _EXPECTEDNUM_ for this scouter but got _ACTUALNUM_',
@@ -48,9 +53,11 @@ addI18n({
 		pt:'Código QR esperado _EXPECTEDNUM_ para este scouter, mas obteve _ACTUALNUM_',
 		tr:'Bu scouter için _EXPECTEDNUM_ QR kodu bekleniyordu ancak _ACTUALNUM_ alındı',
 		fr:'Le code QR attendu était _EXPECTEDNUM_ pour ce scouter, mais il a été obtenu _ACTUALNUM_.',
+		es:'Códigos QR fuera de secuencia',
 	},
 	qr_extra_error:{
 		en:'Too much data scanned',
+		es:'Código QR extra',
 		zh_tw:'掃描的資料過多',
 		he:'יותר מדי נתונים נסרקו',
 		pt:'Muitos dados escaneados',
@@ -59,6 +66,7 @@ addI18n({
 	},
 	qr_another_needed:{
 		en:'Scan another QR code from this scouter',
+		es:'Se necesita otra entrada de datos',
 		zh_tw:'從此偵察器掃描另一個二維碼',
 		he:'סרוק קוד QR נוסף מהסקאוטר הזה',
 		pt:'Escanear outro código QR deste scouter',
@@ -67,6 +75,7 @@ addI18n({
 	},
 	qr_upload_complete:{
 		en:'Scanned data ready for upload',
+		es:'Carga completada',
 		zh_tw:'掃描資料已準備好上傳',
 		he:'נתונים סרוקים מוכנים להעלאה',
 		pt:'Dados escaneados prontos para upload',
@@ -80,9 +89,11 @@ addI18n({
 		pt:'Prosseguir para upload',
 		tr:'Yüklemeye devam edin',
 		fr:'Procéder au téléchargement.',
+		es:'Cargar códigos QR',
 	},
 	qr_delete_partial_confirm:{
 		en:'Are you sure you want to delete this partial scan?',
+		es:'¿Eliminar entrada parcial?',
 		zh_tw:'您確實要刪除此部分掃描嗎？',
 		he:'האם אתה בטוח שברצונך למחוק את הסריקה החלקית הזו?',
 		pt:'Tem certeza de que deseja excluir esta varredura parcial?',
@@ -91,6 +102,7 @@ addI18n({
 	},
 	qr_optional_scan_another:{
 		en:'or scan another QR code for _SCOUTINGNAME_',
+		es:'Escanea otro código QR (opcional)',
 		zh_tw:'或掃描 _SCOUTINGNAME_ 的另一個二維碼',
 		he:'או סרוק קוד QR אחר עבור _SCOUTINGNAME_',
 		pt:'ou escanear outro código QR para _SCOUTINGNAME_',

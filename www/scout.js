@@ -8,6 +8,7 @@ addI18n({
 		zh_tw:'選擇場地方向和機器人位置',
 		he:'בחר את כיוון השדה ואת עמדת הרובוט שלך',
 		tr:'Alan yönünüzü ve robot pozisyonunuzu seçin',
+		es:'Elige la orientación de tu campo y la posición del robot',
 	},
 	choose_pos_or:{
 		en:'OR',
@@ -16,6 +17,7 @@ addI18n({
 		zh_tw:'或者',
 		he:'אוֹ',
 		tr:'veya',
+		es:'O',
 	},
 	pre_match_tab:{
 		en:'Pre',
@@ -24,6 +26,7 @@ addI18n({
 		zh_tw:'預',
 		he:'מִרֹאשׁ',
 		tr:'Ön',
+		es:'Pre',
 	},
 	auto_tab:{
 		en:'Auto',
@@ -32,6 +35,7 @@ addI18n({
 		zh_tw:'汽車',
 		he:'אוטומטי',
 		tr:'Otomatik',
+		es:'Auto',
 	},
 	tele_tab:{
 		en:'Tele',
@@ -40,6 +44,7 @@ addI18n({
 		zh_tw:'遠距離',
 		he:'טל',
 		tr:'Tele',
+		es:'Tele',
 	},
 	end_game_tab:{
 		en:'End',
@@ -48,6 +53,7 @@ addI18n({
 		zh_tw:'結尾',
 		he:'סוֹף',
 		tr:'Bitiş',
+		es:'Fin',
 	},
 	red:{
 		en:'red',
@@ -56,6 +62,7 @@ addI18n({
 		zh_tw:'紅色的',
 		he:'אָדוֹם',
 		tr:'kırmızı',
+		es:'rojo',
 	},
 	blue:{
 		en:'blue',
@@ -64,6 +71,7 @@ addI18n({
 		zh_tw:'藍色的',
 		he:'כְּחוֹל',
 		tr:'mavi',
+		es:'azul',
 	},
 	team_correction_button:{
 		en:'Set Team #',
@@ -72,6 +80,7 @@ addI18n({
 		zh_tw:'設置隊伍 #',
 		he:'הגדר קבוצה #',
 		tr:'Takım # Ayarla',
+		es:'Establecer equipo #',
 	},
 	choose_match_button:{
 		en:'Change Match',
@@ -80,6 +89,7 @@ addI18n({
 		zh_tw:'選擇匹配',
 		he:'בחר התאמה',
 		tr:'Maç Seç',
+		es:'Cambiar partido',
 	},
 	rotate_field_button:{
 		en:'Rotate Field',
@@ -88,6 +98,7 @@ addI18n({
 		zh_tw:'旋轉字段',
 		he:'סובב שדה',
 		tr:'Alanı Döndür',
+		es:'Rotar campo',
 	},
 	change_robot_button:{
 		en:'Change Position',
@@ -96,9 +107,11 @@ addI18n({
 		zh_tw:'更改位置',
 		he:'שנה עמדה',
 		tr:'Konumu Değiştir',
+		es:'Cambiar posición',
 	},
 	no_show:{
 		en:'No Show',
+		es:'No',
 		pt:'Sem presença',
 		fr:'Non présent',
 		zh_tw:'沒有出席',
@@ -112,9 +125,11 @@ addI18n({
 		zh_tw:'汽車 ”',
 		he:'אוטומטי »',
 		tr:'Otomatik »',
+		es:'Proceder a autónoma',
 	},
 	proceed_tele_button:{
 		en:'Teleop »',
+		es:'Proceder a teleop',
 		pt:'Teleop »',
 		fr:'Télé »',
 		zh_tw:'遠端操作 »',
@@ -128,6 +143,7 @@ addI18n({
 		zh_tw:'結束遊戲 »',
 		he:'משחק סיום »',
 		tr:'Oyunu Sonlandır »',
+		es:'Proceder a fin del juego',
 	},
 	scouting_title:{
 		en:'_TEAMNUM_ _POS_ _MATCHSHORT_ _EVENTNAME_',
@@ -136,9 +152,11 @@ addI18n({
 		zh_tw:'_TEAMNUM_ _POS_ _MATCHSHORT_ _EVENTNAME_',
 		he:'_TEAMNUM_ _POS_ _MATCHSHORT_ _EVENTNAME_',
 		tr:'_TEAMNUM_ _POS_ _MATCHSHORT_ _EVENTNAME_',
+		es:'Exploración',
 	},
 	scouting_heading:{
 		en:'_EVENTNAME_, _POS_, _MATCHNAME_, Team _TEAMNUM_',
+		es:'Exploración',
 		pt:'_EVENTNAME_, _POS_, _MATCHNAME_, Equipe _TEAMNUM_',
 		fr:'_EVENTNAME_, _POS_, _MATCHNAME_, Équipe _TEAMNUM_',
 		zh_tw:'_EVENTNAME_、_POS_、_MATCHNAME_、隊伍 _TEAMNUM_',
@@ -152,6 +170,7 @@ addI18n({
 		zh_tw:'_TEAMNUM_ 在 _EVENTNAME_ 進行維修站偵察',
 		he:'_TEAMNUM_ צופי בורות ב-_EVENTNAME_',
 		tr:'_TEAMNUM_ _EVENTNAME_\'de Pit Scout',
+		es:'Exploración de hoyo',
 	},
 	pit_scouting_heading:{
 		en:'Pit Scout _TEAMNUM_ at _EVENTNAME_',
@@ -160,9 +179,11 @@ addI18n({
 		zh_tw:'_EVENTNAME_ 的維修站偵察兵 _TEAMNUM_',
 		he:'Pit Scout _TEAMNUM_ ב-_EVENTNAME_',
 		tr:'_TEAMNUM_ _EVENTNAME_\'de Pit Scout',
+		es:'Exploración de hoyo',
 	},
 	select_pos_title:{
 		en:'Choose _EVENTNAME_ bot',
+		es:'Posición',
 		pt:'Escolha o bot _EVENTNAME_',
 		fr:'Choisir le robot _EVENTNAME_',
 		zh_tw:'選擇 _EVENTNAME_ 機器人',
@@ -171,6 +192,7 @@ addI18n({
 	},
 	select_pos_heading:{
 		en:'_EVENTNAME_',
+		es:'Seleccionar posición',
 		pt:'_EVENTNAME_',
 		fr:'_EVENTNAME_',
 		zh_tw:'_事件名稱_',
@@ -179,6 +201,7 @@ addI18n({
 	},
 	team_correction_title:{
 		en:'_EVENTNAME_, _POS_, _MATCHNAME_,',
+		es:'Corrección de equipo',
 		pt:'_EVENTNAME_, _POS_, _MATCHNAME_,',
 		fr:'_EVENTNAME_, _POS_, _MATCHNAME_,',
 		zh_tw:'_EVENTNAME_, _POS_, _MATCHNAME_,',
@@ -192,6 +215,7 @@ addI18n({
 		zh_tw:'_MATCHNAME_ _POS_ 隊伍號碼修正',
 		he:'_MATCHNAME_ _POS_ תיקון מספר צוות',
 		tr:'_MATCHNAME_ _POS_ Takım Numarası Düzeltme',
+		es:'Corregir equipo',
 	},
 	pit_scouting_select_team_title:{
 		en:'Pit Scout at _EVENTNAME_',
@@ -200,9 +224,11 @@ addI18n({
 		zh_tw:'_EVENTNAME_ 的坑道偵察員',
 		he:'פיט סקאוט ב-_EVENTNAME_',
 		tr:'_EVENTNAME_\'de Pit Scout',
+		es:'Seleccionar equipo para hoyo',
 	},
 	pit_scouting_select_team_heading:{
 		en:'Select a Team to Pit Scout',
+		es:'Selecciona',
 		pt:'Selecione uma equipe para fazer o Pit Scout',
 		fr:'Sélectionner une équipe à repérer',
 		zh_tw:'選擇一隊進行坑探',
@@ -211,6 +237,7 @@ addI18n({
 	},
 	subjective_scouting_select_team_title:{
 		en:'Subjective Scout at _EVENTNAME_',
+		es:'Exploración subjetiva',
 		pt:'Scout subjetivo em _EVENTNAME_',
 		fr:'Reconnaissance subjective à _EVENTNAME_',
 		zh_tw:'_EVENTNAME_ 的主觀偵察員',
@@ -224,6 +251,7 @@ addI18n({
 		zh_tw:'選擇一支球隊進行主觀考察',
 		he:'בחר צוות לצפייה סובייקטיבית',
 		tr:'Öznel Olarak Scout Yapmak İçin Bir Takım Seçin',
+		es:'Seleccionar equipo para exploración subjetiva',
 	},
 	event_not_found:{
 		en:'Event Not Found',
@@ -232,9 +260,11 @@ addI18n({
 		zh_tw:'未找到事件',
 		he:'האירוע לא נמצא',
 		tr:'Etkinlik Bulunamadı',
+		es:'Evento no encontrado',
 	},
 	confirm_save_data_question:{
 		en:'Do you want to save your data?',
+		es:'¿Deseas',
 		pt:'Você quer salvar seus dados?',
 		fr:'Voulez-vous sauvegarder vos données ?',
 		zh_tw:'您想保存您的資料嗎？',
@@ -243,6 +273,7 @@ addI18n({
 	},
 	done_scouting:{
 		en:'Data saved and done. That was the last match!',
+		es:'Exploración completada',
 		pt:'Dados salvos e prontos. Essa foi a última partida!',
 		fr:'Données sauvegardées et terminées. C\'était le dernier match !',
 		zh_tw:'資料已儲存並完成。那是最後一場比賽！',
@@ -256,6 +287,7 @@ addI18n({
 		zh_tw:'撤銷',
 		he:'לְבַטֵל',
 		tr:'Geri al',
+		es:'Deshacer',
 	},
 	pos_team:{
 		en:'_POS_ _TEAMNUM_',
@@ -264,9 +296,11 @@ addI18n({
 		zh_tw:'_位置_ _球隊號碼_',
 		he:'_POS_ _TEAMNUM_',
 		tr:'_POS_ _TEAMNUM_',
+		es:'Equipo',
 	},
 	values_button:{
 		en:'Values',
+		es:'Valores',
 		pt:'Valores',
 		fr:'Valeurs',
 		zh_tw:'價值觀',
@@ -280,6 +314,7 @@ addI18n({
 		zh_tw:'時間軸',
 		he:'ציר זמן',
 		tr:'Zaman Çizelgesi',
+		es:'Cronología',
 	},
 	timeline_time_header:{
 		en:'Time',
@@ -288,9 +323,11 @@ addI18n({
 		zh_tw:'時間',
 		he:'זְמַן',
 		tr:'Zaman',
+		es:'Tiempo',
 	},
 	timeline_action_header:{
 		en:'Action',
+		es:'Acción',
 		pt:'Ação',
 		fr:'Action',
 		zh_tw:'行動',
@@ -304,6 +341,7 @@ addI18n({
 		zh_tw:'球探資訊',
 		he:'מידע על צופי',
 		tr:'Scouter Bilgileri',
+		es:'Explorador',
 	},
 	review_requested_legend:{
 		en:'Fall asleep? Watch the wrong robot? Press the wrong button?',
@@ -312,9 +350,11 @@ addI18n({
 		zh_tw:'睡著了？看錯機器人？按錯按鈕了？',
 		he:'נרדמת? צפה ברובוט הלא נכון? לחץ על הכפתור הלא נכון?',
 		tr:'Uyudun mu? Yanlış robotu mu izliyorsun? Yanlış düğmeye mi bastınız?',
+		es:'Este equipo solicitó revisión',
 	},
 	review_requested_button:{
 		en:'Request data review',
+		es:'Revisión',
 		pt:'Solicitar revisão destes dados',
 		fr:'Demander la révision de ces données',
 		zh_tw:'請求審查此數據',
@@ -328,6 +368,7 @@ addI18n({
 		zh_tw:'姓名：',
 		he:'שֵׁם:',
 		tr:'Ad:',
+		es:'¿Cuál es tu nombre?',
 	},
 	scouter_name_placeholder:{
 		en:'Scouter Team, First name, Last initial, Eg. 1234 Pat Q',
@@ -336,9 +377,11 @@ addI18n({
 		zh_tw:'童子軍隊伍，名字，姓氏首字母，例如。 1234 還',
 		he:'צוות צופים, שם פרטי, ראשי תיבות אחרון, למשל. 1234 Pat Q',
 		tr:'Scouter Takımı, Adı, Soyadı, Örn. 1234 Pat Q',
+		es:'Tu nombre...',
 	},
 	comments_question:{
 		en:'Comments:',
+		es:'¿Comentarios?',
 		pt:'Comentários:',
 		fr:'Commentaires :',
 		zh_tw:'評論：',
@@ -352,9 +395,11 @@ addI18n({
 		zh_tw:'評論',
 		he:'הערות',
 		tr:'Yorumlar',
+		es:'Comentarios...',
 	},
 	save_data_question:{
 		en:'Save data:',
+		es:'¿Guardar',
 		pt:'Salvar dados:',
 		fr:'Sauvegarder les données :',
 		zh_tw:'儲存資料：',
@@ -368,9 +413,11 @@ addI18n({
 		zh_tw:'下一場比賽',
 		he:'המשחק הבא',
 		tr:'Sonraki Maç',
+		es:'Siguiente partida',
 	},
 	upload_data_button:{
 		en:'Upload Data',
+		es:'Cargar datos',
 		pt:'Carregar dados',
 		fr:'Télécharger les données',
 		zh_tw:'上傳數據',
@@ -379,6 +426,7 @@ addI18n({
 	},
 	qr_code_button:{
 		en:'QR Code',
+		es:'Código QR',
 		pt:'Código QR',
 		fr:'Code QR',
 		zh_tw:'QR 圖碼',
@@ -392,6 +440,7 @@ addI18n({
 		he:'חזרה לבחירת צוות',
 		fr:'Retour à la sélection d\'équipe',
 		zh_tw:'返回球隊選擇',
+		es:'Atrás',
 	},
 	fuel_capacity_label:{
 		en:'Max fuel:',
@@ -400,9 +449,11 @@ addI18n({
 		zh_tw:'最大燃料：',
 		he:'דלק מקסימלי:',
 		tr:'Maksimum yakıt:',
+		es:'Capacidad de combustible:',
 	},
 	loading_photos:{
 		en:'Loading robot photos…',
+		es:'Cargando',
 		pt:'Carregando fotos do robô…',
 		fr:'Chargement des photos du robot…',
 		zh_tw:'正在加載機器人照片…',

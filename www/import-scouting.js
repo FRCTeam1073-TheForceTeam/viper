@@ -7,7 +7,8 @@ addI18n({
 		he:'ייבוא ​​נתוני צופי',
 		tr:'İzcilik Verilerini İçe Aktar',
 		fr:'Importer les données de dépistage',
-		zh_tw:'導入偵察數據',
+		zh_tw:'導入偵察數揚',
+		es:'Importar datos de exploración',
 	},
 	format_label:{
 		en:'Format:',
@@ -16,10 +17,12 @@ addI18n({
 		tr:'Biçim:',
 		fr:'Format :',
 		zh_tw:'格式：',
+		es:'Formato:',
 	},
 	example_button:{
 		en:'Show Example',
 		pt:'Mostrar exemplo',
+		es:'Ejemplo',
 		he:'הצג דוגמה',
 		tr:'Örnek Göster',
 		fr:'Afficher un exemple',
@@ -32,6 +35,7 @@ addI18n({
 		tr:'Verileri buraya yapıştır',
 		fr:'Coller les données ici',
 		zh_tw:'將數據貼到此處',
+		es:'Haz clic para cargar un archivo...',
 	},
 	convert_button:{
 		en:'Convert ↓',
@@ -40,10 +44,12 @@ addI18n({
 		tr:'Dönüştür ↓',
 		fr:'Convertir ↓',
 		zh_tw:'轉換↓',
+		es:'Convertir',
 	},
 	output_placeholder:{
 		en:'Reformatted data will appear here',
 		pt:'Os dados reformatados aparecerão aqui',
+		es:'Los datos convertidos se mostrarán aquí',
 		he:'נתונים מעוצבים מחדש יופיעו כאן',
 		tr:'Yeniden biçimlendirilmiş veriler burada görünecek',
 		fr:'Les données reformatées apparaîtront ici.',
@@ -52,6 +58,7 @@ addI18n({
 	error_not_implemented:{
 		en:'Sorry, no import options are available yet this season.',
 		pt:'Desculpe, ainda não há opções de importação disponíveis nesta temporada.',
+		es:'Formato no implementado',
 		he:'מצטערים, אין עדיין אפשרויות ייבוא ​​זמינות העונה.',
 		tr:'Üzgünüz, bu sezon henüz hiçbir içe aktarma seçeneği mevcut değil.',
 		fr:'Désolé, aucune option d\'importation n\'est encore disponible cette saison.',

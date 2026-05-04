@@ -8,6 +8,7 @@ addI18n({
 		fr:'Erreur :',
 		pt:'Erro:',
 		tr:'Hata:',
+		es:'Error:',
 	},
 	no_event_title:{
 		en:'Event not specified',
@@ -16,6 +17,7 @@ addI18n({
 		fr:'Événement non spécifié',
 		pt:'Evento não especificado',
 		tr:'Etkinlik belirtilmedi',
+		es:'Evento no especificado',
 	},
 	no_event_message:{
 		en:'No event parameter found in URL',
@@ -24,6 +26,7 @@ addI18n({
 		fr:'Aucun paramètre d\'événement trouvé dans l\'URL',
 		pt:'Nenhum parâmetro de evento encontrado na URL',
 		tr:'URL\'de etkinlik parametresi bulunamadı',
+		es:'No se encontró el parámetro de evento en la URL',
 	},
 	js_error_title:{
 		en:'_FILENAME_ not loaded',
@@ -32,6 +35,7 @@ addI18n({
 		fr:'_FILENAME_ non chargé',
 		pt:'_FILENAME_ não carregado',
 		tr:'_FILENAME_ yüklenmedi',
+		es:'_FILENAME_ no cargado',
 	},
 	js_error_message:{
 		en:'Maybe the season isn\'t implemented?',
@@ -40,6 +44,7 @@ addI18n({
 		fr:'Peut-être que la saison n\'est pas implémentée ?',
 		pt:'Talvez a temporada não esteja implementada?',
 		tr:'Belki de sezon uygulanmadı?',
+		es:'¿Quizás la temporada no esté implementada?',
 	},
 })
 

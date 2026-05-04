@@ -8,6 +8,7 @@ addI18n({
 		tr:'_EVENT_ Scouters',
 		zh_tw:'_EVENT_偵察員',
 		fr:'_EVENT_ Animateurs',
+		es:'_EVENT_ Scout',
 	},
 	scouter_heading:{
 		en:'Scouter',
@@ -16,6 +17,7 @@ addI18n({
 		tr:'Scouter',
 		zh_tw:'偵查員',
 		fr:'Animateur',
+		es:'Scout',
 	},
 	matches_heading:{
 		en:'Matches',
@@ -24,6 +26,7 @@ addI18n({
 		tr:'Maçlar',
 		zh_tw:'火柴',
 		fr:'Matchs',
+		es:'Partidos',
 	},
 	error_heading:{
 		en:'Average Error',
@@ -32,6 +35,7 @@ addI18n({
 		tr:'Ortalama Hata',
 		zh_tw:'平均誤差',
 		fr:'Erreur moyenne',
+		es:'Error promedio',
 	},
 })
 

@@ -8,6 +8,7 @@ addI18n({
 		pt:'Alterar se a equipe foi escolhida',
 		he:'שנה אם צוות נבחר',
 		tr:'Takımın Seçilip Seçilmediğini Değiştir',
+		es:'Cambiar si el equipo ha sido elegido',
 	},
 	view_team_header:{
 		en:'Show Team Stats',
@@ -16,6 +17,7 @@ addI18n({
 		pt:'Mostrar estatísticas da equipe',
 		he:'הצג סטטיסטיקות של צוות',
 		tr:'Takım İstatistiklerini Göster',
+		es:'Mostrar estadísticas del equipo',
 	},
 	pick_list_heading:{
 		en:'Pick List',
@@ -24,6 +26,7 @@ addI18n({
 		pt:'Lista de seleção',
 		he:'רשימת בחירה',
 		tr:'Seçim Listesi',
+		es:'Lista de selección',
 	},
 	no_pick_heading:{
 		en:'No Pick',
@@ -32,6 +35,7 @@ addI18n({
 		pt:'Sem seleção',
 		he:'אין בחירה',
 		tr:'Seçim Yok',
+		es:'Sin selección',
 	},
 	mark_picked_label:{
 		en:'Mark picked:',
@@ -40,6 +44,7 @@ addI18n({
 		pt:'Marcar como escolhido:',
 		he:'מארק בחר:',
 		tr:'Seçildi olarak işaretle:',
+		es:'Marcar como seleccionado:',
 	},
 	view_team_label:{
 		en:'View stats:',
@@ -48,6 +53,7 @@ addI18n({
 		pt:'Exibir estatísticas:',
 		he:'צפה בסטטיסטיקה:',
 		tr:'İstatistikleri görüntüle:',
+		es:'Ver estadísticas:',
 	},
 	sort_by_label:{
 		en:'Sort by:',
@@ -56,6 +62,7 @@ addI18n({
 		pt:'Classificar por:',
 		he:'מיין לפי:',
 		tr:'Sırala:',
+		es:'Ordenar por:',
 	},
 	stats_title:{
 		en:'_EVENT_ Stats',
@@ -64,6 +71,7 @@ addI18n({
 		tr:'_EVENT_ İstatistikleri',
 		zh_tw:'_EVENT_ 統計訊息',
 		fr:'Statistiques _EVENT_',
+		es:'Estadísticas _EVENT_',
 	},
 	mark_picked_button:{
 		en:'Mark team as picked',
@@ -72,6 +80,7 @@ addI18n({
 		tr:'Takımı seçilmiş olarak işaretle',
 		zh_tw:'將團隊標記為已選',
 		fr:'Marquer l\'équipe comme sélectionnée',
+		es:'Marcar equipo como seleccionado',
 	},
 	view_team_button:{
 		en:'View team info',
@@ -80,6 +89,7 @@ addI18n({
 		tr:'Takım bilgilerini görüntüle',
 		zh_tw:'查看團隊資訊',
 		fr:'Voir les informations sur l\'équipe',
+		es:'Ver información del equipo',
 	},
 	sort_label:{
 		en:'Sort:',
@@ -87,7 +97,8 @@ addI18n({
 		pt:'Classificar:',
 		tr:'Sırala:',
 		zh_tw:'種類：',
-		fr:'Trier :',
+		fr:'Trier :',
+		es:'Ordenar:',
 	},
 	starting_match_label:{
 		en:'Starting:',
@@ -95,7 +106,8 @@ addI18n({
 		pt:'Começando:',
 		tr:'Başlangıç:',
 		zh_tw:'開始：',
-		fr:'Début :',
+		fr:'Début :',
+		es:'Empezando:',
 	},
 })
 onApplyTranslation.push(showStats)

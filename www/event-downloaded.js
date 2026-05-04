@@ -8,6 +8,7 @@ addI18n({
 		tr:'_EVENT_ API Verileri',
 		pt:'_EVENTO_ Dados da API',
 		he:'_EVENT_ נתוני API',
+		es:'Datos de API de _EVENT_',
 	},
 	event_download_instruction:{
 		en:'How would you like to use the data?',
@@ -16,6 +17,7 @@ addI18n({
 		tr:'Verileri nasıl kullanmak istersiniz?',
 		pt:'Como você gostaria de usar os dados?',
 		he:'כיצד תרצה להשתמש בנתונים?',
+		es:'¿Cómo te gustaría usar los datos?',
 	},
 	update_schedule_link:{
 		en:'Update schedule',
@@ -24,6 +26,7 @@ addI18n({
 		tr:'Programı güncelle',
 		pt:'Atualizar cronograma',
 		he:'עדכן את לוח הזמנים',
+		es:'Actualizar cronograma',
 	},
 	compare_scouting_link:{
 		en:'Compare scouting data',
@@ -32,6 +35,7 @@ addI18n({
 		tr:'İzleme verilerini karşılaştır',
 		pt:'Comparar dados de olheiros',
 		he:'השווה נתוני צופים',
+		es:'Comparar datos de scout',
 	},
 	scouter_rankings_link:{
 		en:'See scouter rankings',
@@ -40,6 +44,7 @@ addI18n({
 		tr:'İzci sıralamalarını gör',
 		pt:'Ver classificações de olheiros',
 		he:'ראה דירוג צופים',
+		es:'Ver rankings de scouts',
 	},
 	view_event_link:{
 		en:'View the event page',
@@ -48,6 +53,7 @@ addI18n({
 		tr:'Etkinlik sayfasını görüntüle',
 		pt:'Visualizar a página do evento',
 		he:'צפו בדף האירוע',
+		es:'Ver la página de eventos',
 	},
 })
 

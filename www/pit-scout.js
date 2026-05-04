@@ -8,6 +8,7 @@ addI18n({
 		tr:'_TEAMNUM_ Bot Fotoğrafları',
 		zh_tw:'_TEAMNUM_ 機器人照片',
 		fr:'_TEAMNUM_ Photos du robot',
+		es:'_TEAMNUM_ Fotos del bot',
 	},
 	side_view_header:{
 		en:'Side View',
@@ -16,9 +17,11 @@ addI18n({
 		tr:'Yan Görünüm',
 		zh_tw:'側面圖',
 		fr:'Vue latérale',
+		es:'Vista lateral',
 	},
 	top_view_header:{
 		en:'Top View',
+		es:'Vista',
 		pt:'Vista superior',
 		he:'תצוגה למעלה',
 		tr:'Üst Görünüm',
@@ -32,6 +35,7 @@ addI18n({
 		he:'_TEAMNUM_ מידע על הקבוצה',
 		fr:'_TEAMNUM_ Informations sur l\'équipe',
 		zh_tw:'_TEAMNUM_ 團隊訊息',
+		es:'Información del equipo _TEAMNUM_',
 	},
 	team_name_label:{
 		en:'Name:',
@@ -40,9 +44,11 @@ addI18n({
 		he:'שֵׁם:',
 		fr:'Nom :',
 		zh_tw:'姓名：',
+		es:'Nombre:',
 	},
 	team_name_placeholder:{
 		en:'NOT the team number',
+		es:'NO',
 		pt:'NÃO o número da equipe',
 		tr:'Takım numarası DEĞİL',
 		he:'לא מספר הצוות',
@@ -51,6 +57,7 @@ addI18n({
 	},
 	team_location_label:{
 		en:'Location:',
+		es:'Ubicación:',
 		pt:'Localização:',
 		tr:'Konum:',
 		he:'מִקוּם:',
@@ -64,6 +71,7 @@ addI18n({
 		he:'Anytown, ST, ארה"ב',
 		fr:'Anytown, ST, États-Unis',
 		zh_tw:'美國 ST 州 Anytown',
+		es:'Cualquier ciudad, estado, USA',
 	},
 	bot_name_label:{
 		en:'Bot name:',
@@ -72,9 +80,11 @@ addI18n({
 		he:'שם הבוט:',
 		fr:'Nom du robot :',
 		zh_tw:'機器人名稱：',
+		es:'Nombre del bot:',
 	},
 	auto_path_legend:{
 		en:'Draw the robot\'s path for each auto routine that team _TEAMNUM_ can perform',
+		es:'Dibuja',
 		pt:'Desenhe o caminho do robô para cada rotina automática que a equipe _TEAMNUM_ pode executar',
 		tr:'_TEAMNUM_ takımının gerçekleştirebileceği her otomatik rutin için robotun yolunu çiz',
 		he:'צייר את הנתיב של הרובוט עבור כל שגרה אוטומטית שצוות _TEAMNUM_ יכול לבצע',
@@ -88,9 +98,11 @@ addI18n({
 		he:'בטל את הנקודה האחרונה',
 		fr:'Annuler le dernier point',
 		zh_tw:'撤銷上一點',
+		es:'Deshacer último punto',
 	},
 	auto_path_next_button:{
 		en:'Next Auto',
+		es:'Siguiente',
 		pt:'Próximo automático',
 		tr:'Sonraki Otomatik',
 		he:'האוטו הבא',
@@ -99,6 +111,7 @@ addI18n({
 	},
 	robot_legend:{
 		en:'Robot',
+		es:'Información del robot',
 		pt:'Robô',
 		tr:'Robot',
 		he:'רוֹבּוֹט',
@@ -112,6 +125,7 @@ addI18n({
 		he:'מהן מידות מסגרת הרובוט ללא פגושים?',
 		fr:'Quelles sont les dimensions du châssis du robot SANS pare-chocs ?',
 		zh_tw:'不含保險桿的機器人框架尺寸是多少？',
+		es:'¿Cuál es el tamaño del robot?',
 	},
 	robot_size_length:{
 		en:'Length:',
@@ -120,9 +134,11 @@ addI18n({
 		he:'מֶשֶׁך:',
 		fr:'Longueur :',
 		zh_tw:'長度：',
+		es:'Largo',
 	},
 	robot_size_width:{
 		en:'Width:',
+		es:'Ancho',
 		pt:'Largura:',
 		tr:'Genişlik:',
 		he:'רוֹחַב:',
@@ -131,6 +147,7 @@ addI18n({
 	},
 	robot_size_unit:{
 		en:'inches',
+		es:'pulgadas',
 		pt:'polegadas',
 		tr:'inç',
 		he:'אינצ\'ים',
@@ -144,9 +161,11 @@ addI18n({
 		he:'מה משקל הרובוט?',
 		fr:'Quel est le poids du robot ?',
 		zh_tw:'機器人的重量是多少？',
+		es:'¿Cuál es el peso del robot?',
 	},
 	robot_weight_unit:{
 		en:'pounds',
+		es:'libras',
 		pt:'libras',
 		tr:'pound',
 		he:'פאונד',
@@ -155,6 +174,7 @@ addI18n({
 	},
 	robot_drivetrain_question:{
 		en:'What drivetrain is used?',
+		es:'¿Qué tipo de sistema de tracción tiene el robot?',
 		pt:'Qual sistema de transmissão é usado?',
 		tr:'Hangi aktarma organı kullanılıyor?',
 		he:'באיזו מערכת הנעה משתמשים?',
@@ -168,9 +188,11 @@ addI18n({
 		he:'טַנק',
 		fr:'Réservoir',
 		zh_tw:'坦克',
+		es:'Tank',
 	},
 	robot_drivetrain_swerve:{
 		en:'Swerve',
+		es:'Swerve',
 		pt:'Desvio',
 		tr:'Swerve',
 		he:'לִסְטוֹת',
@@ -179,6 +201,7 @@ addI18n({
 	},
 	robot_drivetrain_other:{
 		en:'Other',
+		es:'Otro',
 		pt:'Outros',
 		tr:'Diğer',
 		he:'אַחֵר',
@@ -192,6 +215,7 @@ addI18n({
 		he:'אם להטות, אילו מודולים?',
 		fr:'Si dévie, quels modules ?',
 		zh_tw:'如果轉向，哪些模組？',
+		es:'¿Qué módulos swerve usa?',
 	},
 	robot_swerve_sds:{
 		en:'Swerve Drive Specialties',
@@ -200,9 +224,11 @@ addI18n({
 		he:'התמחויות Swerve Drive',
 		fr:'Swerve Drive Specialties',
 		zh_tw:'Swerve Drive 專長',
+		es:'SDS',
 	},
 	robot_swerve_am:{
 		en:'AndyMark',
+		es:'AndyMark',
 		pt:'AndyMark',
 		tr:'AndyMark',
 		he:'אנדימרק',
@@ -216,6 +242,7 @@ addI18n({
 		he:'REV רובוטיקה',
 		fr:'REV Robotics',
 		zh_tw:'REV 機器人',
+		es:'REV',
 	},
 	robot_swerve_wcp:{
 		en:'WestCoast Products',
@@ -224,9 +251,11 @@ addI18n({
 		he:'מוצרי WestCoast',
 		fr:'WestCoast Products',
 		zh_tw:'WestCoast 產品',
+		es:'WCP',
 	},
 	robot_swerve_other:{
 		en:'Other/Custom',
+		es:'Otro',
 		pt:'Outros/Personalizados',
 		tr:'Diğer/Özel',
 		he:'אחר/מותאם אישית',
@@ -240,6 +269,7 @@ addI18n({
 		he:'כמה מנועים מפעילים את מערכת ההינע?',
 		fr:'Combien de moteurs alimentent la transmission ?',
 		zh_tw:'有多少個電動馬達為傳動系統提供動力？',
+		es:'¿Cuántos motores tiene el sistema de tracción?',
 	},
 	drivetrain_motor_type_question:{
 		en:'What type of motors power the drivetrain?',
@@ -248,9 +278,11 @@ addI18n({
 		he:'איזה סוג מנועים מניע את מערכת ההינע?',
 		fr:'Quel type de moteurs alimente la transmission ?',
 		zh_tw:'什麼類型的馬達為傳動系統提供動力？',
+		es:'¿Qué tipo de motor usa el sistema de tracción?',
 	},
 	motor_type_neo:{
 		en:'Neo',
+		es:'NEO',
 		pt:'Neo',
 		tr:'Neo',
 		he:'ניאו',
@@ -264,6 +296,7 @@ addI18n({
 		he:'פלקון 500',
 		fr:'Falcon 500',
 		zh_tw:'獵鷹 500',
+		es:'Falcon 500',
 	},
 	motor_type_cim:{
 		en:'Full Size CIM',
@@ -272,9 +305,11 @@ addI18n({
 		he:'CIM בגודל מלא',
 		fr:'CIM grandeur nature',
 		zh_tw:'全尺寸 CIM',
+		es:'CIM',
 	},
 	motor_type_kraken:{
 		en:'Kraken',
+		es:'Kraken',
 		pt:'Kraken',
 		tr:'Kraken',
 		he:'קראקן',
@@ -283,6 +318,7 @@ addI18n({
 	},
 	motor_type_other:{
 		en:'Other',
+		es:'Otro',
 		pt:'Outros',
 		tr:'Diğer',
 		he:'אַחֵר',
@@ -296,6 +332,7 @@ addI18n({
 		he:'כמה גלגלים?',
 		fr:'Combien de roues ?',
 		zh_tw:'有多少個輪子？',
+		es:'¿Cuántas ruedas tiene el robot?',
 	},
 	wheel_type_question:{
 		en:'What type of drive wheels?',
@@ -304,9 +341,11 @@ addI18n({
 		he:'איזה סוג של גלגלי הנעה?',
 		fr:'Quel type de roues motrices ?',
 		zh_tw:'什麼類型的驅動輪？',
+		es:'¿Qué tipo de ruedas tiene?',
 	},
 	wheel_type_traction:{
 		en:'Treaded',
+		es:'Tracción',
 		pt:'Com esteira',
 		tr:'Tırtıklı',
 		he:'דרוך',
@@ -315,6 +354,7 @@ addI18n({
 	},
 	wheel_type_high_traction:{
 		en:'High Traction (TPU)',
+		es:'Alto agarre',
 		pt:'Alta tração (TPU)',
 		tr:'Yüksek Çekiş (TPU)',
 		he:'גרירה גבוהה (TPU)',
@@ -328,6 +368,7 @@ addI18n({
 		he:'פּנֵאוֹמָטִי',
 		fr:'Pneumatiques',
 		zh_tw:'氣動',
+		es:'Neumático',
 	},
 	wheel_type_omni:{
 		en:'Omni',
@@ -336,9 +377,11 @@ addI18n({
 		he:'אומני',
 		fr:'Omni',
 		zh_tw:'全方位',
+		es:'Omni',
 	},
 	wheel_type_untreaded:{
 		en:'Untreaded',
+		es:'Sin',
 		pt:'Sem esteira',
 		tr:'Tırtıksız',
 		he:'ללא דריכה',
@@ -352,6 +395,7 @@ addI18n({
 		he:'מכנום',
 		fr:'Mécanisme',
 		zh_tw:'機械能',
+		es:'Mechanum',
 	},
 	wheel_type_mixed:{
 		en:'Mixed',
@@ -360,9 +404,11 @@ addI18n({
 		he:'מְעוּרָב',
 		fr:'Mixtes',
 		zh_tw:'混合',
+		es:'Mixto',
 	},
 	wheel_type_other:{
 		en:'Other',
+		es:'Otro',
 		pt:'Outro',
 		tr:'Diğer',
 		he:'אַחֵר',
@@ -371,6 +417,7 @@ addI18n({
 	},
 	software_section:{
 		en:'Software',
+		es:'Software',
 		pt:'Software',
 		tr:'Yazılım',
 		he:'תוכנה',
@@ -384,9 +431,11 @@ addI18n({
 		he:'ראייה ממוחשבת יכולה לסייע לרובוט עם:',
 		fr:'La vision artificielle peut assister le robot dans les tâches suivantes :',
 		zh_tw:'電腦視覺可以協助機器人：',
+		es:'¿Qué capacidades de visión tiene el robot?',
 	},
 	vision_auto:{
 		en:'Auto',
+		es:'Visión en autónoma',
 		pt:'Automático',
 		tr:'Otomatik',
 		he:'אוטומטי',
@@ -395,6 +444,7 @@ addI18n({
 	},
 	vision_collecting:{
 		en:'Collecting',
+		es:'Recolectando con visión',
 		pt:'Coletar',
 		tr:'Toplama',
 		he:'איסוף',
@@ -408,6 +458,7 @@ addI18n({
 		he:'הצבה, ירי או מכוון',
 		fr:'Placement, tir ou visée',
 		zh_tw:'放置、射擊或瞄準',
+		es:'Colocando con visión',
 	},
 	vision_localization:{
 		en:'Localization',
@@ -416,9 +467,11 @@ addI18n({
 		he:'לוקליזציה',
 		fr:'Localisation',
 		zh_tw:'本土化',
+		es:'Localización',
 	},
 	auto_software_question:{
 		en:'Does _TEAMNUM_ use any autonomous software planning tools?',
+		es:'¿Qué',
 		pt:'O _TEAMNUM_ usa alguma ferramenta de planejamento de software autônomo?',
 		he:'האם _TEAMNUM_ משתמש בכלים לתכנון תוכנה אוטונומית?',
 		tr:'_TEAMNUM_ herhangi bir otonom yazılım planlama aracı kullanıyor mu?',
@@ -427,6 +480,7 @@ addI18n({
 	},
 	auto_software_choreo:{
 		en:'Choreo',
+		es:'Choreo',
 		pt:'Choreo',
 		he:'Choreo',
 		tr:'Choreo',
@@ -435,6 +489,7 @@ addI18n({
 	},
 	auto_software_path_planner:{
 		en:'PathPlanner',
+		es:'Path Planner',
 		pt:'PathPlanner',
 		he:'PathPlanner',
 		tr:'PathPlanner',
@@ -448,6 +503,7 @@ addI18n({
 		tr:'_TEAMNUM_ robot kodu için kullandığı ana programlama dili nedir?',
 		fr:'Quel est le langage de programmation principal utilisé par _TEAMNUM_ pour le code du robot ?',
 		zh_tw:'_TEAMNUM_ 用於機器人代碼的主要編程語言是什麼？',
+		es:'¿Qué lenguaje de programación usan?',
 	},
 	programming_java:{
 		en:'Java',
@@ -456,9 +512,11 @@ addI18n({
 		tr:'Java',
 		fr:'Java',
 		zh_tw:'Java',
+		es:'Java',
 	},
 	programming_cpp:{
 		en:'C++',
+		es:'C++',
 		pt:'C++',
 		he:'C++',
 		tr:'C++',
@@ -472,6 +530,7 @@ addI18n({
 		tr:'Python',
 		fr:'Python',
 		zh_tw:'Python',
+		es:'Python',
 	},
 	pit_scout_notes_placeholder:{
 		en:'Notes (Other things that would be good to know)',
@@ -480,33 +539,20 @@ addI18n({
 		he:'הערות (דברים נוספים שיהיה טוב לדעת)',
 		fr:'Remarques (Autres informations utiles)',
 		zh_tw:'備註（其他值得了解的事）',
+		es:'Notas adicionales...',
 	},
 	pit_scout_photo_reminder:{
 		en:'If you are also bot photo scouting, don\'t forget to take a picture!',
 		pt:'Se você também estiver explorando fotos de robôs, não se esqueça de tirar uma foto!',
 		tr:'Eğer siz de bot fotoğraf keşifçisiyseniz, fotoğraf çekmeyi unutmayın!',
 		he:'אם גם אתם צופים בתמונות בוט, אל תשכחו לצלם!',
-		fr:'Si vous utilisez également la reconnaissance photographique de robots, n\'oubliez pas de prendre une photo !',
+		fr:'Si vous utilisez également la reconnaissance photographique de robots, n\'oubliez pas de prendre une photo !',
 		zh_tw:'如果您也正在尋找機器人照片，別忘了拍照！',
-	},
-	pit_scout_notes_placeholder:{
-		en:'Notes (Other things that would be good to know)',
-		pt:'Notas (Outras coisas que seria bom saber)',
-		tr:'Notlar (Bilmenizde fayda olacak diğer şeyler)',
-		he:'הערות (דברים נוספים שיהיה טוב לדעת)',
-		fr:'Remarques (Autres informations utiles)',
-		zh_tw:'備註（其他值得了解的事）',
-	},
-	pit_scout_photo_reminder:{
-		en:'If you are also bot photo scouting, don\'t forget to take a picture!',
-		pt:'Se você também estiver explorando fotos de robôs, não se esqueça de tirar uma foto!',
-		tr:'Eğer siz de bot fotoğraf keşifçisiyseniz, fotoğraf çekmeyi unutmayın!',
-		he:'אם גם אתם צופים בתמונות בוט, אל תשכחו לצלם!',
-		fr:'Si vous utilisez également la reconnaissance photographique de robots, n\'oubliez pas de prendre une photo !',
-		zh_tw:'如果您也正在尋找機器人照片，別忘了拍照！',
+		es:'Toma fotos del lado y la parte superior del robot',
 	},
 	save_data_legend:{
 		en:'Save data:',
+		es:'Guardar',
 		pt:'Salvar dados:',
 		tr:'Verileri kaydet:',
 		he:'שמור נתונים:',
@@ -520,9 +566,11 @@ addI18n({
 		tr:'Takım _TEAMNUM_ Cezaları',
 		he:'צוות _TEAMNUM_ פנדלים',
 		pt:'Penalidades da equipe _TEAMNUM_',
+		es:'¿El robot recibió alguna sanción?',
 	},
 	subjective_defense_question:{
 		en:'Team _TEAMNUM_ Defense Tips',
+		es:'¿Qué',
 		zh_tw:'球隊 _TEAMNUM_ 防守提示',
 		fr:'Conseils de défense de l\'équipe _TEAMNUM_',
 		tr:'Takım _TEAMNUM_ Savunma İpuçları',
@@ -536,9 +584,11 @@ addI18n({
 		tr:'Diğer',
 		he:'אַחֵר',
 		pt:'Outros',
+		es:'¿Hay algo más que debamos saber sobre este equipo?',
 	},
 	pit_scout_not_answered:{
 		en:'Unknown',
+		es:'No',
 		tr:'Bilinmeyen',
 		pt:'Desconhecido',
 		he:'לֹא יְדוּעַ',
@@ -547,6 +597,7 @@ addI18n({
 	},
 	localstorage_full:{
 		en:'Local photo storage is full, upload now',
+		es:'Almacenamiento local lleno',
 		tr:'Yerel fotoğraf depolama alanı doldu, şimdi yükleyin',
 		pt:'O armazenamento local de fotos está cheio, faça upload agora',
 		he:'אחסון התמונות המקומי מלא, העלה עכשיו',

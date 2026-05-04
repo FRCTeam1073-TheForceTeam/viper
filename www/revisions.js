@@ -8,6 +8,7 @@ addI18n({
 		he:'_FILENAME_ גרסאות',
 		pt:'_FILENAME_ Revisões',
 		tr:'_FILENAME_ Revizyonları',
+		es:'Revisiones de _FILENAME_',
 	},
 	error_no_file:{
 		en:'No file specified',
@@ -16,6 +17,7 @@ addI18n({
 		he:'לא צוין קובץ',
 		pt:'Nenhum arquivo especificado',
 		tr:'Belirtilen dosya yok',
+		es:'Ningún archivo especificado',
 	},
 	revision_label:{
 		en:'Revision:',
@@ -24,6 +26,7 @@ addI18n({
 		he:'עדכון:',
 		pt:'Revisão:',
 		tr:'Revizyon:',
+		es:'Revisión:',
 	},
 	timestamp_label:{
 		en:'Timestamp:',
@@ -32,6 +35,7 @@ addI18n({
 		he:'חותמת זמן:',
 		pt:'Carimbo de data/hora:',
 		tr:'Zaman damgası:',
+		es:'Marca de tiempo:',
 	},
 	message_label:{
 		en:'Message:',
@@ -40,6 +44,7 @@ addI18n({
 		he:'הוֹדָעָה:',
 		pt:'Mensagem:',
 		tr:'Mesaj:',
+		es:'Mensaje:',
 	},
 	view_link:{
 		en:'View',
@@ -48,6 +53,7 @@ addI18n({
 		he:'נוֹף',
 		pt:'Visualizar',
 		tr:'Görüntüle',
+		es:'Ver',
 	},
 	download_link:{
 		en:'Download',
@@ -56,6 +62,7 @@ addI18n({
 		he:'הורד',
 		pt:'Baixar',
 		tr:'İndir',
+		es:'Descargar',
 	},
 	revert_link:{
 		en:'Revert',
@@ -64,6 +71,7 @@ addI18n({
 		he:'לַחֲזוֹר',
 		pt:'Reverter',
 		tr:'Geri al',
+		es:'Revertir',
 	},
 })
 

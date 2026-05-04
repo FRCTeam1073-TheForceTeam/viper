@@ -8,9 +8,11 @@ addI18n({
 		tr:'_EVENT_ İzcilik İstatistikleri',
 		he:'_EVENT_ סטטיסטיקות צופים',
 		pt:'_EVENT_ Estatísticas de Scouting',
+		es:'_EVENT_ Estadísticas de exploración',
 	},
 	difference_heading:{
 		en:'Match/Alliance Difference',
+		es:'Diferencia',
 		fr:'Différence Match/Alliance',
 		zh_tw:'比賽/聯盟差異',
 		tr:'Maç/İttifak Farkı',
@@ -19,6 +21,7 @@ addI18n({
 	},
 	details_heading:{
 		en:'Details',
+		es:'Detalles',
 		fr:'Détails',
 		zh_tw:'細節',
 		tr:'Ayrıntılar',
@@ -32,6 +35,7 @@ addI18n({
 		tr:'Fark',
 		he:'הבדל',
 		pt:'Diferença',
+		es:'Dif',
 	},
 	api_heading:{
 		en:'API',
@@ -40,9 +44,11 @@ addI18n({
 		tr:'API',
 		he:'ממשק API',
 		pt:'API',
+		es:'API',
 	},
 	scouting_heading:{
 		en:'Scouting',
+		es:'Exploración',
 		fr:'Repérage',
 		zh_tw:'偵察',
 		tr:'İzcilik',
@@ -56,9 +62,11 @@ addI18n({
 		tr:'Ad',
 		he:'שֵׁם',
 		pt:'Nome',
+		es:'Nombre',
 	},
 	value_heading:{
 		en:'Value',
+		es:'Valor',
 		fr:'Valeur',
 		zh_tw:'價值',
 		tr:'Değer',
@@ -67,6 +75,7 @@ addI18n({
 	},
 	match_alliance:{
 		en:'_MATCHTYPE__MATCHNUM_ - _ALLIANCE_',
+		es:'Alianza',
 		fr:'_MATCHTYPE__MATCHNUM_ - _ALLIANCE_',
 		zh_tw:'_MATCHTYPE__MATCHNUM_ - _ALLIANCE_',
 		tr:'_MATCHTYPE__MATCHNUM_ - _ALLIANCE_',

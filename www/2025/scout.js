@@ -8,6 +8,7 @@ addI18n({
 		zh_tw:'預裝珊瑚',
 		fr:'Corail préchargé',
 		pt:'Coral pré-carregado',
+		es:'Coral precargado',
 	},
 	opponent_processor_team:{
 		en:'What is the team number of the OPPONENT\'s human player at the processor?',
@@ -16,6 +17,7 @@ addI18n({
 		zh_tw:'對手人類玩家在處理器處的隊號是多少？',
 		fr:'Quel est le numéro d\'équipe du joueur humain adverse au processeur ?',
 		pt:'Qual é o número da equipe do jogador humano do OPONENTE no processador?',
+		es:'¿Cuál es el número de equipo del jugador humano del OPONENTE en el procesador?',
 	},
 	starting_position:{
 		en:'Click team _TEAMNUM_\'s starting position.',
@@ -24,6 +26,7 @@ addI18n({
 		zh_tw:'點選隊伍_TEAMNUM_的起始位置。',
 		fr:'Cliquez sur la position de départ de l\'équipe _TEAMNUM_.',
 		pt:'Clique na posição inicial da equipe _TEAMNUM_.',
+		es:'Haz clic en la posición de inicio del equipo _TEAMNUM_.',
 	},
 	pre_team_header:{
 		en:'Team _TEAMNUM_',
@@ -32,6 +35,7 @@ addI18n({
 		zh_tw:'團隊 _TEAMNUM_',
 		fr:'Équipe _TEAMNUM_',
 		pt:'Equipe _TEAMNUM_',
+		es:'Equipo _TEAMNUM_',
 	},
 	barge_zone_question:{
 		en:'Is _TEAMNUM_\'s robot in the _TEAMCOLOR_ barge zone?',
@@ -40,6 +44,7 @@ addI18n({
 		zh_tw:'_TEAMNUM_ 的機器人是否在 _TEAMCOLOR_ 駁船區？',
 		fr:'Le robot de _TEAMNUM_ se trouve-t-il dans la zone de la barge _TEAMCOLOR_ ?',
 		pt:'O robô de _TEAMNUM_ está na zona de barcaça _TEAMCOLOR_?',
+		es:'¿Está el robot de _TEAMNUM_ en la zona de barcaza _TEAMCOLOR_?',
 	},
 	barge_zone_parked_button:{
 		en:'Parked',
@@ -48,6 +53,7 @@ addI18n({
 		zh_tw:'停車',
 		fr:'Stationné',
 		pt:'Estacionado',
+		es:'Estacionado',
 	},
 	barge_zone_shallow_button:{
 		en:'Hanging from a shallow cage',
@@ -56,6 +62,7 @@ addI18n({
 		zh_tw:'懸掛在淺籠子裡',
 		fr:'Suspendu à une cage peu profonde',
 		pt:'Pendurado em uma gaiola rasa',
+		es:'Colgado de una jaula poco profunda',
 	},
 	barge_zone_deep_parked_button:{
 		en:'Hanging from a deep cage',
@@ -64,6 +71,7 @@ addI18n({
 		zh_tw:'吊在深籠子裡',
 		fr:'Suspendu à une cage profonde',
 		pt:'Pendurado em uma gaiola funda',
+		es:'Colgado de una jaula profunda',
 	},
 	climb_failed_question:{
 		en:'If not off the ground on a cage:',
@@ -72,6 +80,7 @@ addI18n({
 		zh_tw:'如果籠子沒有離地面：',
 		fr:'S\'il n\'est pas au sol sur une cage :',
 		pt:'Se não estiver fora do chão em uma gaiola:',
+		es:'Si no está fuera del piso en una jaula:',
 	},
 	climb_failed_button:{
 		en:'Robot attempted to climb, but failed',
@@ -80,6 +89,7 @@ addI18n({
 		zh_tw:'機器人嘗試攀爬，但失敗了',
 		fr:'Le robot a tenté de grimper, mais a échoué',
 		pt:'O robô tentou escalar, mas falhou',
+		es:'El robot intentó trepar, pero falló',
 	},
 	barge_heading:{
 		en:'Barge',
@@ -88,6 +98,7 @@ addI18n({
 		zh_tw:'駁船',
 		fr:'Barge',
 		pt:'Barcaça',
+		es:'Barcaza',
 	},
 	gameplay_heading:{
 		en:'Gameplay',
@@ -96,6 +107,7 @@ addI18n({
 		zh_tw:'遊戲玩法',
 		fr:'Gameplay',
 		pt:'Jogabilidade',
+		es:'Jugabilidad',
 	},
 	gameplay_question:{
 		en:'During the match, the robot:',
@@ -104,6 +116,7 @@ addI18n({
 		zh_tw:'比賽過程中，機器人：',
 		fr:'Pendant le match, le robot :',
 		pt:'Durante a partida, o robô:',
+		es:'Durante el partido, el robot:',
 	},
 	defense_button:{
 		en:'Played defense',
@@ -112,6 +125,7 @@ addI18n({
 		zh_tw:'防守',
 		fr:'A joué en défense',
 		pt:'Jogou na defesa',
+		es:'Jugó defensa',
 	},
 	bricked_button:{
 		en:'Broke or was disabled',
@@ -120,6 +134,7 @@ addI18n({
 		zh_tw:'損壞或被停用',
 		fr:'S\'est cassé ou a été désactivé',
 		pt:'Quebrou ou foi desabilitado',
+		es:'Se rompió o fue deshabilitado',
 	},
 	coral_stuck_button:{
 		en:'Had a coral stuck on it',
@@ -128,6 +143,7 @@ addI18n({
 		zh_tw:'上面黏著一塊珊瑚',
 		fr:'A eu un corail coincé dessus',
 		pt:'Tinha um coral preso nele',
+		es:'Tenía un coral atrapado en él',
 	},
 })
 

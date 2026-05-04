@@ -8,6 +8,7 @@ addI18n({
 		pt:'Posição Inicial:',
 		tr:'Başlangıç ​​Pozisyonu:',
 		zh_tw:'起始位置：',
+		es:'Posición inicial:',
 	},
 	at_goal:{
 		en:'At Goal',
@@ -16,6 +17,7 @@ addI18n({
 		pt:'No Gol',
 		tr:'Kalede',
 		zh_tw:'在目標位置',
+		es:'En la meta',
 	},
 	near_audience:{
 		en:'Near Audience',
@@ -24,6 +26,7 @@ addI18n({
 		pt:'Perto do Público',
 		tr:'Seyirci Yakınında',
 		zh_tw:'靠近觀眾',
+		es:'Cerca del público',
 	},
 	use_preset:{
 		en:'Use preset:',
@@ -32,6 +35,7 @@ addI18n({
 		pt:'Usar predefinição:',
 		tr:'Ön Ayarı Kullan:',
 		zh_tw:'使用預設位置：',
+		es:'Usar preestablecido:',
 	},
 	in_goal:{
 		en:'In goal:',
@@ -40,6 +44,7 @@ addI18n({
 		pt:'No gol:',
 		tr:'Kalede:',
 		zh_tw:'在目標位置：',
+		es:'En la meta:',
 	},
 	in_depot:{
 		en:'In depot:',
@@ -48,6 +53,7 @@ addI18n({
 		pt:'No depósito:',
 		tr:'Depoda:',
 		zh_tw:'在倉庫位置：',
+		es:'En el depósito:',
 	},
 	opened_gate:{
 		en:'Opened gate:',
@@ -56,6 +62,7 @@ addI18n({
 		pt:'Portão aberto:',
 		tr:'Kapı Açıldı:',
 		zh_tw:'大門打開：',
+		es:'Puerta abierta:',
 	},
 	returned_base:{
 		en:'Returned to base:',
@@ -64,6 +71,7 @@ addI18n({
 		pt:'Retornou à base:',
 		tr:'Üsse Döndü:',
 		zh_tw:'返回基地：',
+		es:'Regresó a la base:',
 	},
 	returned_base_partially:{
 		en:'Partially',
@@ -72,6 +80,7 @@ addI18n({
 		pt:'Parcialmente',
 		tr:'Kısmen',
 		zh_tw:'部分返回',
+		es:'Parcialmente',
 	},
 	returned_base_alone:{
 		en:'Fully (other robot not fully-in)',
@@ -80,6 +89,7 @@ addI18n({
 		pt:'Totalmente (outro robô não está totalmente dentro)',
 		tr:'Tamamen (diğer robot tamamen içeride değil)',
 		zh_tw:'完全返回（其他機器人未完全進入）',
+		es:'Completamente (otro robot no está completamente dentro)',
 	},
 	returned_base_under:{
 		en:'Fully and underneath fully-in robot',
@@ -88,6 +98,7 @@ addI18n({
 		pt:'Totalmente e abaixo do robô totalmente dentro',
 		tr:'Tamamen ve tamamen içerideki robotun altında',
 		zh_tw:'完全返回，且位於機器人下方',
+		es:'Completamente y debajo del robot completamente dentro',
 	},
 	returned_base_above:{
 		en:'Fully and above fully-in robot',
@@ -96,6 +107,7 @@ addI18n({
 		pt:'Totalmente e acima do robô totalmente dentro',
 		tr:'Tamamen ve tamamen içerideki robotun üstünde',
 		zh_tw:'完全返回，且位於機器人上方',
+		es:'Completamente y encima del robot completamente dentro',
 	},
 	during_auto:{
 		en:'During auto:',
@@ -104,6 +116,7 @@ addI18n({
 		pt:'Durante o modo automático:',
 		tr:'Otomatik sırasında:',
 		zh_tw:'自動運行期間：',
+		es:'Durante el auto:',
 	},
 	during_auto_obelisk:{
 		en:'Scanned obelisk, created patterns matching motif',
@@ -112,6 +125,7 @@ addI18n({
 		pt:'Escaneou o obelisco, criou padrões que correspondem ao motivo',
 		tr:'Dikilitaş tarandı, motifle eşleşen desenler oluşturuldu',
 		zh_tw:'掃描方尖碑，創造與圖案相符的圖案',
+		es:'Escaneo de obelisco, patrones creados que coinciden con el motivo',
 	},
 	during_auto_purple:{
 		en:'Used only purple classified artifacts',
@@ -120,6 +134,7 @@ addI18n({
 		pt:'Utilizou apenas artefatos classificados em roxo',
 		tr:'Sadece mor sınıflandırılmış eserler kullanıldı',
 		zh_tw:'僅使用紫色分類文物',
+		es:'Solo utilizó artefactos clasificados como púrpura',
 	},
 	during_auto_took_turns:{
 		en:'Avoided simultaneous goal shooting during classification',
@@ -128,6 +143,7 @@ addI18n({
 		pt:'Evitou chutes a gol simultâneos durante a classificação',
 		tr:'Sınıflandırma sırasında eş zamanlı kale atışlarından kaçınıldı',
 		zh_tw:'分類過程中避免同時射擊目標',
+		es:'Evitó tiros simultáneos a la porteria durante la clasificación',
 	},
 	during_tele:{
 		en:'During teleop:',
@@ -136,6 +152,7 @@ addI18n({
 		pt:'Durante o teleoperador:',
 		tr:'Teleop sırasında:',
 		zh_tw:'遙控運轉期間：',
+		es:'Durante tele:',
 	},
 	during_tele_patterns:{
 		en:'Created patterns matching motif',
@@ -144,6 +161,7 @@ addI18n({
 		pt:'Criou padrões que correspondem ao motivo',
 		tr:'Motifle eşleşen desenler oluşturuldu',
 		zh_tw:'創建與圖案相符的圖案',
+		es:'Patrones creados que coinciden con el motivo',
 	},
 	auto_leave:{
 		en:'Left the starting line during auto',
@@ -152,6 +170,7 @@ addI18n({
 		pt:'Saiu da linha de partida durante o modo automático',
 		tr:'Otomatik sırasında başlangıç çizgisinden ayrıldı',
 		zh_tw:'自動運行期間離開起始線',
+		es:'Salió de la línea de salida durante el auto',
 	},
 })
 

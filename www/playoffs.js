@@ -8,6 +8,7 @@ addI18n({
 		zh_tw:'聯盟、季後賽、總決賽',
 		fr:'Alliances, Playoffs, Finales',
 		he:'בריתות, פלייאוף, גמר',
+		es:'Alianzas, Playoff, Finales',
 	},
 	playoffs_event_title:{
 		en:'_EVENT_',
@@ -16,6 +17,7 @@ addI18n({
 		zh_tw:'_EVENT_',
 		fr:'_ÉVENT_',
 		he:'_EVENT_',
+		es:'_EVENT_',
 	},
 	bracket_type_heading:{
 		en:'Playoff Brackets',
@@ -24,6 +26,7 @@ addI18n({
 		zh_tw:'季後賽對上表',
 		fr:'Tableau des Playoffs',
 		he:'סוגרי פלייאוף',
+		es:'Corchetes de Playoff',
 	},
 	bracket_type_double:{
 		en:'Double elimination',
@@ -32,6 +35,7 @@ addI18n({
 		zh_tw:'雙重淘汰制',
 		fr:'Double élimination',
 		he:'חיסול כפול',
+		es:'Eliminación doble',
 	},
 	bracket_type_single:{
 		en:'Single elimination',
@@ -40,6 +44,7 @@ addI18n({
 		zh_tw:'單淘汰制',
 		fr:'Élimination simple',
 		he:'חיסול בודד',
+		es:'Eliminación simple',
 	},
 	alliance_selection_heading:{
 		en:'Alliance Selection',
@@ -48,6 +53,7 @@ addI18n({
 		zh_tw:'聯盟選擇',
 		fr:'Sélection de l\'Alliance',
 		he:'בחירת ברית',
+		es:'Selección de Alianza',
 	},
 	alliance_heading:{
 		en:'Alliance',
@@ -55,7 +61,8 @@ addI18n({
 		pt:'Aliança',
 		zh_tw:'聯盟',
 		fr:'Alliance',
-		he:'בְּרִית',
+		he:'בְּרִית',
+		es:'Alianza',
 	},
 	captain_heading:{
 		en:'Captain',
@@ -63,7 +70,8 @@ addI18n({
 		pt:'Capitão',
 		zh_tw:'隊長',
 		fr:'Capitaine',
-		he:'סֶרֶן',
+		he:'סברב',
+		es:'Capitán',
 	},
 	first_pick_heading:{
 		en:'First Pick',
@@ -72,6 +80,7 @@ addI18n({
 		zh_tw:'首選',
 		fr:'Premier choix',
 		he:'בחירה ראשונה',
+		es:'Primera selección',
 	},
 	second_pick_heading:{
 		en:'Second Pick',
@@ -80,6 +89,7 @@ addI18n({
 		zh_tw:'第二選擇',
 		fr:'Deuxième choix',
 		he:'בחירה שניה',
+		es:'Segunda selección',
 	},
 	team_number_placeholder:{
 		en:'team #',
@@ -88,6 +98,7 @@ addI18n({
 		zh_tw:'團隊 ＃',
 		fr:'Numéro d\'équipe',
 		he:'צוות #',
+		es:'equipo #',
 	},
 	round_1_title:{
 		en:'Playoffs Round 1',
@@ -96,6 +107,7 @@ addI18n({
 		zh_tw:'季後賽第一輪',
 		fr:'1er tour des Playoffs',
 		he:'סיבוב 1 בפלייאוף',
+		es:'Ronda de Playoff 1',
 	},
 	round_2_title:{
 		en:'Playoffs Round 2',
@@ -104,6 +116,7 @@ addI18n({
 		zh_tw:'季後賽第二輪',
 		fr:'2e tour des Playoffs',
 		he:'סיבוב 2 בפלייאוף',
+		es:'Ronda de Playoff 2',
 	},
 	round_3_title:{
 		en:'Playoffs Round 3',
@@ -112,6 +125,7 @@ addI18n({
 		zh_tw:'季後賽第三輪',
 		fr:'3e tour des Playoffs',
 		he:'פלייאוף סיבוב 3',
+		es:'Ronda de Playoff 3',
 	},
 	round_4_title:{
 		en:'Playoffs Round 4',
@@ -120,6 +134,7 @@ addI18n({
 		zh_tw:'季後賽第四輪',
 		fr:'4e tour des Playoffs',
 		he:'פלייאוף סיבוב 4',
+		es:'Ronda de Playoff 4',
 	},
 	round_5_title:{
 		en:'Playoffs Round 5',
@@ -128,6 +143,7 @@ addI18n({
 		zh_tw:'季後賽第五輪',
 		fr:'5e tour des Playoffs',
 		he:'סיבוב 5 בפלייאוף',
+		es:'Ronda de Playoff 5',
 	},
 	finals_title:{
 		en:'Finals',
@@ -136,6 +152,7 @@ addI18n({
 		zh_tw:'決賽',
 		fr:'Finales',
 		he:'מִשְׂחָקֵי הָגְמָר',
+		es:'Finales',
 	},
 	quarter_finals_title:{
 		en:'Quarter-Finals',
@@ -144,6 +161,7 @@ addI18n({
 		zh_tw:'四分之一決賽',
 		fr:'Quarts de finale',
 		he:'רבע גמר',
+		es:'Cuartos de final',
 	},
 	semi_finals_title:{
 		en:'Semi-Finals',
@@ -152,6 +170,7 @@ addI18n({
 		zh_tw:'準決賽',
 		fr:'Demi-finales',
 		he:'חצי גמר',
+		es:'Semifinales',
 	},
 	schedule_heading:{
 		en:'_ROUND_ Schedule',
@@ -160,6 +179,7 @@ addI18n({
 		zh_tw:'_ROUND_ 時間表',
 		fr:'_ROUND_ Calendrier',
 		he:'_ROUND_ לוח זמנים',
+		es:'Calendario _ROUND_',
 	},
 	alliance_name:{
 		en:'Alliance _ALLIANCENUM_',
@@ -168,6 +188,7 @@ addI18n({
 		zh_tw:'聯盟 _ALLIANCENUM_',
 		fr:'Alliance _ALLIANCENUM_',
 		he:'ברית _ALLIANCENUM_',
+		es:'Alianza _ALLIANCENUM_',
 	},
 	prediction_label:{
 		en:'Prediction: ',
@@ -176,6 +197,7 @@ addI18n({
 		zh_tw:'預言：',
 		fr:'Pronostic :',
 		he:'נְבוּאָה:',
+		es:'Predicción:',
 	},
 	set_winner_button:{
 		en:'Set Winner',
@@ -184,6 +206,7 @@ addI18n({
 		zh_tw:'勝者組',
 		fr:'Vainqueur du set',
 		he:'מנצח סט',
+		es:'Establecer ganador',
 	},
 })
 

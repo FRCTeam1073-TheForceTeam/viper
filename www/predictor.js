@@ -8,6 +8,7 @@ addI18n({
 		zh_tw:'_EVENT_ 的匹配預測器',
 		pt:'Previsor de Partida para _EVENT_',
 		fr:'Prédicteur de match pour _EVENT_',
+		es:'Predictor de coincidencias para _EVENT_',
 	},
 	predictor_match_title:{
 		en:'_MATCH_ Match Predictor for _EVENT_',
@@ -16,9 +17,11 @@ addI18n({
 		zh_tw:'_MATCH_ _EVENT_ 的比賽預測器',
 		pt:'_MATCH_ Previsor de Partida para _EVENT_',
 		fr:'_MATCH_ Prédicteur de match pour _EVENT_',
+		es:'Predicción de partida',
 	},
 	change_teams_button:{
 		en:'Change Teams',
+		es:'Cambiar equipos',
 		tr:'Alterar Equipes',
 		he:'שנה צוותים',
 		zh_tw:'更換團隊',

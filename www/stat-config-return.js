@@ -8,6 +8,7 @@ addI18n({
 		fr:'Configuration enregistrée',
 		he:'התצורה נשמרה',
 		zh_tw:'配置已儲存',
+		es:'Configuración guardada',
 	},
 	redirect_message:{
 		en:'Redirecting back, please wait...',
@@ -16,6 +17,7 @@ addI18n({
 		fr:'Redirection en cours, veuillez patienter…',
 		he:'מפנה חזרה, אנא המתן...',
 		zh_tw:'正在重定向回來，請等待...',
+		es:'Redirigiendo, por favor espera...',
 	},
 })
 

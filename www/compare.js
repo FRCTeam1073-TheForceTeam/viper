@@ -8,6 +8,7 @@ addI18n({
 		he:'נהל קבוצות',
 		zh_tw:'管理團隊',
 		fr:'Gérer les équipes',
+		es:'Administrar equipos',
 	},
 	compare_page_title:{
 		en:'Compare Teams: _TEAMS_ at _EVENT_',
@@ -16,6 +17,7 @@ addI18n({
 		he:'השווה קבוצות: _TEAMS_ ב-_EVENT_',
 		zh_tw:'比較團隊：_TEAMS_ 參加 _EVENT_',
 		fr:'Comparer les équipes : _TEAMS_ à _EVENT_',
+		es:'Comparar equipos: _TEAMS_ en _EVENT_',
 	},
 })
 

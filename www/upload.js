@@ -6,8 +6,9 @@ addI18n({
 		tr:'Verileri Yükle',
 		he:'העלה נתונים',
 		zh_tw:'上傳數據',
-		fr:'Importer des données',
+		fr:'Importer des don nées',
 		pt:'Carregar dados',
+		es:'Cargar datos',
 	},
 	upload_all_button:{
 		en:'Upload All Data',
@@ -16,6 +17,7 @@ addI18n({
 		zh_tw:'上傳所有數據',
 		fr:'Importer toutes les données',
 		pt:'Carregar todos os dados',
+		es:'Cargar todos los datos',
 	},
 	upload_limited_button:{
 		en:'Upload first 4 photos and 10 scoutings',
@@ -24,6 +26,7 @@ addI18n({
 		zh_tw:'上傳前4張照片和10次偵測',
 		fr:'Importer les 4 premières photos et 10 explorations',
 		pt:'Carregar os primeiros 4 fotos e 10 scouting',
+		es:'Cargar las primeras 4 fotos y 10 scouts',
 	},
 	no_uploads:{
 		en:'There is no data to upload.',
@@ -32,9 +35,11 @@ addI18n({
 		zh_tw:'沒有可上傳的數據。',
 		fr:'Aucune donnée à importer.',
 		pt:'Não há dados para carregar.',
+		es:'Sin cargas',
 	},
 	uploading_button:{
 		en:'Uploading, please wait…',
+		es:'Cargando...',
 		tr:'Yükleniyor, lütfen bekleyin...',
 		he:'מעלה, אנא המתן...',
 		zh_tw:'正在上傳，請稍候…',
@@ -43,6 +48,7 @@ addI18n({
 	},
 	delete_match_confirm:{
 		en:'Are you sure you want to delete _MATCH_?',
+		es:'¿Eliminar partida?',
 		tr:'_MATCH_ öğesini silmek istediğinizden emin misiniz?',
 		he:'האם אתה בטוח שברצונך למחוק את _MATCH_?',
 		zh_tw:'您確定要刪除_MATCH_嗎？',
@@ -51,6 +57,7 @@ addI18n({
 	},
 	remove_match_confirm:{
 		en:'Are you sure you want to remove _MATCH_?',
+		es:'¿Eliminar partida?',
 		tr:'_MATCH_ öğesini kaldırmak istediğinizden emin misiniz?',
 		he:'האם אתה בטוח שברצונך להסיר את _MATCH_?',
 		zh_tw:'您確定要刪除_MATCH_嗎？',
@@ -64,6 +71,7 @@ addI18n({
 		zh_tw:'顯示數據',
 		fr:'Afficher les données',
 		pt:'Mostrar dados',
+		es:'Mostrar datos',
 	},
 	uploads_heading:{
 		en:'Data to Upload (_UPLOADCOUNT_)',
@@ -72,9 +80,11 @@ addI18n({
 		zh_tw:'要上傳的資料 (_UPLOADCOUNT_)',
 		fr:'Données à importer (_UPLOADCOUNT_)',
 		pt:'Dados para carregar (_UPLOADCOUNT_)',
+		es:'Cargas',
 	},
 	uploads_later_heading:{
 		en:'Data to Upload Later (_LATERCOUNT_)',
+		es:'Cargar más tarde',
 		tr:'Daha Sonra Yüklenecek Veriler (_LATERCOUNT_)',
 		he:'נתונים להעלאה בהמשך (_LATERCOUNT_)',
 		zh_tw:'稍後要上傳的資料 (_LATERCOUNT_)',
@@ -88,6 +98,7 @@ addI18n({
 		zh_tw:'歷史記錄 (_HISTORYCOUNT_)',
 		fr:'Historique (_HISTORYCOUNT_)',
 		pt:'Histórico (_HISTORYCOUNT_)',
+		es:'Historial',
 	},
 	qr_code_button:{
 		en:'QR Code',
@@ -96,9 +107,11 @@ addI18n({
 		zh_tw:'QR 圖碼',
 		fr:'Code QR',
 		pt:'Código QR',
+		es:'Código QR',
 	},
 	undelete_button:{
 		en:'Undelete',
+		es:'Deshacer eliminación',
 		tr:'Silmeyi Geri Al',
 		he:'בטל מחיקה',
 		zh_tw:'取消刪除',
@@ -107,6 +120,7 @@ addI18n({
 	},
 	remove_history_button:{
 		en:'Remove from History',
+		es:'Eliminar del historial',
 		tr:'Geçmişten Kaldır',
 		he:'הסר מההיסטוריה',
 		zh_tw:'從歷史記錄中刪除',
@@ -115,6 +129,7 @@ addI18n({
 	},
 	reupload_button:{
 		en:'Reupload',
+		es:'Recargar',
 		tr:'Yeniden Yükle',
 		he:'העלה מחדש',
 		zh_tw:'重新上傳',
@@ -128,6 +143,7 @@ addI18n({
 		zh_tw:'清除全部歷史記錄',
 		fr:'Effacer tout l\'historique',
 		pt:'Limpar histórico inteiro',
+		es:'Borrar historial',
 	},
 	clear_history_confirm:{
 		en:'Are you sure you want to clear the history?',
@@ -136,9 +152,11 @@ addI18n({
 		zh_tw:'您確定要清除歷史記錄嗎？',
 		fr:'Voulez-vous vraiment effacer l\'historique ?',
 		pt:'Tem certeza de que deseja limpar o histórico?',
+		es:'¿Borrar historial?',
 	},
 	qr_heading:{
 		en:'QR Code _QRNUM_ of _QRTOTAL_',
+		es:'Códigos QR',
 		tr:'QR Kodu _QRNUM_ / _QRTOTAL_',
 		he:'קוד QR _QRNUM_ מתוך _QRTOTAL_',
 		zh_tw:'QR 碼 _QRNUM_ / _QRTOTAL_',

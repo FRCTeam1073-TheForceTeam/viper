@@ -8,10 +8,12 @@ addI18n({
 		pt:'Upload concluído',
 		he:'ההעלאה הושלמה',
 		tr:'Yükleme Tamamlandı',
+		es:'Carga completada',
 	},
 	upload_done_please_wait:{
 		en:'Moving uploaded data to history…',
 		fr:'Transfert des données téléchargées vers l\'historique…',
+		es:'Por favor espere...',
 		zh_tw:'正在將上傳的資料移至歷史記錄...',
 		pt:'Movendo dados enviados para o histórico…',
 		he:'מעביר נתונים שהועלו להיסטוריה...',

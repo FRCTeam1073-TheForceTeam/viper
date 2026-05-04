@@ -8,6 +8,7 @@ addI18n({
 		zh_tw:'偵查燃料射擊、推土或放置，但不是錯誤。追蹤燃料目標。記錄機器人所在的區域。在自動中標記倉庫和前哨站收集。在自動和遠程操作中點擊攀爬級別。',
 		fr:'Scout carburant tiré, bulldozé ou placé, mais pas des ratés. Suivez la cible de carburant. Enregistrez dans quelle zone se trouve le robot. Marquez la collecte du dépôt et du poste avancé en auto. Cliquez sur le niveau de grimpe en auto et en téléopération.',
 		pt:'Scout de combustível atirado, empurrado com escavadeira ou colocado, mas não erros. Acompanhe o alvo de combustível. Registre em qual zona o robô está. Marque a coleta de depósito e avançado em automático. Clique no nível de escalada em automático e teleop.',
+		es:'Detecta combustible disparado, aplanado o colocado, pero no fallos. Rastrea el objetivo de combustible. Registra en qué zona está el robot. Marca la recopilación de depósito y avanzada en automático. Haz clic en el nivel de escalada en automático y teleop.',
 	},
 	full_instructions:{
 		en:'Full Instructions',
@@ -16,6 +17,7 @@ addI18n({
 		zh_tw:'完整說明',
 		fr:'Instructions complètes',
 		pt:'Instruções completas',
+		es:'Instrucciones completas',
 	},
 	start_auto_button:{
 		en:'Start Auto',
@@ -24,6 +26,7 @@ addI18n({
 		zh_tw:'開始自動',
 		fr:'Démarrer Auto',
 		pt:'Iniciar Auto',
+		es:'Iniciar Auto',
 	},
 	timeline_value_header:{
 		en:'Value',
@@ -32,6 +35,7 @@ addI18n({
 		zh_tw:'值',
 		fr:'Valeur',
 		pt:'Valor',
+		es:'Valor',
 	},
 	starting_position:{
 		en:'Click team _TEAMNUM_\'s starting position.',
@@ -40,6 +44,7 @@ addI18n({
 		zh_tw:'點選隊伍_TEAMNUM_的起始位置。',
 		fr:'Cliquez sur la position de départ de l\'équipe _TEAMNUM_.',
 		pt:'Clique na posição inicial da equipe _TEAMNUM_.',
+		es:'Haz clic en la posición de inicio del equipo _TEAMNUM_.',
 	},
 	end_game_gameplay_header:{
 		en:'Game play',
@@ -48,6 +53,7 @@ addI18n({
 		zh_tw:'遊戲',
 		fr:'Jeu',
 		pt:'Jogo',
+		es:'Juego',
 	},
 	demonstrated_capabilities:{
 		en:'Team _TEAMNUM_ Demonstrated Capabilities',
@@ -56,6 +62,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_展示的能力',
 		fr:'Capacités démontrées de l\'équipe _TEAMNUM_',
 		pt:'Capacidades Demonstradas da Equipe _TEAMNUM_',
+		es:'Capacidades Demostradas del Equipo _TEAMNUM_',
 	},
 	shoot_move_desc:{
 		en:'Shoot on the move',
@@ -64,6 +71,7 @@ addI18n({
 		zh_tw:'邊移動邊射擊',
 		fr:'Tirer en mouvement',
 		pt:'Atirar em movimento',
+		es:'Dispara en movimiento',
 	},
 	shoot_collecting_desc:{
 		en:'Shoot while collecting',
@@ -72,6 +80,7 @@ addI18n({
 		zh_tw:'邊收集邊射擊',
 		fr:'Tirer tout en collectant',
 		pt:'Atirar enquanto coleta',
+		es:'Dispara mientras recoge',
 	},
 	shoot_turret_desc:{
 		en:'Change shooting direction while moving straight',
@@ -80,6 +89,7 @@ addI18n({
 		zh_tw:'直線移動時改變射擊方向',
 		fr:'Changer la direction de tir en se déplaçant droit',
 		pt:'Mudar direção de tiro enquanto se move reto',
+		es:'Cambia la dirección de tiro mientras te mueves hacia adelante',
 	},
 	shoot_climbing_desc:{
 		en:'Shoot while climbing',
@@ -88,6 +98,7 @@ addI18n({
 		zh_tw:'攀爬時射擊',
 		fr:'Tirer tout en grimpant',
 		pt:'Atirar enquanto escala',
+		es:'Dispara mientras escala',
 	},
 	fuel_strategy_legend:{
 		en:'What was the main strategy team _TEAMNUM_ used to get fuel into the alliance zone?',
@@ -96,6 +107,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_將燃料送入聯盟區的主要策略是什麼?',
 		fr:'Quelle était la stratégie principale utilisée par l\'équipe _TEAMNUM_ pour obtenir du carburant dans la zone d\'alliance?',
 		pt:'Qual foi a estratégia principal que a equipe _TEAMNUM_ usou para colocar combustível na zona de aliança?',
+		es:'¿Cuál fue la estrategia principal que el equipo _TEAMNUM_ usó para meter combustible en la zona de alianza?',
 	},
 	fuel_carried_label:{
 		en:'Carried',
@@ -104,6 +116,7 @@ addI18n({
 		zh_tw:'攜帶',
 		fr:'Portée',
 		pt:'Transportada',
+		es:'Llevada',
 	},
 	fuel_carried_desc:{
 		en:'Stored fuel in the robot and carried it.',
@@ -112,6 +125,7 @@ addI18n({
 		zh_tw:'將燃料儲存在機器人中並運輸。',
 		fr:'Carburant stocké dans le robot et transporté.',
 		pt:'Armazenou combustível no robô e o transportou.',
+		es:'Almacenó combustible en el robot y lo transportó.',
 	},
 	fuel_pushed_label:{
 		en:'Pushed',
@@ -120,6 +134,7 @@ addI18n({
 		zh_tw:'推送',
 		fr:'Poussée',
 		pt:'Empurrada',
+		es:'Empujada',
 	},
 	fuel_pushed_desc:{
 		en:'Pushed fuel over the bump or under the trench.',
@@ -128,6 +143,7 @@ addI18n({
 		zh_tw:'將燃料推過凸起或溝渠下方。',
 		fr:'Carburant poussé par-dessus la bosse ou sous le fossé.',
 		pt:'Empurrou o combustível sobre a saliência ou sob a trincheira.',
+		es:'Empujó combustible sobre el bache o bajo la trinchera.',
 	},
 	fuel_passed_label:{
 		en:'Passed',
@@ -136,6 +152,7 @@ addI18n({
 		zh_tw:'通過',
 		fr:'Passé',
 		pt:'Passou',
+		es:'Pasada',
 	},
 	fuel_passed_desc:{
 		en:'Shot fuel towards the alliance zone.',
@@ -144,6 +161,7 @@ addI18n({
 		zh_tw:'向聯盟區射擊燃料。',
 		fr:'Carburant tiré vers la zone d\'alliance.',
 		pt:'Disparou combustível em direção à zona de aliança.',
+		es:'Disparó combustible hacia la zona de alianza.',
 	},
 	fuel_received_label:{
 		en:'Received',
@@ -152,6 +170,7 @@ addI18n({
 		zh_tw:'收到',
 		fr:'Reçu',
 		pt:'Recebida',
+		es:'Recibida',
 	},
 	fuel_received_desc:{
 		en:'Stayed in the alliance zone and received fuel from other bots.',
@@ -160,6 +179,7 @@ addI18n({
 		zh_tw:'留在聯盟區並從其他機器人接收燃料。',
 		fr:'Est resté dans la zone d\'alliance et a reçu du carburant d\'autres bots.',
 		pt:'Permaneceu na zona de aliança e recebeu combustível de outros bots.',
+		es:'Se quedó en la zona de alianza y recibió combustible de otros bots.',
 	},
 	bricked_legend:{
 		en:'Was team _TEAMNUM_ bricked?',
@@ -168,6 +188,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_被禁用了嗎?',
 		fr:'L\'équipe _TEAMNUM_ a-t-elle été paralysée?',
 		pt:'A equipe _TEAMNUM_ foi desabilitada?',
+		es:'¿Fue el equipo _TEAMNUM_ deshabilitado?',
 	},
 	bricked_no:{
 		en:'No',
@@ -176,6 +197,7 @@ addI18n({
 		zh_tw:'否',
 		fr:'Non',
 		pt:'Não',
+		es:'No',
 	},
 	bricked_no_desc:{
 		en:'Didn\'t get disabled.',
@@ -184,6 +206,7 @@ addI18n({
 		zh_tw:'未被禁用。',
 		fr:'N\'a pas été désactivée.',
 		pt:'Não foi desabilitada.',
+		es:'No fue deshabilitado.',
 	},
 	bricked_some:{
 		en:'Some',
@@ -192,6 +215,7 @@ addI18n({
 		zh_tw:'某些',
 		fr:'Un peu',
 		pt:'Alguns',
+		es:'Algunos',
 	},
 	bricked_some_desc:{
 		en:'Disabled for a short time.',
@@ -200,6 +224,7 @@ addI18n({
 		zh_tw:'被禁用很短的時間。',
 		fr:'Désactivée pour une courte durée.',
 		pt:'Desabilitada por um curto período.',
+		es:'Deshabilitado por un corto tiempo.',
 	},
 	bricked_half:{
 		en:'Half',
@@ -208,6 +233,7 @@ addI18n({
 		zh_tw:'半',
 		fr:'Moitié',
 		pt:'Metade',
+		es:'Mitad',
 	},
 	bricked_half_desc:{
 		en:'Disabled for about half the match.',
@@ -216,6 +242,7 @@ addI18n({
 		zh_tw:'在比賽的大約一半時間內被禁用。',
 		fr:'Désactivée pendant environ la moitié du match.',
 		pt:'Desabilitada por aproximadamente metade da partida.',
+		es:'Deshabilitado durante aproximadamente la mitad del partido.',
 	},
 	bricked_most:{
 		en:'Most',
@@ -224,6 +251,7 @@ addI18n({
 		zh_tw:'大部分',
 		fr:'Plupart',
 		pt:'A maioria',
+		es:'La mayoría',
 	},
 	bricked_most_desc:{
 		en:'Disabled for most of the match.',
@@ -232,6 +260,7 @@ addI18n({
 		zh_tw:'在大部分比賽時間內被禁用。',
 		fr:'Désactivée pendant la majeure partie du match.',
 		pt:'Desabilitada durante a maior parte da partida.',
+		es:'Deshabilitado durante la mayor parte del partido.',
 	},
 	bricked_all:{
 		en:'All',
@@ -240,6 +269,7 @@ addI18n({
 		zh_tw:'全部',
 		fr:'Tous',
 		pt:'Tudo',
+		es:'Todo',
 	},
 	bricked_all_desc:{
 		en:'Disabled for the entire match.',
@@ -248,6 +278,7 @@ addI18n({
 		zh_tw:'在整場比賽中被禁用。',
 		fr:'Désactivée pendant tout le match.',
 		pt:'Desabilitada durante toda a partida.',
+		es:'Deshabilitado durante todo el partido.',
 	},
 	defense_legend:{
 		en:'Team _TEAMNUM_ Defense Rating',
@@ -256,6 +287,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_防守評級',
 		fr:'Cote de défense de l\'équipe _TEAMNUM_',
 		pt:'Classificação de Defesa da Equipe _TEAMNUM_',
+		es:'Clasificación de Defensa del Equipo _TEAMNUM_',
 	},
 	defense_none:{
 		en:'None',
@@ -264,6 +296,7 @@ addI18n({
 		zh_tw:'無',
 		fr:'Aucun',
 		pt:'Nenhum',
+		es:'Ninguno',
 	},
 	defense_none_desc:{
 		en:'Didn\'t play defense.',
@@ -272,6 +305,7 @@ addI18n({
 		zh_tw:'未進行防守。',
 		fr:'N\'a pas joué la défense.',
 		pt:'Não jogou defesa.',
+		es:'No jugó defensa.',
 	},
 	defense_bad:{
 		en:'Bad',
@@ -280,6 +314,7 @@ addI18n({
 		zh_tw:'壞',
 		fr:'Mauvais',
 		pt:'Ruim',
+		es:'Malo',
 	},
 	defense_bad_desc:{
 		en:'More penalties playing defense than opponent points prevented.',
@@ -288,6 +323,7 @@ addI18n({
 		zh_tw:'防守時的罰球多於阻止對手得分。',
 		fr:'Plus de pénalités jouant la défense que les points adverses empêchés.',
 		pt:'Mais penalidades jogando defesa do que pontos adversários impedidos.',
+		es:'Más penalizaciones jugando defensa que puntos del oponente prevenidos.',
 	},
 	defense_ineffective:{
 		en:'Ineffective',
@@ -296,6 +332,7 @@ addI18n({
 		zh_tw:'無效',
 		fr:'Inefficace',
 		pt:'Ineficaz',
+		es:'Ineficaz',
 	},
 	defense_ineffective_desc:{
 		en:'Didn\'t significantly impact the game.',
@@ -304,6 +341,7 @@ addI18n({
 		zh_tw:'對比賽沒有產生重大影響。',
 		fr:'N\'a pas eu d\'impact significatif sur le jeu.',
 		pt:'Não teve impacto significativo no jogo.',
+		es:'No tuvo un impacto significativo en el juego.',
 	},
 	defense_good:{
 		en:'Good',
@@ -312,6 +350,7 @@ addI18n({
 		zh_tw:'好',
 		fr:'Bon',
 		pt:'Bom',
+		es:'Bueno',
 	},
 	defense_good_desc:{
 		en:'Prevented an opponent from scoring some points.',
@@ -320,6 +359,7 @@ addI18n({
 		zh_tw:'阻止對手得到一些分數。',
 		fr:'A empêché un adversaire de marquer des points.',
 		pt:'Impediu um adversário de marcar alguns pontos.',
+		es:'Evitó que un oponente anotara algunos puntos.',
 	},
 	defense_great:{
 		en:'Great',
@@ -328,6 +368,7 @@ addI18n({
 		zh_tw:'太棒了',
 		fr:'Excellent',
 		pt:'Ótimo',
+		es:'Excelente',
 	},
 	defense_great_desc:{
 		en:'Mostly shut down an opponent.',
@@ -336,6 +377,7 @@ addI18n({
 		zh_tw:'主要關閉對手。',
 		fr:'Surtout arrêté un adversaire.',
 		pt:'Principalmente desligou um adversário.',
+		es:'Principalmente neutralizó a un oponente.',
 	},
 	defended_legend:{
 		en:'Was team _TEAMNUM_ affected by defense?',
@@ -344,6 +386,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_是否受到防守影響?',
 		fr:'L\'équipe _TEAMNUM_ a-t-elle été affectée par la défense?',
 		pt:'A equipe _TEAMNUM_ foi afetada pela defesa?',
+		es:'¿Fue el equipo _TEAMNUM_ afectado por la defensa?',
 	},
 	defended_undefended:{
 		en:'Undefended',
@@ -352,6 +395,7 @@ addI18n({
 		zh_tw:'未防守',
 		fr:'Non défendu',
 		pt:'Indefeso',
+		es:'Sin defensa',
 	},
 	defended_undefended_desc:{
 		en:'Didn\'t get defended.',
@@ -360,6 +404,7 @@ addI18n({
 		zh_tw:'沒有獲得防守。',
 		fr:'N\'a pas été défendu.',
 		pt:'Não foi defendido.',
+		es:'No fue defendido.',
 	},
 	defended_turned_tables:{
 		en:'Turned tables',
@@ -368,6 +413,7 @@ addI18n({
 		zh_tw:'扭轉局面',
 		fr:'Renversé la situation',
 		pt:'Reverteu a situação',
+		es:'Giró las tornas',
 	},
 	defended_turned_tables_desc:{
 		en:'Unaffected and the defender got penalties.',
@@ -376,6 +422,7 @@ addI18n({
 		zh_tw:'不受影響，防守者受罰。',
 		fr:'Inaffecté et le défenseur a reçu des pénalités.',
 		pt:'Não afetado e o defensor recebeu penalidades.',
+		es:'No fue afectado y el defensor recibió penalizaciones.',
 	},
 	defended_unaffected:{
 		en:'Unaffected',
@@ -384,6 +431,7 @@ addI18n({
 		zh_tw:'未受影響',
 		fr:'Non affecté',
 		pt:'Não afetado',
+		es:'No afectado',
 	},
 	defended_unaffected_desc:{
 		en:'Not slowed down by defense.',
@@ -392,6 +440,7 @@ addI18n({
 		zh_tw:'防守未減速。',
 		fr:'Pas ralenti par la défense.',
 		pt:'Não foi desacelerado pela defesa.',
+		es:'No fue ralentizado por la defensa.',
 	},
 	defended_slowed:{
 		en:'Slowed',
@@ -400,6 +449,7 @@ addI18n({
 		zh_tw:'放緩',
 		fr:'Ralenti',
 		pt:'Desacelerado',
+		es:'Ralentizado',
 	},
 	defended_slowed_desc:{
 		en:'Scored less than they would have.',
@@ -408,6 +458,7 @@ addI18n({
 		zh_tw:'得分少於他們本來會得到的分數。',
 		fr:'Marqué moins qu\'ils ne l\'auraient fait.',
 		pt:'Pontuou menos do que teria feito.',
+		es:'Anotó menos de lo que hubiera anotado.',
 	},
 	defended_slowed_greatly:{
 		en:'Slowed greatly',
@@ -416,6 +467,7 @@ addI18n({
 		zh_tw:'大幅減速',
 		fr:'Considérablement ralenti',
 		pt:'Desacelerado muito',
+		es:'Ralentizado mucho',
 	},
 	defended_slowed_greatly_desc:{
 		en:'Scored very little.',
@@ -424,6 +476,7 @@ addI18n({
 		zh_tw:'得分非常少。',
 		fr:'Marqué très peu.',
 		pt:'Pontuou muito pouco.',
+		es:'Anotó muy poco.',
 	},
 	defense_methods_legend:{
 		en:'What methods did team _TEAMNUM_ use when defending?',
@@ -432,6 +485,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_防守時使用了哪些方法?',
 		fr:'Quelles méthodes l\'équipe _TEAMNUM_ a-t-elle utilisées pour défendre?',
 		pt:'Quais métodos a equipe _TEAMNUM_ usou ao defender?',
+		es:'¿Qué métodos usó el equipo _TEAMNUM_ al defender?',
 	},
 	defense_collected:{
 		en:'Collected',
@@ -440,6 +494,7 @@ addI18n({
 		zh_tw:'收集',
 		fr:'Collecté',
 		pt:'Coletou',
+		es:'Recolectado',
 	},
 	defense_collected_desc:{
 		en:'Collected fuel from opponents\' alliance zone.',
@@ -448,6 +503,7 @@ addI18n({
 		zh_tw:'從對手的聯盟區收集燃料。',
 		fr:'Carburant collecté à partir de la zone d\'alliance des adversaires.',
 		pt:'Coletou combustível da zona de aliança dos oponentes.',
+		es:'Recolectó combustible de la zona de alianza del oponente.',
 	},
 	defense_hit:{
 		en:'Hit',
@@ -456,6 +512,7 @@ addI18n({
 		zh_tw:'碰撞',
 		fr:'Frappé',
 		pt:'Bateu',
+		es:'Golpeado',
 	},
 	defense_hit_desc:{
 		en:'Hit or pushed the opponent to reduce their shooting accuracy.',
@@ -464,6 +521,7 @@ addI18n({
 		zh_tw:'碰撞或推動對手以降低其射擊準確度。',
 		fr:'Frappé ou poussé l\'adversaire pour réduire la précision de tir.',
 		pt:'Bateu ou empurrou o adversário para reduzir sua precisão de tiro.',
+		es:'Golpeó o empujó al oponente para reducir su precisión de disparo.',
 	},
 	defense_blocked:{
 		en:'Blocked',
@@ -472,6 +530,7 @@ addI18n({
 		zh_tw:'阻擋',
 		fr:'Bloqué',
 		pt:'Bloqueou',
+		es:'Bloqueado',
 	},
 	defense_blocked_desc:{
 		en:'Blocked an opponent from entering or leaving the alliance zone.',
@@ -480,6 +539,7 @@ addI18n({
 		zh_tw:'阻止對手進入或離開聯盟區。',
 		fr:'Bloqué un adversaire pour entrer ou quitter la zone d\'alliance.',
 		pt:'Bloqueou um oponente de entrar ou sair da zona de aliança.',
+		es:'Bloqueó a un oponente para que no entrara o saliera de la zona de alianza.',
 	},
 	defense_pinned:{
 		en:'Pinned',
@@ -488,6 +548,7 @@ addI18n({
 		zh_tw:'牢固',
 		fr:'Épinglé',
 		pt:'Prendeu',
+		es:'Atrapado',
 	},
 	defense_pinned_desc:{
 		en:'Pinned an opponent to prevent them from shooting or collecting.',
@@ -496,6 +557,7 @@ addI18n({
 		zh_tw:'牢固對手以防止他們射擊或收集。',
 		fr:'Épinglé un adversaire pour les empêcher de tirer ou de collecter.',
 		pt:'Prendeu um oponente para impedir que disparasse ou coletasse.',
+		es:'Atrapó a un oponente para evitar que disparara o recolectara.',
 	},
 	misses_legend:{
 		en:'How often did team _TEAMNUM_ miss their shots?',
@@ -504,21 +566,52 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_多久會漏接他們的射擊?',
 		fr:'Combien de fois l\'équipe _TEAMNUM_ a-t-elle raté ses tirs?',
 		pt:'Com que frequência a equipe _TEAMNUM_ errou seus tiros?',
+		es:'¿Con qué frecuencia el equipo _TEAMNUM_ falla sus disparos?',
 	},
 	misses_0_1:{
 		en:'0-1%',
+		es:'0-1%',
+		fr:'0-1%',
+		pt:'0-1%',
+		tr:'0-1%',
+		he:'0-1%',
+		zh_tw:'0-1%',
 	},
 	misses_1_10:{
 		en:'1-10%',
+		es:'1-10%',
+		fr:'1-10%',
+		pt:'1-10%',
+		tr:'1-10%',
+		he:'1-10%',
+		zh_tw:'1-10%',
 	},
 	misses_10_30:{
 		en:'10-30%',
+		es:'10-30%',
+		fr:'10-30%',
+		pt:'10-30%',
+		tr:'10-30%',
+		he:'10-30%',
+		zh_tw:'10-30%',
 	},
 	misses_30_60:{
 		en:'30-60%',
+		es:'30-60%',
+		fr:'30-60%',
+		pt:'30-60%',
+		tr:'30-60%',
+		he:'30-60%',
+		zh_tw:'30-60%',
 	},
 	misses_60_100:{
 		en:'60-100%',
+		es:'60-100%',
+		fr:'60-100%',
+		pt:'60-100%',
+		tr:'60-100%',
+		he:'60-100%',
+		zh_tw:'60-100%',
 	},
 	tele_fuel_score:{
 		en:'Fuel scored in hub',
@@ -527,6 +620,7 @@ addI18n({
 		zh_tw:'燃料在樞紐中得分',
 		fr:'Carburant marqué dans le hub',
 		pt:'Combustível marcado no hub',
+		es:'Combustible anotado en el hub',
 	},
 	tele_fuel_alliance_dump:{
 		en:'Fuel dumped in the alliance zone',
@@ -535,6 +629,7 @@ addI18n({
 		zh_tw:'燃料傾倒在聯盟區域中',
 		fr:'Carburant versé dans la zone d\'alliance',
 		pt:'Combustível despejado na zona de aliança',
+		es:'Combustible vertido en la zona de alianza',
 	},
 	tele_fuel_outpost:{
 		en:'Fuel fed to outpost',
@@ -543,6 +638,7 @@ addI18n({
 		zh_tw:'燃料供給前哨站',
 		fr:'Carburant approvisionné au poste avancé',
 		pt:'Combustível alimentado para o avançado',
+		es:'Combustible suministrado a la avanzada',
 	},
 	tele_fuel_neutral_alliance_pass:{
 		en:'Fuel passed or pushed to the alliance zone from the neutral zone',
@@ -551,6 +647,7 @@ addI18n({
 		zh_tw:'燃料從中立區傳遞或推送到聯盟區',
 		fr:'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
 		pt:'Combustível passado ou empurrado para a zona de aliança da zona neutra',
+		es:'Combustible pasado o empujado a la zona de alianza desde la zona neutral',
 	},
 	tele_fuel_opponent_neutral_pass:{
 		en:'Fuel passed or pushed to the neutral zone from the opponent\'s zone',
@@ -559,6 +656,7 @@ addI18n({
 		zh_tw:'燃料從對手的區域傳遞或推送到中立區',
 		fr:'Carburant passé ou poussé vers la zone neutre à partir de la zone adverse',
 		pt:'Combustível passado ou empurrado para a zona neutra da zona do oponente',
+		es:'Combustible pasado o empujado a la zona neutral desde la zona del oponente',
 	},
 	tele_fuel_opponent_alliance_pass:{
 		en:'Fuel passed or pushed to the alliance zone from the opponent\'s zone',
@@ -567,6 +665,7 @@ addI18n({
 		zh_tw:'燃料從對手的區域傳遞或推送到聯盟區',
 		fr:'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone adverse',
 		pt:'Combustível passado ou empurrado para a zona de aliança da zona do oponente',
+		es:'Combustible pasado o empujado a la zona de alianza desde la zona del oponente',
 	},
 	tele_trench_depot_alliance_to_neutral:{
 		en:'Trench (depot side) alliance to neutral',
@@ -575,6 +674,7 @@ addI18n({
 		zh_tw:'戰壕(仓库方)聯盟到中立',
 		fr:'Tranchée (côté dépôt) alliance à neutre',
 		pt:'Trincheira (lado do depósito) aliança a neutro',
+		es:'Trinchera (lado del depósito) alianza a neutral',
 	},
 	tele_bump_depot_alliance_to_neutral:{
 		en:'Bump (depot side) alliance to neutral',
@@ -583,6 +683,7 @@ addI18n({
 		zh_tw:'碰撞(仓库方)聯盟到中立',
 		fr:'Bosse (côté dépôt) alliance à neutre',
 		pt:'Saliência (lado do depósito) aliança a neutro',
+		es:'Protuberancia (lado del depósito) alianza a neutral',
 	},
 	tele_bump_outpost_alliance_to_neutral:{
 		en:'Bump (outpost side) alliance to neutral',
@@ -591,6 +692,7 @@ addI18n({
 		zh_tw:'碰撞(前哨站側)聯盟到中立',
 		fr:'Bosse (côté avant-poste) alliance à neutre',
 		pt:'Saliência (lado do avançado) aliança a neutro',
+		es:'Protuberancia (lado del avanzada) alianza a neutral',
 	},
 	tele_trench_outpost_alliance_to_neutral:{
 		en:'Trench (outpost side) alliance to neutral',
@@ -599,6 +701,7 @@ addI18n({
 		zh_tw:'戰壕(前哨站側)聯盟到中立',
 		fr:'Tranchée (côté avant-poste) alliance à neutre',
 		pt:'Trincheira (lado do avançado) aliança a neutro',
+		es:'Trinchera (lado del avanzada) alianza a neutral',
 	},
 	tele_trench_depot_neutral_to_alliance:{
 		en:'Trench (depot side) neutral to alliance',
@@ -607,6 +710,7 @@ addI18n({
 		zh_tw:'戰壕(仓库方)中立到聯盟',
 		fr:'Tranchée (côté dépôt) neutre à alliance',
 		pt:'Trincheira (lado do depósito) neutro a aliança',
+		es:'Trinchera (lado del depósito) neutral a alianza',
 	},
 	tele_bump_depot_neutral_to_alliance:{
 		en:'Bump (depot side) neutral to alliance',
@@ -615,6 +719,7 @@ addI18n({
 		zh_tw:'碰撞(仓库方)中立到聯盟',
 		fr:'Bosse (côté dépôt) neutre à alliance',
 		pt:'Saliência (lado do depósito) neutro a aliança',
+		es:'Protuberancia (lado del depósito) neutral a alianza',
 	},
 	tele_bump_outpost_neutral_to_alliance:{
 		en:'Bump (outpost side) neutral to alliance',
@@ -623,6 +728,7 @@ addI18n({
 		zh_tw:'碰撞(前哨站側)中立到聯盟',
 		fr:'Bosse (côté avant-poste) neutre à alliance',
 		pt:'Saliência (lado do avançado) neutro a aliança',
+		es:'Protuberancia (lado del avanzada) neutral a alianza',
 	},
 	tele_trench_outpost_neutral_to_alliance:{
 		en:'Trench (outpost side) neutral to alliance',
@@ -631,6 +737,7 @@ addI18n({
 		zh_tw:'戰壕(前哨站側)中立到聯盟',
 		fr:'Tranchée (côté avant-poste) neutre à alliance',
 		pt:'Trincheira (lado do avançado) neutro a aliança',
+		es:'Trinchera (lado del avanzada) neutral a alianza',
 	},
 	tele_trench_outpost_neutral_to_opponent:{
 		en:'Trench (outpost side) neutral to opponent',
@@ -639,6 +746,7 @@ addI18n({
 		zh_tw:'戰壕(前哨站側)中立到對手',
 		fr:'Tranchée (côté avant-poste) neutre à adversaire',
 		pt:'Trincheira (lado do avançado) neutro a oponente',
+		es:'Trinchera (lado del avanzada) neutral a oponente',
 	},
 	tele_bump_outpost_neutral_to_opponent:{
 		en:'Bump (outpost side) neutral to opponent',
@@ -647,6 +755,7 @@ addI18n({
 		zh_tw:'碰撞(前哨站側)中立到對手',
 		fr:'Bosse (côté avant-poste) neutre à adversaire',
 		pt:'Saliência (lado do avançado) neutro a oponente',
+		es:'Protuberancia (lado del avanzada) neutral a oponente',
 	},
 	tele_bump_depot_neutral_to_opponent:{
 		en:'Bump (depot side) neutral to opponent',
@@ -655,6 +764,7 @@ addI18n({
 		zh_tw:'碰撞(仓库方)中立到對手',
 		fr:'Bosse (côté dépôt) neutre à adversaire',
 		pt:'Saliência (lado do depósito) neutro a oponente',
+		es:'Protuberancia (lado del depósito) neutral a oponente',
 	},
 	tele_trench_depot_neutral_to_opponent:{
 		en:'Trench (depot side) neutral to opponent',
@@ -663,6 +773,7 @@ addI18n({
 		zh_tw:'戰壕(仓库方)中立到對手',
 		fr:'Tranchée (côté dépôt) neutre à adversaire',
 		pt:'Trincheira (lado do depósito) neutro a oponente',
+		es:'Trinchera (lado del depósito) neutral a oponente',
 	},
 	tele_trench_outpost_opponent_to_neutral:{
 		en:'Trench (outpost side) opponent to neutral',
@@ -671,6 +782,7 @@ addI18n({
 		zh_tw:'戰壕(前哨站側)對手到中立',
 		fr:'Tranchée (côté avant-poste) adversaire à neutre',
 		pt:'Trincheira (lado do avançado) oponente a neutro',
+		es:'Trinchera (lado del avanzada) oponente a neutral',
 	},
 	tele_bump_outpost_opponent_to_neutral:{
 		en:'Bump (outpost side) opponent to neutral',
@@ -679,6 +791,7 @@ addI18n({
 		zh_tw:'碰撞(前哨站側)對手到中立',
 		fr:'Bosse (côté avant-poste) adversaire à neutre',
 		pt:'Saliência (lado do avançado) oponente a neutro',
+		es:'Protuberancia (lado del avanzada) oponente a neutral',
 	},
 	tele_bump_depot_opponent_to_neutral:{
 		en:'Bump (depot side) opponent to neutral',
@@ -687,6 +800,7 @@ addI18n({
 		zh_tw:'碰撞(仓库方)對手到中立',
 		fr:'Bosse (côté dépôt) adversaire à neutre',
 		pt:'Saliência (lado do depósito) oponente a neutro',
+		es:'Protuberancia (lado del depósito) oponente a neutral',
 	},
 	tele_trench_depot_opponent_to_neutral:{
 		en:'Trench (depot side) opponent to neutral',
@@ -695,6 +809,7 @@ addI18n({
 		zh_tw:'戰壕(仓库方)對手到中立',
 		fr:'Tranchée (côté dépôt) adversaire à neutre',
 		pt:'Trincheira (lado do depósito) oponente a neutro',
+		es:'Trinchera (lado del depósito) oponente a neutral',
 	},
 	auto_fuel_score:{
 		en:'Fuel scored in hub',
@@ -703,6 +818,7 @@ addI18n({
 		zh_tw:'燃料在樞紐中得分',
 		fr:'Carburant marqué dans le hub',
 		pt:'Combustível marcado no hub',
+		es:'Combustible anotado en el hub',
 	},
 	auto_fuel_neutral_alliance_pass:{
 		en:'Fuel passed or pushed to the alliance zone from the neutral zone',
@@ -711,6 +827,7 @@ addI18n({
 		zh_tw:'燃料從中立區傳遞或推送到聯盟區',
 		fr:'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
 		pt:'Combustível passado ou empurrado para a zona de aliança da zona neutra',
+		es:'Combustible pasado o empujado a la zona de alianza desde la zona neutral',
 	},
 	auto_trench_depot_alliance_to_neutral:{
 		en:'Trench (depot side) alliance to neutral',
@@ -719,6 +836,7 @@ addI18n({
 		zh_tw:'戰壕(仓库方)聯盟到中立',
 		fr:'Tranchée (côté dépôt) alliance à neutre',
 		pt:'Trincheira (lado do depósito) aliança a neutro',
+		es:'Trinchera (lado del depósito) alianza a neutral',
 	},
 	auto_bump_depot_alliance_to_neutral:{
 		en:'Bump (depot side) alliance to neutral',
@@ -727,6 +845,7 @@ addI18n({
 		zh_tw:'碰撞(仓库方)聯盟到中立',
 		fr:'Bosse (côté dépôt) alliance à neutre',
 		pt:'Saliência (lado do depósito) aliança a neutro',
+		es:'Protuberancia (lado del depósito) alianza a neutral',
 	},
 	auto_bump_outpost_alliance_to_neutral:{
 		en:'Bump (outpost side) alliance to neutral',
@@ -735,6 +854,7 @@ addI18n({
 		zh_tw:'碰撞(前哨站側)聯盟到中立',
 		fr:'Bosse (côté avant-poste) alliance à neutre',
 		pt:'Saliência (lado do avançado) aliança a neutro',
+		es:'Protuberancia (lado del avanzada) alianza a neutral',
 	},
 	auto_trench_outpost_alliance_to_neutral:{
 		en:'Trench (outpost side) alliance to neutral',
@@ -743,6 +863,7 @@ addI18n({
 		zh_tw:'戰壕(前哨站側)聯盟到中立',
 		fr:'Tranchée (côté avant-poste) alliance à neutre',
 		pt:'Trincheira (lado do avançado) aliança a neutro',
+		es:'Trinchera (lado del avanzada) alianza a neutral',
 	},
 	auto_trench_depot_neutral_to_alliance:{
 		en:'Trench (depot side) neutral to alliance',
@@ -751,6 +872,7 @@ addI18n({
 		zh_tw:'戰壕(仓库方)中立到聯盟',
 		fr:'Tranchée (côté dépôt) neutre à alliance',
 		pt:'Trincheira (lado do depósito) neutro a aliança',
+		es:'Trinchera (lado del depósito) neutral a alianza',
 	},
 	auto_bump_depot_neutral_to_alliance:{
 		en:'Bump (depot side) neutral to alliance',
@@ -759,6 +881,7 @@ addI18n({
 		zh_tw:'碰撞(仓库方)中立到聯盟',
 		fr:'Bosse (côté dépôt) neutre à alliance',
 		pt:'Saliência (lado do depósito) neutro a aliança',
+		es:'Protuberancia (lado del depósito) neutral a alianza',
 	},
 	auto_bump_outpost_neutral_to_alliance:{
 		en:'Bump (outpost side) neutral to alliance',
@@ -767,6 +890,7 @@ addI18n({
 		zh_tw:'碰撞(前哨站側)中立到聯盟',
 		fr:'Bosse (côté avant-poste) neutre à alliance',
 		pt:'Saliência (lado do avançado) neutro a aliança',
+		es:'Protuberancia (lado del avanzada) neutral a alianza',
 	},
 	auto_trench_outpost_neutral_to_alliance:{
 		en:'Trench (outpost side) neutral to alliance',
@@ -775,6 +899,7 @@ addI18n({
 		zh_tw:'戰壕(前哨站側)中立到聯盟',
 		fr:'Tranchée (côté avant-poste) neutre à alliance',
 		pt:'Trincheira (lado do avançado) neutro a aliança',
+		es:'Trinchera (lado del avanzada) neutral a alianza',
 	},
 	auto_climb_legend:{
 		en:'Where did team _TEAMNUM_ climb during autonomous?',
@@ -783,6 +908,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_在自主期間爬到了哪裡?',
 		fr:'Où l\'équipe _TEAMNUM_ a-t-elle grimpé lors de l\'autonome?',
 		pt:'Onde a equipe _TEAMNUM_ escalou durante autônoma?',
+		es:'¿Dónde trepó el equipo _TEAMNUM_ durante autónomo?',
 	},
 	tele_climb_legend:{
 		en:'Where did team _TEAMNUM_ climb during teleop?',
@@ -791,6 +917,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_在遠程操作期間爬到了哪裡?',
 		fr:'Où l\'équipe _TEAMNUM_ a-t-elle grimpé lors du téléopération?',
 		pt:'Onde a equipe _TEAMNUM_ escalou durante o teleop?',
+		es:'¿Dónde trepó el equipo _TEAMNUM_ durante teleop?',
 	},
 	climb_method_legend:{
 		en:'How did team _TEAMNUM_ climb past level one?',
@@ -799,6 +926,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_如何攀爬過第一級?',
 		fr:'Comment l\'équipe _TEAMNUM_ a-t-elle grimpé au-delà du niveau un?',
 		pt:'Como a equipe _TEAMNUM_ escalou além do nível um?',
+		es:'¿Cómo trepó el equipo _TEAMNUM_ pasando el nivel uno?',
 	},
 	climb_method_rungs:{
 		en:'Rungs',
@@ -807,6 +935,7 @@ addI18n({
 		zh_tw:'橫檔',
 		fr:'Barreaux',
 		pt:'Degraus',
+		es:'Peldaños',
 	},
 	climb_method_rungs_desc:{
 		en:'Climbed the rungs.',
@@ -815,6 +944,7 @@ addI18n({
 		zh_tw:'攀爬了橫檔。',
 		fr:'Grimpé les barreaux.',
 		pt:'Escalou os degraus.',
+		es:'Trepó los peldaños.',
 	},
 	climb_method_uprights:{
 		en:'Uprights',
@@ -823,6 +953,7 @@ addI18n({
 		zh_tw:'豎柱',
 		fr:'Montants',
 		pt:'Colunas',
+		es:'Postes verticales',
 	},
 	climb_method_uprights_desc:{
 		en:'Climbed the uprights.',
@@ -831,6 +962,7 @@ addI18n({
 		zh_tw:'攀爬了豎柱。',
 		fr:'Grimpé les montants.',
 		pt:'Escalou as colunas.',
+		es:'Trepó los postes verticales.',
 	},
 	climb_method_flip:{
 		en:'Flip',
@@ -839,6 +971,7 @@ addI18n({
 		zh_tw:'翻轉',
 		fr:'Basculer',
 		pt:'Virar',
+		es:'Voltear',
 	},
 	climb_method_flip_desc:{
 		en:'Grabbed on and flipped upside down.',
@@ -847,6 +980,7 @@ addI18n({
 		zh_tw:'抓住並翻轉倒立。',
 		fr:'S\'est accroché et a basculé à l\'envers.',
 		pt:'Agarrou-se e virou de cabeça para baixo.',
+		es:'Se agarró y dio la vuelta boca abajo.',
 	},
 	shooting_locations_fieldset:{
 		en:'Shooting Locations',
@@ -855,6 +989,7 @@ addI18n({
 		zh_tw:'射擊位置',
 		fr:'Emplacements de tir',
 		pt:'Locais de Tiro',
+		es:'Ubicaciones de Disparo',
 	},
 	shooting_locations_legend:{
 		en:'Were there a limited set of locations from which team _TEAMNUM_ could score fuel that could be defended? If so, mark them.',
@@ -863,6 +998,7 @@ addI18n({
 		zh_tw:'隊伍_TEAMNUM_是否有一組有限的位置可以得分燃料可以防守?如果是，請標記它們。',
 		fr:'Y avait-il un ensemble limité d\'emplacements à partir desquels l\'équipe _TEAMNUM_ pouvait marquer du carburant qui pouvait être défendu? Si oui, marquez-les.',
 		pt:'Havia um conjunto limitado de locais de onde a equipe _TEAMNUM_ poderia marcar combustível que poderia ser defendido? Se sim, marque-os.',
+		es:'¿Había un conjunto limitado de ubicaciones desde las cuales el equipo _TEAMNUM_ podía anotar combustible que pudiera ser defendido? Si es así, márquelos.',
 	},
 	robot_fuel_capacity_question:{
 		en:'What is the maxiumum amount of fuel _TEAMNUM_\'s robot can hold at once?',
@@ -871,6 +1007,7 @@ addI18n({
 		zh_tw:'_TEAMNUM_的機器人一次最多可以容納多少燃料?',
 		fr:'Quelle est la quantité maximale de carburant que le robot de l\'équipe _TEAMNUM_ peut contenir à la fois?',
 		pt:'Qual é a quantidade máxima de combustível que o robô da equipe _TEAMNUM_ pode conter de uma vez?',
+		es:'¿Cuál es la cantidad máxima de combustible que el robot del equipo _TEAMNUM_ puede contener a la vez?',
 	},
 	trenchbot_question:{
 			en:'Trench ability:',
@@ -879,6 +1016,7 @@ addI18n({
 			zh_tw:'戰壕能力:',
 			fr:'Capacité de tranchée:',
 			pt:'Capacidade de trincheira:',
+			es:'Habilidad de trinchera:',
 	},
 	trenchbot_option:{
 		en:'Fits under trench',
@@ -887,6 +1025,7 @@ addI18n({
 		zh_tw:'適合在戰壕下',
 		fr:'S\'adapte sous la tranchée',
 		pt:'Cabe sob a trincheira',
+		es:'Encaja bajo la trinchera',
 	},
 	intake_count_question:{
 		en:'On how many side of the robot can _TEAMNUM_ intake fuel?',
@@ -895,6 +1034,7 @@ addI18n({
 		zh_tw:'_TEAMNUM_的機器人可以從多少側吸入燃料?',
 		fr:'Sur combien de côtés du robot l\'équipe _TEAMNUM_ peut-elle aspirer du carburant?',
 		pt:'De quantos lados o robô da equipe _TEAMNUM_ pode ingerir combustível?',
+		es:'¿De cuántos lados del robot puede el equipo _TEAMNUM_ tomar combustible?',
 	},
 	intake_style_question:{
 		en:'Which style(s) of intake does _TEAMNUM_ use?',
@@ -903,6 +1043,7 @@ addI18n({
 		zh_tw:'_TEAMNUM_使用哪種進氣風格?',
 		fr:'Quel(s) style(s) d\'aspiration l\'équipe _TEAMNUM_ utilise-t-elle?',
 		pt:'Qual(is) estilo(s) de ingestão a equipe _TEAMNUM_ usa?',
+		es:'¿Qué estilo(s) de toma utiliza el equipo _TEAMNUM_?',
 	},
 	robot_intake_style_otb:{
 		en:'Over the bumper',
@@ -911,6 +1052,7 @@ addI18n({
 		zh_tw:'在保險槓上方',
 		fr:'Au-dessus du pare-chocs',
 		pt:'Acima do para-choque',
+		es:'Sobre el parachoques',
 	},
 	robot_intake_style_gap:{
 		en:'Bumper gap',
@@ -919,6 +1061,7 @@ addI18n({
 		zh_tw:'保險槓間隙',
 		fr:'Espace du pare-chocs',
 		pt:'Espaço do para-choque',
+		es:'Brecha del parachoques',
 	},
 	robot_intake_style_reversible:{
 		en:'Reversible',
@@ -927,6 +1070,7 @@ addI18n({
 		zh_tw:'可逆',
 		fr:'Réversible',
 		pt:'Reversível',
+		es:'Reversible',
 	},
 	shooter_count_question:{
 		en:'How many fuel can _TEAMNUM_\'s robot fire simultaneously (side-by-side or with separate shooters)?',
@@ -935,6 +1079,7 @@ addI18n({
 		zh_tw:'_TEAMNUM_的機器人可以同時發射多少燃料(並排或使用單獨的射手)?',
 		fr:'Combien de carburant le robot de l\'équipe _TEAMNUM_ peut-il tirer simultanément (côte à côte ou avec des tireurs séparés)?',
 		pt:'Quantos combustíveis o robô da equipe _TEAMNUM_ pode disparar simultaneamente (lado a lado ou com atiradores separados)?',
+		es:'¿Cuántos combustibles puede disparar simultáneamente el robot del equipo _TEAMNUM_ (lado a lado o con disparadores separados)?',
 	},
 	shooter_style_question:{
 		en:'Which style(s) of shooter does _TEAMNUM_ use?',
@@ -943,6 +1088,7 @@ addI18n({
 		zh_tw:'_TEAMNUM_使用哪種射手風格?',
 		fr:'Quel(s) style(s) de tireur l\'équipe _TEAMNUM_ utilise-t-elle?',
 		pt:'Qual(is) estilo(s) de atirador a equipe _TEAMNUM_ usa?',
+		es:'¿Qué estilo(s) de disparador utiliza el equipo _TEAMNUM_?',
 	},
 	robot_shooter_style_fixed:{
 		en:'Fixed',
@@ -951,6 +1097,7 @@ addI18n({
 		zh_tw:'固定',
 		fr:'Fixe',
 		pt:'Fixo',
+		es:'Fijo',
 	},
 	robot_shooter_style_turret:{
 		en:'Turret',
@@ -959,6 +1106,7 @@ addI18n({
 		zh_tw:'砲塔',
 		fr:'Tourelle',
 		pt:'Torreta',
+		es:'Torreta',
 	},
 	auto_alliance_time:{
 		en:'Time spent in alliance zone during autonomous (seconds)',
@@ -967,6 +1115,7 @@ addI18n({
 		zh_tw:'自主期間在聯盟區域度過的時間(秒)',
 		fr:'Temps passé dans la zone d\'alliance pendant l\'autonome (secondes)',
 		pt:'Tempo gasto na zona de aliança durante a autônoma (segundos)',
+		es:'Tiempo invertido en la zona de alianza durante autónomo (segundos)',
 	},
 	auto_neutral_time:{
 		en:'Time spent in neutral zone during autonomous (seconds)',
@@ -975,6 +1124,7 @@ addI18n({
 		zh_tw:'自主期間在中立區域度過的時間(秒)',
 		fr:'Temps passé dans la zone neutre pendant l\'autonome (secondes)',
 		pt:'Temps passé dans la zone neutre pendant l\'autonome (secondes)',
+		es:'Tiempo invertido en la zona neutral durante autónomo (segundos)',
 	},
 	tele_alliance_time:{
 		en:'Time spent in alliance zone during teleop (seconds)',
@@ -983,6 +1133,7 @@ addI18n({
 		zh_tw:'遠程操作期間在聯盟區域度過的時間(秒)',
 		fr:'Temps passé dans la zone d\'alliance pendant le téléopération (secondes)',
 		pt:'Tempo gasto na zona de aliança durante o teleop (segundos)',
+		es:'Tiempo invertido en la zona de alianza durante teleop (segundos)',
 	},
 	tele_neutral_time:{
 		en:'Time spent in neutral zone during teleop (seconds)',
@@ -991,6 +1142,7 @@ addI18n({
 		zh_tw:'遠程操作期間在中立區域度過的時間(秒)',
 		fr:'Temps passé dans la zone neutre pendant le téléopération (secondes)',
 		pt:'Tempo gasto na zona neutra durante o teleop (segundos)',
+		es:'Tiempo invertido en la zona neutral durante teleop (segundos)',
 	},
 	tele_opponent_time:{
 		en:'Time spent in opponent zone during teleop (seconds)',
@@ -999,6 +1151,7 @@ addI18n({
 		zh_tw:'遠程操作期間在對手區域度過的時間(秒)',
 		fr:'Temps passé dans la zone adverse pendant le téléopération (secondes)',
 		pt:'Tempo gasto na zona do oponente durante o teleop (segundos)',
+		es:'Tiempo invertido en la zona del oponente durante teleop (segundos)',
 	},
 })
 

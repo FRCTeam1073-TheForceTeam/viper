@@ -3,6 +3,7 @@
 addI18n({
 	validate_error_no_name:{
 		en:'Error: Name not specified',
+		es:'Error:',
 		fr:'Erreur : Nom non spécifié',
 		he:'שגיאה: השם לא צוין',
 		pt:'Erro: Nome não especificado',
@@ -16,6 +17,7 @@ addI18n({
 		pt:'Adicionar:',
 		he:'לְהוֹסִיף:',
 		tr:'Ekle:',
+		es:'Agregar:',
 	},
 	graph_bar:{
 		en:'Bar chart',
@@ -24,6 +26,7 @@ addI18n({
 		pt:'Gráfico de barras',
 		he:'תרשים עמודות',
 		tr:'Çubuk grafik',
+		es:'Gráfico de barras',
 	},
 	graph_line:{
 		en:'Line Graph',
@@ -32,6 +35,7 @@ addI18n({
 		pt:'Gráfico de linhas',
 		he:'גרף קווי',
 		tr:'Çizgi grafiği',
+		es:'Gráfico de líneas',
 	},
 	graph_boxplot:{
 		en:'Box plot',
@@ -40,6 +44,7 @@ addI18n({
 		pt:'Plotagem de caixa',
 		he:'עלילת קופסה',
 		tr:'Kutu grafiği',
+		es:'Diagrama de caja',
 	},
 	graph_heatmap:{
 		en:'Heatmap',
@@ -48,6 +53,7 @@ addI18n({
 		pt:'Mapa de calor',
 		he:'מפת חום',
 		tr:'Isı haritası',
+		es:'Mapa de calor',
 	},
 	graph_stacked:{
 		en:'Stacked bars',
@@ -56,9 +62,11 @@ addI18n({
 		pt:'Barras empilhadas',
 		he:'סורגים מוערמים',
 		tr:'Yığılmış çubuklar',
+		es:'Barras apiladas',
 	},
 	graph_stacked_percent:{
 		en:'Stacked percents',
+		es:'Porcentajes',
 		fr:'Pourcentages empilés',
 		zh_tw:'堆疊百分比',
 		pt:'Porcentagens empilhadas',
@@ -67,6 +75,7 @@ addI18n({
 	},
 	graph_timeline:{
 		en:'Timeline',
+		es:'Cronología',
 		fr:'Chronologie',
 		zh_tw:'時間軸',
 		pt:'Linha do tempo',
@@ -80,6 +89,7 @@ addI18n({
 		pt:'Nome do gráfico',
 		he:'שם הגרף',
 		tr:'Grafik adı',
+		es:'Nombre del gráfico',
 	},
 	section_name_placeholder:{
 		en:'Name of section',
@@ -88,9 +98,11 @@ addI18n({
 		pt:'Nome da seção',
 		he:'שם המדור',
 		tr:'Bölüm adı',
+		es:'Nombre de la sección',
 	},
 	remove_link:{
 		en:'Remove',
+		es:'Eliminar',
 		fr:'Supprimer',
 		zh_tw:'消除',
 		pt:'Remover',
@@ -104,6 +116,7 @@ addI18n({
 		pt:'Tem certeza de que deseja remover este gráfico?',
 		he:'האם אתה בטוח שברצונך להסיר את הגרף הזה?',
 		tr:'Bu grafiği kaldırmak istediğinizden emin misiniz?',
+		es:'¿Eliminar gráfico?',
 	},
 	manage_graphs_heading:{
 		en:'Manage Graphs',
@@ -112,9 +125,11 @@ addI18n({
 		pt:'Gerenciar gráficos',
 		he:'נהל גרפים',
 		tr:'Grafikleri Yönet',
+		es:'Administrar gráficos',
 	},
 	manage_stats_heading:{
 		en:'Manage Stats',
+		es:'Administrar',
 		fr:'Gérer les statistiques',
 		zh_tw:'管理統計數據',
 		pt:'Gerenciar estatísticas',
@@ -123,6 +138,7 @@ addI18n({
 	},
 	download_data_link:{
 		en:'Download Data',
+		es:'Descargar',
 		fr:'Télécharger les données',
 		zh_tw:'下載數據',
 		pt:'Baixar dados',
@@ -131,6 +147,7 @@ addI18n({
 	},
 	add_graph_link:{
 		en:'Add Graph',
+		es:'Agregar',
 		fr:'Ajouter un graphique',
 		zh_tw:'新增圖表',
 		pt:'Adicionar gráfico',
@@ -144,9 +161,11 @@ addI18n({
 		pt:'Adicionar seção',
 		he:'הוסף סעיף',
 		tr:'Bölüm Ekle',
+		es:'Agregar sección',
 	},
 	save_to_server_link:{
 		en:'Save to Server',
+		es:'Guardar en servidor',
 		fr:'Enregistrer sur le serveur',
 		zh_tw:'保存到伺服器',
 		pt:'Salvar no servidor',
@@ -155,6 +174,7 @@ addI18n({
 	},
 	reorder_link:{
 		en:'Reorder',
+		es:'Reordenar',
 		fr:'Réorganiser',
 		zh_tw:'重新排序',
 		pt:'Reordenar',
@@ -168,6 +188,7 @@ addI18n({
 		pt:'Arrastar para reordenar',
 		he:'גרור כדי לסדר מחדש',
 		tr:'Sürükleyerek Yeniden Sırala',
+		es:'Reordenar',
 	},
 	profile_selector_label:{
 		en:'Profile:',
@@ -176,9 +197,11 @@ addI18n({
 		pt:'Perfil:',
 		he:'פרופיל:',
 		tr:'Profil:',
+		es:'Perfil:',
 	},
 	profile_name_prompt:{
 		en:'Enter profile name:',
+		es:'Nombre',
 		fr:'Entrez le nom du profil :',
 		zh_tw:'輸入個人資料名稱：',
 		pt:'Digite o nome do perfil:',
@@ -192,6 +215,7 @@ addI18n({
 		pt:'O nome do perfil não pode estar vazio',
 		he:'שם הפרופיל לא יכול להיות ריק',
 		tr:'Profil adı boş olamaz',
+		es:'El nombre del perfil no puede estar vacío',
 	},
 	profile_name_error_duplicate:{
 		en:'Profile "_PROFILENAME_" already exists',
@@ -200,9 +224,11 @@ addI18n({
 		pt:'O perfil "_PROFILENAME_" já existe',
 		he:'הפרופיל "_PROFILENAME_" כבר קיים',
 		tr:'Profil "_PROFILENAME_" zaten var',
+		es:'El nombre del perfil ya existe',
 	},
 	delete_profile_confirm:{
 		en:'Are you sure you want to delete the "_PROFILENAME_" profile?',
+		es:'¿Confirmar',
 		fr:'Voulez-vous vraiment supprimer le profil « _PROFILENAME_ » ?',
 		zh_tw:'您確定要刪除"_PROFILENAME_"個人資料嗎？',
 		pt:'Tem certeza de que deseja excluir o perfil "_PROFILENAME_"?',
@@ -211,6 +237,7 @@ addI18n({
 	},
 	cannot_delete_only_profile:{
 		en:'Cannot delete the only profile. Create another profile first.',
+		es:'No',
 		fr:'Impossible de supprimer le seul profil. Créez d\'abord un autre profil.',
 		zh_tw:'無法刪除唯一的個人資料。請先建立另一個個人資料。',
 		pt:'Não é possível excluir o único perfil. Primeiro, crie outro perfil.',
@@ -224,6 +251,7 @@ addI18n({
 		pt:'Novo perfil',
 		he:'פרופיל חדש',
 		tr:'Yeni Profil',
+		es:'Nuevo perfil',
 	},
 	delete_profile_tooltip:{
 		en:'Delete Profile',
@@ -232,9 +260,11 @@ addI18n({
 		pt:'Excluir perfil',
 		he:'מחק פרופיל',
 		tr:'Profili Sil',
+		es:'Eliminar perfil',
 	},
 	rename_profile_tooltip:{
 		en:'Rename Profile',
+		es:'Renombrar',
 		fr:'Renommer le profil',
 		zh_tw:'重新命名個人資料',
 		pt:'Renomear perfil',

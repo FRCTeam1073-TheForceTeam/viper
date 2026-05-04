@@ -7,6 +7,7 @@ addI18n({
 		he:'_TEAM_ ב-_EVENT_',
 		zh_tw:'_TEAM_ 參加 _EVENT_',
 		fr:'_TEAM_ à _EVENT_',
+		es:'_TEAM_ en _EVENT_',
 	},
 	choose_team_page_title:{
 		en:'Choose a Team',
@@ -15,6 +16,7 @@ addI18n({
 		he:'בחר צוות',
 		zh_tw:'選擇團隊',
 		fr:'Choisir une équipe',
+		es:'Elegir un equipo',
 	},
 	pit_scouting_heading:{
 		en:'Pit Scouting',
@@ -23,6 +25,7 @@ addI18n({
 		he:'צופי בור',
 		zh_tw:'礦坑勘察',
 		fr:'Repérage des stands',
+		es:'Explorador de Pit',
 	},
 	subjective_scouting_heading:{
 		en:'Subjective Scouting',
@@ -31,6 +34,7 @@ addI18n({
 		he:'צופית סובייקטיבית',
 		zh_tw:'主觀球探',
 		fr:'Repérage subjectif',
+		es:'Scout subjetivo',
 	},
 	comments_heading:{
 		en:'Comments',
@@ -39,6 +43,7 @@ addI18n({
 		he:'הערות',
 		zh_tw:'評論',
 		fr:'Commentaires',
+		es:'Comentarios',
 	},
 	compare_teams:{
 		en:'Compare Teams',
@@ -47,6 +52,7 @@ addI18n({
 		he:'השווה קבוצות',
 		zh_tw:'比較團隊',
 		fr:'Comparer les équipes',
+		es:'Comparar equipos',
 	},
 })
 

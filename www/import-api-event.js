@@ -8,10 +8,12 @@ addI18n({
 		tr:'API Etkinliğini İçe Aktar',
 		he:'אירוע ייבוא ​​API',
 		pt:'Importar evento da API',
+		es:'Importar evento de API',
 	},
 	import_api_event_heading:{
 		en:'Importing API Event',
 		fr:'Importation d\'un événement API',
+		es:'Importar evento de API',
 		zh_tw:'導入API事件',
 		tr:'API Etkinliğini İçe Aktarma',
 		he:'ייבוא ​​אירוע API',
@@ -20,6 +22,7 @@ addI18n({
 	event_name_heading:{
 		en:'Event name',
 		fr:'Nom de l\'événement',
+		es:'Nombre del evento',
 		zh_tw:'活動名稱',
 		tr:'Etkinlik adı',
 		he:'שם האירוע',
@@ -32,6 +35,7 @@ addI18n({
 		tr:'Tarihler',
 		he:'תאריכים',
 		pt:'Datas',
+		es:'Fechas importantes',
 	},
 	location_heading:{
 		en:'Location',
@@ -40,10 +44,12 @@ addI18n({
 		tr:'Konum',
 		he:'מִקוּם',
 		pt:'Localização',
+		es:'Ubicación',
 	},
 	event_id_heading:{
 		en:'Event ID',
 		fr:'ID de l\'événement',
+		es:'ID del evento',
 		zh_tw:'事件ID',
 		tr:'Etkinlik kimliği',
 		he:'מזהה אירוע',
@@ -56,6 +62,7 @@ addI18n({
 		tr:'Program',
 		he:'לוּחַ זְמַנִים',
 		pt:'Programação',
+		es:'Horario',
 	},
 	alliances_heading:{
 		en:'Alliances',
@@ -64,10 +71,12 @@ addI18n({
 		fr:'Alliances',
 		he:'בריתות',
 		zh_tw:'聯盟',
+		es:'Alianzas',
 	},
 	no_event_heading:{
 		en:'No event specified',
 		fr:'Aucun événement spécifié',
+		es:'No se encontró ningún evento',
 		zh_tw:'沒有指定事件',
 		tr:'Belirtilen bir etkinlik yok',
 		he:'לא צוין אירוע',
