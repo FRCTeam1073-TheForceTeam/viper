@@ -120,10 +120,24 @@ sub upsert {
 	my @allFields = keys(%$data);
 	my $fields = join("`,`", @allFields);
 	my $placeholders = join(",", map {"?"} @allFields);
-	my $updates = join(",", map {"`$_`=?"} @allFields);
+
+	# Build UPDATE clause with optional modified date check
+	my $updates;
+	if (exists $data->{'modified'}) {
+		# Only update fields if new modified date >= old modified date
+		my @updateParts = ();
+		for my $field (@allFields) {
+			push @updateParts, "`$field`=IF(VALUES(`modified`) >= `modified`, VALUES(`$field`), `$field`)";
+		}
+		$updates = join(",", @updateParts);
+	} else {
+		$updates = join(",", map {"`$_`=?"} @allFields);
+	}
+
 	my @values = ();
 	push @values, map {$data->{$_}} @allFields;
-	push @values, map {$data->{$_}} @allFields;
+	# Only add values for UPDATE clause if modified is not being checked (old behavior)
+	push @values, map {$data->{$_}} @allFields unless exists $data->{'modified'};
 
 	my $done = 0;
 
