@@ -104,8 +104,10 @@ sub writeCsvData(){
 		my $lockFile = "$fileName.lock";
 		open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 		flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
+		# Read existing file content BEFORE opening for write to avoid truncation issues
+		my $mergedContent = csv->mergeFile($fileName, $newCsv->toString());
 		open my $fh, '>', $fileName or $webutil->error("Cannot open $fileName", "$!\n");
-		$fh->print(csv->mergeFile($fileName, $newCsv->toString()));
+		$fh->print($mergedContent);
 		close $fh;
 		$webutil->commitDataFile($fileName, "scouting");
 		close $lock;

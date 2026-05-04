@@ -205,6 +205,9 @@ sub getPrimaryKeyColumns(){
 	return ['match', 'team', 'scouter'] if $type eq 'scouting';
 	return ['team', 'scouter'] if $type eq 'pit';
 	return ['team', 'scouter'] if $type eq 'subjective';
+	return [] if $type eq 'event';
+	return ['Match'] if $type eq 'schedule';
+	return ['Alliance'] if $type eq 'alliances';
 	return undef;
 }
 
@@ -223,7 +226,7 @@ sub removeMatchingRows(){
 	$self->{_data} = [
 		grep {
 			my $rowArray = $_;
-			my $key = join("|", map { $rowArray->[$self->{_headerMap}->{$_}] } @{$keyColumns});
+			my $key = join("|", map { $self->getByName($rowArray, $_) } @{$keyColumns});
 			!exists $keysToRemove->{$key};
 		} @{$self->{_data}}
 	];
