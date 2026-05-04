@@ -211,29 +211,6 @@ sub getPrimaryKeyColumns(){
 	return undef;
 }
 
-sub removeMatchingRows(){
-	my ($self, $newCsv, $keyColumns) = @_;
-
-	# Build set of keys from new data
-	my $keysToRemove = {};
-	for my $newRowNum (1..$newCsv->getRowCount()) {
-		my @keyParts = map { $newCsv->getByName($newRowNum, $_) } @{$keyColumns};
-		my $key = join("|", @keyParts);
-		$keysToRemove->{$key} = 1;
-	}
-
-	# Remove rows from self that match keys from new
-	$self->{_data} = [
-		grep {
-			my $rowArray = $_;
-			my $key = join("|", map { $self->getByName($rowArray, $_) } @{$keyColumns});
-			!exists $keysToRemove->{$key};
-		} @{$self->{_data}}
-	];
-
-	return $self;
-}
-
 sub mergeFile(){
 	my ($self, $filePath, $newCsvContents) = @_;
 
@@ -249,11 +226,96 @@ sub mergeFile(){
 	my $existingCsv = csv->new($existingCsvData);
 	my $newCsv = csv->new($newCsvContents);
 
-	# Remove rows from existing that match new data's primary keys
-	$existingCsv->removeMatchingRows($newCsv, $keyColumns);
+	# First pass: merge headers from new into existing
+	for my $header (@{$newCsv->{_headers}}){
+		if (!exists $existingCsv->{_headerMap}->{$header}){
+			$existingCsv->{_headerMap}->{$header} = scalar @{$existingCsv->{_headers}};
+			push(@{$existingCsv->{_headers}},$header);
+		}
+	}
 
-	# Append new rows
-	$existingCsv->append($newCsv);
+	# Build map of existing rows by primary key
+	my $existingRowsByKey = {};
+	for my $existingRowNum (1..$existingCsv->getRowCount()) {
+		my @keyParts = map { $existingCsv->getByName($existingRowNum, $_) } @{$keyColumns};
+		my $key = join("|", @keyParts);
+		$existingRowsByKey->{$key} = $existingRowNum;
+	}
+
+	# Check if modified column exists
+	my $hasModified = exists $existingCsv->{_headerMap}->{modified};
+
+	# Merged result
+	my $mergedData = [];
+	my $processedKeys = {};
+
+	# Process all new rows
+	for my $newRowNum (1..$newCsv->getRowCount()) {
+		my @keyParts = map { $newCsv->getByName($newRowNum, $_) } @{$keyColumns};
+		my $key = join("|", @keyParts);
+		$processedKeys->{$key} = 1;
+
+		if (exists $existingRowsByKey->{$key}) {
+			# Key exists in both - need to decide which to keep
+			my $existingRowNum = $existingRowsByKey->{$key};
+			my $keepNew = 1; # Default: new wins
+
+			if ($hasModified) {
+				my $existingModified = $existingCsv->getByName($existingRowNum, 'modified');
+				my $newModified = $newCsv->getByName($newRowNum, 'modified');
+
+				# Both have dates - keep the newer one
+				if ($existingModified ne "" && $newModified ne "") {
+					$keepNew = 0 if ($existingModified gt $newModified);
+				}
+				# One has date - keep the one with date
+				elsif ($existingModified ne "") {
+					$keepNew = 0;
+				}
+				# else: both blank or new has date - new wins
+			}
+
+			# Add the winning row
+			if ($keepNew) {
+				my $row = [("") x scalar(@{$existingCsv->{_headers}})];
+				for my $header(@{$newCsv->{_headers}}){
+					$row->[$existingCsv->{_headerMap}->{$header}] = $newCsv->getByName($newRowNum,$header);
+				}
+				push(@$mergedData, $row);
+			} else {
+				# Keep existing row, extend it if needed
+				my $existingRow = $existingCsv->{_data}->[$existingRowNum - 1];
+				while (scalar(@$existingRow) < scalar(@{$existingCsv->{_headers}})) {
+					push(@$existingRow, "");
+				}
+				push(@$mergedData, $existingRow);
+			}
+		} else {
+			# Key only in new - add it
+			my $row = [("") x scalar(@{$existingCsv->{_headers}})];
+			for my $header(@{$newCsv->{_headers}}){
+				$row->[$existingCsv->{_headerMap}->{$header}] = $newCsv->getByName($newRowNum,$header);
+			}
+			push(@$mergedData, $row);
+		}
+	}
+
+	# Add remaining existing rows that weren't processed
+	for my $existingRowNum (1..$existingCsv->getRowCount()) {
+		my @keyParts = map { $existingCsv->getByName($existingRowNum, $_) } @{$keyColumns};
+		my $key = join("|", @keyParts);
+
+		if (!exists $processedKeys->{$key}) {
+			my $existingRow = $existingCsv->{_data}->[$existingRowNum - 1];
+			while (scalar(@$existingRow) < scalar(@{$existingCsv->{_headers}})) {
+				push(@$existingRow, "");
+			}
+			push(@$mergedData, $existingRow);
+		}
+	}
+
+	# Replace data with merged result
+	$existingCsv->{_data} = $mergedData;
 
 	return $existingCsv->toString();
 }
