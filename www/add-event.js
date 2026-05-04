@@ -97,6 +97,14 @@ addI18n({
 		zh_tw:'上傳',
 		he:'העלה',
 	},
+	add_event_import_file_required:{
+		en:'Please select a .json file to import',
+		pt:'Selecione um arquivo .json para importar',
+		fr:'Veuillez sélectionner un fichier .json à importer',
+		tr:'İçe aktarmak için bir .json dosyası seçiniz',
+		zh_tw:'請選擇要匯入的 .json 檔案',
+		he:'אנא בחר קובץ .json לייבוא',
+	},
 })
 
 onApplyTranslation.push(setComp)
@@ -121,4 +129,13 @@ $(document).ready(function(){
 	$(`#comp option[value="${hash}"]`).attr('selected', 'selected')
 	$('#comp').change(setComp)
 	setComp()
+
+	$('form[action="/admin/import.cgi"]').on('submit', function(e){
+		var fileInput = $('input[name="json"]')[0]
+		if (!fileInput.files || fileInput.files.length === 0){
+			e.preventDefault()
+			alert(translate('add_event_import_file_required'))
+			return false
+		}
+	})
 })
