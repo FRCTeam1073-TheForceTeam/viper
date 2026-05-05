@@ -134,7 +134,11 @@ sub cmpRowsVals(){
 	my $aval = $self->getByName($a,$name);
 	my $bval = $self->getByName($b,$name);
 
-	return ($aval||"0")+0 <=> ($bval||"0")+0 if ($name eq "team" or $name eq "Alliance");
+	if ($name eq "team" or $name eq "Alliance") {
+		my ($anum) = ($aval =~ /(\d+)/);
+		my ($bnum) = ($bval =~ /(\d+)/);
+		return ($anum||"0")+0 <=> ($bnum||"0")+0;
+	}
 
 	if ($name eq "Match" or $name eq "match"){
 		my ($around, $aname, $anum) = $aval =~ /^([0-9]*)(pm|qm|p|qf|sf|f)([0-9]+)/;
