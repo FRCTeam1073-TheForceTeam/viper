@@ -49,10 +49,11 @@ sub flushProgress {
 
 	if ($fileContents) {
 		my $escaped_contents = $cgi->escapeHTML($fileContents);
-		print "<textarea readonly style=\"width: 100%; height: 200px; font-family: monospace; font-size: 12px;\">$escaped_contents</textarea>\n";
+		print "<textarea readonly>$escaped_contents</textarea>\n";
 	}
 
 	scrollToBottom();
+	STDOUT->flush();  # Explicitly flush output to browser
 }
 
 sub scrollToBottom {
@@ -121,18 +122,17 @@ print <<'HTML';
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Import Progress</title>
-	<style>
-		body { font-family: sans-serif; margin: 20px; }
-		h2 { margin: 15px 0 5px 0; }
-		p { margin: 0 0 10px 0; padding: 5px; }
-		.success { background: #d4edda; }
-		.error { background: #f8d7da; color: #721c24; }
-		.summary { margin-top: 20px; font-weight: bold; }
-	</style>
+<title>Import Progress</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel="stylesheet" href="/import.css">
+<script src=/jquery.min.js></script>
+<script src=/main.js></script>
 </head>
 <body>
-	<h1>Import Progress</h1>
+<h1>Import Progress</h1>
 HTML
 
 # Enable autoflush for streaming output
@@ -140,23 +140,30 @@ $| = 1;
 
 $dbh = $db->dbConnection();
 
+# Helper function to format bytes as MB
+sub formatBytes {
+	my ($bytes) = @_;
+	return sprintf("%.2f MB", $bytes / (1024 * 1024));
+}
+
 # Custom streaming JSON parser for flat key-value structure
 my $buffer = "";
 my $event = "";
 my $errorCount = 0;
 my $fileCount = 0;
 my $pendingFileName = "";  # Track if we're waiting for a value from a previous key
+my $pendingValue = 0;  # Track if we're in the middle of extracting a value
 my $is_final_buffer = 0;   # Flag to indicate we're processing the final buffer (no more chunks coming)
 
 # Create a subroutine to process key-value pairs from the buffer
 sub processKeyValuePairs {
+
 	while (1) {
 		# Skip leading whitespace and structural characters
 		$buffer =~ s/^\s*//;
 
 		# If buffer starts with { or , or }, skip it
 		if ($buffer =~ /^[{,}]/) {
-			printf STDERR "DEBUG: Skipping structural char, buffer len=%d\n", length($buffer);
 			$buffer = substr($buffer, 1);
 			$buffer =~ s/^\s*//;
 			next;
@@ -167,110 +174,131 @@ sub processKeyValuePairs {
 		if ($pendingFileName) {
 			# We're resuming extraction for a previous key match
 			$fileName = $pendingFileName;
-			printf STDERR "DEBUG: Resuming extraction for pending fileName: %s\n", $fileName;
 		} elsif ($buffer =~ /^"([^"]+)"\s*:\s*/) {
-			# Match a new key
+			# Match a new key (JSON keys are always double-quoted)
 			$fileName = $1;
-			printf STDERR "DEBUG: Matched new key: %s\n", $fileName;
-			$buffer = substr($buffer, $+[0]);  # Remove the matched key
-			printf STDERR "DEBUG: After removing key, buffer len=%d\n", length($buffer);
+			$buffer = substr($buffer, $+[0]);  # Remove the matched key and colon
 		}
 
 		if ($fileName) {
-			# Now extract the value - it should be a quoted string
-			printf STDERR "DEBUG: Looking for value, first 80 chars: %.80s\n", $buffer;
-			# Find the closing quote by looking for the next key separator or end marker
-			my $comma_quote_pos = index($buffer, '","');
-			my $close_brace_pos = $is_final_buffer ? index($buffer, '"}') : -1;
-			my $end_pos = -1;
+			# Now extract the value - it should be a quoted string (JSON always uses double quotes)
 
-			printf STDERR "DEBUG: comma_quote_pos=%d, close_brace_pos=%d, is_final=%d\n", $comma_quote_pos, $close_brace_pos, $is_final_buffer;
-
-			# Determine which separator comes first
-			if ($comma_quote_pos >= 0 && ($close_brace_pos < 0 || $comma_quote_pos < $close_brace_pos)) {
-				# Found "," first
-				$end_pos = $comma_quote_pos;
-				printf STDERR "DEBUG: Using comma_quote_pos, end_pos=%d\n", $end_pos;
-			} elsif ($close_brace_pos >= 0) {
-				# Found "}" first (only in final buffer)
-				$end_pos = $close_brace_pos;
-				printf STDERR "DEBUG: Using close_brace_pos, end_pos=%d\n", $end_pos;
+			if ($pendingValue) {
+				# Resume from a previous incomplete value - we already consumed the opening quote
+			} elsif ($buffer =~ /^"/) {
+				# Found opening double quote for value
+				$buffer = substr($buffer, 1);  # Remove the opening quote from buffer
+				$pendingValue = 1;  # Mark that we're extracting a value
 			}
 
-			if ($end_pos > 0) {
-				# Extract value from position 1 (after opening quote) to end_pos
-				my $value = substr($buffer, 1, $end_pos - 1);
-				printf STDERR "DEBUG: Raw extracted value (first 200 chars): %s\n", substr($value, 0, 200);
-				printf STDERR "DEBUG: Raw extracted value length: %d chars\n", length($value);
+			if ($pendingValue) {
+				# Scan buffer for closing unescaped double quote using index() for efficiency
+				my $value_end_pos = -1;
+				my $search_pos = 0;
 
-				# Check for leading/trailing quotes
-				if ($value =~ /^"/) {
-					printf STDERR "DEBUG: WARNING - Value starts with quote!\n";
-				}
-				if ($value =~ /"$/) {
-					printf STDERR "DEBUG: WARNING - Value ends with quote!\n";
-				}
+				while ($search_pos < length($buffer)) {
+					my $pos = index($buffer, '"', $search_pos);
+					last if $pos < 0;  # No more quotes found
 
-				$buffer = substr($buffer, $end_pos + 1);  # Remove value and closing quote from buffer
-				printf STDERR "DEBUG: After removing value, buffer len=%d\n", length($buffer);
-				$pendingFileName = "";  # Clear pending flag since we got the value
-
-				# Properly unescape JSON string escapes
-				$value =~ s/\\\\/\x00/g;    # Temporarily replace \\ with null byte
-				$value =~ s/\\"/"/g;        # \" -> "
-				$value =~ s/\\n/\n/g;       # \n -> newline
-				$value =~ s/\\r/\r/g;       # \r -> carriage return
-				$value =~ s/\\t/\t/g;       # \t -> tab
-				$value =~ s/\\b/\b/g;       # \b -> backspace
-				$value =~ s/\\f/\f/g;       # \f -> form feed
-				$value =~ s/\\\//\//g;      # \/ -> /
-				$value =~ s/\x00/\\/g;      # Replace null byte back with single backslash
-
-				printf STDERR "DEBUG: Unescaped value length: %d\n", length($value);
-
-				$fileCount++;
-				printf STDERR "DEBUG: Processing file %d: %s\n", $fileCount, $fileName;
-
-				# Validate file path
-				if ($fileName !~ /^\/?data(\/20[0-9]{2})?\/([\.a-z0-9A-Z\-]+)\.(json|csv|jpg|webp)$/) {
-					$errorCount++;
-					printf STDERR "DEBUG: INVALID file path: %s\n", $fileName;
-					flushProgress($fileName, "error", "Invalid file path");
-				} else {
-					# Extract event name
-					if ($fileName =~ /data\/(20[0-9]{2}[a-z0-9\-]+)/) {
-						$event = $1;
-						printf STDERR "DEBUG: Extracted event: %s\n", $event;
+					# Count preceding backslashes
+					my $backslash_count = 0;
+					my $j = $pos - 1;
+					while ($j >= 0 && substr($buffer, $j, 1) eq '\\') {
+						$backslash_count++;
+						$j--;
 					}
 
-					# Process this file immediately
-					my $error = processFile($fileName, $value);
-					if ($error) {
+					# If even number of backslashes (including 0), the quote is not escaped
+					if ($backslash_count % 2 == 0) {
+						$value_end_pos = $pos;
+						last;
+					}
+
+					# Quote is escaped, continue searching after this one
+					$search_pos = $pos + 1;
+				}
+
+				if ($value_end_pos >= 0) {
+					# Found complete value! Extract it from buffer
+					my $value = substr($buffer, 0, $value_end_pos);
+
+					# Remove value and closing quote from buffer
+					$buffer = substr($buffer, $value_end_pos + 1);
+
+					# Skip whitespace after the closing quote
+					$buffer =~ s/^\s*//;
+
+					# Remove the comma if present
+					if ($buffer =~ /^,/) {
+						$buffer = substr($buffer, 1);
+					}
+
+					# Clear pending state
+					$pendingFileName = "";
+					$pendingValue = 0;
+
+					# Properly unescape JSON string escapes from the extracted raw value
+					$value =~ s/\\\\/\x00/g;    # Temporarily replace \\ with null byte
+					$value =~ s/\\"/"/g;        # \" -> "
+					$value =~ s/\\n/\n/g;       # \n -> newline
+					$value =~ s/\\r/\r/g;       # \r -> carriage return
+					$value =~ s/\\t/\t/g;       # \t -> tab
+					$value =~ s/\\b/\b/g;       # \b -> backspace
+					$value =~ s/\\f/\f/g;       # \f -> form feed
+					$value =~ s/\\\//\//g;      # \/ -> /
+					$value =~ s/\x00/\\/g;      # Replace null byte back with single backslash
+
+					$fileCount++;
+
+					# Validate file path
+					if ($fileName !~ /^\/?data(\/20[0-9]{2})?\/([\.a-z0-9A-Z\-]+)\.(json|csv|jpg|webp)$/) {
 						$errorCount++;
-						printf STDERR "DEBUG: ERROR processing %s: %s\n", $fileName, $error;
-						flushProgress($fileName, "error", $error);
+						flushProgress($fileName, "error", "Invalid file path");
 					} else {
-						printf STDERR "DEBUG: Successfully processed %s\n", $fileName;
-						flushProgress($fileName, "success", "OK", $value);
+						# Extract event name
+						if ($fileName =~ /data\/(20[0-9]{2}[a-z0-9\-]+)/) {
+							$event = $1;
+						}
+
+						# Process this file immediately
+						my $error = processFile($fileName, $value);
+						if ($error) {
+							$errorCount++;
+							flushProgress($fileName, "error", $error);
+						} else {
+							flushProgress($fileName, "success", "OK");
+						}
+					}
+
+					# Continue to next pair
+					next;
+				} else {
+					# Value not complete yet
+					if ($is_final_buffer) {
+						last;
+					} else {
+						# Mark that we're waiting for the closing quote, leave partial value in buffer
+						$pendingFileName = $fileName;
+						$pendingValue = 1;
+						last;  # Wait for next chunk
 					}
 				}
-
-				# Continue to next pair
-				next;
 			} else {
-				# Value not complete yet, wait for more chunks (or done if final buffer)
+				# Value opening quote not found, wait for more data
 				if ($is_final_buffer) {
-					printf STDERR "DEBUG: Final buffer - value not complete (no separator found)\n";
 					last;
 				} else {
-					printf STDERR "DEBUG: Value not complete yet for %s, buffer len=%d, waiting for more data\n", $fileName, length($buffer);
-					$pendingFileName = $fileName;  # Save the fileName for next iteration
+					# Mark pending and wait for next chunk which should have the opening quote
+					$pendingFileName = $fileName;
+					$pendingValue = 0;
 					last;
 				}
 			}
 		} else {
-			# No valid key found, might need more data
-			printf STDERR "DEBUG: No valid key found, buffer len=%d\n", length($buffer);
+			# No valid key found
+			if (length($buffer) > 0 && !$is_final_buffer) {
+				# Buffer has partial data that might be a key, keep waiting
+			}
 			last;
 		}
 	}
@@ -278,19 +306,21 @@ sub processKeyValuePairs {
 
 # Read chunks and parse JSON key-value pairs
 my $chunk;
+my $total_bytes_read = 0;
 while (read($json_source, $chunk, 8192)) {
+	$total_bytes_read += length($chunk);
 	$buffer .= $chunk;
-	printf STDERR "DEBUG: Read chunk of %d bytes, buffer now %d bytes\n", length($chunk), length($buffer);
+
 
 	$is_final_buffer = 0;  # More chunks may be coming
 	processKeyValuePairs();
+
 }
 close($json_source);
-printf STDERR "DEBUG: Finished reading JSON, final buffer len=%d\n", length($buffer);
+
 
 # Process any remaining data in the final buffer
 if (length($buffer) > 0) {
-	printf STDERR "DEBUG: Processing final buffer, length=%d\n", length($buffer);
 	$buffer =~ s/^\s*//;
 	$buffer =~ s/^[{,}]//;  # Skip structural characters
 	$buffer =~ s/^\s*//;
@@ -313,9 +343,15 @@ print $cgi->escapeHTML("$fileCount file(s) processed. $errorInfo. $eventInfo");
 print "</p>\n";
 scrollToBottom();
 
-# Redirect if successful
-if ($event && $errorCount == 0) {
-	print "<script>setTimeout(function() { window.location.href = '/event.html#$event'; }, 2000);</script>\n";
+# Redirect if successful, or show link if event exists
+if ($event) {
+	# Show clickable link when there are errors
+	my $eventLink = $cgi->escapeHTML("/event.html#$event");
+	print "<p class=\"event-link\"><a href=\"$eventLink\">Go to Event: $event</a></p>\n";
+	if ($errorCount == 0) {
+		# Auto-redirect after 2 seconds on successful import
+		print "<script>setTimeout(function() { window.location.href = '/event.html#$event'; }, 2000);</script>\n";
+	}
 }
 
 print "</body></html>\n";

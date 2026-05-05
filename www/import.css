@@ -1,0 +1,3 @@
+.success{background:var(--highlight-bg-color);color:var(--highlight-fg-color)}
+.error{background:var(--button-disabled-decoration-color)}
+html{padding-bottom:1em}

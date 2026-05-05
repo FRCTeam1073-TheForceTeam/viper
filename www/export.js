@@ -152,7 +152,7 @@ $(document).ready(function(){
 			setTimeout(fullDataLoaded,100)
 			return
 		}
-		var json = JSON.stringify(dataFull)
+		var json = JSON.stringify(dataFull, null, "\t")
 		$('#downloadImages')
 			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
 			.attr('download',`${eventId}.full.json`)
@@ -166,7 +166,7 @@ $(document).ready(function(){
 			setTimeout(textDataLoaded,100)
 			return
 		}
-		var json = JSON.stringify(dataText)
+		var json = JSON.stringify(dataText, null, "\t")
 		$('#downloadData')
 			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
 			.attr('download',`${eventId}.dat.json`)
