@@ -226,7 +226,7 @@ sub mergeFile(){
 	die "Unknown CSV type: $type in file: $filePath" unless $keyColumns;
 
 	# Read existing CSV or create empty one
-	my $existingCsvData = -f $filePath ? scalar(read_file($filePath)) : "";
+	my $existingCsvData = -f $filePath ? scalar(read_file($filePath, binmode => ':encoding(UTF-8)')) : "";
 	my $existingCsv = csv->new($existingCsvData);
 	my $newCsv = csv->new($newCsvContents);
 
