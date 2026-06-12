@@ -32,10 +32,10 @@ my $info = $cgi->uploadInfo($upload_fh);
 if ($info){
 	# If file was uploaded, use the temp file
 	my $upload_file = $cgi->tmpFileName($json);
-	open($json_source, '<:raw', $upload_file) or $webutil->error("Cannot open $upload_file", "$!");
+	open($json_source, '<:encoding(UTF-8)', $upload_file) or $webutil->error("Cannot open $upload_file", "$!");
 } else {
 	# Otherwise, use the JSON parameter directly (could be form data or already read)
-	open($json_source, '<', \$json) or $webutil->error("Cannot open JSON parameter", "$!");
+	open($json_source, '<:encoding(UTF-8)', \$json) or $webutil->error("Cannot open JSON parameter", "$!");
 }
 
 sub flushProgress {
@@ -93,8 +93,7 @@ sub writeFileData(){
 	if ($fileName =~ /\.csv$/) {
 		# For CSV files, merge based on primary keys
 		$fileContents = csv->mergeFile($fileName, $fileContents);
-
-		open(my $fh, ">$openMode", $fileName) or die "Error opening $fileName for writing: $!";
+		open(my $fh, ">:encoding(UTF-8)", $fileName) or die "Error opening $fileName for writing: $!";
 		print $fh $fileContents;
 		close $fh;
 		$webutil->commitDataFile($fileName, "import");
