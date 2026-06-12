@@ -882,7 +882,7 @@ $(document).ready(function(){
 	}
 	Promise.all([
 		promiseEventMatches(),
-		promiseEventStats(),
+		promiseEventStats(null,true,true),
 		promiseEventScores(),
 		promiseEventFiles(),
 		promiseEventInfo(),
@@ -1010,7 +1010,7 @@ $(document).ready(function(){
 				row.find(`.${pos}`).text(match[pos])
 					.toggleClass("scouted",isScouted)
 					.toggleClass("needed",(!isScouted)&&seenLastFullyDone&&!seenOurNext&&matchHasTeam(ourNext,match[pos]))
-					.toggleClass("error",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
+					.toggleClass("overscouted",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
 					.toggleClass("review",isScouted&&(scouted.review_requested==1||scouted.review_requested=="1"))
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
 					.toggleClass("tooltip-before",/^B/.test(pos))

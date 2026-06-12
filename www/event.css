@@ -13,7 +13,8 @@ h3{margin:0 0 .25em 0;padding:0}
 #eventInfo{margin:1em 0}
 #matchTable .scouted{color:var(--highlight-fg-color)}
 #matchTable .scouted.review{color:var(--alert-fg-color)}
-#matchTable .scouted.review::after{content: "⚠"}
+#matchTable .scouted.review::after{content: "⚠";vertical-align:super;font-size:.8em}
+#matchTable .scouted.overscouted::after{content: "+";color:var(--alert-fg-color);vertical-align:super;font-size:.8em}
 #matchTable .score{color:var(--highlight2-fg-color)}
 #matchTable .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color)}
 #matchTable .error{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
