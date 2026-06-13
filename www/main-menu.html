@@ -1,22 +1,29 @@
-<ul>
+<nav id=menuNav>
+<ul class=menuGroup>
 <li><a href=/ data-i18n=home_link></a></li>
 <li class=dependEvent><a href="/event.html#event=EVENT_ID">EVENT_NAME</a></li>
 <li class=dependUpload><a href=/upload.html data-i18n=upload_data_link></a></li>
 <li><a href="/about.html" data-i18n=about_link></a></li>
 <li style=display:none><a id=error-logs-link href="#">Error logs</a></li>
-<li><select id=locale-choose>
-	<option value=en>English</option>
-	<option value=es>Español</option>
-	<option value=fr>Français</option>
-	<option value=pt>Português</option>
-	<option value=tr>Türkçe</option>
-	<option value=he>עברית</option>
-	<option value=zh_tw>繁體中文</option>
-</select></li>
+</ul>
+<ul class=menuGroup>
+<li><label class=menuField>
+	<span data-i18n=my_team_num></span>
+	<input type=text placeholder=1234 maxlength=5 size=5 class=my-team-input>
+</label></li>
+<li><label class=menuField>
+	<span aria-hidden=true>🌐</span>
+	<select id=locale-choose>
+		<option value=en>English</option>
+		<option value=es>Español</option>
+		<option value=fr>Français</option>
+		<option value=pt>Português</option>
+		<option value=tr>Türkçe</option>
+		<option value=he>עברית</option>
+		<option value=zh_tw>繁體中文</option>
+	</select>
+</label></li>
+<li><button id=theme-toggle></button></li>
 <li><a id=logout-link href="/logout">Logout</a></li>
 </ul>
-
-<label>
-<span data-i18n=my_team_num></span>
-<input type=text placeholder=1234 maxlength=5 size=5 class=my-team-input>
-</label>
+</nav>

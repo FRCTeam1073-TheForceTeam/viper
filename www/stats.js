@@ -109,6 +109,33 @@ addI18n({
 		fr:'Début :',
 		es:'Empezando:',
 	},
+	choose_sort_heading:{
+		en:'Choose Sort Criterion',
+		he:'בחר קריטריון מיון',
+		pt:'Escolher critério de ordenação',
+		tr:'Sıralama Ölçütü Seçin',
+		zh_tw:'選擇排序條件',
+		fr:'Choisir le critère de tri',
+		es:'Elegir criterio de ordenación',
+	},
+	reset_sort_criteria:{
+		en:'Reset / Show all',
+		he:'איפוס / הצג הכל',
+		pt:'Redefinir / Mostrar tudo',
+		tr:'Sıfırla / Tümünü göster',
+		zh_tw:'重設／顯示全部',
+		fr:'Réinitialiser / Tout afficher',
+		es:'Restablecer / Mostrar todo',
+	},
+	remove_sort_criterion:{
+		en:'Remove from sort list',
+		he:'הסר מרשימת המיון',
+		pt:'Remover da lista de ordenação',
+		tr:'Sıralama listesinden kaldır',
+		zh_tw:'從排序清單中移除',
+		fr:'Retirer de la liste de tri',
+		es:'Quitar de la lista de ordenación',
+	},
 })
 onApplyTranslation.push(showStats)
 var teamList = [],
@@ -452,20 +479,65 @@ function showStatClickMenu(e, team, fields){
 	showLightBox(ca)
 }
 
+var hiddenSortStatsKey=`${eventYear}HiddenSortStats`
+
+function getHiddenSortStats(){
+	try{ return JSON.parse(localStorage.getItem(hiddenSortStatsKey))||[] }
+	catch(e){ return [] }
+}
+
+function setHiddenSortStats(arr){
+	localStorage.setItem(hiddenSortStatsKey, JSON.stringify(arr))
+}
+
+function hideSortStat(field){
+	var hidden = getHiddenSortStats()
+	if (hidden.indexOf(field)<0) hidden.push(field)
+	setHiddenSortStats(hidden)
+	if (sortStat==field){
+		sortStat='score'
+		$('#sortBy .name').text(translate('score'))
+		setHash()
+		showStats()
+	}
+}
+
+function resetHiddenSortStats(){
+	setHiddenSortStats([])
+}
+
 function showSortOptions(){
 	var picker = $('#sortChooser').html(`<h2 data-i18n=choose_sort_heading></h2>`)
+	var hidden = getHiddenSortStats()
 	var allStats = []
 	graphList=statsConfig.getStatsConfig()
 	Object.keys(graphList).forEach(x=>{
 		graphList[x].data.forEach(y=>allStats.push(y))
 	})
+	allStats = allStats.filter(field=>{
+		var info = statInfo[field]||{}
+		return !/^(text|enum)$/.test(info.type) && hidden.indexOf(field)<0
+	})
 	allStats.sort((a,b)=>{return translate(a).localeCompare(translate(b))})
+	var cols = Math.max(1, Math.ceil(Math.sqrt(allStats.length)))
+	var grid = $('<div class=sortGrid>').css('grid-template-columns',`repeat(${cols},auto)`)
 	for (var i=0; i<allStats.length; i++){
 		var field = allStats[i],
-		info = statInfo[field]||{},
-		active = sortStat==field?" active":""
-		if(!/^(text|enum)$/.test(info.type)) picker.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).attr('data-i18n',translate(field)).click(reSort))
+		active = sortStat==field?" active":"",
+		cell = $('<div class=sortCell>')
+		cell.append($(`<button class="sortByBtn${active}">`).attr('data-field',field).attr('data-i18n',translate(field)).click(reSort))
+		cell.append($('<button class=sortRemoveBtn>').attr('data-i18n-tooltip','remove_sort_criterion').attr('data-field',field).text('✘').click(function(e){
+			e.stopPropagation()
+			hideSortStat($(this).attr('data-field'))
+			showSortOptions()
+		}))
+		grid.append(cell)
 	}
+	picker.append(grid)
+	picker.append($('<button class=sortReset>').attr('data-i18n','reset_sort_criteria').click(function(){
+		resetHiddenSortStats()
+		showSortOptions()
+	}))
 	applyTranslations(picker)
 	showLightBox(picker)
 }
@@ -516,10 +588,8 @@ function setDnpStartNumber(){
 
 function showTeamStats(){
 	var team = parseInt($(this).attr('data-team')||$(this).text())
-	$('#teamPicker').hide()
-	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
-	window.scrollTo(0,0)
-	showLightBox($('#teamStats'))
+	closeLightBox()
+	window.open(`/team.html#event=${eventId}&team=${team}`, '_blank')
 }
 
 function bgArr(color){

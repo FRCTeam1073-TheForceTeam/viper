@@ -17,12 +17,12 @@
 <div id=main>
 <h1 data-i18n=index_h1></h1>
 <ul id="events-list"></ul>
-<ul>
-<li id=seasonStatsLink style=display:none><a href="/stats.html#event=YEARcombined" data-i18n=full_season_link></a></li>
-</ul>
 <div class=index-nav>
-	<div class=side-by-side><select id=seasons style=display:none><option value="-" data-i18n=choose_season_option></option></select></div>
-	<div class=side-by-side><a id=add-event-link href=/add-event.html data-i18n=add_event_button></a></div>
+	<select id=seasons style=display:none><option value="-" data-i18n=choose_season_option></option></select>
+	<div class=action-cards>
+		<div id=seasonStatsLink style=display:none><a class=action-card href="/stats.html#event=YEARcombined" data-i18n=full_season_link></a></div>
+		<a id=add-event-link class=action-card href=/add-event.html data-i18n=add_event_button></a>
+	</div>
 </div>
 </div>
 </body></html>

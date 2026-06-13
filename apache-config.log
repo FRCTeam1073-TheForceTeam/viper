@@ -1,0 +1,172 @@
++ set -e
++ '[' -e local.conf ']'
++ source ./local.conf
+++ SERVER_NAMES='webscout.example.com 127.0.0.1'
+++ HTTPS_INCLUDE=include/ssl.conf
+++ APACHE_SITE_NAME=
+++ DB_SITE_NAME=
+++ GUEST_USER=guest
+++ SCOUTING_USER=scouter
+++ ADMIN_USER=admin
+++ ALLOW_LOCAL=1
+++ ALLOW_IPS=
+++ STATIC_IP=
+++ DHCP_RANGE=
+++ FRC_API_USER=
+++ FRC_API_TOKEN=
+++ FTC_API_USER=
+++ FTC_API_TOKEN=
+++ MYSQL_HOST=
+++ MYSQL_PORT=
+++ MYSQL_DATABASE=
+++ MYSQL_USER=
+++ MYSQL_PASSWORD=
+++ MYSQL_SSL=true
++ source ./local.conf
+++ SERVER_NAMES='webscout.example.com 127.0.0.1'
+++ HTTPS_INCLUDE=include/ssl.conf
+++ APACHE_SITE_NAME=
+++ DB_SITE_NAME=
+++ GUEST_USER=guest
+++ SCOUTING_USER=scouter
+++ ADMIN_USER=admin
+++ ALLOW_LOCAL=1
+++ ALLOW_IPS=
+++ STATIC_IP=
+++ DHCP_RANGE=
+++ FRC_API_USER=
+++ FRC_API_TOKEN=
+++ FTC_API_USER=
+++ FTC_API_TOKEN=
+++ MYSQL_HOST=
+++ MYSQL_PORT=
+++ MYSQL_DATABASE=
+++ MYSQL_USER=
+++ MYSQL_PASSWORD=
+++ MYSQL_SSL=true
++ SERVER_NAME=webscout.example.com
++ SERVER_ALIASES=127.0.0.1
+++ pwd
++ DOCUMENT_ROOT=/c/Users/tgoye/Desktop/rubit/viper/www
++ DOCUMENT_ROOT=C:/Users/tgoye/Desktop/rubit/viper/www
++ '[' z == z ']'
++ APACHE_SITE_NAME=webscout
+++ mktemp /tmp/webscout-XXXXXXXXXX.conf
++ TMPCONF=/tmp/webscout-WO9mNo43as.conf
++ APACHE_DIR=
++ '[' -e /etc/apache2 ']'
++ '[' -e /c/xampp/apache/conf ']'
++ APACHE_DIR=/c/xampp/apache/conf
++ '[' z/c/xampp/apache/conf == z ']'
++ APACHE_DIR_CONF=/c/xampp/apache/conf
++ APACHE_DIR_CONF=C:/xampp/apache/conf
++ echo '<VirtualHost *:80>'
++ '[' zwebscout.example.com '!=' z ']'
++ echo $'\tServername webscout.example.com'
++ for SERVER_ALIAS in $SERVER_ALIASES
++ echo $'\tServerAlias 127.0.0.1'
++ '[' zinclude/ssl.conf '!=' z ']'
++ echo $'\tRedirect / https://webscout.example.com/'
++ echo '</VirtualHost>'
++ echo '<VirtualHost *:443>'
++ '[' zwebscout.example.com '!=' z ']'
++ echo $'\tServername webscout.example.com'
++ for SERVER_ALIAS in $SERVER_ALIASES
++ echo $'\tServerAlias 127.0.0.1'
++ echo $'\tInclude include/ssl.conf'
++ echo $'\tDocumentRoot C:/Users/tgoye/Desktop/rubit/viper/www'
++ echo $'\t<Directory C:/Users/tgoye/Desktop/rubit/viper/www/>'
++ echo $'\t\tAllowOverride All'
++ echo $'\t\tAuthName "webscout"'
++ echo $'\t\tAuthType Digest'
++ echo $'\t\tAuthDigestDomain /'
++ echo $'\t\tAuthDigestProvider file'
++ echo $'\t\tAuthUserFile C:/xampp/apache/conf/webscout.auth'
++ echo $'\t\t<RequireAny>'
++ '[' zguest == z ']'
++ echo $'\t\t\tRequire valid-user'
++ '[' 1 == 1 ']'
++ echo $'\t\t\tRequire local'
++ '[' z '!=' z ']'
++ echo $'\t\t</RequireAny>'
++ echo $'\t</Directory>'
++ '[' zscouter '!=' z ']'
++ echo $'\t<Directory C:/Users/tgoye/Desktop/rubit/viper/www/scout/>'
++ echo $'\t\t<RequireAny>'
++ echo $'\t\t\tRequire user scouter'
++ '[' zadmin '!=' z ']'
++ echo $'\t\t\tRequire user admin'
++ '[' 1 == 1 ']'
++ echo $'\t\t\tRequire local'
++ '[' z '!=' z ']'
++ echo $'\t\t</RequireAny>'
++ echo $'\t</Directory>'
++ '[' zadmin '!=' z ']'
++ echo $'\t<Directory C:/Users/tgoye/Desktop/rubit/viper/www/admin/>'
++ echo $'\t\t<RequireAny>'
++ echo $'\t\t\tRequire user admin'
++ '[' 1 == 1 ']'
++ echo $'\t\t\tRequire local'
++ '[' z '!=' z ']'
++ echo $'\t\t</RequireAny>'
++ echo $'\t</Directory>'
++ echo $'\t</VirtualHost>'
++ SUDO=
++ which sudo
++ SUDO=sudo
++ sudo mkdir -p /c/xampp/apache/conf/sites-available/
++ sudo mkdir -p /c/xampp/apache/conf/sites-enabled/
++ RELOAD_NEEDED=0
++ sudo touch /c/xampp/apache/conf/sites-available/webscout.conf
++ sudo chmod a+r /c/xampp/apache/conf/sites-available/webscout.conf
++ cmp /tmp/webscout-WO9mNo43as.conf /c/xampp/apache/conf/sites-available/webscout.conf
++ sudo cp -v /tmp/webscout-WO9mNo43as.conf /c/xampp/apache/conf/sites-available/webscout.conf
++ RELOAD_NEEDED=1
++ rm -f /tmp/webscout-WO9mNo43as.conf
++ '[' '!' -e /c/xampp/apache/conf/sites-enabled/webscout.conf ']'
++ '[' -e /c/xampp/apache/conf/sites-enabled/000-default.conf ']'
++ which a2enmod
++ sed -i -E 's/^\#(.*((mod_auth_digest\.so)|(mod_headers\.so)|(mod_rewrite\.so)|(mod_cgi\.so)|(mod_alias\.so)))$/\1/g' /c/xampp/apache/conf/httpd.conf
++ '[' -e /c/xampp/apache/conf/httpd.conf ']'
++ perl -i -pe 'BEGIN { $/=undef } s/\<Directory \"C\:\/xampp\/htdocs\"\>.*?\<\/Directory\>/Include conf\/sites-available\/\*\.conf/gs' /c/xampp/apache/conf/httpd.conf
++ RELOAD_NEEDED=1
++ HTDIGEST=htdigest
++ '[' -e /c/xampp/apache/bin/htdigest.exe ']'
++ HTDIGEST=/c/xampp/apache/bin/htdigest.exe
++ for USER in $GUEST_USER $SCOUTING_USER $ADMIN_USER
++ CREATE=
++ '[' '!' -e /c/xampp/apache/conf/webscout.auth ']'
++ grep -Eq '^guest:' /c/xampp/apache/conf/webscout.auth
++ for USER in $GUEST_USER $SCOUTING_USER $ADMIN_USER
++ CREATE=
++ '[' '!' -e /c/xampp/apache/conf/webscout.auth ']'
++ grep -Eq '^scouter:' /c/xampp/apache/conf/webscout.auth
++ sudo /c/xampp/apache/bin/htdigest.exe /c/xampp/apache/conf/webscout.auth webscout scouter
++ RELOAD_NEEDED=1
++ for USER in $GUEST_USER $SCOUTING_USER $ADMIN_USER
++ CREATE=
++ '[' '!' -e /c/xampp/apache/conf/webscout.auth ']'
++ grep -Eq '^admin:' /c/xampp/apache/conf/webscout.auth
++ sudo /c/xampp/apache/bin/htdigest.exe /c/xampp/apache/conf/webscout.auth webscout admin
++ RELOAD_NEEDED=1
++ '[' 1 == 1 ']'
++ which service
++ '[' -e /c/xampp/xampp_stop.exe ']'
++ /c/xampp/xampp_stop.exe
+Stopping XAMPP...
+
+Can't find MySQL process #3020.
++ true
++ /c/xampp/xampp_start.exe
+2026-05-10 10:38:52 0 [Note] Using unique option prefix 'key_buffer' is error-prone and can break in the future. Please use the full name 'key_buffer_size' instead.
+
+XAMPP now starts as a console application.
+
+Instead of pressing Control-C in this console window, please use xampp_stop.exe
+to stop XAMPP, because it lets XAMPP end any current transactions and cleanup
+gracefully.
+
++ echo 'Webserver configuration reloaded'
+Webserver configuration reloaded
++ '[' -e /c/xampp/perl/bin/perl.exe ']'
++ find www/ -name '*.cgi' -exec sed -E -i 's|^#!/usr/bin/perl|#!C:/xampp/perl/bin/perl.exe|g' '{}' ';'
