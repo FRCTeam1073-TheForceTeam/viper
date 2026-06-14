@@ -10,5 +10,7 @@ table{margin:1em auto}
 #tableForm > .side-by-side{display:inline-flex;flex-direction:column;align-items:stretch;gap:.2em;width:10em;max-width:100%;text-align:start;vertical-align:top;margin:.4em}
 #tableForm > .side-by-side > span{font-size:.85em;font-weight:600;opacity:.85}
 #tableForm > .side-by-side input,#tableForm > .side-by-side select{width:100%;box-sizing:border-box;font:inherit;padding:.3em .65em;border:1px solid var(--main-border-color);border-radius:var(--radius);background:var(--surface);color:var(--main-fg-color)}
+.field-error{color:var(--button-disabled-decoration-color);font-weight:600;text-align:center;margin:.3em auto}
+#tableForm > .side-by-side input.date-invalid{border-color:var(--button-disabled-decoration-color)!important;box-shadow:0 0 0 2px var(--button-disabled-decoration-color)}
 #buttons {position:fixed;left:0;right:0;bottom:0;background:var(--main-bg-color);padding-bottom:1em}
 body{padding-bottom:100vh}

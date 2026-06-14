@@ -494,6 +494,9 @@ $(document).ready(function(){
 		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>'),
 		appBar = $('<header id=appBar>')
 			.append($('<a id=appBarBrand href=/>').append('<img src=/logo.png alt="">').append('<span>Viper</span>'))
+			.append($('<nav id=appBarNav>')
+				.append($('<a class=appBarLink href=/ data-i18n=home_link></a>'))
+				.append($('<a class=appBarLink id=appBarEvent href=/ style=display:none></a>')))
 			.append($('<div id=appBarActions>').append(fullscreen).append(hamburger))
 		$('body').addClass('hasAppBar').append(appBar).append(mainMenu)
 		hamburger.click(function(){showLightBox(mainMenu)})
@@ -518,6 +521,8 @@ $(document).ready(function(){
 				)
 				applyTranslations(mainMenu)
 				mainMenu.find('.dependEvent').toggle(eName&&!/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eId||""))
+				var showEvent = !!(eName && !/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eId||""))
+				$('#appBarEvent').toggle(showEvent).attr('href',`/event.html#event=${eId}`).text(eName)
 				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
 					localStorage.setItem('my-team', parseInt($(this).val()))
 					location.reload()

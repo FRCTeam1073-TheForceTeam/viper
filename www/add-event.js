@@ -91,6 +91,15 @@ addI18n({
 		he:'ייבוא ​​נתונים שיוצאו ממופע אחר של Viper.',
 		es:'Importar datos exportados de otra instancia de Viper.',
 	},
+	add_event_import_choose:{
+		en:'Choose file',
+		pt:'Escolher arquivo',
+		fr:'Choisir un fichier',
+		tr:'Dosya seç',
+		zh_tw:'選擇檔案',
+		he:'בחר קובץ',
+		es:'Elegir archivo',
+	},
 	add_event_import_file:{
 		en:'.json file:',
 		pt:'Arquivo .json:',
@@ -130,7 +139,7 @@ function setComp(){
 		season += "-" + (season+1+"").slice(-2)
 	}
 	location.hash=comp
-	$('a').each(function(){
+	$('.option a').each(function(){
 		$(this).attr('href',$(this).attr('href').replace(/_COMP_|\bftc\b|\bfrc\b/gi, comp))
 		$(this).attr('href',$(this).attr('href').replace(/_SEASON_|20[0-9]{2}(-[0-9]{2})?/g, season))
 		$(this).text($(this).text().replace(/_COMP_|\bftc\b|\bfrc\b/gi, comp.toUpperCase()))
@@ -142,6 +151,10 @@ $(document).ready(function(){
 	$(`#comp option[value="${hash}"]`).attr('selected', 'selected')
 	$('#comp').change(setComp)
 	setComp()
+
+	$('input[name="json"]').on('change', function(){
+		$(this).closest('form').find('.file-name').text(this.files && this.files.length ? this.files[0].name : '')
+	})
 
 	$('form[action="/admin/import.cgi"]').on('submit', function(e){
 		var fileInput = $('input[name="json"]')[0]

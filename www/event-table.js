@@ -145,6 +145,15 @@ addI18n({
 		he:'שמור אירוע',
 		es:'Guardar evento',
 	},
+	event_end_before_start:{
+		en:'End date can\'t be before the start date',
+		pt:'A data de término não pode ser anterior à data de início',
+		fr:'La date de fin ne peut pas être antérieure à la date de début',
+		tr:'Bitiş tarihi başlangıç tarihinden önce olamaz',
+		zh_tw:'結束日期不能早於開始日期',
+		he:'תאריך הסיום לא יכול להיות לפני תאריך ההתחלה',
+		es:'La fecha de finalización no puede ser anterior a la de inicio',
+	},
 })
 
 function addRow(table){
@@ -355,6 +364,22 @@ $(document).ready(function(){
 		}
 		$('#csvInp').val(csv + otherCSV)
 	})
+	function validateDates(){
+		var s = $('#startInp').val(),
+		e = $('#endInp').val()
+		$('#endInp').attr('min', s||null)
+		$('#startInp').attr('max', e||null)
+		if (s && e && e < s){
+			$('#endInp')[0].setCustomValidity(translate('event_end_before_start'))
+			$('#startInp,#endInp').addClass('date-invalid')
+			$('#date-error').text(translate('event_end_before_start')).show()
+		} else {
+			$('#endInp')[0].setCustomValidity('')
+			$('#startInp,#endInp').removeClass('date-invalid')
+			$('#date-error').hide()
+		}
+	}
+	$('#startInp,#endInp').on('change input', validateDates)
 	if (eventId){
 		$('#comp').val(/^20[0-9]{2}-[0-9]{2}/.test(eventId)?'ftc':'frc')
 		setComp()
@@ -387,6 +412,7 @@ $(document).ready(function(){
 			$('#locationInp').val(eventInfo.location)
 			$('#startInp').val(eventInfo.start)
 			$('#endInp').val(eventInfo.end)
+			validateDates()
 		})
 	}
 	$('#comp').change(setComp)

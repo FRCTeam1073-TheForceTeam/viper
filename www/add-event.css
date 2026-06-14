@@ -12,3 +12,9 @@
 /* Import card form pinned to the bottom */
 .option form{margin-top:auto;display:flex;flex-direction:column;gap:.5em;align-items:flex-start}
 .option form label{display:flex;align-items:center;gap:.4em;flex-wrap:wrap}
+
+/* File picker: a themed button (matches the Upload button), only it is clickable */
+.file-button{display:inline-flex;align-items:center;justify-content:center;font-family:inherit;padding:.3em .65em;border:1px solid var(--main-border-color);border-radius:var(--radius);background:var(--button-bg-color);color:var(--button-fg-color);cursor:pointer;transition:border-color .15s ease}
+.file-button:hover{border-color:var(--accent)}
+.file-button input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.file-name{opacity:.85;font-size:.9em}

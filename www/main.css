@@ -92,7 +92,11 @@ body.hasAppBar{padding-top:3.25em}
 #appBarBrand,#appBarBrand:link,#appBarBrand:visited{display:flex;align-items:center;gap:.4em;font-weight:600;font-size:1.05em;color:var(--main-fg-color);text-decoration:none}
 #appBarBrand:hover{text-decoration:none}
 #appBarBrand img{height:1.6em;width:auto;display:block}
-#appBarActions{display:flex;align-items:center;gap:.15em}
+#appBarNav{display:flex;align-items:center;gap:1em;margin-inline-start:auto;margin-inline-end:1em;min-width:0;overflow:hidden}
+.appBarLink,.appBarLink:link,.appBarLink:visited{color:var(--main-fg-color);text-decoration:none;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appBarLink:hover{color:var(--accent);text-decoration:none}
+#appBarEvent{font-weight:600;max-width:14em}
+#appBarActions{display:flex;align-items:center;gap:.15em;flex:0 0 auto}
 #appBar #fullscreen,#appBar #hamburger{position:static;font-size:1.5em;line-height:1;cursor:pointer;padding:.1em .3em;border-radius:var(--radius)}
 #appBar #fullscreen:hover,#appBar #hamburger:hover{background:var(--lowlight-bg-color)}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}

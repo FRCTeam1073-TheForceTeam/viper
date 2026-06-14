@@ -40,7 +40,12 @@
 		<h3 data-i18n=add_event_import_title></h3>
 		<span data-i18n=add_event_import_description></span>
 		<form method=POST action=/admin/import.cgi enctype=multipart/form-data>
-			<label><span data-i18n=add_event_import_file></span> <input type=file name=json accept=application/json></label>
+			<span data-i18n=add_event_import_file></span>
+			<label class=file-button>
+				<span data-i18n=add_event_import_choose></span>
+				<input type=file name=json accept=application/json>
+			</label>
+			<span class=file-name></span>
 			<input type=submit data-i18n-value=add_event_import_upload>
 		</form>
 	</div>
