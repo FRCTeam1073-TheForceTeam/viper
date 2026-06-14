@@ -17,34 +17,63 @@
 </head>
 <body>
 <h1 data-i18n=predictor_title></h1>
-<div class=teamDataEntry>
-	<div id=allianceEntry>
-		<div class="allianceRow redTeamBG">
-			<span class=allianceLabel data-i18n=red_heading></span>
-			<input type=text id=R1 size=5 placeholder="Team #" class=lastFocus>
-			<input type=text id=R2 size=5 placeholder="Team #">
-			<input type=text id=R3 size=5 placeholder="Team #" class=noftc>
-		</div>
-		<div class="allianceRow blueTeamBG">
-			<span class=allianceLabel data-i18n=blue_heading></span>
-			<input type=text id=B1 size=5 placeholder="Team #">
-			<input type=text id=B2 size=5 placeholder="Team #">
-			<input type=text id=B3 size=5 placeholder="Team #" class=noftc>
-		</div>
-	</div>
-	<div class=orSep>- OR -</div>
-	<div class=matchPick>Match: <select id=matchList></select></div>
-	<div id=teamButtons></div>
+
+<div id=modeToggle>
+	<button data-mode=qual class=active data-i18n=qual_mode></button>
+	<button data-mode=playoff data-i18n=playoff_mode></button>
 </div>
-<table id=prediction style=display:none><thead><tr>
-	<th class=redTeamBG id=th-R1></th>
-	<th class=redTeamBG id=th-R2></th>
-	<th class="redTeamBG noftc" id=th-R3></th>
-	<th class=redTeamBG><div data-i18n=red_heading></div></th>
-	<th><button id=change-teams data-i18n=change_teams_button></button></th>
-	<th class=blueTeamBG><div data-i18n=blue_heading></div></th>
-	<th class=blueTeamBG id=th-B1></th>
-	<th class=blueTeamBG id=th-B2></th>
-	<th class="blueTeamBG noftc" id=th-B3></th>
-</tr></thead><tbody>
-</tbody></table></body></html>
+
+<label id=playoffStatsToggle style=display:none><span class=switch><input type=checkbox id=usePlayoffStats><span class=slider></span></span> <span data-i18n=use_playoff_stats></span></label>
+
+<div class=matchPick><span data-i18n=match_label></span> <select id=matchList></select></div>
+
+<div id=scoreboard>
+	<div id=redBreakout class="sbBreakout sbbRed"></div>
+	<div class="sbSide sbRed">
+		<div class=sbLabel data-i18n=red_heading></div>
+		<div id=redScore class=sbScore>0</div>
+	</div>
+	<div class=sbVs>VS</div>
+	<div class="sbSide sbBlue">
+		<div class=sbLabel data-i18n=blue_heading></div>
+		<div id=blueScore class=sbScore>0</div>
+	</div>
+	<div id=blueBreakout class="sbBreakout sbbBlue"></div>
+</div>
+
+<div id=alliances>
+	<div class="alliancePanel redSide">
+		<div class=panelLabel data-i18n=red_heading></div>
+		<div class=slots id=redAlliance></div>
+	</div>
+	<div class="alliancePanel blueSide">
+		<div class=panelLabel data-i18n=blue_heading></div>
+		<div class=slots id=blueAlliance></div>
+	</div>
+</div>
+
+<div class=poolHeader>
+	<span id=poolLabel data-i18n=team_pool_label></span>
+	<button id=change-teams data-i18n=change_teams_button></button>
+</div>
+<div id=teamPool></div>
+
+<details id=breakdown>
+	<summary data-i18n=stat_breakdown_label></summary>
+	<table id=prediction><thead><tr>
+		<th class=redTeamBG id=th-R1></th>
+		<th class=redTeamBG id=th-R2></th>
+		<th class="redTeamBG noftc" id=th-R3></th>
+		<th class=redTeamBG><div data-i18n=red_heading></div></th>
+		<th></th>
+		<th class=blueTeamBG><div data-i18n=blue_heading></div></th>
+		<th class=blueTeamBG id=th-B1></th>
+		<th class=blueTeamBG id=th-B2></th>
+		<th class="blueTeamBG noftc" id=th-B3></th>
+	</tr></thead><tbody></tbody></table>
+</details>
+
+<div class=dataModel hidden>
+	<input id=R1><input id=R2><input id=R3><input id=B1><input id=B2><input id=B3>
+</div>
+</body></html>

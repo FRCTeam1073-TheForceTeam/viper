@@ -1,19 +1,90 @@
-table th{padding:0.5em;min-width:2em}
-button.team{min-width:3.2em;margin:0.25em;padding:.3em .6em;text-align:center;font-variant-numeric:tabular-nums}
-h4{margin:0;padding:0.5em 0 0 0;font-size:130%}
-td{margin:0;padding:0;max-width:15em}
-td div{margin:0;padding:0.5em;width:100%;height: 100%}
+/* ===== Mode toggle (Qualifications / Playoffs) ===== */
+#modeToggle{display:flex;width:fit-content;margin:.8em auto;border:1px solid var(--main-border-color);border-radius:var(--radius-lg);overflow:hidden}
+#modeToggle button{border:0;border-radius:0;background:var(--button-bg-color);padding:.45em 1.1em;cursor:pointer;font-weight:600;transition:background .15s ease,color .15s ease}
+#modeToggle button:hover{background:var(--lowlight-bg-color)}
+#modeToggle button.active{background:var(--accent);color:var(--accent-fg)}
+#modeToggle button.active:hover{background:var(--accent)}
 
-/* Alliance team entry (red row / blue row) */
-#allianceEntry{display:flex;flex-direction:column;gap:.5em;margin:.6em auto;width:fit-content}
-.allianceRow{display:flex;align-items:center;gap:.5em;padding:.45em .7em;border-radius:var(--radius-lg)}
-.allianceLabel{min-width:3.5em;font-weight:600;text-align:start}
-.allianceRow input{width:5em;text-align:center;font-variant-numeric:tabular-nums}
-.allianceRow input:focus,.allianceRow input:focus-visible{outline:none}
-.allianceRow input.lastFocus{box-shadow:0 0 0 3px var(--winner-color);border-color:var(--winner-color)}
-.allianceRow input.dupError{box-shadow:0 0 0 3px var(--button-disabled-decoration-color);border-color:var(--button-disabled-decoration-color)}
-button.team:disabled{opacity:.45}
-.teamDataEntry .orSep{margin:.4em 0;opacity:.7}
+#playoffStatsToggle{display:inline-flex;align-items:center;gap:.45em;justify-content:center;width:fit-content;margin:.2em auto .6em;cursor:pointer;font-size:.95em}
+
+/* Slider toggle switch */
+.switch{position:relative;display:inline-block;width:2.6em;height:1.4em;flex:none}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.switch .slider{position:absolute;inset:0;border-radius:1em;background:var(--lowlight-bg-color);border:1px solid var(--main-border-color);transition:background .2s ease}
+.switch .slider::before{content:"";position:absolute;height:1em;width:1em;left:.2em;top:50%;transform:translateY(-50%);border-radius:50%;background:#fff;box-shadow:var(--shadow);transition:transform .2s ease}
+.switch input:checked + .slider{background:var(--accent)}
+.switch input:checked + .slider::before{transform:translate(1.2em,-50%)}
+
+.matchPick{display:flex;align-items:center;gap:.5em;justify-content:center;width:fit-content;margin:.8em auto}
+.matchPick select{flex:1;min-width:0}
+
+/* ===== Alliance cards (playoffs) ===== */
+.allianceCard{cursor:grab;user-select:none;min-width:8em;text-align:center;padding:.5em .8em;border-radius:var(--radius);background:var(--button-bg-color);border:1px solid var(--main-border-color);transition:border-color .15s ease,box-shadow .15s ease}
+.allianceCard:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.allianceCard:active{cursor:grabbing}
+.allianceCard.dragging{opacity:.4}
+.allianceCard.dragover{box-shadow:0 0 0 3px var(--winner-color) inset;border-color:var(--winner-color)}
+.allianceCard.placed{width:100%;background:var(--surface)}
+.allianceName{font-weight:700}
+.allianceTeams{font-size:.85em;opacity:.85;font-variant-numeric:tabular-nums;margin-top:.15em}
+.poolEmpty{opacity:.7;padding:.5em}
+
+/* ===== Versus scoreboard hero ===== */
+#scoreboard{display:flex;align-items:stretch;justify-content:center;max-width:42em;margin:1em auto;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)}
+.sbSide{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.1em;padding:.7em 1em}
+.sbRed{background:var(--red-team-color)}
+.sbBlue{background:var(--blue-team-color)}
+.sbLabel{font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-size:.85em;opacity:.92}
+.sbScore{font-size:2.6em;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.sbVs{display:flex;align-items:center;justify-content:center;padding:0 .7em;font-weight:800;letter-spacing:.05em;background:var(--surface)}
+#scoreboard.redWin .sbRed .sbScore,#scoreboard.blueWin .sbBlue .sbScore{color:var(--winner-color)}
+
+/* Per-team contribution breakout (playoffs only) — 3 rows the height of the score box */
+.sbBreakout{display:flex;flex-direction:column;width:0;opacity:0;overflow:hidden;white-space:nowrap;transition:width .3s ease,opacity .3s ease}
+.sbBreakout.show{width:8.5em;opacity:1}
+.sbbRed{background:var(--red-team-color);border-right:2px solid #000}
+.sbbBlue{background:var(--blue-team-color);border-left:2px solid #000}
+.sbBreakoutRow{flex:1;display:flex;align-items:stretch;font-variant-numeric:tabular-nums}
+.sbbRed .sbBreakoutRow{flex-direction:row-reverse}
+.sbbTeam,.sbbScore{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:.15em .3em;border-top:1px solid #000}
+.sbBreakoutRow:first-child .sbbTeam,.sbBreakoutRow:first-child .sbbScore{border-top:0}
+.sbbTeam{font-weight:700}
+.sbbScore{background:#cfcfcf;color:#000;font-weight:700}
+
+/* ===== Alliance panels ===== */
+#alliances{display:flex;gap:1em;justify-content:center;flex-wrap:wrap;max-width:42em;margin:0 auto 1em;align-items:flex-start}
+.alliancePanel{flex:1 1 15em;min-width:13em;box-sizing:border-box;border-radius:var(--radius-lg);padding:.7em;background:var(--section-bg-color);border:1px solid var(--main-border-color)}
+.redSide{border-top:3px solid var(--red-team-color)}
+.blueSide{border-top:3px solid var(--blue-team-color)}
+.panelLabel{font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.85em;margin-bottom:.5em;opacity:.85}
+.slots{display:flex;flex-direction:column;gap:.5em}
+.alliance-slot{min-height:2.8em;display:flex;align-items:center;justify-content:center;border-radius:var(--radius);padding:.35em;transition:background .15s ease,box-shadow .15s ease}
+.alliance-slot.empty{background:var(--lowlight-bg-color);color:var(--main-fg-color);opacity:.65;cursor:pointer}
+.alliance-slot.empty:hover{opacity:1}
+.alliance-slot.active,.alliance-slot.dragover{opacity:1;box-shadow:0 0 0 3px var(--winner-color) inset}
+.slotHint{font-size:.8em;pointer-events:none}
+
+/* ===== Team cards ===== */
+.teamCard{cursor:grab;user-select:none;min-width:4.6em;text-align:center;padding:.5em .7em;border-radius:var(--radius);background:var(--button-bg-color);border:1px solid var(--main-border-color);font-weight:600;font-variant-numeric:tabular-nums;transition:transform .05s ease,border-color .15s ease,box-shadow .15s ease}
+.teamCard:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.teamCard:active{cursor:grabbing}
+.teamCard.dragging{opacity:.4}
+.teamCard.placed{width:100%;background:var(--surface)}
+
+/* ===== Team pool (wrapped grid) ===== */
+.poolHeader{display:flex;align-items:center;justify-content:space-between;gap:1em;max-width:42em;margin:1.2em auto .4em;font-weight:600}
+#teamPool{box-sizing:border-box;display:flex;flex-wrap:wrap;gap:.5em;justify-content:center;max-width:42em;margin:0 auto;padding:.7em;border-radius:var(--radius-lg);background:var(--section-bg-color);border:1px solid var(--main-border-color);min-height:3em}
+#teamPool.dragover{border-style:dashed;border-color:var(--accent)}
+
+/* ===== Stat breakdown ===== */
+#breakdown{max-width:42em;margin:1.2em auto}
+#breakdown>summary{cursor:pointer;font-weight:600;padding:.5em 0;list-style-position:inside}
+#breakdown>summary:hover{color:var(--accent)}
+table#prediction{margin:.5em auto}
+#prediction th{padding:0.5em;min-width:2em}
+#prediction td{margin:0;padding:0;max-width:15em}
+#prediction td div{margin:0;padding:0.5em}
+h4{margin:0;padding:0.5em 0 0 0;font-size:130%}
 .winner{color:var(--highlight-fg-color);font-weight:bold}
 .first .alliance .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color);color:var(--main-fg-color)}
 .alliance{font-size:150%}
