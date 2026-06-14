@@ -1,12 +1,17 @@
 ul{max-width:25em;list-style-type:none}
 li{margin:.5em 0;}
 .initHid,.more{display:none}
-.show-more{cursor:pointer; color:var(--link-color);font-size:80%;margin:1em 0}
-.show-more:hover{text-decoration:underline}
+.show-more{cursor:pointer;color:var(--link-color);margin:.2em 0}
+.show-more:hover{text-decoration:none}
 #dataTable td,#dataTable th{padding:0.5em}
 .scoreTable td,.scoreTable th{padding:0.15em}
-#matchTable td, #matchTable th {padding:0.15em;border:1px solid var(--main-border-color);cursor:pointer}
-#matchTable{margin:1em auto;max-width:27em}
+#matchTable td, #matchTable th {padding:0.6em 0.15em;border:1px solid var(--main-border-color);cursor:pointer}
+#matchTable .R1,#matchTable .R2,#matchTable .R3,#matchTable .B1,#matchTable .B2,#matchTable .B3{width:calc(6ch + 0.6em)}
+body.hide-practice #matchTable tr.practiceMatch{display:none}
+body.team-only #matches tr:not(.myTeamMatch){display:none}
+#matchTable{margin:1em auto;table-layout:fixed;max-width:100%}
+#matchTable thead th:first-child{width:5em}
+#matchTable .redScore,#matchTable .blueScore{width:2.8em}
 h3{margin:0 0 .25em 0;padding:0}
 .narrow{max-width:18em}
 .match-id{max-width:7.5em;hyphens:auto}
@@ -15,7 +20,7 @@ h3{margin:0 0 .25em 0;padding:0}
 #matchTable .scouted.review{color:var(--alert-fg-color)}
 #matchTable .scouted.review::after{content: "⚠"}
 #matchTable .score{color:var(--highlight2-fg-color)}
-#matchTable .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color)}
+#matchTable .winner{font-weight:700;text-decoration:underline;text-decoration-color:#c2941c;text-decoration-thickness:.18em;text-underline-offset:.18em}
 #matchTable .error{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
 #pitScoutSetup img{width:2em;display:block}
 #pitScoutSetup{text-align:start}
@@ -26,8 +31,41 @@ h3{margin:0 0 .25em 0;padding:0}
 #jsonLightBox{text-align:start;overflow:auto}
 #jsonLightBox h2{margin-left:1em}
 .narrow ul{margin:0;padding:0}
-.narrow li{margin:.2em 0;padding:0;border:1px solid var(--main-border-color);padding:0.3em}
-.narrow li>ul{margin-top:0.2em;padding-left:0.5em}
-#event-menu h2 {text-align:start;font-size:110%;margin:0.5em 0}
-#left-nav{text-align:start}
-#main{display:none}
+.narrow li{margin:.1em 0;padding:0;border:0}
+.narrow li>a{display:block;padding:.35em .5em;border-radius:var(--radius);color:var(--link-color);text-decoration:none}
+.narrow li>a:hover{background:var(--lowlight-bg-color);text-decoration:none}
+.narrow li>ul{margin-top:0.2em;padding-inline-start:0.6em}
+
+/* Section cards */
+#event-menu{display:flex;flex-direction:column;gap:.6em}
+#event-menu > div{border:1px solid var(--main-border-color);border-radius:var(--radius-lg);padding:.6em .8em}
+#event-menu > .show-more{display:block;padding:.5em .8em;border:1px solid var(--main-border-color);border-radius:var(--radius-lg);text-align:start;transition:border-color .15s ease,background .15s ease}
+#event-menu > .show-more:hover{background:var(--lowlight-bg-color);border-color:var(--accent)}
+#event-menu h2{text-align:start;font-size:110%;font-weight:600;margin:0 0 .3em 0}
+
+/* Sidebar at top of nav */
+#eventInfo{margin:.5em 0}
+#showInstructions{width:100%;margin-bottom:.6em}
+.sidebar-toggle{display:flex;align-items:center;gap:.5em;cursor:pointer;padding:.5em .8em;margin-top:.6em;border:1px solid var(--main-border-color);border-radius:var(--radius-lg)}
+.sidebar-toggle:hover{border-color:var(--accent)}
+.sidebar-toggle input{margin:0;width:auto}
+
+/* Fixed, hideable navigation sidebar */
+#left-nav{position:fixed;top:3em;inset-inline-start:0;bottom:0;width:18em;max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:1em;background:var(--surface);border-inline-end:1px solid var(--main-border-color);z-index:9980;transition:transform .2s ease}
+body.nav-hidden #left-nav{transform:translateX(-100%)}
+html[dir=rtl] body.nav-hidden #left-nav{transform:translateX(100%)}
+
+#main{display:none;padding-inline-start:18em;transition:padding .2s ease}
+body.nav-hidden #main{padding-inline-start:0}
+
+/* Sidebar toggle + backdrop */
+#navToggle{position:fixed;top:3.3em;inset-inline-start:calc(18em - 2.4em);z-index:9985;width:1.8em;height:1.8em;display:flex;align-items:center;justify-content:center;padding:0;font-size:1.2em;line-height:1;border-radius:var(--radius);background:var(--surface);border:1px solid var(--main-border-color);color:var(--main-fg-color);cursor:pointer;transition:inset-inline-start .2s ease}
+body.nav-hidden #navToggle{inset-inline-start:.4em}
+#navToggle:hover{border-color:var(--accent)}
+#navBackdrop{display:none}
+
+@media (max-width:700px){
+	#main{padding-inline-start:0}
+	#left-nav{box-shadow:var(--shadow)}
+	body:not(.nav-hidden) #navBackdrop{display:block;position:fixed;inset:3em 0 0 0;background:var(--translucent-hide-color);z-index:9979}
+}

@@ -1,6 +1,42 @@
 "use strict"
 
 addI18n({
+	tba_format_label:{
+		en:'TBA format',
+		tr:'TBA biçimi',
+		pt:'Formato TBA',
+		es:'Formato TBA',
+		fr:'Format TBA',
+		he:'פורמט TBA',
+		zh_tw:'TBA 格式',
+	},
+	hide_practice_label:{
+		en:'Hide practice matches',
+		tr:'Antrenman maçlarını gizle',
+		pt:'Ocultar partidas de treino',
+		es:'Ocultar partidos de práctica',
+		fr:'Masquer les matchs d\'entraînement',
+		he:'הסתר משחקי אימון',
+		zh_tw:'隱藏練習賽',
+	},
+	team_schedule_label:{
+		en:'Show team schedule only',
+		tr:'Yalnızca takım programını göster',
+		pt:'Mostrar apenas a agenda da equipe',
+		es:'Mostrar solo el calendario del equipo',
+		fr:'Afficher seulement le calendrier de l\'équipe',
+		he:'הצג רק את לוח הזמנים של הקבוצה',
+		zh_tw:'僅顯示球隊賽程',
+	},
+	event_nav_toggle:{
+		en:'Show/hide navigation',
+		tr:'Gezinmeyi göster/gizle',
+		pt:'Mostrar/ocultar navegação',
+		es:'Mostrar/ocultar navegación',
+		fr:'Afficher/masquer la navigation',
+		he:'הצג/הסתר ניווט',
+		zh_tw:'顯示/隱藏導覽',
+	},
 	score_label:{
 		en:'Score:',
 		tr:'Puan:',
@@ -451,6 +487,15 @@ addI18n({
 		fr:'Afficher les options avancées',
 		tr:'Gelişmiş seçenekleri göster',
 	},
+	hide_advanced_link:{
+		en:'Hide advanced options',
+		he:'הסתר אפשרויות מתקדמות',
+		zh_tw:'隱藏進階選項',
+		pt:'Ocultar opções avançadas',
+		es:'Ocultar opciones avanzadas',
+		fr:'Masquer les options avancées',
+		tr:'Gelişmiş seçenekleri gizle',
+	},
 	score_abbreviation:{
 		en:'Scr',
 		he:'צִיוּן',
@@ -798,6 +843,47 @@ $(document).ready(function(){
 	var uploadCount = getUploads().length
 	$('.initHid').hide()
 
+	function setNavHidden(hidden){
+		$('body').toggleClass('nav-hidden', hidden)
+		localStorage.eventNavHidden = hidden ? '1' : '0'
+		$('#navToggle').html(hidden ? '›' : '‹')
+	}
+	var navHiddenStored = localStorage.eventNavHidden
+	setNavHidden(navHiddenStored != null ? navHiddenStored == '1' : window.innerWidth < 700)
+	$('#navToggle').click(function(){ setNavHidden(!$('body').hasClass('nav-hidden')) })
+	$('#navBackdrop').click(function(){ setNavHidden(true) })
+
+	function applyColumnOrder(){
+		var order = $('#tbaToggle').is(':checked')
+			? ['R1','R2','R3','B1','B2','B3','redScore','blueScore']
+			: ['R1','R2','R3','redScore','blueScore','B1','B2','B3']
+		$('#matchTable tr').each(function(){
+			var $tr = $(this)
+			order.forEach(function(cls){ $tr.append($tr.children('.'+cls)) })
+		})
+	}
+	$('#tbaToggle').prop('checked', localStorage.matchColTBA != '0').change(function(){
+		localStorage.matchColTBA = this.checked ? '1' : '0'
+		applyColumnOrder()
+	})
+	function applyHidePractice(){
+		$('body').toggleClass('hide-practice', $('#hidePracticeToggle').is(':checked'))
+	}
+	$('#hidePracticeToggle').prop('checked', localStorage.hidePractice == '1').change(function(){
+		localStorage.hidePractice = this.checked ? '1' : '0'
+		applyHidePractice()
+	})
+	applyHidePractice()
+	function applyTeamOnly(){
+		var on = $('#teamOnlyToggle').is(':checked') && parseInt(getLocalTeam()) > 0 && $('#matches tr.myTeamMatch').length > 0
+		$('body').toggleClass('team-only', on)
+	}
+	$('#teamOnlyToggle').prop('checked', localStorage.teamScheduleOnly == '1').change(function(){
+		localStorage.teamScheduleOnly = this.checked ? '1' : '0'
+		applyTeamOnly()
+	})
+	applyTeamOnly()
+
 	function showDataActions(){
 		var url = $(this).attr('href'),
 		da = $('#dataActions'),
@@ -821,9 +907,11 @@ $(document).ready(function(){
 		return false
 	}
 	$('.show-more').click(function(){
-		$('.more').show()
-		$(this).hide()
-
+		var show = !$(this).hasClass('expanded')
+		$(this).toggleClass('expanded', show)
+		$('.more').toggle(show)
+		var key = show ? 'hide_advanced_link' : 'show_advanced_link'
+		$(this).attr('data-i18n', key).text(translate(key))
 	})
 	function setName(){
 		$('title,h1').text(eventName)
@@ -1046,9 +1134,13 @@ $(document).ready(function(){
 			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':(!isRedScouted&&redPrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction).attr('data-epa',redEpa)
 			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':(!isBlueScouted&&bluePrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).attr('data-epa',blueEpa).addClass('tooltip-before')
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
+			row.toggleClass('practiceMatch', /^pm/.test(match.Match))
+			row.toggleClass('myTeamMatch', matchHasTeam(match, parseInt(getLocalTeam())||0))
 			row.click(showLinks)
 			$('#matches').append(row)
 		})
+		applyColumnOrder()
+		applyTeamOnly()
 		window.eventStats = eventStats
 		$('#extendedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))

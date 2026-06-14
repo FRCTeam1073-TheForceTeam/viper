@@ -16,6 +16,8 @@
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body><div id=main>
+	<button id=navToggle aria-label="Show/hide navigation"></button>
+	<div id=navBackdrop></div>
 	<h1></h1>
 
 	<div class="side-by-side narrow" id=left-nav>
@@ -126,10 +128,14 @@
 			</div>
 			<div class=show-more data-i18n=show_advanced_link></div>
 		</div>
+
+		<label class=sidebar-toggle><input type=checkbox id=tbaToggle> <span data-i18n=tba_format_label></span></label>
+		<label class=sidebar-toggle><input type=checkbox id=hidePracticeToggle> <span data-i18n=hide_practice_label></span></label>
+		<label class=sidebar-toggle><input type=checkbox id=teamOnlyToggle> <span data-i18n=team_schedule_label></span></label>
 	</div>
 
 	<table id=matchTable class=side-by-side>
-		<thead><tr><th data-i18n=match></th><th>R1</th><th>R2</th><th class= noftc>R3</th><th data-i18n=score_abbreviation></th><th data-i18n=score_abbreviation></th><th>B1</th><th>B2</th><th class= noftc>B3</th></tr></thead>
+		<thead><tr><th data-i18n=match></th><th class=R1>R1</th><th class=R2>R2</th><th class="R3 noftc">R3</th><th class=redScore data-i18n=score_abbreviation></th><th class=blueScore data-i18n=score_abbreviation></th><th class=B1>B1</th><th class=B2>B2</th><th class="B3 noftc">B3</th></tr></thead>
 		<tbody id=matches></tbody>
 	</table>
 
