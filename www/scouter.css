@@ -1,1 +1,22 @@
-.borderTable td,.borderTable th{border: 3px var(--main-fg-color) ridge;padding:0.3em}
+.scouterTable{border-collapse:collapse;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+.scouterTable th,.scouterTable td{padding:.55em 1.1em;text-align:start;border:0}
+.scouterTable th{font-weight:600;color:var(--main-fg-color);background:var(--lowlight-bg-color);border-bottom:1px solid var(--main-border-color)}
+.scouterTable th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+.scouterTable th.sortable:hover{color:var(--accent)}
+.scouterTable th.sortable::after{content:"\2195";opacity:.3;margin-inline-start:.4em;font-size:.85em}
+.scouterTable th.sortedAsc::after{content:"\2191";opacity:1;color:var(--accent)}
+.scouterTable th.sortedDesc::after{content:"\2193";opacity:1;color:var(--accent)}
+.scouterTable td{border-top:1px solid var(--main-border-color)}
+.scouterTable tbody tr:first-child td{border-top:0}
+.scouterTable tbody tr:nth-child(even){background:rgba(255,255,255,.025)}
+.scouterTable tbody tr:hover{background:var(--lowlight-bg-color)}
+.scouterTable td:not(:first-child),.scouterTable th:not(:first-child){text-align:end;font-variant-numeric:tabular-nums}
+.scouterTable td.scoreCell{font-weight:600;color:var(--accent)}
+.scouterTable th.scoreCol{position:relative}
+.scouterLayout{display:inline-block;margin:1em auto;text-align:start}
+.scouterLayout .scouterTable{width:100%}
+.scoreInfo{width:0;min-width:100%;box-sizing:border-box;margin-bottom:1em;padding:.8em 1.1em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+.scoreInfo h3{margin:0 0 .4em}
+.scoreInfo p{margin:0 0 .6em;max-width:none}
+.scoreInfo code{display:block;margin:.6em 0;padding:.45em .6em;text-align:center;background:var(--lowlight-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius)}
+.scoreInfo .dash{margin-bottom:0;color:var(--alert-fg-color);font-size:.9em}

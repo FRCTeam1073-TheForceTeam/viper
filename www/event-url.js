@@ -487,6 +487,13 @@ function getShortMatchName(matchId){
 	return translate(getShortMatchNameKey(matchId))+getMatchNumber(matchId)
 }
 
+function promiseStatboticsMatches(){
+	if (!promiseCache.statboticsMatches) promiseCache.statboticsMatches = promiseJson(`/data/${eventId}.statbotics-matches.json`)
+		.then(arr=>Array.isArray(arr)?arr:[])
+		.catch(e=>{ console.error(e); return [] })
+	return promiseCache.statboticsMatches
+}
+
 function promiseEpa(){
 	if (!promiseCache.epa) promiseCache.epa = promiseJson(`/data/${eventId}.epa.json`).then(epaArray=>{
 		var epaByTeam = {}

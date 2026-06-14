@@ -59,4 +59,25 @@ if ($db->dbConnection()) {
 	close $fh;
 }
 
+# Also fetch match-level predictions (used for predicted rank calculations)
+my $matchesUrl = "https://api.statbotics.io/v3/matches?event=$sbevent&limit=1000";
+my $matchesResp = $ua->request(HTTP::Request->new('GET', $matchesUrl));
+if (!$matchesResp->is_error()) {
+	my $matchesContent = $matchesResp->content();
+	if ($db->dbConnection()) {
+		$db->upsert('apijson', {
+			'event' => $event,
+			'file'  => 'statbotics-matches',
+			'json'  => $matchesContent,
+		});
+		$db->commit();
+	} else {
+		my $matchesPath = "../data/$event.statbotics-matches.json";
+		if (open my $fh, ">", $matchesPath) {
+			print $fh $matchesContent;
+			close $fh;
+		}
+	}
+}
+
 $webutil->redirect("/event.html#$event");

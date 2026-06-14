@@ -1,12 +1,19 @@
 table th{padding:0.5em;min-width:2em}
-button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
-button.team{width:3em;height:1.5em;margin:0.25em}
+button.team{min-width:3.2em;margin:0.25em;padding:.3em .6em;text-align:center;font-variant-numeric:tabular-nums}
 h4{margin:0;padding:0.5em 0 0 0;font-size:130%}
-.vertical {writing-mode:vertical-rl;text-orientation:upright}
-.vertical th{min-width:2em;text-align:center;vertical-align:top}
 td{margin:0;padding:0;max-width:15em}
-.vertical input,.vertical div{border:none;margin:0 auto}
 td div{margin:0;padding:0.5em;width:100%;height: 100%}
+
+/* Alliance team entry (red row / blue row) */
+#allianceEntry{display:flex;flex-direction:column;gap:.5em;margin:.6em auto;width:fit-content}
+.allianceRow{display:flex;align-items:center;gap:.5em;padding:.45em .7em;border-radius:var(--radius-lg)}
+.allianceLabel{min-width:3.5em;font-weight:600;text-align:start}
+.allianceRow input{width:5em;text-align:center;font-variant-numeric:tabular-nums}
+.allianceRow input:focus,.allianceRow input:focus-visible{outline:none}
+.allianceRow input.lastFocus{box-shadow:0 0 0 3px var(--winner-color);border-color:var(--winner-color)}
+.allianceRow input.dupError{box-shadow:0 0 0 3px var(--button-disabled-decoration-color);border-color:var(--button-disabled-decoration-color)}
+button.team:disabled{opacity:.45}
+.teamDataEntry .orSep{margin:.4em 0;opacity:.7}
 .winner{color:var(--highlight-fg-color);font-weight:bold}
 .first .alliance .winner{border-top:0.5em solid var(--winner-color);border-bottom:0.5em solid var(--winner-color);color:var(--main-fg-color)}
 .alliance{font-size:150%}

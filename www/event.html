@@ -177,6 +177,18 @@
 		<tr><th data-i18n=score_header_epa></th><th class=redTeamBG>_REDEPA_</th><th class=blueTeamBG>_BLUEEPA_</th></tr>
 		</table>
 	</div>
+	<button id=topTeamsToggle aria-label="Show/hide top teams"></button>
+	<div id=topTeamsBackdrop></div>
+	<aside id=topTeamsPanel>
+		<div class=topTeamsHeader>
+			<h2 data-i18n=top_teams_heading></h2>
+			<button id=topTeamsRefresh class="dependBlueAlliance initHid" aria-label="Refresh from Statbotics" title="Refresh from Statbotics">⟳</button>
+		</div>
+		<div class=topTeamsList><h3 data-i18n=top_epa_heading></h3><ol id=topEpaList></ol></div>
+		<div class=topTeamsList><h3 data-i18n=top_max_score_heading></h3><ol id=topMaxScoreList></ol></div>
+		<div class=topTeamsList><h3 data-i18n=top_avg_score_heading></h3><ol id=topAvgScoreList></ol></div>
+	</aside>
+
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
 	<div id=dataActions class=lightBoxCenterContent style=display:none><h2></h2><ul></ul></div>
 	<iframe id=instructions class=lightBoxFullContent src=/event-instructions.html></iframe>

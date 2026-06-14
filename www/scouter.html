@@ -16,12 +16,21 @@
 </head>
 <body>
 <h1 data-i18n=scouter_page_title></h1>
-<table class=borderTable><tr><th data-i18n=scouter_heading>
-</th><th data-i18n=matches_heading>
-</th><th data-i18n=error_heading>
+<div class=scouterLayout>
+<aside class=scoreInfo>
+<h3 data-i18n=score_info_title></h3>
+<p data-i18n=score_info_body></p>
+<code>log₂(matches + 1) × 100 / (avgError + 5)</code>
+<p class=dash data-i18n=score_info_dash></p>
+</aside>
+<table class=scouterTable><tr><th data-i18n=scouter_heading>
+</th><th class=sortable data-sort=matches data-i18n=matches_heading>
+</th><th class=sortable data-sort=avgError data-i18n=error_heading>
+</th><th class="sortable scoreCol" data-sort=score data-i18n=score_heading>
 </th></tr>
 <tbody id=scouterStats>
 </tbody>
 </table>
+</div>
 </body>
 </html>

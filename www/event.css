@@ -51,7 +51,8 @@ h3{margin:0 0 .25em 0;padding:0}
 .sidebar-toggle input{margin:0;width:auto}
 
 /* Fixed, hideable navigation sidebar */
-#left-nav{position:fixed;top:3em;inset-inline-start:0;bottom:0;width:18em;max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:1em;background:var(--surface);border-inline-end:1px solid var(--main-border-color);z-index:9980;transition:transform .2s ease}
+#left-nav{position:fixed;top:3em;inset-inline-start:0;bottom:0;width:18em;max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:1em;background:var(--surface);border-inline-end:1px solid var(--main-border-color);z-index:9980;transition:transform .2s ease;scrollbar-width:none;-ms-overflow-style:none}
+#left-nav::-webkit-scrollbar{display:none}
 body.nav-hidden #left-nav{transform:translateX(-100%)}
 html[dir=rtl] body.nav-hidden #left-nav{transform:translateX(100%)}
 
@@ -68,4 +69,37 @@ body.nav-hidden #navToggle{inset-inline-start:.4em}
 	#main{padding-inline-start:0}
 	#left-nav{box-shadow:var(--shadow)}
 	body:not(.nav-hidden) #navBackdrop{display:block;position:fixed;inset:3em 0 0 0;background:var(--translucent-hide-color);z-index:9979}
+}
+
+/* Top teams pop-in sidebar (right) */
+#topTeamsPanel{position:fixed;top:3em;inset-inline-end:0;bottom:0;width:20rem;max-width:85vw;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;text-align:start;padding:1em;font-size:clamp(9px,1.95vh,18px);background:var(--surface);border-inline-start:1px solid var(--main-border-color);box-shadow:var(--shadow);z-index:9980;transition:transform .2s ease}
+body.top-teams-hidden #topTeamsPanel{transform:translateX(100%)}
+html[dir=rtl] body.top-teams-hidden #topTeamsPanel{transform:translateX(-100%)}
+body:not(.top-teams-hidden) #main{padding-inline-end:20em}
+.topTeamsHeader{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:.5em;margin:0 0 .4em 0}
+#topTeamsRefresh{flex:0 0 auto;width:1.7em;height:1.7em;display:flex;align-items:center;justify-content:center;padding:0;font-size:1em;line-height:1;border-radius:var(--radius);background:var(--button-bg-color);border:1px solid var(--main-border-color);color:var(--main-fg-color);cursor:pointer}
+#topTeamsRefresh:hover{border-color:var(--accent)}
+#topTeamsPanel h2{flex:0 0 auto;text-align:start;font-size:115%;font-weight:600;margin:0}
+.topTeamsList{flex:1 1 0;min-height:0;display:flex;flex-direction:column;overflow:hidden;margin-bottom:.4em}
+.topTeamsList:last-child{margin-bottom:0}
+.topTeamsList h3{flex:0 0 auto;font-size:100%;font-weight:600;margin:.2em 0 .15em 0}
+#topTeamsPanel ol{flex:1 1 auto;min-height:0;counter-reset:rank;list-style:none;margin:0;padding:0;max-width:none}
+#topTeamsPanel li{counter-increment:rank;display:flex;align-items:baseline;gap:.5em;margin:.12em 0;padding:.06em .3em;border-radius:var(--radius)}
+#topTeamsPanel li:nth-child(odd){background:var(--lowlight-bg-color)}
+#topTeamsPanel li::before{content:counter(rank) ".";opacity:.55;min-width:1.6em;text-align:end}
+.ttTeam{font-weight:600}
+.ttVal{margin-inline-start:auto;color:var(--highlight2-fg-color);font-variant-numeric:tabular-nums}
+.ttPred{opacity:.6;font-variant-numeric:tabular-nums;min-width:2.4em;text-align:end}
+.topTeamsEmpty{display:block;opacity:.6}
+.topTeamsEmpty::before{content:none}
+
+#topTeamsToggle{position:fixed;top:3.3em;inset-inline-end:.4em;z-index:9985;width:1.8em;height:1.8em;display:flex;align-items:center;justify-content:center;padding:0;font-size:1.2em;line-height:1;border-radius:var(--radius);background:var(--surface);border:1px solid var(--main-border-color);color:var(--main-fg-color);cursor:pointer;transition:inset-inline-end .2s ease}
+#topTeamsToggle::before{content:'🏆'}
+body:not(.top-teams-hidden) #topTeamsToggle{inset-inline-end:calc(20em - 2.4em)}
+#topTeamsToggle:hover{border-color:var(--accent)}
+#topTeamsBackdrop{display:none}
+@media (max-width:700px){
+	body:not(.top-teams-hidden) #main{padding-inline-end:0}
+	body:not(.top-teams-hidden) #topTeamsToggle{inset-inline-end:.4em}
+	body:not(.top-teams-hidden) #topTeamsBackdrop{display:block;position:fixed;inset:3em 0 0 0;background:var(--translucent-hide-color);z-index:9979}
 }

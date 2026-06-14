@@ -37,6 +37,51 @@ addI18n({
 		he:'הצג/הסתר ניווט',
 		zh_tw:'顯示/隱藏導覽',
 	},
+	top_teams_heading:{
+		en:'Top Teams',
+		tr:'En İyi Takımlar',
+		pt:'Melhores Equipes',
+		es:'Mejores Equipos',
+		fr:'Meilleures Équipes',
+		he:'הקבוצות המובילות',
+		zh_tw:'頂尖隊伍',
+	},
+	top_teams_toggle:{
+		en:'Show/hide top teams',
+		tr:'En iyi takımları göster/gizle',
+		pt:'Mostrar/ocultar melhores equipes',
+		es:'Mostrar/ocultar mejores equipos',
+		fr:'Afficher/masquer les meilleures équipes',
+		he:'הצג/הסתר קבוצות מובילות',
+		zh_tw:'顯示/隱藏頂尖隊伍',
+	},
+	top_epa_heading:{
+		en:'Top 8 by EPA',
+		tr:'EPA\'ya Göre İlk 8',
+		pt:'Top 8 por EPA',
+		es:'Top 8 por EPA',
+		fr:'Top 8 par EPA',
+		he:'8 המובילים לפי EPA',
+		zh_tw:'EPA 前 8 名',
+	},
+	top_max_score_heading:{
+		en:'Top 8 by Max Score',
+		tr:'Maksimum Skora Göre İlk 8',
+		pt:'Top 8 por Pontuação Máxima',
+		es:'Top 8 por Puntuación Máxima',
+		fr:'Top 8 par Score Maximum',
+		he:'8 המובילים לפי ציון מקסימלי',
+		zh_tw:'最高分前 8 名',
+	},
+	top_avg_score_heading:{
+		en:'Top 8 by Average Score',
+		tr:'Ortalama Skora Göre İlk 8',
+		pt:'Top 8 por Pontuação Média',
+		es:'Top 8 por Puntuación Promedio',
+		fr:'Top 8 par Score Moyen',
+		he:'8 המובילים לפי ציון ממוצע',
+		zh_tw:'平均分前 8 名',
+	},
 	score_label:{
 		en:'Score:',
 		tr:'Puan:',
@@ -853,6 +898,18 @@ $(document).ready(function(){
 	$('#navToggle').click(function(){ setNavHidden(!$('body').hasClass('nav-hidden')) })
 	$('#navBackdrop').click(function(){ setNavHidden(true) })
 
+	function setTopTeamsHidden(hidden){
+		$('body').toggleClass('top-teams-hidden', hidden)
+		localStorage.eventTopTeamsHidden = hidden ? '1' : '0'
+	}
+	setTopTeamsHidden(localStorage.eventTopTeamsHidden == null ? true : localStorage.eventTopTeamsHidden == '1')
+	$('#topTeamsToggle').click(function(){ setTopTeamsHidden(!$('body').hasClass('top-teams-hidden')) })
+	$('#topTeamsBackdrop').click(function(){ setTopTeamsHidden(true) })
+	$('#topTeamsRefresh').click(function(){
+		if (blueAllianceId && /^20[0-9]{2}[a-z0-9]{3,6}$/.test(blueAllianceId))
+			window.location.href = `/admin/statbotics-event.cgi?event=${eventId}&sbevent=${blueAllianceId}`
+	})
+
 	function applyColumnOrder(){
 		var order = $('#tbaToggle').is(':checked')
 			? ['R1','R2','R3','B1','B2','B3','redScore','blueScore']
@@ -980,8 +1037,9 @@ $(document).ready(function(){
 		promiseTeamsInfo(),
 		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
 		promiseEventTeams(),
-	]).then(values =>{
-		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.epaByTeam, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles, pitScoutEventTeams] = values
+			promiseStatboticsMatches(),
+		]).then(values =>{
+		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.epaByTeam, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles, pitScoutEventTeams, window.statboticsMatches] = values
 		var lastDone,
 		nextToScout,
 		lastMatch,
@@ -1086,14 +1144,14 @@ $(document).ready(function(){
 						redScouting += scouted.score||0
 					}
 					redPrediction += getScore(eventStatsByTeam, match[pos])
-					redEpa += (epaByTeam[match[pos]]?.epa.total_points?.mean) || 0
+					redEpa += epaTotalPoints(epaByTeam[match[pos]]) || 0
 				} else {
 					if (isScouted){
 						isBlueScouted=true
 						blueScouting += scouted.score||0
 					}
 					bluePrediction += getScore(eventStatsByTeam, match[pos])
-					blueEpa += (epaByTeam[match[pos]]?.epa.total_points?.mean) || 0
+					blueEpa += epaTotalPoints(epaByTeam[match[pos]]) || 0
 				}
 				row.find(`.${pos}`).text(match[pos])
 					.toggleClass("scouted",isScouted)
@@ -1101,16 +1159,7 @@ $(document).ready(function(){
 					.toggleClass("error",!!scouted&&!!scouted.old&&(typeof scouted.old.score)!=='undefined')
 					.toggleClass("review",isScouted&&(scouted.review_requested==1||scouted.review_requested=="1"))
 					.toggleClass("ourTeam",""+match[pos]==""+getLocalTeam())
-					.toggleClass("tooltip-before",/^B/.test(pos))
 					.attr('data-team-info',getTeamInfo(match[pos])||null)
-					.attr('data-tooltip',(function(){
-						var tooltip = getTeamInfo(match[pos])||""
-						var score = getScore(eventStatsByTeam, match[pos])
-						var epa = epaByTeam[match[pos]]?.epa.total_points?.mean
-						if (score) tooltip += (tooltip?"\n":"") + `${translate('prediction_label')} ${Math.round(score)}`
-						if (epa) tooltip += (tooltip?"\n":"") + `${translate('epa_label')} ${Math.round(epa)}`
-						return tooltip||null
-					})())
 			})
 			redPrediction=Math.round(redPrediction)
 			bluePrediction=Math.round(bluePrediction)
@@ -1128,11 +1177,9 @@ $(document).ready(function(){
 				})
 			}
 			var redPoints=hasScores?redScore:(isRedScouted?redScouting:(!isRedScouted&&redPrediction===0?redEpa:redPrediction)),
-			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:(!isBlueScouted&&bluePrediction===0?blueEpa:bluePrediction)),
-			redTooltip=(redPrediction===0 && !redEpa) ? null : ((hasScores?`${translate('score_label')} ${redScore}\n`:"")+(isRedScouted?`${translate('scouted_label')} ${redScouting}\n`:"")+(redPrediction?`${translate('prediction_label')} ${redPrediction}\n`:"")+(redEpa?`${translate('epa_label')} ${redEpa}`:"")),
-			blueTooltip=(bluePrediction===0 && !blueEpa) ? null : ((hasScores?`${translate('score_label')} ${blueScore}\n`:"")+(isBlueScouted?`${translate('scouted_label')} ${blueScouting}\n`:"")+(bluePrediction?`${translate('prediction_label')} ${bluePrediction}\n`:"")+(blueEpa?`${translate('epa_label')} ${blueEpa}`:""))
-			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':(!isRedScouted&&redPrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction).attr('data-epa',redEpa)
-			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':(!isBlueScouted&&bluePrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).attr('data-epa',blueEpa).addClass('tooltip-before')
+			bluePoints=hasScores?blueScore:(isBlueScouted?blueScouting:(!isBlueScouted&&bluePrediction===0?blueEpa:bluePrediction))
+			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':(!isRedScouted&&redPrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction).attr('data-epa',redEpa)
+			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':(!isBlueScouted&&bluePrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).attr('data-epa',blueEpa)
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
 			row.toggleClass('practiceMatch', /^pm/.test(match.Match))
 			row.toggleClass('myTeamMatch', matchHasTeam(match, parseInt(getLocalTeam())||0))
@@ -1141,8 +1188,73 @@ $(document).ready(function(){
 		})
 		applyColumnOrder()
 		applyTeamOnly()
-		window.eventStats = eventStats
-		$('#extendedScoutingData')
+		buildTopTeams()
+			// Predicted final qual rank from Statbotics match predictions: hybrid of
+			// actual RP for matches already played + expected RP for unplayed ones.
+			function computePredictedRanks(matches){
+				var WIN_RP = 3, agg = {}
+				function add(team, rp, tb){ if (!agg[team]) agg[team]=[0,0,0]; agg[team][0]+=rp; agg[team][1]++; agg[team][2]+=tb }
+				matches.forEach(m=>{
+					if (m.comp_level != 'qm') return
+					var r = m.result, p = m.pred
+					;['red','blue'].forEach(color=>{
+						var alliance = m.alliances?.[color] || {},
+						teamKeys = alliance.team_keys || [],
+						surrogates = alliance.surrogate_team_keys || [],
+						dqs = alliance.dq_team_keys || [],
+						rp, tb
+						if (r && r[`${color}_score`]!=null && r[`${color}_rp_1`]!=null){
+							rp = (r.winner==color?WIN_RP:(r.winner=='tie'?1:0))
+								+ [1,2,3].reduce((s,i)=>s+(r[`${color}_rp_${i}`]?1:0),0)
+							tb = r[`${color}_tiebreaker_points`] || 0     // played: actual no-foul score
+						} else if (p && p.red_win_prob!=null){
+							var wp = color=='red' ? p.red_win_prob : 1-p.red_win_prob
+							rp = wp*WIN_RP + [1,2,3].reduce((s,i)=>s+(p[`${color}_rp_${i}`]||0),0)
+							tb = p[`${color}_score`] || 0                 // unplayed: predicted score
+						} else return
+						teamKeys.forEach(t=>{
+							if (surrogates.includes(t)) return        // surrogate matches don't count
+							add(t, dqs.includes(t)?0:rp, dqs.includes(t)?0:tb)  // DQ = played match, 0 RP
+						})
+					})
+				})
+				var ranked = Object.keys(agg)
+					.map(t=>({team:t, rp:agg[t][0]/agg[t][1], tb:agg[t][2]/agg[t][1]}))
+					.sort((a,b)=> b.rp-a.rp || b.tb-a.tb)   // RP, then tiebreaker points
+				var map = {}
+				ranked.forEach((e,i)=>map[String(e.team)]=i+1)
+				return map
+			}
+			function buildTopTeams(){
+				function topN(teams, valueFn){
+					return teams
+						.map(team=>({team:team, value:valueFn(team)}))
+						.filter(e=>e.value!=null && !isNaN(e.value) && e.value>0)
+						.sort((a,b)=>b.value-a.value)
+						.slice(0,8)
+				}
+				var predRankByTeam = computePredictedRanks(window.statboticsMatches||[])
+				function fill(listId, entries){
+					var ol = $('#'+listId).html("")
+					if (!entries.length) return ol.append($('<li class=topTeamsEmpty>').text('—'))
+					entries.forEach(e=>{
+						var li = $('<li>')
+							.attr('title', getTeamInfo(e.team)||null)
+							.append($('<span class=ttTeam>').text(e.team))
+							.append($('<span class=ttVal>').text(e.value))
+						var pr = predRankByTeam[String(e.team)]
+						if (pr) li.append($('<span class=ttPred>').text('#'+pr))
+						ol.append(li)
+					})
+				}
+				var statTeams = Object.keys(eventStatsByTeam),
+				epaTeams = Object.keys(epaByTeam)
+				fill('topEpaList', topN(epaTeams, t=>Math.round(epaTotalPoints(epaByTeam[t]))))
+				fill('topMaxScoreList', topN(statTeams, t=>Math.round(eventStatsByTeam[t].max_score)))
+				fill('topAvgScoreList', topN(statTeams, t=>Math.round(getScore(eventStatsByTeam, t))))
+			}
+			window.eventStats = eventStats
+			$('#extendedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
 			.attr('download',`${eventId}.scouting.extended.csv`)
 			.attr('data-source','eventStats')
@@ -1259,6 +1371,11 @@ var blueAllianceId = eventId
 var orangeAllianceId = eventId.replace(/^20([0-9]){2}-([0-9]){2}-(.*)/,"$1$2$3/")
 var firstInspiresId = eventId.replace(/^(20[0-9]{2})/,"$1/")
 
+// Statbotics changed epa.total_points from {mean,sd} to a flat number; handle both.
+function epaTotalPoints(epaEntry){
+	var tp = epaEntry?.epa?.total_points
+	return (tp && typeof tp == 'object') ? tp.mean : tp
+}
 function viewJson(){
 	var jv = $('#jsonViewer').html(""),
 	lb = $('#jsonLightBox')

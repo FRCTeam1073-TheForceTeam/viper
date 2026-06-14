@@ -38,7 +38,7 @@ onApplyTranslation.push(function(){
 })
 
 function lf(){
-	return $('#prediction .lastFocus')
+	return $('#allianceEntry .lastFocus')
 }
 
 var statsConfig
@@ -91,10 +91,10 @@ $(document).ready(function(){
 		if (match) $('title,h1').attr('data-i18n','predictor_match_title')
 		applyTranslations()
 	})
-	$('#prediction input').focus(focusInput).change(setPickedTeams)
+	$('#allianceEntry input').focus(focusInput).change(setPickedTeams)
 	if (eventCompetition=='ftc') $('.noftc').hide()
 	$('#change-teams').click(function(){
-		$('#prediction input').val("")
+		$('#allianceEntry input').val("")
 		setPickedTeams()
 	})
 })
@@ -102,12 +102,12 @@ $(document).ready(function(){
 function focusInput(input){
 	if ('target' in input) input = $(input.target)
 	if (input[0]==lf()[0]) return
-	$('#prediction input').removeClass('lastFocus')
+	$('#allianceEntry input').removeClass('lastFocus')
 	input.addClass('lastFocus')
 }
 
 function lf(){
-	return $('#prediction input.lastFocus')
+	return $('#allianceEntry input.lastFocus')
 }
 
 function withoutValues(i,el){
@@ -115,26 +115,35 @@ function withoutValues(i,el){
 }
 
 function focusNext(){
-	var next = $('#prediction .redTeamBG input').filter(withoutValues).first()
-	if (!next.length) next = $('#prediction .blueTeamBG input').filter(withoutValues).first()
+	var next = $('#allianceEntry .redTeamBG input').filter(withoutValues).first()
+	if (!next.length) next = $('#allianceEntry .blueTeamBG input').filter(withoutValues).first()
 	if (next.length) focusInput(next)
 	return next.length > 0
 }
 
 function setPickedTeams(){
-	$('#teamButtons button').removeClass("picked")
-	var teamCount = 0
-	$('#prediction input').each(function(){
+	$('#teamButtons button').removeClass("picked").prop('disabled', false)
+	var teamCount = 0,
+	seen = {}
+	$('#allianceEntry input').each(function(){
 		var val = $(this).val()
+		$(this).removeClass('dupError')
 		if (val){
-			$(`#team-${val}`).addClass("picked")
-			teamCount++
+			if (seen[val]){
+				$(this).addClass('dupError')        // same team entered in another slot
+			} else {
+				seen[val] = true
+				$(`#team-${val}`).addClass("picked").prop('disabled', true)
+				teamCount++
+			}
 		}
 	})
 	if (teamCount == BOT_POSITIONS.length){
 		$('#change-teams').show()
 		$('input').removeClass('lastFocus')
 		$('.teamDataEntry').hide()
+		BOT_POSITIONS.forEach(pos=>$(`#th-${pos}`).text($(`#${pos}`).val()))
+		$('#prediction').show()
 		var table = $('#prediction tbody'),
 		stats = statsConfig.getStatsConfig(),
 		first=true
@@ -183,6 +192,7 @@ function setPickedTeams(){
 		})
 	} else {
 		$('.teamDataEntry').show()
+		$('#prediction').hide()
 		$('#prediction tbody').html("")
 		$('#change-teams').hide()
 	}
@@ -195,7 +205,7 @@ var match = ""
 function setLocationHash(){
 	var hash = `event=${eventId}`
 	if (match) hash += `&match=${match}`
-	$('#prediction input').each(function(){
+	$('#allianceEntry input').each(function(){
 		var val = $(this).val()
 		if (/^[0-9]+$/.test(val)){
 			var name = $(this).attr('id')
@@ -207,7 +217,7 @@ function setLocationHash(){
 
 function loadFromLocationHash(){
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)([a-z0-9]+)(?:\&.*)?$/)||["",""])[1]
-	$('#prediction input').each(function(){
+	$('#allianceEntry input').each(function(){
 		var name = $(this).attr('id')
 		var val = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${name}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
 		$(this).val(val)
@@ -224,6 +234,7 @@ function getTeamValue(eventStatsByTeam, field, team){
 }
 
 function teamButtonClicked(){
+	if ($(this).prop('disabled') || $(this).hasClass('picked')) return
 	lf().val($(this).text())
 	focusNext()
 	setPickedTeams()

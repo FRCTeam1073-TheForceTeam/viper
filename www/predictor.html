@@ -18,21 +18,33 @@
 <body>
 <h1 data-i18n=predictor_title></h1>
 <div class=teamDataEntry>
-	<div>Match: <select id=matchList></select></div>
-	- OR -
+	<div id=allianceEntry>
+		<div class="allianceRow redTeamBG">
+			<span class=allianceLabel data-i18n=red_heading></span>
+			<input type=text id=R1 size=5 placeholder="Team #" class=lastFocus>
+			<input type=text id=R2 size=5 placeholder="Team #">
+			<input type=text id=R3 size=5 placeholder="Team #" class=noftc>
+		</div>
+		<div class="allianceRow blueTeamBG">
+			<span class=allianceLabel data-i18n=blue_heading></span>
+			<input type=text id=B1 size=5 placeholder="Team #">
+			<input type=text id=B2 size=5 placeholder="Team #">
+			<input type=text id=B3 size=5 placeholder="Team #" class=noftc>
+		</div>
+	</div>
+	<div class=orSep>- OR -</div>
+	<div class=matchPick>Match: <select id=matchList></select></div>
 	<div id=teamButtons></div>
 </div>
-<table id=prediction><thead><tr>
-	<th class="vertical redTeamBG"><input type=text id=R1 size=5 placeholder="Team #" class=lastFocus></th>
-	<th class="vertical redTeamBG"><input type=text id=R2 size=5 placeholder="Team #"></th>
-	<th class="vertical redTeamBG noftc"><input type=text id=R3 size=5 placeholder="Team #"></th>
+<table id=prediction style=display:none><thead><tr>
+	<th class=redTeamBG id=th-R1></th>
+	<th class=redTeamBG id=th-R2></th>
+	<th class="redTeamBG noftc" id=th-R3></th>
 	<th class=redTeamBG><div data-i18n=red_heading></div></th>
-	<th><button id=change-teams style=display:none data-i18n=change_teams_button></button></th>
+	<th><button id=change-teams data-i18n=change_teams_button></button></th>
 	<th class=blueTeamBG><div data-i18n=blue_heading></div></th>
-	<th class="vertical blueTeamBG"><input type=text id=B1 size=5 placeholder="Team #"></th>
-	<th class="vertical blueTeamBG"><input type=text id=B2 size=5 placeholder="Team #"></th>
-	<th class="vertical blueTeamBG noftc"><input type=text id=B3 size=5 placeholder="Team #"></th>
+	<th class=blueTeamBG id=th-B1></th>
+	<th class=blueTeamBG id=th-B2></th>
+	<th class="blueTeamBG noftc" id=th-B3></th>
 </tr></thead><tbody>
-</tbody></table>
-<p data-include-practice=stats_include_practice data-exclude-practice=stats_exclude_practice></p>
-</body></html>
+</tbody></table></body></html>
