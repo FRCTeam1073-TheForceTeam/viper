@@ -1,0 +1,10 @@
+/* Controls row */
+#season,#filter{margin:0 .3em}
+
+/* Event results as a responsive card grid */
+#events{display:grid;grid-template-columns:repeat(auto-fill,minmax(17em,1fr));gap:.8em;max-width:62em;margin:1.2em auto;padding:0 .5em;text-align:start}
+.event-card{background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:.8em 1em;transition:border-color .15s ease}
+.event-card:hover{border-color:var(--accent)}
+.event-card h2{margin:0 0 .35em 0;font-size:1.1em}
+.event-card h2 a,.event-card h2 a:link{color:var(--link-color)}
+.event-card span{opacity:.85;font-size:.9em;line-height:1.5}

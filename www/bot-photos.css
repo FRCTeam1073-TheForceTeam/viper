@@ -1,5 +1,22 @@
-.photoPreview {margin:1em;max-width:150px;max-height:150px;display:block}
+/* Uniform photo box — every preview is the same square regardless of image aspect */
+.photoPreview{width:293px;height:225px;object-fit:contain;background:var(--lowlight-bg-color);border-radius:var(--radius);display:block;margin:.4em auto;cursor:pointer}
 #fullPhoto{object-fit:contain;background:#0000;border:none}
-#teams td,#teams th{padding:0.5em;border:1px solid gray}
-#teams{margin: 1em auto}
+
+/* Teams table as cards */
+#teams{margin:1em auto;border:0;border-collapse:separate;border-spacing:.4em}
+#teams td,#teams th{padding:.6em;border:1px solid var(--main-border-color);border-radius:var(--radius-lg);text-align:center;vertical-align:middle}
+#teams th{background:var(--surface);font-weight:600}
+#teams th h2{margin:0}
+.upload-cell{width:325px;min-height:290px;vertical-align:top}
+
+/* Edit link + choose-file styled as themed buttons */
+.edit-link{margin-bottom:.4em}
+.edit-link a,.edit-link a:link,.edit-link a:visited{display:inline-block;padding:.3em .65em;border:1px solid var(--main-border-color);border-radius:var(--radius);background:var(--button-bg-color);color:var(--button-fg-color);text-decoration:none;transition:border-color .15s ease}
+.edit-link a:hover{border-color:var(--accent);text-decoration:none}
+.file-button{display:inline-flex;align-items:center;justify-content:center;margin-top:.4em;font-family:inherit;padding:.3em .65em;border:1px solid var(--main-border-color);border-radius:var(--radius);background:var(--button-bg-color);color:var(--button-fg-color);cursor:pointer;transition:border-color .15s ease}
+.file-button:hover{border-color:var(--accent)}
+.file-button input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+
 #showInstructions{margin-bottom:1em}
+form>div{margin:1em auto}
+#team{margin-inline-end:.3em}

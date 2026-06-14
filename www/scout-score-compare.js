@@ -8,13 +8,14 @@ function promiseScoutScoreCompare(callback){
 	]).then(values =>{
 		var [eventScores, [_, _, eventStatsByMatchTeam], eventMatches] = values,
 		scouterStats = {},
-		matchStats = []
+		matchStats = [],
+		teamsPerAlliance = (BOT_POSITIONS||[]).length/2 || 3
 		eventMatches.forEach(match => {
 			var thisMatch = {}
 			;["Red","Blue"].forEach(alliance=>{
 				var scoutData = [],
 				scoreData
-				for (var i=0; i<=3; i++){
+				for (var i=1; i<=teamsPerAlliance; i++){
 					var team = match[alliance.charAt(0)+""+i],
 					matchTeam = `${match.Match}-${team}`
 					if (eventStatsByMatchTeam[matchTeam])scoutData.push(eventStatsByMatchTeam[matchTeam])
@@ -22,7 +23,7 @@ function promiseScoutScoreCompare(callback){
 				if (eventScores[match.Match]) eventScores[match.Match].alliances.forEach(dat=>{
 					if (dat.alliance.toLowerCase() == alliance.toLowerCase()) scoreData = dat
 				})
-				if (scoreData && scoutData.length == 3){
+				if (scoreData && scoutData.length == teamsPerAlliance){
 					thisMatch[alliance]=getScoreDifference(scoutData, scoreData)
 					thisMatch[alliance].alliance=alliance
 					thisMatch.match=match.Match
@@ -35,7 +36,7 @@ function promiseScoutScoreCompare(callback){
 					scouterStats[key].matches++
 					if (thisMatch[alliance]){
 						scouterStats[key].scoredMatches++
-						scouterStats[key].error+=thisMatch[alliance].diff/3
+						scouterStats[key].error+=thisMatch[alliance].diff/teamsPerAlliance
 						scouterStats[key].avgError=Math.round(scouterStats[key].error/scouterStats[key].scoredMatches)
 					}
 				})

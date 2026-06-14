@@ -1,7 +1,4 @@
-/* ===== Design tokens =====
-   Shared sizing/shape tokens live here. Color tokens are themed below:
-   :root holds the DARK palette (default); [data-theme="light"] overrides.
-   main.js sets data-theme on <html> ("dark"/"light", resolving "system"). */
+/* ===== Design tokens ===== (dark only) */
 :root {
 --radius:0.55em;
 --radius-lg:1em;
@@ -34,34 +31,6 @@
 --diff-add-bg-color:#14361f;
 --diff-rem-bg-color:#3a1717;
 color-scheme:dark;
-}
-[data-theme="light"]{
---surface:#ffffff;
---shadow:0 1px 4px rgba(0,0,0,.12);
---accent:#2563eb;
---main-bg-color:#f4f6f9;
---main-fg-color:#1a1d23;
---main-border-color:#d6dbe3;
---section-bg-color:#eceff3;
---link-color:#2563eb;
---link-visited-color:#7c3aed;
---red-team-color:#a83232;
---blue-team-color:#2f5aa0;
---winner-color:#bb8a00;
---button-bg-color:#ffffff;
---button-fg-color:#1a1d23;
---button-selected-bg-color:#2fa45c;
---button-disabled-decoration-color:#d9534f;
---highlight-bg-color:#d5f5e3;
---highlight-fg-color:#1d7a44;
---highlight2-fg-color:#c2710a;
---alert-fg-color:#b8860b;
---lowlight-bg-color:#e9ecf1;
---focus-bg-color:#fff3cd;
---translucent-hide-color:rgba(20,22,28,.45);
---diff-add-bg-color:#d6f5df;
---diff-rem-bg-color:#fcdcdc;
-color-scheme:light;
 }
 *{box-sizing:border-box}
 html{font-size:2vmin;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--main-fg-color);background:var(--main-bg-color);padding-bottom:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}

@@ -484,7 +484,7 @@ var statInfo={
 		type:'enum',
 		values: {
 			'swerve-drive-specialties':'robot_swerve_sds',
-			'andymark':'robot_swerve_am',
+			'thriftybot':'robot_swerve_thrifty',
 			'rev-robotics':'robot_swerve_rev',
 			'westcoast-products':'robot_swerve_wcp',
 			'other':'robot_swerve_other'
@@ -2172,7 +2172,7 @@ function showPitScouting(el,team){
 	}
 
 	function translation(node,s,prefix){
-		var swerveMap={'swerve-drive-specialties':'sds','andymark':'am','rev-robotics':'rev','westcoast-products':'wcp','other':'other'}
+		var swerveMap={'swerve-drive-specialties':'sds','thriftybot':'thrifty','rev-robotics':'rev','westcoast-products':'wcp','other':'other'}
 		var key=s
 		if(prefix==='robot_swerve_'&&swerveMap[s])key=swerveMap[s]
 		return node.attr('data-i18n',is(s)?`${prefix}${key}`.replace(/-/g,'_'):'pit_scout_not_answered')

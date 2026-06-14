@@ -358,38 +358,6 @@ addI18n({
 	},
 })
 
-addI18n({
-	theme_label:{
-		en:'Theme',he:'ערכת נושא',pt:'Tema',fr:'Thème',tr:'Tema',zh_tw:'主題',es:'Tema',
-	},
-	theme_system:{
-		en:'System',he:'מערכת',pt:'Sistema',fr:'Système',tr:'Sistem',zh_tw:'系統',es:'Sistema',
-	},
-	theme_light:{
-		en:'Light',he:'בהיר',pt:'Claro',fr:'Clair',tr:'Açık',zh_tw:'淺色',es:'Claro',
-	},
-	theme_dark:{
-		en:'Dark',he:'כהה',pt:'Escuro',fr:'Sombre',tr:'Koyu',zh_tw:'深色',es:'Oscuro',
-	},
-})
-
-function resolveTheme(t){
-	if(t=='light'||t=='dark')return t
-	return (window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark'
-}
-function getStoredTheme(){
-	return localStorage.getItem('theme')||'system'
-}
-function applyTheme(){
-	document.documentElement.setAttribute('data-theme',resolveTheme(getStoredTheme()))
-}
-applyTheme()
-if(window.matchMedia){
-	window.matchMedia('(prefers-color-scheme: light)').addEventListener('change',function(){
-		if(getStoredTheme()=='system')applyTheme()
-	})
-}
-
 var locale=computeLocale()
 
 function addI18n(i){
@@ -531,18 +499,6 @@ $(document).ready(function(){
 					localStorage.locale=locale=$(this).val()
 					applyTranslations()
 
-				})
-				var themeOrder=['system','light','dark'],themeIcon={system:'🌗',light:'☀️',dark:'🌙'}
-				function updateThemeToggle(){
-					var t=getStoredTheme()
-					$('#theme-toggle').html(themeIcon[t]+' <span>'+translate('theme_'+t)+'</span>').attr('data-tooltip',translate('theme_label'))
-				}
-				updateThemeToggle()
-				$('#theme-toggle').click(function(){
-					var next=themeOrder[(themeOrder.indexOf(getStoredTheme())+1)%themeOrder.length]
-					localStorage.setItem('theme',next)
-					applyTheme()
-					updateThemeToggle()
 				})
 				showMainMenuUploads()
 				$('#logout-link').click(function(){

@@ -235,6 +235,15 @@ addI18n({
 		fr:'AndyMark',
 		zh_tw:'安迪馬克',
 	},
+	robot_swerve_thrifty:{
+		en:'ThriftyBot',
+		es:'ThriftyBot',
+		pt:'ThriftyBot',
+		tr:'ThriftyBot',
+		he:'ThriftyBot',
+		fr:'ThriftyBot',
+		zh_tw:'ThriftyBot',
+	},
 	robot_swerve_rev:{
 		en:'REV Robotics',
 		pt:'REV Robotics',

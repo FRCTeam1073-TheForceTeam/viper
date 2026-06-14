@@ -19,6 +19,15 @@ addI18n({
 		fr:'Photos du robot pour _EVENT_',
 		es:'Fotos de robot para _EVENT_',
 	},
+	choose_file_label:{
+		en:'Choose file',
+		pt:'Escolher arquivo',
+		fr:'Choisir un fichier',
+		tr:'Dosya seç',
+		zh_tw:'選擇檔案',
+		he:'בחר קובץ',
+		es:'Elegir archivo',
+	},
 	season_label:{
 		en:'Season:',
 		pt:'Temporada:',
@@ -204,7 +213,10 @@ function imageCell(imgName){
 	pdb.get(`${season}_photo_${imgName}`,p=>img.attr('src',p?p:`/data/${season}/${imgName}.jpg`))
 	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
 	.append(img)
-	if(hasLocalStorageCapacity())td.append($(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload))
+	if(hasLocalStorageCapacity()){
+		var fileInput=$(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload)
+		td.append($('<label class=file-button><span data-i18n=choose_file_label></span></label>').append(fileInput))
+	}
 	else td.append($('<div data-i18n=localstorage_full>'))
 	return td
 }
