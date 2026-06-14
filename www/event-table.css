@@ -1,9 +1,14 @@
 #schedule td,#schedule th{padding:1vmin;font-size:120%}
-#schedule input{width:3.5em}
-button.team{width:3.5em;height:1.5em;font-size:140%;margin:0.25em}
+#schedule input{width:4em;text-align:center}
+#schedule input:focus{outline:3px solid var(--winner-color);outline-offset:0;position:relative;z-index:1}
+button.team{width:4em;font-size:120%;text-align:center;margin:0.25em}
 #team-list{min-width:320px;column-width:4em;display:block;margin:0 auto}
 #schedule{overflow-x:auto;max-width:100%}
 table{margin:1em auto}
 .side-by-side{max-width:500px}
+/* Event-info fields: input flexes to fill the field so text can't run off it */
+#tableForm > .side-by-side{display:inline-flex;flex-direction:column;align-items:stretch;gap:.2em;width:10em;max-width:100%;text-align:start;vertical-align:top;margin:.4em}
+#tableForm > .side-by-side > span{font-size:.85em;font-weight:600;opacity:.85}
+#tableForm > .side-by-side input,#tableForm > .side-by-side select{width:100%;box-sizing:border-box;font:inherit;padding:.3em .65em;border:1px solid var(--main-border-color);border-radius:var(--radius);background:var(--surface);color:var(--main-fg-color)}
 #buttons {position:fixed;left:0;right:0;bottom:0;background:var(--main-bg-color);padding-bottom:1em}
 body{padding-bottom:100vh}

@@ -16,32 +16,34 @@
 </head>
 <body>
 <h1 data-i18n=add_event_title></h1>
-<label>
+<label class=comp-label>
 	<span data-i18n=add_event_comp_type></span> <select id=comp>
 		<option value=frc>FRC</option>
 		<option value=ftc>FTC</option>
 	</select>
 </label>
 
-<div class="option side-by-side">
-	<h3><a href="/event-table.html#_COMP_" data-i18n=add_event_data_entry_title></a></h3>
-	<span data-i18n=add_event_data_entry_description></span>
-</div>
-<div class="option side-by-side">
-	<h3><a href="/event-upload.html#_COMP_" data-i18n=add_event_upload_title></a></h3>
-	<span data-i18n=add_event_upload_description></span>
-</div>
-<div class="option side-by-side">
-	<h3><a href="/api-events.html#_SEASON_" data-i18n=add_event_api_title></a></h3>
-	<span data-i18n=add_event_api_description></span>
-</div>
-<div class="option side-by-side">
-	<h3 data-i18n=add_event_import_title></h3>
-	<span data-i18n=add_event_import_description></span>
-	<form method=POST action=/admin/import.cgi enctype=multipart/form-data>
-		<label><span data-i18n=add_event_import_file></span> <input type=file name=json accept=application/json></label>
-		<input type=submit data-i18n-value=add_event_import_upload>
-	</form>
+<div class=options-grid>
+	<div class=option>
+		<h3><a href="/event-table.html#_COMP_" data-i18n=add_event_data_entry_title></a></h3>
+		<span data-i18n=add_event_data_entry_description></span>
+	</div>
+	<div class=option>
+		<h3><a href="/event-upload.html#_COMP_" data-i18n=add_event_upload_title></a></h3>
+		<span data-i18n=add_event_upload_description></span>
+	</div>
+	<div class=option>
+		<h3><a href="/api-events.html#_SEASON_" data-i18n=add_event_api_title></a></h3>
+		<span data-i18n=add_event_api_description></span>
+	</div>
+	<div class=option>
+		<h3 data-i18n=add_event_import_title></h3>
+		<span data-i18n=add_event_import_description></span>
+		<form method=POST action=/admin/import.cgi enctype=multipart/form-data>
+			<label><span data-i18n=add_event_import_file></span> <input type=file name=json accept=application/json></label>
+			<input type=submit data-i18n-value=add_event_import_upload>
+		</form>
+	</div>
 </div>
 </body>
 </html>

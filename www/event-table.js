@@ -154,7 +154,7 @@ function addRow(table){
 	for(var j=0; j<BOT_POSITIONS.length; j++){
 		row.append(
 			$('<td>').attr('class',BOT_POSITIONS[j][0]=='R'?'redTeamBG':'blueTeamBG').append(
-				$('<input inputmode=numeric type=text placeholder="team#" pattern="^[0-9]+$">').attr('name',table+rowNum+BOT_POSITIONS[j])
+				$('<input inputmode=numeric type=text placeholder="team#" pattern="^[0-9]+$" maxlength=5>').attr('name',table+rowNum+BOT_POSITIONS[j])
 			)
 		)
 	}

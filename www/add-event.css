@@ -1,2 +1,14 @@
-.option{border:1px solid var(--main-border-color);max-width:16em;min-height:15em;margin:0.4em;padding:0.8em}
-label{border:1px solid var(--main-border-color);max-width:20em;margin:0.4em auto;padding:0.8em;display:block}
+/* Comp-type selector — clean centered chip */
+.comp-label{display:inline-flex;align-items:center;gap:.5em;margin:1em auto;padding:.5em .8em;border:1px solid var(--main-border-color);border-radius:var(--radius);background:var(--surface)}
+
+/* Options — responsive card grid (2x2 desktop, single column mobile) */
+.options-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15em,1fr));gap:.8em;max-width:40em;margin:1.2em auto;padding:0 .5em;text-align:start}
+.option{display:flex;flex-direction:column;gap:.5em;min-height:13em;margin:0;padding:1em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);transition:border-color .15s ease}
+.option:hover{border-color:var(--accent)}
+.option h3{margin:0;font-size:1.15em}
+.option h3 a,.option h3 a:link{color:var(--link-color)}
+.option>span{opacity:.85}
+
+/* Import card form pinned to the bottom */
+.option form{margin-top:auto;display:flex;flex-direction:column;gap:.5em;align-items:flex-start}
+.option form label{display:flex;align-items:center;gap:.4em;flex-wrap:wrap}

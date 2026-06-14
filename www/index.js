@@ -1,7 +1,7 @@
 "use strict"
 addI18n({
 	full_season_link:{
-		en:'_YEAR_ full season stats',
+		en:'_YEAR_ Full Season Stats',
 		tr:'_YEAR_ tam sezon istatistikleri',
 		pt:'Estatísticas completas da temporada _YEAR_',
 		fr:'Statistiques de la saison complète de _YEAR_',
