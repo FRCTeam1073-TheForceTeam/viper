@@ -17,22 +17,21 @@
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body>
-<div id=field><canvas id=fieldDraw></canvas></div>
+<div id=drawingControls>
+	<button class="pen selected icon-button draw-mode" data-type=pencil style=color:black data-i18n-tooltip=black_pen_tooltip><span class=ctl-icon>⬤</span><span class=ctl-label data-i18n=pen_label></span></button>
+	<span id=stamps></span>
+	<button class="eraser icon-button draw-mode" data-i18n-tooltip=eraser_tooltip><span class=ctl-icon>◍</span><span class=ctl-label data-i18n=eraser_label></span></button>
+	<button class="undo icon-button" data-i18n-tooltip=undo_tooltip><span class=ctl-icon>↶</span><span class=ctl-label data-i18n=undo_label></span></button>
+	<button class="clear icon-button" data-i18n-tooltip=clear_tooltip><span class=ctl-icon>✘</span><span class=ctl-label data-i18n=clear_label></span></button>
+	<button class="rotate icon-button" data-i18n-tooltip=rotate_tooltip><span class=ctl-icon>🗘</span><span class=ctl-label data-i18n=rotate_label></span></button>
+	<button class="printer icon-button" data-i18n-tooltip=print_tooltip><span class=ctl-icon>🖶</span><span class=ctl-label data-i18n=print_label></span></button>
+	<button class="clear-teams icon-button" data-i18n-tooltip=choose_teams_tooltip><span class=ctl-icon>▦</span><span class=ctl-label data-i18n=teams_label></span></button>
+	<button class="configure-stats icon-button" data-i18n-tooltip=configure_tooltip><span class=ctl-icon>⚙</span><span class=ctl-label data-i18n=stats_label></span></button>
+	<button class="showInstructions icon-button" data-i18n-tooltip=instructions_tooltip><span class=ctl-icon>?</span><span class=ctl-label data-i18n=help_label></span></button>
+</div>
+<div id=field><div id=fieldRotor></div><canvas id=fieldDraw></canvas></div>
 <div id=stats>
 <h3 data-i18n=planner_heading></h3>
-<div id=drawingControls>
-	<button class="pen selected icon-button draw-mode" data-type=pencil style=color:black data-i18n-tooltip=black_pen_tooltip>⬤</button>
-	<span id=stamps>
-	</span>
-	<button class="eraser icon-button draw-mode" data-i18n-tooltip=eraser_tooltip>◍</button>
-	<button class="undo icon-button" data-i18n-tooltip=undo_tooltip>↶</button>
-	<button class="clear icon-button" data-i18n-tooltip=clear_tooltip>✘</button>
-	<button class="rotate icon-button" data-i18n-tooltip=rotate_tooltip>🗘</button>
-	<button class="printer icon-button" data-i18n-tooltip=print_tooltip>🖶</button>
-	<button class="clear-teams icon-button" data-i18n-tooltip=choose_teams_tooltip>▦</button>
-	<button class="configure-stats icon-button" data-i18n-tooltip=configure_tooltip>⚙</button>
-	<button class="showInstructions icon-button" data-i18n-tooltip=instructions_tooltip>?</button>
-</div>
 <table id=statsTable>
 	<thead>
 	<tr>
@@ -70,8 +69,8 @@
 <div class=footnote data-include-practice=stats_include_practice data-exclude-practice=stats_exclude_practice></div>
 <div class=footnote id=switch-to-season><a data-i18n=switch_to_season_link></a></div>
 <div class=teamDataEntry>
-	<div>Match: <select id=matchList></select></div>
-	- OR -
+	<label class=matchSelect>Match: <select id=matchList></select></label>
+	<span class=orDivider>- OR -</span>
 	<div id=teamButtons></div>
 </div>
 </div>

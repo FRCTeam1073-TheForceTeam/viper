@@ -35,6 +35,10 @@ h3{margin:0 0 .25em 0;padding:0}
 .narrow li>a{display:block;padding:.35em .5em;border-radius:var(--radius);color:var(--link-color);text-decoration:none}
 .narrow li>a:hover{background:var(--lowlight-bg-color);text-decoration:none}
 .narrow li>ul{margin-top:0.2em;padding-inline-start:0.6em}
+/* Zebra-stripe nav items (only in lists with more than one option) so each reads as distinct */
+#event-menu li:not(:only-child)>a{background:var(--surface)}
+#event-menu li:not(:only-child):nth-child(odd)>a{background:var(--lowlight-bg-color)}
+#event-menu li:not(:only-child)>a:hover{background:var(--accent);color:var(--button-fg-color)}
 
 /* Section cards */
 #event-menu{display:flex;flex-direction:column;gap:.6em}

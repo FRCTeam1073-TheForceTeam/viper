@@ -136,6 +136,15 @@ addI18n({
 		he:'_EVENT_ _MATCHSHORT_',
 		zh_tw:'_EVENT_ _MATCHSHORT_',
 	},
+	pen_label:{en:'Pen',es:'Bolígrafo',fr:'Stylo',pt:'Caneta',tr:'Kalem',he:'עט',zh_tw:'筆'},
+	eraser_label:{en:'Eraser',es:'Borrador',fr:'Effaceur',pt:'Apagador',tr:'Silgi',he:'מחק',zh_tw:'橡皮擦'},
+	undo_label:{en:'Undo',es:'Deshacer',fr:'Annuler',pt:'Desfazer',tr:'Geri al',he:'בטל',zh_tw:'撤銷'},
+	clear_label:{en:'Clear',es:'Borrar',fr:'Effacer',pt:'Limpar',tr:'Temizle',he:'נקה',zh_tw:'清除'},
+	rotate_label:{en:'Rotate',es:'Girar',fr:'Pivoter',pt:'Girar',tr:'Döndür',he:'סובב',zh_tw:'旋轉'},
+	print_label:{en:'Print',es:'Imprimir',fr:'Imprimer',pt:'Imprimir',tr:'Yazdır',he:'הדפס',zh_tw:'列印'},
+	teams_label:{en:'Teams',es:'Equipos',fr:'Équipes',pt:'Equipes',tr:'Takımlar',he:'קבוצות',zh_tw:'隊伍'},
+	stats_label:{en:'Stats',es:'Estadísticas',fr:'Stats',pt:'Estatísticas',tr:'İstatistik',he:'סטטיסטיקה',zh_tw:'統計'},
+	help_label:{en:'Help',es:'Ayuda',fr:'Aide',pt:'Ajuda',tr:'Yardım',he:'עזרה',zh_tw:'說明'},
 })
 
 var matchId,
@@ -150,7 +159,7 @@ onApplyTranslation.push(function(){
 
 $(document).ready(function(){
 	onApplyTranslation.push(fillStats)
-	if (typeof eventYear !== 'undefined') $('#field').prepend($('<img id=fieldBG>').attr('src',`/${eventYear}/field-whiteboard.png`))
+	if (typeof eventYear !== 'undefined') $('#fieldRotor').append($('<img id=fieldBG>').attr('src',`/${eventYear}/field-whiteboard.png`))
 	if (eventCompetition=='ftc') $('.noftc').hide()
 
 	$('.rotate').click(function(){
@@ -261,28 +270,26 @@ $(document).ready(function(){
 	window.addEventListener("resize",sizeWhiteboard)
 
 	function sizeWhiteboard(){
+		// portrait aspect ratio of the source field image (down-field / cross-field)
 		var winH = $(window).height(),
-		fieldR=window.whiteboard_aspect_ratio||(eventCompetition=='ftc'?1:2),
 		winW=$(window).width(),
+		fieldR=window.whiteboard_aspect_ratio||(eventCompetition=='ftc'?1:2),
 		margin=winW<500?0:winW/150,
-		spacing=winW/100,
-		vert=winW<750,
-		statsW=vert?winW-margin-margin:Math.max(400,winW/3),
-		fieldW=vert?winW-margin-margin:winW-statsW-spacing-margin-margin,
-		fieldH=fieldR*fieldW
-		if (fieldH>winH-margin-margin){
-			fieldH=winH-margin-margin
-			fieldW=fieldH/fieldR
+		// the field is rendered landscape: the long (down-field) axis runs horizontally
+		fieldW=winW-margin-margin,
+		fieldH=fieldW/fieldR,
+		maxFieldH=winH*0.6
+		if (fieldH>maxFieldH){
+			fieldH=maxFieldH
+			fieldW=fieldH*fieldR
 		}
-		if(!vert)statsW=Math.max(statsW,winW-fieldW-margin-margin-spacing)
-		var h3W=statsW-70,
-		statsL=vert?0:fieldW+spacing+margin,
-		statsT=vert?fieldH+spacing+margin:0
-		$('#field,#fieldBG,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
-		$('#field').css('top',margin).css('left',margin)
-		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css('left',statsL).css('top',statsT)
-		$('h3').css('width',`${h3W}px`)
-		$('body').css('overflow-y',vert?'visible':'hidden')
+		// the rotor holds the bg image + overlays in portrait space, then rotates 90deg into the landscape box
+		$('#field,#fieldDraw').css('width',`${fieldW}px`).css('height',`${fieldH}px`)
+		$('#field').css('margin-top',margin)
+		$('#fieldRotor').css('width',`${fieldH}px`).css('height',`${fieldW}px`)
+			.css('left',`${(fieldW-fieldH)/2}px`).css('top',`${(fieldH-fieldW)/2}px`)
+		$('#stats').css('width',`${fieldW}px`).css('max-width',`${fieldW}px`)
+		$('body').css('overflow-y','visible')
 		if(!whiteboard) whiteboard = new Whiteboard($('#fieldDraw')[0])
 		drawOverlays()
 	}
@@ -331,14 +338,16 @@ $(document).ready(function(){
 				if (team == getLocalTeam() && (i>=BOT_POSITIONS.length/2)) $('#fieldBG').addClass('rotated')
 			})
 			tbody.append(row)
-			;["","-top"].forEach(function(imageSuffix){
-				row = $("<tr>")
-				teamList.forEach(function(team,i){
-					var color = (i<BOT_POSITIONS.length/2)?"red":"blue"
-					row.append($(`<td class="${color}TeamBG">`).click(showImg).html(`<img src=/data/${eventYear}/${team}${imageSuffix}.jpg>`))
+			row = $("<tr>")
+			teamList.forEach(function(team,i){
+				var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
+				cell = $(`<td class="${color}TeamBG photoCell">`)
+				;["","-top"].forEach(function(imageSuffix){
+					cell.append($(`<img src=/data/${eventYear}/${team}${imageSuffix}.jpg>`).click(showImg))
 				})
-				tbody.append(row)
+				row.append(cell)
 			})
+			tbody.append(row)
 			statsConfig.getStatsConfig().forEach(field=>{
 				var info = statInfo[field]||{},
 				name = translate(field)
@@ -407,8 +416,8 @@ $(document).ready(function(){
 					invert = !!fieldInfo.whiteboard_invert,
 					height = end - start,
 					width = sRight - sLeft,
-					whiteboard = $('#field'),
-					whiteboardBounds = whiteboard[0].getBoundingClientRect(),
+					whiteboard = $('#fieldRotor'),
+					whiteboardBounds = {width:whiteboard.width(),height:whiteboard.height()},
 					source = fieldInfo.source,
 					type = fieldInfo.type,
 					dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
@@ -421,7 +430,7 @@ $(document).ready(function(){
 							} else {
 								canvas.css({top:start*whiteboardBounds.height})
 							}
-							$('#field').append(canvas)
+							whiteboard.append(canvas)
 							canvas[0].width = canvas[0].clientWidth
 							canvas[0].height = canvas[0].clientHeight
 							;(data||[]).forEach(path=>{
@@ -515,7 +524,8 @@ $(document).ready(function(){
 	}
 
 	function showImg(){
-		showLightBox($('#fullPhoto').attr('src', $(this).find('img').attr('src')))
+		var img = $(this).is('img') ? $(this) : $(this).find('img')
+		showLightBox($('#fullPhoto').attr('src', img.attr('src')))
 	}
 	$('#fullPhoto').click(closeLightBox)
 	$('title').text($('title').text().replace("EVENT", eventName))
