@@ -132,6 +132,7 @@ The router has the following plugged into it:
  - Ethernet cord to the network switch
  - USB power from the splitter
  - A USB cord to plug in a phone that can share its network connection with the system via USB tethering
+ - [Instructions for configuring the router software](router-glinet.md)
 
 ### Network switch
 
@@ -144,6 +145,7 @@ The router has the following plugged into it:
 
  - Ethernet via a micro-USB dongle
  - Power via micro-USB from the USB splitter
+ - [Instructions for install Viper on Linux](linux-install.md)
 
 
 ## Other documentation
