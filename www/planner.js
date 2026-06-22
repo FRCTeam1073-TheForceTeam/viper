@@ -37,14 +37,23 @@ addI18n({
 		zh_tw:'白板清除',
 		fr:'Effacement du tableau blanc',
 	},
+	redo_tooltip:{
+		en:'Whiteboard redo',
+		tr:'Beyaz tahta yinele',
+		he:'בצע שוב לוח לבן',
+		pt:'Refazer quadro branco',
+		zh_tw:'白板重做',
+		fr:'Rétablir le tableau blanc',
+		es:'Rehacer',
+	},
 	rotate_tooltip:{
-		en:'Whiteboard rotate',
-		es:'Girar',
-		tr:'Beyaz tahta döndür',
-		he:'סיבוב לוח לבן',
-		pt:'Girar quadro branco',
-		zh_tw:'白板旋轉',
-		fr:'Rotation du tableau blanc',
+		en:'Whiteboard flip',
+		es:'Voltear',
+		tr:'Beyaz tahta çevir',
+		he:'הפוך לוח לבן',
+		pt:'Virar quadro branco',
+		zh_tw:'白板翻轉',
+		fr:'Retourner le tableau blanc',
 	},
 	print_tooltip:{
 		en:'Print, save page',
@@ -139,12 +148,17 @@ addI18n({
 	pen_label:{en:'Pen',es:'Bolígrafo',fr:'Stylo',pt:'Caneta',tr:'Kalem',he:'עט',zh_tw:'筆'},
 	eraser_label:{en:'Eraser',es:'Borrador',fr:'Effaceur',pt:'Apagador',tr:'Silgi',he:'מחק',zh_tw:'橡皮擦'},
 	undo_label:{en:'Undo',es:'Deshacer',fr:'Annuler',pt:'Desfazer',tr:'Geri al',he:'בטל',zh_tw:'撤銷'},
+	redo_label:{en:'Redo',es:'Rehacer',fr:'Rétablir',pt:'Refazer',tr:'Yinele',he:'בצע שוב',zh_tw:'重做'},
 	clear_label:{en:'Clear',es:'Borrar',fr:'Effacer',pt:'Limpar',tr:'Temizle',he:'נקה',zh_tw:'清除'},
-	rotate_label:{en:'Rotate',es:'Girar',fr:'Pivoter',pt:'Girar',tr:'Döndür',he:'סובב',zh_tw:'旋轉'},
+	rotate_label:{en:'Flip',es:'Voltear',fr:'Retourner',pt:'Virar',tr:'Çevir',he:'הפוך',zh_tw:'翻轉'},
 	print_label:{en:'Print',es:'Imprimir',fr:'Imprimer',pt:'Imprimir',tr:'Yazdır',he:'הדפס',zh_tw:'列印'},
 	teams_label:{en:'Teams',es:'Equipos',fr:'Équipes',pt:'Equipes',tr:'Takımlar',he:'קבוצות',zh_tw:'隊伍'},
 	stats_label:{en:'Stats',es:'Estadísticas',fr:'Stats',pt:'Estatísticas',tr:'İstatistik',he:'סטטיסטיקה',zh_tw:'統計'},
 	help_label:{en:'Help',es:'Ayuda',fr:'Aide',pt:'Ajuda',tr:'Yardım',he:'עזרה',zh_tw:'說明'},
+	custom_match_label:{en:'Custom',es:'Personalizado',fr:'Personnalisé',pt:'Personalizado',tr:'Özel',he:'מותאם אישית',zh_tw:'自訂'},
+	hide_practice_label:{en:'Hide practice',es:'Ocultar práctica',fr:'Masquer entraînement',pt:'Ocultar treino',tr:'Antrenmanı gizle',he:'הסתר אימון',zh_tw:'隱藏練習賽'},
+	more_stats_label:{en:'More stats',es:'Más estadísticas',fr:'Plus de stats',pt:'Mais estatísticas',tr:'Daha fazla istatistik',he:'עוד סטטיסטיקה',zh_tw:'更多統計'},
+	my_matches_label:{en:'My matches',es:'Mis partidos',fr:'Mes matchs',pt:'Minhas partidas',tr:'Maçlarım',he:'המשחקים שלי',zh_tw:'我的比賽'},
 })
 
 var matchId,
@@ -238,18 +252,17 @@ $(document).ready(function(){
 				var team = teamList[i]
 				$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).attr('data-tooltip',getTeamInfo(team)).click(teamButtonClicked))
 			}
-			$('#matchList').html('').append($('<option selected=1>')).change(function(){
+			$('#matchList').off('change.match').on('change.match',function(){
 				matchId = $(this).val()
 				var match = (eventMatches.filter(m=>m.Match==matchId))[0]
 				BOT_POSITIONS.forEach(function(pos){
-					$(`#${pos}`).val(match[pos])
+					$(`#${pos}`).val(match?match[pos]:"")
 				})
 				fillStats()
 				focusNext()
 			})
-			eventMatches.forEach(match=>{
-				$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',match.Match))
-			})
+			$('#hidePractice,#myMatchesOnly').off('change.practice').on('change.practice',populateMatchList)
+			populateMatchList()
 			fillStats()
 
 			if (window.whiteboardStamps){
@@ -329,7 +342,6 @@ $(document).ready(function(){
 			$(this).parent().attr('data-tooltip',tooltip)
 		})
 		$('#switch-to-season').toggle(!/combined$/.test(eventId)).find('a').attr('href','#'+getHash(eventId.replace(/(20[[0-9]{2}(-[0-9]{2})?).*/,"$1combined"),null,getTeamPositions()))
-		$('.teamDataEntry').toggle(teamList.length!=BOT_POSITIONS.length)
 		if(teamList.length==BOT_POSITIONS.length){
 			var row = $("<tr>")
 			teamList.forEach(function(team,i){
@@ -348,11 +360,14 @@ $(document).ready(function(){
 				row.append(cell)
 			})
 			tbody.append(row)
-			statsConfig.getStatsConfig().forEach(field=>{
+			var statRowIndex = 0
+			function appendStatRow(field, hidden){
 				var info = statInfo[field]||{},
-				name = translate(field)
+				name = translate(field),
+				row, extraRow
 				if (info.whiteboard_end === undefined){
-					row = $("<tr>")
+					row = $("<tr class=statRow>")
+					if (statRowIndex++ % 2) row.addClass('alt')
 					var best=info.good=='low'?99999999:-99999999,
 					worst=-best
 					teamList.forEach(function(team,i){
@@ -374,26 +389,113 @@ $(document).ready(function(){
 						row.append($(`<td class="${color}TeamBG">`).addClass(val==best?"best":"").text(dispVal))
 					})
 					row.append($('<th>').text(name))
-					tbody.append(row)
 				} else {
-					var forUs = !!info.whiteboard_us
+					var forUs = !!info.whiteboard_us,
+					rotated = $('#fieldBG').is('.rotated'),
+					half = BOT_POSITIONS.length/2,
+					perTeam = !!info.whiteboard_per_team,
+					defaultOn = isRed => !hidden && (forUs==!rotated) == isRed
 					row = $("<tr>")
-					teamList.forEach(function(team,i){
-						var color = (i<BOT_POSITIONS.length/2)?"red":"blue",
-						checkbox = $(`<input id="${field}_${team}" type=checkbox>`).change(drawOverlays)
-						if ((forUs==!$('#fieldBG').is('.rotated')) == (i<BOT_POSITIONS.length/2)) checkbox.attr('checked',"")
-						row.append($(`<td class="${color}TeamBG">`).append(checkbox).click(function(e){
-							if ($(e.target).is('input[type=checkbox]')) return
-							const cb = $(this).find('input[type=checkbox]')
-							cb.prop('checked',!cb.prop('checked')).change()
-						}))
+					;[true,false].forEach(function(isRed){
+						var color = isRed?"red":"blue",
+						toggle = $(`<input id="${field}_${color}" type=checkbox>`)
+						if (defaultOn(isRed)) toggle.attr('checked',"")
+						toggle.change(function(){
+							// the alliance toggle is a master switch over its teams' per-team toggles
+							if (perTeam) teamList.forEach(function(t,i){
+								if ((i<half)===isRed) $(`#${field}_team_${i}`).prop('checked',toggle.prop('checked'))
+							})
+							drawOverlays()
+						})
+						row.append($(`<td colspan=${half} class="${color}TeamBG allianceToggle">`)
+							.append($('<label class=switch>').append(toggle).append($('<span class=slider>'))))
 					})
-					row.append($('<th>').text(name))
-					tbody.append(row)
+					var nameTh = $('<th>').text(name)
+					if (perTeam){
+						var caret = $('<span class=perTeamCaret>▾</span>')
+						nameTh.append(' ').append(caret)
+						// one collapsed row beneath, with a per-team toggle aligned under each team column
+						extraRow = $('<tr class=perTeamRow>').hide()
+						teamList.forEach(function(team,i){
+							var color = (i<half)?"red":"blue",
+							tt = $(`<input id="${field}_team_${i}" type=checkbox>`).change(drawOverlays)
+							if (defaultOn(i<half)) tt.attr('checked',"")
+							extraRow.append($(`<td class="${color}TeamBG allianceToggle">`)
+								.append($('<label class=switch>').append(tt).append($('<span class=slider>'))))
+						})
+						extraRow.append($('<th>'))
+						caret.click(function(){
+							extraRow.toggle()
+							caret.text(extraRow.is(':visible')?'▴':'▾')
+						})
+					}
+					row.append(nameTh)
 				}
-			})
+				if (hidden) row.addClass('more-stat').hide()
+				tbody.append(row)
+				if (extraRow){
+					if (hidden) extraRow.addClass('more-stat')
+					tbody.append(extraRow)
+				}
+			}
+
+			var allFields = statsConfig.getStatsConfig(),
+			isToggle = f=>(statInfo[f]||{}).whiteboard_end !== undefined,
+			anyDefault = allFields.some(f=>(statInfo[f]||{}).whiteboard_default),
+			numericFields = allFields.filter(f=>!isToggle(f)),
+			defaultToggles = allFields.filter(f=>isToggle(f)&&(!anyDefault||(statInfo[f]||{}).whiteboard_default)),
+			moreToggles = anyDefault?allFields.filter(f=>isToggle(f)&&!(statInfo[f]||{}).whiteboard_default):[]
+			numericFields.forEach(f=>appendStatRow(f,false))
+			defaultToggles.forEach(f=>appendStatRow(f,false))
+			if (moreToggles.length){
+				tbody.append($('<tr class=more-toggle-row>').append(
+					$(`<td colspan=${teamList.length+1} class=more-toggle>`)
+						.append($('<span class=more-caret>▸</span>'))
+						.append(' ')
+						.append($('<span data-i18n=more_stats_label>'))
+				).click(function(){
+					var rows = tbody.find('.more-stat'),
+					show = rows.first().is(':hidden')
+					rows.toggle(show)
+					$(this).find('.more-caret').text(show?'▾':'▸')
+				}))
+				moreToggles.forEach(f=>appendStatRow(f,true))
+			}
 			applyTranslations(tbody)
 		}
+	}
+
+	function populateMatchList(){
+		var hidePractice = $('#hidePractice').prop('checked'),
+		myMatchesOnly = $('#myMatchesOnly').prop('checked'),
+		myTeam = getLocalTeam(),
+		current = matchId
+		$('#matchList').html('').append($('<option value="">').attr('data-i18n','custom_match_label'))
+		eventMatches.forEach(match=>{
+			if (hidePractice && /^pm/.test(match.Match)) return
+			if (myMatchesOnly && myTeam && !BOT_POSITIONS.some(pos=>match[pos]==myTeam)) return
+			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',match.Match))
+		})
+		$('#matchList').val(current||"")
+		applyTranslations($('#matchList'))
+	}
+
+	// like drawPath() in canvas-path.js, but scales coordinates by the canvas's own width/height instead of
+	// getBoundingClientRect(); the path canvas is rotated 90deg inside the rotor, so the bounding box is W/H-swapped
+	function drawPathOnRotated(canvas, color, path, reversedX){
+		var ctx = canvas.getContext('2d'), last, w = canvas.width, h = canvas.height
+		ctx.lineWidth = w*.005
+		path.split(/ /).forEach(point=>{
+			var m = point.match(/^([0-9]{1,2})x([0-9]{1,2})$/)
+			if (!m) return
+			var px = parseInt(m[1]), py = parseInt(m[2])
+			if (reversedX) px = 100-px
+			ctx.fillStyle = ctx.strokeStyle = color
+			var c = {x:Math.round(px*w/100), y:Math.round(py*h/100)}
+			if (last) drawArrow(ctx, last, c, w*.015)
+			else drawDot(ctx, c, w*.01)
+			last = c
+		})
 	}
 
 	function drawOverlays(){
@@ -403,10 +505,11 @@ $(document).ready(function(){
 			var	fieldInfo = statInfo[field]||{}
 			if (fieldInfo.whiteboard_end !== undefined){
 				teamList.forEach(function(team,i){
-					var enabled = $(`#${field}_${team}`).prop('checked'),
+					var isRed = i<BOT_POSITIONS.length/2,
+					perTeamToggle = $(`#${field}_team_${i}`),
+					enabled = perTeamToggle.length ? perTeamToggle.prop('checked') : $(`#${field}_${isRed?'red':'blue'}`).prop('checked'),
 					style = $(`#bot-${i}-pen`).attr('style').split(/[:;]/),
 					rotated = $('#fieldBG').is('.rotated'),
-					isRed = i<BOT_POSITIONS.length/2,
 					atBottom = rotated != isRed,
 					char = fieldInfo.whiteboard_char||"&",
 					start = (fieldInfo.whiteboard_start??0)/100,
@@ -433,8 +536,10 @@ $(document).ready(function(){
 							whiteboard.append(canvas)
 							canvas[0].width = canvas[0].clientWidth
 							canvas[0].height = canvas[0].clientHeight
+							// draw with the canvas's own (un-rotated) dimensions; drawPath() uses getBoundingClientRect,
+							// which returns the rotor-rotated box and both clips and squishes the paths
 							;(data||[]).forEach(path=>{
-								drawPath(canvas, style[1], path, !atBottom && window.fieldRotationalSymmetry)
+								drawPathOnRotated(canvas[0], style[1], path, !atBottom && window.fieldRotationalSymmetry)
 							})
 						} else {
 							;(data||"").split(" ").forEach(coordinates=>{
@@ -541,6 +646,7 @@ $(document).ready(function(){
 	$('.eraser').click(()=>whiteboard.eraserMode.call(whiteboard))
 	$('.pen').click(function(){whiteboard.penMode.call(whiteboard,this.style.color)})
 	$('.undo').click(()=>whiteboard.undo.call(whiteboard))
+	$('.redo').click(()=>whiteboard.redo.call(whiteboard))
 
 	function stampWhiteboard(){
 		whiteboard.stampMode.call(whiteboard,this.querySelector('img'))
@@ -566,6 +672,11 @@ class Whiteboard {
 			this.canvas.width=this.canvas.height/this.canvas.clientHeight*this.canvas.clientWidth
 		}
 		this.ctx = canvas.getContext('2d')
+		this.eraserCursor=document.createElement('div')
+		this.eraserCursor.className='eraser-cursor'
+		document.body.appendChild(this.eraserCursor)
+		document.addEventListener("mousemove",e=>this.updateEraserCursor.call(this,e),{passive:true})
+		this.canvas.addEventListener("mouseleave",()=>this.eraserCursor.style.display='none')
 		document.addEventListener("mousemove",e=>this.moused.call(this,e),{passive:false})
 		document.addEventListener("mousedown",e=>this.moused.call(this,e),{passive:false})
 		document.addEventListener("mouseup",e=>this.moused.call(this,e),{passive:false})
@@ -578,23 +689,40 @@ class Whiteboard {
 		this.drawClear()
 		this.penMode('#000')
 		this.history=[]
+		this.redoStack=[]
 	}
 
 	stampMode(image){
 		this.mode='stamp'
 		this.canvas.style.cursor=`url('${image.src}'),cell`
 		this.stampImage=image
+		this.eraserCursor.style.display='none'
 	}
 
 	penMode(color){
 		this.color=color
 		this.mode='pen'
 		this.canvas.style.cursor="url('/pencil.svg'),crosshair"
+		this.eraserCursor.style.display='none'
 	}
 
 	eraserMode(){
 		this.mode='eraser'
 		this.canvas.style.cursor="url('/eraser.svg'),grab"
+	}
+
+	// show a circle under the cursor matching the area the eraser will clear (EraserStroke.lineScale)
+	updateEraserCursor(e){
+		if (this.mode!='eraser'||e.clientX<this.left||e.clientY<this.top||e.clientX>this.right||e.clientY>this.bottom){
+			this.eraserCursor.style.display='none'
+			return
+		}
+		var diameter=this.maxDimension*0.03*(this.width/this.canvas.width)
+		this.eraserCursor.style.width=`${diameter}px`
+		this.eraserCursor.style.height=`${diameter}px`
+		this.eraserCursor.style.left=`${e.clientX}px`
+		this.eraserCursor.style.top=`${e.clientY}px`
+		this.eraserCursor.style.display='block'
 	}
 
 	size(){
@@ -607,6 +735,7 @@ class Whiteboard {
 	}
 
 	clear(){
+		this.redoStack=[]
 		this.current=new ClearStroke()
 		this.history.push(this.current)
 		this.current.draw(this)
@@ -617,7 +746,12 @@ class Whiteboard {
 	}
 
 	undo(){
-		this.history.pop()
+		if (this.history.length) this.redoStack.push(this.history.pop())
+		this.redraw()
+	}
+
+	redo(){
+		if (this.redoStack.length) this.history.push(this.redoStack.pop())
 		this.redraw()
 	}
 
@@ -667,6 +801,7 @@ class Whiteboard {
 					this.current=new StampStroke(this.stampImage)
 					break
 			}
+			this.redoStack=[]
 			this.history.push(this.current)
 		}
 		this.current.addPoint(point,this.lastPoint)

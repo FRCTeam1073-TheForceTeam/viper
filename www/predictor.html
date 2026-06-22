@@ -6,12 +6,12 @@
 <meta charset="UTF-8">
 <link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
-<link rel=stylesheet href=/predictor.css>
+<link rel=stylesheet href="/predictor.css?v=backup10">
 <script src=/jquery.min.js></script>
 <script src=/main.js></script>
 <script src=/event-url.js></script>
 <script src=/stats-config.js></script>
-<script src=/predictor.js></script>
+<script src="/predictor.js?v=backup8"></script>
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
@@ -23,7 +23,7 @@
 	<button data-mode=playoff data-i18n=playoff_mode></button>
 </div>
 
-<label id=playoffStatsToggle style=display:none><span class=switch><input type=checkbox id=usePlayoffStats><span class=slider></span></span> <span data-i18n=use_playoff_stats></span></label>
+<label id=playoffStatsToggle style=display:none><span class=switch-label data-i18n=use_playoff_stats></span> <span class=switch><input type=checkbox id=usePlayoffStats><span class=slider></span></span></label>
 
 <div class=matchPick><span data-i18n=match_label></span> <select id=matchList></select></div>
 
@@ -49,6 +49,20 @@
 	<div class="alliancePanel blueSide">
 		<div class=panelLabel data-i18n=blue_heading></div>
 		<div class=slots id=blueAlliance></div>
+	</div>
+</div>
+
+<div id=backupSection style=display:none>
+	<span class=backupTitle data-i18n=backup_section_label></span>
+	<div id=backupGrid>
+		<div class=backupRow id=backupRow0>
+			<span data-i18n=backup_team_label></span><select id=backupTeamSelect0></select>
+			<span data-i18n=backup_replacing_label></span><select id=backupReplacingSelect0></select>
+		</div>
+		<div class="backupRow hide" id=backupRow1>
+			<span data-i18n=backup_team_label></span><select id=backupTeamSelect1></select>
+			<span data-i18n=backup_replacing_label></span><select id=backupReplacingSelect1></select>
+		</div>
 	</div>
 </div>
 

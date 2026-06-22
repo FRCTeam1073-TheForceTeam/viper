@@ -1,9 +1,112 @@
-button.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
-#teams{column-width:3.5em}
-button.team{width:3em;height:1.5em;font-size:140%;margin:0.25em}
-table{margin:1em auto;border-spacing:.1em;border-collapse:separate}
-table td,table th{padding:0.25em}
-.prediction div{font-size:200%}
-.matchup{padding:0 .5em;border-width:0.5em;border-style:solid}
-h4{padding:0;margin:0}
+/* ===== Section cards ===== */
+.card{max-width:40em;margin:1.2em auto;padding:1.2em;background:var(--section-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+.card h2{margin:0 0 .6em;font-size:1.2em;letter-spacing:.02em}
+.card>select{margin:0}
+
+/* ===== Toggle switch ===== */
+.toggleRow{display:flex;align-items:center;gap:.5em;margin-top:.8em;cursor:pointer;user-select:none}
+.toggleRow input{position:absolute;opacity:0;width:0;height:0}
+.toggleSwitch{position:relative;display:inline-block;width:2.4em;height:1.3em;flex:none;background:var(--button-bg-color);border:1px solid var(--main-border-color);border-radius:1em;transition:background .15s}
+.toggleSwitch::after{content:"";position:absolute;top:.15em;left:.15em;width:1em;height:1em;border-radius:50%;background:var(--main-fg-color);transition:transform .15s}
+.toggleRow input:checked+.toggleSwitch{background:var(--accent)}
+.toggleRow input:checked+.toggleSwitch::after{transform:translateX(1.1em)}
+.toggleRow input:focus-visible+.toggleSwitch{outline:2px solid var(--accent);outline-offset:2px}
+#importApiAlliances{display:block;margin-top:.9em;font-weight:600}
+
+/* ===== Import confirmation modal ===== */
+.modalOverlay{display:none;position:fixed;inset:0;z-index:1000;padding:1em;background:rgba(0,0,0,.55);align-items:center;justify-content:center}
+.modalOverlay.show{display:flex}
+.modalBox{background:var(--section-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1.2em 1.4em;width:100%;max-width:32em;max-height:90vh;overflow:auto}
+.modalBox h2{margin:0 0 .6em;font-size:1.15em;letter-spacing:.02em}
+.modalBox #importPreview{margin:.4em auto}
+.modalButtons{display:flex;gap:.6em;justify-content:flex-end;margin-top:1.1em}
+.modalButtons button{font-weight:600}
+#importConfirm{background:var(--accent);color:var(--accent-fg);border-color:transparent}
+#importConfirm:hover{filter:brightness(1.08);border-color:transparent}
+
+/* ===== Alliance selection table ===== */
+.allianceTable{border-collapse:separate;border-spacing:0;margin:0 auto;width:100%;max-width:30em}
+.allianceTable th,.allianceTable td{padding:.4em .55em;text-align:center}
+.allianceTable thead th{font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:.82em;opacity:.85;border-bottom:1px solid var(--main-border-color)}
+.allianceTable tbody th{font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent)}
+.allianceTable tbody tr+tr th,.allianceTable tbody tr+tr td{border-top:1px solid var(--main-border-color)}
+.allianceTable input{width:100%;text-align:center;font-variant-numeric:tabular-nums}
+/* Backup column only appears for 4-team alliances */
+.allianceTable .backupCol{display:none}
+.allianceTable.fourTeam .backupCol{display:table-cell}
+/* Highlight the slot the next picked team will fill */
+.allianceTable input.lastFocus{outline:2px solid #ffd60a;outline-offset:1px;border-color:#ffd60a}
+
+/* ===== Team pool buttons ===== */
+#teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.2em,1fr));gap:.4em;max-width:40em;margin:1.2em auto 0}
+button.team{width:100%;height:1.9em;padding:0 .2em;display:flex;align-items:center;justify-content:center;font-size:120%;font-weight:600;font-variant-numeric:tabular-nums;border-radius:var(--radius)}
+button.team{border:1px solid var(--main-border-color)}
+/* Available teams pop with an accent tint; hover reinforces they're clickable */
+button.team:not(.picked){background:var(--button-bg-color);color:var(--main-fg-color)}
+button.team:not(.picked):hover{border-color:var(--accent);box-shadow:var(--shadow)}
+/* Picked teams clearly recede: dimmed, desaturated, flat and non-interactive */
+button.team.picked{opacity:.35;filter:grayscale(1);background:var(--lowlight-bg-color);border-color:transparent;box-shadow:none;cursor:default;font-weight:400}
+button.team.picked:hover{border-color:transparent;box-shadow:none}
+
+/* ===== Tables (bracket / schedule) ===== */
+table{margin:1em auto;border-spacing:.35em;border-collapse:separate}
+table td,table th{padding:.25em}
+
+#bracketControls{margin:1em auto .4em;display:flex;gap:.6em;justify-content:center;flex-wrap:wrap}
+#bracketControls button{font-weight:600}
+#undoWinner:disabled{opacity:.45;cursor:default}
+
+/* ===== Bracket view (cards + SVG connector lines) ===== */
+#bracketWrap{position:relative;display:inline-block;max-width:100%;overflow:auto;text-align:start}
+#bracketLines{position:absolute;top:0;left:0;pointer-events:none;z-index:0;overflow:visible}
+.bracketLine{fill:none;stroke:var(--main-border-color);stroke-width:2}
+.bracketDivider{fill:none;stroke:var(--main-border-color);stroke-width:2;stroke-dasharray:7 5;opacity:.6}
+
+/* Rotated Upper/Lower bracket side labels */
+.bracketSideHead{border:0;background:transparent}
+.bracketSide{width:2.6em;padding:.25em;text-align:center;vertical-align:middle;background:var(--button-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius)}
+.bracketSideText{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;font-weight:800;letter-spacing:.16em;font-size:1.05em;opacity:.85;white-space:nowrap}
+#playoff-bracket{position:relative;z-index:1;margin:0;border-spacing:2.4em .35em}
+#playoff-bracket th[data-i18n]{font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.85em;opacity:.85;padding-bottom:.4em}
+#playoff-bracket td{vertical-align:middle}
+
+/* ===== Matchup cards (manual-style layout, our theming) ===== */
+.matchupPair{display:flex;flex-direction:column;min-width:8.5em;font-size:.8em;border:1px solid var(--main-border-color);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--surface)}
+.matchupPair:hover{border-color:var(--accent)}
+
+/* Alliance rows keep the themed red/blue team colors */
+.matchup{position:relative;padding:.2em .5em .2em 1.9em;border:0;border-radius:0;text-align:start;min-width:0;font-weight:600}
+.matchup h4{padding:0;margin:0;font-weight:700;font-size:1em}
+.matchup.placeholder{font-style:italic;opacity:.85}
+
+/* R / B badge on the left of each row */
+.matchup::before{position:absolute;left:0;top:0;bottom:0;width:1.6em;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;background:rgba(0,0,0,.28)}
+.matchup.redTeamBG::before{content:"R"}
+.matchup.blueTeamBG::before{content:"B"}
+
+/* Match-number bar between the two alliances */
+.matchBar{background:var(--lowlight-bg-color);color:var(--main-fg-color);font-style:italic;font-weight:700;font-size:.72em;text-align:center;padding:.18em .5em;letter-spacing:.02em;border-top:1px solid var(--main-border-color);border-bottom:1px solid var(--main-border-color)}
+
+/* Winner highlight */
+.matchup.winner{box-shadow:0 0 0 2px var(--winner-color) inset}
+
+/* ===== Reveal animation (applied inline from animateBracketReveal) ===== */
+@keyframes bracketCardReveal{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes bracketLinesFade{from{opacity:0}to{opacity:1}}
+
+.prediction{margin-top:.1em;font-size:.7em;opacity:.9}
+.prediction div{font-size:150%;font-weight:700;font-variant-numeric:tabular-nums;display:inline-block}
+.prediction a{color:inherit}
+.prediction a:hover{color:var(--accent);text-decoration:none}
+
+.winnerBtn{margin-top:.25em;padding:.1em .5em;font-size:.85em;background:var(--accent);color:var(--accent-fg);border-color:transparent;font-weight:600}
+.winnerBtn:hover{filter:brightness(1.08);border-color:transparent}
+
+/* ===== Schedule table ===== */
+#scheduleTable{width:100%;max-width:34em}
+#scheduleTable thead th{font-weight:600;text-transform:uppercase;letter-spacing:.03em;font-size:.82em;opacity:.85}
+#scheduleTable th,#scheduleTable td{font-variant-numeric:tabular-nums}
+#scheduleTable .redTeamBG,#scheduleTable .blueTeamBG{border-radius:var(--radius)}
+#save{margin-top:1em;font-weight:600}
+
 .hidden{display:none}

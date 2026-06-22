@@ -18,40 +18,50 @@
 	<h1 data-i18n=export_title></h1>
 
 	<div id=contents>
-		<div><button id=showInstructions data-i18n=instructions></button></div>
+		<div class=instructionsBar><button id=showInstructions data-i18n=instructions></button></div>
 
-		<div class=side-by-side>
-			<h2 data-i18n=with_images_heading></h2>
+		<div class=exportPanels>
+			<div class=side-by-side>
+				<h2 data-i18n=with_images_heading></h2>
 
-			<p data-i18n=with_images_download_description></p>
-			<a id=downloadImages data-i18n=with_images_download_link></a>
+				<div class=panelSection>
+					<p data-i18n=with_images_download_description></p>
+					<a class=downloadLink id=downloadImages data-i18n=with_images_download_link></a>
+				</div>
 
-			<hr>
+				<hr>
 
-			<p data-i18n=with_images_transfer_description></p>
-			<form method=POST action=https://example.viperscout.com/admin/import.cgi>
-				<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$'>
-				<ul class=hostOptions></ul>
-				<input name=json id=transferJsonImages type=hidden>
-				<button class=submit id=submitImages disabled=true><img id=loadingImages class=loading-spinner src=/loading.svg> <span data-i18n=with_images_transfer_button></span></button>
-			</form>
-		</div>
+				<div class=panelSection>
+					<p data-i18n=with_images_transfer_description></p>
+					<form method=POST action=https://example.viperscout.com/admin/import.cgi>
+						<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$'>
+						<ul class=hostOptions></ul>
+						<input name=json id=transferJsonImages type=hidden>
+						<button class=submit id=submitImages disabled=true><img id=loadingImages class=loading-spinner src=/loading.svg> <span data-i18n=with_images_transfer_button></span></button>
+					</form>
+				</div>
+			</div>
 
-		<div class=side-by-side>
-			<h2 data-i18n=without_images_heading></h2>
+			<div class=side-by-side>
+				<h2 data-i18n=without_images_heading></h2>
 
-			<p data-i18n=without_images_download_description></p>
-			<a id=downloadData data-i18n=without_images_download_link></a>
+				<div class=panelSection>
+					<p data-i18n=without_images_download_description></p>
+					<a class=downloadLink id=downloadData data-i18n=without_images_download_link></a>
+				</div>
 
-			<hr>
+				<hr>
 
-			<p data-i18n=without_images_transfer_description></p>
-			<form method=POST action=https://example.viperscout.com/admin/import.cgi>
-				<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-z]+(:[^:@]+)?@)?([a-zA-Z0-9\-\.\:]+)(\/?)$'>
-				<ul class=hostOptions></ul>
-				<input name=json id=transferJsonData type=hidden>
-				<button class=submit id=submitData disabled=true><img id=loadingData class=loading-spinner src=/loading.svg> <span data-i18n=without_images_transfer_button></span></button>
-			</form>
+				<div class=panelSection>
+					<p data-i18n=without_images_transfer_description></p>
+					<form method=POST action=https://example.viperscout.com/admin/import.cgi>
+						<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-z]+(:[^:@]+)?@)?([a-zA-Z0-9\-\.\:]+)(\/?)$'>
+						<ul class=hostOptions></ul>
+						<input name=json id=transferJsonData type=hidden>
+						<button class=submit id=submitData disabled=true><img id=loadingData class=loading-spinner src=/loading.svg> <span data-i18n=without_images_transfer_button></span></button>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 

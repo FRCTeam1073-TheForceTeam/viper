@@ -19,6 +19,51 @@ addI18n({
 		fr:'_MATCH_ Prédicteur de match pour _EVENT_',
 		es:'Predicción de partida',
 	},
+	backup_label:{
+		en:'Backup: ',
+		tr:'Yedek: ',
+		pt:'Reserva: ',
+		zh_tw:'替補：',
+		fr:'Remplaçant : ',
+		he:'מילואים: ',
+		es:'Reserva: ',
+	},
+	backup_section_label:{
+		en:'Backup robot',
+		tr:'Yedek robot',
+		pt:'Robô reserva',
+		zh_tw:'替補機器人',
+		fr:'Robot remplaçant',
+		he:'רובוט מילואים',
+		es:'Robot de reserva',
+	},
+	backup_team_label:{
+		en:'Backup team:',
+		tr:'Yedek takım:',
+		pt:'Equipa reserva:',
+		zh_tw:'替補隊伍：',
+		fr:'Équipe remplaçante :',
+		he:'קבוצת מילואים:',
+		es:'Equipo de reserva:',
+	},
+	backup_replacing_label:{
+		en:'Replacing:',
+		tr:'Yerine geçen:',
+		pt:'Substituindo:',
+		zh_tw:'替換：',
+		fr:'Remplace :',
+		he:'מחליף את:',
+		es:'Reemplazando:',
+	},
+	backup_none_option:{
+		en:'none',
+		tr:'yok',
+		pt:'nenhum',
+		zh_tw:'無',
+		fr:'aucun',
+		he:'ללא',
+		es:'ninguno',
+	},
 	change_teams_button:{
 		en:'Clear',
 		es:'Limpiar',
@@ -134,15 +179,37 @@ usePlayoffStats = localStorage.predictorUsePlayoffStats != '0',
 activeSide = 'red',
 sideAlliance = {red:null, blue:null}
 
+// Backup robots subbed in. Each alliance may sub one backup for an on-field
+// position; the lineup itself is never changed. State lives in the two rows of
+// backup selects and is read on demand.
+function backupForPos(pos){
+	for (var i=0; i<2; i++){
+		if ($('#backupReplacingSelect'+i).val() === pos && $('#backupTeamSelect'+i).val())
+			return $('#backupTeamSelect'+i).val()
+	}
+	return null
+}
+function isBackupPos(pos){ return !!backupForPos(pos) }
+
+// The team effectively occupying a position (the backup if one replaces it).
+function effectiveTeam(pos){
+	return backupForPos(pos) || $(`#${pos}`).val()
+}
+
 $(document).ready(function(){
 	Promise.all([
 		promiseEventMatches(),
 		promiseEventStats(),
 		fetch(`/data/${eventYear}/predictor.json`).then(response=>{if(response.ok)return response.json()}),
-		fetch(`/data/${eventId}.alliances.json`).then(response=>response.ok?response.json():null).catch(()=>null)
+		fetch(`/data/${eventId}.alliances.json`).then(response=>response.ok?response.json():null).catch(()=>null),
+		promiseAlliances().catch(()=>[])
 	]).then(values =>{
-		[window.eventMatches, [{}, window.eventStatsByTeam, {}], window.myTeamsStats, window.allianceData] = values
-		window.alliances = (window.allianceData && window.allianceData.Alliances) || []
+		[window.eventMatches, [{}, window.eventStatsByTeam, {}], window.myTeamsStats, window.allianceData, window.allianceCsv] = values
+		// Prefer the playoffs-edited alliances CSV (the source of truth that
+		// playoffs.html writes); fall back to the FRC API alliances.json only when
+		// no CSV exists, so edits made in playoffs.html show up here too.
+		window.alliances = alliancesFromCsv(window.allianceCsv)
+		if (!window.alliances.length) window.alliances = (window.allianceData && window.allianceData.Alliances) || []
 		statsConfig= new StatsConfig({
 			statsConfigKey:`${eventYear}PredictorStats`,
 			getStatsConfig:function(){
@@ -195,6 +262,7 @@ $(document).ready(function(){
 		playoffMode = po
 		BOT_POSITIONS.forEach(pos=>$(`#${pos}`).val(""))   // start the new mode clean
 		sideAlliance = {red:null, blue:null}
+		clearBackups()
 		activePos = null
 		activeSide = 'red'
 		updateModeUI()
@@ -203,10 +271,12 @@ $(document).ready(function(){
 	$('#change-teams').click(function(){
 		BOT_POSITIONS.forEach(pos=>$(`#${pos}`).val(""))
 		sideAlliance = {red:null, blue:null}
+		clearBackups()
 		activePos = null
 		activeSide = 'red'
 		setPickedTeams()
 	})
+	$('#backupSection').on('change', 'select', applyBackup)
 	$('#usePlayoffStats').prop('checked', usePlayoffStats).change(function(){
 		usePlayoffStats = this.checked
 		localStorage.predictorUsePlayoffStats = usePlayoffStats ? '1' : '0'
@@ -255,14 +325,161 @@ function setPickedTeams(){
 		renderAlliance('blueAlliance', bluePos)
 		renderPool(assigned)
 	}
+	renderBackupSection()
 	updateScoreboard(redPos, bluePos)
 	renderBreakdown()
 	setLocationHash()
 	applyTranslations()
 }
 
+function posSide(pos){
+	return BOT_POSITIONS.indexOf(pos) < BOT_POSITIONS.length/2 ? 'red' : 'blue'
+}
+
+// backup team -> side it may replace: a designated alliance backup ('red'/'blue')
+// can only sub into that alliance; a free agent (on no alliance) is 'any'.
+var backupTeamSide = {}
+
+// Eligible backup teams for the current alliances. A 4-team alliance contributes
+// only its designated backup (round3); a side without one (3-team) accepts any
+// team that's on no alliance.
+function computeBackupTeams(){
+	backupTeamSide = {}
+	var backupTeams = [], freeSides = []
+	;['red','blue'].forEach(function(side){
+		var backups = allianceBackupTeams(allianceByNumber(sideAlliance[side]))
+		if (backups.length){
+			backups.forEach(function(t){ t = String(t); if (!(t in backupTeamSide)){ backupTeamSide[t] = side; backupTeams.push(t) } })
+		} else freeSides.push(side)
+	})
+	if (freeSides.length){
+		var freeSide = freeSides.length === 2 ? 'any' : freeSides[0]
+		var onField = {}
+		BOT_POSITIONS.forEach(function(pos){ var v = $(`#${pos}`).val(); if (v) onField[String(v)] = true })
+		var allianceMembers = {}
+		;(window.alliances || []).forEach(function(a){
+			[a.captain, a.round1, a.round2, a.round3].forEach(function(t){ if (t != null && t !== '') allianceMembers[String(t)] = true })
+		})
+		;(window.teamList || []).forEach(function(t){
+			t = String(t)
+			if (onField[t] || allianceMembers[t] || (t in backupTeamSide)) return
+			backupTeamSide[t] = freeSide; backupTeams.push(t)
+		})
+	}
+	return backupTeams
+}
+
+// Show the backup controls (playoff mode only) and (re)build both rows. The second
+// row appears once the first backup is set, so a backup can be added on the other
+// alliance.
+function renderBackupSection(){
+	if (!playoffMode){ $('#backupSection').hide(); clearBackups(); return }
+	var backupTeams = computeBackupTeams()
+	var anyOnField = BOT_POSITIONS.some(function(pos){ return $(`#${pos}`).val() })
+	if (!backupTeams.length || !anyOnField){ $('#backupSection').hide(); clearBackups(); return }
+	buildBackupRow(0, backupTeams)
+	var row0done = $('#backupTeamSelect0').val() && $('#backupReplacingSelect0').val()
+	if (row0done && secondBackupPossible(backupTeams)){
+		buildBackupRow(1, backupTeams)
+		$('#backupRow1').removeClass('hide')
+	} else {
+		$('#backupTeamSelect1').val(''); $('#backupReplacingSelect1').val('')
+		$('#backupRow1').addClass('hide')
+	}
+	$('#backupSection').show()
+}
+
+// Whether a second backup is possible on the alliance the first didn't touch.
+function secondBackupPossible(backupTeams){
+	var usedSide = posSide($('#backupReplacingSelect0').val()),
+	usedTeam = $('#backupTeamSelect0').val()
+	return ['red','blue'].some(function(side){
+		if (side === usedSide) return false
+		var hasPos = BOT_POSITIONS.some(function(pos){ return posSide(pos) === side && $(`#${pos}`).val() })
+		var hasTeam = backupTeams.some(function(t){ return t !== usedTeam && (backupTeamSide[t] === 'any' || backupTeamSide[t] === side) })
+		return hasPos && hasTeam
+	})
+}
+
+// Build one backup row's two selects, excluding what the other row uses, and
+// preserving the current selections where still valid.
+function buildBackupRow(i, backupTeams){
+	var other = i === 0 ? 1 : 0,
+	otherTeam = $('#backupTeamSelect'+other).val(),
+	otherPos = $('#backupReplacingSelect'+other).val(),
+	otherSide = otherPos ? posSide(otherPos) : null,
+	none = translate('backup_none_option')
+	var prevTeam = $('#backupTeamSelect'+i).val()
+	var bsel = $('#backupTeamSelect'+i).html('').append($('<option>').val('').text(none))
+	backupTeams.forEach(function(t){
+		if (otherTeam && t === otherTeam) return                       // used by the other row
+		var s = backupTeamSide[t]
+		if (otherSide && s !== 'any' && s === otherSide) return        // its only side is taken
+		if (otherSide && s === 'any' && !sideHasPosOtherThan(otherSide)) return  // nowhere left for a free agent
+		bsel.append($('<option>').val(t).text(t))
+	})
+	bsel.val(prevTeam)
+	var selTeam = $('#backupTeamSelect'+i).val(), selSide = backupTeamSide[selTeam]
+	var prevPos = $('#backupReplacingSelect'+i).val()
+	var rsel = $('#backupReplacingSelect'+i).html('').append($('<option>').val('').text(none))
+	BOT_POSITIONS.forEach(function(pos){
+		var base = $(`#${pos}`).val()
+		if (!base) return
+		var ps = posSide(pos)
+		if (otherPos && pos === otherPos) return                       // taken by the other row
+		if (otherSide && ps === otherSide) return                      // other row owns this side
+		if (selTeam && selSide && selSide !== 'any' && ps !== selSide) return
+		rsel.append($('<option>').val(pos).text(pos + ' (' + base + ')'))
+	})
+	rsel.val(prevPos)
+}
+
+// Is there an on-field position on a side other than `side`?
+function sideHasPosOtherThan(side){
+	return BOT_POSITIONS.some(function(pos){ return posSide(pos) !== side && $(`#${pos}`).val() })
+}
+
+function clearBackups(){
+	$('#backupTeamSelect0,#backupReplacingSelect0,#backupTeamSelect1,#backupReplacingSelect1').val('')
+	$('#backupRow1').addClass('hide')
+}
+
+// Apply backup selections: rebuild the rows (re-filter, add/remove the 2nd) and
+// refresh the score views.
+function applyBackup(){
+	renderBackupSection()
+	var half = BOT_POSITIONS.length/2
+	updateScoreboard(BOT_POSITIONS.slice(0, half), BOT_POSITIONS.slice(half))
+	renderBreakdown()
+	applyTranslations()
+}
+
 // ===== Playoffs mode =====
+// Map the playoffs alliances CSV (Alliance,Captain,First Pick,Second Pick,Backup,…)
+// onto the {number,captain,round1,round2,round3} shape the predictor expects. The
+// backup (round3) is filtered out of the 3v3 lineup by allianceTeams().
+function alliancesFromCsv(rows){
+	if (!rows || !rows.length) return []
+	return rows.map(function(r){
+		return {
+			number: r['Alliance'],
+			captain: r['Captain'],
+			round1: r['First Pick'],
+			round2: r['Second Pick'],
+			round3: r['Backup']
+		}
+	})
+}
 function allianceByNumber(num){ return (window.alliances||[]).find(a=>a.number==num) }
+// Team(s) beyond the 3 on-field robots, i.e. the backup. Shown for information
+// only; never added to a side's lineup, so it doesn't affect predictions.
+function allianceBackupTeams(a){
+	if (!a) return []
+	return [a.captain, a.round1, a.round2, a.round3]
+		.filter(t=>t!=null && t!=="")
+		.map(String)
+		.slice(BOT_POSITIONS.length/2)
+}
 function allianceTeams(a){
 	if (!a) return []
 	return [a.captain, a.round1, a.round2, a.round3]
@@ -293,6 +510,16 @@ function allianceCard(a, fromSide){
 	var card = $('<div class=allianceCard>').attr('draggable',true)
 		.append($('<div class=allianceName>').text(a.name || `Alliance ${a.number}`))
 		.append($('<div class=allianceTeams>').text(allianceTeams(a).join(' · ')))
+	// Show each backup team with its predicted score contribution (the same
+	// per-team value used in the breakout), so its impact is visible even though
+	// it is excluded from the alliance's predicted score.
+	var backupTeams = allianceBackupTeams(a)
+	if (backupTeams.length){
+		var backupText = backupTeams.map(function(t){
+			return t + ' (' + Math.round(getTeamValue('score', parseInt(t))) + ')'
+		}).join(' · ')
+		card.append($('<div class=allianceBackup>').text(translate('backup_label')+backupText))
+	}
 	card.on('dragstart', function(e){ setDrag(e, {alliance:a.number, from:fromSide==null?null:fromSide}); card.addClass('dragging') })
 	card.on('dragend', function(){ card.removeClass('dragging') })
 	if (fromSide != null){
@@ -420,29 +647,31 @@ function updateScoreboard(redPos, bluePos){
 // Per-team score contribution shown beside the alliance score box (playoffs)
 function renderBreakout(containerId, positions){
 	var c = $(`#${containerId}`)
-	var teams = positions.map(pos=>$(`#${pos}`).val())
+	var teams = positions.map(effectiveTeam)
 	// Collapse the breakout (no formatting) outside playoffs or when this side is empty.
 	// Keep stale rows in place so the slide-out animation has content to show.
 	if (!playoffMode || !teams.some(t=>t)){ c.removeClass('show'); return }
 	c.html("")
-	teams.forEach(function(t){
-		var row = $('<div class=sbBreakoutRow>')
-		row.append($('<span class=sbbTeam>').text(t || "—"))
-		row.append($('<span class=sbbScore>').text(t ? Math.round(getTeamValue('score', parseInt(t))) : ""))
+	positions.forEach(function(pos){
+		var t = effectiveTeam(pos),
+		isBackup = isBackupPos(pos),
+		row = $('<div class=sbBreakoutRow>')
+		row.append($('<span class=sbbTeam>').text(t || "—").toggleClass('backup', isBackup))
+		row.append($('<span class=sbbScore>').text(t ? Math.round(getTeamValue('score', parseInt(t))) : "").toggleClass('backup', isBackup))
 		c.append(row)
 	})
 	c.addClass('show')
 }
 function allianceScore(positions){
 	return Math.round(positions.reduce((sum,pos)=>{
-		var t = $(`#${pos}`).val()
+		var t = effectiveTeam(pos)
 		return sum + (t ? getTeamValue('score', parseInt(t)) : 0)
 	}, 0))
 }
 
 // ===== Stat breakdown table (live) =====
 function renderBreakdown(){
-	BOT_POSITIONS.forEach(pos=>$(`#th-${pos}`).text($(`#${pos}`).val()||""))
+	BOT_POSITIONS.forEach(pos=>$(`#th-${pos}`).text(effectiveTeam(pos)||"").toggleClass('backup', isBackupPos(pos)))
 	var table = $('#prediction tbody').html(""),
 	stats = statsConfig.getStatsConfig(),
 	first = true
@@ -461,7 +690,7 @@ function renderBreakdown(){
 			var teamScores = [],
 			allianceScores = [0,0]
 			BOT_POSITIONS.forEach(function(pos, i){
-				var team = parseInt($(`#${pos}`).val())
+				var team = parseInt(effectiveTeam(pos))
 				teamScores[i] = getTeamValue(field, team)
 				allianceScores[Math.floor(i/(BOT_POSITIONS.length/2))] += teamScores[i]
 			})

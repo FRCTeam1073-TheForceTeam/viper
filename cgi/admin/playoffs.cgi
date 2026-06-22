@@ -21,7 +21,7 @@ my $alliancesCsv = $cgi->param('alliancesCsv');
 $webutil->error("Missing alliances CSV") if (!$alliancesCsv);
 $alliancesCsv =~ s/\r\n|\r/\n/g;
 $alliancesCsv =~ s/,undefined/,/g;
-$webutil->error("Malformed alliances CSV", $alliancesCsv) if (!$alliancesCsv or $alliancesCsv !~ /\AAlliance,Captain,First Pick,Second Pick,(?:(?:Won Quarter-Finals,Won Semi-Finals)|(?:Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5)),Won Finals\n(?:[0-9]+(?:,[0-9]+){3}(,[01]?){3,6}\n){8}\Z/g);
+$webutil->error("Malformed alliances CSV", $alliancesCsv) if (!$alliancesCsv or $alliancesCsv !~ /\AAlliance,Captain,First Pick,Second Pick(?:,Backup)?,(?:(?:Won Quarter-Finals,Won Semi-Finals)|(?:Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5)),Won Finals\n(?:[0-9]+(?:,[0-9]+){3,4}(,[01]?){3,6}\n){8}\Z/g);
 
 my $newSchedule = $cgi->param('scheduleCsv');
 if ($newSchedule){
@@ -29,6 +29,7 @@ if ($newSchedule){
 	$webutil->error("Malformed playoffs CSV", $newSchedule) if ($newSchedule !~ /\AMatch,R1,R2,R3,B1,B2,B3\n(?:(?:f|sf|qf|1p|2p|3p|4p|5p)[0-9]+(?:,[0-9]+){6}\n)+\Z/g);
 	$newSchedule =~ //g;
 }
+my $resetSchedule = $cgi->param('resetSchedule');
 
 my $dbh = $db->dbConnection();
 
@@ -61,7 +62,12 @@ sub writeCsvData(){
 			$schedule = $newSchedule;
 		} else {
 			$newSchedule =~ s/^Match.*\n//g;
-			if ($schedule =~ /^($rounds)/gm){
+			if ($resetSchedule){
+				# Bracket was regenerated: drop every existing playoff match, then
+				# add the freshly generated ones (keeps qualification/practice rows).
+				$schedule =~ s/^(?:f|sf|qf|[1-5]p)[0-9].*\n//gm;
+				$schedule .= $newSchedule;
+			} elsif ($schedule =~ /^($rounds)/gm){
 				$schedule =~ s/(^($rounds).*\n)+/$newSchedule/gm;
 			} else {
 				$schedule .= $newSchedule;
@@ -86,6 +92,7 @@ sub writeDbData(){
 	}
 
 	if ($newSchedule){
+		$db->deletePlayoffSchedule($event) if $resetSchedule;
 		$csv = csv->new($newSchedule);
 		for my $row (1..$csv->getRowCount()){
 			my $data = $csv->getRowMap($row);
@@ -102,4 +109,4 @@ if ($dbh){
 	&writeCsvData();
 }
 
-$webutil->redirect("/event.html#$event");
+$webutil->redirect("/playoffs.html#$event");

@@ -664,7 +664,7 @@ var statInfo={
 		he:'ציון דלק באוטומט',
 	},
 	auto_start:{
-		name:"Location where the robot starts",
+		name:"Starting Location",
 		type:"heatmap",
 		image:"/2026/start-area.png",
 		aspect_ratio:2.644,
@@ -672,6 +672,7 @@ var statInfo={
 		whiteboard_end:15.5,
 		whiteboard_char:"□",
 		whiteboard_us:true,
+		whiteboard_default:true,
 		fr:'Lieu de départ du robot',
 		pt:'Local onde o robô começa',
 		zh_tw:'機器人啟動的位置',
@@ -1781,6 +1782,8 @@ var statInfo={
 		whiteboard_start:0,
 		whiteboard_end:55,
 		whiteboard_us:true,
+		whiteboard_default:true,
+		whiteboard_per_team:true,
 		source:"pit",
 		fr:'Trajectoires automatiques',
 		pt:'Caminhos Automáticos',
@@ -1908,6 +1911,7 @@ var statInfo={
 		whiteboard_end:1,
 		whiteboard_char:"C",
 		whiteboard_us:true,
+		whiteboard_default:true,
 	},
 }
 

@@ -7,28 +7,63 @@ button.selected{background:var(--button-selected-bg-color)}
 #fieldBG.rotated{transform:rotate(180deg)}
 #field .overlay{position:absolute;z-index:2}
 #field canvas{z-index:3}
-.team-input{background-color:transparent;border:none;display:block;margin:0 auto;width:100%;text-align:center;box-sizing:border-box}
-.team-input.lastFocus{background-color:var(--focus-bg-color)}
-#statsTable{margin:0.5em auto;max-width:34em;width:100%;border-collapse:collapse}
+#statsTable .team-input{background-color:color-mix(in srgb,#000 28%,transparent);border:1px solid color-mix(in srgb,#000 22%,transparent);border-radius:0.45em;display:block;margin:0.1em auto;width:100%;min-width:3.4em;text-align:center;font-weight:700;padding:0.28em 0.12em;box-sizing:border-box;transition:background-color .12s ease,box-shadow .12s ease}
+#statsTable .team-input::placeholder{font-weight:400;opacity:0.6}
+#statsTable .team-input.lastFocus{background-color:var(--focus-bg-color);box-shadow:0 0 0 2px var(--accent)}
+#statsTable{margin:0.5em auto;max-width:37em;width:100%;border-collapse:separate;border-spacing:0;background:var(--section-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);overflow:hidden}
 #statsTable th{padding:0.1em;min-width:1.5em}
+#statsTable .redTeamBG,#statsTable .blueTeamBG{min-width:3.9em}
+#statsTable thead th,#statsTable thead td{padding:0.35em 0.15em}
 /* keep the alliance colors strong only in the team header; data cells get a light tint so the table reads cleanly */
 #statsTable tbody td.redTeamBG{background-color:color-mix(in srgb,var(--red-team-color) 14%,transparent);border-color:transparent}
 #statsTable tbody td.blueTeamBG{background-color:color-mix(in srgb,var(--blue-team-color) 14%,transparent);border-color:transparent}
-#statsTable tbody td{border-bottom:1px solid color-mix(in srgb,var(--main-fg-color) 12%,transparent)}
-#statsTable tbody th{text-align:start;font-weight:normal;padding:0.2em 0.6em;white-space:normal;border-bottom:1px solid color-mix(in srgb,var(--main-fg-color) 12%,transparent)}
+/* zebra striping: the name column on the right is banded to match each row's data-cell shading */
+#statsTable tbody tr.statRow th{background-color:color-mix(in srgb,var(--main-fg-color) 8%,transparent)}
+#statsTable tbody tr.alt td.redTeamBG{background-color:color-mix(in srgb,var(--red-team-color) 7%,transparent)}
+#statsTable tbody tr.alt td.blueTeamBG{background-color:color-mix(in srgb,var(--blue-team-color) 7%,transparent)}
+#statsTable tbody tr.alt th{background-color:color-mix(in srgb,var(--main-fg-color) 2%,transparent)}
+#statsTable tbody tr:hover td.redTeamBG{background-color:color-mix(in srgb,var(--red-team-color) 24%,transparent)}
+#statsTable tbody tr:hover td.blueTeamBG{background-color:color-mix(in srgb,var(--blue-team-color) 24%,transparent)}
+#statsTable tbody tr.statRow:hover th{background-color:color-mix(in srgb,var(--main-fg-color) 12%,transparent)}
+#statsTable tbody td{border-bottom:1px solid color-mix(in srgb,var(--main-fg-color) 10%,transparent)}
+#statsTable tbody th{text-align:start;font-weight:500;padding:0.3em 0.7em;white-space:normal;color:color-mix(in srgb,var(--main-fg-color) 82%,transparent);border:none}
 h3,#drawingControls{margin:0.5em 0}
 iframe{width:100%;height:100%}
-button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
-button.team{width:3.4em;height:1.8em;margin:0;cursor:pointer}
-.teamDataEntry{display:flex;flex-direction:column;align-items:center;gap:0.7em;max-width:34em;margin:1em auto;padding:0.9em;border:1px solid var(--main-border-color);border-radius:0.5em}
+button.team.picked{opacity:0.45;background:color-mix(in srgb,var(--main-fg-color) 18%,transparent)}
+button.team{width:3.4em;height:1.8em;margin:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+.teamSelectArea{display:flex;flex-direction:column;align-items:center}
+.teamSelectArea>.statsCol{width:100%}
+.teamDataEntry{position:relative;display:flex;flex-direction:column;align-items:center;gap:0.7em;max-width:34em;margin:1em auto;padding:3.4em 0.9em 0.9em;border:1px solid var(--main-border-color);border-radius:0.5em}
+.toggleGroup{position:absolute;top:0.5em;right:0.6em;display:flex;flex-direction:column;align-items:flex-end;gap:0.35em}
+.hidePracticeToggle{display:inline-flex;align-items:center;gap:0.45em;font-size:0.8em;cursor:pointer;user-select:none}
+.hidePracticeToggle .switch-label{text-transform:uppercase}
+.switch{position:relative;display:inline-block;width:2.6em;height:1.4em;flex:none}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.switch .slider{position:absolute;inset:0;border-radius:1em;background:var(--lowlight-bg-color);border:1px solid var(--main-border-color);transition:background .2s ease}
+.switch .slider::before{content:"";position:absolute;height:1em;width:1em;left:.2em;top:50%;transform:translateY(-50%);border-radius:50%;background:var(--button-bg-color);box-shadow:var(--shadow);transition:transform .2s ease}
+.switch input:checked + .slider{background:var(--accent)}
+.switch input:checked + .slider::before{transform:translate(1.2em,-50%)}
+@media(min-width:56em){
+	.teamSelectArea{flex-direction:row;align-items:flex-start;justify-content:center;gap:1.2em}
+	.teamSelectArea>.statsCol{width:auto;flex:0 1 37em}
+	.teamSelectArea>.teamDataEntry{margin:0.5em 0;flex:0 0 auto}
+}
 .teamDataEntry .matchSelect{font-weight:bold}
 .teamDataEntry select{font-size:1em;padding:0.3em 0.5em;min-width:11em}
 .teamDataEntry .orDivider{font-size:0.8em;opacity:0.55;text-transform:uppercase;letter-spacing:0.12em}
 #teamButtons{display:flex;flex-wrap:wrap;justify-content:center;gap:0.45em}
 #statsTable img{width:1.8em;display:inline-block;margin:0;padding:0;border:none;cursor:pointer;vertical-align:bottom}
 #statsTable .photoCell img{width:1.5em}
-#statsTable td{text-align:center;padding:0.1em 0.25em;line-height:1.2}
-#statsTable td.best{color:var(--highlight-fg-color);font-weight:bold}
+#statsTable td{text-align:center;padding:0.3em 0.3em;line-height:1.2;font-variant-numeric:tabular-nums}
+#statsTable tbody td.best{color:var(--highlight-fg-color);font-weight:700}
+#statsTable td.allianceToggle{text-align:center;padding:0.35em 0.25em}
+#statsTable .perTeamCaret{display:inline-block;cursor:pointer;font-size:0.8em;opacity:0.6;padding:0 0.2em}
+#statsTable .perTeamCaret:hover{opacity:1}
+#statsTable tr.perTeamRow td.allianceToggle{padding-top:0.15em;padding-bottom:0.45em}
+#statsTable tr.perTeamRow .switch{transform:scale(0.82)}
+#statsTable td.more-toggle{text-align:center;cursor:pointer;user-select:none;padding:0.4em;font-size:0.85em;opacity:0.75}
+#statsTable td.more-toggle:hover{opacity:1}
+#statsTable .more-caret{display:inline-block;font-size:0.8em}
 #imageLightBox img{object-fit:contain;width:100%;height:100%}
 #stamps img{height:1.7em}
 #fullPhoto{object-fit:contain;background:#0000;border:none}
@@ -37,8 +72,12 @@ button.team{width:3.4em;height:1.8em;margin:0;cursor:pointer}
 #drawingControls{display:flex;flex-wrap:wrap;gap:0.4em;justify-content:center;align-items:flex-end;margin:0.5em auto;padding:0.4em 0}
 #drawingControls .icon-button{width:auto;height:auto;min-width:3.2em;display:inline-flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:0.2em;padding:0.4em 0.5em;cursor:pointer}
 #drawingControls .ctl-icon{font-size:1.7em;line-height:1}
-#drawingControls .ctl-label{font-size:0.72em;line-height:1;white-space:nowrap}
+#drawingControls .redo-icon{transform:scaleX(-1)}
+#drawingControls .mirror-icon{width:1em;height:1em;display:block}
+#drawingControls .ctl-label{font-size:0.85em;line-height:1;white-space:nowrap;color:var(--main-fg-color)}
 #stamps{display:inline-flex;flex-wrap:wrap;gap:0.4em;align-items:flex-end}
 #stamps:empty{display:none}
 #stats{position:relative;margin:0 auto}
+.eraser-cursor{display:none;position:fixed;border:2px solid #000;background:rgba(0,0,0,0.1);border-radius:50%;box-sizing:border-box;transform:translate(-50%,-50%);pointer-events:none;z-index:1000}
+button[data-tooltip]::before,button[data-tooltip]:hover::before{content:none;display:none}
 body{text-align:start}

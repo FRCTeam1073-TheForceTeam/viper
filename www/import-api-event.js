@@ -182,10 +182,15 @@ $(document).ready(function(){
 		})
 		if(alliancesJson&&alliancesJson.Alliances){
 			var alliancesCsv = ""
+			// Emit the Backup column only when every alliance has a backup (round3),
+			// so each row stays a complete, valid set of team numbers.
+			var validAlliances = alliancesJson.Alliances.filter(a=>a.captain&&a.round1&&a.round2),
+			hasBackup = validAlliances.length>0 && validAlliances.every(a=>a.round3)
 			alliancesJson.Alliances.forEach(a=>{
 				if (a.captain&&a.round1&&a.round2){
-					if (!alliancesCsv)alliancesCsv = "Alliance,Captain,First Pick,Second Pick,Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5,Won Finals\n"
+					if (!alliancesCsv)alliancesCsv = "Alliance,Captain,First Pick,Second Pick,"+(hasBackup?"Backup,":"")+"Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5,Won Finals\n"
 					alliancesCsv += `${a.number},${a.captain},${a.round1},${a.round2}`
+					if (hasBackup) alliancesCsv += `,${a.round3}`
 					;['1p','2p','3p','4p','5p','f'].forEach(function(round){
 						var matches=(playoffMatchAlliances[round]||{})[a.number]||{},
 						wonCount=0,

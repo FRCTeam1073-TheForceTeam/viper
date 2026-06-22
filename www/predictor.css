@@ -6,12 +6,13 @@
 #modeToggle button.active:hover{background:var(--accent)}
 
 #playoffStatsToggle{display:inline-flex;align-items:center;gap:.45em;justify-content:center;width:fit-content;margin:.2em auto .6em;cursor:pointer;font-size:.95em}
+#playoffStatsToggle .switch-label{text-transform:uppercase}
 
 /* Slider toggle switch */
 .switch{position:relative;display:inline-block;width:2.6em;height:1.4em;flex:none}
 .switch input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
 .switch .slider{position:absolute;inset:0;border-radius:1em;background:var(--lowlight-bg-color);border:1px solid var(--main-border-color);transition:background .2s ease}
-.switch .slider::before{content:"";position:absolute;height:1em;width:1em;left:.2em;top:50%;transform:translateY(-50%);border-radius:50%;background:#fff;box-shadow:var(--shadow);transition:transform .2s ease}
+.switch .slider::before{content:"";position:absolute;height:1em;width:1em;left:.2em;top:50%;transform:translateY(-50%);border-radius:50%;background:var(--button-bg-color);box-shadow:var(--shadow);transition:transform .2s ease}
 .switch input:checked + .slider{background:var(--accent)}
 .switch input:checked + .slider::before{transform:translate(1.2em,-50%)}
 
@@ -27,6 +28,7 @@
 .allianceCard.placed{width:100%;background:var(--surface)}
 .allianceName{font-weight:700}
 .allianceTeams{font-size:.85em;opacity:.85;font-variant-numeric:tabular-nums;margin-top:.15em}
+.allianceBackup{font-size:.72em;opacity:.6;font-variant-numeric:tabular-nums;margin-top:.1em;font-style:italic}
 .poolEmpty{opacity:.7;padding:.5em}
 
 /* ===== Versus scoreboard hero ===== */
@@ -50,6 +52,9 @@
 .sbBreakoutRow:first-child .sbbTeam,.sbBreakoutRow:first-child .sbbScore{border-top:0}
 .sbbTeam{font-weight:700}
 .sbbScore{background:#cfcfcf;color:#000;font-weight:700}
+/* Backup robot subbed in: a medium purple, between the bold and the very soft */
+.sbbScore.backup{background:#a777c2;color:#fff}
+.sbbTeam.backup{color:#e1cdf0}
 
 /* ===== Alliance panels ===== */
 #alliances{display:flex;gap:1em;justify-content:center;flex-wrap:wrap;max-width:42em;margin:0 auto 1em;align-items:flex-start}
@@ -63,6 +68,17 @@
 .alliance-slot.empty:hover{opacity:1}
 .alliance-slot.active,.alliance-slot.dragover{opacity:1;box-shadow:0 0 0 3px var(--winner-color) inset}
 .slotHint{font-size:.8em;pointer-events:none}
+
+/* ===== Backup robot section ===== */
+#backupSection{display:flex;flex-direction:column;align-items:center;gap:.55em;max-width:42em;margin:0 auto 1em;padding:.7em 1em;border-radius:var(--radius-lg);background:var(--section-bg-color);border:1px solid var(--main-border-color)}
+#backupSection .backupTitle{font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:.85em;opacity:.85}
+/* Both rows share one grid so labels and selects line up in columns */
+#backupGrid{display:grid;grid-template-columns:auto 8em auto 8em;gap:.5em .6em;align-items:center}
+#backupGrid .backupRow{display:contents}
+#backupGrid .backupRow.hide{display:none}
+#backupGrid span{white-space:nowrap}
+#backupGrid select{width:100%}
+#prediction th.backup{box-shadow:inset 0 -0.35em 0 #a777c2}
 
 /* ===== Team cards ===== */
 .teamCard{cursor:grab;user-select:none;min-width:4.6em;text-align:center;padding:.5em .7em;border-radius:var(--radius);background:var(--button-bg-color);border:1px solid var(--main-border-color);font-weight:600;font-variant-numeric:tabular-nums;transition:transform .05s ease,border-color .15s ease,box-shadow .15s ease}

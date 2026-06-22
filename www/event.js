@@ -343,6 +343,24 @@ addI18n({
 		fr:'Saisir les résultats de la sélection d\'alliance et le type de séries éliminatoires',
 		tr:'İttifak seçimi sonuçlarını ve playoff türünü gir',
 	},
+	reset_playoffs_link:{
+		en:'Reset playoff bracket (clear alliances)',
+		he:'אפס את סוגר הפלייאוף (נקה בריתות)',
+		zh_tw:'重置季後賽對戰表（清除聯盟）',
+		pt:'Redefinir chave dos playoffs (limpar alianças)',
+		es:'Restablecer el cuadro de playoffs (borrar alianzas)',
+		fr:'Réinitialiser le tableau des playoffs (effacer les alliances)',
+		tr:'Playoff grubunu sıfırla (ittifakları temizle)',
+	},
+	reset_playoffs_confirm:{
+		en:'Reset the playoff bracket? This permanently clears the alliances and all playoff matches and results for this event.',
+		he:'לאפס את סוגר הפלייאוף? פעולה זו מוחקת לצמיתות את הבריתות ואת כל משחקי ותוצאות הפלייאוף של אירוע זה.',
+		zh_tw:'重置季後賽對戰表？這將永久清除此賽事的聯盟以及所有季後賽比賽和結果。',
+		pt:'Redefinir a chave dos playoffs? Isto apaga permanentemente as alianças e todas as partidas e resultados dos playoffs deste evento.',
+		es:'¿Restablecer el cuadro de playoffs? Esto borra permanentemente las alianzas y todos los partidos y resultados de playoffs de este evento.',
+		fr:'Réinitialiser le tableau des playoffs ? Cela efface définitivement les alliances et tous les matchs et résultats des playoffs de cet événement.',
+		tr:'Playoff grubu sıfırlansın mı? Bu, bu etkinlik için ittifakları ve tüm playoff maçlarını ve sonuçlarını kalıcı olarak siler.',
+	},
 	api_link:{
 		en:'Fetch latest schedule and official scores from the FIRST API',
 		he:'קבל את לוח הזמנים העדכני ביותר וציונים רשמיים מה-FIRST API',
@@ -1103,10 +1121,15 @@ $(document).ready(function(){
 			if(!lastDone&&!matchScoutingDataCount(eventStatsByMatchTeam,m))nextToScout=m
 			if(!lastMatch)lastMatch=m
 		}
-		if((!nextToScout||!/^(pm|qm)/.test(nextToScout.Match))&&lastMatch){
-			$('#edit-event-section').prepend($('#edit-event-header'))
-			$('#edit-event-section>ul').append($('#edit-playoffs-link'))
-		}
+		// Always offer the playoffs / alliance-selection link, regardless of how
+		// much (if any) scouting data exists for the event. The reset link rides
+		// along but stays hidden (dependAlliances) until a bracket actually exists.
+		$('#edit-event-section').prepend($('#edit-event-header'))
+		$('#edit-event-section>ul').append($('#edit-playoffs-link'))
+		$('#edit-event-section>ul').append($('#reset-playoffs-link'))
+		$('#reset-playoffs-link a').click(function(e){
+			if (!confirm(translate('reset_playoffs_confirm'))) e.preventDefault()
+		})
 		if(!lastMatch||lastMatch&&/^pm/.test(lastMatch.Match)){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('#edit-match-link,.fetch-api-link'))

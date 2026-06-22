@@ -179,6 +179,30 @@ sub commit(){
 	$dbh->commit();
 }
 
+# Remove every playoff match (qf/sf/f and 1p-5p) for an event, leaving the
+# qualification/practice matches intact. Used when a bracket is regenerated so
+# stale matches from the previous alliances don't linger.
+sub deletePlayoffSchedule {
+	my ($self, $event) = @_;
+	my $conn = $self->dbConnection();
+	return if (!$conn);
+	$conn->prepare_cached("
+		DELETE FROM `schedule`
+		WHERE `site`=? AND `event`=? AND `Match` REGEXP '^(f|sf|qf|[1-5]p)[0-9]'
+	")->execute(getSite(), $event);
+}
+
+# Remove all alliances for an event (used by the admin playoff-reset action).
+sub deleteAlliances {
+	my ($self, $event) = @_;
+	my $conn = $self->dbConnection();
+	return if (!$conn);
+	$conn->prepare_cached("
+		DELETE FROM `alliances`
+		WHERE `site`=? AND `event`=?
+	")->execute(getSite(), $event);
+}
+
 sub getInputName(){
 	my ($input) = @_;
 	my ($name) = $input =~ /name\s*=\s*[\'\"]?([A-Za-z0-9\-_]+)[\'\"]?\b/i;
@@ -246,6 +270,7 @@ sub schema {
 				`Captain` VARCHAR(8) NOT NULL,
 				`First Pick` VARCHAR(8) NOT NULL,
 				`Second Pick` VARCHAR(8) NOT NULL,
+				`Backup` VARCHAR(8),
 				`Won Quarter-Finals` VARCHAR(1),
 				`Won Semi-Finals` VARCHAR(1),
 				`Won Playoffs Round 1` VARCHAR(1),
@@ -259,6 +284,19 @@ sub schema {
 			)  $tableOptions
 		"
 	);
+	# Backup column for 4-team alliances; added separately so existing installs
+	# pick it up too. Ignore the error if the column already exists.
+	eval {
+		$dbh->do(
+			"
+				ALTER TABLE
+					`alliances`
+				ADD COLUMN
+					`Backup` VARCHAR(8)
+			"
+		);
+		1;
+	};
 	$dbh->commit();
 
 	print("Creating table `event`\n");

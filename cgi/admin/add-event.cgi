@@ -50,7 +50,7 @@ my $alliancesCsv = $cgi->param('alliancesCsv');
 if ($alliancesCsv){
 	$alliancesCsv =~ s/\r\n|\r/\n/g;
 	$alliancesCsv =~ s/,undefined/,/g;
-	$webutil->error("Malformed alliances CSV", $alliancesCsv) if (!$alliancesCsv or $alliancesCsv !~ /\AAlliance,Captain,First Pick,Second Pick,(?:(?:Won Quarter-Finals,Won Semi-Finals)|(?:Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5)),Won Finals\n(?:[0-9]+(?:,[0-9]+){3}(,[01]?){3,6}\n){8}\Z/g);
+	$webutil->error("Malformed alliances CSV", $alliancesCsv) if (!$alliancesCsv or $alliancesCsv !~ /\AAlliance,Captain,First Pick,Second Pick(?:,Backup)?,(?:(?:Won Quarter-Finals,Won Semi-Finals)|(?:Won Playoffs Round 1,Won Playoffs Round 2,Won Playoffs Round 3,Won Playoffs Round 4,Won Playoffs Round 5)),Won Finals\n(?:[0-9]+(?:,[0-9]+){3,4}(,[01]?){3,6}\n){8}\Z/g);
 }
 
 my $dbh = $db->dbConnection();
