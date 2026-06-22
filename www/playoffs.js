@@ -366,21 +366,23 @@ function showAllianceSelection(){
 function allianceDisplay(num, oppNum, showButton, column, teamColor, placeholder){
 	if (num == 0) return `<div class="${teamColor}TeamBG matchup placeholder">${placeholder||'?'}</div>`
 	var a = eventAlliances[num-1],
+	decided = /^[01]$/.test(a[column]),
 	winClass = a[column]?"winner":"",
 	c = a['Captain'],
 	p1 = a['First Pick'],
 	p2 = a['Second Pick'],
 	b = a['Backup'],
 	roster = b ? `${c}, ${p1}, ${p2}, ${b}` : `${c}, ${p1}, ${p2}`,
-	button=showButton?`<div><button class=winnerBtn data-alliance=${num} data-opponent=${oppNum} data-column="${column}" data-i18n=set_winner_button></button></div>`:"",
 	predictorLink = getPredictorLink(num,oppNum,teamColor),
-	score=getPrediction(num),
-	prediction=""
-	if (!/^[01]$/.test(a[column])){
-		if (predictorLink) prediction =`<div class=prediction><a href="${predictorLink}"><span data-i18n=prediction_label></span> <div>${score}</div></a></div>`
-		else prediction = `<div class=prediction><span data-i18n=prediction_label></span> <div>${score}</div></div>`
-	}
-	return `<div class="${teamColor}TeamBG matchup ${winClass}"><h4 data-alliance-num=${num} data-i18n=alliance_name></h4>${roster}${prediction}${button}</div>`
+	score = getPrediction(num),
+	// Prediction shown as just the number in a box at the end of the card.
+	predBox = decided ? "" : (predictorLink
+		? `<a class=predBox href="${predictorLink}">${score}</a>`
+		: `<span class=predBox>${score}</span>`),
+	// During the active round the card is clickable to advance that alliance.
+	clickable = showButton ? " clickable" : "",
+	attrs = showButton ? ` data-alliance=${num} data-opponent=${oppNum} data-column="${column}"` : ""
+	return `<div class="${teamColor}TeamBG matchup ${winClass}${clickable}" data-alliance-badge="A${num}"${attrs}><div class=matchupMain><span class=roster>${roster}</span></div>${predBox}</div>`
 }
 
 function getPredictorLink(num, oppNum, teamColor){
@@ -882,14 +884,12 @@ $(document).ready(function(){
 	})
 	$('#playoff-bracket').click(function(e){
 		var t = $(e.target)
-		if (t.is(".winnerBtn")){
-			var aInd=parseInt(t.attr('data-alliance'))-1
-			var oppInd=parseInt(t.attr('data-opponent'))-1
-			var column = t.attr('data-column')
-			recordWinner(aInd, oppInd, column)
-			showContent()
-			return false
-		}
+		if (t.closest('.predBox').length) return   // let the prediction link work
+		var cell = t.closest('.matchup.clickable')
+		if (!cell.length) return
+		recordWinner(parseInt(cell.attr('data-alliance'))-1, parseInt(cell.attr('data-opponent'))-1, cell.attr('data-column'))
+		showContent()
+		return false
 	})
 	focusNext()
 	applyTranslations()

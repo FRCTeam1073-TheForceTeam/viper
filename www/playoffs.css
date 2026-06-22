@@ -57,7 +57,7 @@ table td,table th{padding:.25em}
 #undoWinner:disabled{opacity:.45;cursor:default}
 
 /* ===== Bracket view (cards + SVG connector lines) ===== */
-#bracketWrap{position:relative;display:inline-block;max-width:100%;overflow:auto;text-align:start}
+#bracketWrap{position:relative;display:inline-block;text-align:start}
 #bracketLines{position:absolute;top:0;left:0;pointer-events:none;z-index:0;overflow:visible}
 .bracketLine{fill:none;stroke:var(--main-border-color);stroke-width:2}
 .bracketDivider{fill:none;stroke:var(--main-border-color);stroke-width:2;stroke-dasharray:7 5;opacity:.6}
@@ -66,26 +66,31 @@ table td,table th{padding:.25em}
 .bracketSideHead{border:0;background:transparent}
 .bracketSide{width:2.6em;padding:.25em;text-align:center;vertical-align:middle;background:var(--button-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius)}
 .bracketSideText{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;font-weight:800;letter-spacing:.16em;font-size:1.05em;opacity:.85;white-space:nowrap}
-#playoff-bracket{position:relative;z-index:1;margin:0;border-spacing:2.4em .35em}
+#playoff-bracket{position:relative;z-index:1;margin:0;border-spacing:2.4em .2em}
 #playoff-bracket th[data-i18n]{font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.85em;opacity:.85;padding-bottom:.4em}
 #playoff-bracket td{vertical-align:middle}
 
 /* ===== Matchup cards (manual-style layout, our theming) ===== */
-.matchupPair{display:flex;flex-direction:column;min-width:8.5em;font-size:.8em;border:1px solid var(--main-border-color);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--surface)}
+.matchupPair{display:flex;flex-direction:column;min-width:15em;font-size:.8em;border:1px solid var(--main-border-color);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--surface)}
 .matchupPair:hover{border-color:var(--accent)}
 
 /* Alliance rows keep the themed red/blue team colors */
-.matchup{position:relative;padding:.2em .5em .2em 1.9em;border:0;border-radius:0;text-align:start;min-width:0;font-weight:600}
-.matchup h4{padding:0;margin:0;font-weight:700;font-size:1em}
-.matchup.placeholder{font-style:italic;opacity:.85}
+.matchup{position:relative;display:flex;align-items:stretch;border:0;border-radius:0;text-align:start;min-width:0;font-weight:600;line-height:1.2}
+.matchup.clickable{cursor:pointer}
+/* Teams fill the card height */
+.matchupMain{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:.45em .5em .45em 2.4em}
+.roster{font-variant-numeric:tabular-nums;font-size:1.1em;font-weight:700}
+.matchup.placeholder{font-style:italic;opacity:.85;padding:.2em .5em .2em 2.4em}
 
-/* R / B badge on the left of each row */
-.matchup::before{position:absolute;left:0;top:0;bottom:0;width:1.6em;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;background:rgba(0,0,0,.28)}
-.matchup.redTeamBG::before{content:"R"}
-.matchup.blueTeamBG::before{content:"B"}
+/* A# alliance badge on the left of each row */
+.matchup::before{position:absolute;left:0;top:0;bottom:0;width:2em;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85em;color:#fff;background:rgba(0,0,0,.28);content:attr(data-alliance-badge)}
+
+/* Prediction number box at the end of the card */
+.predBox{flex:none;display:flex;align-items:center;justify-content:center;min-width:3em;padding:.2em .5em;font-size:1.05em;font-weight:800;font-variant-numeric:tabular-nums;color:#fff;background:rgba(0,0,0,.28);text-decoration:none;border-left:1px solid rgba(0,0,0,.25)}
+a.predBox:hover{filter:brightness(1.3)}
 
 /* Match-number bar between the two alliances */
-.matchBar{background:var(--lowlight-bg-color);color:var(--main-fg-color);font-style:italic;font-weight:700;font-size:.72em;text-align:center;padding:.18em .5em;letter-spacing:.02em;border-top:1px solid var(--main-border-color);border-bottom:1px solid var(--main-border-color)}
+.matchBar{background:var(--lowlight-bg-color);color:var(--main-fg-color);font-style:italic;font-weight:700;font-size:.72em;text-align:center;padding:.08em .5em;letter-spacing:.02em;border-top:1px solid var(--main-border-color);border-bottom:1px solid var(--main-border-color)}
 
 /* Winner highlight */
 .matchup.winner{box-shadow:0 0 0 2px var(--winner-color) inset}
@@ -93,14 +98,6 @@ table td,table th{padding:.25em}
 /* ===== Reveal animation (applied inline from animateBracketReveal) ===== */
 @keyframes bracketCardReveal{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}
 @keyframes bracketLinesFade{from{opacity:0}to{opacity:1}}
-
-.prediction{margin-top:.1em;font-size:.7em;opacity:.9}
-.prediction div{font-size:150%;font-weight:700;font-variant-numeric:tabular-nums;display:inline-block}
-.prediction a{color:inherit}
-.prediction a:hover{color:var(--accent);text-decoration:none}
-
-.winnerBtn{margin-top:.25em;padding:.1em .5em;font-size:.85em;background:var(--accent);color:var(--accent-fg);border-color:transparent;font-weight:600}
-.winnerBtn:hover{filter:brightness(1.08);border-color:transparent}
 
 /* ===== Schedule table ===== */
 #scheduleTable{width:100%;max-width:34em}
