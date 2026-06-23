@@ -123,8 +123,8 @@ The project enforces several code standards via pre-commit hooks:
 **Code Requirements:**
 - Perl: `use strict` required
 - Bash: `set -e` (exit on error) required
-- JavaScript: `"use strict"` required at the top of `.js` files; omit end-of-line semicolons when possible; use whitespace sparingly to keep file sizes low
-- CSS: Keep selector and properties on a single line when possible to reduce file size
+- JavaScript: `"use strict"` required at the top of `.js` files; omit end-of-line semicolons when possible; use whitespace and comments sparingly to keep file sizes low
+- CSS: **Each individual selector and its properties must be on a single line** to minimize file size. Example: `selector{property:value;property:value}` Do not use multi-line formatting for rules. Exception: At-rules like `@media`, `@keyframes`, and `@supports` may span multiple lines as needed. See `/www/scout.css` for reference. This applies to all CSS files including new files you create.
 - Remove all `console.log()` statements before committing
 - Remove non-exceptional STDERR logging from CGI scripts (keep only genuine exceptions)
 
