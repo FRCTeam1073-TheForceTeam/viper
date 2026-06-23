@@ -102,8 +102,10 @@ sub updateLocalJs {
 
 	if (exists $config->{ourTeam}) {
 		$js =~ s/^var\s+ourTeam\s*=\s*.*?\n//m;
-		my $val = $config->{ourTeam} // 0;
-		$updates .= "var ourTeam = $val\n";
+		if ($config->{ourTeam} ne '') {
+			my $val = $config->{ourTeam};
+			$updates .= "var ourTeam = $val\n";
+		}
 	}
 	if (exists $config->{showScoutingComments}) {
 		$js =~ s/^var\s+showScoutingComments\s*=\s*.*?\n//m;
