@@ -50,6 +50,15 @@ addI18n({
 		zh_tw:'關於此應用程式',
 		es:'Acerca de esta aplicación',
 	},
+	site_configuration_link:{
+		en:'Site configuration',
+		he:'תצורת אתר',
+		pt:'Configuração do site',
+		fr:'Configuration du site',
+		tr:'Site yapılandırması',
+		zh_tw:'網站配置',
+		es:'Configuración del sitio',
+	},
 	my_team_num:{
 		en:'My team #',
 		he:'הצוות שלי #',
@@ -500,6 +509,7 @@ $(document).ready(function(){
 					req.send()
 					return false
 				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
+				mainMenu.find('#site-configuration-link').closest('li').toggle(userName=='admin')
 				$('#error-logs-link').click(function(){
 					var p=$('#show-errors')
 					if(!p.length){

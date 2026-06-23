@@ -1,0 +1,16 @@
+#local-config-form{max-width:600px;margin:0 auto}
+.form-group{margin-bottom:1.5em}
+.form-group label{display:block;margin-bottom:0.5em}
+.form-group label[for]{font-weight:normal}
+.form-group label:has(>input[type="checkbox"]) span{background:var(--button-bg-color);color:var(--button-fg-color);display:inline-block;padding:0.5em 1em;border-radius:3px;cursor:pointer;font-weight:bold}
+.form-group label:has(>input[type="checkbox"]) input:checked+span{background:var(--button-selected-bg-color)}
+.form-group input[type=number],.form-group textarea{width:100%;padding:0.5em;border:1px solid var(--main-border-color);border-radius:3px;font-family:inherit;font-size:inherit}
+.form-group textarea{resize:vertical}
+.form-group input[type="checkbox"]{display:none}
+.form-group small{display:block;margin-top:0.25em;color:var(--main-border-color);font-size:0.9em}
+button[type=submit]{padding:0.5em 1.5em;font-size:1em;background-color:var(--button-bg-color);color:var(--button-fg-color);border:none;border-radius:3px;cursor:pointer}
+#message-area{margin-top:1.5em}
+#message-area p{padding:1em;border-radius:3px;margin:0 0 1em 0}
+#message-area p.success{background-color:var(--diff-add-bg-color);color:var(--highlight-fg-color);border:1px solid var(--highlight-bg-color)}
+#message-area p.error{background-color:var(--diff-rem-bg-color);color:var(--button-disabled-decoration-color);border:1px solid var(--button-disabled-decoration-color)}
+textarea{height:15em}
