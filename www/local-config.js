@@ -2,13 +2,13 @@
 
 addI18n({
 	local_config_title:{
-		en:'Local Configuration',
-		es:'Configuración local',
-		fr:'Configuration locale',
-		pt:'Configuração local',
-		zh_tw:'本地配置',
-		tr:'Yerel Yapılandırma',
-		he:'תצורה מקומית',
+		en:'Site Configuration',
+		es:'Configuración del sitio',
+		fr:'Configuration du site',
+		pt:'Configuração do site',
+		zh_tw:'網站配置',
+		tr:'Site Yapılandırması',
+		he:'תצורת האתר',
 	},
 	local_config_loading:{
 		en:'Loading configuration...',
