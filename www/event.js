@@ -905,6 +905,7 @@ $(document).ready(function(){
 	if ("ftc"==eventCompetition) $('.noftc').hide()
 	var uploadCount = getUploads().length
 	$('.initHid').hide()
+	restripe()
 
 	function setNavHidden(hidden){
 		$('body').toggleClass('nav-hidden', hidden)
@@ -978,16 +979,16 @@ $(document).ready(function(){
 		if (/^blob/.test(url)){
 			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).attr('data-source',$(this).attr('data-source')).click(viewDataAsTable)))
 		}
+		// Show the practice-aggregation note only for the by-team aggregated export.
+		$('#aggregationNote').toggle($(this).attr('data-source')=='eventStatsByTeam')
 		showLightBox(da)
 		return false
 	}
-	$('.show-more').click(function(){
-		var show = !$(this).hasClass('expanded')
-		$(this).toggleClass('expanded', show)
-		$('.more').toggle(show)
-		var key = show ? 'hide_advanced_link' : 'show_advanced_link'
-		$(this).attr('data-i18n', key).text(translate(key))
+	$('#showAdvancedToggle').prop('checked', localStorage.showAdvanced == '1').change(function(){
+		localStorage.showAdvanced = this.checked ? '1' : '0'
+		$('.more').toggle(this.checked)
 	})
+	$('.more').toggle($('#showAdvancedToggle').is(':checked'))
 	function setName(){
 		$('title,h1').text(eventName)
 	}
@@ -1026,6 +1027,15 @@ $(document).ready(function(){
 
 	if (uploadCount) dependencySatisfied('dependUploads')
 
+	function restripe(){
+		$('#event-menu > div').each(function(){
+			var n = 0
+			$(this).find('li:not(.initHid):not(:has(> ul))').each(function(){
+				$(this).toggleClass('stripe-odd', n%2===0).toggleClass('stripe-even', n%2===1)
+				n++
+			})
+		})
+	}
 	function dependencySatisfied(depend){
 		$(`.${depend}`).each(function(){
 			$(this).removeClass(depend)
@@ -1037,6 +1047,7 @@ $(document).ready(function(){
 				$(this).show().removeClass('initHid').parents('.initHid').show().removeClass('initHid')
 			}
 		})
+		restripe()
 	}
 
 	function matchScoutingDataCount(eventStatsByMatchTeam, m){
@@ -1075,6 +1086,7 @@ $(document).ready(function(){
 			if(extension=='scouting.csv')haveScouting=true
 			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions))).parents('.initHid').show()
 		})
+		restripe()
 		if(!haveScouting)$('#scout-link').after($('#photo-scout-link,#pit-scout-link'))
 		seasonFiles.split(/[\r\n]+/).forEach(file=>{
 			if (/\/subjective-scout\.html$/.test(file)) dependencySatisfied('dependSubjective')
@@ -1138,6 +1150,7 @@ $(document).ready(function(){
 			$('#edit-event-section').prepend($('#edit-event-header'))
 			$('#edit-event-section>ul').append($('.fetch-statbotics-link'))
 		}
+		restripe()
 		function getTeamInfo(teamNum){
 			var info=eventTeamsInfo[teamNum]
 			if (!info)return""

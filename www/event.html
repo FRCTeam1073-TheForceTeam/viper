@@ -67,25 +67,22 @@
 					<li><a href="/export.html#event=_EVENT_" data-i18n=viper_export_link></a></li>
 					<ul id=dataList class=more>
 						<li class="initHid dependScouting"><a id=extendedScoutingData href="javascript:void(0)" data-i18n=computed_data_link></a></li>
-						<li class="initHid dependScouting"><a id=aggregatedScoutingData href="javascript:void(0)" data-i18n=aggregated_data_link></a> *</a></li>
+						<li class="initHid dependScouting"><a id=aggregatedScoutingData href="javascript:void(0)" data-i18n=aggregated_data_link></a></li>
 					</ul>
 				</ul>
 			</div>
 
-			<div id=edit-event-section>
-				<ul></ul>
-				<div class=more>
-					<h2 id=edit-event-header data-i18n=edit_event_heading></h2>
-					<ul>
-						<li id=edit-match-link><a href="/event-table.html#event=_EVENT_" data-i18n=edit_event_link></a></li>
-						<li id=edit-playoffs-link><a href="/playoffs.html#event=_EVENT_" data-i18n=edit_playoffs_link></a></li>
-						<li id=reset-playoffs-link class=initHid><a class=dependAlliances href="/admin/reset-playoffs.cgi?event=_EVENT_" data-i18n=reset_playoffs_link></a></li>
-						<li class="initHid fetch-statbotics-link"><a class=dependBlueAlliance href="/admin/statbotics-event.cgi?event=_EVENT_&sbevent=_BAID_" data-i18n=statbotics_epa_link></a></li>
-						<li class="initHid fetch-api-link"><a class=dependFirstFrc href="/admin/frc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a></li>
-						<li class="initHid fetch-api-link"><a class=dependFirstFtc href="/admin/ftc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a></li>
-						<li class=initHid><a class=dependImport href="/import-scouting.html#event=_EVENT_" data-i18n=import_link></a></li>
-					</ul>
-				</div>
+			<div id=edit-event-section class=more>
+				<h2 id=edit-event-header data-i18n=edit_event_heading></h2>
+				<ul>
+					<li id=edit-match-link><a href="/event-table.html#event=_EVENT_" data-i18n=edit_event_link></a></li>
+					<li id=edit-playoffs-link><a href="/playoffs.html#event=_EVENT_" data-i18n=edit_playoffs_link></a></li>
+					<li id=reset-playoffs-link class=initHid><a class=dependAlliances href="/admin/reset-playoffs.cgi?event=_EVENT_" data-i18n=reset_playoffs_link></a></li>
+					<li class="initHid fetch-statbotics-link"><a class=dependBlueAlliance href="/admin/statbotics-event.cgi?event=_EVENT_&sbevent=_BAID_" data-i18n=statbotics_epa_link></a></li>
+					<li class="initHid fetch-api-link"><a class=dependFirstFrc href="/admin/frc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a></li>
+					<li class="initHid fetch-api-link"><a class=dependFirstFtc href="/admin/ftc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a></li>
+					<li class=initHid><a class=dependImport href="/import-scouting.html#event=_EVENT_" data-i18n=import_link></a></li>
+				</ul>
 			</div>
 
 			<div class=more>
@@ -124,12 +121,9 @@
 					</ul>
 				</div>
 			</div>
-			<div class=more>
-				<p class="initHid dependScouting" data-include-practice=aggregation_includes_practice data-exclude-practice=aggregation_excludes_practice></p>
-			</div>
-			<div class=show-more data-i18n=show_advanced_link></div>
 		</div>
 
+		<label class=sidebar-toggle><input type=checkbox id=showAdvancedToggle> <span data-i18n=show_advanced_link></span></label>
 		<label class=sidebar-toggle><input type=checkbox id=tbaToggle> <span data-i18n=tba_format_label></span></label>
 		<label class=sidebar-toggle><input type=checkbox id=hidePracticeToggle> <span data-i18n=hide_practice_label></span></label>
 		<label class=sidebar-toggle><input type=checkbox id=teamOnlyToggle> <span data-i18n=team_schedule_label></span></label>
@@ -191,7 +185,7 @@
 	</aside>
 
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
-	<div id=dataActions class=lightBoxCenterContent style=display:none><h2></h2><ul></ul></div>
+	<div id=dataActions class=lightBoxCenterContent style=display:none><h2></h2><ul></ul><p id=aggregationNote style=display:none data-include-practice=aggregation_includes_practice data-exclude-practice=aggregation_excludes_practice></p></div>
 	<iframe id=instructions class=lightBoxFullContent src=/event-instructions.html></iframe>
 	<div id=jsonLightBox class=lightBoxFullContent><h2></h2><pre id=jsonViewer></pre></div>
 </div></body>

@@ -35,10 +35,13 @@ h3{margin:0 0 .25em 0;padding:0}
 .narrow li>a{display:block;padding:.35em .5em;border-radius:var(--radius);color:var(--link-color);text-decoration:none}
 .narrow li>a:hover{background:var(--lowlight-bg-color);text-decoration:none}
 .narrow li>ul{margin-top:0.2em;padding-inline-start:0.6em}
-/* Zebra-stripe nav items (only in lists with more than one option) so each reads as distinct */
-#event-menu li:not(:only-child)>a{background:var(--surface)}
-#event-menu li:not(:only-child):nth-child(odd)>a{background:var(--lowlight-bg-color)}
-#event-menu li:not(:only-child)>a:hover{background:var(--accent);color:var(--button-fg-color)}
+/* Zebra-stripe nav items — classes assigned by JS restripe() so hidden items don't break the count */
+#event-menu li.stripe-odd>a{background:var(--lowlight-bg-color)}
+#event-menu li.stripe-even>a{background:var(--surface)}
+#event-menu li>a:hover{background:var(--accent);color:var(--button-fg-color)}
+/* Category headings (e.g. The Blue Alliance, First Inspires): no stripe, set apart as a labeled divider */
+#event-menu li:has(> ul)>a{background:transparent;color:var(--main-fg-color);font-weight:700;text-transform:uppercase;font-size:.8em;letter-spacing:.06em;padding-bottom:.3em;margin-bottom:.15em;border-bottom:1px solid var(--main-border-color);border-radius:0}
+#firstInspiresFrcLinks,#firstInspiresFtcLinks{margin-top:.8em}
 
 /* Section cards */
 #event-menu{display:flex;flex-direction:column;gap:.6em}

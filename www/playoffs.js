@@ -389,7 +389,9 @@ function getPredictorLink(num, oppNum, teamColor){
 	var red=eventAlliances[(teamColor=='red'?num:oppNum)-1],
 	blue=eventAlliances[(teamColor=='red'?oppNum:num)-1]
 	if (!red||!blue) return ""
-	return `/predictor.html#event=${eventId}&R1=${red['Captain']}&R2=${red['First Pick']}&R3=${red['Second Pick']}&B1=${blue['Captain']}&B2=${blue['First Pick']}&B3=${blue['Second Pick']}`
+	// Deep-link straight into the predictor's playoff section with both alliances
+	// pre-loaded (ra/ba are the alliance numbers it resolves via allianceByNumber).
+	return `/predictor.html#event=${eventId}&mode=playoff&ra=${red['Alliance']}&ba=${blue['Alliance']}`
 }
 
 function getPrediction(num){
