@@ -159,7 +159,7 @@ $(document).ready(function(){
 
 function readConfiguration(){
 	// Wait for local.js to be loaded, then read the global variables
-	if (typeof window.ourTeam !== 'undefined'){
+	if (window.localJsLoaded){
 		populateForm({
 			ourTeam: window.ourTeam,
 			showScoutingComments: window.showScoutingComments,
@@ -177,7 +177,7 @@ function readConfiguration(){
 
 function populateForm(config){
 	// Set ourTeam
-	$('#form-ourTeam').val(config.ourTeam !== undefined ? config.ourTeam : 0)
+	$('#form-ourTeam').val(config.ourTeam !== undefined ? config.ourTeam : '')
 
 	// Set boolean checkboxes with safe defaults
 	$('#form-showScoutingComments').prop('checked', !!config.showScoutingComments)
