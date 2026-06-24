@@ -68,6 +68,7 @@ final databaseProvider = FutureProvider((ref) async {
 // ============================================================================
 
 final sharedPreferencesProvider = FutureProvider((ref) async {
+	// This is now just for reference - SharedPreferences is already initialized in main()
 	return SharedPreferences.getInstance();
 });
 
@@ -143,16 +144,19 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 // ============================================================================
 
 class _BotPositionNotifier extends StateNotifier<String?> {
-	final SharedPreferences _prefs;
+	final SharedPreferences? _prefs;
 
-	_BotPositionNotifier(this._prefs) : super(_prefs.getString('selected_bot_position'));
+	_BotPositionNotifier(this._prefs)
+		: super(_prefs?.getString('selected_bot_position') ?? null);
 
 	Future<void> setPosition(String? position) async {
+		if (_prefs == null) return;
+
 		state = position;
 		if (position == null) {
-			await _prefs.remove('selected_bot_position');
+			await _prefs!.remove('selected_bot_position');
 		} else {
-			await _prefs.setString('selected_bot_position', position);
+			await _prefs!.setString('selected_bot_position', position);
 		}
 	}
 }
@@ -163,12 +167,8 @@ final selectedBotPositionProvider =
 
 	return prefsAsync.when(
 		data: (prefs) => _BotPositionNotifier(prefs),
-		loading: () => _BotPositionNotifier(
-			throw Exception('SharedPreferences not initialized'),
-		),
-		error: (error, stack) => _BotPositionNotifier(
-			throw Exception('Failed to load SharedPreferences: $error'),
-		),
+		loading: () => _BotPositionNotifier(null),
+		error: (error, stack) => _BotPositionNotifier(null),
 	);
 });
 

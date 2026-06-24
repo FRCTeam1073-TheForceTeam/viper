@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/server_config_screen.dart';
 import 'screens/event_picker_screen.dart';
 import 'screens/bot_selection_screen.dart';
@@ -9,7 +10,12 @@ import 'providers/app_providers.dart';
 import 'data/api/viper_api_client.dart';
 import 'constants/colors.dart';
 
-void main() {
+late SharedPreferences _sharedPrefs;
+
+void main() async {
+	WidgetsFlutterBinding.ensureInitialized();
+	_sharedPrefs = await SharedPreferences.getInstance();
+
 	runApp(
 		const ProviderScope(
 			child: ViperScoutApp(),
