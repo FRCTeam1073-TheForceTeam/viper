@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:logger/logger.dart';
 import '../data/database/scout_database.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/csv_builder.dart';
+import '../models/match_model.dart';
 
 // ============================================================================
 // DATABASE
@@ -267,6 +267,73 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 			);
 		}
 	}
+}
+
+// ============================================================================
+// MATCH LIST
+// ============================================================================
+
+final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
+	final apiClient = await ref.watch(apiClientProvider.future);
+	final selectedEvent = ref.watch(selectedEventProvider);
+
+	if (selectedEvent == null) {
+		return [];
+	}
+
+	try {
+		// Fetch schedule CSV
+		final scheduleUrl = '/data/$selectedEvent.schedule.csv';
+		final response = await apiClient.fetchRaw(scheduleUrl);
+
+		// Parse CSV
+		final matches = _parseScheduleCSV(response);
+		return matches;
+	} catch (e) {
+		Logger().e('Failed to fetch matches: $e');
+		return [];
+	}
+});
+
+/// Parse schedule CSV into MatchModel list
+List<MatchModel> _parseScheduleCSV(String csvContent) {
+	final lines = csvContent.trim().split('\n');
+	if (lines.isEmpty) return [];
+
+	// Parse header row
+	final headers = lines[0].split(',').map((h) => h.trim()).toList();
+	final matchIndex = headers.indexOf('Match');
+	
+	if (matchIndex == -1) {
+		Logger().w('Match column not found in schedule');
+		return [];
+	}
+
+	// Parse data rows
+	final matches = <MatchModel>[];
+	for (int i = 1; i < lines.length; i++) {
+		final values = lines[i].split(',').map((v) => v.trim()).toList();
+		if (values.length <= matchIndex) continue;
+
+		final matchNumber = values[matchIndex];
+		final teams = <String, String>{};
+
+		// Extract team numbers for each position
+		const positions = ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'];
+		for (final pos in positions) {
+			final posIndex = headers.indexOf(pos);
+			if (posIndex >= 0 && posIndex < values.length) {
+				teams[pos] = values[posIndex];
+			}
+		}
+
+		matches.add(MatchModel(
+			matchNumber: matchNumber,
+			teams: teams,
+		));
+	}
+
+	return matches;
 }
 
 // CONNECTIVITY (SIMPLIFIED - TODO: Fix)

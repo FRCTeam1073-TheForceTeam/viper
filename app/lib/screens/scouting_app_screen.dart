@@ -12,10 +12,14 @@ import '../../data/api/viper_api_client.dart';
 
 class ScoutingAppScreen extends ConsumerStatefulWidget {
 	final EventModel selectedEvent;
+	final String? prefilledMatch;
+	final String? prefilledTeam;
 
 	const ScoutingAppScreen({
 		Key? key,
 		required this.selectedEvent,
+		this.prefilledMatch,
+		this.prefilledTeam,
 	}) : super(key: key);
 
 	@override
@@ -32,6 +36,10 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 	@override
 	void initState() {
 		super.initState();
+		// Use prefilled values if provided
+		_matchNumber = widget.prefilledMatch;
+		_teamNumber = widget.prefilledTeam;
+		
 		_tabs = [
 			ScouterInfoTab(
 				eventId: widget.selectedEvent.eventId,

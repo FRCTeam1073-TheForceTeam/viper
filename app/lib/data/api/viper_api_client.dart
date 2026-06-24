@@ -288,6 +288,26 @@ class ViperApiClient {
 		}
 	}
 
+	/// Fetch raw text from a server endpoint
+	Future<String> fetchRaw(String path) async {
+		try {
+			_logger.i('📡 Fetching raw from: $path');
+
+			final response = await _dio.get(path);
+
+			if (response.statusCode != 200) {
+				throw Exception(
+					'Failed to fetch: HTTP ${response.statusCode}',
+				);
+			}
+
+			return response.data as String;
+		} catch (e) {
+			_logger.e('Error fetching raw data: $e');
+			rethrow;
+		}
+	}
+
 	// =========================================================================
 	// PRIVATE HELPERS
 	// =========================================================================

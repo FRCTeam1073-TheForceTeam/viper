@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/server_config_screen.dart';
 import 'screens/event_picker_screen.dart';
 import 'screens/bot_selection_screen.dart';
+import 'screens/match_selection_screen.dart';
 import 'screens/scouting_app_screen.dart';
 import 'providers/app_providers.dart';
 import 'data/api/viper_api_client.dart';
@@ -44,8 +45,11 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 	bool _serverConfigured = false;
 	bool _eventSelected = false;
 	bool _botSelected = false;
+	bool _matchSelected = false;
 	bool _checking = true;
 	EventModel? _selectedEvent;
+	String? _selectedMatch;
+	String? _selectedTeam;
 
 	@override
 	void initState() {
@@ -151,6 +155,7 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 						_selectedEvent = event;
 						_eventSelected = true;
 						_botSelected = false; // Reset bot selection when changing events
+						_matchSelected = false; // Reset match selection when changing events
 					});
 				},
 			);
@@ -167,13 +172,31 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 			);
 		}
 
-		// Show scouting app with selected event
+		if (!_matchSelected) {
+			final botPosition = ref.watch(selectedBotPositionProvider);
+			return MatchSelectionScreen(
+				botPosition: botPosition,
+				onMatchSelected: (matchNumber, teamNumber) {
+					setState(() {
+						_selectedMatch = matchNumber;
+						_selectedTeam = teamNumber;
+						_matchSelected = true;
+					});
+				},
+			);
+		}
+
+		// Show scouting app with selected event, match, and team
 		return _selectedEvent != null
-				? ScoutingAppScreen(selectedEvent: _selectedEvent!)
+				? ScoutingAppScreen(
+					selectedEvent: _selectedEvent!,
+					prefilledMatch: _selectedMatch,
+					prefilledTeam: _selectedTeam,
+				)
 				: const Scaffold(
-						body: Center(
-							child: Text('Error loading event'),
-						),
+					body: Center(
+						child: Text('Error loading event'),
+					),
 					);
 	}
 }
