@@ -94,8 +94,34 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 // SELECTED BOT POSITION
 // ============================================================================
 
-final selectedBotPositionProvider = StateProvider<String?>((ref) {
-	return null;
+class _BotPositionNotifier extends StateNotifier<String?> {
+	final SharedPreferences _prefs;
+
+	_BotPositionNotifier(this._prefs) : super(_prefs.getString('selected_bot_position'));
+
+	Future<void> setPosition(String? position) async {
+		state = position;
+		if (position == null) {
+			await _prefs.remove('selected_bot_position');
+		} else {
+			await _prefs.setString('selected_bot_position', position);
+		}
+	}
+}
+
+final selectedBotPositionProvider =
+	StateNotifierProvider<_BotPositionNotifier, String?>((ref) {
+	final prefsAsync = ref.watch(sharedPreferencesProvider);
+
+	return prefsAsync.when(
+		data: (prefs) => _BotPositionNotifier(prefs),
+		loading: () => _BotPositionNotifier(
+			throw Exception('SharedPreferences not initialized'),
+		),
+		error: (error, stack) => _BotPositionNotifier(
+			throw Exception('Failed to load SharedPreferences: $error'),
+		),
+	);
 });
 
 // CONNECTIVITY (SIMPLIFIED - TODO: Fix)
@@ -152,22 +178,15 @@ final eventListProvider = FutureProvider((ref) async {
 // SCOUT ENTRIES
 // ============================================================================
 
-final scoutListProvider = StreamProvider<List<ScoutData>>((ref) async* {
+final scoutListProvider = FutureProvider<List<ScoutData>>((ref) async {
 	final db = await ref.watch(databaseProvider.future);
 	final selectedEvent = ref.watch(selectedEventProvider);
 
 	if (selectedEvent == null) {
-		yield [];
-		return;
+		return [];
 	}
 
-	// Initial load
-	yield await db.getScoutsForEvent(selectedEvent);
-
-	// Stream updates (poll every 2 seconds for now)
-	await for (final _ in Stream.periodic(const Duration(seconds: 2))) {
-		yield await db.getScoutsForEvent(selectedEvent);
-	}
+	return db.getScoutsForEvent(selectedEvent);
 });
 
 final pendingScoutsProvider = FutureProvider<List<ScoutData>>((ref) async {
@@ -303,7 +322,7 @@ List<MatchModel> _parseScheduleCSV(String csvContent) {
 	// Parse header row
 	final headers = lines[0].split(',').map((h) => h.trim()).toList();
 	final matchIndex = headers.indexOf('Match');
-	
+
 	if (matchIndex == -1) {
 		Logger().w('Match column not found in schedule');
 		return [];

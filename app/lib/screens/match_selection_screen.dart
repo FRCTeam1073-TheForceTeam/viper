@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/app_providers.dart';
+import '../widgets/viper_menu_button.dart';
 
 class MatchSelectionScreen extends ConsumerWidget {
 	final Function(String matchNumber, String teamNumber) onMatchSelected;
 	final String? botPosition;
+	final VoidCallback? onChangeEvent;
+	final VoidCallback? onChangeBotPosition;
 
 	const MatchSelectionScreen({
 		Key? key,
 		required this.onMatchSelected,
 		this.botPosition,
+		this.onChangeEvent,
+		this.onChangeBotPosition,
 	}) : super(key: key);
 
 	@override
@@ -21,6 +26,12 @@ class MatchSelectionScreen extends ConsumerWidget {
 				title: const Text('Select Match'),
 				centerTitle: true,
 				elevation: 0,
+				actions: [
+					ViperMenuButton(
+						onChangeEvent: onChangeEvent,
+						onChangeBotPosition: onChangeBotPosition,
+					),
+				],
 			),
 			body: matchesAsync.when(
 				data: (matches) {
@@ -111,4 +122,3 @@ class MatchSelectionScreen extends ConsumerWidget {
 		);
 	}
 }
-

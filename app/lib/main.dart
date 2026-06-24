@@ -23,6 +23,7 @@ class ViperScoutApp extends StatelessWidget {
 	Widget build(BuildContext context) {
 		return MaterialApp(
 			title: 'Viper Scout FRC',
+			debugShowCheckedModeBanner: false,
 			theme: ThemeData(
 				useMaterial3: true,
 				colorScheme: ColorScheme.fromSeed(
@@ -164,9 +165,18 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 		if (!_botSelected) {
 			return BotSelectionScreen(
 				onBotSelected: (bot) {
-					ref.read(selectedBotPositionProvider.notifier).state = bot;
+					ref.read(selectedBotPositionProvider.notifier).setPosition(bot);
 					setState(() {
 						_botSelected = true;
+					});
+				},
+				onChangeEvent: () {
+					setState(() {
+						_eventSelected = false;
+						_botSelected = false;
+						_matchSelected = false;
+						_selectedMatch = null;
+						_selectedTeam = null;
 					});
 				},
 			);
@@ -181,6 +191,23 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 						_selectedMatch = matchNumber;
 						_selectedTeam = teamNumber;
 						_matchSelected = true;
+					});
+				},
+				onChangeEvent: () {
+					setState(() {
+						_eventSelected = false;
+						_botSelected = false;
+						_matchSelected = false;
+						_selectedMatch = null;
+						_selectedTeam = null;
+					});
+				},
+				onChangeBotPosition: () {
+					setState(() {
+						_botSelected = false;
+						_matchSelected = false;
+						_selectedMatch = null;
+						_selectedTeam = null;
 					});
 				},
 			);

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'server_config_screen.dart';
-import 'bot_selection_screen.dart';
 import 'tabs/scouter_info_tab.dart';
 import 'tabs/pre_match_tab.dart';
 import 'tabs/auto_tab.dart';
 import 'tabs/teleop_tab.dart';
 import 'tabs/end_game_tab.dart';
+import '../widgets/viper_menu_button.dart';
 import '../../providers/app_providers.dart';
 import '../../data/api/viper_api_client.dart';
 
@@ -45,7 +45,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 		// Use prefilled values if provided
 		_matchNumber = widget.prefilledMatch;
 		_teamNumber = widget.prefilledTeam;
-		
+
 		_tabs = [
 			ScouterInfoTab(
 				eventId: widget.selectedEvent.eventId,
@@ -104,12 +104,36 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 					],
 				),
 				actions: [
+					ViperMenuButton(
+						onChangeEvent: widget.onChangeEvent,
+						onChangeBotPosition: widget.onChangeBotPosition,
+						onChangeMatch: widget.onChangeMatch,
+						onChangeServer: () {
+							Navigator.push(
+								context,
+								MaterialPageRoute(
+									builder: (context) => ServerConfigScreen(
+										onServerConfigured: (_) {
+											ref.invalidate(apiClientProvider);
+											ref.invalidate(eventListProvider);
+											Navigator.pop(context);
+										},
+									),
+								),
+							);
+						},
+						onSync: () {
+							ref.read(syncStateProvider.notifier).syncScoutData();
+						},
+						isSyncing: syncState.isSyncing,
+						pendingCount: syncState.pendingCount,
+					),
 					if (syncState.isSyncing)
 						const Padding(
-							padding: EdgeInsets.all(16),
+							padding: EdgeInsets.all(12),
 							child: SizedBox(
-								width: 24,
-								height: 24,
+								width: 20,
+								height: 20,
 								child: CircularProgressIndicator(
 									strokeWidth: 2,
 									valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
@@ -118,7 +142,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 						)
 					else
 						Padding(
-							padding: const EdgeInsets.all(16),
+							padding: const EdgeInsets.all(12),
 							child: Center(
 								child: Text(
 									syncState.pendingCount > 0
@@ -132,25 +156,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 								),
 							),
 						),
-					PopupMenuButton<String>(
-						onSelected: (value) {
-							if (value == 'settings') {
-								_showSettingsSheet(context, ref);
-							} else if (value == 'sync') {
-								ref.read(syncStateProvider.notifier).syncScoutData();
-							}
-						},
-						itemBuilder: (BuildContext context) => [
-							const PopupMenuItem<String>(
-								value: 'sync',
-								child: Text('Manual Sync'),
-							),
-							const PopupMenuItem<String>(
-								value: 'settings',
-								child: Text('Settings'),
-							),
-						],
-					),
 				],
 			),
 			body: IndexedStack(
@@ -185,76 +190,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 						label: 'End Game',
 					),
 				],
-			),
-		);
-	}
-
-	void _showSettingsSheet(BuildContext context, WidgetRef ref) {
-		showModalBottomSheet(
-			context: context,
-			builder: (context) => Padding(
-				padding: const EdgeInsets.all(16),
-				child: Column(
-					mainAxisSize: MainAxisSize.min,
-					crossAxisAlignment: CrossAxisAlignment.stretch,
-					children: [
-						Text(
-							'Settings',
-							style: Theme.of(context).textTheme.headlineSmall,
-						),
-						const SizedBox(height: 24),
-						ElevatedButton(
-							onPressed: widget.onChangeMatch != null ? () {
-								Navigator.pop(context);
-								widget.onChangeMatch?.call();
-							} : null,
-							child: const Text('Change Match'),
-						),
-						const SizedBox(height: 12),
-						ElevatedButton(
-							onPressed: widget.onChangeBotPosition != null ? () {
-								Navigator.pop(context);
-								widget.onChangeBotPosition?.call();
-							} : null,
-							child: const Text('Change Robot Position'),
-						),
-						const SizedBox(height: 12),
-						ElevatedButton(
-							onPressed: widget.onChangeEvent != null ? () {
-								Navigator.pop(context);
-								widget.onChangeEvent?.call();
-							} : null,
-							child: const Text('Change Event'),
-						),
-						const SizedBox(height: 12),
-						ElevatedButton(
-							onPressed: () {
-								Navigator.pop(context);
-								Navigator.push(
-									context,
-									MaterialPageRoute(
-										builder: (context) => ServerConfigScreen(
-											onServerConfigured: (_) {
-												ref.invalidate(apiClientProvider);
-												ref.invalidate(eventListProvider);
-												Navigator.pop(context);
-											},
-										),
-									),
-								);
-							},
-							child: const Text('Change Server'),
-						),
-						const SizedBox(height: 12),
-						ElevatedButton(
-							onPressed: () {
-								Navigator.pop(context);
-								ref.read(syncStateProvider.notifier).syncScoutData();
-							},
-							child: const Text('Sync Now'),
-						),
-					],
-				),
 			),
 		);
 	}
