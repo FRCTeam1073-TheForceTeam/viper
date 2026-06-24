@@ -8,6 +8,54 @@ import '../services/csv_builder.dart';
 import '../models/match_model.dart';
 
 // ============================================================================
+// CSV PARSING
+// ============================================================================
+
+/// Parse CSV string into list of maps with headers as keys
+/// Matches the JavaScript csvToArrayOfMaps behavior
+List<Map<String, dynamic>> csvToArrayOfMaps(String csv) {
+	final List<Map<String, dynamic>> arr = [];
+	final List<String> lines = csv.split(RegExp(r'[\r\n]+'));
+
+	if (lines.isEmpty) return arr;
+
+	// Parse header
+	final List<String> headers = lines[0].split(',');
+
+	// Parse data rows
+	for (int i = 1; i < lines.length; i++) {
+		if (lines[i].trim().isEmpty) continue;
+
+		final List<String> data = lines[i].split(',').map((s) => s.trim()).toList();
+		final Map<String, dynamic> map = {};
+
+		for (int j = 0; j < data.length; j++) {
+			if (j < headers.length) {
+				final String value = data[j];
+				// Try to parse as integer if it's all digits
+				if (RegExp(r'^[0-9]+$').hasMatch(value)) {
+					map[headers[j]] = int.parse(value);
+				} else {
+					map[headers[j]] = unescapeField(value);
+				}
+			}
+		}
+
+		arr.add(map);
+	}
+
+	return arr;
+}
+
+/// Unescape CSV field values
+String unescapeField(String s) {
+	return s
+		.replaceAll('⏎', '\n')
+		.replaceAll('״', '"')
+		.replaceAll('،', ',');
+}
+
+// ============================================================================
 // DATABASE
 // ============================================================================
 
@@ -177,6 +225,43 @@ final eventListProvider = FutureProvider((ref) async {
 // ============================================================================
 // SCOUT ENTRIES
 // ============================================================================
+
+final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
+	final db = await ref.watch(databaseProvider.future);
+	final selectedEvent = ref.watch(selectedEventProvider);
+
+	if (selectedEvent == null) {
+		return {};
+	}
+
+	// Get local scouting data - track which matches have been scouted (by any position)
+	final localScouts = await db.getScoutsForEvent(selectedEvent);
+	final scoutedMatches = <String>{};
+	for (final scout in localScouts) {
+		scoutedMatches.add(scout.match);
+	}
+
+	// Try to download event scouting data from server
+	try {
+		final apiClient = await ref.watch(apiClientProvider.future);
+		final serverCsv = await apiClient.fetchRaw('/data/$selectedEvent.scouting.csv');
+
+		// Parse server CSV using proper CSV parser that matches JavaScript behavior
+		final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(serverCsv);
+
+		for (final entry in scoutingData) {
+			if (entry.containsKey('match')) {
+				final match = entry['match'].toString();
+				scoutedMatches.add(match);
+			}
+		}
+	} catch (e) {
+		// If download fails, just use local data
+		Logger().w('Failed to download event scouting data: $e');
+	}
+
+	return scoutedMatches;
+});
 
 final scoutListProvider = FutureProvider<List<ScoutData>>((ref) async {
 	final db = await ref.watch(databaseProvider.future);

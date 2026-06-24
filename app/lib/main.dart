@@ -7,6 +7,7 @@ import 'screens/match_selection_screen.dart';
 import 'screens/scouting_app_screen.dart';
 import 'providers/app_providers.dart';
 import 'data/api/viper_api_client.dart';
+import 'constants/colors.dart';
 
 void main() {
 	runApp(
@@ -26,8 +27,36 @@ class ViperScoutApp extends StatelessWidget {
 			debugShowCheckedModeBanner: false,
 			theme: ThemeData(
 				useMaterial3: true,
+				scaffoldBackgroundColor: AppColors.mainBgColor,
 				colorScheme: ColorScheme.fromSeed(
 					seedColor: Colors.blue,
+					brightness: Brightness.dark,
+					surface: AppColors.mainBgColor,
+					onSurface: AppColors.mainFgColor,
+					background: AppColors.mainBgColor,
+					onBackground: AppColors.mainFgColor,
+				),
+				textTheme: const TextTheme(
+					bodyLarge: TextStyle(color: AppColors.mainFgColor),
+					bodyMedium: TextStyle(color: AppColors.mainFgColor),
+					bodySmall: TextStyle(color: AppColors.mainFgColor),
+					headlineLarge: TextStyle(color: AppColors.mainFgColor),
+					headlineMedium: TextStyle(color: AppColors.mainFgColor),
+					headlineSmall: TextStyle(color: AppColors.mainFgColor),
+					titleLarge: TextStyle(color: AppColors.mainFgColor),
+					titleMedium: TextStyle(color: AppColors.mainFgColor),
+					titleSmall: TextStyle(color: AppColors.mainFgColor),
+					labelLarge: TextStyle(color: AppColors.mainFgColor),
+					labelMedium: TextStyle(color: AppColors.mainFgColor),
+					labelSmall: TextStyle(color: AppColors.mainFgColor),
+					displayLarge: TextStyle(color: AppColors.mainFgColor),
+					displayMedium: TextStyle(color: AppColors.mainFgColor),
+					displaySmall: TextStyle(color: AppColors.mainFgColor),
+				),
+				appBarTheme: const AppBarTheme(
+					backgroundColor: AppColors.sectionBgColor,
+					foregroundColor: AppColors.mainFgColor,
+					elevation: 0,
 				),
 			),
 			home: const _HomeRouter(),

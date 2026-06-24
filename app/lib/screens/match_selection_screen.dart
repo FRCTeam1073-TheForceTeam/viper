@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../constants/colors.dart';
 import '../providers/app_providers.dart';
 import '../widgets/viper_menu_button.dart';
 
@@ -41,12 +42,15 @@ class MatchSelectionScreen extends ConsumerWidget {
 						);
 					}
 
-					return ref.watch(scoutListProvider).when(
-						data: (scouts) {
-							// Build set of scouted match+team combinations
-							final scoutedMatches = <String>{};
-							for (final scout in scouts) {
-								scoutedMatches.add('${scout.match}_${scout.team}');
+					return ref.watch(scoutedMatchesProvider).when(
+						data: (scoutedMatchSet) {
+							// Find the last (most recent) scouted match
+							String? lastScoutedMatch;
+							for (int i = matches.length - 1; i >= 0; i--) {
+								if (scoutedMatchSet.contains(matches[i].matchNumber)) {
+									lastScoutedMatch = matches[i].matchNumber;
+									break;
+								}
 							}
 
 							return ListView.builder(
@@ -61,24 +65,29 @@ class MatchSelectionScreen extends ConsumerWidget {
 										return const SizedBox.shrink();
 									}
 
-									final isScouted = scoutedMatches.contains('${match.matchNumber}_$team');
+									// Mark as scouted if:
+									// 1. It's explicitly in scoutedMatches, OR
+									// 2. It's before or equal to the last scouted match
+									final isScouted = scoutedMatchSet.contains(match.matchNumber) ||
+										(lastScoutedMatch != null &&
+											matches.indexWhere((m) => m.matchNumber == match.matchNumber) <=
+											matches.indexWhere((m) => m.matchNumber == lastScoutedMatch));
 
-									return Card(
-										margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-										child: ListTile(
-											title: Text('Match ${match.matchNumber}'),
-											subtitle: Text('Team $team'),
-											trailing: isScouted
-													? const Chip(
-														label: Text('Scouted'),
-														backgroundColor: Colors.grey,
-													)
-													: null,
-											tileColor: isScouted ? Colors.grey[100] : null,
-											onTap: () {
-												onMatchSelected(match.matchNumber, team);
-											},
-										),
+									// Determine team color (R1-R3 = red, B1-B3 = blue)
+									final isRedTeam = botPosition?.startsWith('R') ?? false;
+									final teamBgColor = isRedTeam ? AppColors.redTeamColor : AppColors.blueTeamColor;
+
+									return ListTile(
+										title: Text('Match ${match.matchNumber}'),
+										subtitle: Text('Team $team'),
+										tileColor: isScouted ? AppColors.lowlightBgColor : teamBgColor,
+										textColor: isScouted ? AppColors.highlightFgColor : AppColors.mainFgColor,
+										trailing: isScouted
+												? const Icon(Icons.check_circle, color: AppColors.highlightFgColor)
+												: null,
+										onTap: () {
+											onMatchSelected(match.matchNumber, team);
+										},
 									);
 								},
 							);
@@ -98,15 +107,18 @@ class MatchSelectionScreen extends ConsumerWidget {
 									return const SizedBox.shrink();
 								}
 
-								return Card(
-									margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-									child: ListTile(
-										title: Text('Match ${match.matchNumber}'),
-										subtitle: Text('Team $team'),
-										onTap: () {
-											onMatchSelected(match.matchNumber, team);
-										},
-									),
+								// Determine team color (R1-R3 = red, B1-B3 = blue)
+								final isRedTeam = botPosition?.startsWith('R') ?? false;
+								final teamBgColor = isRedTeam ? AppColors.redTeamColor : AppColors.blueTeamColor;
+
+								return ListTile(
+									title: Text('Match ${match.matchNumber}'),
+									subtitle: Text('Team $team'),
+									tileColor: teamBgColor,
+									textColor: AppColors.mainFgColor,
+									onTap: () {
+										onMatchSelected(match.matchNumber, team);
+									},
 								);
 							},
 						),
