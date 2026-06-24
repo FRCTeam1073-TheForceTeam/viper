@@ -192,6 +192,30 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 					selectedEvent: _selectedEvent!,
 					prefilledMatch: _selectedMatch,
 					prefilledTeam: _selectedTeam,
+					onChangeEvent: () {
+						setState(() {
+							_eventSelected = false;
+							_botSelected = false;
+							_matchSelected = false;
+							_selectedMatch = null;
+							_selectedTeam = null;
+						});
+					},
+					onChangeBotPosition: () {
+						setState(() {
+							_botSelected = false;
+							_matchSelected = false;
+							_selectedMatch = null;
+							_selectedTeam = null;
+						});
+					},
+					onChangeMatch: () {
+						setState(() {
+							_matchSelected = false;
+							_selectedMatch = null;
+							_selectedTeam = null;
+						});
+					},
 				)
 				: const Scaffold(
 					body: Center(

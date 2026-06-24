@@ -14,12 +14,18 @@ class ScoutingAppScreen extends ConsumerStatefulWidget {
 	final EventModel selectedEvent;
 	final String? prefilledMatch;
 	final String? prefilledTeam;
+	final VoidCallback? onChangeEvent;
+	final VoidCallback? onChangeBotPosition;
+	final VoidCallback? onChangeMatch;
 
 	const ScoutingAppScreen({
 		Key? key,
 		required this.selectedEvent,
 		this.prefilledMatch,
 		this.prefilledTeam,
+		this.onChangeEvent,
+		this.onChangeBotPosition,
+		this.onChangeMatch,
 	}) : super(key: key);
 
 	@override
@@ -198,21 +204,27 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 						),
 						const SizedBox(height: 24),
 						ElevatedButton(
-							onPressed: () {
+							onPressed: widget.onChangeMatch != null ? () {
 								Navigator.pop(context);
-								Navigator.push(
-									context,
-									MaterialPageRoute(
-										builder: (context) => BotSelectionScreen(
-											onBotSelected: (bot) {
-												ref.read(selectedBotPositionProvider.notifier).state = bot;
-												Navigator.pop(context);
-											},
-										),
-									),
-								);
-							},
+								widget.onChangeMatch?.call();
+							} : null,
+							child: const Text('Change Match'),
+						),
+						const SizedBox(height: 12),
+						ElevatedButton(
+							onPressed: widget.onChangeBotPosition != null ? () {
+								Navigator.pop(context);
+								widget.onChangeBotPosition?.call();
+							} : null,
 							child: const Text('Change Robot Position'),
+						),
+						const SizedBox(height: 12),
+						ElevatedButton(
+							onPressed: widget.onChangeEvent != null ? () {
+								Navigator.pop(context);
+								widget.onChangeEvent?.call();
+							} : null,
+							child: const Text('Change Event'),
 						),
 						const SizedBox(height: 12),
 						ElevatedButton(
@@ -232,15 +244,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 								);
 							},
 							child: const Text('Change Server'),
-						),
-						const SizedBox(height: 12),
-						ElevatedButton(
-							onPressed: () {
-								Navigator.pop(context);
-								ref.read(selectedEventProvider.notifier).setSelectedEvent('');
-								// Force reload
-							},
-							child: const Text('Change Event'),
 						),
 						const SizedBox(height: 12),
 						ElevatedButton(
