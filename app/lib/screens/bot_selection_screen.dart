@@ -27,6 +27,15 @@ class _BotSelectionScreenState extends State<BotSelectionScreen> {
 		super.dispose();
 	}
 
+	void _toggleOrientation() {
+		final nextPage = _pageController.page == 0 ? 1 : 0;
+		_pageController.animateToPage(
+			nextPage.toInt(),
+			duration: const Duration(milliseconds: 300),
+			curve: Curves.easeInOut,
+		);
+	}
+
 	Widget _buildPositionButton(String position, bool isRed) {
 		return ElevatedButton(
 			style: ElevatedButton.styleFrom(
@@ -52,90 +61,96 @@ class _BotSelectionScreenState extends State<BotSelectionScreen> {
 		// orientRight: B1 B2 B3 on left (blue), R3 R2 R1 on right (red)
 		
 		if (isRotated) {
-			return Column(
+			return Row(
 				mainAxisAlignment: MainAxisAlignment.center,
+				crossAxisAlignment: CrossAxisAlignment.center,
 				children: [
-					Row(
-						mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: [
-							// Blue team on left
-							Column(
-								mainAxisSize: MainAxisSize.min,
-								children: [
-									_buildPositionButton('B1', false),
-									const SizedBox(height: 16),
-									_buildPositionButton('B2', false),
-									const SizedBox(height: 16),
-									_buildPositionButton('B3', false),
-								],
+					// Blue team on left
+					SizedBox(
+						width: 80,
+						child: Column(
+								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+							children: [
+								_buildPositionButton('B1', false),
+								const SizedBox(height: 16),
+								_buildPositionButton('B2', false),
+								const SizedBox(height: 16),
+								_buildPositionButton('B3', false),
+							],
+						),
+					),
+					const SizedBox(width: 16),
+					// Field image - expands to fill
+					Expanded(
+						child: GestureDetector(
+							onTap: _toggleOrientation,
+							child: Image.asset(
+								'assets/images/field.png',
+								fit: BoxFit.contain,
 							),
-							// Field image placeholder
-							Container(
-								width: 120,
-								height: 120,
-								decoration: BoxDecoration(
-									border: Border.all(color: Colors.grey),
-									borderRadius: BorderRadius.circular(8),
-								),
-								child: const Icon(Icons.sports_soccer, size: 60, color: Colors.grey),
-							),
-							// Red team on right
-							Column(
-								mainAxisSize: MainAxisSize.min,
-								children: [
-									_buildPositionButton('R3', true),
-									const SizedBox(height: 16),
-									_buildPositionButton('R2', true),
-									const SizedBox(height: 16),
-									_buildPositionButton('R1', true),
-								],
-							),
-						],
+						),
+					),
+					const SizedBox(width: 16),
+					// Red team on right
+					SizedBox(
+						width: 80,
+						child: Column(
+								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+							children: [
+								_buildPositionButton('R3', true),
+								const SizedBox(height: 16),
+								_buildPositionButton('R2', true),
+								const SizedBox(height: 16),
+								_buildPositionButton('R1', true),
+							],
+						),
 					),
 				],
 			);
 		} else {
-			return Column(
+			return Row(
 				mainAxisAlignment: MainAxisAlignment.center,
+				crossAxisAlignment: CrossAxisAlignment.center,
 				children: [
-					Row(
-						mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-						crossAxisAlignment: CrossAxisAlignment.start,
-						children: [
-							// Red team on left
-							Column(
-								mainAxisSize: MainAxisSize.min,
-								children: [
-									_buildPositionButton('R1', true),
-									const SizedBox(height: 16),
-									_buildPositionButton('R2', true),
-									const SizedBox(height: 16),
-									_buildPositionButton('R3', true),
-								],
+					// Red team on left
+					SizedBox(
+						width: 80,
+						child: Column(
+								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+							children: [
+								_buildPositionButton('R1', true),
+								const SizedBox(height: 16),
+								_buildPositionButton('R2', true),
+								const SizedBox(height: 16),
+								_buildPositionButton('R3', true),
+							],
+						),
+					),
+					const SizedBox(width: 16),
+					// Field image - expands to fill
+					Expanded(
+						child: GestureDetector(
+							onTap: _toggleOrientation,
+							child: Image.asset(
+								'assets/images/field.png',
+								fit: BoxFit.contain,
 							),
-							// Field image placeholder
-							Container(
-								width: 120,
-								height: 120,
-								decoration: BoxDecoration(
-									border: Border.all(color: Colors.grey),
-									borderRadius: BorderRadius.circular(8),
-								),
-								child: const Icon(Icons.sports_soccer, size: 60, color: Colors.grey),
-							),
-							// Blue team on right
-							Column(
-								mainAxisSize: MainAxisSize.min,
-								children: [
-									_buildPositionButton('B3', false),
-									const SizedBox(height: 16),
-									_buildPositionButton('B2', false),
-									const SizedBox(height: 16),
-									_buildPositionButton('B1', false),
-								],
-							),
-						],
+						),
+					),
+					const SizedBox(width: 16),
+					// Blue team on right
+					SizedBox(
+						width: 80,
+						child: Column(
+								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+							children: [
+								_buildPositionButton('B3', false),
+								const SizedBox(height: 16),
+								_buildPositionButton('B2', false),
+								const SizedBox(height: 16),
+								_buildPositionButton('B1', false),
+							],
+						),
 					),
 				],
 			);
@@ -152,32 +167,6 @@ class _BotSelectionScreenState extends State<BotSelectionScreen> {
 			),
 			body: Column(
 				children: [
-					// Page indicator
-					Padding(
-						padding: const EdgeInsets.all(16.0),
-						child: Row(
-							mainAxisAlignment: MainAxisAlignment.center,
-							children: [
-								Container(
-									width: 12,
-									height: 12,
-									decoration: BoxDecoration(
-										shape: BoxShape.circle,
-										color: Colors.blue[700],
-									),
-								),
-								const SizedBox(width: 8),
-								Container(
-									width: 12,
-									height: 12,
-									decoration: const BoxDecoration(
-										shape: BoxShape.circle,
-										color: Colors.grey,
-									),
-								),
-							],
-						),
-					),
 					// PageView for field orientations
 					Expanded(
 						child: PageView(
