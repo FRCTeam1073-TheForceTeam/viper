@@ -70,7 +70,7 @@ static void my_application_activate(GApplication* application) {
 	// Show the window when Flutter renders.
 	// Requires the view to be realized so we can start rendering.
 	g_signal_connect_swapped(view, "first-frame", G_CALLBACK(first_frame_cb),
-													 self);
+		self);
 	gtk_widget_realize(GTK_WIDGET(view));
 
 	fl_register_plugins(FL_PLUGIN_REGISTRY(view));
@@ -80,8 +80,8 @@ static void my_application_activate(GApplication* application) {
 
 // Implements GApplication::local_command_line.
 static gboolean my_application_local_command_line(GApplication* application,
-																									gchar*** arguments,
-																									int* exit_status) {
+	gchar*** arguments,
+	int* exit_status) {
 	MyApplication* self = MY_APPLICATION(application);
 	// Strip out the first argument as it is the binary name.
 	self->dart_entrypoint_arguments = g_strdupv(*arguments + 1);
@@ -143,6 +143,6 @@ MyApplication* my_application_new() {
 	g_set_prgname(APPLICATION_ID);
 
 	return MY_APPLICATION(g_object_new(my_application_get_type(),
-																		 "application-id", APPLICATION_ID, "flags",
-																		 G_APPLICATION_NON_UNIQUE, nullptr));
+		"application-id", APPLICATION_ID, "flags",
+		G_APPLICATION_NON_UNIQUE, nullptr));
 }

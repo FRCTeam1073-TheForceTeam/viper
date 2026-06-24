@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'server_config_screen.dart';
+import 'bot_selection_screen.dart';
 import 'tabs/scouter_info_tab.dart';
 import 'tabs/pre_match_tab.dart';
 import 'tabs/auto_tab.dart';
@@ -65,6 +66,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 	@override
 	Widget build(BuildContext context) {
 		final syncState = ref.watch(syncStateProvider);
+		final selectedBot = ref.watch(selectedBotPositionProvider);
 
 		return Scaffold(
 			appBar: AppBar(
@@ -80,7 +82,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 						),
 						if (_matchNumber != null && _teamNumber != null)
 							Text(
-								'Match $_matchNumber • Team $_teamNumber',
+								'Match $_matchNumber • Team $_teamNumber${selectedBot != null ? ' • Pos: $selectedBot' : ''}',
 								style: Theme.of(context).textTheme.labelSmall?.copyWith(
 									color: Colors.white70,
 								),
@@ -187,6 +189,24 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 							style: Theme.of(context).textTheme.headlineSmall,
 						),
 						const SizedBox(height: 24),
+						ElevatedButton(
+							onPressed: () {
+								Navigator.pop(context);
+								Navigator.push(
+									context,
+									MaterialPageRoute(
+										builder: (context) => BotSelectionScreen(
+											onBotSelected: (bot) {
+												ref.read(selectedBotPositionProvider.notifier).state = bot;
+												Navigator.pop(context);
+											},
+										),
+									),
+								);
+							},
+							child: const Text('Change Robot Position'),
+						),
+						const SizedBox(height: 12),
 						ElevatedButton(
 							onPressed: () {
 								Navigator.pop(context);

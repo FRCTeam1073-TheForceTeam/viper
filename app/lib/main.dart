@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/server_config_screen.dart';
 import 'screens/event_picker_screen.dart';
+import 'screens/bot_selection_screen.dart';
 import 'screens/scouting_app_screen.dart';
 import 'providers/app_providers.dart';
 import 'data/api/viper_api_client.dart';
@@ -42,6 +43,7 @@ class _HomeRouter extends ConsumerStatefulWidget {
 class _HomeRouterState extends ConsumerState<_HomeRouter> {
 	bool _serverConfigured = false;
 	bool _eventSelected = false;
+	bool _botSelected = false;
 	bool _checking = true;
 	EventModel? _selectedEvent;
 
@@ -148,6 +150,18 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 					setState(() {
 						_selectedEvent = event;
 						_eventSelected = true;
+						_botSelected = false; // Reset bot selection when changing events
+					});
+				},
+			);
+		}
+
+		if (!_botSelected) {
+			return BotSelectionScreen(
+				onBotSelected: (bot) {
+					ref.read(selectedBotPositionProvider.notifier).state = bot;
+					setState(() {
+						_botSelected = true;
 					});
 				},
 			);

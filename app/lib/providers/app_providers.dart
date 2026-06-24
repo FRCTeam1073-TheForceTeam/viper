@@ -90,6 +90,14 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 	}
 }
 
+// ============================================================================
+// SELECTED BOT POSITION
+// ============================================================================
+
+final selectedBotPositionProvider = StateProvider<String?>((ref) {
+	return null;
+});
+
 // CONNECTIVITY (SIMPLIFIED - TODO: Fix)
 final connectivityProvider = StreamProvider((ref) async* {
 	// Always assume online - connectivity detection needs API review
@@ -127,6 +135,15 @@ final eventListProvider = FutureProvider((ref) async {
 	if (filtered.isNotEmpty) {
 		logger.d('   Filtered events: ${filtered.map((e) => e.eventId).join(", ")}');
 	}
+
+	// Sort by start date, most recent first
+	// Events with no start date are placed at the bottom
+	filtered.sort((a, b) {
+		if (a.startDate == null && b.startDate == null) return 0;
+		if (a.startDate == null) return 1;
+		if (b.startDate == null) return -1;
+		return b.startDate!.compareTo(a.startDate!);
+	});
 
 	return filtered;
 });
