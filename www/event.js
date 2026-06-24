@@ -1280,8 +1280,13 @@ $(document).ready(function(){
 				}
 				var predRankByTeam = computePredictedRanks(window.statboticsMatches||[])
 				function fill(listId, entries){
-					var ol = $('#'+listId).html("")
-					if (!entries.length) return ol.append($('<li class=topTeamsEmpty>').text('—'))
+					var ol = $('#'+listId).html(""),
+					section = ol.closest('.topTeamsList')
+					// Collapse the whole section (heading + list) when there's nothing
+					// to show — e.g. no EPA data until it's fetched from Statbotics —
+					// so it doesn't leave an empty gap in the panel.
+					if (!entries.length) return section.hide()
+					section.show()
 					entries.forEach(e=>{
 						var li = $('<li>')
 							.attr('title', getTeamInfo(e.team)||null)

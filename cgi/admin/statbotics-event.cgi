@@ -30,17 +30,28 @@ my $url = "https://api.statbotics.io/v3/team_events?event=$sbevent&limit=1000";
 my $req = HTTP::Request->new('GET', $url);
 my $response = $ua->request($req);
 
-$webutil->error("Statbotics API Error", "Error fetching $url: " . $response->message() . "\n\nRefresh this page to try fetching from the API again.")
+$webutil->error(
+	"Statbotics is temporarily unavailable",
+	"We couldn't reach the Statbotics API right now (it responded: " . $response->message() . ").\n\n"
+		. "This is almost always a temporary problem on Statbotics' end, not your event data. "
+		. "Please wait a little while and try fetching again.",
+	"/event.html#$event")
 	if ($response->is_error());
 
 my $content = $response->content();
 my $data = eval { decode_json($content) };
 
-$webutil->error("Statbotics API Error", "Invalid JSON response from Statbotics API")
+$webutil->error(
+	"Statbotics is temporarily unavailable",
+	"Statbotics returned a response we couldn't read. This is usually a temporary problem on their end; please try again shortly.",
+	"/event.html#$event")
 	if ($@);
 
 if (!defined $data || (ref($data) eq 'ARRAY' && scalar(@$data) == 0)) {
-	$webutil->error("Statbotics API Error", "No data returned for event $sbevent from Statbotics API. Verify the event code is correct.");
+	$webutil->error(
+		"No Statbotics data for this event",
+		"Statbotics returned no data for event \"$sbevent\". Double-check that the Statbotics event code is correct, or try again later if the event is new.",
+		"/event.html#$event");
 }
 
 # Write the EPA data to database or file
