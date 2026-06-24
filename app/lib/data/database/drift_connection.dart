@@ -5,7 +5,7 @@ import 'package:path/path.dart' as path;
 import 'dart:io';
 
 Future<NativeDatabase> openDriftConnection() async {
-  final folder = await getApplicationDocumentsDirectory();
-  final file = File(path.join(folder.path, 'viper_scout.db'));
-  return NativeDatabase(file, logStatements: true);
+	final folder = await getApplicationDocumentsDirectory();
+	final file = File(path.join(folder.path, 'viper_scout.db'));
+	return NativeDatabase(file, logStatements: true);
 }

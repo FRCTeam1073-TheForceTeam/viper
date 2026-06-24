@@ -19,7 +19,6 @@ tmp
 /app/build/
 /app/.dart_tool/
 /app/.packages
-/app/pubspec.lock
 /app/linux/flutter/
 /app/macos/Flutter/
 /app/windows/flutter/
