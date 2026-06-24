@@ -32,18 +32,25 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	bool _climbing = false;
 
 	late TextEditingController _shootingMissesController;
+	late TextEditingController _scouterNameController;
+	late TextEditingController _commentsController;
+	bool _reviewRequest = false;
 	ScoutData? _currentScout;
 
 	@override
 	void initState() {
 		super.initState();
 		_shootingMissesController = TextEditingController();
+		_scouterNameController = TextEditingController();
+		_commentsController = TextEditingController();
 		_loadScout();
 	}
 
 	@override
 	void dispose() {
 		_shootingMissesController.dispose();
+		_scouterNameController.dispose();
+		_commentsController.dispose();
 		super.dispose();
 	}
 
@@ -66,6 +73,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 					_shootWhileCollecting = scout.shootWhileCollecting;
 					_climbing = scout.climbing;
 					_shootingMissesController.text = (scout.shootingMissesRange ?? 0).toString();
+					_scouterNameController.text = scout.scouterName ?? '';
+					_commentsController.text = scout.comments ?? '';
+					_reviewRequest = scout.reviewRequest;
 				});
 			}
 		}
@@ -92,6 +102,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						shootWhileCollecting: _shootWhileCollecting,
 						climbing: _climbing,
 						shootingMissesRange: Value(int.tryParse(_shootingMissesController.text)),
+						scouterName: Value(_scouterNameController.text),
+						comments: Value(_commentsController.text),
+						reviewRequest: _reviewRequest,
 						updatedAt: now,
 					)
 				: ScoutDataHelper.createNewScout(
@@ -107,6 +120,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						shootWhileCollecting: _shootWhileCollecting,
 						climbing: _climbing,
 						shootingMissesRange: Value(int.tryParse(_shootingMissesController.text)),
+						scouterName: Value(_scouterNameController.text),
+						comments: Value(_commentsController.text),
+						reviewRequest: _reviewRequest,
 					);
 
 		await db.upsertScout(scout);
@@ -316,6 +332,50 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											border: OutlineInputBorder(),
 										),
 										keyboardType: TextInputType.number,
+									),
+								],
+							),
+						),
+					),
+					const SizedBox(height: 16),
+					Card(
+						child: Padding(
+							padding: const EdgeInsets.all(16),
+							child: Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									Text(
+										'Scouter Info',
+										style: Theme.of(context).textTheme.titleMedium,
+									),
+									const SizedBox(height: 12),
+									CheckboxListTile(
+										title: const Text('Request Review'),
+										subtitle: const Text('Fall asleep? Watch the wrong robot? Press the wrong button?'),
+										value: _reviewRequest,
+										onChanged: (value) {
+											setState(() => _reviewRequest = value ?? false);
+										},
+										contentPadding: EdgeInsets.zero,
+									),
+									const SizedBox(height: 12),
+									TextFormField(
+										controller: _scouterNameController,
+										decoration: const InputDecoration(
+											labelText: 'Scouter Name',
+											border: OutlineInputBorder(),
+										),
+										maxLength: 32,
+									),
+									const SizedBox(height: 12),
+									TextFormField(
+										controller: _commentsController,
+										decoration: const InputDecoration(
+											labelText: 'Comments',
+											border: OutlineInputBorder(),
+										),
+										maxLines: 5,
+										minLines: 3,
 									),
 								],
 							),

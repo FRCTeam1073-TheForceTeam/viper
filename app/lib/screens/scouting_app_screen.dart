@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'server_config_screen.dart';
-import 'tabs/scouter_info_tab.dart';
 import 'tabs/pre_match_tab.dart';
 import 'tabs/auto_tab.dart';
 import 'tabs/teleop_tab.dart';
@@ -47,13 +46,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 		_teamNumber = widget.prefilledTeam;
 
 		_tabs = [
-			ScouterInfoTab(
-				eventId: widget.selectedEvent.eventId,
-				matchNumber: _matchNumber,
-				teamNumber: _teamNumber,
-				onTeamChanged: (team) => setState(() => _teamNumber = team),
-				onMatchChanged: (match) => setState(() => _matchNumber = match),
-			),
 			PreMatchTab(
 				eventId: widget.selectedEvent.eventId,
 				matchNumber: _matchNumber,
@@ -169,10 +161,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 				},
 				type: BottomNavigationBarType.fixed,
 				items: const [
-					BottomNavigationBarItem(
-						icon: Icon(Icons.person),
-						label: 'Info',
-					),
 					BottomNavigationBarItem(
 						icon: Icon(Icons.edit),
 						label: 'Pre-Match',
