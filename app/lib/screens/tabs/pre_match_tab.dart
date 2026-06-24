@@ -133,14 +133,26 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						),
 					),
 					const SizedBox(height: 16),
-					Card(
-						child: CheckboxListTile(
-							title: const Text('No Show'),
-							subtitle: const Text('Robot did not show up for match'),
-							value: _noShow,
-							onChanged: (value) {
-								setState(() => _noShow = value ?? false);
+					SizedBox(
+						width: double.infinity,
+						child: FilledButton(
+							style: FilledButton.styleFrom(
+								backgroundColor: _noShow
+									? const Color(0xFF77DD77) // --button-selected-bg-color
+									: const Color(0xFFBBBBBB), // --button-bg-color
+								foregroundColor: const Color(0xFF333333), // --button-fg-color
+								padding: const EdgeInsets.symmetric(vertical: 16),
+								shape: RoundedRectangleBorder(
+									borderRadius: BorderRadius.circular(8),
+								),
+							),
+							onPressed: () {
+								setState(() => _noShow = !_noShow);
 							},
+							child: const Text(
+								'No Show',
+								style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+							),
 						),
 					),
 					const SizedBox(height: 16),
