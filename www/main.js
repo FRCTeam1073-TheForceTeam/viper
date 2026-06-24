@@ -461,7 +461,7 @@ $(document).ready(function(){
 		fullscreen = $('<div id=fullscreen>⛶</div>').click(toggleFullScreen),
 		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>'),
 		appBar = $('<header id=appBar>')
-			.append($('<a id=appBarBrand href=/>').append('<img src=/logo.png alt="">').append('<span>Viper</span>'))
+			.append($('<a id=appBarBrand href=/>').append('<img src=/viper.svg alt="">').append('<span>Viper</span>'))
 			.append($('<nav id=appBarNav>')
 				.append($('<a class=appBarLink href=/ data-i18n=home_link></a>'))
 				.append($('<a class=appBarLink id=appBarEvent href=/ style=display:none></a>')))

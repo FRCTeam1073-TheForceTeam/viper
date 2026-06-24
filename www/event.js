@@ -271,6 +271,15 @@ addI18n({
 		fr:'Afficher le planificateur de match avec le tableau blanc',
 		tr:'Beyaz tahta ile maç planlayıcısını görüntüle',
 	},
+	view_bracket_link:{
+		en:'View bracket',
+		he:'הצג סוגר',
+		zh_tw:'查看對戰表',
+		pt:'Ver chave',
+		es:'Ver cuadro',
+		fr:'Voir le tableau',
+		tr:'Grubu görüntüle',
+	},
 	all_team_stats_link:{
 		en:'View individual team stats and pit scouting data',
 		he:'הצג נתונים סטטיסטיים של צוות בודד ונתוני סקאוטינג בבור',
