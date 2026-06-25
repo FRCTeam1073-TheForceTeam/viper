@@ -36,15 +36,6 @@ class ViperScoutApp extends ConsumerWidget {
 			title: 'Viper Scout FRC',
 			debugShowCheckedModeBanner: false,
 			locale: locale,
-			supportedLocales: const [
-				Locale('en'),
-				Locale('es'),
-				Locale('fr'),
-				Locale('pt'),
-				Locale('zh', 'TW'),
-				Locale('tr'),
-				Locale('he'),
-			],
 			theme: ThemeData(
 				useMaterial3: true,
 				scaffoldBackgroundColor: AppColors.mainBgColor,

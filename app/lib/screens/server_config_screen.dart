@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
 import '../data/database/scout_database.dart';
 import '../providers/app_providers.dart';
+import '../providers/locale_provider.dart';
 import '../services/form_validation.dart';
+import '../services/localization.dart';
 
 class ServerConfigScreen extends ConsumerStatefulWidget {
 	final Function(String) onServerConfigured;
@@ -25,12 +27,176 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 	final _formKey = GlobalKey<FormState>();
 	bool _isLoading = false;
 
+	/// Helper to get translated text with current provider locale
+	String _translate(String key) {
+		final locale = ref.read(selectedLocaleProvider);
+		return AppLocalizations.translate(key, locale: locale);
+	}
+
 	@override
 	void initState() {
 		super.initState();
 		_backendUrlController = TextEditingController();
 		_usernameController = TextEditingController();
 		_passwordController = TextEditingController();
+
+		// Register translations
+		AppLocalizations.addI18n({
+			'configure_backend_server': {
+				'en': 'Configure Backend Server',
+				'es': 'Configurar servidor backend',
+				'pt': 'Configurar servidor backend',
+				'fr': 'Configurer le serveur backend',
+				'zh_tw': '配置後端伺服器',
+				'he': 'הגדר שרת אחורי',
+				'tr': 'Arka Uç Sunucusunu Yapılandır',
+			},
+			'backend_server_url': {
+				'en': 'Backend Server URL',
+				'es': 'URL del servidor backend',
+				'pt': 'URL do servidor backend',
+				'fr': 'URL du serveur backend',
+				'zh_tw': '後端伺服器 URL',
+				'he': 'כתובת URL של שרת אחורי',
+				'tr': 'Arka Uç Sunucusu URL\'si',
+			},
+			'backend_url_hint': {
+				'en': 'https://demo.viperscout.com',
+				'es': 'https://demo.viperscout.com',
+				'pt': 'https://demo.viperscout.com',
+				'fr': 'https://demo.viperscout.com',
+				'zh_tw': 'https://demo.viperscout.com',
+				'he': 'https://demo.viperscout.com',
+				'tr': 'https://demo.viperscout.com',
+			},
+			'backend_url_examples': {
+				'en': 'Examples: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+				'es': 'Ejemplos: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+				'pt': 'Exemplos: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+				'fr': 'Exemples: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+				'zh_tw': '範例: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+				'he': 'דוגמאות: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+				'tr': 'Örnekler: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+			},
+			'username_optional': {
+				'en': 'Username (optional)',
+				'es': 'Usuario (opcional)',
+				'pt': 'Usuário (opcional)',
+				'fr': 'Nom d\'utilisateur (optionnel)',
+				'zh_tw': '使用者名稱（可選）',
+				'he': 'שם משתמש (אופציונלי)',
+				'tr': 'Kullanıcı Adı (İsteğe Bağlı)',
+			},
+			'username_hint': {
+				'en': 'username',
+				'es': 'usuario',
+				'pt': 'usuário',
+				'fr': 'nom d\'utilisateur',
+				'zh_tw': '使用者名稱',
+				'he': 'שם משתמש',
+				'tr': 'kullanıcı adı',
+			},
+			'password_optional': {
+				'en': 'Password (optional)',
+				'es': 'Contraseña (opcional)',
+				'pt': 'Senha (opcional)',
+				'fr': 'Mot de passe (optionnel)',
+				'zh_tw': '密碼（可選）',
+				'he': 'סיסמה (אופציונלי)',
+				'tr': 'Şifre (İsteğe Bağlı)',
+			},
+			'password_hint': {
+				'en': 'password',
+				'es': 'contraseña',
+				'pt': 'senha',
+				'fr': 'mot de passe',
+				'zh_tw': '密碼',
+				'he': 'סיסמה',
+				'tr': 'şifre',
+			},
+			'test_and_save': {
+				'en': 'Test & Save',
+				'es': 'Probar y guardar',
+				'pt': 'Testar e salvar',
+				'fr': 'Tester et enregistrer',
+				'zh_tw': '測試並保存',
+				'he': 'בדוק והשמור',
+				'tr': 'Test Et Kaydet',
+			},
+			'testing_connection': {
+				'en': 'Testing connection...',
+				'es': 'Probando conexión...',
+				'pt': 'Testando conexão...',
+				'fr': 'Test de connexion...',
+				'zh_tw': '測試連接中...',
+				'he': 'בדיקת חיבור...',
+				'tr': 'Bağlantı Test Ediliyor...',
+			},
+			'server_connected_successfully': {
+				'en': '✓ Server connected successfully!',
+				'es': '✓ ¡Servidor conectado exitosamente!',
+				'pt': '✓ Servidor conectado com sucesso!',
+				'fr': '✓ Serveur connecté avec succès!',
+				'zh_tw': '✓ 伺服器已成功連接！',
+				'he': '✓ השרת התחבר בהצלחה!',
+				'tr': '✓ Sunucu başarıyla bağlandı!',
+			},
+			'server_connection_failed': {
+				'en': '✗ Server did not respond or returned an error.\n\nMake sure the URL is correct and the server is running.\nTrying http:// instead of https:// may help.',
+				'es': '✗ El servidor no respondió o devolvió un error.\n\nAsegúrate de que la URL sea correcta y que el servidor esté en ejecución.\nIntenta usar http:// en lugar de https://',
+				'pt': '✗ O servidor não respondeu ou retornou um erro.\n\nCertifique-se de que a URL está correta e que o servidor está em execução.\nTentativa com http:// em vez de https:// pode ajudar.',
+				'fr': '✗ Le serveur n\'a pas répondu ou a renvoyé une erreur.\n\nAssurez-vous que l\'URL est correcte et que le serveur fonctionne.\nEssayer http:// au lieu de https:// peut aider.',
+				'zh_tw': '✗ 伺服器沒有回應或返回錯誤。\n\n確保 URL 正確且伺服器正在運行。\n嘗試使用 http:// 而不是 https:// 可能會有幫助。',
+				'he': '✗ השרת לא הגיב או החזיר שגיאה.\n\nוודא שה-URL נכון ושהשרת פועל.\nניסיון להשתמש ב-http:// במקום https:// עשוי לעזור.',
+				'tr': '✗ Sunucu yanıt vermedi veya bir hata döndürdü.\n\nURL\'in doğru olduğundan ve sunucunun çalıştığından emin olun.\nhttp:// yerine https:// kullanmayı deneyin.',
+			},
+			'ssl_certificate_error': {
+				'en': 'SSL Certificate error. Try using http:// instead of https://, or ensure the server certificate is valid.',
+				'es': 'Error de certificado SSL. Intenta usar http:// en lugar de https://, o asegúrate de que el certificado del servidor sea válido.',
+				'pt': 'Erro de certificado SSL. Tente usar http:// em vez de https://, ou certifique-se de que o certificado do servidor seja válido.',
+				'fr': 'Erreur de certificat SSL. Essayez d\'utiliser http:// au lieu de https://, ou assurez-vous que le certificat du serveur est valide.',
+				'zh_tw': 'SSL 證書錯誤。嘗試使用 http:// 而不是 https://，或確保伺服器憑證有效。',
+				'he': 'שגיאת תעודת SSL. נסה להשתמש ב-http:// במקום https://، או וודא שתעודת השרת תקפה.',
+				'tr': 'SSL Sertifikası hatası. http:// yerine https:// kullanmayı deneyin veya sunucu sertifikasının geçerli olduğundan emin olun.',
+			},
+			'connection_refused': {
+				'en': 'Connection refused. Make sure the server is running and the URL is correct.',
+				'es': 'Conexión rechazada. Asegúrate de que el servidor esté en ejecución y la URL sea correcta.',
+				'pt': 'Conexão recusada. Certifique-se de que o servidor está em execução e a URL está correta.',
+				'fr': 'Connexion refusée. Assurez-vous que le serveur fonctionne et que l\'URL est correcte.',
+				'zh_tw': '連接被拒絕。確保伺服器正在運行且 URL 正確。',
+				'he': 'החיבור נדחה. וודא שהשרת פועל ו-URL נכון.',
+				'tr': 'Bağlantı reddedildi. Sunucunun çalıştığından ve URL\'in doğru olduğundan emin olun.',
+			},
+			'unable_resolve_address': {
+				'en': 'Unable to resolve server address. Check the URL and your internet connection.',
+				'es': 'No se puede resolver la dirección del servidor. Verifica la URL y tu conexión a Internet.',
+				'pt': 'Não é possível resolver o endereço do servidor. Verifique a URL e sua conexão com a Internet.',
+				'fr': 'Impossible de résoudre l\'adresse du serveur. Vérifiez l\'URL et votre connexion Internet.',
+				'zh_tw': '無法解析伺服器地址。檢查 URL 和您的網際網路連接。',
+				'he': 'לא ניתן להحיל את כתובת השרת. בדוק את ה-URL ואת חיבור האינטרנט שלך.',
+				'tr': 'Sunucu adresi çözülemiyor. URL\'i ve internet bağlantınızı kontrol edin.',
+			},
+			'connection_timeout': {
+				'en': 'Connection timeout. The server took too long to respond.',
+				'es': 'Tiempo de conexión agotado. El servidor tardó demasiado en responder.',
+				'pt': 'Tempo limite de conexão. O servidor demorou muito para responder.',
+				'fr': 'Délai d\'attente de connexion. Le serveur a mis trop de temps pour répondre.',
+				'zh_tw': '連接逾時。伺服器回應時間過長。',
+				'he': 'תם הזמן לחיבור. השרת לקח יותר מדי זמן לתגובה.',
+				'tr': 'Bağlantı zaman aşımı. Sunucu çok uzun süre yanıt vermedi.',
+			},
+			'error_prefix': {
+				'en': 'Error',
+				'es': 'Error',
+				'pt': 'Erro',
+				'fr': 'Erreur',
+				'zh_tw': '錯誤',
+				'he': 'שגיאה',
+				'tr': 'Hata',
+			},
+		});
+
 		_loadExistingConfig();
 	}
 
@@ -111,33 +277,33 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				if (!mounted) return;
 
 				ScaffoldMessenger.of(context).showSnackBar(
-					const SnackBar(
-						content: Text('Testing connection...'),
-						duration: Duration(seconds: 1),
-					),
-				);
+					SnackBar(
+					content: Text(_translate('testing_connection')),
+					duration: const Duration(seconds: 1),
+				),
+			);
 
-				final testPassed = await apiClient.testConnection();
+			final testPassed = await apiClient.testConnection();
 
-				if (!mounted) return;
+			if (!mounted) return;
 
-				if (testPassed) {
-					ScaffoldMessenger.of(context).showSnackBar(
-						const SnackBar(
-							content: Text('✓ Server connected successfully!'),
-							backgroundColor: Colors.green,
-							duration: Duration(seconds: 2),
-						),
-					);
+			if (testPassed) {
+			ScaffoldMessenger.of(context).showSnackBar(
+				SnackBar(
+					content: Text(_translate('server_connected_successfully')),
+					backgroundColor: Colors.green,
+					duration: const Duration(seconds: 2),
+				),
+			);
 
-					// Call the callback
-					widget.onServerConfigured(backendUrl);
+			// Call the callback
+			widget.onServerConfigured(backendUrl);
 				} else {
 					ScaffoldMessenger.of(context).showSnackBar(
-						const SnackBar(
-							content: Text('✗ Server did not respond or returned an error.\n\nMake sure the URL is correct and the server is running.\nTrying http:// instead of https:// may help.'),
+						SnackBar(
+							content: Text(_translate('server_connection_failed')),
 							backgroundColor: Colors.red,
-							duration: Duration(seconds: 4),
+							duration: const Duration(seconds: 4),
 						),
 					);
 				}
@@ -147,18 +313,18 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 
 			String errorMessage = e.toString();
 			if (errorMessage.contains('CERTIFICATE')) {
-				errorMessage = 'SSL Certificate error. Try using http:// instead of https://, or ensure the server certificate is valid.';
+				errorMessage = _translate('ssl_certificate_error');
 			} else if (errorMessage.contains('Connection refused')) {
-				errorMessage = 'Connection refused. Make sure the server is running and the URL is correct.';
+				errorMessage = _translate('connection_refused');
 			} else if (errorMessage.contains('getaddrinfo')) {
-				errorMessage = 'Unable to resolve server address. Check the URL and your internet connection.';
+				errorMessage = _translate('unable_resolve_address');
 			} else if (errorMessage.contains('Timeout')) {
-				errorMessage = 'Connection timeout. The server took too long to respond.';
+				errorMessage = _translate('connection_timeout');
 			}
 
 			ScaffoldMessenger.of(context).showSnackBar(
 				SnackBar(
-					content: Text('Error: $errorMessage'),
+					content: Text('${_translate('error_prefix')}: $errorMessage'),
 					backgroundColor: Colors.red,
 					duration: const Duration(seconds: 4),
 				),
@@ -172,9 +338,15 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 
 	@override
 	Widget build(BuildContext context) {
+		// Watch locale to rebuild when language changes
+		final locale = ref.watch(selectedLocaleProvider);
+
+		// Helper to get translated text with current locale
+		String t(String key) => AppLocalizations.translate(key, locale: locale);
+
 		return Scaffold(
 			appBar: AppBar(
-				title: const Text('Configure Backend Server'),
+				title: Text(t('configure_backend_server')),
 				centerTitle: true,
 				elevation: 0,
 			),
@@ -185,33 +357,16 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 					child: Column(
 						crossAxisAlignment: CrossAxisAlignment.start,
 						children: [
-							// Welcome message
-							const Text(
-								'Welcome to Viper Scout',
-								style: TextStyle(
-									fontSize: 28,
-									fontWeight: FontWeight.bold,
-								),
-							),
-							const SizedBox(height: 8),
-							Text(
-								'First, let\'s connect to your backend server',
-								style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-											color: Colors.grey[600],
-										),
-							),
-							const SizedBox(height: 40),
-
 							// Backend URL input
 							Text(
-								'Backend Server URL',
+								t('backend_server_url'),
 								style: Theme.of(context).textTheme.titleMedium,
 							),
 							const SizedBox(height: 12),
 							TextFormField(
 								controller: _backendUrlController,
 								decoration: InputDecoration(
-									hintText: 'http://192.168.1.100:8080',
+									hintText: t('backend_url_hint'),
 									prefixIcon: const Icon(Icons.language),
 									border: OutlineInputBorder(
 										borderRadius: BorderRadius.circular(8),
@@ -222,23 +377,23 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 							),
 							const SizedBox(height: 12),
 							Text(
-								'Examples: http://192.168.1.100, http://viper.example.com, http://localhost:8080',
+								t('backend_url_examples'),
 								style: Theme.of(context).textTheme.bodySmall?.copyWith(
-											color: Colors.grey[500],
-										),
+									color: Colors.grey[500],
+								),
 							),
 							const SizedBox(height: 30),
 
 							// Username input (optional)
 							Text(
-								'Username (optional)',
+								t('username_optional'),
 								style: Theme.of(context).textTheme.titleMedium,
 							),
 							const SizedBox(height: 12),
 							TextFormField(
 								controller: _usernameController,
 								decoration: InputDecoration(
-									hintText: 'username',
+									hintText: t('username_hint'),
 									prefixIcon: const Icon(Icons.person),
 									border: OutlineInputBorder(
 										borderRadius: BorderRadius.circular(8),
@@ -249,7 +404,7 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 
 							// Password input (optional)
 							Text(
-								'Password (optional)',
+								t('password_optional'),
 								style: Theme.of(context).textTheme.titleMedium,
 							),
 							const SizedBox(height: 12),
@@ -257,7 +412,7 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 								controller: _passwordController,
 								obscureText: true,
 								decoration: InputDecoration(
-									hintText: 'password',
+									hintText: t('password_hint'),
 									prefixIcon: const Icon(Icons.lock),
 									border: OutlineInputBorder(
 										borderRadius: BorderRadius.circular(8),
@@ -277,52 +432,19 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 													height: 20,
 													child: CircularProgressIndicator(
 														strokeWidth: 2,
-														valueColor:
-																AlwaysStoppedAnimation<Color>(
+														valueColor: AlwaysStoppedAnimation<Color>(
 															Theme.of(context).colorScheme.onPrimary,
 														),
 													),
 												)
 											: const Icon(Icons.check_circle),
 									label: Text(
-										_isLoading ? 'Testing connection...' : 'Test & Save',
+										_isLoading ? t('testing_connection') : t('test_and_save'),
 										style: const TextStyle(
 											fontSize: 16,
 											fontWeight: FontWeight.w600,
 										),
 									),
-								),
-							),
-							const SizedBox(height: 20),
-
-							// Info box
-							Container(
-								padding: const EdgeInsets.all(16),
-								decoration: BoxDecoration(
-									color: Colors.blue[50],
-									border: Border.all(color: Colors.blue[200]!),
-									borderRadius: BorderRadius.circular(8),
-								),
-								child: Column(
-									crossAxisAlignment: CrossAxisAlignment.start,
-									children: [
-										Text(
-											'ℹ Server Information',
-											style: Theme.of(context).textTheme.titleSmall?.copyWith(
-														color: Colors.blue[900],
-														fontWeight: FontWeight.w600,
-													),
-										),
-										const SizedBox(height: 8),
-										Text(
-											'Enter your Viper server URL (e.g., https://1073.viperscout.com).\n\n'
-											'The app will test the connection by accessing /cgi/event-list.cgi.\n\n'
-											'If connection fails with HTTPS, try using http:// instead.',
-											style: Theme.of(context).textTheme.bodySmall?.copyWith(
-														color: Colors.blue[900],
-													),
-										),
-									],
 								),
 							),
 						],

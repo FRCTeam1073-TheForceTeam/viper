@@ -14,12 +14,14 @@ class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
 	final String? matchNumber;
 	final String? teamNumber;
+	final VoidCallback? onProceedToAuto;
 
 	const PreMatchTab({
 		Key? key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
+		this.onProceedToAuto,
 	}) : super(key: key);
 
 	@override
@@ -54,6 +56,15 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 				'zh_tw': '起始位置',
 				'he': 'מיקום ההתחלה',
 				'tr': 'Başlangıç Pozisyonu',
+			},
+			'proceed_auto_button': {
+				'en': 'Auto »',
+				'es': 'Auto »',
+				'pt': 'Auto »',
+				'fr': 'Auto »',
+				'zh_tw': '自動 »',
+				'he': 'אוטו »',
+				'tr': 'Otomatik »',
 			},
 		});
 
@@ -162,10 +173,22 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						onChanged: (newValue) => setState(() => _noShow = newValue),
 					),
 					const SizedBox(height: 16),
-					ElevatedButton.icon(
-						onPressed: _saveTab,
-						icon: const Icon(Icons.save),
-						label: const Text('Save Pre-Match'),
+					Center(
+						child: FilledButton(
+							style: FilledButton.styleFrom(
+								backgroundColor: AppColors.buttonBgColor,
+								foregroundColor: AppColors.buttonFgColor,
+								padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+								shape: RoundedRectangleBorder(
+									borderRadius: BorderRadius.circular(8),
+								),
+							),
+							onPressed: widget.onProceedToAuto,
+							child: Text(
+								context.t('proceed_auto_button'),
+								style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+							),
+						),
 					),
 				],
 			),

@@ -50,6 +50,9 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 				eventId: widget.selectedEvent.eventId,
 				matchNumber: _matchNumber,
 				teamNumber: _teamNumber,
+				onProceedToAuto: () {
+					setState(() => _selectedTabIndex = 1);
+				},
 			),
 			AutoTab(
 				eventId: widget.selectedEvent.eventId,
