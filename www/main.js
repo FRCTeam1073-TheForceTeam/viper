@@ -536,7 +536,9 @@ $(document).ready(function(){
 		}
 		$(window).on('hashchange',showMainMenuUploads)
 	}
-	$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
+	$('body').append($('<div id=lightBoxBG>').click(closeLightBox))
+		.append($('<button id=lightBoxClose aria-label=Close>✕</button>').click(closeLightBox))
+		.on('keyup',function(e){
 		if (e.key=='Escape' && $('#lightBoxBG').is(":visible")){
 			e.preventDefault()
 			closeLightBox()
@@ -572,13 +574,14 @@ function getLocalTeam(){
 }
 
 function closeLightBox(){
-	$('#lightBoxBG,.lightBoxCenterContent,.lightBoxFullContent').hide()
+	$('#lightBoxBG,#lightBoxClose,.lightBoxCenterContent,.lightBoxFullContent').hide()
 	return false
 }
 
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
+	$('#lightBoxClose').css('display','flex')
 	applyTranslations()
 	content.show()
 	return false

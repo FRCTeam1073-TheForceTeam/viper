@@ -159,6 +159,26 @@ addI18n({
 	hide_practice_label:{en:'Hide practice',es:'Ocultar práctica',fr:'Masquer entraînement',pt:'Ocultar treino',tr:'Antrenmanı gizle',he:'הסתר אימון',zh_tw:'隱藏練習賽'},
 	more_stats_label:{en:'More stats',es:'Más estadísticas',fr:'Plus de stats',pt:'Mais estatísticas',tr:'Daha fazla istatistik',he:'עוד סטטיסטיקה',zh_tw:'更多統計'},
 	my_matches_label:{en:'My matches',es:'Mis partidos',fr:'Mes matchs',pt:'Minhas partidas',tr:'Maçlarım',he:'המשחקים שלי',zh_tw:'我的比賽'},
+	save_plan_label:{en:'Save',es:'Guardar',fr:'Enregistrer',pt:'Salvar',tr:'Kaydet',he:'שמור',zh_tw:'儲存'},
+	save_plan_done_label:{en:'Saved ✓',es:'Guardado ✓',fr:'Enregistré ✓',pt:'Salvo ✓',tr:'Kaydedildi ✓',he:'נשמר ✓',zh_tw:'已儲存 ✓'},
+	save_plan_tooltip:{
+		en:'Save this drawing for this match',
+		es:'Guardar este dibujo para este partido',
+		fr:'Enregistrer ce dessin pour ce match',
+		pt:'Salvar este desenho para esta partida',
+		tr:'Bu maç için bu çizimi kaydet',
+		he:'שמור את הציור הזה עבור משחק זה',
+		zh_tw:'為這場比賽儲存此繪圖',
+	},
+	save_plan_error_label:{
+		en:'Could not save the drawing (storage may be full)',
+		es:'No se pudo guardar el dibujo (el almacenamiento puede estar lleno)',
+		fr:'Impossible d\'enregistrer le dessin (le stockage est peut-être plein)',
+		pt:'Não foi possível salvar o desenho (o armazenamento pode estar cheio)',
+		tr:'Çizim kaydedilemedi (depolama dolu olabilir)',
+		he:'לא ניתן היה לשמור את הציור (ייתכן שהאחסון מלא)',
+		zh_tw:'無法儲存繪圖（儲存空間可能已滿）',
+	},
 })
 
 var matchId,
@@ -305,6 +325,7 @@ $(document).ready(function(){
 		$('body').css('overflow-y','visible')
 		if(!whiteboard) whiteboard = new Whiteboard($('#fieldDraw')[0])
 		drawOverlays()
+		syncWhiteboardToMatch()
 	}
 
 	$('#statsTable input').change(fillStats).focus(function(){
@@ -640,7 +661,48 @@ $(document).ready(function(){
 	})
 
 
-	var whiteboard
+	var whiteboard, loadedWhiteboardKey
+
+	// Saved whiteboard drawings are keyed per event + match so reselecting a match restores its plan
+	function whiteboardKey(){
+		return `${eventId}_planner_wb_${matchId||'custom'}`
+	}
+
+	// Load the saved drawing whenever the selected match changes (no-op if we already loaded this match)
+	function syncWhiteboardToMatch(){
+		if (!whiteboard) return
+		var key = whiteboardKey()
+		if (key === loadedWhiteboardKey) return
+		loadedWhiteboardKey = key
+		whiteboard.reset()
+		var saved = localStorage[key]
+		if (saved){
+			try { whiteboard.deserialize(saved) }
+			catch(e){ console.error('Could not load saved plan', e) }
+		}
+	}
+
+	function saveWhiteboard(){
+		if (!whiteboard) return
+		try {
+			localStorage[whiteboardKey()] = whiteboard.serialize()
+			loadedWhiteboardKey = whiteboardKey()
+		} catch(e){
+			console.error(e)
+			alert(translate('save_plan_error_label'))
+			return
+		}
+		// brief confirmation on the button
+		var label = $('.save-plan .ctl-label')
+		label.text(translate('save_plan_done_label'))
+		$('.save-plan').addClass('saved')
+		clearTimeout(saveWhiteboard.timer)
+		saveWhiteboard.timer = setTimeout(function(){
+			label.text(translate('save_plan_label'))
+			$('.save-plan').removeClass('saved')
+		}, 1500)
+	}
+	$('.save-plan').click(saveWhiteboard)
 
 	$('.clear').click(()=>whiteboard.clear.call(whiteboard))
 	$('.eraser').click(()=>whiteboard.eraserMode.call(whiteboard))
@@ -762,6 +824,50 @@ class Whiteboard {
 		}
 	}
 
+	// Wipe the board back to empty (used before loading a different match's saved plan)
+	reset(){
+		this.history=[]
+		this.redoStack=[]
+		this.drawClear()
+	}
+
+	// Serialize the stroke history (plus the canvas dimensions it was drawn at) to a JSON string
+	serialize(){
+		return JSON.stringify({
+			w:this.canvas.width,
+			h:this.canvas.height,
+			strokes:this.history.map(s=>s.serialize())
+		})
+	}
+
+	// Rebuild the stroke history from a serialized string and repaint, scaling points if the
+	// canvas is now a different size than when the drawing was saved
+	deserialize(json){
+		var data=JSON.parse(json)
+		this.history=[]
+		this.redoStack=[]
+		var sx=data.w?this.canvas.width/data.w:1,
+		sy=data.h?this.canvas.height/data.h:1
+		;(data.strokes||[]).forEach(s=>{
+			var stroke
+			switch(s.mode){
+				case 'pen': stroke=new PenStroke(s.color); break
+				case 'eraser': stroke=new EraserStroke(); break
+				case 'clear': stroke=new ClearStroke(); break
+				case 'stamp':
+					var img=new Image()
+					img.src=s.src
+					img.onload=()=>this.redraw()
+					stroke=new StampStroke(img)
+					break
+				default: return
+			}
+			stroke.points=(s.points||[]).map(p=>[p[0]*sx,p[1]*sy])
+			this.history.push(stroke)
+		})
+		this.redraw()
+	}
+
 	moused(e){
 		var drawing = (e.buttons&1)==1||/^touchstart|touchmove$/.test(e.type)
 		if ((this.current && this.current.mode != this.mode) || !drawing){
@@ -836,6 +942,10 @@ class WhiteboardStroke {
 	drawEnd(whiteboard){
 		whiteboard.ctx.closePath()
 	}
+
+	serialize(){
+		return {mode:this.mode,color:this.color,points:this.points}
+	}
 }
 
 class PenStroke extends WhiteboardStroke {
@@ -902,5 +1012,9 @@ class StampStroke extends WhiteboardStroke {
 		this.drawStart(whiteboard)
 		whiteboard.ctx.drawImage(this.image,0,0,width,height,this.points[0][0],this.points[0][1],width*scale,height*scale)
 		this.drawEnd(whiteboard)
+	}
+
+	serialize(){
+		return {mode:this.mode,points:this.points,src:this.image.src}
 	}
 }

@@ -4,15 +4,18 @@
 
 /* --- Team select screen --- */
 #select-team{max-width:54em;margin:1em auto;padding:0 1em}
-#teamList{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.5em,1fr));gap:.5em;max-width:50em;margin:1em auto}
-#select-team button{margin:0;padding:.6em .4em;font-size:1.05em;font-weight:600;border-radius:var(--radius);transition:background .15s ease,border-color .15s ease,transform .05s ease}
+#teamList{display:grid;grid-template-columns:repeat(auto-fill,minmax(5em,1fr));gap:.5em;max-width:50em;margin:1em auto}
+/* Override scout.css's generic button min-width:8vw so each button fits its grid cell instead of overflowing into the next */
+#select-team button{width:100%;min-width:0;margin:0;padding:.6em .4em;font-size:1.05em;font-weight:600;white-space:nowrap;border-radius:var(--radius);transition:background .15s ease,border-color .15s ease,transform .05s ease}
 #select-team button:hover{border-color:var(--accent);background:var(--lowlight-bg-color)}
 #select-team button.stored{color:var(--highlight-fg-color);background-color:var(--highlight-bg-color);border-color:var(--highlight-bg-color)}
 #select-team button.stored:hover{border-color:var(--accent)}
 
 /* --- Form layout --- */
-#pit-scouting{max-width:52em;margin:0 auto;padding:0 1em}
-#pit-scouting form{display:flex;flex-direction:column;align-items:stretch;gap:1em}
+#pit-scouting{max-width:52em;margin:0 auto;padding:0 1em;display:flex;flex-direction:column;gap:1.75em}
+#pit-scouting form{display:flex;flex-direction:column;align-items:stretch;gap:1.75em}
+/* Outer sections (form / photos / save) are also flex children of #pit-scouting */
+#pit-scouting > fieldset.full{margin:0}
 
 /* Back-to-team-select button: full-width pill at the top of the form */
 #pitTeamButton{align-self:stretch;padding:.6em 1em;font-weight:600;background:var(--button-bg-color);border-radius:var(--radius-lg)}
@@ -64,9 +67,19 @@
 #pit-scout-photos th{padding:.3em;font-weight:600;color:var(--main-fg-color)}
 #pit-scout-photos td.upload-cell{background:var(--section-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius);padding:.6em;vertical-align:top}
 #pit-scout-photos img.photoPreview{max-width:100%;border-radius:var(--radius);display:block;margin:.4em auto 0}
-#pit-scout-photos .edit-link{text-align:end;font-size:.9em}
+#pit-scout-photos .edit-link{text-align:end;font-size:.9em;margin-bottom:.4em}
+#pit-scout-photos .edit-link a,#pit-scout-photos .edit-link a:link,#pit-scout-photos .edit-link a:visited{display:inline-block;padding:.25em .7em;background:var(--button-bg-color);color:var(--main-fg-color);border:1px solid var(--main-border-color);border-radius:var(--radius);text-decoration:none;font-weight:600}
+#pit-scout-photos .edit-link a:hover{border-color:var(--accent);text-decoration:none}
+
+/* Native file picker themed to match buttons */
+#pit-scout-photos input[type=file]{margin-top:.5em;font-size:.9em;color:var(--main-fg-color);max-width:100%}
+#pit-scout-photos input[type=file]::file-selector-button{font:inherit;font-weight:600;padding:.4em .8em;margin-inline-end:.6em;background:var(--button-bg-color);color:var(--button-fg-color);border:1px solid var(--main-border-color);border-radius:var(--radius);cursor:pointer;transition:background .15s ease,border-color .15s ease}
+#pit-scout-photos input[type=file]::file-selector-button:hover{border-color:var(--accent)}
 
 /* --- Save section --- */
 #nextButtons{text-align:center}
-#doneButtons{display:flex;flex-wrap:wrap;gap:.6em;justify-content:center}
-#doneButtons button{padding:.6em 1.1em;font-weight:600}
+#pit-scouting #doneButtons{display:flex;flex-wrap:wrap;gap:.8em;justify-content:center;align-items:center}
+#pit-scouting #featuredButton{margin:0}
+#pit-scouting #featuredButton button{margin:0}
+#pit-scouting #otherButtons{display:flex;flex-wrap:wrap;gap:.6em;align-items:center;justify-content:center}
+#pit-scouting #doneButtons button{font-weight:600;font-size:1.4em;padding:.55em 1.3em;margin:0;display:inline-block}

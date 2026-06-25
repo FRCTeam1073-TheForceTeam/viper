@@ -75,6 +75,7 @@ button.team{width:3.4em;height:1.8em;margin:0;cursor:pointer;display:inline-flex
 #drawingControls .redo-icon{transform:scaleX(-1)}
 #drawingControls .mirror-icon{width:1em;height:1em;display:block}
 #drawingControls .ctl-label{font-size:0.85em;line-height:1;white-space:nowrap;color:var(--main-fg-color)}
+#drawingControls .save-plan.saved,#drawingControls .save-plan.saved .ctl-label{color:var(--highlight-fg-color)}
 #stamps{display:inline-flex;flex-wrap:wrap;gap:0.4em;align-items:flex-end}
 #stamps:empty{display:none}
 #stats{position:relative;margin:0 auto}

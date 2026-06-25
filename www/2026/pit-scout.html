@@ -116,12 +116,9 @@
 				<label><input type=radio name=swerve value=other><span data-i18n=robot_swerve_other></span></label>
 			</p>
 			<p>
-				<span data-i18n=drivetrain_motor_count_question></span><br>
-				<input type=number min=1 step=1 max=4 name=motor_count>
-			</p>
-			<p>
 				<span data-i18n=drivetrain_motor_type_question></span><br>
 				<label><input type=radio name=motors value=neo><span data-i18n=motor_type_neo></span></label>
+				<label><input type=radio name=motors value=neo_vortex><span data-i18n=motor_type_vortex></span></label>
 				<label><input type=radio name=motors value=falcon_500><span data-i18n=motor_type_f500></span></label>
 				<label><input type=radio name=motors value=full_size_cim><span data-i18n=motor_type_cim></span></label>
 				<label><input type=radio name=motors value=kraken><span data-i18n=motor_type_kraken></span></label>
@@ -160,12 +157,17 @@
 				<label><input type=checkbox name=vision_placing value=yes><span data-i18n=vision_placing></span></label>
 				<label><input type=checkbox name=vision_localization value=yes><span data-i18n=vision_localization></span></label>
 			</p>
+			<p>
+				<span data-i18n=battery_count_question></span><br>
+				<label><input type=number min=0 step=1 max=99 name=battery_count></label>
+			</p>
 		</fieldset>
 
-		<span data-i18n=scouter_header></span><br>
-		<span data-i18n=
-		></span> <div class=full><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></div>
-		<p><textarea name=notes  data-i18n-placeholder=pit_scout_notes_placeholder></textarea></p>
+		<fieldset class=full>
+			<legend data-i18n=scouter_header></legend>
+			<p><input type=text size=50 name=scouter data-i18n-placeholder=scouter_name_placeholder></p>
+			<p><textarea name=notes data-i18n-placeholder=pit_scout_notes_placeholder></textarea></p>
+		</fieldset>
 
 		<input type=hidden name=created value="">
 		<input type=hidden name=modified value="">

@@ -1,2 +1,37 @@
-table{border-collapse:collapse}
-th,td{border:0.1em solid var(--main-border-color);padding:0.3em}
+/* Rendered Markdown documents (instructions, etc.) shown standalone or inside a lightbox iframe */
+#md{max-width:46em;margin:0 auto;padding:1.5em 1.75em 3em;text-align:start;line-height:1.6}
+
+/* Headings */
+#md h1,#md h2,#md h3,#md h4,#md h5,#md h6{line-height:1.25;font-weight:700;margin:1.4em 0 .5em;text-align:start}
+#md > :first-child{margin-top:0}
+#md h1{font-size:1.8em}
+#md h2{font-size:1.45em;padding-bottom:.25em;border-bottom:1px solid var(--main-border-color)}
+#md h3{font-size:1.2em;color:var(--accent)}
+#md h4{font-size:1.05em;text-transform:uppercase;letter-spacing:.04em;color:var(--main-fg-color);opacity:.8}
+#md h5,#md h6{font-size:1em}
+
+/* Body text */
+#md p{max-width:none;margin:.75em 0;text-align:start}
+#md a{color:var(--link-color)}
+#md strong{font-weight:700}
+
+/* Lists */
+#md ul,#md ol{max-width:none;margin:.6em 0;padding-inline-start:1.6em;text-align:start}
+#md li{margin:.3em 0}
+#md li>ul,#md li>ol{margin:.3em 0}
+
+/* Code */
+#md code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.9em;background:var(--lowlight-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius);padding:.1em .35em}
+#md pre{background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius);padding:.8em 1em;overflow:auto}
+#md pre code{background:none;border:0;padding:0}
+
+/* Quotes, rules, media */
+#md blockquote{margin:.8em 0;padding:.3em 1em;border-inline-start:.25em solid var(--accent);background:var(--lowlight-bg-color);border-radius:0 var(--radius) var(--radius) 0;color:var(--main-fg-color)}
+#md hr{border:0;border-top:1px solid var(--main-border-color);margin:1.5em 0}
+#md img{max-width:100%;height:auto;border-radius:var(--radius)}
+
+/* Tables */
+#md table{border-collapse:collapse;margin:1em 0}
+#md th,#md td{border:1px solid var(--main-border-color);padding:.4em .6em;text-align:start}
+#md th{background:var(--section-bg-color);font-weight:600}
+#md tr:nth-child(even) td{background:var(--lowlight-bg-color)}
