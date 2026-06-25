@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/api/viper_api_client.dart';
 import '../../providers/app_providers.dart';
+import '../../widgets/viper_menu_button.dart';
 import 'server_config_screen.dart';
 
 class EventPickerScreen extends ConsumerWidget {
@@ -36,23 +37,15 @@ class EventPickerScreen extends ConsumerWidget {
 				title: const Text('Select Event'),
 				elevation: 0,
 				actions: [
-					PopupMenuButton(
-						itemBuilder: (context) => [
-							PopupMenuItem(
-								child: const Text('Change Server'),
-								onTap: () {
-									WidgetsBinding.instance.addPostFrameCallback((_) {
-										_showServerConfigModal(context, ref);
-									});
-								},
-							),
-							PopupMenuItem(
-								child: const Text('Retry'),
-								onTap: () {
-									ref.refresh(eventListProvider);
-								},
-							),
-						],
+					ViperMenuButton(
+						onChangeServer: () {
+							WidgetsBinding.instance.addPostFrameCallback((_) {
+								_showServerConfigModal(context, ref);
+							});
+						},
+						onSync: () {
+							ref.refresh(eventListProvider);
+						},
 					),
 				],
 			),
