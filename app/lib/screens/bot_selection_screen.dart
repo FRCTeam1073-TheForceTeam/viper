@@ -1,7 +1,9 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
 import '../providers/app_providers.dart';
+import '../providers/field_side_provider.dart';
 import '../widgets/viper_menu_button.dart';
 
 class BotSelectionScreen extends ConsumerStatefulWidget {
@@ -24,7 +26,11 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 	@override
 	void initState() {
 		super.initState();
-		_pageController = PageController();
+		// Initialize page controller with the stored field side preference
+		// Page 0 = left field, Page 1 = right field
+		final fieldSide = ref.read(selectedFieldSideProvider);
+		final initialPage = fieldSide == FieldSide.right ? 1 : 0;
+		_pageController = PageController(initialPage: initialPage);
 	}
 
 	@override
@@ -40,6 +46,10 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 			duration: const Duration(milliseconds: 300),
 			curve: Curves.easeInOut,
 		);
+		// Update the field side provider when orientation changes
+		// Page 0 = left field, Page 1 = right field
+		final newFieldSide = nextPage == 0 ? FieldSide.left : FieldSide.right;
+		ref.read(selectedFieldSideProvider.notifier).setFieldSide(newFieldSide);
 	}
 
 	Widget _buildPositionButton(String position, bool isRed, String? selectedPosition) {
@@ -138,13 +148,16 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 						),
 					),
 					const SizedBox(width: 16),
-					// Field image - expands to fill
+					// Field image - expands to fill (rotated for orientRight)
 					Expanded(
-						child: GestureDetector(
-							onTap: _toggleOrientation,
-							child: Image.asset(
-								'assets/images/field.png',
-								fit: BoxFit.contain,
+						child: Transform.rotate(
+							angle: pi, // 180° in radians
+							child: GestureDetector(
+								onTap: _toggleOrientation,
+								child: Image.asset(
+									'assets/images/field.png',
+									fit: BoxFit.contain,
+								),
 							),
 						),
 					),

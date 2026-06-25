@@ -1,10 +1,14 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
 import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
+import '../../providers/field_side_provider.dart';
 import '../../services/scout_data_helper.dart';
 import '../../services/localization.dart';
+import '../../constants/colors.dart';
+import '../../widgets/checkbox_button.dart';
 
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -78,11 +82,13 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		if (widget.matchNumber == null || widget.teamNumber == null) return;
 
 		final db = await ref.read(databaseProvider.future);
-		final existing = _currentScout ?? await db.getScout(
-			widget.eventId,
-			widget.matchNumber!,
-			widget.teamNumber!,
-		);
+		final existing =
+				_currentScout ??
+				await db.getScout(
+					widget.eventId,
+					widget.matchNumber!,
+					widget.teamNumber!,
+				);
 
 		final now = DateTime.now();
 		final scout = existing != null
@@ -104,9 +110,9 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		setState(() => _currentScout = scout);
 
 		if (mounted) {
-			ScaffoldMessenger.of(context).showSnackBar(
-				const SnackBar(content: Text('Pre-Match data saved')),
-			);
+			ScaffoldMessenger.of(
+				context,
+			).showSnackBar(const SnackBar(content: Text('Pre-Match data saved')));
 		}
 	}
 
@@ -115,6 +121,9 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		// Get the selected bot position to determine team color (blue or red)
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
+
+		// Get the field side (left or right)
+		final fieldSide = ref.watch(selectedFieldSideProvider);
 
 		return SingleChildScrollView(
 			padding: const EdgeInsets.all(16),
@@ -136,6 +145,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 									_StartingPositionArea(
 										selectedPosition: _selectedPosition,
 										isBlueTeam: isBlueTeam,
+										fieldSide: fieldSide,
 										onPositionChanged: (newPosition) {
 											print('💾 Saving starting position: $newPosition');
 											setState(() => _selectedPosition = newPosition);
@@ -146,27 +156,10 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						),
 					),
 					const SizedBox(height: 16),
-					SizedBox(
-						width: double.infinity,
-						child: FilledButton(
-							style: FilledButton.styleFrom(
-								backgroundColor: _noShow
-									? const Color(0xFF77DD77) // --button-selected-bg-color
-									: const Color(0xFFBBBBBB), // --button-bg-color
-								foregroundColor: const Color(0xFF333333), // --button-fg-color
-								padding: const EdgeInsets.symmetric(vertical: 16),
-								shape: RoundedRectangleBorder(
-									borderRadius: BorderRadius.circular(8),
-								),
-							),
-							onPressed: () {
-								setState(() => _noShow = !_noShow);
-							},
-							child: Text(
-								context.t('no_show'),
-								style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-							),
-						),
+					CheckboxButton(
+						isChecked: _noShow,
+						translationKey: 'no_show',
+						onChanged: (newValue) => setState(() => _noShow = newValue),
 					),
 					const SizedBox(height: 16),
 					ElevatedButton.icon(
@@ -184,11 +177,13 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 class _StartingPositionArea extends StatefulWidget {
 	final String? selectedPosition;
 	final bool isBlueTeam;
+	final FieldSide fieldSide;
 	final Function(String) onPositionChanged;
 
 	const _StartingPositionArea({
 		required this.selectedPosition,
 		required this.isBlueTeam,
+		required this.fieldSide,
 		required this.onPositionChanged,
 	});
 
@@ -218,8 +213,10 @@ class _StartingPositionAreaState extends State<_StartingPositionArea> {
 		int px = pxRaw.round().clamp(1, 99);
 		int py = pyRaw.round().clamp(1, 99);
 
-		print('   Percentages: px=${pxRaw.toStringAsFixed(1)}% → $px%, py=${pyRaw.toStringAsFixed(1)}% → $py%');
-		
+		print(
+			'   Percentages: px=${pxRaw.toStringAsFixed(1)}% → $px%, py=${pyRaw.toStringAsFixed(1)}% → $py%',
+		);
+
 		return '${px}x${py}';
 	}
 
@@ -227,58 +224,73 @@ class _StartingPositionAreaState extends State<_StartingPositionArea> {
 	Widget build(BuildContext context) {
 		final parsedPos = _parsePosition(widget.selectedPosition);
 		final imagePath = widget.isBlueTeam
-			? 'assets/images/start-area-blue.png'
-			: 'assets/images/start-area-red.png';
+				? 'assets/images/start-area-blue.png'
+				: 'assets/images/start-area-red.png';
 
-		return GestureDetector(
-			onTapDown: (details) {
-				// Start area dimensions match web app CSS: 8.4em width, 25em height
-				// Approximate pixel dimensions for a reasonable UI size
-				final size = Size(84, 250);
-				final newPos = _getTapPosition(details, size);
-				
-				// Debug output
-				print('🎯 Starting Position Tap:');
-				print('   Raw coordinates: dx=${details.localPosition.dx.toStringAsFixed(1)}, dy=${details.localPosition.dy.toStringAsFixed(1)}');
-				print('   Container size: ${size.width.toStringAsFixed(0)} x ${size.height.toStringAsFixed(0)} px');
-				print('   ✅ New position: $newPos');
-				
-				widget.onPositionChanged(newPos);
-			},
-			child: Container(
-				width: 84,
-				height: 250,
-				decoration: BoxDecoration(
-					border: Border.all(color: Colors.grey, width: 2),
-				),
-				child: Stack(
-					children: [
-						// Start area background image
-						Image.asset(
-							imagePath,
-							fit: BoxFit.fill,
-							width: 84,
-							height: 250,
-						),
-						// Robot position indicator (small square overlay)
-						if (parsedPos != null)
-							Positioned(
-								left: (parsedPos.$1 / 100) * 84 - 12.5,
-								top: (parsedPos.$2 / 100) * 250 - 12.5,
-								child: Container(
-									width: 25,
-									height: 25,
-									decoration: BoxDecoration(
-										border: Border.all(
-											color: widget.isBlueTeam ? Colors.blue : Colors.red,
-											width: 3,
+		// Apply 180° rotation based on team color and field side
+		// Blue team on right field → rotate 180
+		// Red team on left field → rotate 180
+		final shouldRotate =
+				(widget.isBlueTeam && widget.fieldSide == FieldSide.right) ||
+				(!widget.isBlueTeam && widget.fieldSide == FieldSide.left);
+
+		print(
+			'🔄 Start Area Rotation: ${widget.isBlueTeam ? 'BLUE' : 'RED'} team, ${widget.fieldSide.name} field → ${shouldRotate ? '180°' : '0°'}',
+		);
+
+		return Transform.rotate(
+			angle: shouldRotate ? pi : 0, // 180° in radians
+			child: GestureDetector(
+				onTapDown: (details) {
+					// Start area dimensions match web app CSS: 8.4em width, 25em height
+					// Approximate pixel dimensions for a reasonable UI size
+					final size = Size(84, 250);
+					final newPos = _getTapPosition(details, size);
+
+					// Debug output
+					print('🎯 Starting Position Tap:');
+					print(
+						'   Raw coordinates: dx=${details.localPosition.dx.toStringAsFixed(1)}, dy=${details.localPosition.dy.toStringAsFixed(1)}',
+					);
+					print(
+						'   Container size: ${size.width.toStringAsFixed(0)} x ${size.height.toStringAsFixed(0)} px',
+					);
+					print('   ✅ New position: $newPos');
+
+					widget.onPositionChanged(newPos);
+				},
+				child: Container(
+					width: 84,
+					height: 250,
+					decoration: BoxDecoration(
+						border: Border.all(color: Colors.grey, width: 2),
+					),
+					child: Stack(
+						children: [
+							// Start area background image
+							Image.asset(imagePath, fit: BoxFit.fill, width: 84, height: 250),
+							// Robot position indicator (small square overlay)
+							if (parsedPos != null)
+								Positioned(
+									left: (parsedPos.$1 / 100) * 84 - 12.5,
+									top: (parsedPos.$2 / 100) * 250 - 12.5,
+									child: Container(
+										width: 25,
+										height: 25,
+										decoration: BoxDecoration(
+											border: Border.all(
+												color: widget.isBlueTeam
+														? AppColors.blueTeamColor
+														: AppColors.redTeamColor,
+												width: 3,
+											),
+											color: Colors.grey[600],
+											borderRadius: BorderRadius.circular(3),
 										),
-										color: Colors.grey[600],
-										borderRadius: BorderRadius.circular(3),
 									),
 								),
-							),
-					],
+						],
+					),
 				),
 			),
 		);
