@@ -15,13 +15,12 @@ class CheckboxButton extends StatelessWidget {
 		required this.isChecked,
 		required this.translationKey,
 		required this.onChanged,
-		this.padding = const EdgeInsets.symmetric(vertical: 16),
+		this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
 	}) : super(key: key);
 
 	@override
 	Widget build(BuildContext context) {
-		return SizedBox(
-			width: double.infinity,
+		return Center(
 			child: FilledButton(
 				style: FilledButton.styleFrom(
 					backgroundColor: isChecked
