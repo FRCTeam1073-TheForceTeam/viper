@@ -1,0 +1,72 @@
+/* ===== Pit scouting — modernized to match app theming ===== */
+/* Scoped to #select-team / #pit-scouting so the shared scout.css match-scouting
+   flow is left untouched. */
+
+/* --- Team select screen --- */
+#select-team{max-width:54em;margin:1em auto;padding:0 1em}
+#teamList{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.5em,1fr));gap:.5em;max-width:50em;margin:1em auto}
+#select-team button{margin:0;padding:.6em .4em;font-size:1.05em;font-weight:600;border-radius:var(--radius);transition:background .15s ease,border-color .15s ease,transform .05s ease}
+#select-team button:hover{border-color:var(--accent);background:var(--lowlight-bg-color)}
+#select-team button.stored{color:var(--highlight-fg-color);background-color:var(--highlight-bg-color);border-color:var(--highlight-bg-color)}
+#select-team button.stored:hover{border-color:var(--accent)}
+
+/* --- Form layout --- */
+#pit-scouting{max-width:52em;margin:0 auto;padding:0 1em}
+#pit-scouting form{display:flex;flex-direction:column;align-items:stretch;gap:1em}
+
+/* Back-to-team-select button: full-width pill at the top of the form */
+#pitTeamButton{align-self:stretch;padding:.6em 1em;font-weight:600;background:var(--button-bg-color);border-radius:var(--radius-lg)}
+#pitTeamButton:hover{border-color:var(--accent)}
+
+/* Fieldsets as cards */
+#pit-scouting fieldset.full{width:100%;max-width:none;margin:0;display:block;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:1em 1.25em 1.25em}
+#pit-scouting legend{padding:.15em .6em;margin-inline-start:-.2em;font-weight:700;font-size:1.05em;color:var(--main-fg-color);border:1px solid var(--main-border-color);border-radius:var(--radius);background:var(--section-bg-color)}
+
+/* Questions: each <p> is one question block with the prompt set off in bold */
+#pit-scouting form > p,
+#pit-scouting fieldset p{max-width:none;margin:0;padding:.7em 0;border-top:1px solid var(--main-border-color)}
+#pit-scouting fieldset p:first-of-type{border-top:0;padding-top:.3em}
+#pit-scouting fieldset p > span:first-child{display:inline-block;font-weight:600;margin-bottom:.45em;color:var(--main-fg-color)}
+
+/* Inline label rows (team info etc.): label stays put, input grows to fill */
+#pit-scouting fieldset p:has(> input[type=text]){display:flex;align-items:center;gap:.5em;flex-wrap:wrap}
+#pit-scouting fieldset p:has(> input[type=text]) > span:first-child{margin-bottom:0;white-space:nowrap}
+#pit-scouting fieldset p > input[type=text]{flex:1 1 12em;min-width:0}
+
+/* Number inputs read as compact fields */
+#pit-scouting input[type=number]{width:5em;text-align:end}
+/* Standalone text fields (scouter) fill their container */
+#pit-scouting .full > input[type=text]{width:100%}
+
+/* Pill-style radio / checkbox choices, laid out in a wrapping row */
+#pit-scouting fieldset p:has(label){line-height:1.9}
+#pit-scouting label{margin:.15em .3em .15em 0}
+#pit-scouting label:has(>input[type=radio])>span,
+#pit-scouting label:has(>input[type=checkbox])>span{min-width:6em;width:auto;padding:.4em .8em;border-radius:var(--radius);border:1px solid var(--main-border-color);transition:background .15s ease,border-color .15s ease}
+#pit-scouting label:has(>input:not(:checked))>span:hover{border-color:var(--accent)}
+#pit-scouting label input:checked+span{background:var(--button-selected-bg-color);border-color:var(--button-selected-bg-color);color:var(--accent-fg)}
+
+/* Wheel-type choices include an image preview */
+#pit-scouting label:has(img)>span img{display:block;margin:0 auto .25em;max-width:3.5em;height:auto}
+
+/* Auto-path canvas */
+/* Keep the year stylesheet's field-image background; just frame it. */
+#pit-scouting #auto-paths{border:1px solid var(--main-border-color);border-radius:var(--radius)}
+#pit-scouting fieldset > div:has(#auto-path-undo){display:flex;gap:.5em;justify-content:center;margin-top:.6em}
+
+/* Scouter / notes */
+#pit-scouting [data-i18n=scouter_header]{font-weight:600}
+#pit-scouting textarea{width:100%;max-width:none}
+
+/* --- Bot photos table --- */
+#pit-scout-photos{border-collapse:separate;border-spacing:.5em;margin:.5em auto 0}
+#pit-scout-photos,#pit-scout-photos td,#pit-scout-photos th{border:0}
+#pit-scout-photos th{padding:.3em;font-weight:600;color:var(--main-fg-color)}
+#pit-scout-photos td.upload-cell{background:var(--section-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius);padding:.6em;vertical-align:top}
+#pit-scout-photos img.photoPreview{max-width:100%;border-radius:var(--radius);display:block;margin:.4em auto 0}
+#pit-scout-photos .edit-link{text-align:end;font-size:.9em}
+
+/* --- Save section --- */
+#nextButtons{text-align:center}
+#doneButtons{display:flex;flex-wrap:wrap;gap:.6em;justify-content:center}
+#doneButtons button{padding:.6em 1.1em;font-weight:600}

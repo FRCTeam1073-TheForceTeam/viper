@@ -7,6 +7,9 @@ li{margin:.5em 0;}
 .scoreTable td,.scoreTable th{padding:0.15em}
 #matchTable td, #matchTable th {padding:0.6em 0.15em;border:1px solid var(--main-border-color);cursor:pointer}
 #matchTable .R1,#matchTable .R2,#matchTable .R3,#matchTable .B1,#matchTable .B2,#matchTable .B3{width:calc(6ch + 0.6em)}
+/* Desaturate the team columns so they read apart from the full-color score columns */
+#matchTable td.R1,#matchTable td.R2,#matchTable td.R3{background-color:color-mix(in srgb,var(--red-team-color) 60%,var(--surface))}
+#matchTable td.B1,#matchTable td.B2,#matchTable td.B3{background-color:color-mix(in srgb,var(--blue-team-color) 60%,var(--surface))}
 body.hide-practice #matchTable tr.practiceMatch{display:none}
 body.team-only #matches tr:not(.myTeamMatch){display:none}
 #matchTable{margin:1em auto;table-layout:fixed;max-width:100%}
