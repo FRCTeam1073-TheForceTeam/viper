@@ -6,24 +6,6 @@ import '../../providers/app_providers.dart';
 import '../../services/scout_data_helper.dart';
 import '../../services/localization.dart';
 
-// Register translations when this file is imported (function runs on import)
-void _initPreMatchI18n() {
-	AppLocalizations.addI18n({
-		'no_show': {
-			'en': 'No Show',
-			'es': 'No',
-			'pt': 'Sem presença',
-			'fr': 'Non présent',
-			'zh_tw': '沒有出席',
-			'he': 'אין הופעה',
-			'tr': 'Gösterilmedi',
-		},
-	});
-}
-
-// Call initialization on import
-final _PreMatchI18nInitialized = _initPreMatchI18n();
-
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
 	final String? matchNumber;
@@ -48,6 +30,29 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 	@override
 	void initState() {
 		super.initState();
+
+		// Register translations on demand when this tab is first loaded
+		AppLocalizations.addI18n({
+			'no_show': {
+				'en': 'No Show',
+				'es': 'No',
+				'pt': 'Sem presença',
+				'fr': 'Non présent',
+				'zh_tw': '沒有出席',
+				'he': 'אין הופעה',
+				'tr': 'Gösterilmedi',
+			},
+			'starting_position': {
+				'en': 'Starting Position',
+				'es': 'Posición inicial',
+				'pt': 'Posição inicial',
+				'fr': 'Position de départ',
+				'zh_tw': '起始位置',
+				'he': 'מיקום ההתחלה',
+				'tr': 'Başlangıç Pozisyonu',
+			},
+		});
+
 		_loadScout();
 	}
 
@@ -107,13 +112,9 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 
 	@override
 	Widget build(BuildContext context) {
-		final positions = [
-			'Alliance 1',
-			'Alliance 2',
-			'Neutral',
-			'Opponent 1',
-			'Opponent 2',
-		];
+		// Get the selected bot position to determine team color (blue or red)
+		final botPosition = ref.watch(selectedBotPositionProvider);
+		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 
 		return SingleChildScrollView(
 			padding: const EdgeInsets.all(16),
@@ -127,25 +128,18 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: [
 									Text(
-										'Starting Position',
+										context.t('starting_position'),
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 16),
-									Wrap(
-										spacing: 8,
-										runSpacing: 8,
-										children: positions.map((pos) {
-											final isSelected = _selectedPosition == pos;
-											return FilterChip(
-												label: Text(pos),
-												selected: isSelected,
-												onSelected: (selected) {
-													setState(() {
-														_selectedPosition = selected ? pos : null;
-													});
-												},
-											);
-										}).toList(),
+									// Starting position interactive area (clickable/draggable)
+									_StartingPositionArea(
+										selectedPosition: _selectedPosition,
+										isBlueTeam: isBlueTeam,
+										onPositionChanged: (newPosition) {
+											print('💾 Saving starting position: $newPosition');
+											setState(() => _selectedPosition = newPosition);
+										},
 									),
 								],
 							),
@@ -181,6 +175,111 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						label: const Text('Save Pre-Match'),
 					),
 				],
+			),
+		);
+	}
+}
+
+/// Interactive starting position area widget (mimics web app's click-to-position behavior)
+class _StartingPositionArea extends StatefulWidget {
+	final String? selectedPosition;
+	final bool isBlueTeam;
+	final Function(String) onPositionChanged;
+
+	const _StartingPositionArea({
+		required this.selectedPosition,
+		required this.isBlueTeam,
+		required this.onPositionChanged,
+	});
+
+	@override
+	State<_StartingPositionArea> createState() => _StartingPositionAreaState();
+}
+
+class _StartingPositionAreaState extends State<_StartingPositionArea> {
+	/// Parse "XxY" format (e.g., "50x50") to (x%, y%) tuple
+	static (int, int)? _parsePosition(String? pos) {
+		if (pos == null) return null;
+		final parts = pos.split('x');
+		if (parts.length != 2) return null;
+		final x = int.tryParse(parts[0]);
+		final y = int.tryParse(parts[1]);
+		return (x != null && y != null) ? (x, y) : null;
+	}
+
+	/// Convert tap position to "XxY" format based on container dimensions
+	String _getTapPosition(TapDownDetails details, Size containerSize) {
+		final dx = details.localPosition.dx;
+		final dy = details.localPosition.dy;
+
+		// Calculate percentages (clamped 1-99)
+		final pxRaw = (dx / containerSize.width) * 100;
+		final pyRaw = (dy / containerSize.height) * 100;
+		int px = pxRaw.round().clamp(1, 99);
+		int py = pyRaw.round().clamp(1, 99);
+
+		print('   Percentages: px=${pxRaw.toStringAsFixed(1)}% → $px%, py=${pyRaw.toStringAsFixed(1)}% → $py%');
+		
+		return '${px}x${py}';
+	}
+
+	@override
+	Widget build(BuildContext context) {
+		final parsedPos = _parsePosition(widget.selectedPosition);
+		final imagePath = widget.isBlueTeam
+			? 'assets/images/start-area-blue.png'
+			: 'assets/images/start-area-red.png';
+
+		return GestureDetector(
+			onTapDown: (details) {
+				// Start area dimensions match web app CSS: 8.4em width, 25em height
+				// Approximate pixel dimensions for a reasonable UI size
+				final size = Size(84, 250);
+				final newPos = _getTapPosition(details, size);
+				
+				// Debug output
+				print('🎯 Starting Position Tap:');
+				print('   Raw coordinates: dx=${details.localPosition.dx.toStringAsFixed(1)}, dy=${details.localPosition.dy.toStringAsFixed(1)}');
+				print('   Container size: ${size.width.toStringAsFixed(0)} x ${size.height.toStringAsFixed(0)} px');
+				print('   ✅ New position: $newPos');
+				
+				widget.onPositionChanged(newPos);
+			},
+			child: Container(
+				width: 84,
+				height: 250,
+				decoration: BoxDecoration(
+					border: Border.all(color: Colors.grey, width: 2),
+				),
+				child: Stack(
+					children: [
+						// Start area background image
+						Image.asset(
+							imagePath,
+							fit: BoxFit.fill,
+							width: 84,
+							height: 250,
+						),
+						// Robot position indicator (small square overlay)
+						if (parsedPos != null)
+							Positioned(
+								left: (parsedPos.$1 / 100) * 84 - 12.5,
+								top: (parsedPos.$2 / 100) * 250 - 12.5,
+								child: Container(
+									width: 25,
+									height: 25,
+									decoration: BoxDecoration(
+										border: Border.all(
+											color: widget.isBlueTeam ? Colors.blue : Colors.red,
+											width: 3,
+										),
+										color: Colors.grey[600],
+										borderRadius: BorderRadius.circular(3),
+									),
+								),
+							),
+					],
+				),
 			),
 		);
 	}

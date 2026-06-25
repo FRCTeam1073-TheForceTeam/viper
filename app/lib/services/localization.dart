@@ -20,10 +20,11 @@ class AppLocalizations {
 	static Locale? getLocale() => _currentLocale;
 
 	static String translate(String key, {Locale? locale}) {
-		final languageCode = (locale ?? _currentLocale)?.languageCode ?? 'en';
-		final countryCode = (locale ?? _currentLocale)?.countryCode;
+		final resolvedLocale = locale ?? _currentLocale;
+		final languageCode = resolvedLocale?.languageCode ?? 'en';
+		final countryCode = resolvedLocale?.countryCode;
 
-		// Try exact match first (e.g., zh_TW)
+		// Try exact match first (e.g., zh_tw)
 		if (countryCode != null) {
 			final variantKey = '${languageCode}_${countryCode.toLowerCase()}';
 			if (_translations[key]?.containsKey(variantKey) ?? false) {
@@ -31,12 +32,29 @@ class AppLocalizations {
 			}
 		}
 
-		// Fall back to language code only
-		return _translations[key]?[languageCode] ?? _translations[key]?['en'] ?? key;
+		// Try language code only (e.g., 'es', 'fr', 'en')
+		if (_translations[key]?.containsKey(languageCode) ?? false) {
+			return _translations[key]![languageCode]!;
+		}
+
+		// Fall back to English
+		if (_translations[key]?.containsKey('en') ?? false) {
+			return _translations[key]!['en']!;
+		}
+
+		// Last resort: return the key itself (untranslated)
+		return key;
 	}
 
-	static String get(String key, {Locale? locale}) {
-		return translate(key, locale: locale);
+	/// Get all available translations for debugging
+	static Map<String, Map<String, String>> getAllTranslations() => _translations;
+
+	/// Debug: Print all registered translation keys
+	static void debugPrintKeys() {
+		print('Registered translation keys: ${_translations.keys.toList()}');
+		for (var key in _translations.keys) {
+			print('  $key: ${_translations[key]?.keys.toList()}');
+		}
 	}
 }
 
