@@ -7,8 +7,10 @@ import 'screens/bot_selection_screen.dart';
 import 'screens/match_selection_screen.dart';
 import 'screens/scouting_app_screen.dart';
 import 'providers/app_providers.dart';
+import 'providers/locale_provider.dart';
 import 'data/api/viper_api_client.dart';
 import 'constants/colors.dart';
+import 'services/localization.dart';
 
 late SharedPreferences _sharedPrefs;
 
@@ -23,14 +25,26 @@ void main() async {
 	);
 }
 
-class ViperScoutApp extends StatelessWidget {
+class ViperScoutApp extends ConsumerWidget {
 	const ViperScoutApp({Key? key}) : super(key: key);
 
 	@override
-	Widget build(BuildContext context) {
+	Widget build(BuildContext context, WidgetRef ref) {
+		final locale = ref.watch(selectedLocaleProvider);
+
 		return MaterialApp(
 			title: 'Viper Scout FRC',
 			debugShowCheckedModeBanner: false,
+			locale: locale,
+			supportedLocales: const [
+				Locale('en'),
+				Locale('es'),
+				Locale('fr'),
+				Locale('pt'),
+				Locale('zh', 'TW'),
+				Locale('tr'),
+				Locale('he'),
+			],
 			theme: ThemeData(
 				useMaterial3: true,
 				scaffoldBackgroundColor: AppColors.mainBgColor,

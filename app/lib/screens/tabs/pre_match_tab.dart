@@ -4,6 +4,25 @@ import 'package:drift/drift.dart' show Value;
 import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
 import '../../services/scout_data_helper.dart';
+import '../../services/localization.dart';
+
+// Register translations when this file is imported (function runs on import)
+void _initPreMatchI18n() {
+	AppLocalizations.addI18n({
+		'no_show': {
+			'en': 'No Show',
+			'es': 'No',
+			'pt': 'Sem presença',
+			'fr': 'Non présent',
+			'zh_tw': '沒有出席',
+			'he': 'אין הופעה',
+			'tr': 'Gösterilmedi',
+		},
+	});
+}
+
+// Call initialization on import
+final _PreMatchI18nInitialized = _initPreMatchI18n();
 
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -149,9 +168,9 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 							onPressed: () {
 								setState(() => _noShow = !_noShow);
 							},
-							child: const Text(
-								'No Show',
-								style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+							child: Text(
+								context.t('no_show'),
+								style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
 							),
 						),
 					),

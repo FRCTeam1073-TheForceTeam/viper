@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/locale_provider.dart';
 
 class ViperMenuButton extends StatelessWidget {
 	final VoidCallback? onChangeEvent;
@@ -95,6 +97,12 @@ class ViperMenuButton extends StatelessWidget {
 							)
 						else
 							SizedBox.shrink(),
+						Padding(
+							padding: const EdgeInsets.only(top: 16),
+							child: _LanguageSelector(onLanguageChanged: () {
+								Navigator.pop(context);
+							}),
+						),
 					],
 				),
 			),
@@ -114,6 +122,58 @@ class ViperMenuButton extends StatelessWidget {
 		return IconButton(
 			icon: const Icon(Icons.more_vert),
 			onPressed: () => _showMenu(context),
+		);
+	}
+}
+
+class _LanguageSelector extends StatefulWidget {
+	final VoidCallback onLanguageChanged;
+
+	const _LanguageSelector({Key? key, required this.onLanguageChanged})
+		: super(key: key);
+
+	@override
+	State<_LanguageSelector> createState() => _LanguageSelectorState();
+}
+
+class _LanguageSelectorState extends State<_LanguageSelector> {
+	bool _expanded = false;
+
+	@override
+	Widget build(BuildContext context) {
+		return Column(
+			mainAxisSize: MainAxisSize.min,
+			crossAxisAlignment: CrossAxisAlignment.stretch,
+			children: [
+				ElevatedButton.icon(
+					icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+					label: const Text('Language'),
+					onPressed: () {
+						setState(() => _expanded = !_expanded);
+					},
+				),
+				if (_expanded)
+					Padding(
+						padding: const EdgeInsets.only(top: 8),
+						child: Wrap(
+							spacing: 4,
+							runSpacing: 4,
+							children: supportedLanguages.entries.map((entry) {
+								return Consumer(builder: (context, ref, child) {
+									return FilterChip(
+										label: Text(entry.value),
+										onSelected: (_) {
+											ref
+												.read(selectedLocaleProvider.notifier)
+												.setLanguage(entry.key);
+											widget.onLanguageChanged();
+										},
+									);
+								});
+							}).toList(),
+						),
+					),
+			],
 		);
 	}
 }
