@@ -113,18 +113,25 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 	}
 
 	Future<void> setSelectedEvent(String eventId) async {
+		print('[SELECTED_EVENT_NOTIFIER] setSelectedEvent($eventId) called');
 		state = eventId;
+		print('[SELECTED_EVENT_NOTIFIER] state set to $eventId');
 		final db = await ref.read(databaseProvider.future);
+		print('[SELECTED_EVENT_NOTIFIER] got database');
 		final config = await db.getCurrentConfig();
+		print('[SELECTED_EVENT_NOTIFIER] got config: $config');
 
 		if (config != null) {
+			print('[SELECTED_EVENT_NOTIFIER] upserting config with selectedEventId=$eventId');
 			await db.upsertConfig(
 				config.copyWith(
 					selectedEventId: Value(eventId),
 					lastEventChangeDate: Value(DateTime.now()),
 				),
 			);
+			print('[SELECTED_EVENT_NOTIFIER] upsertConfig completed');
 		} else {
+			print('[SELECTED_EVENT_NOTIFIER] creating new config with selectedEventId=$eventId');
 			await db.upsertConfig(
 				ServerConfigData(
 					id: 1,
@@ -135,6 +142,7 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 					lastEventChangeDate: DateTime.now(),
 				),
 			);
+			print('[SELECTED_EVENT_NOTIFIER] upsertConfig (new) completed');
 		}
 	}
 }
@@ -377,9 +385,26 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 // MATCH LIST
 // ============================================================================
 
+/// Helper provider that ensures selectedEventProvider is loaded
+final _ensureSelectedEventProvider = FutureProvider<String?>((ref) async {
+	// Keep re-watching until selectedEventProvider is non-null or we've waited enough
+	// This gives the async load time to complete
+	for (int i = 0; i < 50; i++) {
+		final event = ref.watch(selectedEventProvider);
+		if (event != null) {
+			return event;
+		}
+		// Wait a bit and retry
+		await Future.delayed(const Duration(milliseconds: 10));
+	}
+	// Even if still null, return what we have
+	return ref.watch(selectedEventProvider);
+});
+
 final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 	final apiClient = await ref.watch(apiClientProvider.future);
-	final selectedEvent = ref.watch(selectedEventProvider);
+	// Use the helper provider to ensure event is loaded
+	final selectedEvent = await ref.watch(_ensureSelectedEventProvider.future);
 
 	if (selectedEvent == null) {
 		return [];

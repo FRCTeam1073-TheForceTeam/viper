@@ -175,7 +175,9 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 
 	@override
 	Widget build(BuildContext context) {
+		print('[HOME_ROUTER_BUILD] Building... _checking=$_checking, _serverConfigured=$_serverConfigured, _eventSelected=$_eventSelected, _botSelected=$_botSelected, _matchSelected=$_matchSelected');
 		if (_checking) {
+			print('[HOME_ROUTER_BUILD] Showing loading spinner');
 			return const Scaffold(
 				body: Center(
 					child: CircularProgressIndicator(),
@@ -190,19 +192,12 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 		}
 
 		if (!_eventSelected) {
-			return EventPickerScreen(
-				onEventSelected: (event) {
-					setState(() {
-						_selectedEvent = event;
-						_eventSelected = true;
-						_botSelected = false; // Reset bot selection when changing events
-						_matchSelected = false; // Reset match selection when changing events
-					});
-				},
-			);
+			print('[HOME_ROUTER_BUILD] Showing EventPickerScreen');
+			return const EventPickerScreen();
 		}
 
 		if (!_botSelected) {
+			print('[HOME_ROUTER_BUILD] Showing BotSelectionScreen');
 			return BotSelectionScreen(
 				onBotSelected: (bot) {
 					ref.read(selectedBotPositionProvider.notifier).setPosition(bot);
@@ -223,6 +218,7 @@ class _HomeRouterState extends ConsumerState<_HomeRouter> {
 		}
 
 		if (!_matchSelected) {
+			print('[HOME_ROUTER_BUILD] Showing MatchSelectionScreen');
 			final botPosition = ref.watch(selectedBotPositionProvider);
 			return MatchSelectionScreen(
 				botPosition: botPosition,

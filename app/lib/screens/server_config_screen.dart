@@ -6,6 +6,7 @@ import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../services/form_validation.dart';
 import '../services/localization.dart';
+import '../widgets/viper_menu_button.dart';
 
 class ServerConfigScreen extends ConsumerStatefulWidget {
 	final Function(String) onServerConfigured;
@@ -349,6 +350,12 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				title: Text(t('configure_backend_server')),
 				centerTitle: true,
 				elevation: 0,
+				automaticallyImplyLeading: false,
+				actions: [
+					ViperMenuButton(
+						onSync: () {},
+					),
+				],
 			),
 			body: SingleChildScrollView(
 				padding: const EdgeInsets.all(24),

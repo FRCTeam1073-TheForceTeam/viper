@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
+import '../providers/app_providers.dart';
 import '../services/localization.dart';
 import '../screens/server_config_screen.dart';
 import '../screens/event_picker_screen.dart';
@@ -180,17 +181,11 @@ class _MenuContent extends ConsumerWidget {
 							onPressed: () {
 								Navigator.pop(context);
 								WidgetsBinding.instance.addPostFrameCallback((_) {
-									Navigator.pushAndRemoveUntil(
+									Navigator.push(
 										context,
 										MaterialPageRoute(
-											builder: (context) => EventPickerScreen(
-												onEventSelected: (event) {
-													onChangeEvent?.call();
-													Navigator.pop(context);
-												},
-											),
+											builder: (context) => const EventPickerScreen(),
 										),
-										(route) => false,
 									);
 								});
 							},
@@ -202,12 +197,14 @@ class _MenuContent extends ConsumerWidget {
 							icon: const Icon(Icons.sports),
 							label: Text(t('change_match')),
 							onPressed: () {
+								final botPosition = ref.read(selectedBotPositionProvider);
 								Navigator.pop(context);
 								WidgetsBinding.instance.addPostFrameCallback((_) {
 									Navigator.push(
 										context,
 										MaterialPageRoute(
 											builder: (context) => MatchSelectionScreen(
+												botPosition: botPosition,
 												onMatchSelected: (matchNum, teamNum) {
 													onChangeMatch?.call();
 													Navigator.pop(context);

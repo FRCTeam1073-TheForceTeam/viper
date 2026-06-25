@@ -6,12 +6,7 @@ import '../../widgets/viper_menu_button.dart';
 import 'server_config_screen.dart';
 
 class EventPickerScreen extends ConsumerWidget {
-	final Function(EventModel) onEventSelected;
-
-	const EventPickerScreen({
-		Key? key,
-		required this.onEventSelected,
-	}) : super(key: key);
+	const EventPickerScreen({Key? key}) : super(key: key);
 
 	void _showServerConfigModal(BuildContext context, WidgetRef ref) {
 		showModalBottomSheet(
@@ -36,18 +31,8 @@ class EventPickerScreen extends ConsumerWidget {
 			appBar: AppBar(
 				title: const Text('Select Event'),
 				elevation: 0,
-				actions: [
-					ViperMenuButton(
-						onChangeServer: () {
-							WidgetsBinding.instance.addPostFrameCallback((_) {
-								_showServerConfigModal(context, ref);
-							});
-						},
-						onSync: () {
-							ref.refresh(eventListProvider);
-						},
-					),
-				],
+				automaticallyImplyLeading: false,
+				actions: [ViperMenuButton(onSync: () {})],
 			),
 			body: eventListAsync.when(
 				data: (events) {
@@ -84,10 +69,14 @@ class EventPickerScreen extends ConsumerWidget {
 							final event = events[index];
 							return EventListTile(
 								event: event,
-								onTap: () {
-									ref.read(selectedEventProvider.notifier)
+								onTap: () async {
+									print('[EVENT_PICKER] EventListTile.onTap called for ${event.eventId}');
+									print('[EVENT_PICKER] Calling setSelectedEvent...');
+									await ref.read(selectedEventProvider.notifier)
 											.setSelectedEvent(event.eventId);
-									onEventSelected(event);
+									print('[EVENT_PICKER] setSelectedEvent completed');
+									print('[EVENT_PICKER] Popping EventPickerScreen');
+									Navigator.pop(context);
 								},
 							);
 						},
@@ -149,9 +138,9 @@ class EventPickerScreen extends ConsumerWidget {
 	}
 }
 
-class EventListTile extends StatelessWidget {
+class EventListTile extends StatefulWidget {
 	final EventModel event;
-	final VoidCallback onTap;
+	final Future<void> Function() onTap;
 
 	const EventListTile({
 		Key? key,
@@ -160,31 +149,66 @@ class EventListTile extends StatelessWidget {
 	}) : super(key: key);
 
 	@override
+	State<EventListTile> createState() => _EventListTileState();
+}
+
+class _EventListTileState extends State<EventListTile> {
+	bool _isLoading = false;
+
+	@override
 	Widget build(BuildContext context) {
+		print('[EVENT_LIST_TILE] build() called, _isLoading=$_isLoading');
 		return Card(
 			margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
 			child: ListTile(
-				onTap: onTap,
-				title: Text(event.name),
+				onTap: _isLoading ? null : _handleTap,
+				enabled: !_isLoading,
+				title: Text(widget.event.name),
 				subtitle: Column(
 					crossAxisAlignment: CrossAxisAlignment.start,
 					children: [
-						if (event.location != null) ...[
+						if (widget.event.location != null) ...[
 							const SizedBox(height: 4),
-							Text(event.location!),
+							Text(widget.event.location!),
 						],
 						const SizedBox(height: 4),
 						Text(
-							_formatDateRange(event.startDate, event.endDate),
+							_formatDateRange(widget.event.startDate, widget.event.endDate),
 							style: Theme.of(context).textTheme.labelSmall?.copyWith(
 								color: Colors.grey[600],
 							),
 						),
 					],
 				),
-				trailing: const Icon(Icons.arrow_forward),
+				trailing: _isLoading
+					? const SizedBox(
+						width: 24,
+						height: 24,
+						child: CircularProgressIndicator(strokeWidth: 2),
+					)
+					: const Icon(Icons.arrow_forward),
 			),
 		);
+	}
+
+	Future<void> _handleTap() async {
+		print('[EVENT_LIST_TILE] _handleTap() called');
+		setState(() {
+			print('[EVENT_LIST_TILE] setState _isLoading = true');
+			_isLoading = true;
+		});
+		try {
+			print('[EVENT_LIST_TILE] Awaiting widget.onTap()...');
+			await widget.onTap();
+			print('[EVENT_LIST_TILE] widget.onTap() completed');
+		} finally {
+			if (mounted) {
+				print('[EVENT_LIST_TILE] setState _isLoading = false');
+				setState(() => _isLoading = false);
+			} else {
+				print('[EVENT_LIST_TILE] Widget already unmounted, skipping setState');
+			}
+		}
 	}
 
 	String _formatDateRange(DateTime? start, DateTime? end) {
