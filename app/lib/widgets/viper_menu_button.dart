@@ -165,7 +165,19 @@ class _MenuContent extends ConsumerWidget {
 									MaterialPageRoute(
 										builder: (context) => ServerConfigScreen(
 											onServerConfigured: (_) {
+												// After server config, invalidate event list and navigate to event picker
+												ref.invalidate(eventListProvider);
+												// Pop ServerConfigScreen
 												Navigator.pop(context);
+												// Push EventPickerScreen
+												WidgetsBinding.instance.addPostFrameCallback((_) {
+													Navigator.push(
+														context,
+														MaterialPageRoute(
+															builder: (context) => const EventPickerScreen(),
+														),
+													);
+												});
 											},
 										),
 									),
