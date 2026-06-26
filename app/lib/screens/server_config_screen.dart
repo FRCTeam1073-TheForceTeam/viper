@@ -62,22 +62,22 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				'tr': 'Arka Uç Sunucusu URL\'si',
 			},
 			'backend_url_hint': {
-				'en': 'https://demo.viperscout.com',
-				'es': 'https://demo.viperscout.com',
-				'pt': 'https://demo.viperscout.com',
-				'fr': 'https://demo.viperscout.com',
-				'zh_tw': 'https://demo.viperscout.com',
-				'he': 'https://demo.viperscout.com',
-				'tr': 'https://demo.viperscout.com',
+				'en': 'demo.viperscout.com',
+				'es': 'demo.viperscout.com',
+				'pt': 'demo.viperscout.com',
+				'fr': 'demo.viperscout.com',
+				'zh_tw': 'demo.viperscout.com',
+				'he': 'demo.viperscout.com',
+				'tr': 'demo.viperscout.com',
 			},
 			'backend_url_examples': {
-				'en': 'Examples: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
-				'es': 'Ejemplos: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
-				'pt': 'Exemplos: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
-				'fr': 'Exemples: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
-				'zh_tw': '範例: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
-				'he': 'דוגמאות: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
-				'tr': 'Örnekler: http://192.168.1.100, http://demo.viperscout.com, http://localhost:8080',
+				'en': 'Examples: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
+				'es': 'Ejemplos: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
+				'pt': 'Exemplos: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
+				'fr': 'Exemples: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
+				'zh_tw': '範例: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
+				'he': 'דוגמאות: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
+				'tr': 'Örnekler: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
 			},
 			'username_optional': {
 				'en': 'Username (optional)',
@@ -228,6 +228,58 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 		super.dispose();
 	}
 
+	/// Normalize server URL by prepending protocol if missing
+	/// - IP addresses get http://
+	/// - Hostnames get https://
+	String _normalizeUrl(String url) {
+		url = url.trim();
+
+		// If already has protocol, return as-is
+		if (url.startsWith('http://') || url.startsWith('https://')) {
+			return url;
+		}
+
+		// Check if it's an IP address (including localhost and IPv6)
+		final isIpAddress = _isIpAddress(url);
+
+		return isIpAddress ? 'http://$url' : 'https://$url';
+	}
+
+	/// Check if a string is an IP address (IPv4, IPv6, localhost, or with port)
+	bool _isIpAddress(String str) {
+		// Remove port if present (e.g., "192.168.1.1:8080" or "[::1]:8080")
+		String host = str;
+		if (host.contains(':')) {
+			// Handle IPv6 [::1]:8080 format
+			if (host.startsWith('[')) {
+				host = host.substring(1, host.lastIndexOf(']'));
+			} else {
+				// For IPv4 or hostname with port, take everything before first colon
+				host = host.split(':').first;
+			}
+		}
+
+		// Check for localhost
+		if (host == 'localhost') return true;
+
+		// IPv4 check: all parts are numbers 0-255
+		final ipv4Pattern = RegExp(r'^(\d{1,3}\.){3}\d{1,3}$');
+		if (ipv4Pattern.hasMatch(host)) {
+			final parts = host.split('.');
+			return parts.every((part) {
+				final num = int.tryParse(part);
+				return num != null && num >= 0 && num <= 255;
+			});
+		}
+
+		// IPv6 check: contains colons or is "::1"
+		if (host.contains(':') || host == '::1') {
+			return true;
+		}
+
+		return false;
+	}
+
 	Future<void> _testAndSaveConnection() async {
 		if (!_formKey.currentState!.validate()) {
 			return;
@@ -239,7 +291,7 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 			// Save configuration to database first
 			final db = await ref.read(databaseProvider.future);
 			final config = await db.getCurrentConfig();
-			final backendUrl = _backendUrlController.text.trim();
+			final backendUrl = _normalizeUrl(_backendUrlController.text);
 			final username = _usernameController.text.trim();
 			final password = _passwordController.text;
 
@@ -339,6 +391,7 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 
 	@override
 	Widget build(BuildContext context) {
+		print('[SCREEN_BUILD] ServerConfigScreen.build() called');
 		// Watch locale to rebuild when language changes
 		final locale = ref.watch(selectedLocaleProvider);
 

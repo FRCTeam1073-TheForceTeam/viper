@@ -3,26 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
 import '../providers/app_providers.dart';
 import '../services/localization.dart';
-import '../screens/server_config_screen.dart';
-import '../screens/event_picker_screen.dart';
-import '../screens/match_selection_screen.dart';
-import '../screens/bot_selection_screen.dart';
 
 class ViperMenuButton extends ConsumerWidget {
-	final VoidCallback? onChangeEvent;
-	final VoidCallback? onChangeBotPosition;
-	final VoidCallback? onChangeMatch;
-	final VoidCallback? onChangeServer;
 	final VoidCallback? onSync;
 	final bool isSyncing;
 	final int pendingCount;
 
 	const ViperMenuButton({
 		Key? key,
-		this.onChangeEvent,
-		this.onChangeBotPosition,
-		this.onChangeMatch,
-		this.onChangeServer,
 		this.onSync,
 		this.isSyncing = false,
 		this.pendingCount = 0,
@@ -92,10 +80,6 @@ class ViperMenuButton extends ConsumerWidget {
 		showModalBottomSheet(
 			context: context,
 			builder: (context) => _MenuContent(
-				onChangeEvent: onChangeEvent,
-				onChangeBotPosition: onChangeBotPosition,
-				onChangeMatch: onChangeMatch,
-				onChangeServer: onChangeServer,
 				onSync: onSync,
 				isSyncing: isSyncing,
 				pendingCount: pendingCount,
@@ -105,16 +89,7 @@ class ViperMenuButton extends ConsumerWidget {
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
-		// Always show if we have any callback, since onChangeServer and onChangeMatch
-		// are always rendered (may have null callbacks but still need to show menu)
-		if (onChangeEvent == null &&
-			onChangeBotPosition == null &&
-			onChangeMatch == null &&
-			onChangeServer == null &&
-			onSync == null) {
-			return SizedBox.shrink();
-		}
-
+		print('[VIPER_MENU] Building menu button - always visible');
 		return IconButton(
 			icon: const Icon(Icons.more_vert),
 			onPressed: () => _showMenu(context),
@@ -123,19 +98,11 @@ class ViperMenuButton extends ConsumerWidget {
 }
 
 class _MenuContent extends ConsumerWidget {
-	final VoidCallback? onChangeEvent;
-	final VoidCallback? onChangeBotPosition;
-	final VoidCallback? onChangeMatch;
-	final VoidCallback? onChangeServer;
 	final VoidCallback? onSync;
 	final bool isSyncing;
 	final int pendingCount;
 
 	const _MenuContent({
-		this.onChangeEvent,
-		this.onChangeBotPosition,
-		this.onChangeMatch,
-		this.onChangeServer,
 		this.onSync,
 		this.isSyncing = false,
 		this.pendingCount = 0,
@@ -149,40 +116,24 @@ class _MenuContent extends ConsumerWidget {
 		// Helper to get translated text
 		String t(String key) => AppLocalizations.translate(key, locale: locale);
 
+		// Get the navigation provider
+		final navigateTo = (NavigationTarget target) =>
+			ref.read(navigationCommandProvider.notifier).navigateTo(target);
+
 		return Padding(
 			padding: const EdgeInsets.all(16),
 			child: Column(
 				mainAxisSize: MainAxisSize.min,
 				children: [
+					// Always show these navigation options
 					ElevatedButton.icon(
 						icon: const Icon(Icons.storage),
 						label: Text(t('change_server')),
 						onPressed: () {
+							print('[KEBAB_MENU] ✓ Change Server clicked');
 							Navigator.pop(context);
-							WidgetsBinding.instance.addPostFrameCallback((_) {
-								Navigator.push(
-									context,
-									MaterialPageRoute(
-										builder: (context) => ServerConfigScreen(
-											onServerConfigured: (_) {
-												// After server config, invalidate event list and navigate to event picker
-												ref.invalidate(eventListProvider);
-												// Pop ServerConfigScreen
-												Navigator.pop(context);
-												// Push EventPickerScreen
-												WidgetsBinding.instance.addPostFrameCallback((_) {
-													Navigator.push(
-														context,
-														MaterialPageRoute(
-															builder: (context) => const EventPickerScreen(),
-														),
-													);
-												});
-											},
-										),
-									),
-								);
-							});
+							print('[KEBAB_MENU] → Calling navigateTo(server)');
+							navigateTo(NavigationTarget.server);
 						},
 					),
 					Padding(
@@ -191,15 +142,23 @@ class _MenuContent extends ConsumerWidget {
 							icon: const Icon(Icons.event),
 							label: Text(t('change_event')),
 							onPressed: () {
+								print('[KEBAB_MENU] ✓ Change Event clicked');
 								Navigator.pop(context);
-								WidgetsBinding.instance.addPostFrameCallback((_) {
-									Navigator.push(
-										context,
-										MaterialPageRoute(
-											builder: (context) => const EventPickerScreen(),
-										),
-									);
-								});
+								print('[KEBAB_MENU] → Calling navigateTo(event)');
+								navigateTo(NavigationTarget.event);
+							},
+						),
+					),
+					Padding(
+						padding: const EdgeInsets.only(top: 8),
+						child: ElevatedButton.icon(
+							icon: const Icon(Icons.sports_esports),
+							label: Text(t('change_robot_position')),
+							onPressed: () {
+								print('[KEBAB_MENU] ✓ Change Robot Position clicked');
+								Navigator.pop(context);
+								print('[KEBAB_MENU] → Calling navigateTo(botSelection)');
+								navigateTo(NavigationTarget.botSelection);
 							},
 						),
 					),
@@ -209,51 +168,13 @@ class _MenuContent extends ConsumerWidget {
 							icon: const Icon(Icons.sports),
 							label: Text(t('change_match')),
 							onPressed: () {
-								final botPosition = ref.read(selectedBotPositionProvider);
+								print('[KEBAB_MENU] ✓ Change Match clicked');
 								Navigator.pop(context);
-								WidgetsBinding.instance.addPostFrameCallback((_) {
-									Navigator.push(
-										context,
-										MaterialPageRoute(
-											builder: (context) => MatchSelectionScreen(
-												botPosition: botPosition,
-												onMatchSelected: (matchNum, teamNum) {
-													onChangeMatch?.call();
-													Navigator.pop(context);
-												},
-											),
-										),
-									);
-								});
+								print('[KEBAB_MENU] → Calling navigateTo(match)');
+								navigateTo(NavigationTarget.match);
 							},
 						),
 					),
-					if (onChangeBotPosition != null)
-						Padding(
-							padding: const EdgeInsets.only(top: 8),
-							child: ElevatedButton.icon(
-								icon: const Icon(Icons.sports_esports),
-								label: Text(t('change_robot_position')),
-								onPressed: () {
-									Navigator.pop(context);
-									WidgetsBinding.instance.addPostFrameCallback((_) {
-										Navigator.push(
-											context,
-											MaterialPageRoute(
-												builder: (context) => BotSelectionScreen(
-													onBotSelected: (bot) {
-														onChangeBotPosition?.call();
-														Navigator.pop(context);
-													},
-												),
-											),
-										);
-									});
-								},
-							),
-						)
-					else
-						SizedBox.shrink(),
 					if (onSync != null)
 						Padding(
 							padding: const EdgeInsets.only(top: 8),
@@ -261,7 +182,9 @@ class _MenuContent extends ConsumerWidget {
 								icon: const Icon(Icons.sync),
 								label: Text(t('manual_sync')),
 								onPressed: () {
+									print('[KEBAB_MENU] ✓ Manual Sync clicked');
 									Navigator.pop(context);
+									print('[KEBAB_MENU] → Calling onSync callback');
 									onSync?.call();
 								},
 							),

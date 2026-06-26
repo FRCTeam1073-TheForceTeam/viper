@@ -8,6 +8,135 @@ import '../services/csv_builder.dart';
 import '../models/match_model.dart';
 
 // ============================================================================
+// APP STATE
+// ============================================================================
+
+/// Represents the current state of the app based on persisted data
+enum AppState {
+	checkingConfig,      // Evaluating what data exists
+	needsServer,         // No server configured
+	needsEvent,          // Server OK, need event selection
+	needsBotSelection,   // Event selected, need bot position
+	needsMatchSelection, // Bot selected, need match
+	scouting,            // Ready to scout
+}
+
+/// Navigation targets that screens can request
+enum NavigationTarget {
+	server,        // Go to server config screen (reset everything)
+	event,         // Go to event picker (reset event, bot, match)
+	botSelection,  // Go to bot selection (reset bot, match)
+	match,         // Go to match selection (reset match)
+}
+
+// ============================================================================
+// FORCED NAVIGATION (User explicitly selects a screen from menu)
+// ============================================================================
+
+/// When user clicks menu to navigate to a specific screen, or on startup state check
+/// HomeRouter will show this screen directly
+enum NavScreen {
+	server,
+	eventPicker,
+	botSelection,
+	matchSelection,
+	scouting,
+}
+
+/// Manages navigation to different screens
+final navigationProvider = StateNotifierProvider<NavigationNotifier, NavScreen?>((ref) {
+	return NavigationNotifier();
+});
+
+class NavigationNotifier extends StateNotifier<NavScreen?> {
+	NavigationNotifier() : super(null);
+
+	void navigateTo(NavScreen screen) {
+		print('[NAVIGATION] User selected: $screen');
+		state = screen;
+	}
+
+	void clear() {
+		print('[NAVIGATION] Cleared navigation');
+		state = null;
+	}
+}
+
+// ============================================================================
+// INITIALIZATION TRACKING
+// ============================================================================
+
+/// Tracks whether we've passed the server config screen in this session
+/// Once set to true, we don't re-check server config availability during navigation
+final appInitializedProvider = StateNotifierProvider<_AppInitializedNotifier, bool>((ref) {
+	return _AppInitializedNotifier();
+});
+
+class _AppInitializedNotifier extends StateNotifier<bool> {
+	_AppInitializedNotifier() : super(false);
+
+	void markInitialized() {
+		state = true;
+		print('[APP_INIT] App marked as initialized - server config check will be skipped on future AppState evaluations');
+	}
+}
+
+/// Determines the current app state based on persisted database data
+/// When called, evaluates the current state and sets forced navigation accordingly
+final appStateProvider = FutureProvider<AppState>((ref) async {
+	print('[APP_STATE] ═══════════════════════════════════════════════════════');
+	print('[APP_STATE] Evaluating app state...');
+
+	final db = await ref.watch(databaseProvider.future);
+	final config = await db.getCurrentConfig();
+
+	// ALWAYS check server config first (not just on startup)
+	// The user might navigate back to it via the menu
+	if (config?.backendUrl == null || config!.backendUrl.isEmpty) {
+		print('[APP_STATE] No server configured → needsServer');
+		print('[APP_STATE] ═══════════════════════════════════════════════════════');
+		return AppState.needsServer;
+	}
+
+	print('[APP_STATE] Server configured, continuing to check other requirements...');
+	// Now evaluate post-server state
+	final nextState = _evaluatePostServerState(config, ref);
+
+	print('[APP_STATE] Next state: $nextState');
+	print('[APP_STATE] ═══════════════════════════════════════════════════════');
+
+	return nextState;
+});
+
+/// Helper to evaluate state after server config is confirmed
+AppState _evaluatePostServerState(ServerConfigData? config, Ref ref) {
+	// Check if event is selected
+	if ((config?.selectedEventId?.isNotEmpty ?? false) == false) {
+		print('[APP_STATE] No event selected → needsEvent');
+		return AppState.needsEvent;
+	}
+
+	// Check if bot position is selected
+	final botPosition = ref.watch(selectedBotPositionProvider);
+	print('[APP_STATE] Bot position: $botPosition (${botPosition == null ? "null" : botPosition.isEmpty ? "empty string" : "set"})');
+	if (botPosition == null || botPosition.isEmpty) {
+		print('[APP_STATE] No bot position selected → needsBotSelection');
+		return AppState.needsBotSelection;
+	}
+
+	// Check if match is selected for this session
+	final matchSelection = ref.watch(selectedMatchProvider);
+	print('[APP_STATE] Match selection: match=${matchSelection.match}, team=${matchSelection.team}');
+	if (matchSelection.match == null || matchSelection.team == null) {
+		print('[APP_STATE] No match selected → needsMatchSelection');
+		return AppState.needsMatchSelection;
+	}
+
+	print('[APP_STATE] All prerequisites met → scouting');
+	return AppState.scouting;
+}
+
+// ============================================================================
 // CSV PARSING
 // ============================================================================
 
@@ -178,6 +307,24 @@ final selectedBotPositionProvider =
 		loading: () => _BotPositionNotifier(null),
 		error: (error, stack) => _BotPositionNotifier(null),
 	);
+});
+
+/// Track selected match and team for current session
+class _MatchSelectionNotifier extends StateNotifier<({String? match, String? team})> {
+	_MatchSelectionNotifier() : super((match: null, team: null));
+
+	void setMatch(String matchNumber, String teamNumber) {
+		state = (match: matchNumber, team: teamNumber);
+	}
+
+	void clear() {
+		state = (match: null, team: null);
+	}
+}
+
+final selectedMatchProvider =
+	StateNotifierProvider<_MatchSelectionNotifier, ({String? match, String? team})>((ref) {
+	return _MatchSelectionNotifier();
 });
 
 // CONNECTIVITY (SIMPLIFIED - TODO: Fix)
@@ -464,5 +611,54 @@ List<MatchModel> _parseScheduleCSV(String csvContent) {
 
 	return matches;
 }
+
+// ============================================================================
+// NAVIGATION COMMANDS
+// ============================================================================
+
+/// Notifier that handles all navigation state transitions
+class _NavigationCommandNotifier extends StateNotifier<NavigationTarget?> {
+	final Ref ref;
+
+	_NavigationCommandNotifier(this.ref) : super(null);
+
+	/// Navigate to the specified target - sets forced navigation to display that screen directly
+	Future<void> navigateTo(NavigationTarget target) async {
+		try {
+			print('[NAV_COMMAND] ═══════════════════════════════════════════════════════');
+			print('[NAV_COMMAND] Navigation requested: $target');
+
+			// Map NavigationTarget to NavScreen for direct navigation
+			switch (target) {
+				case NavigationTarget.server:
+					print('[NAV_COMMAND] Navigating to ServerConfigScreen');
+					ref.read(navigationProvider.notifier).navigateTo(NavScreen.server);
+
+				case NavigationTarget.event:
+					print('[NAV_COMMAND] Navigating to EventPickerScreen');
+					ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
+
+				case NavigationTarget.botSelection:
+					print('[NAV_COMMAND] Navigating to BotSelectionScreen');
+					ref.read(navigationProvider.notifier).navigateTo(NavScreen.botSelection);
+
+				case NavigationTarget.match:
+					print('[NAV_COMMAND] Navigating to MatchSelectionScreen');
+					ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
+			}
+
+			print('[NAV_COMMAND] ═══════════════════════════════════════════════════════');
+		} catch (e) {
+			print('[NAV_COMMAND] ERROR: $e');
+			Logger().e('Navigation error: $e');
+		}
+	}
+}
+
+/// Provider for navigation commands - screens can call this to navigate
+final navigationCommandProvider =
+	StateNotifierProvider<_NavigationCommandNotifier, NavigationTarget?>((ref) {
+	return _NavigationCommandNotifier(ref);
+});
 
 // CONNECTIVITY (SIMPLIFIED - TODO: Fix)

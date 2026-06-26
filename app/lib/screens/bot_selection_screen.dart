@@ -8,12 +8,10 @@ import '../widgets/viper_menu_button.dart';
 
 class BotSelectionScreen extends ConsumerStatefulWidget {
 	final Function(String) onBotSelected;
-	final VoidCallback? onChangeEvent;
 
 	const BotSelectionScreen({
 		Key? key,
 		required this.onBotSelected,
-		this.onChangeEvent,
 	}) : super(key: key);
 
 	@override
@@ -183,6 +181,7 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 
 	@override
 	Widget build(BuildContext context) {
+		print('[SCREEN_BUILD] BotSelectionScreen.build() called');
 		final selectedPosition = ref.watch(selectedBotPositionProvider);
 
 		return Scaffold(
@@ -191,9 +190,7 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 				centerTitle: true,
 				elevation: 0,
 				actions: [
-					ViperMenuButton(
-						onChangeEvent: widget.onChangeEvent,
-					),
+					ViperMenuButton(),
 				],
 			),
 			body: Column(

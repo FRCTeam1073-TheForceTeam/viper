@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:drift/drift.dart' show Value;
 import 'screens/server_config_screen.dart';
 import 'screens/event_picker_screen.dart';
 import 'screens/bot_selection_screen.dart';
@@ -75,215 +76,136 @@ class ViperScoutApp extends ConsumerWidget {
 	}
 }
 
-class _HomeRouter extends ConsumerStatefulWidget {
+/// Simple consumer widget that renders based on app state
+class _HomeRouter extends ConsumerWidget {
 	const _HomeRouter({Key? key}) : super(key: key);
 
 	@override
-	ConsumerState<_HomeRouter> createState() => _HomeRouterState();
-}
-
-class _HomeRouterState extends ConsumerState<_HomeRouter> {
-	bool _serverConfigured = false;
-	bool _eventSelected = false;
-	bool _botSelected = false;
-	bool _matchSelected = false;
-	bool _checking = true;
-	EventModel? _selectedEvent;
-	String? _selectedMatch;
-	String? _selectedTeam;
-
-	@override
-	void initState() {
-		super.initState();
-		_checkServerConfig();
-	}
-
-	Future<void> _checkServerConfig() async {
-		// Check if server configuration exists
-		final db = await ref.read(databaseProvider.future);
-		final config = await db.getCurrentConfig();
-
-		if (config?.backendUrl != null && config!.backendUrl.isNotEmpty) {
-			setState(() {
-				_serverConfigured = true;
-			});
-			// Now check event selection
-			await _checkEventSelection();
-		} else {
-			setState(() {
-				_checking = false;
-			});
-		}
-	}
-
-	Future<void> _checkEventSelection() async {
-		// Check if event is selected and date hasn't changed
-		final db = await ref.read(databaseProvider.future);
-		final config = await db.getCurrentConfig();
-
-		if (config?.selectedEventId != null) {
-			final lastChangeDate = config?.lastEventChangeDate;
-			final today = DateTime.now();
-
-			// Check if date has changed (day/month/year comparison)
-			final dateChanged = lastChangeDate == null ||
-					lastChangeDate.year != today.year ||
-					lastChangeDate.month != today.month ||
-					lastChangeDate.day != today.day;
-
-			if (!dateChanged) {
-				// Load the selected event from API to get full details
-				try {
-					final apiClient = await ref.read(apiClientProvider.future);
-					final allEvents = await apiClient.fetchEventList();
-					final selectedEvent = allEvents.firstWhere(
-						(e) => e.eventId == config!.selectedEventId,
-						orElse: () => EventModel(
-							eventId: config!.selectedEventId!,
-							name: config!.selectedEventId!,
-						),
-					);
-					setState(() {
-						_selectedEvent = selectedEvent;
-						_eventSelected = true;
-						_checking = false;
-					});
-					return;
-				} catch (e) {
-					// Event list fetch failed - show server config screen for reconfiguration
-					setState(() {
-						_serverConfigured = false;
-						_checking = false;
-					});
-					return;
+	Widget build(BuildContext context, WidgetRef ref) {
+		// Listen to app state changes and update navigation accordingly
+		ref.listen(appStateProvider, (previous, next) {
+			next.whenData((appState) {
+				print('[HOME_ROUTER] App state listener: $appState');
+				switch (appState) {
+					case AppState.checkingConfig:
+						// Don't navigate yet
+						break;
+					case AppState.needsServer:
+						print('[HOME_ROUTER] Navigating to server config');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.server);
+					case AppState.needsEvent:
+						print('[HOME_ROUTER] Navigating to event picker');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
+					case AppState.needsBotSelection:
+						print('[HOME_ROUTER] Navigating to bot selection');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.botSelection);
+					case AppState.needsMatchSelection:
+						print('[HOME_ROUTER] Navigating to match selection');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
+					case AppState.scouting:
+						print('[HOME_ROUTER] Navigating to scouting');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.scouting);
 				}
-			}
-		}
-
-		setState(() {
-			_checking = false;
+			});
 		});
-	}
 
-	void _onServerConfigured(String backendUrl) {
-		setState(() {
-			_serverConfigured = true;
-			_checking = true;
-		});
-		_checkEventSelection();
-	}
+		// Watch navigation - this is what determines what to show
+		final nav = ref.watch(navigationProvider);
 
-	@override
-	Widget build(BuildContext context) {
-		print('[HOME_ROUTER_BUILD] Building... _checking=$_checking, _serverConfigured=$_serverConfigured, _eventSelected=$_eventSelected, _botSelected=$_botSelected, _matchSelected=$_matchSelected');
-		if (_checking) {
-			print('[HOME_ROUTER_BUILD] Showing loading spinner');
+		// If we don't have a navigation target yet, that means app is still initializing
+		if (nav == null) {
 			return const Scaffold(
-				body: Center(
-					child: CircularProgressIndicator(),
-				),
+				body: Center(child: CircularProgressIndicator()),
 			);
 		}
 
-		if (!_serverConfigured) {
-			return ServerConfigScreen(
-				onServerConfigured: _onServerConfigured,
-			);
-		}
+		print('[HOME_ROUTER] ═══════════════════════════════════════════════════════');
+		print('[HOME_ROUTER] Showing screen: $nav');
+		print('[HOME_ROUTER] ═══════════════════════════════════════════════════════');
 
-		if (!_eventSelected) {
-			print('[HOME_ROUTER_BUILD] Showing EventPickerScreen');
-			return const EventPickerScreen();
-		}
-
-		if (!_botSelected) {
-			print('[HOME_ROUTER_BUILD] Showing BotSelectionScreen');
-			return BotSelectionScreen(
-				onBotSelected: (bot) {
-					ref.read(selectedBotPositionProvider.notifier).setPosition(bot);
-					setState(() {
-						_botSelected = true;
-					});
-				},
-				onChangeEvent: () {
-					setState(() {
-						_eventSelected = false;
-						_botSelected = false;
-						_matchSelected = false;
-						_selectedMatch = null;
-						_selectedTeam = null;
-					});
-				},
-			);
-		}
-
-		if (!_matchSelected) {
-			print('[HOME_ROUTER_BUILD] Showing MatchSelectionScreen');
-			final botPosition = ref.watch(selectedBotPositionProvider);
-			return MatchSelectionScreen(
-				botPosition: botPosition,
-				onMatchSelected: (matchNumber, teamNumber) {
-					setState(() {
-						_selectedMatch = matchNumber;
-						_selectedTeam = teamNumber;
-						_matchSelected = true;
-					});
-				},
-				onChangeEvent: () {
-					setState(() {
-						_eventSelected = false;
-						_botSelected = false;
-						_matchSelected = false;
-						_selectedMatch = null;
-						_selectedTeam = null;
-					});
-				},
-				onChangeBotPosition: () {
-					setState(() {
-						_botSelected = false;
-						_matchSelected = false;
-						_selectedMatch = null;
-						_selectedTeam = null;
-					});
-				},
-			);
-		}
-
-		// Show scouting app with selected event, match, and team
-		return _selectedEvent != null
-				? ScoutingAppScreen(
-					selectedEvent: _selectedEvent!,
-					prefilledMatch: _selectedMatch,
-					prefilledTeam: _selectedTeam,
-					onChangeEvent: () {
-						setState(() {
-							_eventSelected = false;
-							_botSelected = false;
-							_matchSelected = false;
-							_selectedMatch = null;
-							_selectedTeam = null;
-						});
+		switch (nav) {
+			case NavScreen.server:
+				print('[HOME_ROUTER] → Loading: ServerConfigScreen');
+				return ServerConfigScreen(
+					onServerConfigured: (_) {
+						// After server config is saved, navigate directly to event picker
+						print('[HOME_ROUTER] Server configured, navigating to event picker');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
 					},
-					onChangeBotPosition: () {
-						setState(() {
-							_botSelected = false;
-							_matchSelected = false;
-							_selectedMatch = null;
-							_selectedTeam = null;
-						});
-					},
-					onChangeMatch: () {
-						setState(() {
-							_matchSelected = false;
-							_selectedMatch = null;
-							_selectedTeam = null;
-						});
-					},
-				)
-				: const Scaffold(
-					body: Center(
-						child: Text('Error loading event'),
-					),
+				);
+			case NavScreen.eventPicker:
+				print('[HOME_ROUTER] → Loading: EventPickerScreen');
+					return EventPickerScreen(
+						onEventSelected: (eventId) {
+							// After event selection, navigate directly to bot selection
+							print('[HOME_ROUTER] Event selected, navigating to bot selection');
+							ref.read(navigationProvider.notifier).navigateTo(NavScreen.botSelection);
+						},
 					);
+			case NavScreen.botSelection:
+				print('[HOME_ROUTER] → Loading: BotSelectionScreen');
+				return BotSelectionScreen(
+					onBotSelected: (bot) {
+						ref.read(selectedBotPositionProvider.notifier).setPosition(bot);
+						// After bot selection, navigate directly to match selection
+						print('[HOME_ROUTER] Bot selected, navigating to match selection');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
+					},
+				);
+			case NavScreen.matchSelection:
+				print('[HOME_ROUTER] → Loading: MatchSelectionScreen');
+				final botPosition = ref.watch(selectedBotPositionProvider);
+				return MatchSelectionScreen(
+					botPosition: botPosition ?? '',
+					onMatchSelected: (matchNumber, teamNumber) {
+						ref.read(selectedMatchProvider.notifier).setMatch(matchNumber, teamNumber);
+						// After match selection, navigate directly to scouting
+						print('[HOME_ROUTER] Match selected, navigating to scouting');
+						ref.read(navigationProvider.notifier).navigateTo(NavScreen.scouting);
+					},
+				);
+
+			case NavScreen.scouting:
+				print('[HOME_ROUTER] → Loading: ScoutingAppScreen');
+				return FutureBuilder(
+					future: _getSelectedEventForScouting(ref),
+					builder: (context, snapshot) {
+						if (snapshot.connectionState == ConnectionState.waiting) {
+							return const Scaffold(body: Center(child: CircularProgressIndicator()));
+						}
+						if (snapshot.hasError) {
+							return Scaffold(body: Center(child: Text('Error: ${snapshot.error}')));
+						}
+						if (!snapshot.hasData) {
+							return const Scaffold(body: Center(child: Text('No event selected')));
+						}
+						final event = snapshot.data as EventModel;
+						return ScoutingAppScreen(selectedEvent: event);
+					},
+				);
+		}
+	}
+
+	/// Fetch the currently selected event from the API
+	Future<EventModel> _getSelectedEventForScouting(WidgetRef ref) async {
+		final db = await ref.read(databaseProvider.future);
+		final config = await db.getCurrentConfig();
+
+		if (config?.selectedEventId == null) {
+			throw Exception('No event selected');
+		}
+
+		final apiClient = await ref.read(apiClientProvider.future);
+		final allEvents = await apiClient.fetchEventList();
+
+		final event = allEvents.firstWhere(
+			(e) => e.eventId == config!.selectedEventId,
+			orElse: () => EventModel(
+				eventId: config!.selectedEventId!,
+				name: config!.selectedEventId!,
+			),
+		);
+
+		return event;
 	}
 }

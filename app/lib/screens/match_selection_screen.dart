@@ -10,15 +10,11 @@ import '../utils/match_name_converter.dart';
 class MatchSelectionScreen extends ConsumerStatefulWidget {
 	final Function(String matchNumber, String teamNumber) onMatchSelected;
 	final String? botPosition;
-	final VoidCallback? onChangeEvent;
-	final VoidCallback? onChangeBotPosition;
 
 	const MatchSelectionScreen({
 		Key? key,
 		required this.onMatchSelected,
 		this.botPosition,
-		this.onChangeEvent,
-		this.onChangeBotPosition,
 	}) : super(key: key);
 
 	@override
@@ -101,6 +97,7 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 
 	@override
 	Widget build(BuildContext context) {
+		print('[SCREEN_BUILD] MatchSelectionScreen.build() called');
 		final matchesAsync = ref.watch(matchListProvider);
 
 		return Scaffold(
@@ -108,11 +105,9 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 				title: const Text('Select Match'),
 				centerTitle: true,
 				elevation: 0,
+				automaticallyImplyLeading: false,
 				actions: [
-					ViperMenuButton(
-						onChangeEvent: widget.onChangeEvent,
-						onChangeBotPosition: widget.onChangeBotPosition,
-					),
+					ViperMenuButton(),
 				],
 			),
 			body: matchesAsync.when(

@@ -6,7 +6,12 @@ import '../../widgets/viper_menu_button.dart';
 import 'server_config_screen.dart';
 
 class EventPickerScreen extends ConsumerWidget {
-	const EventPickerScreen({Key? key}) : super(key: key);
+	final Function(String)? onEventSelected;
+
+	const EventPickerScreen({
+		Key? key,
+		this.onEventSelected,
+	}) : super(key: key);
 
 	void _showServerConfigModal(BuildContext context, WidgetRef ref) {
 		showModalBottomSheet(
@@ -25,6 +30,7 @@ class EventPickerScreen extends ConsumerWidget {
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
+		print('[SCREEN_BUILD] EventPickerScreen.build() called');
 		final eventListAsync = ref.watch(eventListProvider);
 
 		return Scaffold(
@@ -32,7 +38,9 @@ class EventPickerScreen extends ConsumerWidget {
 				title: const Text('Select Event'),
 				elevation: 0,
 				automaticallyImplyLeading: false,
-				actions: [ViperMenuButton(onSync: () {})],
+				actions: [
+					ViperMenuButton(),
+				],
 			),
 			body: eventListAsync.when(
 				data: (events) {
@@ -75,8 +83,11 @@ class EventPickerScreen extends ConsumerWidget {
 									await ref.read(selectedEventProvider.notifier)
 											.setSelectedEvent(event.eventId);
 									print('[EVENT_PICKER] setSelectedEvent completed');
-									print('[EVENT_PICKER] Popping EventPickerScreen');
-									Navigator.pop(context);
+									// Call the callback if provided
+									if (onEventSelected != null) {
+										print('[EVENT_PICKER] Calling onEventSelected callback');
+										onEventSelected!(event.eventId);
+									}
 								},
 							);
 						},

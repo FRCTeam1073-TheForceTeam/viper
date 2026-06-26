@@ -13,18 +13,12 @@ class ScoutingAppScreen extends ConsumerStatefulWidget {
 	final EventModel selectedEvent;
 	final String? prefilledMatch;
 	final String? prefilledTeam;
-	final VoidCallback? onChangeEvent;
-	final VoidCallback? onChangeBotPosition;
-	final VoidCallback? onChangeMatch;
 
 	const ScoutingAppScreen({
 		Key? key,
 		required this.selectedEvent,
 		this.prefilledMatch,
 		this.prefilledTeam,
-		this.onChangeEvent,
-		this.onChangeBotPosition,
-		this.onChangeMatch,
 	}) : super(key: key);
 
 	@override
@@ -74,6 +68,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 
 	@override
 	Widget build(BuildContext context) {
+		print('[SCREEN_BUILD] ScoutingAppScreen.build() called');
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
 
@@ -100,23 +95,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 				),
 				actions: [
 					ViperMenuButton(
-						onChangeEvent: widget.onChangeEvent,
-						onChangeBotPosition: widget.onChangeBotPosition,
-						onChangeMatch: widget.onChangeMatch,
-						onChangeServer: () {
-							Navigator.push(
-								context,
-								MaterialPageRoute(
-									builder: (context) => ServerConfigScreen(
-										onServerConfigured: (_) {
-											ref.invalidate(apiClientProvider);
-											ref.invalidate(eventListProvider);
-											Navigator.pop(context);
-										},
-									),
-								),
-							);
-						},
 						onSync: () {
 							ref.read(syncStateProvider.notifier).syncScoutData();
 						},
