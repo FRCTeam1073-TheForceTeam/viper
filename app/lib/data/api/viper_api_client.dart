@@ -97,12 +97,12 @@ class ViperApiClient {
 		}
 	}
 
-	/// Fetch event list from /event-list.cgi
-	/// Returns list of events parsed from CSV response
-	Future<List<EventModel>> fetchEventList() async {
+	/// Fetch raw CSV string from /event-list.cgi
+	/// Returns the raw CSV string for caching purposes
+	Future<String?> fetchEventListCsv() async {
 		try {
 			final fullUrl = '$baseUrl/event-list.cgi';
-			_logger.i('📡 Fetching event list from: $fullUrl');
+			_logger.i('📡 Fetching event list CSV from: $fullUrl');
 
 			final response = await _dio.get('/event-list.cgi');
 
@@ -112,10 +112,19 @@ class ViperApiClient {
 				);
 			}
 
-			// Parse CSV response using the JS-ported CSV parser
 			final csvString = response.data as String;
 			_logger.d('Raw CSV response length: ${csvString.length} characters');
+			return csvString;
+		} catch (e) {
+			_logger.e('Error fetching event list CSV: $e');
+			return null;
+		}
+	}
 
+	/// Parse event CSV string into EventModel list
+	/// Used for both cached and fresh CSV data
+	List<EventModel> parseEventCsv(String csvString) {
+		try {
 			final csvData = csvToArrayOfMaps(csvString);
 			_logger.d('Parsed CSV rows: ${csvData.length}');
 
@@ -146,18 +155,34 @@ class ViperApiClient {
 						startDate: startDate,
 						endDate: endDate,
 					));
-					_logger.d('Added event: $eventId - $name (start: ${startDate?.toString() ?? "null"})');
 				} catch (e) {
 					_logger.e('Error parsing row $i: $e');
 					continue;
 				}
 			}
 
-			_logger.i('✅ Successfully fetched ${events.length} events from $fullUrl');
-			if (events.isNotEmpty) {
-				_logger.d('First event: ${events.first.eventId} - ${events.first.name}');
-			}
+			_logger.i('✅ Successfully parsed ${events.length} events from CSV');
 			return events;
+		} catch (e) {
+			_logger.e('Error parsing event CSV: $e');
+			return [];
+		}
+	}
+
+	/// Fetch event list from /event-list.cgi
+	/// Returns list of events parsed from CSV response
+	Future<List<EventModel>> fetchEventList() async {
+		try {
+			final fullUrl = '$baseUrl/event-list.cgi';
+			_logger.i('📡 Fetching event list from: $fullUrl');
+
+			final csvString = await fetchEventListCsv();
+			if (csvString == null) {
+				_logger.i('Returning empty event list - manual event entry will be available');
+				return [];
+			}
+
+			return parseEventCsv(csvString);
 		} catch (e) {
 			_logger.e('Error fetching event list: $e');
 			// Return empty list instead of throwing - allows offline/no-server operation

@@ -316,57 +316,122 @@ final connectivityProvider = StreamProvider((ref) async* {
 // EVENT LIST
 // ============================================================================
 
+/// Cache key for storing event list CSV in SharedPreferences
+const String _eventListCsvCacheKey = 'event_list_csv_cache';
+
+/// Helper to filter and sort events
+List<EventModel> _filterAndSortEvents(List<EventModel> events) {
+	// Get current year
+	final currentYear = DateTime.now().year;
+
+	// Log filtering info
+	final logger = Logger();
+	logger.i('🎯 EVENT LIST FILTERING:');
+	logger.i('   Total events: ${events.length}');
+	logger.i('   Current year: $currentYear');
+
+	// Show breakdown by year
+	final byYear = <int, int>{};
+	for (var e in events) {
+		byYear[e.season] = (byYear[e.season] ?? 0) + 1;
+	}
+	logger.i('   Events by year: $byYear');
+
+	// Filter to current season only
+	final filtered = events.where((e) => e.season == currentYear).toList();
+	logger.i('   After filtering: ${filtered.length} events');
+
+	if (filtered.isNotEmpty) {
+		logger.d('   Filtered events: ${filtered.map((e) => e.eventId).join(", ")}');
+	}
+
+	// Sort by start date, most recent first
+	// Events with no start date are placed at the bottom
+	filtered.sort((a, b) {
+		if (a.startDate == null && b.startDate == null) return 0;
+		if (a.startDate == null) return 1;
+		if (b.startDate == null) return -1;
+		return b.startDate!.compareTo(a.startDate!);
+	});
+
+	return filtered;
+}
+
 final eventListProvider = FutureProvider((ref) async {
 	try {
 		// First check if we have a valid server configured
 		final db = await ref.watch(databaseProvider.future);
 		final config = await db.getCurrentConfig();
 		if (!_isValidServerUrl(config?.backendUrl)) {
-			// No valid server configured, return empty list
+			// No valid server configured, try to load from cache
+			final prefs = await ref.watch(sharedPreferencesProvider.future);
+			final cachedCsv = prefs.getString(_eventListCsvCacheKey);
+
+			if (cachedCsv != null) {
+				final logger = Logger();
+				logger.i('📦 Loading cached event list (no server configured)');
+				final apiClient = await ref.watch(apiClientProvider.future);
+				final events = apiClient.parseEventCsv(cachedCsv);
+				return _filterAndSortEvents(events);
+			}
+
+			// No cache and no server
 			return [];
 		}
 
-		final apiClient = await ref.watch(apiClientProvider.future);
-		final events = await apiClient.fetchEventList();
-
-		// Get current year
-		final currentYear = DateTime.now().year;
-
-		// Log filtering info
 		final logger = Logger();
-		logger.i('🎯 EVENT LIST FILTERING:');
-		logger.i('   Total events fetched: ${events.length}');
-		logger.i('   Current year: $currentYear');
+		final apiClient = await ref.watch(apiClientProvider.future);
+		final prefs = await ref.watch(sharedPreferencesProvider.future);
 
-		// Show breakdown by year
-		final byYear = <int, int>{};
-		for (var e in events) {
-			byYear[e.season] = (byYear[e.season] ?? 0) + 1;
-		}
-		logger.i('   Events by year: $byYear');
-
-		// Filter to current season only
-		final filtered = events.where((e) => e.season == currentYear).toList();
-		logger.i('   After filtering: ${filtered.length} events');
-
-		if (filtered.isNotEmpty) {
-			logger.d('   Filtered events: ${filtered.map((e) => e.eventId).join(", ")}');
+		// Try to load from cache first to show immediately
+		List<EventModel>? cachedEvents;
+		final cachedCsv = prefs.getString(_eventListCsvCacheKey);
+		if (cachedCsv != null) {
+			logger.i('📦 Loading cached event list');
+			cachedEvents = apiClient.parseEventCsv(cachedCsv);
+			logger.i('📦 Cached events loaded: ${cachedEvents.length} events');
 		}
 
-		// Sort by start date, most recent first
-		// Events with no start date are placed at the bottom
-		filtered.sort((a, b) {
-			if (a.startDate == null && b.startDate == null) return 0;
-			if (a.startDate == null) return 1;
-			if (b.startDate == null) return -1;
-			return b.startDate!.compareTo(a.startDate!);
-		});
+		// Fetch fresh data from server
+		final freshCsv = await apiClient.fetchEventListCsv();
 
-		return filtered;
+		if (freshCsv != null) {
+			// Save to cache
+			await prefs.setString(_eventListCsvCacheKey, freshCsv);
+			logger.i('💾 Event list cached');
+
+			// Parse fresh data
+			final freshEvents = apiClient.parseEventCsv(freshCsv);
+			logger.i('✅ Fresh event list: ${freshEvents.length} events');
+			return _filterAndSortEvents(freshEvents);
+		} else if (cachedEvents != null) {
+			// Server fetch failed, use cache
+			logger.i('⚠️  Server fetch failed, using cached event list');
+			return _filterAndSortEvents(cachedEvents);
+		} else {
+			// No fresh data and no cache
+			logger.w('❌ Failed to fetch events and no cache available');
+			return [];
+		}
 	} catch (e, stack) {
 		final logger = Logger();
 		logger.e('Error in eventListProvider: $e');
 		logger.e('Stack trace: $stack');
+
+		// Try to fall back to cache
+		try {
+			final prefs = await ref.watch(sharedPreferencesProvider.future);
+			final cachedCsv = prefs.getString(_eventListCsvCacheKey);
+			if (cachedCsv != null) {
+				logger.i('⚠️  Using cached event list as fallback');
+				final apiClient = await ref.watch(apiClientProvider.future);
+				final cachedEvents = apiClient.parseEventCsv(cachedCsv);
+				return _filterAndSortEvents(cachedEvents);
+			}
+		} catch (cacheError) {
+			logger.e('Cache fallback failed: $cacheError');
+		}
+
 		// Return empty list to allow offline/no-server operation
 		return [];
 	}
