@@ -79,6 +79,15 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				'he': 'דוגמאות: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
 				'tr': 'Örnekler: 192.168.1.100, demo.viperscout.com, http://localhost:8080',
 			},
+			'backend_url_invalid': {
+				'en': 'Please enter a valid server address (e.g., demo.viperscout.com or 192.168.1.100)',
+				'es': 'Por favor ingresa una dirección de servidor válida (p. ej., demo.viperscout.com o 192.168.1.100)',
+				'pt': 'Por favor, digite um endereço de servidor válido (por exemplo, demo.viperscout.com ou 192.168.1.100)',
+				'fr': 'Veuillez entrer une adresse de serveur valide (par exemple, demo.viperscout.com ou 192.168.1.100)',
+				'zh_tw': '請輸入有效的伺服器地址（例如 demo.viperscout.com 或 192.168.1.100）',
+				'he': 'אנא הזן כתובת שרת תקפה (למשל demo.viperscout.com או 192.168.1.100)',
+				'tr': 'Lütfen geçerli bir sunucu adresi girin (örn. demo.viperscout.com veya 192.168.1.100)',
+			},
 			'username_optional': {
 				'en': 'Username (optional)',
 				'es': 'Usuario (opcional)',
@@ -196,6 +205,15 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				'he': 'שגיאה',
 				'tr': 'Hata',
 			},
+			'skip_for_now': {
+				'en': 'Skip for now',
+				'es': 'Omitir por ahora',
+				'pt': 'Pular por enquanto',
+				'fr': 'Ignorer pour l\'instant',
+				'zh_tw': '暫時跳過',
+				'he': 'דלג לעכשיו',
+				'tr': 'Şimdilik Atla',
+			},
 		});
 
 		_loadExistingConfig();
@@ -280,6 +298,17 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 		return false;
 	}
 
+	/// Validate that the server URL is not empty or just a bare protocol
+	bool _isValidServerUrl(String url) {
+		if (url.isEmpty) return false;
+		// Reject bare protocols or just slashes
+		if (url == 'https://' || url == 'http://' || url == '/') return false;
+		// URL should have something after the protocol or hostname
+		final trimmed = url.trim();
+		if (trimmed.isEmpty) return false;
+		return true;
+	}
+
 	Future<void> _testAndSaveConnection() async {
 		if (!_formKey.currentState!.validate()) {
 			return;
@@ -294,6 +323,20 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 			final backendUrl = _normalizeUrl(_backendUrlController.text);
 			final username = _usernameController.text.trim();
 			final password = _passwordController.text;
+
+			// Validate the URL before saving
+			if (!_isValidServerUrl(backendUrl)) {
+				if (!mounted) return;
+				ScaffoldMessenger.of(context).showSnackBar(
+					SnackBar(
+						content: Text(_translate('backend_url_invalid')),
+						backgroundColor: Colors.red,
+						duration: const Duration(seconds: 3),
+					),
+				);
+				setState(() => _isLoading = false);
+				return;
+			}
 
 			if (config != null) {
 				await db.upsertConfig(
@@ -500,6 +543,23 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 											: const Icon(Icons.check_circle),
 									label: Text(
 										_isLoading ? t('testing_connection') : t('test_and_save'),
+										style: const TextStyle(
+											fontSize: 16,
+											fontWeight: FontWeight.w600,
+										),
+									),
+								),
+							),
+							const SizedBox(height: 12),
+							// Skip for now button
+							SizedBox(
+								width: double.infinity,
+								child: TextButton(
+									onPressed: () {
+										ref.read(navigationCommandProvider.notifier).navigateTo(NavigationTarget.event);
+									},
+									child: Text(
+										t('skip_for_now'),
 										style: const TextStyle(
 											fontSize: 16,
 											fontWeight: FontWeight.w600,

@@ -28,6 +28,86 @@ class EventPickerScreen extends ConsumerWidget {
 		);
 	}
 
+	void _showManualEventEntryDialog(BuildContext context, WidgetRef ref) {
+		final TextEditingController eventIdController = TextEditingController();
+		final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+		showDialog(
+			context: context,
+			builder: (context) => AlertDialog(
+				title: const Text('Enter Event ID'),
+				content: Form(
+					key: formKey,
+					child: Column(
+						mainAxisSize: MainAxisSize.min,
+						children: [
+							TextFormField(
+								controller: eventIdController,
+								decoration: InputDecoration(
+									labelText: 'Event ID',
+									hintText: 'e.g., 2024flbr',
+									helperText: 'Format: 20XX followed by alphanumeric characters',
+									border: OutlineInputBorder(
+										borderRadius: BorderRadius.circular(8),
+									),
+								),
+								validator: (value) {
+									if (value == null || value.isEmpty) {
+										return 'Event ID is required';
+									}
+
+									// Validate format: /^20[0-9]{2}[a-zA-Z0-9\-]+$/
+									final regex = RegExp(r'^20[0-9]{2}[a-zA-Z0-9\-]+$');
+									if (!regex.hasMatch(value)) {
+										return 'Invalid format. Use: 20XX followed by letters/numbers/hyphens';
+									}
+
+									return null;
+								},
+								textCapitalization: TextCapitalization.none,
+							),
+						],
+					),
+				),
+				actions: [
+					TextButton(
+						onPressed: () {
+							Navigator.pop(context);
+							eventIdController.dispose();
+						},
+						child: const Text('Cancel'),
+					),
+					ElevatedButton(
+						onPressed: () async {
+							if (formKey.currentState!.validate()) {
+								final eventId = eventIdController.text.trim();
+								Navigator.pop(context);
+								eventIdController.dispose();
+
+								// Set the selected event
+								try {
+									await ref.read(selectedEventProvider.notifier)
+											.setSelectedEvent(eventId);
+
+									if (onEventSelected != null) {
+										onEventSelected!(eventId);
+									}
+								} catch (e) {
+									if (context.mounted) {
+										ScaffoldMessenger.of(context).showSnackBar(
+											SnackBar(content: Text('Error: $e')),
+										);
+									}
+								}
+							}
+						},
+						child: const Text('Use Event'),
+					),
+				],
+			),
+		);
+	}
+
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
 		print('[SCREEN_BUILD] EventPickerScreen.build() called');
@@ -44,36 +124,25 @@ class EventPickerScreen extends ConsumerWidget {
 			),
 			body: eventListAsync.when(
 				data: (events) {
-					if (events.isEmpty) {
-						return Center(
-							child: Column(
-								mainAxisAlignment: MainAxisAlignment.center,
-								children: [
-									Icon(
-										Icons.event_note,
-										size: 64,
-										color: Colors.grey[400],
-									),
-									const SizedBox(height: 16),
-									Text(
-										'No events found',
-										style: Theme.of(context).textTheme.headlineSmall,
-									),
-									const SizedBox(height: 8),
-									Text(
-										'Try changing the server URL in settings',
-										style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-											color: Colors.grey[600],
-										),
-									),
-								],
-							),
-						);
-					}
-
+					// Always show the list view - it will be empty if there are no events
+					// The "Add Event Manually" button appears at the bottom
 					return ListView.builder(
-						itemCount: events.length,
+						itemCount: events.length + 1, // +1 for manual entry button
 						itemBuilder: (context, index) {
+							// Last item is the manual entry button
+							if (index == events.length) {
+								return Padding(
+									padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+									child: ElevatedButton.icon(
+										onPressed: () {
+											_showManualEventEntryDialog(context, ref);
+										},
+										icon: const Icon(Icons.add),
+										label: const Text('Add Event Manually'),
+									),
+								);
+							}
+
 							final event = events[index];
 							return EventListTile(
 								event: event,
@@ -101,20 +170,20 @@ class EventPickerScreen extends ConsumerWidget {
 						mainAxisAlignment: MainAxisAlignment.center,
 						children: [
 							Icon(
-								Icons.error_outline,
+								Icons.warning_outlined,
 								size: 64,
-								color: Colors.red[300],
+								color: Colors.amber[600],
 							),
 							const SizedBox(height: 16),
 							Text(
-								'Failed to load events',
+								'No Server Connection',
 								style: Theme.of(context).textTheme.headlineSmall,
 							),
 							const SizedBox(height: 8),
 							Padding(
 								padding: const EdgeInsets.symmetric(horizontal: 24),
 								child: Text(
-									error.toString(),
+									'Unable to connect to the server.\nYou can still enter an event ID manually.',
 									textAlign: TextAlign.center,
 									style: Theme.of(context).textTheme.bodyMedium?.copyWith(
 										color: Colors.grey[600],
@@ -133,11 +202,12 @@ class EventPickerScreen extends ConsumerWidget {
 										label: const Text('Change Server'),
 									),
 									const SizedBox(width: 12),
-									ElevatedButton(
+									ElevatedButton.icon(
 										onPressed: () {
-											ref.refresh(eventListProvider);
+											_showManualEventEntryDialog(context, ref);
 										},
-										child: const Text('Retry'),
+										icon: const Icon(Icons.add),
+										label: const Text('Add Manually'),
 									),
 								],
 							),

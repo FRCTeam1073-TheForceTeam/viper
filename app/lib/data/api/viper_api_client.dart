@@ -231,7 +231,9 @@ class ViperApiClient {
 			return events;
 		} catch (e) {
 			_logger.e('Error fetching event list: $e');
-			rethrow;
+			// Return empty list instead of throwing - allows offline/no-server operation
+			_logger.i('Returning empty event list - manual event entry will be available');
+			return [];
 		}
 	}
 

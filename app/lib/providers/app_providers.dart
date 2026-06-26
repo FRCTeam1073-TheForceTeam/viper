@@ -92,13 +92,15 @@ final appStateProvider = FutureProvider<AppState>((ref) async {
 
 	// ALWAYS check server config first (not just on startup)
 	// The user might navigate back to it via the menu
-	if (config?.backendUrl == null || config!.backendUrl.isEmpty) {
-		print('[APP_STATE] No server configured → needsServer');
+	// Treat empty, null, or invalid URLs (like bare "https://") as not configured
+	final isValidServerUrl = _isValidServerUrl(config?.backendUrl);
+	if (!isValidServerUrl) {
+		print('[APP_STATE] No valid server configured (url: "${config?.backendUrl}") → needsServer');
 		print('[APP_STATE] ═══════════════════════════════════════════════════════');
 		return AppState.needsServer;
 	}
 
-	print('[APP_STATE] Server configured, continuing to check other requirements...');
+	print('[APP_STATE] Server configured (${config!.backendUrl}), continuing to check other requirements...');
 	// Now evaluate post-server state
 	final nextState = _evaluatePostServerState(config, ref);
 
@@ -107,6 +109,17 @@ final appStateProvider = FutureProvider<AppState>((ref) async {
 
 	return nextState;
 });
+
+/// Check if a server URL is valid (not empty, not just a protocol, etc.)
+bool _isValidServerUrl(String? url) {
+	if (url == null || url.isEmpty) return false;
+	// Reject bare protocols or just slashes
+	if (url == 'https://' || url == 'http://' || url == '/') return false;
+	// URL should have something after the protocol or hostname
+	final trimmed = url.trim();
+	if (trimmed.isEmpty) return false;
+	return true;
+}
 
 /// Helper to evaluate state after server config is confirmed
 AppState _evaluatePostServerState(ServerConfigData? config, Ref ref) {
@@ -338,43 +351,51 @@ final connectivityProvider = StreamProvider((ref) async* {
 // ============================================================================
 
 final eventListProvider = FutureProvider((ref) async {
-	final apiClient = await ref.watch(apiClientProvider.future);
-	final events = await apiClient.fetchEventList();
+	try {
+		final apiClient = await ref.watch(apiClientProvider.future);
+		final events = await apiClient.fetchEventList();
 
-	// Get current year
-	final currentYear = DateTime.now().year;
+		// Get current year
+		final currentYear = DateTime.now().year;
 
-	// Log filtering info
-	final logger = Logger();
-	logger.i('🎯 EVENT LIST FILTERING:');
-	logger.i('   Total events fetched: ${events.length}');
-	logger.i('   Current year: $currentYear');
+		// Log filtering info
+		final logger = Logger();
+		logger.i('🎯 EVENT LIST FILTERING:');
+		logger.i('   Total events fetched: ${events.length}');
+		logger.i('   Current year: $currentYear');
 
-	// Show breakdown by year
-	final byYear = <int, int>{};
-	for (var e in events) {
-		byYear[e.season] = (byYear[e.season] ?? 0) + 1;
+		// Show breakdown by year
+		final byYear = <int, int>{};
+		for (var e in events) {
+			byYear[e.season] = (byYear[e.season] ?? 0) + 1;
+		}
+		logger.i('   Events by year: $byYear');
+
+		// Filter to current season only
+		final filtered = events.where((e) => e.season == currentYear).toList();
+		logger.i('   After filtering: ${filtered.length} events');
+
+		if (filtered.isNotEmpty) {
+			logger.d('   Filtered events: ${filtered.map((e) => e.eventId).join(", ")}');
+		}
+
+		// Sort by start date, most recent first
+		// Events with no start date are placed at the bottom
+		filtered.sort((a, b) {
+			if (a.startDate == null && b.startDate == null) return 0;
+			if (a.startDate == null) return 1;
+			if (b.startDate == null) return -1;
+			return b.startDate!.compareTo(a.startDate!);
+		});
+
+		return filtered;
+	} catch (e, stack) {
+		final logger = Logger();
+		logger.e('Error in eventListProvider: $e');
+		logger.e('Stack trace: $stack');
+		// Return empty list to allow offline/no-server operation
+		return [];
 	}
-	logger.i('   Events by year: $byYear');
-
-	// Filter to current season only
-	final filtered = events.where((e) => e.season == currentYear).toList();
-	logger.i('   After filtering: ${filtered.length} events');
-
-	if (filtered.isNotEmpty) {
-		logger.d('   Filtered events: ${filtered.map((e) => e.eventId).join(", ")}');
-	}
-
-	// Sort by start date, most recent first
-	// Events with no start date are placed at the bottom
-	filtered.sort((a, b) {
-		if (a.startDate == null && b.startDate == null) return 0;
-		if (a.startDate == null) return 1;
-		if (b.startDate == null) return -1;
-		return b.startDate!.compareTo(a.startDate!);
-	});
-
-	return filtered;
 });
 
 // ============================================================================
