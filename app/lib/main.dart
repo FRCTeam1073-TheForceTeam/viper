@@ -141,6 +141,8 @@ class _HomeRouter extends ConsumerWidget {
 					onServerConfigured: (_) {
 						// After server config is saved, navigate directly to event picker
 						print('[HOME_ROUTER] Server configured, navigating to event picker');
+						// Invalidate eventListProvider to ensure it fetches with new server config
+						ref.invalidate(eventListProvider);
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
 					},
 				);

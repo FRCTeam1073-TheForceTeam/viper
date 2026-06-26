@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:csv/csv.dart';
 import 'package:logger/logger.dart';
 import 'dart:io';
 import 'dart:convert';
+import '../../services/csv_parser.dart';
 
 /// Event model
 class EventModel {
@@ -112,115 +112,44 @@ class ViperApiClient {
 				);
 			}
 
-			// Parse CSV response
+			// Parse CSV response using the JS-ported CSV parser
 			final csvString = response.data as String;
 			_logger.d('Raw CSV response length: ${csvString.length} characters');
-			_logger.d('First 200 chars: ${csvString.substring(0, csvString.length > 200 ? 200 : csvString.length)}');
 
-			// Debug: check for line endings
-			final hasCarriageReturn = csvString.contains('\r');
-			final hasNewline = csvString.contains('\n');
-			_logger.d('Line endings - CR: $hasCarriageReturn, LF: $hasNewline');
-
-			// Split by newlines manually to see raw lines
-			final rawLines = csvString.split(RegExp(r'\r?\n'));
-			_logger.d('Raw line count: ${rawLines.length}');
-			_logger.d('Lines by CsvToListConverter:');
-
-			final csvList = const CsvToListConverter().convert(csvString);
-			_logger.d('Parsed CSV rows: ${csvList.length}');
-
-			if (csvList.length == 1) {
-				_logger.e('ERROR: CSV parser only found 1 row! Trying alternative parsing...');
-				// Try manual parsing
-				final manualLines = csvString.split(RegExp(r'\r?\n'))
-						.where((line) => line.trim().isNotEmpty)
-						.toList();
-				_logger.d('Manual line parsing found ${manualLines.length} non-empty lines');
-				for (var i = 0; i < manualLines.take(5).length; i++) {
-					_logger.d('  Line $i: ${manualLines[i].substring(0, manualLines[i].length > 100 ? 100 : manualLines[i].length)}');
-				}
-			}
+			final csvData = csvToArrayOfMaps(csvString);
+			_logger.d('Parsed CSV rows: ${csvData.length}');
 
 			final events = <EventModel>[];
 
-			// Skip header row if present
-			final startIndex = _isHeaderRow(csvList.first) ? 1 : 0;
-			_logger.d('Header detected at index 0: ${startIndex == 1}');
+			// Convert each CSV row to EventModel
+			for (int i = 0; i < csvData.length; i++) {
+				try {
+					final row = csvData[i];
+					final eventId = (row['event'] ?? '').toString().trim();
+					final name = (row['name'] ?? '').toString().trim();
+					final location = (row['location'] ?? '').toString().trim();
+					final startDateStr = (row['start'] ?? '').toString().trim();
+					final endDateStr = (row['end'] ?? '').toString().trim();
 
-			if (csvList.length == 1) {
-				_logger.e('ERROR: CSV parser only found 1 row! Using manual line parsing...');
-				// CsvToListConverter failed - manually parse lines
-				final manualLines = csvString.split(RegExp(r'\r?\n'))
-						.where((line) => line.trim().isNotEmpty)
-						.toList();
-
-				_logger.d('Manual parsing found ${manualLines.length} non-empty lines');
-
-				for (int i = 1; i < manualLines.length; i++) {
-					try {
-						final line = manualLines[i];
-						// Simple CSV parsing - split by comma
-						final fields = line.split(',');
-
-						if (fields.length < 2) {
-							_logger.w('Skipping line $i: insufficient fields (${fields.length})');
-							continue;
-						}
-
-						final eventId = fields[0].trim();
-						final name = fields[1].trim();
-						final location = fields.length > 2 ? fields[2].trim() : '';
-						final endDate = _parseDate(fields.length > 4 ? fields[4].trim() : null);
-						final startDate = _parseDate(fields.length > 7 ? fields[7].trim() : null);
-
-						if (eventId.isNotEmpty && name.isNotEmpty) {
-							events.add(EventModel(
-								eventId: eventId,
-								name: name,
-								location: location.isEmpty ? null : location,
-								startDate: startDate,
-								endDate: endDate,
-							));
-							_logger.d('Manually added: $eventId - $name');
-						}
-					} catch (e) {
-						_logger.w('Error parsing line $i: $e');
-					}
-				}
-			} else {
-				// Use CSV list normally
-				for (int i = startIndex; i < csvList.length; i++) {
-					final row = csvList[i];
-					if (row.length < 3) {
-						_logger.w('Skipping row $i: insufficient columns (${row.length} < 3)');
+					if (eventId.isEmpty || name.isEmpty) {
+						_logger.w('Skipping row $i: eventId or name is empty');
 						continue;
 					}
 
-					try {
-						final eventId = row[0]?.toString() ?? '';
-						final name = row[1]?.toString() ?? '';
-						final location = row[2]?.toString();
-						// CSV columns: event, name, location, blue_alliance_id, end, first_inspires_id, orange_alliance_id, start
-						final endDate = _parseDate(row.length > 4 ? row[4] : null);
-						final startDate = _parseDate(row.length > 7 ? row[7] : null);
+					final startDate = _parseDate(startDateStr.isNotEmpty ? startDateStr : null);
+					final endDate = _parseDate(endDateStr.isNotEmpty ? endDateStr : null);
 
-						if (eventId.isNotEmpty && name.isNotEmpty) {
-							events.add(EventModel(
-								eventId: eventId,
-								name: name,
-								location: location,
-								startDate: startDate,
-								endDate: endDate,
-							));
-							_logger.d('Added event: $eventId - $name (start: ${startDate?.toString() ?? "null"})');
-						} else {
-							_logger.w('Skipping row $i: eventId or name is empty (eventId="$eventId", name="$name")');
-						}
-					} catch (e) {
-						_logger.e('Error parsing row $i: $e');
-						continue;
-					}
+					events.add(EventModel(
+						eventId: eventId,
+						name: name,
+						location: location.isNotEmpty ? location : null,
+						startDate: startDate,
+						endDate: endDate,
+					));
+					_logger.d('Added event: $eventId - $name (start: ${startDate?.toString() ?? "null"})');
+				} catch (e) {
+					_logger.e('Error parsing row $i: $e');
+					continue;
 				}
 			}
 
@@ -293,19 +222,21 @@ class ViperApiClient {
 	/// Fetch raw text from a server endpoint
 	Future<String> fetchRaw(String path) async {
 		try {
-			_logger.i('📡 Fetching raw from: $path');
+			final fullUrl = '$baseUrl$path';
+			_logger.i('📡 Fetching raw from: $fullUrl');
 
 			final response = await _dio.get(path);
 
 			if (response.statusCode != 200) {
 				throw Exception(
-					'Failed to fetch: HTTP ${response.statusCode}',
+					'Failed to fetch: HTTP ${response.statusCode} from $fullUrl',
 				);
 			}
 
 			return response.data as String;
 		} catch (e) {
-			_logger.e('Error fetching raw data: $e');
+			final fullUrl = '$baseUrl$path';
+			_logger.e('Error fetching raw data from $fullUrl: $e');
 			rethrow;
 		}
 	}
@@ -313,13 +244,6 @@ class ViperApiClient {
 	// =========================================================================
 	// PRIVATE HELPERS
 	// =========================================================================
-
-	/// Check if row is a CSV header row
-	bool _isHeaderRow(List<dynamic> row) {
-		if (row.isEmpty) return false;
-		final first = row.first.toString().toLowerCase();
-		return first.contains('event') || first.contains('id');
-	}
 
 	/// Parse date string (YYYY-MM-DD format)
 	DateTime? _parseDate(dynamic value) {

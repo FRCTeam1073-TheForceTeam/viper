@@ -216,11 +216,42 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 		// Watch locale to trigger rebuild when language changes
 		ref.watch(selectedLocaleProvider);
 		final selectedPosition = ref.watch(selectedBotPositionProvider);
+		final selectedEventId = ref.watch(selectedEventProvider);
+		final eventsAsync = ref.watch(eventListProvider);
+
+		// Find the event name from the event list
+		String? eventName;
+		eventsAsync.whenData((events) {
+			if (selectedEventId != null) {
+				try {
+					eventName = events.firstWhere((e) => e.eventId == selectedEventId).name;
+				} catch (e) {
+					eventName = null;
+				}
+			}
+		});
 
 		return Scaffold(
 			appBar: AppBar(
-				title: Text(_translate('select_robot_position')),
-				centerTitle: true,
+				title: Column(
+					crossAxisAlignment: CrossAxisAlignment.start,
+					mainAxisSize: MainAxisSize.min,
+					children: [
+						if (eventName != null)
+							Text(
+								eventName!,
+								style: Theme.of(context).textTheme.titleMedium?.copyWith(
+									color: Colors.white,
+								),
+							),
+						Text(
+							_translate('select_robot_position'),
+							style: Theme.of(context).textTheme.labelLarge?.copyWith(
+								color: Colors.white70,
+							),
+						),
+					],
+				),
 				elevation: 0,
 				actions: [
 					ViperMenuButton(),

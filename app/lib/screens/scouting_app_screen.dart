@@ -42,7 +42,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 	@override
 	void initState() {
 		super.initState();
-		
+
 		// Register translations on demand when this screen is first loaded
 		AppLocalizations.addI18n({
 			'pre_match_tab': {
@@ -82,7 +82,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 				'tr': 'Oyun Sonu',
 			},
 		});
-		
+
 		// Use prefilled values if provided
 		_matchNumber = widget.prefilledMatch;
 		_teamNumber = widget.prefilledTeam;
