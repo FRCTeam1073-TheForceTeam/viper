@@ -223,14 +223,14 @@ final backendUrlProvider = FutureProvider((ref) async {
 final apiClientProvider = FutureProvider((ref) async {
 	final db = await ref.watch(databaseProvider.future);
 	final config = await db.getCurrentConfig();
-	
+
 	// Validate that we have a proper server URL configured
 	final baseUrl = config?.backendUrl;
 	if (!_isValidServerUrl(baseUrl)) {
 		// Return a no-op client or throw - this shouldn't be called without valid config
 		throw Exception('No valid server configured');
 	}
-	
+
 	final username = config?.username;
 	final password = config?.password;
 	return ViperApiClient(
