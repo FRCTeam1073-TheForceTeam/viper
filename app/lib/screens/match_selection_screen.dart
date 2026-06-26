@@ -4,6 +4,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
 import '../providers/app_providers.dart';
+import '../providers/locale_provider.dart';
+import '../services/localization.dart';
 import '../widgets/viper_menu_button.dart';
 import '../utils/match_name_converter.dart';
 
@@ -29,9 +31,245 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 	int _scrollRetries = 0;
 	static const _maxScrollRetries = 15;
 
+	/// Helper to get translated text with current provider locale
+	String _translate(String key) {
+		final locale = ref.read(selectedLocaleProvider);
+		return AppLocalizations.translate(key, locale: locale);
+	}
+
 	@override
 	void initState() {
 		super.initState();
+
+		// Register translations
+		AppLocalizations.addI18n({
+			'select_match': {
+				'en': 'Select Match',
+				'es': 'Seleccionar partido',
+				'pt': 'Selecionar correspondência',
+				'fr': 'Sélectionner un match',
+				'zh_tw': '選擇比賽',
+				'he': 'בחר משחק',
+				'tr': 'Maçı Seçin',
+			},
+			'enter_match': {
+				'en': 'Enter Match',
+				'es': 'Ingrese partido',
+				'pt': 'Insira correspondência',
+				'fr': 'Entrez le match',
+				'zh_tw': '輸入比賽',
+				'he': 'הזן משחק',
+				'tr': 'Maçı Girin',
+			},
+			'match_type': {
+				'en': 'Match Type',
+				'es': 'Tipo de partido',
+				'pt': 'Tipo de correspondência',
+				'fr': 'Type de match',
+				'zh_tw': '比賽類型',
+				'he': 'סוג משחק',
+				'tr': 'Maç Türü',
+			},
+			'match_type_practice': {
+				'en': 'Practice',
+				'es': 'Práctica',
+				'pt': 'Prática',
+				'fr': 'Pratique',
+				'zh_tw': '練習',
+				'he': 'תרגול',
+				'tr': 'Pratik',
+			},
+			'match_type_qualification': {
+				'en': 'Qualification',
+				'es': 'Calificación',
+				'pt': 'Qualificação',
+				'fr': 'Qualification',
+				'zh_tw': '預賽',
+				'he': 'הסמכה',
+				'tr': 'Nitelik Açması',
+			},
+			'match_type_quarter_final': {
+				'en': 'Quarter-final',
+				'es': 'Cuartos de final',
+				'pt': 'Quartas de final',
+				'fr': 'Quart de finale',
+				'zh_tw': '準決賽',
+				'he': 'רבע גמר',
+				'tr': 'Çeyrek Final',
+			},
+			'match_type_semi_final': {
+				'en': 'Semi-final',
+				'es': 'Semifinal',
+				'pt': 'Semifinal',
+				'fr': 'Demi-finale',
+				'zh_tw': '半決賽',
+				'he': 'חצי גמר',
+				'tr': 'Yarı Final',
+			},
+			'match_type_playoff_1': {
+				'en': 'Playoff Round 1',
+				'es': 'Ronda de desempate 1',
+				'pt': 'Rodada de playoff 1',
+				'fr': 'Ronde éliminatoire 1',
+				'zh_tw': '季後賽第 1 輪',
+				'he': 'סבב פלייאוף 1',
+				'tr': 'Playoff Turu 1',
+			},
+			'match_type_playoff_2': {
+				'en': 'Playoff Round 2',
+				'es': 'Ronda de desempate 2',
+				'pt': 'Rodada de playoff 2',
+				'fr': 'Ronde éliminatoire 2',
+				'zh_tw': '季後賽第 2 輪',
+				'he': 'סבב פלייאוף 2',
+				'tr': 'Playoff Turu 2',
+			},
+			'match_type_playoff_3': {
+				'en': 'Playoff Round 3',
+				'es': 'Ronda de desempate 3',
+				'pt': 'Rodada de playoff 3',
+				'fr': 'Ronde éliminatoire 3',
+				'zh_tw': '季後賽第 3 輪',
+				'he': 'סבב פלייאוף 3',
+				'tr': 'Playoff Turu 3',
+			},
+			'match_type_playoff_4': {
+				'en': 'Playoff Round 4',
+				'es': 'Ronda de desempate 4',
+				'pt': 'Rodada de playoff 4',
+				'fr': 'Ronde éliminatoire 4',
+				'zh_tw': '季後賽第 4 輪',
+				'he': 'סבב פלייאוף 4',
+				'tr': 'Playoff Turu 4',
+			},
+			'match_type_playoff_5': {
+				'en': 'Playoff Round 5',
+				'es': 'Ronda de desempate 5',
+				'pt': 'Rodada de playoff 5',
+				'fr': 'Ronde éliminatoire 5',
+				'zh_tw': '季後賽第 5 輪',
+				'he': 'סבב פלייאוף 5',
+				'tr': 'Playoff Turu 5',
+			},
+			'match_type_final': {
+				'en': 'Final',
+				'es': 'Final',
+				'pt': 'Final',
+				'fr': 'Finale',
+				'zh_tw': '決賽',
+				'he': 'גמר',
+				'tr': 'Final',
+			},
+			'match_number': {
+				'en': 'Match Number',
+				'es': 'Número de partido',
+				'pt': 'Número de correspondência',
+				'fr': 'Numéro de match',
+				'zh_tw': '比賽號碼',
+				'he': 'מספר משחק',
+				'tr': 'Maç Numarası',
+			},
+			'match_number_example': {
+				'en': 'e.g., 5',
+				'es': 'p. ej., 5',
+				'pt': 'p. ex., 5',
+				'fr': 'p. ex., 5',
+				'zh_tw': '例如 5',
+				'he': 'למשל, 5',
+				'tr': 'örn. 5',
+			},
+			'match_number_required': {
+				'en': 'Match number is required',
+				'es': 'El número de partido es obligatorio',
+				'pt': 'O número da correspondência é obrigatório',
+				'fr': 'Le numéro de match est obligatoire',
+				'zh_tw': '比賽號碼為必填項',
+				'he': 'מספר משחק נדרש',
+				'tr': 'Maç Numarası Gerekli',
+			},
+			'must_be_valid_number': {
+				'en': 'Must be a valid number',
+				'es': 'Debe ser un número válido',
+				'pt': 'Deve ser um número válido',
+				'fr': 'Doit être un nombre valide',
+				'zh_tw': '必須是有效的數字',
+				'he': 'חייב להיות מספר תקף',
+				'tr': 'Geçerli bir numara olmalıdır',
+			},
+			'team_number': {
+				'en': 'Team Number',
+				'es': 'Número de equipo',
+				'pt': 'Número do time',
+				'fr': 'Numéro d\'équipe',
+				'zh_tw': '隊伍號碼',
+				'he': 'מספר קבוצה',
+				'tr': 'Takım Numarası',
+			},
+			'team_number_example': {
+				'en': 'e.g., 2058',
+				'es': 'p. ej., 2058',
+				'pt': 'p. ex., 2058',
+				'fr': 'p. ex., 2058',
+				'zh_tw': '例如 2058',
+				'he': 'למשל, 2058',
+				'tr': 'örn. 2058',
+			},
+			'team_number_required': {
+				'en': 'Team number is required',
+				'es': 'El número de equipo es obligatorio',
+				'pt': 'O número do time é obrigatório',
+				'fr': 'Le numéro d\'équipe est obligatoire',
+				'zh_tw': '隊伍號碼為必填項',
+				'he': 'מספר קבוצה נדרש',
+				'tr': 'Takım Numarası Gerekli',
+			},
+			'cancel': {
+				'en': 'Cancel',
+				'es': 'Cancelar',
+				'pt': 'Cancelar',
+				'fr': 'Annuler',
+				'zh_tw': '取消',
+				'he': 'ביטול',
+				'tr': 'İptal',
+			},
+			'use_match': {
+				'en': 'Use Match',
+				'es': 'Usar partido',
+				'pt': 'Usar correspondência',
+				'fr': 'Utiliser le match',
+				'zh_tw': '使用比賽',
+				'he': 'השתמש במשחק',
+				'tr': 'Maçı Kullan',
+			},
+			'add_match_manually': {
+				'en': 'Add Match Manually',
+				'es': 'Agregar partido manualmente',
+				'pt': 'Adicionar correspondência manualmente',
+				'fr': 'Ajouter un match manuellement',
+				'zh_tw': '手動添加比賽',
+				'he': 'הוסף משחק ידנית',
+				'tr': 'Maçı Manuel Olarak Ekle',
+			},
+			'error_loading_scouted_matches': {
+				'en': 'Error loading scouted matches',
+				'es': 'Error al cargar partidos explorados',
+				'pt': 'Erro ao carregar correspondências escotadas',
+				'fr': 'Erreur lors du chargement des matchs observés',
+				'zh_tw': '加載已觀察比賽時出錯',
+				'he': 'שגיאה בטעינת משחקים שנחקרו',
+				'tr': 'Scout Edilen Maçlar Yüklenirken Hata',
+			},
+			'error_loading_matches': {
+				'en': 'Error loading matches',
+				'es': 'Error al cargar partidos',
+				'pt': 'Erro ao carregar correspondências',
+				'fr': 'Erreur lors du chargement des matchs',
+				'zh_tw': '加載比賽時出錯',
+				'he': 'שגיאה בטעינת משחקים',
+				'tr': 'Maçlar Yüklenirken Hata',
+			},
+		});
+
 		_scrollController = ScrollController();
 		_scrollTargetKey = GlobalKey();
 	}
@@ -101,24 +339,24 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 		final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 		String selectedMatchType = 'qm'; // Default to qualification
 
-		const matchTypes = {
-			'pm': 'Practice',
-			'qm': 'Qualification',
-			'qf': 'Quarter-final',
-			'sf': 'Semi-final',
-			'1p': 'Playoff Round 1',
-			'2p': 'Playoff Round 2',
-			'3p': 'Playoff Round 3',
-			'4p': 'Playoff Round 4',
-			'5p': 'Playoff Round 5',
-			'f': 'Final',
+		final matchTypes = {
+			'pm': _translate('match_type_practice'),
+			'qm': _translate('match_type_qualification'),
+			'qf': _translate('match_type_quarter_final'),
+			'sf': _translate('match_type_semi_final'),
+			'1p': _translate('match_type_playoff_1'),
+			'2p': _translate('match_type_playoff_2'),
+			'3p': _translate('match_type_playoff_3'),
+			'4p': _translate('match_type_playoff_4'),
+			'5p': _translate('match_type_playoff_5'),
+			'f': _translate('match_type_final'),
 		};
 
 		showDialog(
 			context: context,
 			builder: (context) => StatefulBuilder(
 				builder: (context, setState) => AlertDialog(
-					title: const Text('Enter Match'),
+					title: Text(_translate('enter_match')),
 					content: Form(
 						key: formKey,
 						child: Column(
@@ -127,7 +365,7 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 								DropdownButtonFormField<String>(
 									value: selectedMatchType,
 									decoration: InputDecoration(
-										labelText: 'Match Type',
+										labelText: _translate('match_type'),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(8),
 										),
@@ -142,14 +380,14 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 											value: e.key,
 											child: Text(e.value),
 										))
-									.toList(),
+										.toList(),
 								),
 								const SizedBox(height: 12),
 								TextFormField(
 									controller: matchNumberController,
 									decoration: InputDecoration(
-										labelText: 'Match Number',
-										hintText: 'e.g., 5',
+										labelText: _translate('match_number'),
+										hintText: _translate('match_number_example'),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(8),
 										),
@@ -157,10 +395,10 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 									keyboardType: TextInputType.number,
 									validator: (value) {
 										if (value == null || value.isEmpty) {
-											return 'Match number is required';
+											return _translate('match_number_required');
 										}
 										if (int.tryParse(value) == null) {
-											return 'Must be a valid number';
+											return _translate('must_be_valid_number');
 										}
 										return null;
 									},
@@ -169,8 +407,8 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 								TextFormField(
 									controller: teamNumberController,
 									decoration: InputDecoration(
-										labelText: 'Team Number',
-										hintText: 'e.g., 2058',
+										labelText: _translate('team_number'),
+										hintText: _translate('team_number_example'),
 										border: OutlineInputBorder(
 											borderRadius: BorderRadius.circular(8),
 										),
@@ -178,10 +416,10 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 									keyboardType: TextInputType.number,
 									validator: (value) {
 										if (value == null || value.isEmpty) {
-											return 'Team number is required';
+											return _translate('team_number_required');
 										}
 										if (int.tryParse(value) == null) {
-											return 'Must be a valid number';
+											return _translate('must_be_valid_number');
 										}
 										return null;
 									},
@@ -194,7 +432,7 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 							onPressed: () {
 								Navigator.pop(context);
 							},
-							child: const Text('Cancel'),
+							child: Text(_translate('cancel')),
 						),
 						ElevatedButton(
 							onPressed: () async {
@@ -215,7 +453,7 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 									}
 								}
 							},
-							child: const Text('Use Match'),
+							child: Text(_translate('use_match')),
 						),
 					],
 				),
@@ -226,11 +464,13 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 	@override
 	Widget build(BuildContext context) {
 		print('[SCREEN_BUILD] MatchSelectionScreen.build() called');
+		// Watch locale to trigger rebuild when language changes
+		ref.watch(selectedLocaleProvider);
 		final matchesAsync = ref.watch(matchListProvider);
 
 		return Scaffold(
 			appBar: AppBar(
-				title: const Text('Select Match'),
+				title: Text(_translate('select_match')),
 				centerTitle: true,
 				elevation: 0,
 				automaticallyImplyLeading: false,
@@ -305,7 +545,7 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 										child: ElevatedButton.icon(
 											onPressed: () => _showManualMatchEntryDialog(context, ref),
 											icon: const Icon(Icons.add),
-											label: const Text('Add Match Manually'),
+											label: Text(_translate('add_match_manually')),
 										),
 									);
 								}
@@ -361,16 +601,16 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 						loading: () => const Center(
 							child: CircularProgressIndicator(),
 						),
-						error: (error, stack) => const Center(
-							child: Text('Error loading scouted matches'),
+						error: (error, stack) => Center(
+							child: Text(_translate('error_loading_scouted_matches')),
 						),
 					);
 				},
 				loading: () => const Center(
 					child: CircularProgressIndicator(),
 				),
-				error: (error, stack) => const Center(
-					child: Text('Error loading matches'),
+				error: (error, stack) => Center(
+					child: Text(_translate('error_loading_matches')),
 				),
 			),
 		);
