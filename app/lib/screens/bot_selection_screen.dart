@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
 import '../providers/app_providers.dart';
 import '../providers/field_side_provider.dart';
+import '../providers/locale_provider.dart';
+import '../services/localization.dart';
 import '../widgets/viper_menu_button.dart';
 
 class BotSelectionScreen extends ConsumerStatefulWidget {
@@ -21,9 +23,38 @@ class BotSelectionScreen extends ConsumerStatefulWidget {
 class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 	late PageController _pageController;
 
+	/// Helper to get translated text with current provider locale
+	String _translate(String key) {
+		final locale = ref.read(selectedLocaleProvider);
+		return AppLocalizations.translate(key, locale: locale);
+	}
+
 	@override
 	void initState() {
 		super.initState();
+
+		// Register translations
+		AppLocalizations.addI18n({
+			'select_robot_position': {
+				'en': 'Select Robot Position',
+				'es': 'Seleccionar posición del robot',
+				'pt': 'Selecionar posição do robô',
+				'fr': 'Sélectionner la position du robot',
+				'zh_tw': '選擇機器人位置',
+				'he': 'בחר מיקום רובוט',
+				'tr': 'Robot Konumunu Seçin',
+			},
+			'swipe_field_orientation': {
+				'en': 'Swipe left/right to change field orientation',
+				'es': 'Desliza izquierda/derecha para cambiar la orientación del campo',
+				'pt': 'Deslize para a esquerda/direita para alterar a orientação do campo',
+				'fr': 'Glissez vers la gauche/droite pour changer l\'orientation du terrain',
+				'zh_tw': '向左/右滑動以更改場地方向',
+				'he': 'סוט שמאלה/ימינה כדי לשנות את כיוון התחום',
+				'tr': 'Alan yönünü değiştirmek için sola/sağa kaydırın',
+			},
+		});
+
 		// Initialize page controller with the stored field side preference
 		// Page 0 = left field, Page 1 = right field
 		final fieldSide = ref.read(selectedFieldSideProvider);
@@ -182,11 +213,13 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 	@override
 	Widget build(BuildContext context) {
 		print('[SCREEN_BUILD] BotSelectionScreen.build() called');
+		// Watch locale to trigger rebuild when language changes
+		ref.watch(selectedLocaleProvider);
 		final selectedPosition = ref.watch(selectedBotPositionProvider);
 
 		return Scaffold(
 			appBar: AppBar(
-				title: const Text('Select Robot Position'),
+				title: Text(_translate('select_robot_position')),
 				centerTitle: true,
 				elevation: 0,
 				actions: [
@@ -217,7 +250,7 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 					Padding(
 						padding: const EdgeInsets.all(16.0),
 						child: Text(
-							'Swipe left/right to change field orientation',
+							_translate('swipe_field_orientation'),
 							style: Theme.of(context).textTheme.bodySmall,
 							textAlign: TextAlign.center,
 						),
