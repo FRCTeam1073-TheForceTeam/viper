@@ -6,8 +6,10 @@ import 'tabs/auto_tab.dart';
 import 'tabs/teleop_tab.dart';
 import 'tabs/end_game_tab.dart';
 import '../widgets/viper_menu_button.dart';
-import '../../providers/app_providers.dart';
-import '../../data/api/viper_api_client.dart';
+import '../providers/app_providers.dart';
+import '../providers/locale_provider.dart';
+import '../data/api/viper_api_client.dart';
+import '../services/localization.dart';
 
 class ScoutingAppScreen extends ConsumerStatefulWidget {
 	final EventModel selectedEvent;
@@ -32,9 +34,55 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 
 	late final List<Widget> _tabs;
 
+	String _translate(String key) {
+		final locale = ref.read(selectedLocaleProvider);
+		return AppLocalizations.translate(key, locale: locale);
+	}
+
 	@override
 	void initState() {
 		super.initState();
+		
+		// Register translations on demand when this screen is first loaded
+		AppLocalizations.addI18n({
+			'pre_match_tab': {
+				'en': 'Pre-Match',
+				'es': 'Previo al partido',
+				'pt': 'Pré-jogo',
+				'fr': 'Avant match',
+				'zh_tw': '賽前',
+				'he': 'לפני המשחק',
+				'tr': 'Maç Öncesi',
+			},
+			'auto_tab': {
+				'en': 'Auto',
+				'es': 'Auto',
+				'pt': 'Auto',
+				'fr': 'Auto',
+				'zh_tw': '自動',
+				'he': 'אוטו',
+				'tr': 'Otomatik',
+			},
+			'teleop_tab': {
+				'en': 'Teleop',
+				'es': 'Teleoperado',
+				'pt': 'Teleoperado',
+				'fr': 'Téléopération',
+				'zh_tw': '遠程操作',
+				'he': 'טלאופ',
+				'tr': 'Teleop',
+			},
+			'end_game_tab': {
+				'en': 'End Game',
+				'es': 'Final',
+				'pt': 'Endgame',
+				'fr': 'Fin du match',
+				'zh_tw': '賽末',
+				'he': 'סיום המשחק',
+				'tr': 'Oyun Sonu',
+			},
+		});
+		
 		// Use prefilled values if provided
 		_matchNumber = widget.prefilledMatch;
 		_teamNumber = widget.prefilledTeam;
@@ -69,6 +117,8 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 	@override
 	Widget build(BuildContext context) {
 		print('[SCREEN_BUILD] ScoutingAppScreen.build() called');
+		// Watch locale to trigger rebuild when language changes
+		ref.watch(selectedLocaleProvider);
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
 
@@ -141,22 +191,22 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 					setState(() => _selectedTabIndex = index);
 				},
 				type: BottomNavigationBarType.fixed,
-				items: const [
+				items: [
 					BottomNavigationBarItem(
-						icon: Icon(Icons.edit),
-						label: 'Pre-Match',
+						icon: const Icon(Icons.edit),
+						label: _translate('pre_match_tab'),
 					),
 					BottomNavigationBarItem(
-						icon: Icon(Icons.flash_on),
-						label: 'Auto',
+						icon: const Icon(Icons.flash_on),
+						label: _translate('auto_tab'),
 					),
 					BottomNavigationBarItem(
-						icon: Icon(Icons.videogame_asset),
-						label: 'Teleop',
+						icon: const Icon(Icons.videogame_asset),
+						label: _translate('teleop_tab'),
 					),
 					BottomNavigationBarItem(
-						icon: Icon(Icons.trending_up),
-						label: 'End Game',
+						icon: const Icon(Icons.trending_up),
+						label: _translate('end_game_tab'),
 					),
 				],
 			),

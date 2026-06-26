@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
+import '../providers/locale_provider.dart';
 import '../services/localization.dart';
 
 /// Reusable checkbox button widget that uses AppColors and localization
 /// Takes the current state and a callback to update it
-class CheckboxButton extends StatelessWidget {
+class CheckboxButton extends ConsumerWidget {
 	final bool isChecked;
 	final String translationKey;
 	final ValueChanged<bool> onChanged;
@@ -19,7 +21,12 @@ class CheckboxButton extends StatelessWidget {
 	}) : super(key: key);
 
 	@override
-	Widget build(BuildContext context) {
+	Widget build(BuildContext context, WidgetRef ref) {
+		// Watch locale to trigger rebuild when language changes
+		ref.watch(selectedLocaleProvider);
+		final locale = ref.read(selectedLocaleProvider);
+		final label = AppLocalizations.translate(translationKey, locale: locale);
+
 		return Center(
 			child: FilledButton(
 				style: FilledButton.styleFrom(
@@ -34,7 +41,7 @@ class CheckboxButton extends StatelessWidget {
 				),
 				onPressed: () => onChanged(!isChecked),
 				child: Text(
-					context.t(translationKey),
+					label,
 					style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
 				),
 			),

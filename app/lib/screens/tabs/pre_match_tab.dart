@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
 import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
+import '../../providers/locale_provider.dart';
 import '../../providers/field_side_provider.dart';
 import '../../services/scout_data_helper.dart';
 import '../../services/localization.dart';
@@ -32,6 +33,11 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 	String? _selectedPosition;
 	bool _noShow = false;
 	ScoutData? _currentScout;
+
+	String _translate(String key) {
+		final locale = ref.read(selectedLocaleProvider);
+		return AppLocalizations.translate(key, locale: locale);
+	}
 
 	@override
 	void initState() {
@@ -65,6 +71,15 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 				'zh_tw': '自動 »',
 				'he': 'אוטו »',
 				'tr': 'Otomatik »',
+			},
+			'pre_match_data_saved': {
+				'en': 'Pre-Match data saved',
+				'es': 'Datos previos al partido guardados',
+				'pt': 'Dados pré-jogo salvos',
+				'fr': 'Données pré-match sauvegardées',
+				'zh_tw': '賽前資料已保存',
+				'he': 'נתונים לפני המשחק נשמרו',
+				'tr': 'Maç öncesi veriler kaydedildi',
 			},
 		});
 
@@ -123,12 +138,14 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		if (mounted) {
 			ScaffoldMessenger.of(
 				context,
-			).showSnackBar(const SnackBar(content: Text('Pre-Match data saved')));
+			).showSnackBar(SnackBar(content: Text(_translate('pre_match_data_saved'))));
 		}
 	}
 
 	@override
 	Widget build(BuildContext context) {
+		// Watch locale to trigger rebuild when language changes
+		ref.watch(selectedLocaleProvider);
 		// Get the selected bot position to determine team color (blue or red)
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
@@ -148,7 +165,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: [
 									Text(
-										context.t('starting_position'),
+										_translate('starting_position'),
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 16),
@@ -185,7 +202,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 							),
 							onPressed: widget.onProceedToAuto,
 							child: Text(
-								context.t('proceed_auto_button'),
+								_translate('proceed_auto_button'),
 								style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
 							),
 						),
