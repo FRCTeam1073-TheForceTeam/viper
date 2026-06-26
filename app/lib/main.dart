@@ -94,9 +94,23 @@ class _HomeRouter extends ConsumerWidget {
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
 		// Listen to app state changes and update navigation accordingly
+		// IMPORTANT: Only auto-navigate during startup (appInitialized == false)
+		// After startup, user controls navigation - app state changes don't force navigation
 		ref.listen(appStateProvider, (previous, next) {
 			next.whenData((appState) {
-				print('[HOME_ROUTER] App state listener: $appState');
+				final isInitialized = ref.read(appInitializedProvider);
+				print('[HOME_ROUTER] App state listener: $appState (initialized: $isInitialized)');
+
+				// Only auto-navigate during initialization
+				if (isInitialized) {
+					// After initialization, app state changes don't trigger navigation
+					// User controls where they go - respect their choices
+					print('[HOME_ROUTER] Already initialized - skipping auto-navigation');
+					return;
+				}
+
+				// During initialization, navigate based on app state
+				bool navigated = false;
 				switch (appState) {
 					case AppState.checkingConfig:
 						// Don't navigate yet
@@ -104,18 +118,25 @@ class _HomeRouter extends ConsumerWidget {
 					case AppState.needsServer:
 						print('[HOME_ROUTER] Navigating to server config');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.server);
+						navigated = true;
 					case AppState.needsEvent:
 						print('[HOME_ROUTER] Navigating to event picker');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
+						navigated = true;
 					case AppState.needsBotSelection:
 						print('[HOME_ROUTER] Navigating to bot selection');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.botSelection);
-					case AppState.needsMatchSelection:
-						print('[HOME_ROUTER] Navigating to match selection');
+						navigated = true;
+					default:
+						print('[HOME_ROUTER] Navigating to match selection (default)');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
-					case AppState.scouting:
-						print('[HOME_ROUTER] Navigating to scouting');
-						ref.read(navigationProvider.notifier).navigateTo(NavScreen.scouting);
+						navigated = true;
+				}
+
+				// Mark initialized once we've determined the initial page to show
+				if (navigated) {
+					print('[HOME_ROUTER] ✅ Initialization complete - disabling auto-navigation');
+					ref.read(appInitializedProvider.notifier).markInitialized();
 				}
 			});
 		});

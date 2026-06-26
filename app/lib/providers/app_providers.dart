@@ -69,18 +69,18 @@ class NavigationNotifier extends StateNotifier<NavScreen?> {
 
 /// Tracks whether we've passed the server config screen in this session
 /// Once set to true, we don't re-check server config availability during navigation
-final appInitializedProvider = StateNotifierProvider<_AppInitializedNotifier, bool>((ref) {
-	return _AppInitializedNotifier();
-});
-
 class _AppInitializedNotifier extends StateNotifier<bool> {
 	_AppInitializedNotifier() : super(false);
 
-	void markInitialized() {
+	Future<void> markInitialized() async {
 		state = true;
-		print('[APP_INIT] App marked as initialized - server config check will be skipped on future AppState evaluations');
+		print('[APP_INIT] ✅ App initialized - auto-navigation disabled for this session');
 	}
 }
+
+final appInitializedProvider = StateNotifierProvider<_AppInitializedNotifier, bool>((ref) {
+	return _AppInitializedNotifier();
+});
 
 /// Determines the current app state based on persisted database data
 /// When called, evaluates the current state and sets forced navigation accordingly
@@ -102,6 +102,11 @@ final appStateProvider = FutureProvider<AppState>((ref) async {
 	}
 
 	print('[APP_STATE] Server configured (${config!.backendUrl}), continuing to check other requirements...');
+
+	// Wait for SharedPreferences to load before evaluating post-server state
+	// This ensures selectedBotPositionProvider has loaded the persisted bot position
+	await ref.watch(sharedPreferencesProvider.future);
+
 	// Now evaluate post-server state
 	final nextState = _evaluatePostServerState(config, ref);
 
@@ -449,36 +454,63 @@ final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
 		return {};
 	}
 
-	// Get local scouting data - track which matches have been scouted (by any position)
+	// Always include local scouting data
 	final localScouts = await db.getScoutsForEvent(selectedEvent);
-	final scoutedMatches = <String>{};
+	final localMatches = <String>{};
 	for (final scout in localScouts) {
-		scoutedMatches.add(scout.match);
+		localMatches.add(scout.match);
 	}
 
-	// Try to download event scouting data from server (only if valid server configured)
+	// Try to get server scouting data (if valid server configured)
 	final config = await db.getCurrentConfig();
-	if (_isValidServerUrl(config?.backendUrl)) {
+	if (!_isValidServerUrl(config?.backendUrl)) {
+		return localMatches;
+	}
+
+	final cacheKey = 'scouting_csv_cache_$selectedEvent';
+	final sharedPrefs = await ref.watch(sharedPreferencesProvider.future);
+
+	// Load cached data first to show immediately
+	Set<String> serverMatches = {};
+	final cachedCsv = sharedPrefs.getString(cacheKey);
+	if (cachedCsv != null) {
 		try {
-			final apiClient = await ref.watch(apiClientProvider.future);
-			final serverCsv = await apiClient.fetchRaw('/data/$selectedEvent.scouting.csv');
-
-			// Parse server CSV using proper CSV parser that matches JavaScript behavior
-			final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(serverCsv);
-
+			final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(cachedCsv);
 			for (final entry in scoutingData) {
 				if (entry.containsKey('match')) {
-					final match = entry['match'].toString();
-					scoutedMatches.add(match);
+					serverMatches.add(entry['match'].toString());
 				}
 			}
 		} catch (e) {
-			// If download fails, just use local data
-			Logger().w('Failed to download event scouting data: $e');
+			Logger().w('Failed to parse cached scouting CSV: $e');
 		}
 	}
 
-	return scoutedMatches;
+	// Fetch fresh data from server
+	try {
+		final apiClient = await ref.watch(apiClientProvider.future);
+		final serverCsv = await apiClient.fetchRaw('/data/$selectedEvent.scouting.csv');
+
+		if (serverCsv.isNotEmpty) {
+			// Cache the fresh CSV
+			await sharedPrefs.setString(cacheKey, serverCsv);
+
+			// Parse fresh data (replaces cached)
+			final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(serverCsv);
+			serverMatches.clear();
+			for (final entry in scoutingData) {
+				if (entry.containsKey('match')) {
+					serverMatches.add(entry['match'].toString());
+				}
+			}
+		}
+	} catch (e) {
+		// If download fails, keep cached/empty server matches
+		Logger().w('Failed to download event scouting data: $e');
+	}
+
+	// Combine server matches (fresh or cached) with local matches
+	return {...localMatches, ...serverMatches};
 });
 
 final scoutListProvider = FutureProvider<List<ScoutData>>((ref) async {
@@ -640,15 +672,61 @@ final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 	}
 
 	try {
-		// Fetch schedule CSV
-		final scheduleUrl = '/data/$selectedEvent.schedule.csv';
-		final response = await apiClient.fetchRaw(scheduleUrl);
+		final logger = Logger();
+		final prefs = await ref.watch(sharedPreferencesProvider.future);
 
-		// Parse CSV
-		final matches = _parseScheduleCSV(response);
-		return matches;
+		// Create cache key specific to this event
+		final cacheKey = 'match_list_csv_cache_$selectedEvent';
+
+		// Try to load from cache first to show immediately
+		List<MatchModel>? cachedMatches;
+		final cachedCsv = prefs.getString(cacheKey);
+		if (cachedCsv != null) {
+			logger.i('📦 Loading cached match schedule for event: $selectedEvent');
+			cachedMatches = _parseScheduleCSV(cachedCsv);
+			logger.i('📦 Cached matches loaded: ${cachedMatches.length} matches');
+		}
+
+		// Fetch fresh data from server
+		logger.i('📡 Fetching fresh match schedule from server');
+		final scheduleUrl = '/data/$selectedEvent.schedule.csv';
+		final freshCsv = await apiClient.fetchMatchScheduleCsv(selectedEvent);
+
+		if (freshCsv != null && freshCsv.isNotEmpty) {
+			// Save to cache
+			await prefs.setString(cacheKey, freshCsv);
+			logger.i('💾 Match schedule cached for event: $selectedEvent');
+
+			// Parse fresh data
+			final freshMatches = _parseScheduleCSV(freshCsv);
+			logger.i('✅ Fresh match schedule: ${freshMatches.length} matches');
+			return freshMatches;
+		} else if (cachedMatches != null && cachedMatches.isNotEmpty) {
+			// Server fetch failed, use cache
+			logger.i('⚠️  Server fetch failed, using cached match schedule');
+			return cachedMatches;
+		} else {
+			// No fresh data and no cache
+			logger.w('❌ Failed to fetch matches and no cache available');
+			return [];
+		}
 	} catch (e) {
 		Logger().e('Failed to fetch matches: $e');
+		// Try to fall back to cache
+		try {
+			final prefs = await ref.watch(sharedPreferencesProvider.future);
+			final selectedEvent = await ref.watch(_ensureSelectedEventProvider.future);
+			if (selectedEvent != null) {
+				final cacheKey = 'match_list_csv_cache_$selectedEvent';
+				final cachedCsv = prefs.getString(cacheKey);
+				if (cachedCsv != null) {
+					Logger().i('⚠️  Using cached match schedule as fallback');
+					return _parseScheduleCSV(cachedCsv);
+				}
+			}
+		} catch (cacheError) {
+			Logger().e('Cache fallback failed: $cacheError');
+		}
 		return [];
 	}
 });
