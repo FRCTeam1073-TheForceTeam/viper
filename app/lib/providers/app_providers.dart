@@ -223,11 +223,18 @@ final backendUrlProvider = FutureProvider((ref) async {
 final apiClientProvider = FutureProvider((ref) async {
 	final db = await ref.watch(databaseProvider.future);
 	final config = await db.getCurrentConfig();
-	final baseUrl = config?.backendUrl ?? 'http://localhost';
+	
+	// Validate that we have a proper server URL configured
+	final baseUrl = config?.backendUrl;
+	if (!_isValidServerUrl(baseUrl)) {
+		// Return a no-op client or throw - this shouldn't be called without valid config
+		throw Exception('No valid server configured');
+	}
+	
 	final username = config?.username;
 	final password = config?.password;
 	return ViperApiClient(
-		baseUrl: baseUrl,
+		baseUrl: baseUrl!,
 		username: username,
 		password: password,
 	);
@@ -352,6 +359,14 @@ final connectivityProvider = StreamProvider((ref) async* {
 
 final eventListProvider = FutureProvider((ref) async {
 	try {
+		// First check if we have a valid server configured
+		final db = await ref.watch(databaseProvider.future);
+		final config = await db.getCurrentConfig();
+		if (!_isValidServerUrl(config?.backendUrl)) {
+			// No valid server configured, return empty list
+			return [];
+		}
+
 		final apiClient = await ref.watch(apiClientProvider.future);
 		final events = await apiClient.fetchEventList();
 
@@ -417,23 +432,26 @@ final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
 		scoutedMatches.add(scout.match);
 	}
 
-	// Try to download event scouting data from server
-	try {
-		final apiClient = await ref.watch(apiClientProvider.future);
-		final serverCsv = await apiClient.fetchRaw('/data/$selectedEvent.scouting.csv');
+	// Try to download event scouting data from server (only if valid server configured)
+	final config = await db.getCurrentConfig();
+	if (_isValidServerUrl(config?.backendUrl)) {
+		try {
+			final apiClient = await ref.watch(apiClientProvider.future);
+			final serverCsv = await apiClient.fetchRaw('/data/$selectedEvent.scouting.csv');
 
-		// Parse server CSV using proper CSV parser that matches JavaScript behavior
-		final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(serverCsv);
+			// Parse server CSV using proper CSV parser that matches JavaScript behavior
+			final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(serverCsv);
 
-		for (final entry in scoutingData) {
-			if (entry.containsKey('match')) {
-				final match = entry['match'].toString();
-				scoutedMatches.add(match);
+			for (final entry in scoutingData) {
+				if (entry.containsKey('match')) {
+					final match = entry['match'].toString();
+					scoutedMatches.add(match);
+				}
 			}
+		} catch (e) {
+			// If download fails, just use local data
+			Logger().w('Failed to download event scouting data: $e');
 		}
-	} catch (e) {
-		// If download fails, just use local data
-		Logger().w('Failed to download event scouting data: $e');
 	}
 
 	return scoutedMatches;
@@ -507,6 +525,17 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 
 		try {
 			final db = await ref.read(databaseProvider.future);
+			final config = await db.getCurrentConfig();
+
+			// Check if we have a valid server configured
+			if (!_isValidServerUrl(config?.backendUrl)) {
+				state = state.copyWith(
+					isSyncing: false,
+					error: 'No server configured. Sync skipped.',
+				);
+				return;
+			}
+
 			final apiClient = await ref.read(apiClientProvider.future);
 			final pendingScouts = await db.getPendingScouts();
 
@@ -570,6 +599,14 @@ final _ensureSelectedEventProvider = FutureProvider<String?>((ref) async {
 });
 
 final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
+	// First check if we have a valid server configured
+	final db = await ref.watch(databaseProvider.future);
+	final config = await db.getCurrentConfig();
+	if (!_isValidServerUrl(config?.backendUrl)) {
+		// No valid server configured, return empty list
+		return [];
+	}
+
 	final apiClient = await ref.watch(apiClientProvider.future);
 	// Use the helper provider to ensure event is loaded
 	final selectedEvent = await ref.watch(_ensureSelectedEventProvider.future);

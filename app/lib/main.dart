@@ -15,6 +15,17 @@ import 'services/localization.dart';
 
 late SharedPreferences _sharedPrefs;
 
+/// Helper to validate server URLs
+bool _isValidServerUrl(String? url) {
+	if (url == null || url.isEmpty) return false;
+	// Reject bare protocols or just slashes
+	if (url == 'https://' || url == 'http://' || url == '/') return false;
+	// URL should have something after the protocol or hostname
+	final trimmed = url.trim();
+	if (trimmed.isEmpty) return false;
+	return true;
+}
+
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
 	_sharedPrefs = await SharedPreferences.getInstance();
@@ -195,17 +206,33 @@ class _HomeRouter extends ConsumerWidget {
 			throw Exception('No event selected');
 		}
 
-		final apiClient = await ref.read(apiClientProvider.future);
-		final allEvents = await apiClient.fetchEventList();
-
-		final event = allEvents.firstWhere(
-			(e) => e.eventId == config!.selectedEventId,
-			orElse: () => EventModel(
+		// If no valid server is configured, return event with just the ID
+		if (!_isValidServerUrl(config?.backendUrl)) {
+			return EventModel(
 				eventId: config!.selectedEventId!,
 				name: config!.selectedEventId!,
-			),
-		);
+			);
+		}
 
-		return event;
+		try {
+			final apiClient = await ref.read(apiClientProvider.future);
+			final allEvents = await apiClient.fetchEventList();
+
+			final event = allEvents.firstWhere(
+				(e) => e.eventId == config!.selectedEventId,
+				orElse: () => EventModel(
+					eventId: config!.selectedEventId!,
+					name: config!.selectedEventId!,
+				),
+			);
+
+			return event;
+		} catch (e) {
+			// If fetching events fails, return with just the ID
+			return EventModel(
+				eventId: config!.selectedEventId!,
+				name: config!.selectedEventId!,
+			);
+		}
 	}
 }

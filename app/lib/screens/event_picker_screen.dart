@@ -73,7 +73,6 @@ class EventPickerScreen extends ConsumerWidget {
 					TextButton(
 						onPressed: () {
 							Navigator.pop(context);
-							eventIdController.dispose();
 						},
 						child: const Text('Cancel'),
 					),
@@ -82,7 +81,6 @@ class EventPickerScreen extends ConsumerWidget {
 							if (formKey.currentState!.validate()) {
 								final eventId = eventIdController.text.trim();
 								Navigator.pop(context);
-								eventIdController.dispose();
 
 								// Set the selected event
 								try {

@@ -95,6 +95,134 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 		}
 	}
 
+	void _showManualMatchEntryDialog(BuildContext context, WidgetRef ref) {
+		final TextEditingController matchNumberController = TextEditingController();
+		final TextEditingController teamNumberController = TextEditingController();
+		final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+		String selectedMatchType = 'qm'; // Default to qualification
+
+		const matchTypes = {
+			'pm': 'Practice',
+			'qm': 'Qualification',
+			'qf': 'Quarter-final',
+			'sf': 'Semi-final',
+			'1p': 'Playoff Round 1',
+			'2p': 'Playoff Round 2',
+			'3p': 'Playoff Round 3',
+			'4p': 'Playoff Round 4',
+			'5p': 'Playoff Round 5',
+			'f': 'Final',
+		};
+
+		showDialog(
+			context: context,
+			builder: (context) => StatefulBuilder(
+				builder: (context, setState) => AlertDialog(
+					title: const Text('Enter Match'),
+					content: Form(
+						key: formKey,
+						child: Column(
+							mainAxisSize: MainAxisSize.min,
+							children: [
+								DropdownButtonFormField<String>(
+									value: selectedMatchType,
+									decoration: InputDecoration(
+										labelText: 'Match Type',
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									onChanged: (value) {
+										if (value != null) {
+											setState(() => selectedMatchType = value);
+										}
+									},
+									items: matchTypes.entries
+										.map((e) => DropdownMenuItem(
+											value: e.key,
+											child: Text(e.value),
+										))
+									.toList(),
+								),
+								const SizedBox(height: 12),
+								TextFormField(
+									controller: matchNumberController,
+									decoration: InputDecoration(
+										labelText: 'Match Number',
+										hintText: 'e.g., 5',
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									keyboardType: TextInputType.number,
+									validator: (value) {
+										if (value == null || value.isEmpty) {
+											return 'Match number is required';
+										}
+										if (int.tryParse(value) == null) {
+											return 'Must be a valid number';
+										}
+										return null;
+									},
+								),
+								const SizedBox(height: 12),
+								TextFormField(
+									controller: teamNumberController,
+									decoration: InputDecoration(
+										labelText: 'Team Number',
+										hintText: 'e.g., 2058',
+										border: OutlineInputBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									keyboardType: TextInputType.number,
+									validator: (value) {
+										if (value == null || value.isEmpty) {
+											return 'Team number is required';
+										}
+										if (int.tryParse(value) == null) {
+											return 'Must be a valid number';
+										}
+										return null;
+									},
+								),
+							],
+						),
+					),
+					actions: [
+						TextButton(
+							onPressed: () {
+								Navigator.pop(context);
+							},
+							child: const Text('Cancel'),
+						),
+						ElevatedButton(
+							onPressed: () async {
+								if (formKey.currentState!.validate()) {
+									final matchNumber = matchNumberController.text.trim();
+									final teamNumber = teamNumberController.text.trim();
+									final matchId = '$selectedMatchType$matchNumber';
+									Navigator.pop(context);
+
+									try {
+										widget.onMatchSelected(matchId, teamNumber);
+									} catch (e) {
+										if (context.mounted) {
+											ScaffoldMessenger.of(context).showSnackBar(
+												SnackBar(content: Text('Error: $e')),
+											);
+										}
+									}
+								}
+							},
+							child: const Text('Use Match'),
+						),
+					],
+				),
+			),
+		);
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		print('[SCREEN_BUILD] MatchSelectionScreen.build() called');
@@ -112,12 +240,6 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 			),
 			body: matchesAsync.when(
 				data: (matches) {
-					if (matches.isEmpty) {
-						return const Center(
-							child: Text('No matches available'),
-						);
-					}
-
 					return ref.watch(scoutedMatchesProvider).when(
 						data: (scoutedMatchSet) {
 							// Find the last (most recent) scouted match
@@ -174,8 +296,19 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 
 							return ListView.builder(
 								controller: _scrollController,
-								itemCount: visibleMatches.length,
-								itemBuilder: (context, index) {
+							itemCount: visibleMatches.length + 1,
+							itemBuilder: (context, index) {
+								// Manual entry button at the bottom
+								if (index == visibleMatches.length) {
+									return Padding(
+										padding: const EdgeInsets.all(16.0),
+										child: ElevatedButton.icon(
+											onPressed: () => _showManualMatchEntryDialog(context, ref),
+											icon: const Icon(Icons.add),
+											label: const Text('Add Match Manually'),
+										),
+									);
+								}
 									final match = visibleMatches[index].$2;
 									final team = widget.botPosition != null
 											? match.getTeamForPosition(widget.botPosition!)
