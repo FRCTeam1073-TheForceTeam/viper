@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -295,6 +296,8 @@ class ViperApiClient {
 	// ROBOT PHOTOS
 	// =========================================================================
 
+	static const int _maxCachedImages = 500;
+
 	/// Build the full URL for a robot photo
 	/// Returns URL like: http://localhost:8080/data/2026/1234.jpg
 	String getRobotPhotoUrl(String eventId, String teamNumber) {
@@ -304,14 +307,68 @@ class ViperApiClient {
 		return url;
 	}
 
+	/// Get the cache directory for robot photos
+	Future<Directory> _getCacheDirectory() async {
+		final cacheDir = await getApplicationCacheDirectory();
+		final photoCacheDir = Directory('${cacheDir.path}/robot_photos');
+		if (!await photoCacheDir.exists()) {
+			await photoCacheDir.create(recursive: true);
+		}
+		return photoCacheDir;
+	}
+
+	/// Generate a cache file path from year and team number
+	/// Returns a file in the cache directory named as year-teamNumber.jpg
+	Future<File> _getCacheFile(String year, String teamNumber) async {
+		final cacheDir = await _getCacheDirectory();
+		final fileName = '$year-$teamNumber.jpg';
+		return File('${cacheDir.path}/$fileName');
+	}
+
+	/// Clean up cache if it exceeds maximum size
+	/// Removes oldest files first
+	Future<void> _cleanupCacheIfNeeded() async {
+		try {
+			final cacheDir = await _getCacheDirectory();
+			final files = cacheDir.listSync();
+
+			if (files.length <= _maxCachedImages) {
+				return;
+			}
+
+			// Sort by modification time (oldest first)
+			final fileList = files.where((f) => f is File).cast<File>().toList();
+			fileList.sort((a, b) => a.statSync().modified.compareTo(b.statSync().modified));
+
+			// Delete oldest files until we're under the limit
+			final filesToDelete = fileList.length - _maxCachedImages;
+			for (int i = 0; i < filesToDelete; i++) {
+				await fileList[i].delete();
+				_logger.d('🗑️ Deleted cached robot photo: ${fileList[i].path}');
+			}
+		} catch (e) {
+			_logger.w('Error cleaning up robot photo cache: $e');
+		}
+	}
+
 	/// Fetch robot photo as bytes
 	/// Uses authenticated Dio client to respect credentials
+	/// Caches images to persistent storage (max 500 images)
 	Future<Uint8List?> fetchRobotPhotoBytes(String eventId, String teamNumber) async {
 		try {
 			final year = _extractYearFromEventId(eventId);
 			final path = '/data/$year/$teamNumber.jpg';
 			final fullUrl = '$baseUrl$path';
 
+			// Check cache first
+			final cacheFile = await _getCacheFile(year, teamNumber);
+			if (await cacheFile.exists()) {
+				_logger.i('📦 Loading robot photo from cache: $fullUrl');
+				final cachedBytes = await cacheFile.readAsBytes();
+				return cachedBytes;
+			}
+
+			// Not in cache, download it
 			_logger.i('📥 Downloading robot photo from: $fullUrl');
 
 			final response = await _dio.get<List<int>>(
@@ -329,8 +386,21 @@ class ViperApiClient {
 				return null;
 			}
 
-			_logger.i('✅ Robot photo downloaded: ${response.data!.length} bytes');
-			return Uint8List.fromList(response.data!);
+			// Save to cache
+			final imageBytes = Uint8List.fromList(response.data!);
+			try {
+				await cacheFile.writeAsBytes(imageBytes);
+				_logger.i('💾 Cached robot photo: ${imageBytes.length} bytes');
+
+				// Cleanup cache if needed
+				await _cleanupCacheIfNeeded();
+			} catch (e) {
+				_logger.w('Could not cache robot photo: $e');
+				// Still return the image even if caching fails
+			}
+
+			_logger.i('✅ Robot photo downloaded: ${imageBytes.length} bytes');
+			return imageBytes;
 		} catch (e) {
 			_logger.e('Error downloading robot photo for $eventId/$teamNumber: $e');
 			return null;
