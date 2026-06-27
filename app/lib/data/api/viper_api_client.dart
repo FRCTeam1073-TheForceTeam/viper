@@ -65,7 +65,6 @@ class ViperApiClient {
 		if (username == null || username!.isEmpty) return;
 
 		final credentials = '$username:${password ?? ''}';
-		final encoded = Uri.encodeComponent(credentials);
 		// For basic auth, we need to use base64 encoding
 		final bytes = utf8.encode(credentials);
 		final base64Str = base64Encode(bytes);
@@ -297,6 +296,7 @@ class ViperApiClient {
 	// =========================================================================
 
 	static const int _maxCachedImages = 500;
+	static const int _staleCacheDays = 7; // Refresh cache if older than this
 
 	/// Build the full URL for a robot photo
 	/// Returns URL like: http://localhost:8080/data/2026/1234.jpg
@@ -354,6 +354,7 @@ class ViperApiClient {
 	/// Fetch robot photo as bytes
 	/// Uses authenticated Dio client to respect credentials
 	/// Caches images to persistent storage (max 500 images)
+	/// If cache is stale (>7 days old), returns cached version but refreshes in background
 	Future<Uint8List?> fetchRobotPhotoBytes(String eventId, String teamNumber) async {
 		try {
 			final year = _extractYearFromEventId(eventId);
@@ -365,6 +366,20 @@ class ViperApiClient {
 			if (await cacheFile.exists()) {
 				_logger.i('📦 Loading robot photo from cache: $fullUrl');
 				final cachedBytes = await cacheFile.readAsBytes();
+
+				// Check if cache is stale (more than _staleCacheDays old)
+				try {
+					final fileStat = cacheFile.statSync();
+					final age = DateTime.now().difference(fileStat.modified);
+					if (age.inDays > _staleCacheDays) {
+						_logger.i('🔄 Cache is stale (${age.inDays} days old), refreshing in background...');
+						// Refresh cache in background without awaiting
+						_refreshRobotPhotoCache(eventId, teamNumber);
+					}
+				} catch (e) {
+					_logger.w('Error checking cache age: $e');
+				}
+
 				return cachedBytes;
 			}
 
@@ -404,6 +419,82 @@ class ViperApiClient {
 		} catch (e) {
 			_logger.e('Error downloading robot photo for $eventId/$teamNumber: $e');
 			return null;
+		}
+	}
+
+	/// Preload a robot photo into cache without returning the image data
+	/// Ensures the photo is downloaded and cached for later use
+	/// Waits for stale cache to be refreshed before returning
+	Future<void> preloadRobotPhoto(String eventId, String teamNumber) async {
+		try {
+			final year = _extractYearFromEventId(eventId);
+
+			// Check cache first
+			final cacheFile = await _getCacheFile(year, teamNumber);
+			if (await cacheFile.exists()) {
+				// Cache exists, check if it's stale
+				try {
+					final fileStat = cacheFile.statSync();
+					final age = DateTime.now().difference(fileStat.modified);
+					if (age.inDays > _staleCacheDays) {
+						// Cache is stale, refresh it and wait for completion
+						_logger.i('🔄 Stale cache detected (${age.inDays} days old), refreshing for preload...');
+						await _refreshRobotPhotoCache(eventId, teamNumber);
+					} else {
+						// Cache is fresh, no need to download
+						_logger.i('📦 Cache is fresh (${age.inDays} days old), no refresh needed');
+					}
+				} catch (e) {
+					_logger.w('Error checking cache age during preload: $e');
+				}
+			} else {
+				// Cache doesn't exist, download it
+				_logger.i('📥 No cache found, downloading for preload...');
+				await fetchRobotPhotoBytes(eventId, teamNumber);
+			}
+		} catch (e) {
+			_logger.e('Error preloading robot photo for $eventId/$teamNumber: $e');
+		}
+	}
+
+	/// Refresh a cached robot photo in the background without blocking
+	/// Called when a cached image is stale (older than _staleCacheDays)
+	/// Returns immediately without awaiting
+	Future<void> _refreshRobotPhotoCache(String eventId, String teamNumber) async {
+		try {
+			final year = _extractYearFromEventId(eventId);
+			final path = '/data/$year/$teamNumber.jpg';
+			final fullUrl = '$baseUrl$path';
+
+			_logger.d('🔄 Background refresh started for: $fullUrl');
+
+			final response = await _dio.get<List<int>>(
+				path,
+				options: Options(responseType: ResponseType.bytes),
+			);
+
+			if (response.statusCode != 200) {
+				_logger.w('Background refresh failed: HTTP ${response.statusCode} for $fullUrl');
+				return;
+			}
+
+			if (response.data == null || response.data!.isEmpty) {
+				_logger.w('Background refresh returned empty data for $fullUrl');
+				return;
+			}
+
+			// Update cache
+			final cacheFile = await _getCacheFile(year, teamNumber);
+			final imageBytes = Uint8List.fromList(response.data!);
+
+			try {
+				await cacheFile.writeAsBytes(imageBytes);
+				_logger.i('✅ Background refresh complete: updated ${imageBytes.length} bytes for $fullUrl');
+			} catch (e) {
+				_logger.w('Could not update cached robot photo during refresh: $e');
+			}
+		} catch (e) {
+			_logger.w('Background refresh error for $eventId/$teamNumber: $e');
 		}
 	}
 

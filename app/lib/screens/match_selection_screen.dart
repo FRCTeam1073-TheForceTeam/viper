@@ -340,11 +340,11 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 				: null;
 
 		if (team != null && team.isNotEmpty) {
-			// Fetch the photo (will cache it)
-			apiClient.fetchRobotPhotoBytes(match.matchNumber, team).then((_) {
+			// Preload the photo (will cache it)
+			apiClient.preloadRobotPhoto(match.matchNumber, team).then((_) {
 				if (mounted) {
 					_preloadedCount++;
-					print('📸 Preloaded photo $currentIndex/${indices.length}: $team');
+					print('📸 Preloaded photo ${currentIndex + 1}/${indices.length}: $team');
 					// Continue with next photo after a small delay to avoid overwhelming the system
 					Future.delayed(const Duration(milliseconds: 100), () {
 						if (mounted) {
