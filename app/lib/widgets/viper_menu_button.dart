@@ -90,7 +90,7 @@ class ViperMenuButton extends ConsumerWidget {
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
 		return IconButton(
-			icon: const Icon(Icons.more_vert),
+			icon: const Icon(Icons.menu),
 			onPressed: () => _showMenu(context),
 		);
 	}

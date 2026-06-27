@@ -172,36 +172,42 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 								child: Row(
 									children: [
 										Expanded(
-											child: TabBar(
-												controller: _tabController,
-												isScrollable: true,
-												indicator: BoxDecoration(
-													color: teamColor,
-													borderRadius: const BorderRadius.only(
-														topLeft: Radius.circular(6),
-														topRight: Radius.circular(6),
-													),
-													border: Border(
-														top: BorderSide(color: AppColors.mainBorderColor, width: 1),
-														left: BorderSide(color: AppColors.mainBorderColor, width: 1),
-														right: BorderSide(color: AppColors.mainBorderColor, width: 1),
-													),
+											flex: 1,
+											child: Container(), // Left spacer for centering
+										),
+										TabBar(
+											controller: _tabController,
+											isScrollable: true,
+											indicator: BoxDecoration(
+												color: teamColor,
+												borderRadius: const BorderRadius.only(
+													topLeft: Radius.circular(6),
+													topRight: Radius.circular(6),
 												),
-												indicatorSize: TabBarIndicatorSize.tab,
-												indicatorPadding: const EdgeInsets.all(1),
-												labelColor: AppColors.mainFgColor,
-												unselectedLabelColor: AppColors.mainFgColor,
-												labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-												unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
-												dividerColor: Colors.transparent,
-												labelPadding: const EdgeInsets.symmetric(horizontal: 2),
-												tabs: [
-													_buildStyledTab('pre_match_tab'),
-													_buildStyledTab('auto_tab'),
-													_buildStyledTab('tele_tab'),
-													_buildStyledTab('end_game_tab'),
-												],
+												border: Border(
+													top: BorderSide(color: AppColors.mainBorderColor, width: 1),
+													left: BorderSide(color: AppColors.mainBorderColor, width: 1),
+													right: BorderSide(color: AppColors.mainBorderColor, width: 1),
+												),
 											),
+											indicatorSize: TabBarIndicatorSize.tab,
+											indicatorPadding: const EdgeInsets.all(1),
+											labelColor: AppColors.mainFgColor,
+											unselectedLabelColor: AppColors.mainFgColor,
+											labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+											unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+											dividerColor: Colors.transparent,
+											labelPadding: const EdgeInsets.symmetric(horizontal: 2),
+											tabs: [
+												_buildStyledTab('pre_match_tab'),
+												_buildStyledTab('auto_tab'),
+												_buildStyledTab('tele_tab'),
+												_buildStyledTab('end_game_tab'),
+											],
+										),
+										Expanded(
+											flex: 1,
+											child: Container(), // Right spacer for centering
 										),
 										SizedBox(
 											width: 72,
@@ -226,24 +232,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 															strokeWidth: 2,
 															valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
 														),
-													),
-												),
-											)
-										else
-											SizedBox(
-												width: 72,
-												child: Center(
-													child: Text(
-														syncState.pendingCount > 0
-																? '${syncState.pendingCount} pending'
-																: 'Synced',
-														style: Theme.of(context).textTheme.labelSmall?.copyWith(
-															color: syncState.pendingCount > 0
-																	? Colors.orange
-																	: Colors.white,
-														),
-														maxLines: 1,
-														overflow: TextOverflow.ellipsis,
 													),
 												),
 											),
