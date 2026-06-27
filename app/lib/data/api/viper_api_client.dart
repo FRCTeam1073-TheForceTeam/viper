@@ -35,12 +35,12 @@ class ViperApiClient {
 	final Logger _logger = Logger();
 
 	ViperApiClient({
-		required this.baseUrl,
+		required String baseUrl,
 		this.username,
 		this.password,
-	}) {
+	}) : baseUrl = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl {
 		final dioOptions = BaseOptions(
-			baseUrl: baseUrl,
+			baseUrl: this.baseUrl,
 			connectTimeout: const Duration(seconds: 10),
 			receiveTimeout: const Duration(seconds: 10),
 			validateStatus: (status) => status != null && status < 500,
