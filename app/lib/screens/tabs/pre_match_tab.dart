@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:drift/drift.dart' show Value;
 import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
@@ -39,9 +41,9 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 	bool _noShow = false;
 	ScoutData? _currentScout;
 
-	String _translate(String key) {
+	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
-		return AppLocalizations.translate(key, locale: locale);
+		return AppLocalizations.translate(key, locale: locale, variables: variables);
 	}
 
 	@override
@@ -69,13 +71,13 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 				'tr': 'Gösterilmedi',
 			},
 			'starting_position': {
-				'en': 'Starting Position',
-				'es': 'Posición inicial',
-				'pt': 'Posição inicial',
-				'fr': 'Position de départ',
-				'zh_tw': '起始位置',
-				'he': 'מיקום ההתחלה',
-				'tr': 'Başlangıç Pozisyonu',
+				'en': 'Click team _TEAMNUM_\'s starting position.',
+				'es': 'Haz clic en la posición de inicio del equipo _TEAMNUM_.',
+				'pt': 'Clique na posição inicial da equipe _TEAMNUM_.',
+				'fr': 'Cliquez sur la position de départ de l\'équipe _TEAMNUM_.',
+				'zh_tw': '點選隊伍_TEAMNUM_的起始位置。',
+				'he': 'לחץ על עמדת ההתחלה של צוות _TEAMNUM_.',
+				'tr': 'Takım _TEAMNUM_\'un başlangıç ​​pozisyonuna tıklayın.',
 			},
 			'proceed_auto_button': {
 				'en': 'Auto »',
@@ -94,6 +96,42 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 				'zh_tw': '賽前資料已保存',
 				'he': 'נתונים לפני המשחק נשמרו',
 				'tr': 'Maç öncesi veriler kaydedildi',
+			},
+			'instructions': {
+				'en': 'Instructions',
+				'es': 'Instrucciones',
+				'pt': 'Instruções',
+				'fr': 'Instructions',
+				'zh_tw': '說明',
+				'he': 'הוראות',
+				'tr': 'Talimatlar',
+			},
+			'brief_instructions': {
+				'en': 'Record robot actions by clicking corresponding buttons. Icons show what action each button performs.',
+				'es': 'Registra las acciones del robot haciendo clic en los botones correspondientes. Los iconos muestran qué acción realiza cada botón.',
+				'pt': 'Registre as ações do robô clicando nos botões correspondentes. Os ícones mostram qual ação cada botão executa.',
+				'fr': 'Enregistrez les actions du robot en cliquant sur les boutons correspondants. Les icônes montrent l\'action que chaque bouton effectue.',
+				'zh_tw': '通過點擊相應的按鈕記錄機器人的操作。圖標顯示每個按鈕執行的操作。',
+				'he': 'הקלט פעולות רובוט על ידי לחיצה על כפתורים המתאימים. הסמלים מראים איזו פעולה כל כפתור מבצע.',
+				'tr': 'İlgili düğmeleri tıklayarak robot eylemlerini kaydedin. Simgeler her düğmenin hangi eylemi gerçekleştirdiğini gösterir.',
+			},
+			'close': {
+				'en': 'Close',
+				'es': 'Cerrar',
+				'pt': 'Fechar',
+				'fr': 'Fermer',
+				'zh_tw': '關閉',
+				'he': 'סגור',
+				'tr': 'Kapat',
+			},
+			'full_instructions': {
+				'en': 'Scouting Instructions\n\nWatch your robot and record its actions by clicking on the corresponding buttons. The icons used for actions show what each button performs.\n\nSwitch to teleop when auto ends - the button will flash red and blue to remind you.\n\nUse the buttons at the bottom to save your data when done.',
+				'es': 'Instrucciones de exploración\n\nMira tu robot y registra sus acciones haciendo clic en los botones correspondientes. Los iconos utilizados para las acciones muestran lo que realiza cada botón.\n\nCambia a teleop cuando termina auto: el botón parpadeará en rojo y azul para recordarte.\n\nUtiliza los botones en la parte inferior para guardar tus datos cuando termines.',
+				'pt': 'Instruções de Scouting\n\nAssista seu robô e registre suas ações clicando nos botões correspondentes. Os ícones usados para ações mostram o que cada botão executa.\n\nMude para teleop quando auto terminar - o botão piscará em vermelho e azul para lembrá-lo.\n\nUse os botões na parte inferior para salvar seus dados quando terminar.',
+				'fr': 'Instructions de Scouting\n\nRegardez votre robot et enregistrez ses actions en cliquant sur les boutons correspondants. Les icônes utilisées pour les actions montrent ce que chaque bouton effectue.\n\nPassez à la téléop lorsque l\'auto se termine - le bouton clignotera en rouge et bleu pour vous le rappeler.\n\nUtilisez les boutons en bas pour enregistrer vos données lorsque vous avez terminé.',
+				'zh_tw': '偵查說明\n\n觀看您的機器人並通過點擊相應的按鈕記錄其動作。用於操作的圖標顯示每個按鈕執行的操作。\n\n當自動結束時切換到遙控 - 按鈕將閃爍紅色和藍色以提醒您。\n\n完成後使用底部的按鈕保存您的數據。',
+				'he': 'הוראות סקאוטינג\n\nצפו ברובוט שלכם ותעדו את פעולותיו על ידי לחיצה על הכפתורים המתאימים. הסמלים המשמשים לפעולות מראים מה כל כפתור מבצע.\n\nעברו לטלאופ כאשר אוטו מסתיים - הכפתור יהבהב באדום וכחול כדי להזכיר לכם.\n\nהשתמשו בכפתורים בתחתית כדי לשמור את הנתונים שלכם לאחר שסיימתם.',
+				'tr': 'Scouting Talimatları\n\nRobotunuzu izleyin ve ilgili düğmeleri tıklayarak eylemlerini kaydedin. Eylemler için kullanılan simgeler her düğmenin ne yaptığını gösterir.\n\nOtomatik bittiğinde teleop\'a geçin - düğme sizi hatırlatmak için kırmızı ve maviye yanıp sönecektir.\n\nBittikten sonra verilerinizi kaydetmek için alttaki düğmeleri kullanın.',
 			},
 		});
 
@@ -156,6 +194,112 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		}
 	}
 
+	String _getInstructionsFilePath() {
+		final locale = ref.read(selectedLocaleProvider);
+		final languageCode = locale.languageCode;
+
+		// Map language codes to file names
+		const languageFileMap = {
+			'en': 'scouting-instructions.md',
+			'es': 'scouting-instructions.es.md',
+			'pt': 'scouting-instructions.pt.md',
+			'fr': 'scouting-instructions.fr.md',
+			'zh': 'scouting-instructions.zh_tw.md',
+			'he': 'scouting-instructions.he.md',
+			'tr': 'scouting-instructions.tr.md',
+		};
+
+		final fileName = languageFileMap[languageCode] ?? 'scouting-instructions.md';
+		return 'assets/$fileName';
+	}
+
+	void _showInstructions() {
+		showDialog(
+			context: context,
+			builder: (context) => AlertDialog(
+				title: Text(_translate('instructions')),
+				content: FutureBuilder<String>(
+					future: rootBundle.loadString(_getInstructionsFilePath()),
+					builder: (context, snapshot) {
+						if (snapshot.connectionState == ConnectionState.waiting) {
+							return const Center(child: CircularProgressIndicator());
+						}
+						if (snapshot.hasError) {
+							return Text('Error loading instructions: ${snapshot.error}');
+						}
+
+						var htmlContent = snapshot.data ?? '';
+
+						// Extract image sizing information from HTML img tags
+						final Map<String, String> imageSizes = {};
+						final imgRegex = RegExp(r'<img[^>]*src="([^"]+)"[^>]*style="([^"]*)"[^>]*>');
+						for (final match in imgRegex.allMatches(htmlContent)) {
+							final src = match.group(1) ?? '';
+							final style = match.group(2) ?? '';
+							imageSizes[src] = style;
+						}
+
+						// Convert HTML img tags to markdown syntax: ![](filename.png)
+						htmlContent = htmlContent.replaceAllMapped(
+							RegExp(r'<img[^>]*src="([^"]+)"[^>]*>'),
+							(match) => '![](${match.group(1)})'
+						);
+
+						return SingleChildScrollView(
+							child: MarkdownBody(
+								data: htmlContent,
+								imageBuilder: (uri, title, alt) {
+									final imagePath = uri.toString();
+									final style = imageSizes[imagePath] ?? '';
+
+									// Parse max-width from style, e.g., "max-width:2em" → 2em
+									final maxWidthMatch = RegExp(r'max-width:\s*([^;]+)').firstMatch(style);
+									final maxWidth = maxWidthMatch?.group(1) ?? '100%';
+
+									// Convert em to logical pixels (1em ≈ 14px in Flutter default)
+									double? constraintWidth;
+									if (maxWidth.endsWith('em')) {
+										final emValue = double.tryParse(maxWidth.replaceAll('em', ''));
+										if (emValue != null) {
+											constraintWidth = emValue * 14;
+										}
+									}
+
+									final image = Image.asset(
+										'assets/images/$imagePath',
+										fit: BoxFit.contain,
+									);
+
+									if (constraintWidth != null) {
+										return ConstrainedBox(
+											constraints: BoxConstraints(maxWidth: constraintWidth),
+											child: image,
+										);
+									}
+									return image;
+								},
+								styleSheet: MarkdownStyleSheet(
+									h2: Theme.of(context).textTheme.titleMedium,
+									h3: Theme.of(context).textTheme.titleSmall,
+									p: Theme.of(context).textTheme.bodyMedium,
+									em: Theme.of(context).textTheme.bodyMedium?.copyWith(fontStyle: FontStyle.italic),
+									strong: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+									listBullet: Theme.of(context).textTheme.bodyMedium,
+								),
+							),
+						);
+					},
+				),
+				actions: [
+					TextButton(
+						onPressed: () => Navigator.pop(context),
+						child: Text(_translate('close')),
+					),
+				],
+			),
+		);
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		// Watch locale to trigger rebuild when language changes
@@ -177,13 +321,51 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						Container(
 							color: AppColors.mainBgColor,
 							padding: const EdgeInsets.all(16),
-						child: Text(
-							'${widget.eventName}${widget.botPosition != null ? ', ${widget.botPosition}' : ''}${widget.matchNumber != null ? ', ${getShortMatchName(widget.matchNumber!)}' : ''}${widget.teamNumber != null ? ', Team ${widget.teamNumber}' : ''}',
-							style: Theme.of(context).textTheme.titleMedium?.copyWith(
-								color: AppColors.mainFgColor,
-							),
+							child: Text(
+								_translate('scouting_heading', variables: {
+									'EVENTNAME': widget.eventName,
+									'POS': widget.botPosition ?? '',
+									'MATCHNAME': widget.matchNumber != null ? getShortMatchName(widget.matchNumber!) : '',
+									'TEAMNUM': widget.teamNumber ?? '',
+								}),
+								style: Theme.of(context).textTheme.titleMedium?.copyWith(
+									color: AppColors.mainFgColor,
+								),
 							),
 						),
+					const SizedBox(height: 16),
+					Center(
+						child: Column(
+							children: [
+								FilledButton(
+									style: FilledButton.styleFrom(
+										backgroundColor: AppColors.buttonBgColor,
+										foregroundColor: AppColors.buttonFgColor,
+										padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+										shape: RoundedRectangleBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									onPressed: _showInstructions,
+									child: Text(
+										_translate('instructions'),
+										style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+									),
+								),
+								const SizedBox(height: 8),
+								Padding(
+									padding: const EdgeInsets.symmetric(horizontal: 16),
+									child: Text(
+										_translate('brief_instructions'),
+										style: Theme.of(context).textTheme.bodySmall?.copyWith(
+											color: AppColors.mainFgColor.withOpacity(0.7),
+										),
+										textAlign: TextAlign.center,
+									),
+								),
+							],
+						),
+					),
 					const SizedBox(height: 16),
 					Card(
 						child: Padding(
@@ -192,7 +374,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: [
 									Text(
-										_translate('starting_position'),
+										_translate('starting_position', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 16),

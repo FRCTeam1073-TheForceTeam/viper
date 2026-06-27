@@ -59,6 +59,9 @@ dependencies:
   # Internationalization (i18n)
   intl: ^0.19.0
 
+  # Markdown rendering
+  flutter_markdown: ^0.6.0
+
   # Path provider
   path_provider: ^2.1.0
 
@@ -89,6 +92,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/scouting-instructions.md
+    - assets/scouting-instructions.es.md
+    - assets/scouting-instructions.pt.md
+    - assets/scouting-instructions.fr.md
+    - assets/scouting-instructions.zh_tw.md
+    - assets/scouting-instructions.he.md
+    - assets/scouting-instructions.tr.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
