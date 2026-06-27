@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:typed_data';
 import '../../services/csv_parser.dart';
 
 /// Event model
@@ -288,6 +289,62 @@ class ViperApiClient {
 			_logger.e('Error fetching match schedule CSV for $eventId: $e');
 			return null;
 		}
+	}
+
+	// =========================================================================
+	// ROBOT PHOTOS
+	// =========================================================================
+
+	/// Build the full URL for a robot photo
+	/// Returns URL like: http://localhost:8080/data/2026/1234.jpg
+	String getRobotPhotoUrl(String eventId, String teamNumber) {
+		final year = _extractYearFromEventId(eventId);
+		final url = '$baseUrl/data/$year/$teamNumber.jpg';
+		_logger.d('🖼️ Robot photo URL: $url (eventId: $eventId, team: $teamNumber)');
+		return url;
+	}
+
+	/// Fetch robot photo as bytes
+	/// Uses authenticated Dio client to respect credentials
+	Future<Uint8List?> fetchRobotPhotoBytes(String eventId, String teamNumber) async {
+		try {
+			final year = _extractYearFromEventId(eventId);
+			final path = '/data/$year/$teamNumber.jpg';
+			final fullUrl = '$baseUrl$path';
+
+			_logger.i('📥 Downloading robot photo from: $fullUrl');
+
+			final response = await _dio.get<List<int>>(
+				path,
+				options: Options(responseType: ResponseType.bytes),
+			);
+
+			if (response.statusCode != 200) {
+				_logger.e('Failed to fetch robot photo: HTTP ${response.statusCode}');
+				return null;
+			}
+
+			if (response.data == null || response.data!.isEmpty) {
+				_logger.w('Robot photo returned empty data');
+				return null;
+			}
+
+			_logger.i('✅ Robot photo downloaded: ${response.data!.length} bytes');
+			return Uint8List.fromList(response.data!);
+		} catch (e) {
+			_logger.e('Error downloading robot photo for $eventId/$teamNumber: $e');
+			return null;
+		}
+	}
+
+	/// Extract year from eventId
+	/// Examples: "2026demo" -> "2026", "2025falb" -> "2025"
+	String _extractYearFromEventId(String eventId) {
+		final yearMatch = RegExp(r'(\d{4})').firstMatch(eventId);
+		if (yearMatch != null) {
+			return yearMatch.group(1) ?? '2026';
+		}
+		return '2026'; // Default year
 	}
 
 	// =========================================================================

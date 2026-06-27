@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -311,6 +312,9 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		// Get the field side (left or right)
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
+		// Get baseUrl for robot photo
+		final apiClientAsync = ref.watch(apiClientProvider);
+
 		return SingleChildScrollView(
 			padding: const EdgeInsets.all(16),
 			child: Column(
@@ -432,6 +436,45 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						],
 						),
 					),
+					const SizedBox(height: 16),
+					// Robot Photo below the two-column layout
+					if (widget.teamNumber != null)
+						apiClientAsync.when(
+							data: (apiClient) => FutureBuilder<Uint8List?>(
+								future: apiClient.fetchRobotPhotoBytes(widget.eventId, widget.teamNumber!),
+								builder: (context, snapshot) {
+									if (snapshot.connectionState == ConnectionState.waiting) {
+										return const Padding(
+											padding: EdgeInsets.symmetric(vertical: 8),
+											child: CircularProgressIndicator(),
+										);
+									}
+
+									if (snapshot.hasError || snapshot.data == null) {
+										// Error logging already handled in API client
+										return const SizedBox.shrink();
+									}
+
+									return Padding(
+										padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+										child: Center(
+											child: LimitedBox(
+												maxWidth: MediaQuery.of(context).size.width - 32,
+												child: Image.memory(
+													snapshot.data!,
+													fit: BoxFit.contain,
+												),
+											),
+										),
+									);
+								},
+							),
+							loading: () => const Padding(
+								padding: EdgeInsets.symmetric(vertical: 8),
+								child: SizedBox.shrink(),
+							),
+							error: (error, stack) => const SizedBox.shrink(),
+						),
 				],
 			),
 		);

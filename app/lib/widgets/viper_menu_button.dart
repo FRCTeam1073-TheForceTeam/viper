@@ -89,7 +89,6 @@ class ViperMenuButton extends ConsumerWidget {
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
-		print('[VIPER_MENU] Building menu button - always visible');
 		return IconButton(
 			icon: const Icon(Icons.more_vert),
 			onPressed: () => _showMenu(context),
