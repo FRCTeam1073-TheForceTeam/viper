@@ -31,6 +31,10 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 	int _scrollRetries = 0;
 	static const _maxScrollRetries = 15;
 
+	// Photo preloading state
+	bool _isPreloadingPhotos = false;
+	int _preloadedCount = 0;
+
 	/// Helper to get translated text with current provider locale
 	String _translate(String key) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -286,6 +290,83 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 		// Reset scroll when widget updates (e.g., bot position changes)
 		_hasScrolled = false;
 		_scrollRetries = 0;
+	}
+
+	/// Preload robot photos for all visible matches
+	/// Starts from nextMatchIndex, goes to end, then loops back to beginning
+	void _preloadRobotPhotos(
+		List<dynamic> visibleMatches,
+		int startIndex,
+		String? eventId,
+	) {
+		if (!mounted || visibleMatches.isEmpty || eventId == null) return;
+		if (_isPreloadingPhotos) return; // Already preloading
+
+		_isPreloadingPhotos = true;
+		_preloadedCount = 0;
+
+		// Try to get API client from ref (may still be loading)
+		final apiClientAsync = ref.read(apiClientProvider);
+		apiClientAsync.whenData((apiClient) {
+			if (!mounted) return; // Widget disposed
+
+			// Create list of indices in circular order starting from startIndex
+			final indices = <int>[];
+			for (int i = 0; i < visibleMatches.length; i++) {
+				indices.add((startIndex + i) % visibleMatches.length);
+			}
+
+			// Preload photos sequentially
+			_preloadPhotosSequentially(apiClient, visibleMatches, indices, 0);
+		});
+	}
+
+	/// Helper to preload photos one at a time
+	void _preloadPhotosSequentially(
+		dynamic apiClient,
+		List<dynamic> visibleMatches,
+		List<int> indices,
+		int currentIndex,
+	) {
+		if (!mounted || currentIndex >= indices.length) {
+			_isPreloadingPhotos = false;
+			return;
+		}
+
+		final matchIndex = indices[currentIndex];
+		final match = visibleMatches[matchIndex];
+		final team = widget.botPosition != null
+				? match.getTeamForPosition(widget.botPosition!)
+				: null;
+
+		if (team != null && team.isNotEmpty) {
+			// Fetch the photo (will cache it)
+			apiClient.fetchRobotPhotoBytes(match.matchNumber, team).then((_) {
+				if (mounted) {
+					_preloadedCount++;
+					print('📸 Preloaded photo $currentIndex/${indices.length}: $team');
+					// Continue with next photo after a small delay to avoid overwhelming the system
+					Future.delayed(const Duration(milliseconds: 100), () {
+						if (mounted) {
+							_preloadPhotosSequentially(apiClient, visibleMatches, indices, currentIndex + 1);
+						}
+					});
+				}
+			}).catchError((e) {
+				// Error preloading, continue anyway
+				print('⚠️ Error preloading photo for team $team: $e');
+				if (mounted) {
+					Future.delayed(const Duration(milliseconds: 100), () {
+						if (mounted) {
+							_preloadPhotosSequentially(apiClient, visibleMatches, indices, currentIndex + 1);
+						}
+					});
+				}
+			});
+		} else {
+			// No team for this match, skip and continue
+			_preloadPhotosSequentially(apiClient, visibleMatches, indices, currentIndex + 1);
+		}
 	}
 
 	void _performScroll(int scrollTargetIndex, int firstUnscoutedIndex) {
@@ -564,10 +645,20 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 							// Schedule scroll after frame is painted
 							SchedulerBinding.instance.scheduleFrameCallback((_) {
 								_performScroll(scrollTargetIndex, firstUnscoutedIndex);
-							});
 
-							return ListView.builder(
-								controller: _scrollController,
+							// Start preloading robot photos from the next match
+							final nextMatchIndex = firstUnscoutedIndex > -1 ? firstUnscoutedIndex : 0;
+							SchedulerBinding.instance.addPostFrameCallback((_) {
+								_preloadRobotPhotos(
+									visibleMatches.map((item) => item.$2).toList(),
+									nextMatchIndex,
+									ref.read(selectedEventProvider),
+								);
+							});
+						});
+
+						return ListView.builder(
+							controller: _scrollController,
 							itemCount: visibleMatches.length + 1,
 							itemBuilder: (context, index) {
 								// Manual entry button at the bottom
