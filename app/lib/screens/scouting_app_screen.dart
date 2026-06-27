@@ -157,87 +157,110 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 			length: 4,
 			initialIndex: _selectedTabIndex,
 			child: Scaffold(
-				appBar: AppBar(
-					toolbarHeight: 60,
-					backgroundColor: AppColors.mainBgColor,
-					elevation: 0,
-					title: Row(
-						mainAxisAlignment: MainAxisAlignment.center,
-					mainAxisSize: MainAxisSize.max,
-						children: [
-							TabBar(
-								controller: _tabController,
-								isScrollable: true,
-							indicator: BoxDecoration(
-								color: teamColor,
-								borderRadius: const BorderRadius.only(
-									topLeft: Radius.circular(6),
-									topRight: Radius.circular(6),
-								),
-								border: Border.all(color: AppColors.mainBorderColor, width: 1),
-							),
-							indicatorSize: TabBarIndicatorSize.tab,
-							indicatorPadding: const EdgeInsets.all(1),
-							labelColor: AppColors.mainFgColor,
-							unselectedLabelColor: AppColors.mainFgColor,
-							labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-							unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
-							dividerColor: Colors.transparent,
-							labelPadding: const EdgeInsets.symmetric(horizontal: 2),
-							tabs: [
-								_buildStyledTab('pre_match_tab'),
-								_buildStyledTab('auto_tab'),
-								_buildStyledTab('tele_tab'),
-								_buildStyledTab('end_game_tab'),
-							],
-						),
-					],
-				),
-					actions: [
-						ViperMenuButton(
-							onSync: () {
-								ref.read(syncStateProvider.notifier).syncScoutData();
-							},
-							isSyncing: syncState.isSyncing,
-							pendingCount: syncState.pendingCount,
-						),
-						if (syncState.isSyncing)
-							const Padding(
-								padding: EdgeInsets.all(12),
-								child: SizedBox(
-									width: 20,
-									height: 20,
-									child: CircularProgressIndicator(
-										strokeWidth: 2,
-										valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+				body: CustomScrollView(
+					slivers: [
+						SliverAppBar(
+							toolbarHeight: 60,
+							backgroundColor: AppColors.mainBgColor,
+							elevation: 0,
+							floating: true,
+							snap: true,
+							title: Row(
+								mainAxisAlignment: MainAxisAlignment.center,
+								mainAxisSize: MainAxisSize.max,
+								children: [
+									TabBar(
+										controller: _tabController,
+										isScrollable: true,
+										indicator: BoxDecoration(
+											color: teamColor,
+											borderRadius: const BorderRadius.only(
+												topLeft: Radius.circular(6),
+												topRight: Radius.circular(6),
+											),
+										border: Border(
+											top: BorderSide(color: AppColors.mainBorderColor, width: 1),
+											left: BorderSide(color: AppColors.mainBorderColor, width: 1),
+											right: BorderSide(color: AppColors.mainBorderColor, width: 1),
+										),
+										),
+										indicatorSize: TabBarIndicatorSize.tab,
+										indicatorPadding: const EdgeInsets.all(1),
+										labelColor: AppColors.mainFgColor,
+										unselectedLabelColor: AppColors.mainFgColor,
+										labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+										unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+										dividerColor: Colors.transparent,
+										labelPadding: const EdgeInsets.symmetric(horizontal: 2),
+										tabs: [
+											_buildStyledTab('pre_match_tab'),
+											_buildStyledTab('auto_tab'),
+											_buildStyledTab('tele_tab'),
+											_buildStyledTab('end_game_tab'),
+										],
 									),
+								],
+							),
+							actions: [
+								ViperMenuButton(
+									onSync: () {
+										ref.read(syncStateProvider.notifier).syncScoutData();
+									},
+									isSyncing: syncState.isSyncing,
+									pendingCount: syncState.pendingCount,
 								),
-							)
-						else
-							Padding(
-								padding: const EdgeInsets.all(12),
-								child: Center(
-									child: Text(
-										syncState.pendingCount > 0
-												? '${syncState.pendingCount} pending'
-												: 'Synced',
-										style: Theme.of(context).textTheme.labelSmall?.copyWith(
-											color: syncState.pendingCount > 0
-													? Colors.orange
-													: Colors.white,
+								if (syncState.isSyncing)
+									const Padding(
+										padding: EdgeInsets.all(12),
+										child: SizedBox(
+											width: 20,
+											height: 20,
+											child: CircularProgressIndicator(
+												strokeWidth: 2,
+												valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+											),
+										),
+									)
+								else
+									Padding(
+										padding: const EdgeInsets.all(12),
+										child: Center(
+											child: Text(
+												syncState.pendingCount > 0
+														? '${syncState.pendingCount} pending'
+														: 'Synced',
+												style: Theme.of(context).textTheme.labelSmall?.copyWith(
+													color: syncState.pendingCount > 0
+															? Colors.orange
+															: Colors.white,
+												),
+											),
 										),
 									),
+							],
+						),
+						SliverFillRemaining(
+							child: Container(
+								margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+								decoration: BoxDecoration(
+									border: Border(
+										top: BorderSide(color: AppColors.mainBorderColor, width: 1),
+										left: BorderSide(color: AppColors.mainBorderColor, width: 1),
+										right: BorderSide(color: AppColors.mainBorderColor, width: 1),
+										bottom: BorderSide(color: AppColors.mainBorderColor, width: 1),
+									),
+								),
+								child: TabBarView(
+									controller: _tabController,
+									children: [
+										_buildTabContent(ref, 0),
+										_buildTabContent(ref, 1),
+										_buildTabContent(ref, 2),
+										_buildTabContent(ref, 3),
+									],
 								),
 							),
-					],
-				),
-				body: TabBarView(
-					controller: _tabController,
-					children: [
-						_buildTabContent(ref, 0),
-						_buildTabContent(ref, 1),
-						_buildTabContent(ref, 2),
-						_buildTabContent(ref, 3),
+						),
 					],
 				),
 			),
