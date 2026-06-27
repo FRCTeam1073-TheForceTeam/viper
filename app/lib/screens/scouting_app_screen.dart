@@ -10,6 +10,7 @@ import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
+import '../constants/colors.dart';
 
 class ScoutingAppScreen extends ConsumerStatefulWidget {
 	final EventModel selectedEvent;
@@ -27,32 +28,41 @@ class ScoutingAppScreen extends ConsumerStatefulWidget {
 	ConsumerState<ScoutingAppScreen> createState() => _ScoutingAppScreenState();
 }
 
-class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
+class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with TickerProviderStateMixin {
 	int _selectedTabIndex = 0;
 	String? _matchNumber;
 	String? _teamNumber;
-
-	late final List<Widget> _tabs;
+	late TabController _tabController;
 
 	String _translate(String key) {
 		final locale = ref.read(selectedLocaleProvider);
 		return AppLocalizations.translate(key, locale: locale);
 	}
 
+	Widget _buildStyledTab(String labelKey) {
+		return Padding(
+			padding: const EdgeInsets.symmetric(horizontal: 12),
+			child: Tab(text: _translate(labelKey)),
+		);
+	}
+
 	@override
 	void initState() {
 		super.initState();
 
+		// Initialize TabController with 4 tabs
+		_tabController = TabController(length: 4, vsync: this);
+
 		// Register translations on demand when this screen is first loaded
 		AppLocalizations.addI18n({
 			'pre_match_tab': {
-				'en': 'Pre-Match',
-				'es': 'Previo al partido',
-				'pt': 'Pré-jogo',
-				'fr': 'Avant match',
+				'en': 'Pre',
+				'es': 'Previo',
+				'pt': 'Pré',
+				'fr': 'Avant',
 				'zh_tw': '賽前',
-				'he': 'לפני המשחק',
-				'tr': 'Maç Öncesi',
+				'he': 'לפני',
+				'tr': 'Öncesi',
 			},
 			'auto_tab': {
 				'en': 'Auto',
@@ -63,55 +73,74 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 				'he': 'אוטו',
 				'tr': 'Otomatik',
 			},
-			'teleop_tab': {
-				'en': 'Teleop',
-				'es': 'Teleoperado',
-				'pt': 'Teleoperado',
-				'fr': 'Téléopération',
-				'zh_tw': '遠程操作',
-				'he': 'טלאופ',
-				'tr': 'Teleop',
+			'tele_tab': {
+				'en': 'Tele',
+				'es': 'Tele',
+				'pt': 'Tele',
+				'fr': 'Tele',
+				'zh_tw': '遠程',
+				'he': 'טלה',
+				'tr': 'Tele',
 			},
 			'end_game_tab': {
-				'en': 'End Game',
+				'en': 'End',
 				'es': 'Final',
-				'pt': 'Endgame',
-				'fr': 'Fin du match',
-				'zh_tw': '賽末',
-				'he': 'סיום המשחק',
-				'tr': 'Oyun Sonu',
+				'pt': 'Fim',
+				'fr': 'Fin',
+				'zh_tw': '結束',
+				'he': 'סוף',
+				'tr': 'Son',
 			},
 		});
 
 		// Use prefilled values if provided
 		_matchNumber = widget.prefilledMatch;
 		_teamNumber = widget.prefilledTeam;
+	}
 
-		_tabs = [
-			PreMatchTab(
-				eventId: widget.selectedEvent.eventId,
-				matchNumber: _matchNumber,
-				teamNumber: _teamNumber,
-				onProceedToAuto: () {
-					setState(() => _selectedTabIndex = 1);
-				},
-			),
-			AutoTab(
-				eventId: widget.selectedEvent.eventId,
-				matchNumber: _matchNumber,
-				teamNumber: _teamNumber,
-			),
-			TeleopTab(
-				eventId: widget.selectedEvent.eventId,
-				matchNumber: _matchNumber,
-				teamNumber: _teamNumber,
-			),
-			EndGameTab(
-				eventId: widget.selectedEvent.eventId,
-				matchNumber: _matchNumber,
-				teamNumber: _teamNumber,
-			),
-		];
+	@override
+	void dispose() {
+		_tabController.dispose();
+		super.dispose();
+	}
+
+	Widget _buildTabContent(WidgetRef ref, int tabIndex) {
+		final botPosition = ref.watch(selectedBotPositionProvider);
+		final selectedMatch = ref.watch(selectedMatchProvider);
+
+		switch (tabIndex) {
+			case 0:
+				return PreMatchTab(
+					eventId: widget.selectedEvent.eventId,
+					eventName: widget.selectedEvent.name,
+					botPosition: botPosition,
+					matchNumber: selectedMatch.match,
+					teamNumber: selectedMatch.team,
+					onProceedToAuto: () {
+						_tabController.animateTo(1);
+					},
+				);
+			case 1:
+				return AutoTab(
+					eventId: widget.selectedEvent.eventId,
+					matchNumber: selectedMatch.match,
+					teamNumber: selectedMatch.team,
+				);
+			case 2:
+				return TeleopTab(
+					eventId: widget.selectedEvent.eventId,
+					matchNumber: selectedMatch.match,
+					teamNumber: selectedMatch.team,
+				);
+			case 3:
+				return EndGameTab(
+					eventId: widget.selectedEvent.eventId,
+					matchNumber: selectedMatch.match,
+					teamNumber: selectedMatch.team,
+				);
+			default:
+				return const SizedBox();
+		}
 	}
 
 	@override
@@ -121,94 +150,96 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> {
 		ref.watch(selectedLocaleProvider);
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
+		final isBlueTeam = selectedBot?.startsWith('B') ?? false;
+		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 
-		return Scaffold(
-			appBar: AppBar(
-				title: Column(
-					crossAxisAlignment: CrossAxisAlignment.start,
-					mainAxisSize: MainAxisSize.min,
-					children: [
-						Text(
-							widget.selectedEvent.name,
-							style: Theme.of(context).textTheme.titleMedium?.copyWith(
-								color: Colors.white,
+		return DefaultTabController(
+			length: 4,
+			initialIndex: _selectedTabIndex,
+			child: Scaffold(
+				appBar: AppBar(
+					toolbarHeight: 60,
+					backgroundColor: AppColors.mainBgColor,
+					elevation: 0,
+					title: Row(
+						mainAxisAlignment: MainAxisAlignment.center,
+					mainAxisSize: MainAxisSize.max,
+						children: [
+							TabBar(
+								controller: _tabController,
+								isScrollable: true,
+							indicator: BoxDecoration(
+								color: teamColor,
+								borderRadius: const BorderRadius.only(
+									topLeft: Radius.circular(6),
+									topRight: Radius.circular(6),
+								),
+								border: Border.all(color: AppColors.mainBorderColor, width: 1),
 							),
+							indicatorSize: TabBarIndicatorSize.tab,
+							indicatorPadding: const EdgeInsets.all(1),
+							labelColor: AppColors.mainFgColor,
+							unselectedLabelColor: AppColors.mainFgColor,
+							labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+							unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
+							dividerColor: Colors.transparent,
+							labelPadding: const EdgeInsets.symmetric(horizontal: 2),
+							tabs: [
+								_buildStyledTab('pre_match_tab'),
+								_buildStyledTab('auto_tab'),
+								_buildStyledTab('tele_tab'),
+								_buildStyledTab('end_game_tab'),
+							],
 						),
-						if (_matchNumber != null && _teamNumber != null)
-							Text(
-								'Match $_matchNumber • Team $_teamNumber${selectedBot != null ? ' • Pos: $selectedBot' : ''}',
-								style: Theme.of(context).textTheme.labelSmall?.copyWith(
-									color: Colors.white70,
+					],
+				),
+					actions: [
+						ViperMenuButton(
+							onSync: () {
+								ref.read(syncStateProvider.notifier).syncScoutData();
+							},
+							isSyncing: syncState.isSyncing,
+							pendingCount: syncState.pendingCount,
+						),
+						if (syncState.isSyncing)
+							const Padding(
+								padding: EdgeInsets.all(12),
+								child: SizedBox(
+									width: 20,
+									height: 20,
+									child: CircularProgressIndicator(
+										strokeWidth: 2,
+										valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+									),
+								),
+							)
+						else
+							Padding(
+								padding: const EdgeInsets.all(12),
+								child: Center(
+									child: Text(
+										syncState.pendingCount > 0
+												? '${syncState.pendingCount} pending'
+												: 'Synced',
+										style: Theme.of(context).textTheme.labelSmall?.copyWith(
+											color: syncState.pendingCount > 0
+													? Colors.orange
+													: Colors.white,
+										),
+									),
 								),
 							),
 					],
 				),
-				actions: [
-					ViperMenuButton(
-						onSync: () {
-							ref.read(syncStateProvider.notifier).syncScoutData();
-						},
-						isSyncing: syncState.isSyncing,
-						pendingCount: syncState.pendingCount,
-					),
-					if (syncState.isSyncing)
-						const Padding(
-							padding: EdgeInsets.all(12),
-							child: SizedBox(
-								width: 20,
-								height: 20,
-								child: CircularProgressIndicator(
-									strokeWidth: 2,
-									valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-								),
-							),
-						)
-					else
-						Padding(
-							padding: const EdgeInsets.all(12),
-							child: Center(
-								child: Text(
-									syncState.pendingCount > 0
-											? '${syncState.pendingCount} pending'
-											: 'Synced',
-									style: Theme.of(context).textTheme.labelSmall?.copyWith(
-										color: syncState.pendingCount > 0
-												? Colors.orange
-												: Colors.white,
-									),
-								),
-							),
-						),
-				],
-			),
-			body: IndexedStack(
-				index: _selectedTabIndex,
-				children: _tabs,
-			),
-			bottomNavigationBar: BottomNavigationBar(
-				currentIndex: _selectedTabIndex,
-				onTap: (index) {
-					setState(() => _selectedTabIndex = index);
-				},
-				type: BottomNavigationBarType.fixed,
-				items: [
-					BottomNavigationBarItem(
-						icon: const Icon(Icons.edit),
-						label: _translate('pre_match_tab'),
-					),
-					BottomNavigationBarItem(
-						icon: const Icon(Icons.flash_on),
-						label: _translate('auto_tab'),
-					),
-					BottomNavigationBarItem(
-						icon: const Icon(Icons.videogame_asset),
-						label: _translate('teleop_tab'),
-					),
-					BottomNavigationBarItem(
-						icon: const Icon(Icons.trending_up),
-						label: _translate('end_game_tab'),
-					),
-				],
+				body: TabBarView(
+					controller: _tabController,
+					children: [
+						_buildTabContent(ref, 0),
+						_buildTabContent(ref, 1),
+						_buildTabContent(ref, 2),
+						_buildTabContent(ref, 3),
+					],
+				),
 			),
 		);
 	}

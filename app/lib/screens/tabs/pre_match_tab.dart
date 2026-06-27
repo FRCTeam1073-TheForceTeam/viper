@@ -9,12 +9,15 @@ import '../../providers/field_side_provider.dart';
 import '../../services/scout_data_helper.dart';
 import '../../services/localization.dart';
 import '../../constants/colors.dart';
+import '../../utils/match_name_converter.dart';
 import '../../widgets/checkbox_button.dart';
 
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
 	final String? matchNumber;
 	final String? teamNumber;
+	final String eventName;
+	final String? botPosition;
 	final VoidCallback? onProceedToAuto;
 
 	const PreMatchTab({
@@ -22,6 +25,8 @@ class PreMatchTab extends ConsumerStatefulWidget {
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
+		required this.eventName,
+		this.botPosition,
 		this.onProceedToAuto,
 	}) : super(key: key);
 
@@ -45,6 +50,15 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 
 		// Register translations on demand when this tab is first loaded
 		AppLocalizations.addI18n({
+			'scouting_heading': {
+				'en': '_EVENTNAME_, _POS_, _MATCHNAME_, Team _TEAMNUM_',
+				'es': 'Exploración',
+				'pt': '_EVENTNAME_, _POS_, _MATCHNAME_, Equipe _TEAMNUM_',
+				'fr': '_EVENTNAME_, _POS_, _MATCHNAME_, Équipe _TEAMNUM_',
+				'zh_tw': '_EVENTNAME_、_POS_、_MATCHNAME_、隊伍 _TEAMNUM_',
+				'he': '_EVENTNAME_, _POS_, _MATCHNAME_, צוות _TEAMNUM_',
+				'tr': '_EVENTNAME_, _POS_, _MATCHNAME_, Takım _TEAMNUM_',
+			},
 			'no_show': {
 				'en': 'No Show',
 				'es': 'No',
@@ -158,6 +172,19 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.stretch,
 				children: [
+					// Heading: Event, Bot Position, Match, Team
+					if (widget.eventName.isNotEmpty || widget.botPosition != null || widget.matchNumber != null || widget.teamNumber != null)
+						Container(
+							color: AppColors.mainBgColor,
+							padding: const EdgeInsets.all(16),
+						child: Text(
+							'${widget.eventName}${widget.botPosition != null ? ', ${widget.botPosition}' : ''}${widget.matchNumber != null ? ', ${getShortMatchName(widget.matchNumber!)}' : ''}${widget.teamNumber != null ? ', Team ${widget.teamNumber}' : ''}',
+							style: Theme.of(context).textTheme.titleMedium?.copyWith(
+								color: AppColors.mainFgColor,
+							),
+							),
+						),
+					const SizedBox(height: 16),
 					Card(
 						child: Padding(
 							padding: const EdgeInsets.all(16),
