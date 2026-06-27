@@ -98,13 +98,13 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 				'tr': 'Maç öncesi veriler kaydedildi',
 			},
 			'instructions': {
-				'en': 'Instructions',
-				'es': 'Instrucciones',
-				'pt': 'Instruções',
-				'fr': 'Instructions',
-				'zh_tw': '說明',
-				'he': 'הוראות',
-				'tr': 'Talimatlar',
+				'en': 'Full Instructions',
+				'es': 'Instrucciones completas',
+				'pt': 'Instruções completas',
+				'fr': 'Instructions complètes',
+				'zh_tw': '完整說明',
+				'he': 'הוראות מלאות',
+				'tr': 'Tam Talimatlar',
 			},
 			'brief_instructions': {
 				'en': 'Record robot actions by clicking corresponding buttons. Icons show what action each button performs.',
@@ -334,86 +334,102 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 							),
 						),
 					const SizedBox(height: 16),
-					Center(
-						child: Column(
+					// Two-column layout: Starting Position (left) | Instructions & Buttons (right)
+					IntrinsicHeight(
+						child: Row(
+							crossAxisAlignment: CrossAxisAlignment.start,
 							children: [
-								FilledButton(
-									style: FilledButton.styleFrom(
-										backgroundColor: AppColors.buttonBgColor,
-										foregroundColor: AppColors.buttonFgColor,
-										padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-										shape: RoundedRectangleBorder(
-											borderRadius: BorderRadius.circular(8),
+							// LEFT COLUMN: Starting Position (fixed width matching image + padding)
+							SizedBox(
+								width: 150,
+								child: Card(
+									child: Padding(
+										padding: const EdgeInsets.all(16),
+										child: Column(
+											crossAxisAlignment: CrossAxisAlignment.start,
+											children: [
+												Text(
+													_translate('starting_position', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+													style: Theme.of(context).textTheme.titleMedium,
+												),
+												const SizedBox(height: 16),
+												// Starting position interactive area (clickable/draggable)
+												Center(
+													child: _StartingPositionArea(
+														selectedPosition: _selectedPosition,
+														isBlueTeam: isBlueTeam,
+														fieldSide: fieldSide,
+														onPositionChanged: (newPosition) {
+															print('💾 Saving starting position: $newPosition');
+															setState(() => _selectedPosition = newPosition);
+														},
+													),
+												),
+											],
 										),
 									),
-									onPressed: _showInstructions,
-									child: Text(
-										_translate('instructions'),
-										style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-									),
 								),
-								const SizedBox(height: 8),
-								Padding(
-									padding: const EdgeInsets.symmetric(horizontal: 16),
-									child: Text(
-										_translate('brief_instructions'),
-										style: Theme.of(context).textTheme.bodySmall?.copyWith(
-											color: AppColors.mainFgColor.withOpacity(0.7),
+							),
+							const SizedBox(width: 16),
+							// RIGHT COLUMN: Instructions & Buttons
+							Expanded(
+								child: Column(
+									crossAxisAlignment: CrossAxisAlignment.center,
+									mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+									children: [
+										// Brief Instructions
+										Padding(
+											padding: const EdgeInsets.only(bottom: 16),
+											child: Text(
+												_translate('brief_instructions'),
+												style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+													color: AppColors.mainFgColor.withOpacity(0.7),
+												),
+												textAlign: TextAlign.center,
+											),
 										),
-										textAlign: TextAlign.center,
-									),
-								),
-							],
-						),
-					),
-					const SizedBox(height: 16),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('starting_position', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 16),
-									// Starting position interactive area (clickable/draggable)
-									_StartingPositionArea(
-										selectedPosition: _selectedPosition,
-										isBlueTeam: isBlueTeam,
-										fieldSide: fieldSide,
-										onPositionChanged: (newPosition) {
-											print('💾 Saving starting position: $newPosition');
-											setState(() => _selectedPosition = newPosition);
-										},
-									),
-								],
-							),
-						),
-					),
-					const SizedBox(height: 16),
-					CheckboxButton(
-						isChecked: _noShow,
-						translationKey: 'no_show',
-						onChanged: (newValue) => setState(() => _noShow = newValue),
-					),
-					const SizedBox(height: 16),
-					Center(
-						child: FilledButton(
-							style: FilledButton.styleFrom(
-								backgroundColor: AppColors.buttonBgColor,
-								foregroundColor: AppColors.buttonFgColor,
-								padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-								shape: RoundedRectangleBorder(
-									borderRadius: BorderRadius.circular(8),
+										// Instructions Button
+										FilledButton(
+											style: FilledButton.styleFrom(
+												backgroundColor: AppColors.buttonBgColor,
+												foregroundColor: AppColors.buttonFgColor,
+												padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+												shape: RoundedRectangleBorder(
+													borderRadius: BorderRadius.circular(8),
+												),
+											),
+											onPressed: _showInstructions,
+											child: Text(
+												_translate('instructions'),
+												style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+											),
+										),
+										// No Show Button
+										CheckboxButton(
+											isChecked: _noShow,
+											translationKey: 'no_show',
+											onChanged: (newValue) => setState(() => _noShow = newValue),
+										),
+										// Proceed to Auto Button
+										FilledButton(
+											style: FilledButton.styleFrom(
+												backgroundColor: AppColors.buttonBgColor,
+												foregroundColor: AppColors.buttonFgColor,
+												padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+												shape: RoundedRectangleBorder(
+													borderRadius: BorderRadius.circular(8),
+												),
+											),
+											onPressed: widget.onProceedToAuto,
+											child: Text(
+												_translate('proceed_auto_button'),
+												style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+											),
+										),
+									],
 								),
 							),
-							onPressed: widget.onProceedToAuto,
-							child: Text(
-								_translate('proceed_auto_button'),
-								style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-							),
+						],
 						),
 					),
 				],
