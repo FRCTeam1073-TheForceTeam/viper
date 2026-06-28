@@ -391,5 +391,14 @@ void initAutoTabTranslations() {
 			'he': 'סה"כ נקודות',
 			'tr': 'Toplam Puan',
 		},
+		'proceed_tele_button': {
+			'en': 'Teleop »',
+			'es': 'Proceder a teleop',
+			'pt': 'Teleop »',
+			'fr': 'Télé »',
+			'zh_tw': '遠端操作 »',
+			'he': 'טלאופ »',
+			'tr': 'Teleop »',
+		},
 	});
 }

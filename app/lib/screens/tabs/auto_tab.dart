@@ -220,57 +220,50 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 
 					const SizedBox(height: 16),
 
-					// Fuel buttons and values/timeline section
-					Padding(
-						padding: const EdgeInsets.symmetric(horizontal: 16),
-						child: Row(
+		// Two-column layout: fuel and info
+		Padding(
+			padding: const EdgeInsets.symmetric(horizontal: 16),
+			child: Row(
+				crossAxisAlignment: CrossAxisAlignment.start,
+				children: [
+					// LEFT COLUMN: Fuel and Table Toggles
+					Expanded(
+					flex: 3,
+					child: Column(
+						crossAxisAlignment: CrossAxisAlignment.center,
 							children: [
-								// Fuel quick-add buttons (1, 5, 10)
-								Expanded(
-									child: Container(
-										padding: const EdgeInsets.symmetric(horizontal: 8),
-										child: Row(
-											mainAxisAlignment: MainAxisAlignment.start,
-											children: [
-												_buildFuelButton('1', 1, autoState, ref),
-												const SizedBox(width: 8),
-												_buildFuelButton('5', 5, autoState, ref),
-												const SizedBox(width: 8),
-												_buildFuelButton('10', 10, autoState, ref),
-											],
+								// Fuel buttons row
+								Row(
+								mainAxisAlignment: MainAxisAlignment.center,
+									children: [
+										_buildFuelButton('1', 1, autoState, ref),
+										const SizedBox(width: 8),
+										_buildFuelButton('5', 5, autoState, ref),
+										const SizedBox(width: 8),
+										_buildFuelButton('10', 10, autoState, ref),
+									],
+								),
+								const SizedBox(height: 8),
+								// Values and timeline toggle buttons row
+								Row(
+								mainAxisAlignment: MainAxisAlignment.center,
+									children: [
+										TextButton(
+											onPressed: () {
+												setState(() => _valuesExpanded = !_valuesExpanded);
+											},
+											child: Text(_translate('values')),
 										),
-									),
+										const SizedBox(width: 8),
+										TextButton(
+											onPressed: () {
+												setState(() => _timelineExpanded = !_timelineExpanded);
+											},
+											child: Text(_translate('timeline')),
+										),
+									],
 								),
-								const SizedBox(width: 12),
-								// Values and timeline collapse buttons
-								Expanded(
-									child: Row(
-										mainAxisAlignment: MainAxisAlignment.end,
-										children: [
-											TextButton(
-												onPressed: () {
-														setState(() => _valuesExpanded = !_valuesExpanded);
-													},
-													child: Text(_translate('values')),
-												),
-												const SizedBox(width: 8),
-												TextButton(
-													onPressed: () {
-														setState(() => _timelineExpanded = !_timelineExpanded);
-												},
-												child: Text(_translate('timeline')),
-											),
-										],
-									),
-								),
-							],
-						),
-					),
-					Padding(
-						padding: const EdgeInsets.symmetric(horizontal: 16),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.stretch,
-							children: [
+								const SizedBox(height: 12),
 								// Values Table (readonly counters)
 								if (_valuesExpanded) ...[
 									AutoValuesTable(
@@ -299,81 +292,84 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							],
 						),
 					),
-
-					const SizedBox(height: 16),
-					Container(
-						margin: _getResponsivePadding(),
-						child: Row(
+					const SizedBox(width: 16),
+					// RIGHT COLUMN: Info Section (vertically stacked)
+					Expanded(
+						flex: 1,
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.stretch,
 							children: [
-								// Undo button (left)
-								Expanded(
-									child: ElevatedButton.icon(
-										onPressed: autoState.actionHistory.isNotEmpty
-											? () {
-												ref.read(autoTabControllerProvider.notifier).undo();
-											}
-											: null,
-										icon: const Icon(Icons.undo),
-										label: Text(
-											_translate('undo'),
-											style: TextStyle(fontSize: _getResponsiveFontSize(14)),
-										),
-										style: ElevatedButton.styleFrom(
-											backgroundColor: autoState.actionHistory.isNotEmpty
-												? AppColors.highlight2FgColor.withOpacity(0.8)
-												: Colors.grey.shade700,
-											foregroundColor: autoState.actionHistory.isNotEmpty ? Colors.black : Colors.grey.shade500,
-											padding: const EdgeInsets.symmetric(vertical: 12),
+								// Undo button
+								FilledButton(
+									style: FilledButton.styleFrom(
+										backgroundColor: autoState.actionHistory.isNotEmpty
+											? AppColors.buttonBgColor
+											: Colors.grey.shade700,
+										foregroundColor: autoState.actionHistory.isNotEmpty
+											? AppColors.buttonFgColor
+											: Colors.grey.shade500,
+										padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+										shape: RoundedRectangleBorder(
+											borderRadius: BorderRadius.circular(8),
 										),
 									),
+									onPressed: autoState.actionHistory.isNotEmpty
+										? () {
+											ref.read(autoTabControllerProvider.notifier).undo();
+										}
+										: null,
+									child: Text(
+										_translate('undo'),
+										style: TextStyle(fontSize: _getResponsiveFontSize(12)),
+									),
 								),
-								const SizedBox(width: 12),
-								// Team indicator (center)
-								Expanded(
-									child: Container(
-										padding: const EdgeInsets.symmetric(vertical: 12),
-										decoration: BoxDecoration(
-											color: teamColor.withValues(alpha: 0.2),
-											border: Border.all(color: teamColor),
-											borderRadius: BorderRadius.circular(4),
-										),
-										child: Center(
-											child: Text(
-												botPosition ?? 'Team',
-												style: TextStyle(
-													fontSize: _getResponsiveFontSize(14),
-													fontWeight: FontWeight.bold,
-													color: teamColor,
-												),
+								const SizedBox(height: 8),
+								// Robot/Team indicator - team color background with contrasting text
+								Container(
+									padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+									decoration: BoxDecoration(
+										color: teamColor,
+										borderRadius: BorderRadius.circular(4),
+									),
+									child: Center(
+										child: Text(
+											'$botPosition ${widget.teamNumber ?? ''}',
+											style: TextStyle(
+												fontSize: _getResponsiveFontSize(12),
+												fontWeight: FontWeight.bold,
+												color: AppColors.mainFgColor,
 											),
 										),
 									),
 								),
-								const SizedBox(width: 12),
-								// Proceed to Teleop button (right)
-								Expanded(
-									child: ElevatedButton.icon(
-										onPressed: _saveTab,
-										icon: const Icon(Icons.arrow_forward),
-										label: Text(
-											_translate('proceed_tele_button'),
-											style: TextStyle(fontSize: _getResponsiveFontSize(14)),
+								const SizedBox(height: 8),
+								// Tele button
+								FilledButton(
+									style: FilledButton.styleFrom(
+										backgroundColor: AppColors.buttonBgColor,
+										foregroundColor: AppColors.buttonFgColor,
+										padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+										shape: RoundedRectangleBorder(
+											borderRadius: BorderRadius.circular(8),
 										),
-										style: ElevatedButton.styleFrom(
-											backgroundColor: teamColor,
-											foregroundColor: Colors.white,
-											padding: const EdgeInsets.symmetric(vertical: 12),
-										),
+									),
+									onPressed: _saveTab,
+									child: Text(
+										_translate('proceed_tele_button'),
+										style: TextStyle(fontSize: _getResponsiveFontSize(12)),
 									),
 								),
 							],
 						),
 					),
-
-					const SizedBox(height: 16),
 				],
 			),
-		);
+		),
+
+		const SizedBox(height: 16),
+		],
+		),
+	);
 	}
 
 	/// Build a fuel quick-add button
@@ -384,8 +380,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		WidgetRef ref,
 	) {
 		return SizedBox(
-			width: 50,
-			height: 50,
+			width: 70,
+			height: 70,
 			child: ElevatedButton(
 				onPressed: () {
 					ref.read(autoTabControllerProvider.notifier).recordAction(
@@ -407,7 +403,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 				child: Text(
 					label,
 					style: TextStyle(
-						fontSize: _getResponsiveFontSize(16),
+						fontSize: _getResponsiveFontSize(18),
 						fontWeight: FontWeight.bold,
 					),
 				),
