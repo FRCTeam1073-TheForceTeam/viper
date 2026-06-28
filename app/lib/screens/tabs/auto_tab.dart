@@ -194,9 +194,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 									valueLabel: '+1',
 								);
 							},
-							onZoneToggled: (zone) {
-								ref.read(autoTabControllerProvider.notifier).toggleZone();
-							},
 							onCollectionToggled: (type) {
 								final field = type == 'depot' ? 'auto_collect_depot' : 'auto_collect_outpost';
 								ref.read(autoTabControllerProvider.notifier).recordAction(

@@ -10,10 +10,6 @@ class AutoFieldOverlay extends StatefulWidget {
 	/// Parameters: field (movement counter name), action (label)
 	final Function(String field, String action) onMovementTapped;
 
-	/// Called when zone toggle buttons are tapped
-	/// Parameters: zone ('alliance' or 'neutral')
-	final Function(String zone)? onZoneToggled;
-
 	/// Called when collection checkboxes are tapped
 	/// Parameters: type ('depot' or 'outpost')
 	final Function(String type)? onCollectionToggled;
@@ -47,7 +43,6 @@ class AutoFieldOverlay extends StatefulWidget {
 	const AutoFieldOverlay({
 		Key? key,
 		required this.onMovementTapped,
-		this.onZoneToggled,
 		this.onCollectionToggled,
 		this.fieldSide = FieldSide.left,
 		this.activeZone = 'alliance',
@@ -110,43 +105,23 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 							btn,
 						)),
 
-					// Zone toggle buttons at bottom
-					_buildZoneToggleButton(
-						maxWidth,
-						fieldHeight,
-						label: '→ Neutral',
-						leftPercent: 3.0,
-						bottomPercent: 3.0,
-						isActive: widget.activeZone == 'alliance',
-						onTap: () => widget.onZoneToggled?.call('neutral'),
-					),
-					_buildZoneToggleButton(
-						maxWidth,
-						fieldHeight,
-						label: '← Alliance',
-						rightPercent: 3.0,
-						bottomPercent: 3.0,
-						isActive: widget.activeZone == 'neutral',
-						onTap: () => widget.onZoneToggled?.call('alliance'),
-					),
-
-					// Fuel target overlays (top-center area)
+					// Fuel target overlays
 					_buildFuelTarget(
 						maxWidth,
 						fieldHeight,
 						label: 'Hub Target',
-						leftPercent: 35.0,
-						topPercent: 8.0,
+						rightPercent: 26.0,
+						topPercent: 42.0,
 						imagePath: 'assets/images/fuel-target.png',
 					),
 					_buildFuelTarget(
 						maxWidth,
 						fieldHeight,
 						label: 'Alliance Pass',
-						rightPercent: 35.0,
-						topPercent: 8.0,
-						imagePath: 'assets/images/fuel-target-active.png',
-					),
+						rightPercent: 13.0,
+						bottomPercent: 7.0,
+							imagePath: 'assets/images/fuel-target-active.png',
+						),
 
 					// Collection checkboxes (near fuel targets)
 					_buildCollectionCheckbox(
@@ -236,62 +211,6 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 		);
 	}
 
-	/// Build a zone toggle button
-	Widget _buildZoneToggleButton(
-		double fieldWidth,
-		double fieldHeight, {
-		required String label,
-		double? leftPercent,
-		double? rightPercent,
-		required double bottomPercent,
-		required bool isActive,
-		required VoidCallback onTap,
-	}) {
-		final buttonWidth = 7.0 * fieldWidth / 100;
-		final buttonHeight = buttonWidth;
-
-		return Positioned(
-			left: leftPercent != null ? leftPercent * fieldWidth / 100 : null,
-			right: rightPercent != null ? rightPercent * fieldWidth / 100 : null,
-			bottom: bottomPercent * fieldHeight / 100,
-			child: GestureDetector(
-				onTap: onTap,
-				child: Container(
-					width: buttonWidth,
-					height: buttonHeight,
-					decoration: BoxDecoration(
-						borderRadius: BorderRadius.circular(buttonWidth * 0.1),
-						color: isActive
-							? Colors.green.shade700.withValues(alpha: 0.9)
-							: Colors.grey.shade400.withValues(alpha: 0.7),
-						border: Border.all(
-							color: Colors.white,
-							width: 2,
-						),
-						boxShadow: [
-							BoxShadow(
-								color: Colors.black.withValues(alpha: 0.4),
-								blurRadius: 4,
-								offset: const Offset(0, 2),
-							),
-						],
-					),
-					child: Center(
-						child: Text(
-							label,
-							textAlign: TextAlign.center,
-							style: TextStyle(
-								color: Colors.white,
-								fontSize: buttonWidth * 0.25,
-								fontWeight: FontWeight.bold,
-							),
-						),
-					),
-				),
-			),
-		);
-	}
-
 	/// Build a fuel target image overlay
 	Widget _buildFuelTarget(
 		double fieldWidth,
@@ -299,7 +218,8 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 		required String label,
 		double? leftPercent,
 		double? rightPercent,
-		required double topPercent,
+		double? topPercent,
+		double? bottomPercent,
 		required String imagePath,
 	}) {
 		final size = 5.0 * fieldWidth / 100;
@@ -307,7 +227,8 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 		return Positioned(
 			left: leftPercent != null ? leftPercent * fieldWidth / 100 : null,
 			right: rightPercent != null ? rightPercent * fieldWidth / 100 : null,
-			top: topPercent * fieldHeight / 100,
+			top: topPercent != null ? topPercent * fieldHeight / 100 : null,
+			bottom: bottomPercent != null ? bottomPercent * fieldHeight / 100 : null,
 			child: Tooltip(
 				message: label,
 				child: Container(
