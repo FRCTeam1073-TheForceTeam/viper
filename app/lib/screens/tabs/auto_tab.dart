@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
+import '../../constants/colors.dart';
 import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
+import '../../providers/auto_tab_controller.dart';
+import '../../providers/field_side_provider.dart';
+import '../../providers/locale_provider.dart';
 import '../../services/scout_data_helper.dart';
+import '../../services/localization.dart';
+import '../../widgets/auto_field_overlay.dart';
+import '../../widgets/auto_values_table.dart';
+import '../../widgets/auto_timeline_table.dart';
+import '../../l10n/auto_tab.dart';
 
 class AutoTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -22,34 +31,42 @@ class AutoTab extends ConsumerStatefulWidget {
 }
 
 class _AutoTabState extends ConsumerState<AutoTab> {
-	late TextEditingController _fuelAllianceController;
-	late TextEditingController _fuelNeutralController;
-	late TextEditingController _fuelOpponentController;
-	late TextEditingController _fuelDepotController;
-	late TextEditingController _fuelOutpostController;
-
-	int _climbLevel = 0;
 	ScoutData? _currentScout;
+	bool _valuesExpanded = false;
+	bool _timelineExpanded = false;
+
+	String _translate(String key, {Map<String, String>? variables}) {
+		final locale = ref.read(selectedLocaleProvider);
+		return AppLocalizations.translate(key, locale: locale, variables: variables);
+	}
+
+	/// Get team color based on bot position (red vs blue team)
+	Color _getTeamColor(String? botPosition) {
+		if (botPosition == null) return AppColors.blueTeamColor;
+		// Red team positions start with 'R', Blue with 'B'
+		return botPosition.startsWith('R') ? AppColors.redTeamColor : AppColors.blueTeamColor;
+	}
+
+	/// Get responsive font size based on screen width
+	double _getResponsiveFontSize(double baseSize) {
+		final screenWidth = MediaQuery.of(context).size.width;
+		if (screenWidth < 400) return baseSize * 0.85; // Mobile
+		return baseSize;
+	}
+
+	/// Get responsive padding based on screen width
+	EdgeInsets _getResponsivePadding() {
+		final screenWidth = MediaQuery.of(context).size.width;
+		if (screenWidth < 400) return const EdgeInsets.all(8);
+		return const EdgeInsets.all(12);
+	}
 
 	@override
 	void initState() {
 		super.initState();
-		_fuelAllianceController = TextEditingController();
-		_fuelNeutralController = TextEditingController();
-		_fuelOpponentController = TextEditingController();
-		_fuelDepotController = TextEditingController();
-		_fuelOutpostController = TextEditingController();
+		// Initialize i18n for auto tab
+		initAutoTabTranslations();
 		_loadScout();
-	}
-
-	@override
-	void dispose() {
-		_fuelAllianceController.dispose();
-		_fuelNeutralController.dispose();
-		_fuelOpponentController.dispose();
-		_fuelDepotController.dispose();
-		_fuelOutpostController.dispose();
-		super.dispose();
 	}
 
 	Future<void> _loadScout() async {
@@ -60,16 +77,32 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 				widget.matchNumber!,
 				widget.teamNumber!,
 			);
-			if (scout != null) {
+			if (scout != null && mounted) {
 				setState(() {
 					_currentScout = scout;
-					_fuelAllianceController.text = (scout.autoFuelAlliance ?? 0).toString();
-					_fuelNeutralController.text = (scout.autoFuelNeutral ?? 0).toString();
-					_fuelOpponentController.text = (scout.autoFuelOpponent ?? 0).toString();
-					_fuelDepotController.text = (scout.autoFuelDepot ?? 0).toString();
-					_fuelOutpostController.text = (scout.autoFuelOutpost ?? 0).toString();
-					_climbLevel = scout.autoClimbLevel ?? 0;
 				});
+
+				// Load auto data into controller
+				final controller = ref.read(autoTabControllerProvider.notifier);
+				final autoData = {
+					'auto_trench_depot_alliance_to_neutral': scout.autoTrenchDepotAllianceToNeutral ?? 0,
+					'auto_bump_depot_alliance_to_neutral': scout.autoBumpDepotAllianceToNeutral ?? 0,
+					'auto_bump_outpost_alliance_to_neutral': scout.autoBumpOutpostAllianceToNeutral ?? 0,
+					'auto_trench_outpost_alliance_to_neutral': scout.autoTrenchOutpostAllianceToNeutral ?? 0,
+					'auto_trench_depot_neutral_to_alliance': scout.autoTrenchDepotNeutralToAlliance ?? 0,
+					'auto_bump_depot_neutral_to_alliance': scout.autoBumpDepotNeutralToAlliance ?? 0,
+					'auto_bump_outpost_neutral_to_alliance': scout.autoBumpOutpostNeutralToAlliance ?? 0,
+					'auto_trench_outpost_neutral_to_alliance': scout.autoTrenchOutpostNeutralToAlliance ?? 0,
+					'auto_fuel_score': scout.autoFuelScore ?? 0,
+					'auto_fuel_neutral_alliance_pass': scout.autoFuelNeutralAlliancePass ?? 0,
+					'auto_collect_outpost': scout.autoCollectOutpost ?? false,
+					'auto_collect_depot': scout.autoCollectDepot ?? false,
+					'auto_alliance_time': scout.autoAllianceTime ?? 0,
+					'auto_neutral_time': scout.autoNeutralTime ?? 0,
+					'auto_climb_level': scout.autoClimbLevel ?? 0,
+					'auto_timeline_events': scout.autoTimelineEvents,
+				};
+				controller.loadFromData(autoData);
 			}
 		}
 	}
@@ -78,6 +111,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		if (widget.matchNumber == null || widget.teamNumber == null) return;
 
 		final db = await ref.read(databaseProvider.future);
+		final autoState = ref.read(autoTabControllerProvider);
+
 		final existing = _currentScout ?? await db.getScout(
 			widget.eventId,
 			widget.matchNumber!,
@@ -85,130 +120,297 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		);
 
 		final now = DateTime.now();
+		final countersMap = autoState.toJson();
+		final timelineJson = countersMap['auto_timeline_events'] as String?;
+
 		final scout = existing != null
 				? existing.copyWith(
-						autoFuelAlliance: Value(int.tryParse(_fuelAllianceController.text)),
-						autoFuelNeutral: Value(int.tryParse(_fuelNeutralController.text)),
-						autoFuelOpponent: Value(int.tryParse(_fuelOpponentController.text)),
-						autoFuelDepot: Value(int.tryParse(_fuelDepotController.text)),
-						autoFuelOutpost: Value(int.tryParse(_fuelOutpostController.text)),
-						autoClimbLevel: Value(_climbLevel),
-						updatedAt: now,
-					)
+					autoTrenchDepotAllianceToNeutral: autoState.trenchDepotAllianceToNeutral,
+					autoBumpDepotAllianceToNeutral: autoState.bumpDepotAllianceToNeutral,
+					autoBumpOutpostAllianceToNeutral: autoState.bumpOutpostAllianceToNeutral,
+					autoTrenchOutpostAllianceToNeutral: autoState.trenchOutpostAllianceToNeutral,
+					autoTrenchDepotNeutralToAlliance: autoState.trenchDepotNeutralToAlliance,
+					autoBumpDepotNeutralToAlliance: autoState.bumpDepotNeutralToAlliance,
+					autoBumpOutpostNeutralToAlliance: autoState.bumpOutpostNeutralToAlliance,
+					autoTrenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
+					autoFuelScore: autoState.fuelScore,
+					autoFuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
+					autoCollectOutpost: autoState.collectOutpost,
+					autoCollectDepot: autoState.collectDepot,
+					autoAllianceTime: autoState.allianceTime,
+					autoNeutralTime: autoState.neutralTime,
+					autoClimbLevel: Value(autoState.climbLevel),
+					autoTimelineEvents: Value(timelineJson),
+					updatedAt: now,
+				)
 				: ScoutDataHelper.createNewScout(
-						event: widget.eventId,
-						match: widget.matchNumber!,
-						team: widget.teamNumber!,
-					).copyWith(
-						autoFuelAlliance: Value(int.tryParse(_fuelAllianceController.text)),
-						autoFuelNeutral: Value(int.tryParse(_fuelNeutralController.text)),
-						autoFuelOpponent: Value(int.tryParse(_fuelOpponentController.text)),
-						autoFuelDepot: Value(int.tryParse(_fuelDepotController.text)),
-						autoFuelOutpost: Value(int.tryParse(_fuelOutpostController.text)),
-						autoClimbLevel: Value(_climbLevel),
-					);
+					event: widget.eventId,
+					match: widget.matchNumber!,
+					team: widget.teamNumber!,
+				);
 
 		await db.upsertScout(scout);
 		setState(() => _currentScout = scout);
 
 		if (mounted) {
 			ScaffoldMessenger.of(context).showSnackBar(
-				const SnackBar(content: Text('Auto data saved')),
+				SnackBar(
+					content: Text(_translate('pre_match_data_saved')),
+					duration: const Duration(seconds: 2),
+				),
 			);
 		}
 	}
 
-	Widget _buildFuelInput(String label, TextEditingController controller) {
-		return Expanded(
-			child: TextFormField(
-				controller: controller,
-				decoration: InputDecoration(
-					labelText: label,
-					border: const OutlineInputBorder(),
-				),
-				keyboardType: TextInputType.number,
+	@override
+	Widget build(BuildContext context) {
+		final fieldSide = ref.watch(selectedFieldSideProvider);
+		final autoState = ref.watch(autoTabControllerProvider);
+		final botPosition = ref.watch(selectedBotPositionProvider);
+		final teamColor = _getTeamColor(botPosition);
+
+		return SingleChildScrollView(
+			padding: const EdgeInsets.symmetric(vertical: 8),
+			child: Column(
+				crossAxisAlignment: CrossAxisAlignment.stretch,
+				children: [
+					// Field Overlay with all integrated controls
+					// (movement buttons, fuel overlays, zone toggles, climb selector)
+					Padding(
+						padding: const EdgeInsets.symmetric(horizontal: 16),
+						child: AutoFieldOverlay(
+							fieldSide: fieldSide,
+							activeZone: autoState.activeZone,
+							collectDepot: autoState.collectDepot,
+							collectOutpost: autoState.collectOutpost,
+							climbLevel: autoState.climbLevel,
+							onMovementTapped: (field, action) {
+								ref.read(autoTabControllerProvider.notifier).recordAction(
+									type: 'movement',
+									field: field,
+									value: 1,
+									actionLabel: action,
+									valueLabel: '+1',
+								);
+							},
+							onZoneToggled: (zone) {
+								ref.read(autoTabControllerProvider.notifier).toggleZone();
+							},
+							onCollectionToggled: (type) {
+								final field = type == 'depot' ? 'auto_collect_depot' : 'auto_collect_outpost';
+								ref.read(autoTabControllerProvider.notifier).recordAction(
+									type: 'collection',
+									field: field,
+									value: 1,
+									actionLabel: 'Collect: $type',
+									valueLabel: 'toggle',
+								);
+							},
+							onClimbToggled: () {
+								ref.read(autoTabControllerProvider.notifier).recordAction(
+									type: 'climb',
+									field: 'auto_climb_level',
+									value: autoState.climbLevel == 0 ? 1 : 0,
+									actionLabel: 'Climb',
+									valueLabel: '${autoState.climbLevel == 0 ? 1 : 0}',
+								);
+							},
+						),
+					),
+
+					const SizedBox(height: 16),
+
+					// Fuel buttons and values/timeline section
+					Padding(
+						padding: const EdgeInsets.symmetric(horizontal: 16),
+						child: Row(
+							children: [
+								// Fuel quick-add buttons (1, 5, 10)
+								Expanded(
+									child: Container(
+										padding: const EdgeInsets.symmetric(horizontal: 8),
+										child: Row(
+											mainAxisAlignment: MainAxisAlignment.start,
+											children: [
+												_buildFuelButton('1', 1, autoState, ref),
+												const SizedBox(width: 8),
+												_buildFuelButton('5', 5, autoState, ref),
+												const SizedBox(width: 8),
+												_buildFuelButton('10', 10, autoState, ref),
+											],
+										),
+									),
+								),
+								const SizedBox(width: 12),
+								// Values and timeline collapse buttons
+								Expanded(
+									child: Row(
+										mainAxisAlignment: MainAxisAlignment.end,
+										children: [
+											TextButton(
+												onPressed: () {
+														setState(() => _valuesExpanded = !_valuesExpanded);
+													},
+													child: Text(_translate('values')),
+												),
+												const SizedBox(width: 8),
+												TextButton(
+													onPressed: () {
+														setState(() => _timelineExpanded = !_timelineExpanded);
+												},
+												child: Text(_translate('timeline')),
+											),
+										],
+									),
+								),
+							],
+						),
+					),
+					Padding(
+						padding: const EdgeInsets.symmetric(horizontal: 16),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.stretch,
+							children: [
+								// Values Table (readonly counters)
+								if (_valuesExpanded) ...[
+									AutoValuesTable(
+										key: const ValueKey('auto_values_table'),
+										trenchDepotAllianceToNeutral: autoState.trenchDepotAllianceToNeutral,
+										bumpDepotAllianceToNeutral: autoState.bumpDepotAllianceToNeutral,
+										bumpOutpostAllianceToNeutral: autoState.bumpOutpostAllianceToNeutral,
+										trenchOutpostAllianceToNeutral: autoState.trenchOutpostAllianceToNeutral,
+										trenchDepotNeutralToAlliance: autoState.trenchDepotNeutralToAlliance,
+										bumpDepotNeutralToAlliance: autoState.bumpDepotNeutralToAlliance,
+										bumpOutpostNeutralToAlliance: autoState.bumpOutpostNeutralToAlliance,
+										trenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
+										fuelScore: autoState.fuelScore,
+										fuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
+										allianceTime: autoState.allianceTime,
+										neutralTime: autoState.neutralTime,
+									),
+									const SizedBox(height: 12),
+								],
+								// Timeline Table
+								if (_timelineExpanded)
+									AutoTimelineTable(
+										key: const ValueKey('auto_timeline_table'),
+										events: autoState.timeline,
+									),
+							],
+						),
+					),
+
+					const SizedBox(height: 16),
+					Container(
+						margin: _getResponsivePadding(),
+						child: Row(
+							children: [
+								// Undo button (left)
+								Expanded(
+									child: ElevatedButton.icon(
+										onPressed: autoState.actionHistory.isNotEmpty
+											? () {
+												ref.read(autoTabControllerProvider.notifier).undo();
+											}
+											: null,
+										icon: const Icon(Icons.undo),
+										label: Text(
+											_translate('undo'),
+											style: TextStyle(fontSize: _getResponsiveFontSize(14)),
+										),
+										style: ElevatedButton.styleFrom(
+											backgroundColor: autoState.actionHistory.isNotEmpty
+												? AppColors.highlight2FgColor.withOpacity(0.8)
+												: Colors.grey.shade700,
+											foregroundColor: autoState.actionHistory.isNotEmpty ? Colors.black : Colors.grey.shade500,
+											padding: const EdgeInsets.symmetric(vertical: 12),
+										),
+									),
+								),
+								const SizedBox(width: 12),
+								// Team indicator (center)
+								Expanded(
+									child: Container(
+										padding: const EdgeInsets.symmetric(vertical: 12),
+										decoration: BoxDecoration(
+											color: teamColor.withValues(alpha: 0.2),
+											border: Border.all(color: teamColor),
+											borderRadius: BorderRadius.circular(4),
+										),
+										child: Center(
+											child: Text(
+												botPosition ?? 'Team',
+												style: TextStyle(
+													fontSize: _getResponsiveFontSize(14),
+													fontWeight: FontWeight.bold,
+													color: teamColor,
+												),
+											),
+										),
+									),
+								),
+								const SizedBox(width: 12),
+								// Proceed to Teleop button (right)
+								Expanded(
+									child: ElevatedButton.icon(
+										onPressed: _saveTab,
+										icon: const Icon(Icons.arrow_forward),
+										label: Text(
+											_translate('proceed_tele_button'),
+											style: TextStyle(fontSize: _getResponsiveFontSize(14)),
+										),
+										style: ElevatedButton.styleFrom(
+											backgroundColor: teamColor,
+											foregroundColor: Colors.white,
+											padding: const EdgeInsets.symmetric(vertical: 12),
+										),
+									),
+								),
+							],
+						),
+					),
+
+					const SizedBox(height: 16),
+				],
 			),
 		);
 	}
 
-	@override
-	Widget build(BuildContext context) {
-		return SingleChildScrollView(
-			padding: const EdgeInsets.all(16),
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.stretch,
-				children: [
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										'Fuel Scoring',
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 16),
-									Row(
-										children: [
-											_buildFuelInput('Alliance', _fuelAllianceController),
-											const SizedBox(width: 8),
-											_buildFuelInput('Neutral', _fuelNeutralController),
-											const SizedBox(width: 8),
-											_buildFuelInput('Opponent', _fuelOpponentController),
-										],
-									),
-									const SizedBox(height: 12),
-									Row(
-										children: [
-											_buildFuelInput('Depot', _fuelDepotController),
-											const SizedBox(width: 8),
-											_buildFuelInput('Outpost', _fuelOutpostController),
-										],
-									),
-								],
-							),
-						),
+	/// Build a fuel quick-add button
+	Widget _buildFuelButton(
+		String label,
+		int amount,
+		AutoTabState autoState,
+		WidgetRef ref,
+	) {
+		return SizedBox(
+			width: 50,
+			height: 50,
+			child: ElevatedButton(
+				onPressed: () {
+					ref.read(autoTabControllerProvider.notifier).recordAction(
+						type: 'fuel',
+						field: 'auto_fuel_score',
+						value: amount,
+						actionLabel: 'Fuel',
+						valueLabel: '+$amount',
+					);
+				},
+				style: ElevatedButton.styleFrom(
+					backgroundColor: const Color(0xFFF1CE03),
+					foregroundColor: Colors.black87,
+					padding: EdgeInsets.zero,
+					shape: RoundedRectangleBorder(
+						borderRadius: BorderRadius.circular(50),
 					),
-					const SizedBox(height: 16),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										'Climb Level (0-1)',
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 16),
-									Slider(
-										value: _climbLevel.toDouble(),
-										min: 0,
-										max: 1,
-										divisions: 1,
-										label: '$_climbLevel',
-										onChanged: (value) {
-											setState(() => _climbLevel = value.toInt());
-										},
-									),
-									Center(
-										child: Text(
-											'Level: $_climbLevel',
-											style: Theme.of(context).textTheme.bodyLarge,
-										),
-									),
-								],
-							),
-						),
+				),
+				child: Text(
+					label,
+					style: TextStyle(
+						fontSize: _getResponsiveFontSize(16),
+						fontWeight: FontWeight.bold,
 					),
-					const SizedBox(height: 16),
-					ElevatedButton.icon(
-						onPressed: _saveTab,
-						icon: const Icon(Icons.save),
-						label: const Text('Save Auto'),
-					),
-				],
+				),
 			),
 		);
 	}

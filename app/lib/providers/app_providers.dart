@@ -821,4 +821,23 @@ final navigationCommandProvider =
 	return _NavigationCommandNotifier(ref);
 });
 
+// ============================================================================
+// SELECTED TAB INDEX
+// ============================================================================
+
+/// Manages the selected tab index (in-memory only, survives hot reload but not restarts)
+class _SelectedTabNotifier extends StateNotifier<int> {
+	_SelectedTabNotifier() : super(0);
+
+	void setTabIndex(int index) {
+		state = index;
+	}
+}
+
+/// Provider for selected tab index - persists across hot reload only
+final selectedTabIndexProvider =
+	StateNotifierProvider<_SelectedTabNotifier, int>((ref) {
+	return _SelectedTabNotifier();
+});
+
 // CONNECTIVITY (SIMPLIFIED - TODO: Fix)

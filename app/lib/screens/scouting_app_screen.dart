@@ -29,7 +29,6 @@ class ScoutingAppScreen extends ConsumerStatefulWidget {
 }
 
 class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with TickerProviderStateMixin {
-	int _selectedTabIndex = 0;
 	String? _matchNumber;
 	String? _teamNumber;
 	late TabController _tabController;
@@ -50,8 +49,16 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 	void initState() {
 		super.initState();
 
+		// Get initial tab index from provider
+		final initialTabIndex = ref.read(selectedTabIndexProvider);
+
 		// Initialize TabController with 4 tabs
-		_tabController = TabController(length: 4, vsync: this);
+		_tabController = TabController(length: 4, vsync: this, initialIndex: initialTabIndex);
+
+		// Listen for tab changes and save to provider
+		_tabController.addListener(() {
+			ref.read(selectedTabIndexProvider.notifier).setTabIndex(_tabController.index);
+		});
 
 		// Register translations on demand when this screen is first loaded
 		AppLocalizations.addI18n({
@@ -150,12 +157,13 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		ref.watch(selectedLocaleProvider);
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
+		final selectedTabIndex = ref.watch(selectedTabIndexProvider);
 		final isBlueTeam = selectedBot?.startsWith('B') ?? false;
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 
 		return DefaultTabController(
 			length: 4,
-			initialIndex: _selectedTabIndex,
+			initialIndex: selectedTabIndex,
 			child: Scaffold(
 				body: CustomScrollView(
 					slivers: [

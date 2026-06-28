@@ -53,6 +53,29 @@ class Scout extends Table {
 	IntColumn get autoFuelOutpost => integer().nullable()();
 	IntColumn get autoClimbLevel => integer().nullable()();
 
+	// Auto Tab - Movement counters (field interactions)
+	IntColumn get autoTrenchDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get autoBumpDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get autoBumpOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get autoTrenchOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get autoTrenchDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
+	IntColumn get autoBumpDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
+	IntColumn get autoBumpOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
+	IntColumn get autoTrenchOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
+
+	// Auto Tab - Fuel scoring and collection
+	IntColumn get autoFuelScore => integer().withDefault(const Constant(0))();
+	IntColumn get autoFuelNeutralAlliancePass => integer().withDefault(const Constant(0))();
+	BoolColumn get autoCollectOutpost => boolean().withDefault(const Constant(false))();
+	BoolColumn get autoCollectDepot => boolean().withDefault(const Constant(false))();
+
+	// Auto Tab - Zone times (in seconds)
+	IntColumn get autoAllianceTime => integer().withDefault(const Constant(0))();
+	IntColumn get autoNeutralTime => integer().withDefault(const Constant(0))();
+
+	// Auto Tab - Timeline events (JSON array of {time, action, value})
+	TextColumn get autoTimelineEvents => text().nullable()();
+
 	// Teleop Tab
 	IntColumn get teleopFuelAlliance => integer().nullable()();
 	IntColumn get teleopFuelNeutral => integer().nullable()();
