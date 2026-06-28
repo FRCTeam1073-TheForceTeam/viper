@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 import '../../providers/field_side_provider.dart';
 import '../data/field_button_definitions.dart';
 
@@ -39,6 +40,10 @@ class AutoFieldOverlay extends StatefulWidget {
 	/// Called when climb selector is tapped to toggle level
 	final Function()? onClimbToggled;
 
+	/// Robot position (bot position like 'R1', 'B1', etc.)
+	/// Used to determine if field should be rotated based on team color
+	final String? botPosition;
+
 	const AutoFieldOverlay({
 		Key? key,
 		required this.onMovementTapped,
@@ -51,6 +56,7 @@ class AutoFieldOverlay extends StatefulWidget {
 		this.collectOutpost = false,
 		this.climbLevel = 0,
 		this.onClimbToggled,
+		this.botPosition,
 	}) : super(key: key);
 
 	@override
@@ -60,15 +66,23 @@ class AutoFieldOverlay extends StatefulWidget {
 class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 	@override
 	Widget build(BuildContext context) {
+		// Determine if field should be rotated based on team color and field side
+		final isBlueTeam = widget.botPosition?.startsWith('B') ?? false;
+		final shouldRotate =
+			(isBlueTeam && widget.fieldSide == FieldSide.left) ||
+			(!isBlueTeam && widget.fieldSide == FieldSide.right);
+
 		// Calculate field dimensions maintaining 1.875:1 aspect ratio (field.png)
 		final maxWidth = widget.fieldWidth ?? (MediaQuery.of(context).size.width - 32);
 		final fieldHeight = maxWidth / 1.875; // 16:30 aspect ratio
 
-		return Container(
-			width: maxWidth,
-			height: fieldHeight,
-			margin: const EdgeInsets.symmetric(vertical: 8),
-			child: Stack(
+		return Transform.rotate(
+			angle: shouldRotate ? pi : 0,
+			child: Container(
+				width: maxWidth,
+				height: fieldHeight,
+				margin: const EdgeInsets.symmetric(vertical: 8),
+				child: Stack(
 				children: [
 					// Field background image
 					Container(
@@ -168,6 +182,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 					),
 				],
 			),
+		),
 		);
 	}
 

@@ -184,6 +184,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							collectDepot: autoState.collectDepot,
 							collectOutpost: autoState.collectOutpost,
 							climbLevel: autoState.climbLevel,
+							botPosition: botPosition,
 							onMovementTapped: (field, action) {
 								ref.read(autoTabControllerProvider.notifier).recordAction(
 									type: 'movement',
