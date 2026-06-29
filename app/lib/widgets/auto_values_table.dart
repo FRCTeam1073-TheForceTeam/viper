@@ -72,29 +72,29 @@ class AutoValuesTable extends StatelessWidget {
 				],
 			),
 			// Fuel Score
-			_buildRow(fuelScore, 'auto_fuel_score'),
+			_buildRow(fuelScore, 'fuel_score'),
 			// Fuel Neutral Pass
-			_buildRow(fuelNeutralAlliancePass, 'auto_fuel_neutral_pass'),
+			_buildRow(fuelNeutralAlliancePass, 'auto_fuel_neutral_alliance_pass'),
 			// Trench Depot A→N
-			_buildRow(trenchDepotAllianceToNeutral, 'auto_trench_depot'),
+			_buildRow(trenchDepotAllianceToNeutral, 'trench_depot_alliance_to_neutral'),
 			// Bump Depot A→N
-			_buildRow(bumpDepotAllianceToNeutral, 'auto_bump_depot'),
+			_buildRow(bumpDepotAllianceToNeutral, 'bump_depot_alliance_to_neutral'),
 			// Bump Outpost A→N
-			_buildRow(bumpOutpostAllianceToNeutral, 'auto_bump_outpost'),
+			_buildRow(bumpOutpostAllianceToNeutral, 'bump_outpost_alliance_to_neutral'),
 			// Trench Outpost A→N
-			_buildRow(trenchOutpostAllianceToNeutral, 'auto_trench_outpost'),
+			_buildRow(trenchOutpostAllianceToNeutral, 'trench_outpost_alliance_to_neutral'),
 			// Trench Depot N→A
-			_buildRow(trenchDepotNeutralToAlliance, 'auto_trench_depot'),
+			_buildRow(trenchDepotNeutralToAlliance, 'trench_depot_neutral_to_alliance'),
 			// Bump Depot N→A
-			_buildRow(bumpDepotNeutralToAlliance, 'auto_bump_depot'),
+			_buildRow(bumpDepotNeutralToAlliance, 'bump_depot_neutral_to_alliance'),
 			// Bump Outpost N→A
-			_buildRow(bumpOutpostNeutralToAlliance, 'auto_bump_outpost'),
+			_buildRow(bumpOutpostNeutralToAlliance, 'bump_outpost_neutral_to_alliance'),
 			// Trench Outpost N→A
-			_buildRow(trenchOutpostNeutralToAlliance, 'auto_trench_outpost'),
+			_buildRow(trenchOutpostNeutralToAlliance, 'trench_outpost_neutral_to_alliance'),
 			// Alliance Time
-			_buildRow(allianceTime, 'auto_alliance_time'),
+			_buildRow(allianceTime, 'alliance_time'),
 			// Neutral Time
-			_buildRow(neutralTime, 'auto_neutral_time'),
+			_buildRow(neutralTime, 'neutral_time'),
 		];
 	}
 

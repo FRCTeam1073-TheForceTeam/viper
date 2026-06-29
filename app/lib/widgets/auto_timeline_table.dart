@@ -23,6 +23,23 @@ class AutoTimelineTable extends StatelessWidget {
 		return '$minutes:${secs.toString().padLeft(2, '0')}';
 	}
 
+	/// Translate action field name to human-readable label
+	String _translateAction(String fieldName) {
+		// Try to translate the field name directly
+		try {
+			final translated = _translate(fieldName);
+			// If translation key doesn't exist, it returns the key itself
+			// Check if the translation is different from the key (meaning it was found)
+			if (translated != fieldName) {
+				return translated;
+			}
+		} catch (e) {
+			// Fall through to return field name
+		}
+		// Fallback: return field name with better formatting
+		return fieldName.replaceAll('_', ' ');
+	}
+
 	/// Build all rows including header
 	List<TableRow> _buildRows() {
 		final rows = <TableRow>[];
@@ -99,7 +116,7 @@ class AutoTimelineTable extends StatelessWidget {
 						Padding(
 							padding: const EdgeInsets.all(8),
 							child: Text(
-								event.action,
+								_translateAction(event.action),
 								style: const TextStyle(
 									color: Color(0xFFDDDDDD),
 									fontSize: 12,
