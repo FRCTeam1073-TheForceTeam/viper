@@ -238,8 +238,10 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							},
 							onStartAutoTapped: () {
 								_startMatchIfNeeded();
-							},
-						startAutoButtonLabel: _translate('start_auto_button'),
+							},						activeFuelTarget: autoState.activeFuelTarget,
+						onFuelTargetTapped: (targetName) {
+							ref.read(autoTabControllerProvider.notifier).changeFuelTarget(targetName);
+						},						startAutoButtonLabel: _translate('start_auto_button'),
 					),
 				),
 
@@ -409,9 +411,14 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 			height: 70,
 			child: ElevatedButton(
 				onPressed: () {
+					// Use the correct fuel counter based on active target
+					final fuelField = autoState.activeFuelTarget == 'hub'
+						? 'auto_fuel_score'
+						: 'auto_fuel_neutral_alliance_pass';
+
 					ref.read(autoTabControllerProvider.notifier).recordAction(
 						type: 'fuel',
-						field: 'auto_fuel_score',
+						field: fuelField,
 						value: amount,
 						actionLabel: 'Fuel',
 						valueLabel: '+$amount',

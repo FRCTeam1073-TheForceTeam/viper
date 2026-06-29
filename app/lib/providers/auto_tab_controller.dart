@@ -60,6 +60,9 @@ class AutoTabState {
 	// Active zone for button filtering ('alliance' or 'neutral')
 	final String activeZone;
 
+	// Active fuel target ('hub' or 'alliancePass')
+	final String activeFuelTarget;
+
 	// Timeline of all events
 	final List<TimelineEvent> timeline;
 
@@ -83,6 +86,7 @@ class AutoTabState {
 		this.neutralTime = 0,
 		this.climbLevel = 0,
 		this.activeZone = 'alliance',
+		this.activeFuelTarget = 'hub',
 		this.timeline = const [],
 		this.autoStartTime,
 	});
@@ -105,6 +109,7 @@ class AutoTabState {
 		int? neutralTime,
 		int? climbLevel,
 		String? activeZone,
+		String? activeFuelTarget,
 		List<TimelineEvent>? timeline,
 		DateTime? autoStartTime,
 	}) {
@@ -125,6 +130,7 @@ class AutoTabState {
 			neutralTime: neutralTime ?? this.neutralTime,
 			climbLevel: climbLevel ?? this.climbLevel,
 			activeZone: activeZone ?? this.activeZone,
+			activeFuelTarget: activeFuelTarget ?? this.activeFuelTarget,
 			timeline: timeline ?? this.timeline,
 			autoStartTime: autoStartTime ?? this.autoStartTime,
 		);
@@ -149,6 +155,7 @@ class AutoTabState {
 			'auto_neutral_time': neutralTime,
 			'auto_climb_level': climbLevel,
 			'auto_active_zone': activeZone,
+			'auto_active_fuel_target': activeFuelTarget,
 			'auto_timeline_events': jsonEncode(timeline.map((e) => e.toJson()).toList()),
 		};
 	}
@@ -182,6 +189,7 @@ class AutoTabState {
 			neutralTime: json['auto_neutral_time'] as int? ?? 0,
 			climbLevel: json['auto_climb_level'] as int? ?? 0,
 			activeZone: json['auto_active_zone'] as String? ?? 'alliance',
+			activeFuelTarget: json['auto_active_fuel_target'] as String? ?? 'hub',
 			timeline: timeline,
 		);
 	}
@@ -218,41 +226,49 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 				newState = newState.copyWith(
 					trenchDepotAllianceToNeutral: newState.trenchDepotAllianceToNeutral + value,
 					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
 				);
 			case 'auto_bump_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpDepotAllianceToNeutral: newState.bumpDepotAllianceToNeutral + value,
 					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
 				);
 			case 'auto_bump_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpOutpostAllianceToNeutral: newState.bumpOutpostAllianceToNeutral + value,
 					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
 				);
 			case 'auto_trench_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchOutpostAllianceToNeutral: newState.trenchOutpostAllianceToNeutral + value,
 					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
 				);
 			case 'auto_trench_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchDepotNeutralToAlliance: newState.trenchDepotNeutralToAlliance + value,
 					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
 				);
 			case 'auto_bump_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpDepotNeutralToAlliance: newState.bumpDepotNeutralToAlliance + value,
 					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
 				);
 			case 'auto_bump_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpOutpostNeutralToAlliance: newState.bumpOutpostNeutralToAlliance + value,
 					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
 				);
 			case 'auto_trench_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchOutpostNeutralToAlliance: newState.trenchOutpostNeutralToAlliance + value,
 					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
 				);
 			case 'auto_fuel_score':
 				newState = newState.copyWith(fuelScore: newState.fuelScore + value);
@@ -298,57 +314,67 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 		AutoTabState newState = state;
 		switch (field) {
 			case 'auto_zone_change':
-				// Toggle zone back to previous zone
+				// Toggle zone back to previous zone and set appropriate fuel target
+				final newZone = state.activeZone == 'alliance' ? 'neutral' : 'alliance';
 				newState = newState.copyWith(
-					activeZone: state.activeZone == 'alliance' ? 'neutral' : 'alliance',
+					activeZone: newZone,
+					activeFuelTarget: newZone == 'neutral' ? 'alliancePass' : 'hub',
 				);
 			case 'auto_trench_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchDepotAllianceToNeutral:
 						(newState.trenchDepotAllianceToNeutral - actionValue).clamp(0, 999),
 					activeZone: 'alliance', // Reverse zone back to alliance
+					activeFuelTarget: 'hub', // Revert fuel target
 				);
 			case 'auto_bump_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpDepotAllianceToNeutral:
 						(newState.bumpDepotAllianceToNeutral - actionValue).clamp(0, 999),
 					activeZone: 'alliance', // Reverse zone back to alliance
+					activeFuelTarget: 'hub', // Revert fuel target
 				);
 			case 'auto_bump_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpOutpostAllianceToNeutral:
 						(newState.bumpOutpostAllianceToNeutral - actionValue).clamp(0, 999),
 					activeZone: 'alliance', // Reverse zone back to alliance
+					activeFuelTarget: 'hub', // Revert fuel target
 				);
 			case 'auto_trench_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchOutpostAllianceToNeutral:
 						(newState.trenchOutpostAllianceToNeutral - actionValue).clamp(0, 999),
 					activeZone: 'alliance', // Reverse zone back to alliance
+					activeFuelTarget: 'hub', // Revert fuel target
 				);
 			case 'auto_trench_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchDepotNeutralToAlliance:
 						(newState.trenchDepotNeutralToAlliance - actionValue).clamp(0, 999),
 					activeZone: 'neutral', // Reverse zone back to neutral
+					activeFuelTarget: 'alliancePass', // Revert fuel target
 				);
 			case 'auto_bump_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpDepotNeutralToAlliance:
 						(newState.bumpDepotNeutralToAlliance - actionValue).clamp(0, 999),
 					activeZone: 'neutral', // Reverse zone back to neutral
+					activeFuelTarget: 'alliancePass', // Revert fuel target
 				);
 			case 'auto_bump_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpOutpostNeutralToAlliance:
 						(newState.bumpOutpostNeutralToAlliance - actionValue).clamp(0, 999),
 					activeZone: 'neutral', // Reverse zone back to neutral
+					activeFuelTarget: 'alliancePass', // Revert fuel target
 				);
 			case 'auto_trench_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchOutpostNeutralToAlliance:
 						(newState.trenchOutpostNeutralToAlliance - actionValue).clamp(0, 999),
 					activeZone: 'neutral', // Reverse zone back to neutral
+					activeFuelTarget: 'alliancePass', // Revert fuel target
 				);
 			case 'auto_fuel_score':
 				newState = newState.copyWith(
@@ -387,6 +413,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 				neutralTime: newState.neutralTime,
 				climbLevel: newState.climbLevel,
 				activeZone: newState.activeZone,
+				activeFuelTarget: newState.activeFuelTarget,
 				timeline: newTimeline,
 				autoStartTime: null,
 			);
@@ -425,6 +452,14 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 			return; // Already in target zone
 		}
 		state = state.copyWith(activeZone: targetZone);
+	}
+
+	/// Change fuel target to specific target ('hub' or 'alliancePass')
+	void changeFuelTarget(String targetName) {
+		if (state.activeFuelTarget == targetName) {
+			return; // Already on target
+		}
+		state = state.copyWith(activeFuelTarget: targetName);
 	}
 
 	/// Start auto (initialize start time) - syncs with UI timer

@@ -50,6 +50,13 @@ class AutoFieldOverlay extends StatelessWidget {
 	/// Used to determine if field should be rotated based on team color
 	final String? botPosition;
 
+	/// Current active fuel target ('hub' or 'alliancePass')
+	final String activeFuelTarget;
+
+	/// Called when a fuel target is tapped
+	/// Parameters: targetName ('hub' or 'alliancePass')
+	final Function(String targetName)? onFuelTargetTapped;
+
 	const AutoFieldOverlay({
 		Key? key,
 		required this.onMovementTapped,
@@ -65,6 +72,8 @@ class AutoFieldOverlay extends StatelessWidget {
 		this.showStartButton = true,
 		this.startAutoButtonLabel = 'Start Auto',
 		this.botPosition,
+		this.activeFuelTarget = 'hub',
+		this.onFuelTargetTapped,
 	}) : super(key: key);
 
 	@override
@@ -119,25 +128,32 @@ class AutoFieldOverlay extends StatelessWidget {
 									)),
 
 								// Fuel target overlays
+							// Hub target shows only in alliance zone
+							if (activeZone == 'alliance')
 								_buildFuelTarget(
 									maxWidth,
 									fieldHeight,
 									label: 'Hub Target',
 									rightPercent: 26.0,
 									topPercent: 42.0,
-									imagePath: 'assets/images/fuel-target.png',
+									targetName: 'hub',
+									isActive: activeFuelTarget == 'hub',
+									onTap: () => onFuelTargetTapped?.call('hub'),
 									shouldRotate: shouldRotate,
 								),
+							// Alliance Pass target shows only in neutral zone
+							if (activeZone == 'neutral')
 								_buildFuelTarget(
 									maxWidth,
 									fieldHeight,
 									label: 'Alliance Pass',
 									rightPercent: 13.0,
 									bottomPercent: 7.0,
-									imagePath: 'assets/images/fuel-target-active.png',
+									targetName: 'alliancePass',
+									isActive: activeFuelTarget == 'alliancePass',
+									onTap: () => onFuelTargetTapped?.call('alliancePass'),
 									shouldRotate: shouldRotate,
 								),
-
 								// Zone indicators (only active zone is shown)
 								if (activeZone == 'alliance')
 									_buildZoneIndicator(
@@ -241,6 +257,7 @@ class AutoFieldOverlay extends StatelessWidget {
 							height: buttonHeight,
 							decoration: BoxDecoration(
 								borderRadius: BorderRadius.circular(buttonWidth * 0.1),
+								color: AppColors.buttonBgColor,
 								boxShadow: [
 									BoxShadow(
 										color: Colors.black.withValues(alpha: 0.4),
@@ -269,36 +286,34 @@ class AutoFieldOverlay extends StatelessWidget {
 		double? rightPercent,
 		double? topPercent,
 		double? bottomPercent,
-		required String imagePath,
+		required String targetName,
+		required bool isActive,
+		required VoidCallback onTap,
 		required bool shouldRotate,
 	}) {
 		final size = 5.0 * fieldWidth / 100;
+		final imagePath = isActive
+			? 'assets/images/fuel-target-active.png'
+			: 'assets/images/fuel-target.png';
 
 		return Positioned(
 			left: leftPercent != null ? leftPercent * fieldWidth / 100 : null,
 			right: rightPercent != null ? rightPercent * fieldWidth / 100 : null,
 			top: topPercent != null ? topPercent * fieldHeight / 100 : null,
 			bottom: bottomPercent != null ? bottomPercent * fieldHeight / 100 : null,
-			child: Transform.rotate(
-				angle: shouldRotate ? pi : 0,
-				child: Tooltip(
-					message: label,
-					child: Container(
-						width: size,
-						height: size,
-						decoration: BoxDecoration(
-							borderRadius: BorderRadius.circular(size * 0.1),
-							boxShadow: [
-								BoxShadow(
-									color: Colors.black.withValues(alpha: 0.3),
-									blurRadius: 2,
-									offset: const Offset(0, 1),
-								),
-							],
-						),
-						child: Image.asset(
-							imagePath,
-							fit: BoxFit.contain,
+			child: GestureDetector(
+				onTap: onTap,
+				child: Transform.rotate(
+					angle: shouldRotate ? pi : 0,
+					child: Tooltip(
+						message: label,
+						child: Container(
+							width: size,
+							height: size,
+							child: Image.asset(
+								imagePath,
+								fit: BoxFit.contain,
+							),
 						),
 					),
 				),
@@ -428,7 +443,7 @@ class AutoFieldOverlay extends StatelessWidget {
 							color: borderColor,
 							width: size * 0.08,
 						),
-						color: Colors.grey.shade600,
+						color: AppColors.buttonBgColor,
 						boxShadow: [
 							BoxShadow(
 								color: Colors.black.withValues(alpha: 0.4),
@@ -467,7 +482,7 @@ class AutoFieldOverlay extends StatelessWidget {
 						height: size,
 						decoration: BoxDecoration(
 							borderRadius: BorderRadius.circular(size * 0.15),
-							color: Colors.black54.withValues(alpha: 0.7),
+							color: AppColors.buttonBgColor,
 							border: Border.all(
 								color: teamColor,
 								width: 3,
@@ -484,7 +499,7 @@ class AutoFieldOverlay extends StatelessWidget {
 							child: Text(
 								climbLevel.toString(),
 								style: TextStyle(
-									color: Colors.white,
+									color: AppColors.buttonFgColor,
 									fontSize: fontSize,
 									fontWeight: FontWeight.bold,
 								),
