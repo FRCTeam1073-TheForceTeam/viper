@@ -191,6 +191,20 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							botPosition: botPosition,
 							showStartButton: widget.matchStartTime == null,
 							onMovementTapped: (field, action) {
+							// Check if this is a zone change button (bump or trench)
+							if (field.contains('bump') || field.contains('trench')) {
+								// Extract target zone from field name
+								String targetZone = 'alliance'; // default
+								if (field.contains('to_neutral')) {
+									targetZone = 'neutral';
+								} else if (field.contains('to_alliance')) {
+									targetZone = 'alliance';
+								}
+									// Change zone
+									ref.read(autoTabControllerProvider.notifier).changeZone(targetZone);
+								}
+
+								// Record the action
 								ref.read(autoTabControllerProvider.notifier).recordAction(
 									type: 'movement',
 									field: field,

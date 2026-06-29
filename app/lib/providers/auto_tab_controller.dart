@@ -409,6 +409,17 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 		state = state.copyWith(activeZone: newZone);
 	}
 
+	/// Change zone to specific zone (alliance or neutral)
+	/// Simply updates the active zone without recording a separate action
+	void changeZone(String targetZone) {
+		if (state.activeZone == targetZone) {
+			return; // Already in target zone
+		}
+
+		// Update active zone
+		state = state.copyWith(activeZone: targetZone);
+	}
+
 	/// Start auto (initialize start time)
 	void startAuto() {
 		state = state.copyWith(autoStartTime: DateTime.now());

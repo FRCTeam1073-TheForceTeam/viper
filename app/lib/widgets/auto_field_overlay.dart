@@ -6,7 +6,7 @@ import '../data/field_button_definitions.dart';
 
 /// Widget that displays the field with positioned buttons for robot movement interactions
 /// Buttons use CSS-like percentage positioning and are zone-aware (alliance/neutral)
-class AutoFieldOverlay extends StatefulWidget {
+class AutoFieldOverlay extends StatelessWidget {
 	/// Called when a movement button is tapped
 	/// Parameters: field (movement counter name), action (label)
 	final Function(String field, String action) onMovementTapped;
@@ -46,7 +46,6 @@ class AutoFieldOverlay extends StatefulWidget {
 	/// Text label for Start Auto button (should be translated)
 	final String startAutoButtonLabel;
 
-
 	/// Robot position (bot position like 'R1', 'B1', etc.)
 	/// Used to determine if field should be rotated based on team color
 	final String? botPosition;
@@ -69,20 +68,15 @@ class AutoFieldOverlay extends StatefulWidget {
 	}) : super(key: key);
 
 	@override
-	State<AutoFieldOverlay> createState() => _AutoFieldOverlayState();
-}
-
-class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
-	@override
 	Widget build(BuildContext context) {
 		// Determine if field should be rotated based on team color and field side
-		final isBlueTeam = widget.botPosition?.startsWith('B') ?? false;
+		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 		final shouldRotate =
-			(isBlueTeam && widget.fieldSide == FieldSide.left) ||
-			(!isBlueTeam && widget.fieldSide == FieldSide.right);
+			(isBlueTeam && fieldSide == FieldSide.left) ||
+			(!isBlueTeam && fieldSide == FieldSide.right);
 
 		// Calculate field dimensions maintaining 1.875:1 aspect ratio (field.png)
-		final maxWidth = widget.fieldWidth ?? (MediaQuery.of(context).size.width - 32);
+		final maxWidth = fieldWidth ?? (MediaQuery.of(context).size.width - 32);
 		final fieldHeight = maxWidth / 1.875; // 16:30 aspect ratio
 
 		return Transform.rotate(
@@ -100,7 +94,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 							decoration: BoxDecoration(
 								image: DecorationImage(
 									image: AssetImage(
-										widget.fieldSide == FieldSide.left
+									fieldSide == FieldSide.left
 											? 'assets/images/field.png'
 											: 'assets/images/field-rotated.png',
 									),
@@ -112,7 +106,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 
 						// Positioned movement buttons - filtered by active zone
 						...fieldButtonDefinitions
-							.where((btn) => btn.zone == widget.activeZone)
+						.where((btn) => btn.zone == activeZone)
 							.map((btn) => _buildMovementButton(
 								maxWidth,
 								fieldHeight,
@@ -140,6 +134,24 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 							shouldRotate: shouldRotate,
 						),
 
+						// Zone indicators (only active zone is shown)
+						if (activeZone == 'alliance')
+							_buildZoneIndicator(
+								maxWidth,
+								fieldHeight,
+								rightPercent: 13.0,
+								topPercent: 43.0,
+								shouldRotate: shouldRotate,
+							),
+						if (activeZone == 'neutral')
+							_buildZoneIndicator(
+								maxWidth,
+								fieldHeight,
+								rightPercent: 46.5,
+								topPercent: 43.0,
+								shouldRotate: shouldRotate,
+							),
+
 						// Collection checkboxes (matching web app positioning)
 						_buildCollectionCheckbox(
 							maxWidth,
@@ -147,8 +159,8 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 							label: 'Depot',
 							rightPercent: 2.0,
 							bottomPercent: 22.0,
-							isChecked: widget.collectDepot,
-							onTap: () => widget.onCollectionToggled?.call('depot'),
+						isChecked: collectDepot,
+						onTap: () => onCollectionToggled?.call('depot'),
 							shouldRotate: shouldRotate,
 						),
 						_buildCollectionCheckbox(
@@ -157,13 +169,13 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 							label: 'Outpost',
 							rightPercent: 0.0,
 							topPercent: 7.0,
-							isChecked: widget.collectOutpost,
-							onTap: () => widget.onCollectionToggled?.call('outpost'),
+						isChecked: collectOutpost,
+						onTap: () => onCollectionToggled?.call('outpost'),
 							shouldRotate: shouldRotate,
 						),
 
 						// Start Auto button overlay (when visible)
-						if (widget.showStartButton)
+					if (showStartButton)
 							_buildStartAutoButton(
 								maxWidth,
 								fieldHeight,
@@ -174,9 +186,9 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 						_buildClimbSelector(
 							maxWidth,
 							fieldHeight,
-							climbLevel: widget.climbLevel,
-							onTap: () => widget.onClimbToggled?.call(),
-							teamColor: widget.fieldSide == FieldSide.left
+						climbLevel: climbLevel,
+						onTap: () => onClimbToggled?.call(),
+						teamColor: fieldSide == FieldSide.left
 								? Colors.red.shade700
 								: Colors.blue.shade700,
 							shouldRotate: shouldRotate,
@@ -212,7 +224,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 			top: topPixels != null ? topPixels - (buttonHeight / 2) : null,
 			bottom: bottomPixels != null ? bottomPixels - (buttonHeight / 2) : null,
 			child: GestureDetector(
-				onTap: () => widget.onMovementTapped(button.field, button.label),
+				onTap: () => onMovementTapped(button.field, button.label),
 				child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Tooltip(
@@ -350,7 +362,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 			left: 9.0 * fieldWidth / 100,
 			top: 15.0 * fieldHeight / 100,
 			child: GestureDetector(
-				onTap: () => widget.onStartAutoTapped?.call(),
+				onTap: () => onStartAutoTapped?.call(),
 				child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Container(
@@ -368,7 +380,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 						),
 						child: Center(
 							child: Text(
-								widget.startAutoButtonLabel,
+								startAutoButtonLabel,
 								textAlign: TextAlign.center,
 								style: TextStyle(
 									color: AppColors.buttonFgColor,
@@ -376,6 +388,49 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 									fontWeight: FontWeight.bold,
 								),
 							),
+						),
+					),
+				),
+			),
+		);
+	}
+
+	/// Build a zone indicator overlay
+	/// Shows robot position in the current zone (alliance or neutral)
+	Widget _buildZoneIndicator(
+		double fieldWidth,
+		double fieldHeight, {
+		required double rightPercent,
+		required double topPercent,
+		required bool shouldRotate,
+	}) {
+		final size = 7.0 * fieldWidth / 100; // 7% of field width
+		final isBlueTeam = botPosition?.startsWith('B') ?? false;
+		final borderColor = isBlueTeam ? Colors.blue.shade700 : Colors.red.shade700;
+
+		return Positioned(
+			right: rightPercent * fieldWidth / 100,
+			top: topPercent * fieldHeight / 100,
+			child: Transform.translate(
+				offset: Offset(-size / 2, -size / 2),
+				child: Transform.rotate(
+					angle: shouldRotate ? pi : 0,
+					child: Container(
+						width: size,
+						height: size,
+						decoration: BoxDecoration(
+							border: Border.all(
+								color: borderColor,
+								width: size * 0.08,
+							),
+							color: Colors.grey.shade600,
+							boxShadow: [
+								BoxShadow(
+									color: Colors.black.withValues(alpha: 0.4),
+									blurRadius: 4,
+									offset: const Offset(0, 2),
+								),
+							],
 						),
 					),
 				),

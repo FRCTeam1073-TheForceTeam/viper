@@ -66,7 +66,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	// Arrow-left buttons positioned at right:26% from right edge
 	FieldButton(
 		field: 'auto_trench_depot_alliance_to_neutral',
-		label: 'Trench\nDepot',
+		label: 'Depot Trench to Neutral',
 		rightPercent: 26.0,
 		bottomPercent: 5.0,
 		imagePath: 'assets/images/arrow-left.png',
@@ -74,7 +74,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	),
 	FieldButton(
 		field: 'auto_bump_depot_alliance_to_neutral',
-		label: 'Bump\nDepot',
+		label: 'Depot Bump to Neutral',
 		rightPercent: 26.0,
 		bottomPercent: 21.0,
 		imagePath: 'assets/images/arrow-left.png',
@@ -82,7 +82,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	),
 	FieldButton(
 		field: 'auto_bump_outpost_alliance_to_neutral',
-		label: 'Bump\nOutpost',
+		label: 'Outpost Bump to Neutral',
 		rightPercent: 26.0,
 		topPercent: 21.0,
 		imagePath: 'assets/images/arrow-left.png',
@@ -90,7 +90,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	),
 	FieldButton(
 		field: 'auto_trench_outpost_alliance_to_neutral',
-		label: 'Trench\nOutpost',
+		label: 'Outpost Trench to Neutral',
 		rightPercent: 26.0,
 		topPercent: 5.0,
 		imagePath: 'assets/images/arrow-left.png',
@@ -101,7 +101,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	// Arrow-right buttons positioned at right:26% from right edge (mirror layout)
 	FieldButton(
 		field: 'auto_trench_depot_neutral_to_alliance',
-		label: 'Trench\nDepot',
+		label: 'Depot Trench to Alliance',
 		rightPercent: 26.0,
 		bottomPercent: 5.0,
 		imagePath: 'assets/images/arrow-right.png',
@@ -109,7 +109,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	),
 	FieldButton(
 		field: 'auto_bump_depot_neutral_to_alliance',
-		label: 'Bump\nDepot',
+		label: 'Depot Bump to Alliance',
 		rightPercent: 26.0,
 		bottomPercent: 21.0,
 		imagePath: 'assets/images/arrow-right.png',
@@ -117,7 +117,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	),
 	FieldButton(
 		field: 'auto_bump_outpost_neutral_to_alliance',
-		label: 'Bump\nOutpost',
+		label: 'Outpost Bump to Alliance',
 		rightPercent: 26.0,
 		topPercent: 21.0,
 		imagePath: 'assets/images/arrow-right.png',
@@ -125,7 +125,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	),
 	FieldButton(
 		field: 'auto_trench_outpost_neutral_to_alliance',
-		label: 'Trench\nOutpost',
+		label: 'Outpost Trench to Alliance',
 		rightPercent: 26.0,
 		topPercent: 5.0,
 		imagePath: 'assets/images/arrow-right.png',
