@@ -8,6 +8,7 @@ import 'tabs/end_game_tab.dart';
 import '../widgets/viper_menu_button.dart';
 import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
+import '../providers/auto_tab_controller.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
 import '../widgets/match_timer.dart';
@@ -164,6 +165,17 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
 		final selectedTabIndex = ref.watch(selectedTabIndexProvider);
+		
+		// Watch autoTabControllerProvider to sync _matchStartTime when undo resets autoStartTime
+		final autoState = ref.watch(autoTabControllerProvider);
+		if (autoState.autoStartTime != _matchStartTime) {
+			// Sync the local state with the provider's autoStartTime
+			// This handles undo resetting the timer
+			WidgetsBinding.instance.addPostFrameCallback((_) {
+				setState(() => _matchStartTime = autoState.autoStartTime);
+			});
+		}
+		
 		final isBlueTeam = selectedBot?.startsWith('B') ?? false;
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 

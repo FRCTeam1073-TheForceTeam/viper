@@ -65,6 +65,16 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		return const EdgeInsets.all(12);
 	}
 
+	/// Start the match timer if not already started
+	void _startMatchIfNeeded() {
+		if (widget.matchStartTime == null) {
+			final now = DateTime.now();
+			widget.onStartMatch?.call(now);
+			// Sync provider's autoStartTime with UI timer start
+			ref.read(autoTabControllerProvider.notifier).syncStartTime(now);
+		}
+	}
+
 	@override
 	void initState() {
 		super.initState();
@@ -191,20 +201,10 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							botPosition: botPosition,
 							showStartButton: widget.matchStartTime == null,
 							onMovementTapped: (field, action) {
-							// Check if this is a zone change button (bump or trench)
-							if (field.contains('bump') || field.contains('trench')) {
-								// Extract target zone from field name
-								String targetZone = 'alliance'; // default
-								if (field.contains('to_neutral')) {
-									targetZone = 'neutral';
-								} else if (field.contains('to_alliance')) {
-									targetZone = 'alliance';
-								}
-									// Change zone
-									ref.read(autoTabControllerProvider.notifier).changeZone(targetZone);
-								}
+								// Start match timer if not already started
+								_startMatchIfNeeded();
 
-								// Record the action
+								// Record the action (zone change is implicit in field name)
 								ref.read(autoTabControllerProvider.notifier).recordAction(
 									type: 'movement',
 									field: field,
@@ -213,7 +213,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 									valueLabel: '+1',
 								);
 							},
-							onCollectionToggled: (type) {
+							onCollectionToggled: (type) {							// Start match timer if not already started
+							_startMatchIfNeeded();
 								final field = type == 'depot' ? 'auto_collect_depot' : 'auto_collect_outpost';
 								ref.read(autoTabControllerProvider.notifier).recordAction(
 									type: 'collection',
@@ -224,6 +225,9 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								);
 							},
 							onClimbToggled: () {
+								// Start match timer if not already started
+								_startMatchIfNeeded();
+
 								ref.read(autoTabControllerProvider.notifier).recordAction(
 									type: 'climb',
 									field: 'auto_climb_level',
@@ -233,7 +237,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								);
 							},
 							onStartAutoTapped: () {
-								widget.onStartMatch?.call(DateTime.now());
+								_startMatchIfNeeded();
 							},
 						startAutoButtonLabel: _translate('start_auto_button'),
 					),
@@ -323,10 +327,10 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								// Undo button
 								FilledButton(
 									style: FilledButton.styleFrom(
-										backgroundColor: autoState.actionHistory.isNotEmpty
+										backgroundColor: autoState.timeline.isNotEmpty
 											? AppColors.buttonBgColor
 											: Colors.grey.shade700,
-										foregroundColor: autoState.actionHistory.isNotEmpty
+										foregroundColor: autoState.timeline.isNotEmpty
 											? AppColors.buttonFgColor
 											: Colors.grey.shade500,
 										padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
@@ -334,7 +338,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 											borderRadius: BorderRadius.circular(8),
 										),
 									),
-									onPressed: autoState.actionHistory.isNotEmpty
+									onPressed: autoState.timeline.isNotEmpty
 										? () {
 											ref.read(autoTabControllerProvider.notifier).undo();
 										}
