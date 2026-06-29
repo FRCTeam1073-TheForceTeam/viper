@@ -83,6 +83,9 @@ class AutoFieldOverlay extends StatelessWidget {
 		final shouldRotate =
 			(isBlueTeam && fieldSide == FieldSide.left) ||
 			(!isBlueTeam && fieldSide == FieldSide.right);
+		
+		// Team color for UI elements - use globally defined app colors
+		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 
 		// Use LayoutBuilder to get actual available width (respects parent padding/constraints)
 		return LayoutBuilder(
@@ -162,6 +165,7 @@ class AutoFieldOverlay extends StatelessWidget {
 										rightPercent: 13.0,
 										topPercent: 43.0,
 										shouldRotate: shouldRotate,
+										teamColor: teamColor,
 									),
 								if (activeZone == 'neutral')
 									_buildZoneIndicator(
@@ -170,9 +174,10 @@ class AutoFieldOverlay extends StatelessWidget {
 										rightPercent: 46.5,
 										topPercent: 43.0,
 										shouldRotate: shouldRotate,
+										teamColor: teamColor,
 									),
 
-								// Collection checkboxes (matching web app positioning)
+								// Collection checkboxes
 								_buildCollectionCheckbox(
 									maxWidth,
 									fieldHeight,
@@ -425,10 +430,9 @@ class AutoFieldOverlay extends StatelessWidget {
 		required double rightPercent,
 		required double topPercent,
 		required bool shouldRotate,
+		required Color teamColor,
 	}) {
 		final size = 7.0 * fieldWidth / 100; // 7% of field width
-		final isBlueTeam = botPosition?.startsWith('B') ?? false;
-		final borderColor = isBlueTeam ? Colors.blue.shade700 : Colors.red.shade700;
 
 		return Positioned(
 			right: rightPercent * fieldWidth / 100,
@@ -440,8 +444,8 @@ class AutoFieldOverlay extends StatelessWidget {
 					height: size,
 					decoration: BoxDecoration(
 						border: Border.all(
-							color: borderColor,
-							width: size * 0.08,
+							color: teamColor,
+							width: size * 0.12,
 						),
 						color: AppColors.buttonBgColor,
 						boxShadow: [
@@ -483,10 +487,6 @@ class AutoFieldOverlay extends StatelessWidget {
 						decoration: BoxDecoration(
 							borderRadius: BorderRadius.circular(size * 0.15),
 							color: AppColors.buttonBgColor,
-							border: Border.all(
-								color: teamColor,
-								width: 3,
-							),
 							boxShadow: [
 								BoxShadow(
 									color: Colors.black.withValues(alpha: 0.5),
