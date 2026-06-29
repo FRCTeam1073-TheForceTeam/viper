@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../providers/field_side_provider.dart';
+import '../../constants/colors.dart';
 import '../data/field_button_definitions.dart';
 
 /// Widget that displays the field with positioned buttons for robot movement interactions
@@ -36,6 +37,16 @@ class AutoFieldOverlay extends StatefulWidget {
 	/// Called when climb selector is tapped to toggle level
 	final Function()? onClimbToggled;
 
+	/// Called when Start Auto button is tapped
+	final Function()? onStartAutoTapped;
+
+	/// Whether to show the Start Auto button (false after match starts)
+	final bool showStartButton;
+
+	/// Text label for Start Auto button (should be translated)
+	final String startAutoButtonLabel;
+
+
 	/// Robot position (bot position like 'R1', 'B1', etc.)
 	/// Used to determine if field should be rotated based on team color
 	final String? botPosition;
@@ -51,6 +62,9 @@ class AutoFieldOverlay extends StatefulWidget {
 		this.collectOutpost = false,
 		this.climbLevel = 0,
 		this.onClimbToggled,
+		this.onStartAutoTapped,
+		this.showStartButton = true,
+		this.startAutoButtonLabel = 'Start Auto',
 		this.botPosition,
 	}) : super(key: key);
 
@@ -78,86 +92,98 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 				height: fieldHeight,
 				margin: const EdgeInsets.symmetric(vertical: 8),
 				child: Stack(
-				children: [
-					// Field background image
-					Container(
-						width: maxWidth,
-						height: fieldHeight,
-						decoration: BoxDecoration(
-							image: DecorationImage(
-								image: AssetImage(
-									widget.fieldSide == FieldSide.left
-										? 'assets/images/field.png'
-										: 'assets/images/field-rotated.png',
+					children: [
+						// Field background image
+						Container(
+							width: maxWidth,
+							height: fieldHeight,
+							decoration: BoxDecoration(
+								image: DecorationImage(
+									image: AssetImage(
+										widget.fieldSide == FieldSide.left
+											? 'assets/images/field.png'
+											: 'assets/images/field-rotated.png',
+									),
+									fit: BoxFit.cover,
 								),
-								fit: BoxFit.cover,
+								borderRadius: BorderRadius.circular(4),
 							),
-							borderRadius: BorderRadius.circular(4),
 						),
-					),
 
-					// Positioned movement buttons - filtered by active zone
-					...fieldButtonDefinitions
-						.where((btn) => btn.zone == widget.activeZone)
-						.map((btn) => _buildMovementButton(
+						// Positioned movement buttons - filtered by active zone
+						...fieldButtonDefinitions
+							.where((btn) => btn.zone == widget.activeZone)
+							.map((btn) => _buildMovementButton(
+								maxWidth,
+								fieldHeight,
+								btn,
+								shouldRotate,
+							)),
+
+						// Fuel target overlays
+						_buildFuelTarget(
 							maxWidth,
 							fieldHeight,
-							btn,
-						)),
-
-					// Fuel target overlays
-					_buildFuelTarget(
-						maxWidth,
-						fieldHeight,
-						label: 'Hub Target',
-						rightPercent: 26.0,
-						topPercent: 42.0,
-						imagePath: 'assets/images/fuel-target.png',
-					),
-					_buildFuelTarget(
-						maxWidth,
-						fieldHeight,
-						label: 'Alliance Pass',
-						rightPercent: 13.0,
-						bottomPercent: 7.0,
+							label: 'Hub Target',
+							rightPercent: 26.0,
+							topPercent: 42.0,
+							imagePath: 'assets/images/fuel-target.png',
+							shouldRotate: shouldRotate,
+						),
+						_buildFuelTarget(
+							maxWidth,
+							fieldHeight,
+							label: 'Alliance Pass',
+							rightPercent: 13.0,
+							bottomPercent: 7.0,
 							imagePath: 'assets/images/fuel-target-active.png',
+							shouldRotate: shouldRotate,
 						),
 
-					// Collection checkboxes (near fuel targets)
-					_buildCollectionCheckbox(
-						maxWidth,
-						fieldHeight,
-						label: 'Depot',
-						leftPercent: 5.0,
-						topPercent: 8.0,
-						isChecked: widget.collectDepot,
-						onTap: () => widget.onCollectionToggled?.call('depot'),
-					),
-					_buildCollectionCheckbox(
-						maxWidth,
-						fieldHeight,
-						label: 'Outpost',
-						rightPercent: 5.0,
-						topPercent: 8.0,
-						isChecked: widget.collectOutpost,
-						onTap: () => widget.onCollectionToggled?.call('outpost'),
-					),
+						// Collection checkboxes (matching web app positioning)
+						_buildCollectionCheckbox(
+							maxWidth,
+							fieldHeight,
+							label: 'Depot',
+							rightPercent: 2.0,
+							bottomPercent: 22.0,
+							isChecked: widget.collectDepot,
+							onTap: () => widget.onCollectionToggled?.call('depot'),
+							shouldRotate: shouldRotate,
+						),
+						_buildCollectionCheckbox(
+							maxWidth,
+							fieldHeight,
+							label: 'Outpost',
+							rightPercent: 0.0,
+							topPercent: 7.0,
+							isChecked: widget.collectOutpost,
+							onTap: () => widget.onCollectionToggled?.call('outpost'),
+							shouldRotate: shouldRotate,
+						),
 
-					// Quick-add fuel buttons will be placed below the field (not overlayed)
+						// Start Auto button overlay (when visible)
+						if (widget.showStartButton)
+							_buildStartAutoButton(
+								maxWidth,
+								fieldHeight,
+								shouldRotate,
+							),
 
-					// Climb selector overlay (top-right)
-					_buildClimbSelector(
-						maxWidth,
-						fieldHeight,
-						climbLevel: widget.climbLevel,
-						onTap: () => widget.onClimbToggled?.call(),
-						teamColor: widget.fieldSide == FieldSide.left
-							? Colors.red.shade700
-							: Colors.blue.shade700,
-					),
-				],
+						// Climb selector overlay (top-right)
+						_buildClimbSelector(
+							maxWidth,
+							fieldHeight,
+							climbLevel: widget.climbLevel,
+							onTap: () => widget.onClimbToggled?.call(),
+							teamColor: widget.fieldSide == FieldSide.left
+								? Colors.red.shade700
+								: Colors.blue.shade700,
+							shouldRotate: shouldRotate,
+						),
+					],
+				),
 			),
-		),
 		);
 	}
 
@@ -166,6 +192,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 		double fieldWidth,
 		double fieldHeight,
 		FieldButton button,
+		bool shouldRotate,
 	) {
 		// Calculate pixel position from percentage
 		final rightPixels = button.rightPercent * fieldWidth / 100;
@@ -186,24 +213,27 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 			bottom: bottomPixels != null ? bottomPixels - (buttonHeight / 2) : null,
 			child: GestureDetector(
 				onTap: () => widget.onMovementTapped(button.field, button.label),
-				child: Tooltip(
-					message: button.label,
-					child: Container(
-						width: buttonWidth,
-						height: buttonHeight,
-						decoration: BoxDecoration(
-							borderRadius: BorderRadius.circular(buttonWidth * 0.1),
-							boxShadow: [
-								BoxShadow(
-									color: Colors.black.withValues(alpha: 0.4),
-									blurRadius: 4,
-									offset: const Offset(0, 2),
-								),
-							],
-						),
-						child: Image.asset(
-							button.imagePath,
-							fit: BoxFit.contain,
+				child: Transform.rotate(
+					angle: shouldRotate ? pi : 0,
+					child: Tooltip(
+						message: button.label,
+						child: Container(
+							width: buttonWidth,
+							height: buttonHeight,
+							decoration: BoxDecoration(
+								borderRadius: BorderRadius.circular(buttonWidth * 0.1),
+								boxShadow: [
+									BoxShadow(
+										color: Colors.black.withValues(alpha: 0.4),
+										blurRadius: 4,
+										offset: const Offset(0, 2),
+									),
+								],
+							),
+							child: Image.asset(
+								button.imagePath,
+								fit: BoxFit.contain,
+							),
 						),
 					),
 				),
@@ -221,6 +251,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 		double? topPercent,
 		double? bottomPercent,
 		required String imagePath,
+		required bool shouldRotate,
 	}) {
 		final size = 5.0 * fieldWidth / 100;
 
@@ -229,76 +260,124 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 			right: rightPercent != null ? rightPercent * fieldWidth / 100 : null,
 			top: topPercent != null ? topPercent * fieldHeight / 100 : null,
 			bottom: bottomPercent != null ? bottomPercent * fieldHeight / 100 : null,
-			child: Tooltip(
-				message: label,
-				child: Container(
-					width: size,
-					height: size,
-					decoration: BoxDecoration(
-						borderRadius: BorderRadius.circular(size * 0.1),
-						boxShadow: [
-							BoxShadow(
-								color: Colors.black.withValues(alpha: 0.3),
-								blurRadius: 2,
-								offset: const Offset(0, 1),
-							),
-						],
-					),
-					child: Image.asset(
-						imagePath,
-						fit: BoxFit.contain,
+			child: Transform.rotate(
+				angle: shouldRotate ? pi : 0,
+				child: Tooltip(
+					message: label,
+					child: Container(
+						width: size,
+						height: size,
+						decoration: BoxDecoration(
+							borderRadius: BorderRadius.circular(size * 0.1),
+							boxShadow: [
+								BoxShadow(
+									color: Colors.black.withValues(alpha: 0.3),
+									blurRadius: 2,
+									offset: const Offset(0, 1),
+								),
+							],
+						),
+						child: Image.asset(
+							imagePath,
+							fit: BoxFit.contain,
+						),
 					),
 				),
 			),
 		);
 	}
 
-	/// Build a collection checkbox overlay
+	/// Build a collection checkbox overlay using fuel-collect.png image
 	Widget _buildCollectionCheckbox(
 		double fieldWidth,
 		double fieldHeight, {
 		required String label,
-		double? leftPercent,
-		double? rightPercent,
-		required double topPercent,
+		required double rightPercent,
+		double? topPercent,
+		double? bottomPercent,
 		required bool isChecked,
 		required VoidCallback onTap,
+		required bool shouldRotate,
 	}) {
-		final size = 4.0 * fieldWidth / 100;
+		final size = 8.0 * fieldWidth / 100;
 
 		return Positioned(
-			left: leftPercent != null ? leftPercent * fieldWidth / 100 : null,
-			right: rightPercent != null ? rightPercent * fieldWidth / 100 : null,
-			top: topPercent * fieldHeight / 100,
+			right: rightPercent * fieldWidth / 100,
+			top: topPercent != null ? topPercent * fieldHeight / 100 : null,
+			bottom: bottomPercent != null ? bottomPercent * fieldHeight / 100 : null,
 			child: GestureDetector(
 				onTap: onTap,
-				child: Container(
-					width: size,
-					height: size,
-					decoration: BoxDecoration(
-						borderRadius: BorderRadius.circular(size * 0.15),
-						color: isChecked
-							? Colors.green.shade700.withValues(alpha: 0.85)
-							: Colors.grey.shade300.withValues(alpha: 0.6),
-						border: Border.all(
-							color: Colors.white,
-							width: 1.5,
+				child: Transform.rotate(
+					angle: shouldRotate ? pi : 0,
+					child: Container(
+						width: size,
+						height: size,
+						decoration: BoxDecoration(
+							borderRadius: BorderRadius.circular(size * 0.15),
+							color: isChecked
+								? AppColors.buttonSelectedBgColor
+								: AppColors.buttonBgColor,
+							boxShadow: [
+								BoxShadow(
+									color: Colors.black.withValues(alpha: 0.3),
+									blurRadius: 4,
+									offset: const Offset(0, 2),
+								),
+							],
 						),
-						boxShadow: [
-							BoxShadow(
-								color: Colors.black.withValues(alpha: 0.3),
-								blurRadius: 2,
-								offset: const Offset(0, 1),
-							),
-						],
+						child: Image.asset(
+							'assets/images/fuel-collect.png',
+							fit: BoxFit.contain,
+
+						),
 					),
-					child: isChecked
-						? Icon(
-							Icons.check,
-							color: Colors.white,
-							size: size * 0.6,
-						)
-						: null,
+				),
+			),
+		);
+	}
+
+	/// Build Start Auto button overlay
+	/// Positioned at left:9%, top:15% with 10% width and "Start Auto" label (matching web app)
+	Widget _buildStartAutoButton(
+		double fieldWidth,
+		double fieldHeight,
+		bool shouldRotate,
+	) {
+		final buttonSize = 10.0 * fieldWidth / 100;
+		final padding = buttonSize * 0.2; // Padding around text content
+
+		return Positioned(
+			left: 9.0 * fieldWidth / 100,
+			top: 15.0 * fieldHeight / 100,
+			child: GestureDetector(
+				onTap: () => widget.onStartAutoTapped?.call(),
+				child: Transform.rotate(
+					angle: shouldRotate ? pi : 0,
+					child: Container(
+						padding: EdgeInsets.all(padding),
+						decoration: BoxDecoration(
+							borderRadius: BorderRadius.circular(buttonSize * 0.15),
+							color: AppColors.buttonBgColor,
+							boxShadow: [
+								BoxShadow(
+									color: Colors.black.withValues(alpha: 0.4),
+									blurRadius: 4,
+									offset: const Offset(0, 2),
+								),
+							],
+						),
+						child: Center(
+							child: Text(
+								widget.startAutoButtonLabel,
+								textAlign: TextAlign.center,
+								style: TextStyle(
+									color: AppColors.buttonFgColor,
+									fontSize: buttonSize * 0.3,
+									fontWeight: FontWeight.bold,
+								),
+							),
+						),
+					),
 				),
 			),
 		);
@@ -312,6 +391,7 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 		required int climbLevel,
 		required VoidCallback onTap,
 		required Color teamColor,
+		required bool shouldRotate,
 	}) {
 		final size = 8.0 * fieldWidth / 100;
 		final fontSize = size * 0.6;
@@ -321,31 +401,34 @@ class _AutoFieldOverlayState extends State<AutoFieldOverlay> {
 			top: 40.0 * fieldHeight / 100 - (size / 2),
 			child: GestureDetector(
 				onTap: onTap,
-				child: Container(
-					width: size,
-					height: size,
-					decoration: BoxDecoration(
-						borderRadius: BorderRadius.circular(size * 0.15),
-						color: Colors.black54.withValues(alpha: 0.7),
-						border: Border.all(
-							color: teamColor,
-							width: 3,
-						),
-						boxShadow: [
-							BoxShadow(
-								color: Colors.black.withValues(alpha: 0.5),
-								blurRadius: 6,
-								offset: const Offset(0, 3),
+				child: Transform.rotate(
+					angle: shouldRotate ? pi : 0,
+					child: Container(
+						width: size,
+						height: size,
+						decoration: BoxDecoration(
+							borderRadius: BorderRadius.circular(size * 0.15),
+							color: Colors.black54.withValues(alpha: 0.7),
+							border: Border.all(
+								color: teamColor,
+								width: 3,
 							),
-						],
-					),
-					child: Center(
-						child: Text(
-							climbLevel.toString(),
-							style: TextStyle(
-								color: Colors.white,
-								fontSize: fontSize,
-								fontWeight: FontWeight.bold,
+							boxShadow: [
+								BoxShadow(
+									color: Colors.black.withValues(alpha: 0.5),
+									blurRadius: 6,
+									offset: const Offset(0, 3),
+								),
+							],
+						),
+						child: Center(
+							child: Text(
+								climbLevel.toString(),
+								style: TextStyle(
+									color: Colors.white,
+									fontSize: fontSize,
+									fontWeight: FontWeight.bold,
+								),
 							),
 						),
 					),

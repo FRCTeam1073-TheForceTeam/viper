@@ -10,6 +10,7 @@ import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
+import '../widgets/match_timer.dart';
 import '../constants/colors.dart';
 
 class ScoutingAppScreen extends ConsumerStatefulWidget {
@@ -32,6 +33,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 	String? _matchNumber;
 	String? _teamNumber;
 	late TabController _tabController;
+	DateTime? _matchStartTime;
 
 	String _translate(String key) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -132,6 +134,10 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 					eventId: widget.selectedEvent.eventId,
 					matchNumber: selectedMatch.match,
 					teamNumber: selectedMatch.team,
+					matchStartTime: _matchStartTime,
+					onStartMatch: (startTime) {
+						setState(() => _matchStartTime = startTime);
+					},
 				);
 			case 2:
 				return TeleopTab(
@@ -179,9 +185,19 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 								preferredSize: const Size.fromHeight(56),
 								child: Row(
 									children: [
+										// Left area: timer (always visible)
 										Expanded(
 											flex: 1,
-											child: Container(), // Left spacer for centering
+											child: Padding(
+												padding: const EdgeInsets.only(left: 16),
+												child: MatchTimer(
+													startTime: _matchStartTime,
+													onAutoEnded: () {
+														// Auto period ended, automatically proceed to tele tab
+														_tabController.animateTo(2);
+													},
+												),
+											),
 										),
 										TabBar(
 											controller: _tabController,

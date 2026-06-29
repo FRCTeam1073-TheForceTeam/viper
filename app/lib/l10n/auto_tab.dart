@@ -400,5 +400,14 @@ void initAutoTabTranslations() {
 			'he': 'טלאופ »',
 			'tr': 'Teleop »',
 		},
+		'start_auto_button': {
+			'en': 'Start Auto',
+			'es': 'Comenzar Auto',
+			'pt': 'Começar Auto',
+			'fr': 'Démarrer Auto',
+			'zh_tw': '開始自動',
+			'he': 'התחל אוטו',
+			'tr': 'Otomatiği Başlat',
+		},
 	});
 }

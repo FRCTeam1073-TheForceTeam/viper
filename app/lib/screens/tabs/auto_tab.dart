@@ -18,12 +18,16 @@ class AutoTab extends ConsumerStatefulWidget {
 	final String eventId;
 	final String? matchNumber;
 	final String? teamNumber;
+	final DateTime? matchStartTime;
+	final Function(DateTime)? onStartMatch;
 
 	const AutoTab({
 		Key? key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
+		this.matchStartTime,
+		this.onStartMatch,
 	}) : super(key: key);
 
 	@override
@@ -185,6 +189,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							collectOutpost: autoState.collectOutpost,
 							climbLevel: autoState.climbLevel,
 							botPosition: botPosition,
+							showStartButton: widget.matchStartTime == null,
 							onMovementTapped: (field, action) {
 								ref.read(autoTabControllerProvider.notifier).recordAction(
 									type: 'movement',
@@ -213,15 +218,19 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 									valueLabel: '${autoState.climbLevel == 0 ? 1 : 0}',
 								);
 							},
-						),
+							onStartAutoTapped: () {
+								widget.onStartMatch?.call(DateTime.now());
+							},
+						startAutoButtonLabel: _translate('start_auto_button'),
 					),
+				),
 
-					const SizedBox(height: 16),
+				const SizedBox(height: 16),
 
-		// Two-column layout: fuel and info
-		Padding(
-			padding: const EdgeInsets.symmetric(horizontal: 16),
-			child: Row(
+				// Two-column layout: fuel and info
+				Padding(
+					padding: const EdgeInsets.symmetric(horizontal: 16),
+					child: Row(
 				crossAxisAlignment: CrossAxisAlignment.start,
 				children: [
 					// LEFT COLUMN: Fuel and Table Toggles
