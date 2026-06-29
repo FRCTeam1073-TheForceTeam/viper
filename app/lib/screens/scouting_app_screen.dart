@@ -165,7 +165,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
 		final selectedTabIndex = ref.watch(selectedTabIndexProvider);
-		
+
 		// Watch autoTabControllerProvider to sync _matchStartTime when undo resets autoStartTime
 		final autoState = ref.watch(autoTabControllerProvider);
 		if (autoState.autoStartTime != _matchStartTime) {
@@ -175,7 +175,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 				setState(() => _matchStartTime = autoState.autoStartTime);
 			});
 		}
-		
+
 		final isBlueTeam = selectedBot?.startsWith('B') ?? false;
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 

@@ -75,127 +75,133 @@ class AutoFieldOverlay extends StatelessWidget {
 			(isBlueTeam && fieldSide == FieldSide.left) ||
 			(!isBlueTeam && fieldSide == FieldSide.right);
 
-		// Calculate field dimensions maintaining 1.875:1 aspect ratio (field.png)
-		final maxWidth = fieldWidth ?? (MediaQuery.of(context).size.width - 32);
-		final fieldHeight = maxWidth / 1.875; // 16:30 aspect ratio
+		// Use LayoutBuilder to get actual available width (respects parent padding/constraints)
+		return LayoutBuilder(
+			builder: (context, constraints) {
+				// Calculate field dimensions maintaining 1.875:1 aspect ratio (field.png)
+				final maxWidth = fieldWidth ?? constraints.maxWidth;
+				final fieldHeight = maxWidth / 1.875; // 16:30 aspect ratio
 
-		return Transform.rotate(
-			angle: shouldRotate ? pi : 0,
-			child: Container(
-				width: maxWidth,
-				height: fieldHeight,
-				margin: const EdgeInsets.symmetric(vertical: 8),
-				child: Stack(
-					children: [
-						// Field background image
-						Container(
-							width: maxWidth,
-							height: fieldHeight,
-							decoration: BoxDecoration(
-								image: DecorationImage(
-									image: AssetImage(
-									fieldSide == FieldSide.left
-											? 'assets/images/field.png'
-											: 'assets/images/field-rotated.png',
+				return Transform.rotate(
+					angle: shouldRotate ? pi : 0,
+					child: Container(
+						width: maxWidth,
+						height: fieldHeight,
+						padding: const EdgeInsets.symmetric(vertical: 8),
+						child: Stack(
+							clipBehavior: Clip.none, // Allow positioned children to overflow
+							children: [
+								// Field background image
+								Container(
+									width: maxWidth,
+									height: fieldHeight,
+									decoration: BoxDecoration(
+										image: DecorationImage(
+											image: AssetImage(
+											fieldSide == FieldSide.left
+													? 'assets/images/field.png'
+													: 'assets/images/field-rotated.png',
+											),
+											fit: BoxFit.contain, // Use contain instead of cover to avoid clipping
+										),
+										borderRadius: BorderRadius.circular(4),
 									),
-									fit: BoxFit.cover,
 								),
-								borderRadius: BorderRadius.circular(4),
-							),
-						),
 
-						// Positioned movement buttons - filtered by active zone
-						...fieldButtonDefinitions
-						.where((btn) => btn.zone == activeZone)
-							.map((btn) => _buildMovementButton(
-								maxWidth,
-								fieldHeight,
-								btn,
-								shouldRotate,
-							)),
+								// Positioned movement buttons - filtered by active zone
+								...fieldButtonDefinitions
+								.where((btn) => btn.zone == activeZone)
+									.map((btn) => _buildMovementButton(
+										maxWidth,
+										fieldHeight,
+										btn,
+										shouldRotate,
+									)),
 
-						// Fuel target overlays
-						_buildFuelTarget(
-							maxWidth,
-							fieldHeight,
-							label: 'Hub Target',
-							rightPercent: 26.0,
-							topPercent: 42.0,
-							imagePath: 'assets/images/fuel-target.png',
-							shouldRotate: shouldRotate,
-						),
-						_buildFuelTarget(
-							maxWidth,
-							fieldHeight,
-							label: 'Alliance Pass',
-							rightPercent: 13.0,
-							bottomPercent: 7.0,
-							imagePath: 'assets/images/fuel-target-active.png',
-							shouldRotate: shouldRotate,
-						),
+								// Fuel target overlays
+								_buildFuelTarget(
+									maxWidth,
+									fieldHeight,
+									label: 'Hub Target',
+									rightPercent: 26.0,
+									topPercent: 42.0,
+									imagePath: 'assets/images/fuel-target.png',
+									shouldRotate: shouldRotate,
+								),
+								_buildFuelTarget(
+									maxWidth,
+									fieldHeight,
+									label: 'Alliance Pass',
+									rightPercent: 13.0,
+									bottomPercent: 7.0,
+									imagePath: 'assets/images/fuel-target-active.png',
+									shouldRotate: shouldRotate,
+								),
 
-						// Zone indicators (only active zone is shown)
-						if (activeZone == 'alliance')
-							_buildZoneIndicator(
-								maxWidth,
-								fieldHeight,
-								rightPercent: 13.0,
-								topPercent: 43.0,
-								shouldRotate: shouldRotate,
-							),
-						if (activeZone == 'neutral')
-							_buildZoneIndicator(
-								maxWidth,
-								fieldHeight,
-								rightPercent: 46.5,
-								topPercent: 43.0,
-								shouldRotate: shouldRotate,
-							),
+								// Zone indicators (only active zone is shown)
+								if (activeZone == 'alliance')
+									_buildZoneIndicator(
+										maxWidth,
+										fieldHeight,
+										rightPercent: 13.0,
+										topPercent: 43.0,
+										shouldRotate: shouldRotate,
+									),
+								if (activeZone == 'neutral')
+									_buildZoneIndicator(
+										maxWidth,
+										fieldHeight,
+										rightPercent: 46.5,
+										topPercent: 43.0,
+										shouldRotate: shouldRotate,
+									),
 
-						// Collection checkboxes (matching web app positioning)
-						_buildCollectionCheckbox(
-							maxWidth,
-							fieldHeight,
-							label: 'Depot',
-							rightPercent: 2.0,
-							bottomPercent: 22.0,
-						isChecked: collectDepot,
-						onTap: () => onCollectionToggled?.call('depot'),
-							shouldRotate: shouldRotate,
-						),
-						_buildCollectionCheckbox(
-							maxWidth,
-							fieldHeight,
-							label: 'Outpost',
-							rightPercent: 0.0,
-							topPercent: 7.0,
-						isChecked: collectOutpost,
-						onTap: () => onCollectionToggled?.call('outpost'),
-							shouldRotate: shouldRotate,
-						),
+								// Collection checkboxes (matching web app positioning)
+								_buildCollectionCheckbox(
+									maxWidth,
+									fieldHeight,
+									label: 'Depot',
+									rightPercent: 2.0,
+									bottomPercent: 22.0,
+									isChecked: collectDepot,
+									onTap: () => onCollectionToggled?.call('depot'),
+									shouldRotate: shouldRotate,
+								),
+								_buildCollectionCheckbox(
+									maxWidth,
+									fieldHeight,
+									label: 'Outpost',
+									rightPercent: 0.0,
+									topPercent: 7.0,
+									isChecked: collectOutpost,
+									onTap: () => onCollectionToggled?.call('outpost'),
+									shouldRotate: shouldRotate,
+								),
 
-						// Start Auto button overlay (when visible)
-					if (showStartButton)
-							_buildStartAutoButton(
-								maxWidth,
-								fieldHeight,
-								shouldRotate,
-							),
+								// Start Auto button overlay (when visible)
+								if (showStartButton)
+									_buildStartAutoButton(
+										maxWidth,
+										fieldHeight,
+										shouldRotate,
+									),
 
-						// Climb selector overlay (top-right)
-						_buildClimbSelector(
-							maxWidth,
-							fieldHeight,
-						climbLevel: climbLevel,
-						onTap: () => onClimbToggled?.call(),
-						teamColor: fieldSide == FieldSide.left
-								? Colors.red.shade700
-								: Colors.blue.shade700,
-							shouldRotate: shouldRotate,
+								// Climb selector (top-right corner)
+								_buildClimbSelector(
+									maxWidth,
+									fieldHeight,
+									climbLevel: climbLevel,
+									onTap: () => onClimbToggled?.call(),
+									teamColor: fieldSide == FieldSide.left
+										? Colors.red.shade700
+										: Colors.blue.shade700,
+									shouldRotate: shouldRotate,
+								),
+							],
 						),
-					],
-				),
-			),
+					),
+				);
+			},
 		);
 	}
 
@@ -207,6 +213,7 @@ class AutoFieldOverlay extends StatelessWidget {
 		bool shouldRotate,
 	) {
 		// Calculate pixel position from percentage
+		// Position the button edges at the specified percentages
 		final rightPixels = button.rightPercent * fieldWidth / 100;
 		final topPixels = button.topPercent != null
 			? button.topPercent! * fieldHeight / 100
@@ -220,9 +227,9 @@ class AutoFieldOverlay extends StatelessWidget {
 		final buttonHeight = buttonWidth * button.aspectRatio;
 
 		return Positioned(
-			right: rightPixels - (buttonWidth / 2),
-			top: topPixels != null ? topPixels - (buttonHeight / 2) : null,
-			bottom: bottomPixels != null ? bottomPixels - (buttonHeight / 2) : null,
+			right: rightPixels, // Right edge at the specified percentage
+			top: topPixels, // Top edge at the specified percentage
+			bottom: bottomPixels, // Bottom edge at the specified percentage
 			child: GestureDetector(
 				onTap: () => onMovementTapped(button.field, button.label),
 				child: Transform.rotate(
@@ -411,27 +418,24 @@ class AutoFieldOverlay extends StatelessWidget {
 		return Positioned(
 			right: rightPercent * fieldWidth / 100,
 			top: topPercent * fieldHeight / 100,
-			child: Transform.translate(
-				offset: Offset(-size / 2, -size / 2),
-				child: Transform.rotate(
-					angle: shouldRotate ? pi : 0,
-					child: Container(
-						width: size,
-						height: size,
-						decoration: BoxDecoration(
-							border: Border.all(
-								color: borderColor,
-								width: size * 0.08,
-							),
-							color: Colors.grey.shade600,
-							boxShadow: [
-								BoxShadow(
-									color: Colors.black.withValues(alpha: 0.4),
-									blurRadius: 4,
-									offset: const Offset(0, 2),
-								),
-							],
+			child: Transform.rotate(
+				angle: shouldRotate ? pi : 0,
+				child: Container(
+					width: size,
+					height: size,
+					decoration: BoxDecoration(
+						border: Border.all(
+							color: borderColor,
+							width: size * 0.08,
 						),
+						color: Colors.grey.shade600,
+						boxShadow: [
+							BoxShadow(
+								color: Colors.black.withValues(alpha: 0.4),
+								blurRadius: 4,
+								offset: const Offset(0, 2),
+							),
+						],
 					),
 				),
 			),
@@ -453,7 +457,7 @@ class AutoFieldOverlay extends StatelessWidget {
 
 		return Positioned(
 			right: 3.0 * fieldWidth / 100,
-			top: 40.0 * fieldHeight / 100 - (size / 2),
+			top: 40.0 * fieldHeight / 100,
 			child: GestureDetector(
 				onTap: onTap,
 				child: Transform.rotate(
