@@ -69,6 +69,9 @@ class AutoTabState {
 	// Auto start time (to calculate relative timestamps)
 	final DateTime? autoStartTime;
 
+	// Last zone change time (to calculate time spent in zone)
+	final DateTime? lastZoneChangeTime;
+
 	AutoTabState({
 		this.trenchDepotAllianceToNeutral = 0,
 		this.bumpDepotAllianceToNeutral = 0,
@@ -89,6 +92,7 @@ class AutoTabState {
 		this.activeFuelTarget = 'hub',
 		this.timeline = const [],
 		this.autoStartTime,
+		this.lastZoneChangeTime,
 	});
 
 	/// Create a copy with updated fields
@@ -112,6 +116,7 @@ class AutoTabState {
 		String? activeFuelTarget,
 		List<TimelineEvent>? timeline,
 		DateTime? autoStartTime,
+		DateTime? lastZoneChangeTime,
 	}) {
 		return AutoTabState(
 			trenchDepotAllianceToNeutral: trenchDepotAllianceToNeutral ?? this.trenchDepotAllianceToNeutral,
@@ -133,6 +138,7 @@ class AutoTabState {
 			activeFuelTarget: activeFuelTarget ?? this.activeFuelTarget,
 			timeline: timeline ?? this.timeline,
 			autoStartTime: autoStartTime ?? this.autoStartTime,
+			lastZoneChangeTime: lastZoneChangeTime ?? this.lastZoneChangeTime,
 		);
 	}
 
@@ -221,54 +227,86 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 		// Update appropriate counter based on field
 		AutoTabState newState = state;
 
+		// Determine if this is a zone transition and calculate elapsed time in current zone
+		String? newZone;
+		if (field.endsWith('_to_neutral')) {
+			newZone = 'neutral';
+		} else if (field.endsWith('_to_alliance')) {
+			newZone = 'alliance';
+		}
+
+		// If zone is changing, calculate time spent in previous zone and update counter
+		if (newZone != null && newZone != state.activeZone) {
+			final lastZoneTime = state.lastZoneChangeTime ?? startTime;
+			final zoneElapsedSeconds = now.difference(lastZoneTime).inSeconds;
+
+			if (state.activeZone == 'alliance' && zoneElapsedSeconds > 0) {
+				newState = newState.copyWith(
+					allianceTime: newState.allianceTime + zoneElapsedSeconds,
+				);
+			} else if (state.activeZone == 'neutral' && zoneElapsedSeconds > 0) {
+				newState = newState.copyWith(
+					neutralTime: newState.neutralTime + zoneElapsedSeconds,
+				);
+			}
+		}
+
 		switch (field) {
 			case 'auto_trench_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchDepotAllianceToNeutral: newState.trenchDepotAllianceToNeutral + value,
 					activeZone: 'neutral',
 					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_bump_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpDepotAllianceToNeutral: newState.bumpDepotAllianceToNeutral + value,
 					activeZone: 'neutral',
 					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_bump_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpOutpostAllianceToNeutral: newState.bumpOutpostAllianceToNeutral + value,
 					activeZone: 'neutral',
 					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_trench_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchOutpostAllianceToNeutral: newState.trenchOutpostAllianceToNeutral + value,
 					activeZone: 'neutral',
 					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_trench_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchDepotNeutralToAlliance: newState.trenchDepotNeutralToAlliance + value,
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_bump_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpDepotNeutralToAlliance: newState.bumpDepotNeutralToAlliance + value,
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_bump_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpOutpostNeutralToAlliance: newState.bumpOutpostNeutralToAlliance + value,
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_trench_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchOutpostNeutralToAlliance: newState.trenchOutpostNeutralToAlliance + value,
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
+					lastZoneChangeTime: now,
 				);
 			case 'auto_fuel_score':
 				newState = newState.copyWith(fuelScore: newState.fuelScore + value);
@@ -286,6 +324,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 				// Zone change: toggle zone
 				newState = newState.copyWith(
 					activeZone: state.activeZone == 'alliance' ? 'neutral' : 'alliance',
+					lastZoneChangeTime: now,
 				);
 		}
 
@@ -296,6 +335,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 		state = newState.copyWith(
 			timeline: newTimeline,
 			autoStartTime: state.autoStartTime ?? now,
+			lastZoneChangeTime: newState.lastZoneChangeTime ?? state.lastZoneChangeTime ?? now,
 		);
 	}
 
@@ -319,62 +359,71 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 				newState = newState.copyWith(
 					activeZone: newZone,
 					activeFuelTarget: newZone == 'neutral' ? 'alliancePass' : 'hub',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_trench_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchDepotAllianceToNeutral:
 						(newState.trenchDepotAllianceToNeutral - actionValue).clamp(0, 999),
-					activeZone: 'alliance', // Reverse zone back to alliance
-					activeFuelTarget: 'hub', // Revert fuel target
+					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_bump_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpDepotAllianceToNeutral:
 						(newState.bumpDepotAllianceToNeutral - actionValue).clamp(0, 999),
-					activeZone: 'alliance', // Reverse zone back to alliance
-					activeFuelTarget: 'hub', // Revert fuel target
+					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_bump_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpOutpostAllianceToNeutral:
 						(newState.bumpOutpostAllianceToNeutral - actionValue).clamp(0, 999),
-					activeZone: 'alliance', // Reverse zone back to alliance
-					activeFuelTarget: 'hub', // Revert fuel target
+					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_trench_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchOutpostAllianceToNeutral:
 						(newState.trenchOutpostAllianceToNeutral - actionValue).clamp(0, 999),
-					activeZone: 'alliance', // Reverse zone back to alliance
-					activeFuelTarget: 'hub', // Revert fuel target
+					activeZone: 'alliance',
+					activeFuelTarget: 'hub',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_trench_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchDepotNeutralToAlliance:
 						(newState.trenchDepotNeutralToAlliance - actionValue).clamp(0, 999),
-					activeZone: 'neutral', // Reverse zone back to neutral
-					activeFuelTarget: 'alliancePass', // Revert fuel target
+					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_bump_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpDepotNeutralToAlliance:
 						(newState.bumpDepotNeutralToAlliance - actionValue).clamp(0, 999),
-					activeZone: 'neutral', // Reverse zone back to neutral
-					activeFuelTarget: 'alliancePass', // Revert fuel target
+					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_bump_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpOutpostNeutralToAlliance:
 						(newState.bumpOutpostNeutralToAlliance - actionValue).clamp(0, 999),
-					activeZone: 'neutral', // Reverse zone back to neutral
-					activeFuelTarget: 'alliancePass', // Revert fuel target
+					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_trench_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchOutpostNeutralToAlliance:
 						(newState.trenchOutpostNeutralToAlliance - actionValue).clamp(0, 999),
-					activeZone: 'neutral', // Reverse zone back to neutral
-					activeFuelTarget: 'alliancePass', // Revert fuel target
+					activeZone: 'neutral',
+					activeFuelTarget: 'alliancePass',
+					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 			case 'auto_fuel_score':
 				newState = newState.copyWith(
