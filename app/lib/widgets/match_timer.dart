@@ -47,6 +47,7 @@ class _MatchTimerState extends State<MatchTimer> {
 		super.didUpdateWidget(oldWidget);
 		if (widget.startTime != oldWidget.startTime) {
 			_updateTimer?.cancel();
+			// Reset flag only if we have a new start time
 			_autoEnded = false;
 			if (widget.startTime != null) {
 				_startTimer();
@@ -57,6 +58,15 @@ class _MatchTimerState extends State<MatchTimer> {
 	}
 
 	void _startTimer() {
+		// Check if we're already past the auto switch time
+		if (widget.startTime != null) {
+			final elapsedMs = DateTime.now().difference(widget.startTime!).inMilliseconds;
+			if (elapsedMs >= teleSwitchTimeMs) {
+				_autoEnded = true;
+				// Don't call the callback - we're already past auto end time
+			}
+		}
+
 		// Trigger immediate update
 		_updateDisplay();
 		// Update every 100ms (matching web app)

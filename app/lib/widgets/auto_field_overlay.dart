@@ -83,7 +83,7 @@ class AutoFieldOverlay extends StatelessWidget {
 		final shouldRotate =
 			(isBlueTeam && fieldSide == FieldSide.left) ||
 			(!isBlueTeam && fieldSide == FieldSide.right);
-		
+
 		// Team color for UI elements - use globally defined app colors
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 

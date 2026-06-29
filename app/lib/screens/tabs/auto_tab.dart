@@ -73,6 +73,15 @@ void _initAutoTabTranslations() {
 			'he': 'ציר הזמן',
 			'tr': 'Zaman Çizelgesi',
 		},
+		'values': {
+			'en': 'Values',
+			'es': 'Valores',
+			'pt': 'Valores',
+			'fr': 'Valeurs',
+			'zh_tw': '值',
+			'he': 'ערכים',
+			'tr': 'Değerler',
+		},
 
 		// Field interaction labels (movement counters)
 		'trench_depot_alliance_to_neutral': {
@@ -829,14 +838,14 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 											onPressed: () {
 												setState(() => _valuesExpanded = !_valuesExpanded);
 											},
-											child: Text(_translate('values')),
+											child: Text('${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}'),
 										),
 										const SizedBox(width: 8),
 										TextButton(
 											onPressed: () {
 												setState(() => _timelineExpanded = !_timelineExpanded);
 											},
-											child: Text(_translate('timeline')),
+											child: Text('${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}'),
 										),
 									],
 								),
