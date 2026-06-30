@@ -7,6 +7,7 @@ import 'screens/event_picker_screen.dart';
 import 'screens/bot_selection_screen.dart';
 import 'screens/match_selection_screen.dart';
 import 'screens/scouting_app_screen.dart';
+import 'screens/upload_data_screen.dart';
 import 'providers/app_providers.dart';
 import 'providers/locale_provider.dart';
 import 'data/api/viper_api_client.dart';
@@ -217,44 +218,38 @@ class _HomeRouter extends ConsumerWidget {
 						return ScoutingAppScreen(selectedEvent: event);
 					},
 				);
+
+		case NavScreen.uploadData:
+			print('[HOME_ROUTER] → Loading: UploadDataScreen');
+			return const UploadDataScreen();
 		}
 	}
 
-	/// Fetch the currently selected event from the API
 	Future<EventModel> _getSelectedEventForScouting(WidgetRef ref) async {
-		final db = await ref.read(databaseProvider.future);
-		final config = await db.getCurrentConfig();
-
-		if (config?.selectedEventId == null) {
-			throw Exception('No event selected');
-		}
-
-		// If no valid server is configured, return event with just the ID
-		if (!_isValidServerUrl(config?.backendUrl)) {
-			return EventModel(
-				eventId: config!.selectedEventId!,
-				name: config!.selectedEventId!,
-			);
-		}
-
 		try {
 			final apiClient = await ref.read(apiClientProvider.future);
 			final allEvents = await apiClient.fetchEventList();
+			final selectedEventId = ref.read(selectedEventProvider);
+
+			if (selectedEventId == null) {
+				throw Exception('No event selected');
+			}
 
 			final event = allEvents.firstWhere(
-				(e) => e.eventId == config!.selectedEventId,
+				(e) => e.eventId == selectedEventId,
 				orElse: () => EventModel(
-					eventId: config!.selectedEventId!,
-					name: config!.selectedEventId!,
+					eventId: selectedEventId,
+					name: selectedEventId,
 				),
 			);
 
 			return event;
 		} catch (e) {
 			// If fetching events fails, return with just the ID
+			final selectedEventId = ref.read(selectedEventProvider);
 			return EventModel(
-				eventId: config!.selectedEventId!,
-				name: config!.selectedEventId!,
+				eventId: selectedEventId ?? 'unknown',
+				name: selectedEventId ?? 'unknown',
 			);
 		}
 	}

@@ -597,6 +597,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	ScoutData? _currentScout;
 	bool _valuesExpanded = false;
 	bool _timelineExpanded = false;
+	bool _listenerRegistered = false;
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -642,6 +643,18 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		_loadScout();
 	}
 
+	@override
+	void deactivate() {
+		// Save before widget is deactivated (removed from tree)
+		_saveTab();
+		super.deactivate();
+	}
+
+	@override
+	void dispose() {
+		super.dispose();
+	}
+
 	Future<void> _loadScout() async {
 		if (widget.matchNumber != null && widget.teamNumber != null) {
 			final db = await ref.read(databaseProvider.future);
@@ -668,12 +681,12 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					'auto_trench_outpost_neutral_to_alliance': scout.autoTrenchOutpostNeutralToAlliance ?? 0,
 					'auto_fuel_score': scout.autoFuelScore ?? 0,
 					'auto_fuel_neutral_alliance_pass': scout.autoFuelNeutralAlliancePass ?? 0,
-					'auto_collect_outpost': scout.autoCollectOutpost ?? false,
-					'auto_collect_depot': scout.autoCollectDepot ?? false,
+					'auto_collect_outpost': scout.autoCollectOutpost ?? 0, // Pass raw int, fromJson will convert
+					'auto_collect_depot': scout.autoCollectDepot ?? 0, // Pass raw int, fromJson will convert
 					'auto_alliance_time': scout.autoAllianceTime ?? 0,
 					'auto_neutral_time': scout.autoNeutralTime ?? 0,
 					'auto_climb_level': scout.autoClimbLevel ?? 0,
-					'auto_timeline_events': scout.autoTimelineEvents,
+					'timeline': scout.timeline,
 				};
 				controller.loadFromData(autoData);
 			}
@@ -686,6 +699,26 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final db = await ref.read(databaseProvider.future);
 		final autoState = ref.read(autoTabControllerProvider);
 
+		// Guard: don't save if all counters are zero and timeline is empty (indicates incomplete state)
+		final allCountersZero = autoState.trenchDepotAllianceToNeutral == 0 &&
+			autoState.bumpDepotAllianceToNeutral == 0 &&
+			autoState.bumpOutpostAllianceToNeutral == 0 &&
+			autoState.trenchOutpostAllianceToNeutral == 0 &&
+			autoState.trenchDepotNeutralToAlliance == 0 &&
+			autoState.bumpDepotNeutralToAlliance == 0 &&
+			autoState.bumpOutpostNeutralToAlliance == 0 &&
+			autoState.trenchOutpostNeutralToAlliance == 0 &&
+			autoState.fuelScore == 0 &&
+			autoState.fuelNeutralAlliancePass == 0 &&
+			autoState.collectOutpost == 0 &&
+			autoState.collectDepot == 0;
+
+		// If we have existing data but now all counters are zero, skip the save to prevent overwriting
+		if (allCountersZero && _currentScout != null && _currentScout!.autoFuelScore != null) {
+			print('[AUTO_TAB] Skipping save - detected blank state, preserving existing data');
+			return;
+		}
+
 		final existing = _currentScout ?? await db.getScout(
 			widget.eventId,
 			widget.matchNumber!,
@@ -693,8 +726,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		);
 
 		final now = DateTime.now();
-		final countersMap = autoState.toJson();
-		final timelineJson = countersMap['auto_timeline_events'] as String?;
+		// Format timeline using web app format (time:action or time:action:value, space-separated)
+		final timelineStr = TimelineEvent.formatTimeline(autoState.timeline);
 
 		final scout = existing != null
 				? existing.copyWith(
@@ -708,32 +741,46 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					autoTrenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
 					autoFuelScore: autoState.fuelScore,
 					autoFuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
-					autoCollectOutpost: autoState.collectOutpost,
-					autoCollectDepot: autoState.collectDepot,
+					autoCollectOutpost: autoState.collectOutpost, // Already stored as int
+					autoCollectDepot: autoState.collectDepot, // Already stored as int
 					autoAllianceTime: autoState.allianceTime,
 					autoNeutralTime: autoState.neutralTime,
 					autoClimbLevel: Value(autoState.climbLevel),
-					autoTimelineEvents: Value(timelineJson),
+					timeline: Value(timelineStr),
 					updatedAt: now,
 				)
 				: ScoutDataHelper.createNewScout(
 					event: widget.eventId,
 					match: widget.matchNumber!,
 					team: widget.teamNumber!,
-				);
+			).copyWith(
+				autoTrenchDepotAllianceToNeutral: autoState.trenchDepotAllianceToNeutral,
+				autoBumpDepotAllianceToNeutral: autoState.bumpDepotAllianceToNeutral,
+				autoBumpOutpostAllianceToNeutral: autoState.bumpOutpostAllianceToNeutral,
+				autoTrenchOutpostAllianceToNeutral: autoState.trenchOutpostAllianceToNeutral,
+				autoTrenchDepotNeutralToAlliance: autoState.trenchDepotNeutralToAlliance,
+				autoBumpDepotNeutralToAlliance: autoState.bumpDepotNeutralToAlliance,
+				autoBumpOutpostNeutralToAlliance: autoState.bumpOutpostNeutralToAlliance,
+				autoTrenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
+				autoFuelScore: autoState.fuelScore,
+				autoFuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
+				autoCollectOutpost: autoState.collectOutpost, // Already stored as int
+				autoCollectDepot: autoState.collectDepot, // Already stored as int
+				autoAllianceTime: autoState.allianceTime,
+				autoNeutralTime: autoState.neutralTime,
+				autoClimbLevel: Value(autoState.climbLevel),
+				timeline: Value(timelineStr),
+				updatedAt: now,
+			);
 
 		await db.upsertScout(scout);
-		setState(() => _currentScout = scout);
-
 		if (mounted) {
-			ScaffoldMessenger.of(context).showSnackBar(
-				SnackBar(
-					content: Text(_translate('pre_match_data_saved')),
-					duration: const Duration(seconds: 2),
-				),
-			);
+			setState(() => _currentScout = scout);
 		}
 	}
+
+	/// Public method to save auto tab data (called before navigating away)
+	Future<void> saveAutoData() => _saveTab();
 
 	@override
 	Widget build(BuildContext context) {
@@ -741,6 +788,17 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final autoState = ref.watch(autoTabControllerProvider);
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final teamColor = _getTeamColor(botPosition);
+
+		// Auto-save whenever auto tab state changes (only register listener once)
+		if (!_listenerRegistered) {
+			_listenerRegistered = true;
+			ref.listen<AutoTabState>(autoTabControllerProvider, (previous, next) {
+				// Skip initial load
+				if (previous != null && previous != next) {
+					_saveTab();
+				}
+			});
+		}
 
 		return SingleChildScrollView(
 			padding: const EdgeInsets.symmetric(vertical: 8),
@@ -754,8 +812,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						child: AutoFieldOverlay(
 							fieldSide: fieldSide,
 							activeZone: autoState.activeZone,
-							collectDepot: autoState.collectDepot,
-							collectOutpost: autoState.collectOutpost,
+							collectDepot: autoState.collectDepot == 1, // Convert int to bool
+							collectOutpost: autoState.collectOutpost == 1, // Convert int to bool
 							climbLevel: autoState.climbLevel,
 							botPosition: botPosition,
 							showStartButton: widget.matchStartTime == null,
@@ -772,15 +830,15 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 									valueLabel: '+1',
 								);
 							},
-							onCollectionToggled: (type) {							// Start match timer if not already started
+							onCollectionToggled: (type, newValue) {
 							_startMatchIfNeeded();
 								final field = type == 'depot' ? 'auto_collect_depot' : 'auto_collect_outpost';
 								ref.read(autoTabControllerProvider.notifier).recordAction(
 									type: 'collection',
 									field: field,
-									value: 1,
+									value: newValue ? 1 : 0,
 									actionLabel: 'Collect: $type',
-									valueLabel: 'toggle',
+									valueLabel: newValue ? 'on' : 'off',
 								);
 							},
 							onClimbToggled: () {

@@ -15,6 +15,7 @@ tmp
 *.swp
 *.bak
 *~
+*.prompt.md
 
 /app/build/
 /app/.dart_tool/

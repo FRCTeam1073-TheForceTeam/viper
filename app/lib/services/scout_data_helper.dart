@@ -14,13 +14,8 @@ class ScoutDataHelper {
 			team: team,
 			// Pre-Match
 			startingPosition: null,
-			noShow: false,
+			noShow: 0,
 			// Auto
-			autoFuelAlliance: null,
-			autoFuelNeutral: null,
-			autoFuelOpponent: null,
-			autoFuelDepot: null,
-			autoFuelOutpost: null,
 			autoClimbLevel: null,
 			autoTrenchDepotAllianceToNeutral: 0,
 			autoBumpDepotAllianceToNeutral: 0,
@@ -32,11 +27,11 @@ class ScoutDataHelper {
 			autoTrenchOutpostNeutralToAlliance: 0,
 			autoFuelScore: 0,
 			autoFuelNeutralAlliancePass: 0,
-			autoCollectOutpost: false,
-			autoCollectDepot: false,
+			autoCollectOutpost: 0,
+			autoCollectDepot: 0,
 			autoAllianceTime: 0,
 			autoNeutralTime: 0,
-			autoTimelineEvents: null,
+			timeline: null,
 			// Teleop
 			teleopFuelAlliance: null,
 			teleopFuelNeutral: null,
@@ -48,9 +43,9 @@ class ScoutDataHelper {
 			// End Game
 			climbPosition: null,
 			climbMethod: null,
-			shootOnMove: false,
-			shootWhileCollecting: false,
-			climbing: false,
+			shootOnMove: 0,
+			shootWhileCollecting: 0,
+			climbing: 0,
 			fuelStrategy: null,
 			shootingLocations: null,
 			damageState: null,
@@ -61,7 +56,7 @@ class ScoutDataHelper {
 			// Scouter Info
 			scouterName: null,
 			comments: null,
-			reviewRequest: false,
+			reviewRequest: 0,
 			// Metadata
 			synced: false,
 			createdAt: now,

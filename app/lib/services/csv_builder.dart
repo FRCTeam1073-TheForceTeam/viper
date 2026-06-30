@@ -2,78 +2,57 @@ import 'package:csv/csv.dart';
 import '../data/database/scout_database.dart';
 
 class CsvBuilder {
+	/// Escape CSV field values using the same logic as server's safeCSV()
+	/// Matches: /www/scout.js safeCSV() function
+	static String safeCSV(String s) {
+		return s
+			.replaceAll('\t', ' ') // Replace tabs with spaces
+			.replaceAll(RegExp(r'\r\n|\r|\n'), '⏎') // Replace line breaks with ⏎
+			.replaceAll('"', '״') // Replace quotes with Hebrew character
+			.replaceAll(',', '،'); // Replace commas with Arabic character
+	}
+
+	/// Convert camelCase to snake_case
+	/// Example: autoFuelScore -> auto_fuel_score
+	static String _camelToSnakeCase(String input) {
+		return input
+			.replaceAllMapped(RegExp(r'[A-Z]'), (match) => '_${match.group(0)!.toLowerCase()}')
+			.replaceFirst(RegExp(r'^_'), ''); // Remove leading underscore if present
+	}
+
+	/// Fields to exclude from CSV export (internal-only fields)
+	static const Set<String> _excludedFields = {
+		'id', // Database ID - not sent to server
+		'synced', // Sync status flag
+		'syncedAt', // Sync timestamp
+	};
+
 	/// Build CSV string from scout entries
 	/// Returns CSV with headers and data rows
+	/// Uses toJson() for automatic schema discovery - new fields are automatically included
 	static String buildScoutCsv(List<ScoutData> scouts) {
 		if (scouts.isEmpty) {
 			return '';
 		}
 
-		// Define column order (must match web backend expectations)
-		final headers = [
-			'event',
-			'match',
-			'team',
-			'noShow',
-			'autoFuelAlliance',
-			'autoFuelNeutral',
-			'autoFuelOpponent',
-			'autoFuelDepot',
-			'autoFuelOutpost',
-			'autoClimbLevel',
-			'teleopFuelAlliance',
-			'teleopFuelNeutral',
-			'teleopFuelOpponent',
-			'teleopClimbLevel',
-			'teleopAlliancePasses',
-			'teleopOpponentPasses',
-			'climbMethod',
-			'damageState',
-			'defenseRating',
-			'defenseImpact',
-			'shootOnMove',
-			'shootWhileCollecting',
-			'climbing',
-			'shootingMissesRange',
-			'startingPosition',
-			'scouterName',
-			'comments',
-			'reviewRequest',
-		];
+		// Get all fields from the first scout using toJson() to determine column order
+		// This acts like "SELECT * FROM scout"
+		final firstScoutJson = scouts.first.toJson();
+		// Filter out internal-only fields
+		final allHeaders = firstScoutJson.keys.where((k) => !_excludedFields.contains(k)).toList();
+		final headers = allHeaders.map(_camelToSnakeCase).toList(); // Convert to snake_case
 
-		// Build rows
-		final rows = <List<dynamic>>[headers];
+		// Build rows using toJson() output with custom escaping
+		final rows = <List<dynamic>>[
+			headers.map((h) => safeCSV(h)).toList() // Escape headers too
+		];
 		for (final scout in scouts) {
-			rows.add([
-				scout.event,
-				scout.match,
-				scout.team,
-				scout.noShow ? '1' : '0',
-				scout.autoFuelAlliance?.toString() ?? '',
-				scout.autoFuelNeutral?.toString() ?? '',
-				scout.autoFuelOpponent?.toString() ?? '',
-				scout.autoFuelDepot?.toString() ?? '',
-				scout.autoFuelOutpost?.toString() ?? '',
-				scout.autoClimbLevel?.toString() ?? '',
-				scout.teleopFuelAlliance?.toString() ?? '',
-				scout.teleopFuelNeutral?.toString() ?? '',
-				scout.teleopFuelOpponent?.toString() ?? '',
-				scout.teleopClimbLevel?.toString() ?? '',
-				scout.teleopAlliancePasses?.toString() ?? '',
-				scout.teleopOpponentPasses?.toString() ?? '',
-				scout.climbMethod ?? '',
-				scout.damageState?.toString() ?? '',
-				scout.defenseRating ?? '',
-				scout.defenseImpact ?? '',
-				scout.shootOnMove ? '1' : '0',
-				scout.shootWhileCollecting ? '1' : '0',
-				scout.climbing ? '1' : '0',
-				scout.shootingMissesRange?.toString() ?? '',
-				scout.startingPosition ?? '',
-				scout.scouterName ?? '',
-				scout.comments ?? '',
-				scout.reviewRequest ? '1' : '0',
-			]);
+			final scoutJson = scout.toJson();
+			rows.add(allHeaders.map((header) {
+				final value = scoutJson[header];
+				// Apply custom CSV escaping to match server's safeCSV() function
+				return safeCSV(value?.toString() ?? '');
+			}).toList());
 		}
 
 		// Convert to CSV string

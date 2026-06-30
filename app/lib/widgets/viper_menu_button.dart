@@ -5,13 +5,11 @@ import '../providers/app_providers.dart';
 import '../services/localization.dart';
 
 class ViperMenuButton extends ConsumerWidget {
-	final VoidCallback? onSync;
 	final bool isSyncing;
 	final int pendingCount;
 
 	const ViperMenuButton({
 		Key? key,
-		this.onSync,
 		this.isSyncing = false,
 		this.pendingCount = 0,
 	}) : super(key: key);
@@ -63,6 +61,15 @@ class ViperMenuButton extends ConsumerWidget {
 				'he': 'סנכרון ידני',
 				'tr': 'Manuel Senkronizasyon',
 			},
+			'upload_data': {
+				'en': 'Upload Data',
+				'es': 'Cargar datos',
+				'pt': 'Enviar dados',
+				'fr': 'Télécharger les données',
+				'zh_tw': '上傳數據',
+				'he': 'העלה נתונים',
+				'tr': 'Veri Yükle',
+			},
 			'language': {
 				'en': 'Language',
 				'es': 'Idioma',
@@ -80,7 +87,6 @@ class ViperMenuButton extends ConsumerWidget {
 		showModalBottomSheet(
 			context: context,
 			builder: (context) => _MenuContent(
-				onSync: onSync,
 				isSyncing: isSyncing,
 				pendingCount: pendingCount,
 			),
@@ -97,12 +103,10 @@ class ViperMenuButton extends ConsumerWidget {
 }
 
 class _MenuContent extends ConsumerWidget {
-	final VoidCallback? onSync;
 	final bool isSyncing;
 	final int pendingCount;
 
 	const _MenuContent({
-		this.onSync,
 		this.isSyncing = false,
 		this.pendingCount = 0,
 	});
@@ -174,22 +178,19 @@ class _MenuContent extends ConsumerWidget {
 							},
 						),
 					),
-					if (onSync != null)
-						Padding(
-							padding: const EdgeInsets.only(top: 8),
-							child: ElevatedButton.icon(
-								icon: const Icon(Icons.sync),
-								label: Text(t('manual_sync')),
-								onPressed: () {
-									print('[KEBAB_MENU] ✓ Manual Sync clicked');
-									Navigator.pop(context);
-									print('[KEBAB_MENU] → Calling onSync callback');
-									onSync?.call();
-								},
-							),
-						)
-					else
-						SizedBox.shrink(),
+					Padding(
+						padding: const EdgeInsets.only(top: 8),
+						child: ElevatedButton.icon(
+							icon: const Icon(Icons.cloud_upload),
+							label: Text(t('upload_data')),
+							onPressed: () {
+								print('[KEBAB_MENU] ✓ Upload Data clicked');
+								Navigator.pop(context);
+								print('[KEBAB_MENU] → Calling navigateTo(upload)');
+								navigateTo(NavigationTarget.upload);
+							},
+						),
+					),
 					Padding(
 						padding: const EdgeInsets.only(top: 16),
 						child: _LanguageSelector(onLanguageChanged: () {

@@ -28,6 +28,40 @@ class TimelineEvent {
 		value: json['value'] as String? ?? '1',
 	);
 
+	/// Format timeline list to string (time:action or time:action:value, space-separated)
+	/// Value is omitted if it equals "1" for parity with web app
+	static String formatTimeline(List<TimelineEvent> events) {
+		return events.map((e) => e.value == '1' ? '${e.timeSeconds}:${e.action}' : '${e.timeSeconds}:${e.action}:${e.value}').join(' ');
+	}
+
+	/// Parse timeline string to list of events (time:action or time:action:value, space-separated)
+	/// Value defaults to "1" if not specified for parity with web app
+	static List<TimelineEvent> parseTimeline(String timelineStr) {
+		final events = <TimelineEvent>[];
+		if (timelineStr.isEmpty) return events;
+
+		final entries = timelineStr.split(' ');
+		for (final entry in entries) {
+			final parts = entry.split(':');
+			if (parts.length == 2) {
+				// Format: time:action (value defaults to "1")
+				events.add(TimelineEvent(
+					timeSeconds: int.parse(parts[0]),
+					action: parts[1],
+					value: '1',
+				));
+			} else if (parts.length == 3) {
+				// Format: time:action:value
+				events.add(TimelineEvent(
+					timeSeconds: int.parse(parts[0]),
+					action: parts[1],
+					value: parts[2],
+				));
+			}
+		}
+		return events;
+	}
+
 	@override
 	String toString() => '[$timeSeconds] $action ($value)';
 }
@@ -47,8 +81,8 @@ class AutoTabState {
 	// Fuel and collection
 	final int fuelScore; // Fuel shot in hub
 	final int fuelNeutralAlliancePass; // Fuel passed from neutral
-	final bool collectOutpost;
-	final bool collectDepot;
+	final int collectOutpost; // 0 or 1
+	final int collectDepot; // 0 or 1
 
 	// Zone times
 	final int allianceTime;
@@ -83,8 +117,8 @@ class AutoTabState {
 		this.trenchOutpostNeutralToAlliance = 0,
 		this.fuelScore = 0,
 		this.fuelNeutralAlliancePass = 0,
-		this.collectOutpost = false,
-		this.collectDepot = false,
+		this.collectOutpost = 0,
+		this.collectDepot = 0,
 		this.allianceTime = 0,
 		this.neutralTime = 0,
 		this.climbLevel = 0,
@@ -107,8 +141,8 @@ class AutoTabState {
 		int? trenchOutpostNeutralToAlliance,
 		int? fuelScore,
 		int? fuelNeutralAlliancePass,
-		bool? collectOutpost,
-		bool? collectDepot,
+		int? collectOutpost,
+		int? collectDepot,
 		int? allianceTime,
 		int? neutralTime,
 		int? climbLevel,
@@ -162,21 +196,13 @@ class AutoTabState {
 			'auto_climb_level': climbLevel,
 			'auto_active_zone': activeZone,
 			'auto_active_fuel_target': activeFuelTarget,
-			'auto_timeline_events': jsonEncode(timeline.map((e) => e.toJson()).toList()),
+			'timeline': TimelineEvent.formatTimeline(timeline),
 		};
 	}
 
 	/// Load state from map (database)
 	factory AutoTabState.fromJson(Map<String, dynamic> json) {
-		List<TimelineEvent> timeline = [];
-		if (json['auto_timeline_events'] != null) {
-			try {
-				final decoded = jsonDecode(json['auto_timeline_events'] as String) as List;
-				timeline = decoded.map((e) => TimelineEvent.fromJson(e as Map<String, dynamic>)).toList();
-			} catch (e) {
-				// Failed to parse timeline, continue with empty
-			}
-		}
+		final timeline = TimelineEvent.parseTimeline(json['timeline'] as String? ?? '');
 
 		return AutoTabState(
 			trenchDepotAllianceToNeutral: json['auto_trench_depot_alliance_to_neutral'] as int? ?? 0,
@@ -189,8 +215,8 @@ class AutoTabState {
 			trenchOutpostNeutralToAlliance: json['auto_trench_outpost_neutral_to_alliance'] as int? ?? 0,
 			fuelScore: json['auto_fuel_score'] as int? ?? 0,
 			fuelNeutralAlliancePass: json['auto_fuel_neutral_alliance_pass'] as int? ?? 0,
-			collectOutpost: json['auto_collect_outpost'] as bool? ?? false,
-			collectDepot: json['auto_collect_depot'] as bool? ?? false,
+		collectOutpost: json['auto_collect_outpost'] as int? ?? 0,
+		collectDepot: json['auto_collect_depot'] as int? ?? 0,
 			allianceTime: json['auto_alliance_time'] as int? ?? 0,
 			neutralTime: json['auto_neutral_time'] as int? ?? 0,
 			climbLevel: json['auto_climb_level'] as int? ?? 0,
@@ -315,9 +341,9 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					fuelNeutralAlliancePass: newState.fuelNeutralAlliancePass + value,
 				);
 			case 'auto_collect_outpost':
-				newState = newState.copyWith(collectOutpost: !newState.collectOutpost);
+				newState = newState.copyWith(collectOutpost: value);
 			case 'auto_collect_depot':
-				newState = newState.copyWith(collectDepot: !newState.collectDepot);
+				newState = newState.copyWith(collectDepot: value);
 			case 'auto_climb_level':
 				newState = newState.copyWith(climbLevel: value);
 			case 'auto_zone_change':
@@ -435,9 +461,9 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 						(newState.fuelNeutralAlliancePass - actionValue).clamp(0, 999),
 				);
 			case 'auto_collect_outpost':
-				newState = newState.copyWith(collectOutpost: !newState.collectOutpost);
+				newState = newState.copyWith(collectOutpost: actionValue);
 			case 'auto_collect_depot':
-				newState = newState.copyWith(collectDepot: !newState.collectDepot);
+				newState = newState.copyWith(collectDepot: actionValue);
 			case 'auto_climb_level':
 				newState = newState.copyWith(climbLevel: actionValue);
 		}

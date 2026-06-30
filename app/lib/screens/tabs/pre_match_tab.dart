@@ -139,6 +139,20 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		_loadScout();
 	}
 
+	@override
+	void deactivate() {
+		// Save before widget is deactivated (removed from tree)
+		_saveTab();
+		super.deactivate();
+	}
+
+	@override
+	void didChangeDependencies() {
+		super.didChangeDependencies();
+		// Reload scout data whenever this tab becomes visible (dependency changes)
+		_loadScout();
+	}
+
 	Future<void> _loadScout() async {
 		if (widget.matchNumber != null && widget.teamNumber != null) {
 			final db = await ref.read(databaseProvider.future);
@@ -151,7 +165,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 				setState(() {
 					_currentScout = scout;
 					_selectedPosition = scout.startingPosition;
-					_noShow = scout.noShow;
+					_noShow = scout.noShow == 1; // Convert int to bool
 				});
 			}
 		}
@@ -169,11 +183,19 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 					widget.teamNumber!,
 				);
 
+		// Guard: don't save if position is null and noShow is false but existing scout has pre-match data
+		final allFieldsEmpty = _selectedPosition == null && !_noShow;
+
+		if (allFieldsEmpty && existing != null && existing.startingPosition != null) {
+			print('[PRE_MATCH_TAB] Skipping save - detected blank state, preserving existing pre-match data');
+			return;
+		}
+
 		final now = DateTime.now();
 		final scout = existing != null
 				? existing.copyWith(
 						startingPosition: Value(_selectedPosition),
-						noShow: _noShow,
+						noShow: _noShow ? 1 : 0, // Convert bool to int
 						updatedAt: now,
 					)
 				: ScoutDataHelper.createNewScout(
@@ -182,11 +204,13 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						team: widget.teamNumber!,
 					).copyWith(
 						startingPosition: Value(_selectedPosition),
-						noShow: _noShow,
+						noShow: _noShow ? 1 : 0, // Convert bool to int
 					);
 
 		await db.upsertScout(scout);
-		setState(() => _currentScout = scout);
+		if (mounted) {
+			setState(() => _currentScout = scout);
+		}
 
 		if (mounted) {
 			ScaffoldMessenger.of(
@@ -412,7 +436,10 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 										CheckboxButton(
 											isChecked: _noShow,
 											translationKey: 'no_show',
-											onChanged: (newValue) => setState(() => _noShow = newValue),
+										onChanged: (intValue) {
+											setState(() => _noShow = intValue == 1); // Convert int to bool
+											_saveTab(); // Auto-save when checkbox changes
+										},
 										),
 										// Proceed to Auto Button
 										FilledButton(

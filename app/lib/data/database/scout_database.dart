@@ -43,15 +43,7 @@ class Scout extends Table {
 
 	// Pre-Match Tab
 	TextColumn get startingPosition => text().nullable()();
-	BoolColumn get noShow => boolean().withDefault(const Constant(false))();
-
-	// Auto Tab
-	IntColumn get autoFuelAlliance => integer().nullable()();
-	IntColumn get autoFuelNeutral => integer().nullable()();
-	IntColumn get autoFuelOpponent => integer().nullable()();
-	IntColumn get autoFuelDepot => integer().nullable()();
-	IntColumn get autoFuelOutpost => integer().nullable()();
-	IntColumn get autoClimbLevel => integer().nullable()();
+	IntColumn get noShow => integer().withDefault(const Constant(0))(); // 0=false, 1=true
 
 	// Auto Tab - Movement counters (field interactions)
 	IntColumn get autoTrenchDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
@@ -63,18 +55,21 @@ class Scout extends Table {
 	IntColumn get autoBumpOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
 	IntColumn get autoTrenchOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
 
+	// Auto Tab - Climb level
+	IntColumn get autoClimbLevel => integer().nullable()();
+
 	// Auto Tab - Fuel scoring and collection
 	IntColumn get autoFuelScore => integer().withDefault(const Constant(0))();
 	IntColumn get autoFuelNeutralAlliancePass => integer().withDefault(const Constant(0))();
-	BoolColumn get autoCollectOutpost => boolean().withDefault(const Constant(false))();
-	BoolColumn get autoCollectDepot => boolean().withDefault(const Constant(false))();
+	IntColumn get autoCollectOutpost => integer().withDefault(const Constant(0))(); // 0=false, 1=true
+	IntColumn get autoCollectDepot => integer().withDefault(const Constant(0))(); // 0=false, 1=true
 
 	// Auto Tab - Zone times (in seconds)
 	IntColumn get autoAllianceTime => integer().withDefault(const Constant(0))();
 	IntColumn get autoNeutralTime => integer().withDefault(const Constant(0))();
 
-	// Auto Tab - Timeline events (JSON array of {time, action, value})
-	TextColumn get autoTimelineEvents => text().nullable()();
+	// Timeline events (JSON array of {time, action, value}) - covers both auto and teleop
+	TextColumn get timeline => text().nullable()();
 
 	// Teleop Tab
 	IntColumn get teleopFuelAlliance => integer().nullable()();
@@ -88,9 +83,9 @@ class Scout extends Table {
 	// End Game Tab
 	TextColumn get climbPosition => text().nullable()();
 	TextColumn get climbMethod => text().nullable()(); // Rungs, Uprights, Flip, No Climb
-	BoolColumn get shootOnMove => boolean().withDefault(const Constant(false))();
-	BoolColumn get shootWhileCollecting => boolean().withDefault(const Constant(false))();
-	BoolColumn get climbing => boolean().withDefault(const Constant(false))();
+	IntColumn get shootOnMove => integer().withDefault(const Constant(0))(); // 0=false, 1=true
+	IntColumn get shootWhileCollecting => integer().withDefault(const Constant(0))(); // 0=false, 1=true
+	IntColumn get climbing => integer().withDefault(const Constant(0))(); // 0=false, 1=true
 	TextColumn get fuelStrategy => text().nullable()(); // Carried, Pushed, Passed, Received
 	TextColumn get shootingLocations => text().nullable()();
 	IntColumn get damageState => integer().nullable()(); // 0-100%
@@ -102,7 +97,7 @@ class Scout extends Table {
 	// Scouter Info Tab
 	TextColumn get scouterName => text().nullable()();
 	TextColumn get comments => text().nullable()();
-	BoolColumn get reviewRequest => boolean().withDefault(const Constant(false))();
+	IntColumn get reviewRequest => integer().withDefault(const Constant(0))(); // 0=false, 1=true
 
 	// Metadata
 	BoolColumn get synced => boolean().withDefault(const Constant(false))();
@@ -114,16 +109,35 @@ class Scout extends Table {
 	Set<Column<Object>> get primaryKey => {event, match, team};
 }
 
+/// Upload history - tracks pending/uploaded/failed scouting data batches
+@DataClassName('UploadHistoryData')
+class UploadHistory extends Table {
+	IntColumn get id => integer().autoIncrement()();
+	TextColumn get event => text()();
+	TextColumn get match => text()();
+	TextColumn get team => text()();
+	TextColumn get uploadStatus => text().withDefault(const Constant('pending'))();
+	DateTimeColumn get uploadDate => dateTime().nullable()();
+	TextColumn get csvHeaders => text()();
+	TextColumn get csvData => text()();
+	DateTimeColumn get createdAt => dateTime().clientDefault(() => DateTime.now())();
+
+	@override
+	List<Set<Column<Object>>> get uniqueKeys => [
+		{event, match, team},
+	];
+}
+
 // ============================================================================
 // DATABASE
 // ============================================================================
 
-@DriftDatabase(tables: [ServerConfig, Event, Scout])
+@DriftDatabase(tables: [ServerConfig, Event, Scout, UploadHistory])
 class ScoutDatabase extends _$ScoutDatabase {
 	ScoutDatabase() : super(_openConnection());
 
 	@override
-	int get schemaVersion => 2;
+	int get schemaVersion => 7;
 
 	@override
 	MigrationStrategy get migration {
@@ -140,12 +154,35 @@ class ScoutDatabase extends _$ScoutDatabase {
 						serverConfig.password,
 					);
 				}
+				if (from < 3) {
+					// Create UploadHistory table
+					await migrator.createTable(uploadHistory);
+				}
+				if (from < 4) {
+					// Add event, match, team columns to UploadHistory table
+					await migrator.addColumn(uploadHistory, uploadHistory.event);
+					await migrator.addColumn(uploadHistory, uploadHistory.match);
+					await migrator.addColumn(uploadHistory, uploadHistory.team);
+				}
+				if (from < 5) {
+					// Schema v5: Removed unused auto fuel fields from UI/code
+					// Old databases may still have these columns, but they're ignored
+					// No migration needed as new databases won't have them
+				}
+				if (from < 6) {
+					// Schema v6: Convert boolean fields to integers (0/1)
+					// SQLite handles this automatically when columns already exist
+					// New databases created with v6+ will have these as integers from the start
+				}
+				if (from < 7) {
+					// Schema v7: Add timeline column to Scout table
+					await migrator.addColumn(scout, scout.timeline);
+				}
 			},
 		);
 	}
 
-	// =========================================================================
-	// ServerConfig Queries
+	// =========================================================================	// ServerConfig Queries
 	// =========================================================================
 
 	/// Get the current server configuration
@@ -244,6 +281,105 @@ class ScoutDatabase extends _$ScoutDatabase {
 	/// Clear all cached events
 	Future<void> clearEvents() async {
 		await delete(event).go();
+	}
+
+	// =========================================================================
+	// UploadHistory Queries
+	// =========================================================================
+
+	/// Insert a new upload history entry
+	Future<int> insertUploadHistory({
+		required String event,
+		required String match,
+		required String team,
+		required String csvHeaders,
+		required String csvData,
+		required String status,
+	}) {
+		return into(uploadHistory).insertOnConflictUpdate(
+			UploadHistoryCompanion(
+				event: Value(event),
+				match: Value(match),
+				team: Value(team),
+				uploadStatus: Value(status),
+				csvHeaders: Value(csvHeaders),
+				csvData: Value(csvData),
+			),
+		);
+	}
+
+	/// Get upload history entries by status
+	Future<List<UploadHistoryData>> getUploadHistoryByStatus(String status) {
+		return (select(uploadHistory)..where((h) => h.uploadStatus.equals(status)))
+				.get();
+	}
+
+	/// Get pending upload history entries (first N entries)
+	Future<List<UploadHistoryData>> getPendingUploadHistory({int limit = 10}) {
+		return (select(uploadHistory)
+					..where((h) => h.uploadStatus.equals('pending'))
+					..limit(limit))
+				.get();
+	}
+
+	/// Get all pending upload entries (no limit)
+	Future<List<UploadHistoryData>> getAllPendingUploadHistory() {
+		return (select(uploadHistory)
+					..where((h) => h.uploadStatus.equals('pending')))
+				.get();
+	}
+
+	/// Mark upload history entries as uploaded
+	Future<void> markHistoryAsUploaded(List<int> ids) async {
+		await (update(uploadHistory)
+					..where((h) => h.id.isIn(ids)))
+				.write(
+			UploadHistoryCompanion(
+				uploadStatus: const Value('uploaded'),
+				uploadDate: Value(DateTime.now()),
+			),
+		);
+	}
+
+	/// Mark an upload history entry for reupload
+	Future<void> markHistoryForReupload(int id) async {
+		await (update(uploadHistory)..where((h) => h.id.equals(id))).write(
+			const UploadHistoryCompanion(
+				uploadStatus: Value('pending'),
+				uploadDate: Value(null),
+			),
+		);
+	}
+
+	/// Delete an upload history entry
+	Future<void> deleteHistoryEntry(int id) async {
+		await (delete(uploadHistory)..where((h) => h.id.equals(id))).go();
+	}
+
+	/// Delete uploaded history entries older than N days
+	Future<void> deleteOldUploadedHistory({int daysOld = 18}) async {
+		final cutoffDate = DateTime.now().subtract(Duration(days: daysOld));
+		await (delete(uploadHistory)
+					..where((h) =>
+							h.uploadStatus.equals('uploaded') &
+							h.uploadDate.isSmallerThanValue(cutoffDate)))
+				.go();
+	}
+
+	/// Delete any pending upload history entries for a given event/match/team
+	Future<void> deletePendingHistoryForMatch(String event, String match, String team) async {
+		await (delete(uploadHistory)
+					..where((h) =>
+							h.uploadStatus.equals('pending') &
+							h.event.equals(event) &
+							h.match.equals(match) &
+							h.team.equals(team)))
+				.go();
+	}
+
+	/// Clear all upload history
+	Future<void> clearUploadHistory() async {
+		await delete(uploadHistory).go();
 	}
 }
 

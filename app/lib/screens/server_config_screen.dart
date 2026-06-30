@@ -448,9 +448,7 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				elevation: 0,
 				automaticallyImplyLeading: false,
 				actions: [
-					ViperMenuButton(
-						onSync: () {},
-					),
+					ViperMenuButton(),
 				],
 			),
 			body: SingleChildScrollView(

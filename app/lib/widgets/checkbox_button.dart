@@ -6,10 +6,11 @@ import '../services/localization.dart';
 
 /// Reusable checkbox button widget that uses AppColors and localization
 /// Takes the current state and a callback to update it
+/// Returns 0/1 instead of bool for database compatibility
 class CheckboxButton extends ConsumerWidget {
 	final bool isChecked;
 	final String translationKey;
-	final ValueChanged<bool> onChanged;
+	final ValueChanged<int> onChanged; // Returns 0 or 1 instead of bool
 	final EdgeInsets padding;
 
 	const CheckboxButton({
@@ -39,7 +40,7 @@ class CheckboxButton extends ConsumerWidget {
 						borderRadius: BorderRadius.circular(8),
 					),
 				),
-				onPressed: () => onChanged(!isChecked),
+				onPressed: () => onChanged(isChecked ? 0 : 1), // Return 0 or 1 instead of bool
 				child: Text(
 					label,
 					style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),

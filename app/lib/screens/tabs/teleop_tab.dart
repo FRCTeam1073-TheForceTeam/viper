@@ -43,6 +43,13 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 	}
 
 	@override
+	void deactivate() {
+		// Save before widget is deactivated (removed from tree)
+		_saveTab();
+		super.deactivate();
+	}
+
+	@override
 	void dispose() {
 		_fuelAllianceController.dispose();
 		_fuelNeutralController.dispose();
@@ -50,6 +57,13 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		_alliancePassesController.dispose();
 		_opponentPassesController.dispose();
 		super.dispose();
+	}
+
+	@override
+	void didChangeDependencies() {
+		super.didChangeDependencies();
+		// Reload scout data whenever this tab becomes visible
+		_loadScout();
 	}
 
 	Future<void> _loadScout() async {
@@ -84,6 +98,20 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			widget.teamNumber!,
 		);
 
+		// Guard: don't save if all teleop fields are empty but existing scout has data
+		final allFieldsEmpty = _fuelAllianceController.text.isEmpty &&
+			_fuelNeutralController.text.isEmpty &&
+			_fuelOpponentController.text.isEmpty &&
+			_alliancePassesController.text.isEmpty &&
+			_opponentPassesController.text.isEmpty &&
+			_climbLevel == null;
+
+		if (allFieldsEmpty && existing != null &&
+			(existing.teleopFuelAlliance != null || existing.teleopClimbLevel != null)) {
+			print('[TELEOP_TAB] Skipping save - detected blank state, preserving existing teleop data');
+			return;
+		}
+
 		final now = DateTime.now();
 		final scout = existing != null
 				? existing.copyWith(
@@ -109,9 +137,8 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 					);
 
 		await db.upsertScout(scout);
-		setState(() => _currentScout = scout);
-
 		if (mounted) {
+			setState(() => _currentScout = scout);
 			ScaffoldMessenger.of(context).showSnackBar(
 				const SnackBar(content: Text('Teleop data saved')),
 			);

@@ -249,9 +249,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 											width: 72,
 											child: Center(
 												child: ViperMenuButton(
-													onSync: () {
-														ref.read(syncStateProvider.notifier).syncScoutData();
-													},
 													isSyncing: syncState.isSyncing,
 													pendingCount: syncState.pendingCount,
 												),

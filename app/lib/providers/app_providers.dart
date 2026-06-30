@@ -28,6 +28,7 @@ enum NavigationTarget {
 	event,         // Go to event picker (reset event, bot, match)
 	botSelection,  // Go to bot selection (reset bot, match)
 	match,         // Go to match selection (reset match)
+	upload,        // Go to upload data screen
 }
 
 // ============================================================================
@@ -42,6 +43,7 @@ enum NavScreen {
 	botSelection,
 	matchSelection,
 	scouting,
+	uploadData,
 }
 
 /// Manages navigation to different screens
@@ -106,6 +108,12 @@ final appStateProvider = FutureProvider<AppState>((ref) async {
 	// Wait for SharedPreferences to load before evaluating post-server state
 	// This ensures selectedBotPositionProvider has loaded the persisted bot position
 	await ref.watch(sharedPreferencesProvider.future);
+
+	// Restore the selected event from the database if it exists
+	if (config.selectedEventId?.isNotEmpty ?? false) {
+		print('[APP_STATE] Restoring selected event from database: ${config.selectedEventId}');
+		ref.read(selectedEventProvider.notifier).state = config.selectedEventId;
+	}
 
 	// Now evaluate post-server state
 	final nextState = _evaluatePostServerState(config, ref);
@@ -216,13 +224,8 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 	final Ref ref;
 
 	SelectedEventNotifier(this.ref) : super(null) {
-		_loadSelectedEvent();
-	}
-
-	Future<void> _loadSelectedEvent() async {
-		final db = await ref.read(databaseProvider.future);
-		final config = await db.getCurrentConfig();
-		state = config?.selectedEventId;
+		// Don't load here - let setSelectedEvent() manage the state
+		// Constructor starts with null, event is set explicitly when user selects one
 	}
 
 	Future<void> setSelectedEvent(String eventId) async {
@@ -635,6 +638,216 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 }
 
 // ============================================================================
+// UPLOAD PAGE STATE
+// ============================================================================
+
+class UploadPageState {
+	final List<UploadHistoryData> readyToUpload;    // First 10 pending
+	final List<UploadHistoryData> uploadLater;       // Remaining pending
+	final List<UploadHistoryData> history;           // Uploaded + failed
+	final bool isUploading;
+	final String? error;
+	final DateTime? lastUploadTime;
+
+	UploadPageState({
+		this.readyToUpload = const [],
+		this.uploadLater = const [],
+		this.history = const [],
+		this.isUploading = false,
+		this.error,
+		this.lastUploadTime,
+	});
+
+	UploadPageState copyWith({
+		List<UploadHistoryData>? readyToUpload,
+		List<UploadHistoryData>? uploadLater,
+		List<UploadHistoryData>? history,
+		bool? isUploading,
+		String? error,
+		DateTime? lastUploadTime,
+	}) {
+		return UploadPageState(
+			readyToUpload: readyToUpload ?? this.readyToUpload,
+			uploadLater: uploadLater ?? this.uploadLater,
+			history: history ?? this.history,
+			isUploading: isUploading ?? this.isUploading,
+			error: error ?? this.error,
+			lastUploadTime: lastUploadTime ?? this.lastUploadTime,
+		);
+	}
+}
+
+final uploadPageStateProvider = StateNotifierProvider<UploadPageStateNotifier, UploadPageState>((ref) {
+	return UploadPageStateNotifier(ref);
+});
+
+class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
+	final Ref ref;
+	static const int BATCH_SIZE = 10;
+
+	UploadPageStateNotifier(this.ref) : super(UploadPageState());
+
+	/// Initialize upload page - clean up old history and load current data
+	Future<void> initializeUploadPage() async {
+		try {
+			print('[UPLOAD_STATE] Initializing upload page...');
+			final db = await ref.read(databaseProvider.future);
+
+			// Clean up uploaded history older than 18 days
+			print('[UPLOAD_STATE] Cleaning up history older than 18 days');
+			await db.deleteOldUploadedHistory(daysOld: 18);
+
+			// Load current data
+			await _loadUploadData();
+			print('[UPLOAD_STATE] Upload page initialized successfully');
+		} catch (e) {
+			print('[UPLOAD_STATE] Error initializing upload page: $e');
+			state = state.copyWith(error: 'Failed to initialize upload page: $e');
+		}
+	}
+
+	/// Reload upload data from database
+	Future<void> _loadUploadData() async {
+		try {
+			print('[UPLOAD_STATE] Loading upload data...');
+			final db = await ref.read(databaseProvider.future);
+
+			// Get all pending entries
+			final allPending = await db.getAllPendingUploadHistory();
+			print('[UPLOAD_STATE] Found ${allPending.length} pending entries');
+
+			// Split into ready (first 10) and later (rest)
+			final readyToUpload = allPending.length > BATCH_SIZE
+					? allPending.sublist(0, BATCH_SIZE)
+					: allPending;
+			final uploadLater = allPending.length > BATCH_SIZE
+					? allPending.sublist(BATCH_SIZE)
+				: <UploadHistoryData>[];
+
+			print('[UPLOAD_STATE] Ready to upload: ${readyToUpload.length}, Upload later: ${uploadLater.length}');
+
+			// Get history (uploaded + failed)
+			final uploaded = await db.getUploadHistoryByStatus('uploaded');
+			final failed = await db.getUploadHistoryByStatus('failed');
+			final history = [...uploaded, ...failed];
+
+			print('[UPLOAD_STATE] History: ${history.length} entries');
+
+			state = state.copyWith(
+				readyToUpload: readyToUpload,
+				uploadLater: uploadLater,
+				history: history,
+				error: null,
+			);
+			print('[UPLOAD_STATE] State updated successfully');
+		} catch (e) {
+			print('[UPLOAD_STATE] Error loading upload data: $e');
+			state = state.copyWith(error: 'Failed to load upload data: $e');
+		}
+	}
+
+	/// Upload all items in ready-to-upload section
+	Future<void> uploadReadyEntries() async {
+		if (state.readyToUpload.isEmpty) {
+			state = state.copyWith(error: 'No entries to upload');
+			return;
+		}
+
+		state = state.copyWith(isUploading: true, error: null);
+
+		try {
+			final db = await ref.read(databaseProvider.future);
+			final config = await db.getCurrentConfig();
+
+			// Check if we have a valid server configured
+			if (!_isValidServerUrl(config?.backendUrl)) {
+				state = state.copyWith(
+					isUploading: false,
+					error: 'No server configured',
+				);
+				return;
+			}
+
+			final apiClient = await ref.read(apiClientProvider.future);
+
+			// Combine CSV headers and data from all ready entries
+			String? headers;
+			final csvDataLines = <String>[];
+
+			for (var entry in state.readyToUpload) {
+				if (headers == null) {
+					headers = entry.csvHeaders;
+				}
+				csvDataLines.add(entry.csvData);
+			}
+
+			if (headers == null || csvDataLines.isEmpty) {
+				state = state.copyWith(isUploading: false);
+				return;
+			}
+
+			final csvContent = headers + '\n' + csvDataLines.join('\n');
+
+			// Upload to backend
+			await apiClient.uploadScoutData(csvContent);
+
+			// Mark as uploaded
+			final ids = state.readyToUpload.map((e) => e.id).toList();
+			await db.markHistoryAsUploaded(ids);
+
+			// Reload data - next batch should move to ready
+			await _loadUploadData();
+
+			state = state.copyWith(
+				isUploading: false,
+				lastUploadTime: DateTime.now(),
+			);
+		} catch (e) {
+			state = state.copyWith(
+				isUploading: false,
+				error: 'Upload failed: $e',
+			);
+		}
+	}
+
+	/// Delete an entry
+	Future<void> deleteEntry(int id) async {
+		try {
+			final db = await ref.read(databaseProvider.future);
+			await db.deleteHistoryEntry(id);
+			await _loadUploadData();
+		} catch (e) {
+			state = state.copyWith(error: 'Failed to delete entry: $e');
+		}
+	}
+
+	/// Mark an uploaded entry for reupload
+	Future<void> reuploadEntry(int id) async {
+		try {
+			final db = await ref.read(databaseProvider.future);
+			await db.markHistoryForReupload(id);
+			await _loadUploadData();
+		} catch (e) {
+			state = state.copyWith(error: 'Failed to mark for reupload: $e');
+		}
+	}
+
+	/// Clear all history
+	Future<void> clearAllHistory() async {
+		try {
+			final db = await ref.read(databaseProvider.future);
+			// Only clear uploaded and failed, not pending
+			for (var entry in state.history) {
+				await db.deleteHistoryEntry(entry.id);
+			}
+			await _loadUploadData();
+		} catch (e) {
+			state = state.copyWith(error: 'Failed to clear history: $e');
+		}
+	}
+}
+
+// ============================================================================
 // MATCH LIST
 // ============================================================================
 
@@ -645,29 +858,36 @@ final _ensureSelectedEventProvider = FutureProvider<String?>((ref) async {
 	for (int i = 0; i < 50; i++) {
 		final event = ref.watch(selectedEventProvider);
 		if (event != null) {
+			print('[ENSURE_SELECTED_EVENT] Found event on retry $i: $event');
 			return event;
 		}
 		// Wait a bit and retry
 		await Future.delayed(const Duration(milliseconds: 10));
 	}
 	// Even if still null, return what we have
-	return ref.watch(selectedEventProvider);
+	final finalEvent = ref.watch(selectedEventProvider);
+	print('[ENSURE_SELECTED_EVENT] Final result after 50 retries: $finalEvent');
+	return finalEvent;
 });
 
 final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 	// First check if we have a valid server configured
 	final db = await ref.watch(databaseProvider.future);
 	final config = await db.getCurrentConfig();
+	print('[MATCH_LIST] Config: backendUrl=${config?.backendUrl}');
 	if (!_isValidServerUrl(config?.backendUrl)) {
 		// No valid server configured, return empty list
+		print('[MATCH_LIST] No valid server configured, returning empty list');
 		return [];
 	}
 
 	final apiClient = await ref.watch(apiClientProvider.future);
 	// Use the helper provider to ensure event is loaded
 	final selectedEvent = await ref.watch(_ensureSelectedEventProvider.future);
+	print('[MATCH_LIST] Selected event: $selectedEvent');
 
 	if (selectedEvent == null) {
+		print('[MATCH_LIST] No event selected, returning empty list');
 		return [];
 	}
 
@@ -682,35 +902,44 @@ final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 		List<MatchModel>? cachedMatches;
 		final cachedCsv = prefs.getString(cacheKey);
 		if (cachedCsv != null) {
+			print('[MATCH_LIST] 📦 Loading cached match schedule for event: $selectedEvent');
 			logger.i('📦 Loading cached match schedule for event: $selectedEvent');
 			cachedMatches = _parseScheduleCSV(cachedCsv);
+			print('[MATCH_LIST] 📦 Cached matches loaded: ${cachedMatches.length} matches');
 			logger.i('📦 Cached matches loaded: ${cachedMatches.length} matches');
 		}
 
 		// Fetch fresh data from server
+		print('[MATCH_LIST] 📡 Fetching fresh match schedule from server for event: $selectedEvent');
 		logger.i('📡 Fetching fresh match schedule from server');
 		final scheduleUrl = '/data/$selectedEvent.schedule.csv';
 		final freshCsv = await apiClient.fetchMatchScheduleCsv(selectedEvent);
+		print('[MATCH_LIST] Fresh CSV response: ${freshCsv?.length ?? 0} bytes');
 
 		if (freshCsv != null && freshCsv.isNotEmpty) {
 			// Save to cache
 			await prefs.setString(cacheKey, freshCsv);
+			print('[MATCH_LIST] 💾 Match schedule cached for event: $selectedEvent');
 			logger.i('💾 Match schedule cached for event: $selectedEvent');
 
 			// Parse fresh data
 			final freshMatches = _parseScheduleCSV(freshCsv);
+			print('[MATCH_LIST] ✅ Fresh match schedule: ${freshMatches.length} matches');
 			logger.i('✅ Fresh match schedule: ${freshMatches.length} matches');
 			return freshMatches;
 		} else if (cachedMatches != null && cachedMatches.isNotEmpty) {
 			// Server fetch failed, use cache
+			print('[MATCH_LIST] ⚠️  Server fetch failed, using cached match schedule');
 			logger.i('⚠️  Server fetch failed, using cached match schedule');
 			return cachedMatches;
 		} else {
 			// No fresh data and no cache
+			print('[MATCH_LIST] ❌ Failed to fetch matches and no cache available');
 			logger.w('❌ Failed to fetch matches and no cache available');
 			return [];
 		}
 	} catch (e) {
+		print('[MATCH_LIST] Error fetching matches: $e');
 		Logger().e('Failed to fetch matches: $e');
 		// Try to fall back to cache
 		try {
@@ -805,6 +1034,10 @@ class _NavigationCommandNotifier extends StateNotifier<NavigationTarget?> {
 				case NavigationTarget.match:
 					print('[NAV_COMMAND] Navigating to MatchSelectionScreen');
 					ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
+
+				case NavigationTarget.upload:
+					print('[NAV_COMMAND] Navigating to UploadDataScreen');
+					ref.read(navigationProvider.notifier).navigateTo(NavScreen.uploadData);
 			}
 
 			print('[NAV_COMMAND] ═══════════════════════════════════════════════════════');

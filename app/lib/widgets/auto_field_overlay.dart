@@ -12,8 +12,8 @@ class AutoFieldOverlay extends StatelessWidget {
 	final Function(String field, String action) onMovementTapped;
 
 	/// Called when collection checkboxes are tapped
-	/// Parameters: type ('depot' or 'outpost')
-	final Function(String type)? onCollectionToggled;
+	/// Parameters: type ('depot' or 'outpost'), newValue (toggled boolean state)
+	final Function(String type, bool newValue)? onCollectionToggled;
 
 	/// Current field side (red/blue) - determines field rotation
 	final FieldSide fieldSide;
@@ -177,37 +177,36 @@ class AutoFieldOverlay extends StatelessWidget {
 										teamColor: teamColor,
 									),
 
-								// Collection checkboxes
-								_buildCollectionCheckbox(
-									maxWidth,
-									fieldHeight,
-									label: 'Depot',
-									rightPercent: 2.0,
-									bottomPercent: 22.0,
-									isChecked: collectDepot,
-									onTap: () => onCollectionToggled?.call('depot'),
-									shouldRotate: shouldRotate,
-								),
-								_buildCollectionCheckbox(
-									maxWidth,
-									fieldHeight,
-									label: 'Outpost',
-									rightPercent: 0.0,
-									topPercent: 7.0,
-									isChecked: collectOutpost,
-									onTap: () => onCollectionToggled?.call('outpost'),
-									shouldRotate: shouldRotate,
-								),
-
-								// Start Auto button overlay (when visible)
-								if (showStartButton)
-									_buildStartAutoButton(
+									// Collection checkboxes
+									_buildCollectionCheckbox(
 										maxWidth,
 										fieldHeight,
-										shouldRotate,
+										label: 'Depot',
+										rightPercent: 2.0,
+										bottomPercent: 22.0,
+										isChecked: collectDepot,
+										onTap: () {
+											final newValue = !collectDepot;
+											onCollectionToggled?.call('depot', newValue);
+										},
+										shouldRotate: shouldRotate,
 									),
+									_buildCollectionCheckbox(
+										maxWidth,
+										fieldHeight,
+										label: 'Outpost',
+										rightPercent: 0.0,
+										topPercent: 7.0,
+										isChecked: collectOutpost,
+										onTap: () {
+											final newValue = !collectOutpost;
+											onCollectionToggled?.call('outpost', newValue);
+										},
+									shouldRotate: shouldRotate,
 
-								// Climb selector (top-right corner)
+								),
+
+								// Climb selector
 								_buildClimbSelector(
 									maxWidth,
 									fieldHeight,

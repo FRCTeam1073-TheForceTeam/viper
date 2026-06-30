@@ -4,6 +4,7 @@ import 'package:drift/drift.dart' show Value;
 import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
 import '../../services/scout_data_helper.dart';
+import '../../services/csv_builder.dart';
 
 class EndGameTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -47,11 +48,26 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	}
 
 	@override
+	@override
+	void deactivate() {
+		// Save before widget is deactivated (removed from tree)
+		_saveTab();
+		super.deactivate();
+	}
+
+	@override
 	void dispose() {
 		_shootingMissesController.dispose();
 		_scouterNameController.dispose();
 		_commentsController.dispose();
 		super.dispose();
+	}
+
+	@override
+	void didChangeDependencies() {
+		super.didChangeDependencies();
+		// Reload scout data whenever this tab becomes visible
+		_loadScout();
 	}
 
 	Future<void> _loadScout() async {
@@ -69,13 +85,13 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 					_damageState = scout.damageState ?? 0;
 					_defenseRating = scout.defenseRating;
 					_defenseImpact = scout.defenseImpact;
-					_shootOnMove = scout.shootOnMove;
-					_shootWhileCollecting = scout.shootWhileCollecting;
-					_climbing = scout.climbing;
+					_shootOnMove = scout.shootOnMove == 1; // Convert int to bool
+					_shootWhileCollecting = scout.shootWhileCollecting == 1; // Convert int to bool
+					_climbing = scout.climbing == 1; // Convert int to bool
 					_shootingMissesController.text = (scout.shootingMissesRange ?? 0).toString();
 					_scouterNameController.text = scout.scouterName ?? '';
 					_commentsController.text = scout.comments ?? '';
-					_reviewRequest = scout.reviewRequest;
+					_reviewRequest = scout.reviewRequest == 1; // Convert int to bool
 				});
 			}
 		}
@@ -85,11 +101,25 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		if (widget.matchNumber == null || widget.teamNumber == null) return;
 
 		final db = await ref.read(databaseProvider.future);
-		final existing = _currentScout ?? await db.getScout(
+		// Always fetch the latest scout from DB to ensure auto data is included
+		final existing = await db.getScout(
 			widget.eventId,
 			widget.matchNumber!,
 			widget.teamNumber!,
 		);
+
+		// Guard: don't save if all end_game fields are empty/false but existing scout has data
+		final allFieldsEmpty = !_shootOnMove && !_shootWhileCollecting && !_climbing &&
+			_climbMethod == null && _damageState == 0 && _defenseRating == null &&
+			_defenseImpact == null && _shootingMissesController.text.isEmpty &&
+			_scouterNameController.text.isEmpty && _commentsController.text.isEmpty && !_reviewRequest;
+
+		// If existing scout has end-game data but now all fields are empty, preserve existing data
+		if (allFieldsEmpty && existing != null &&
+			(existing.climbMethod != null || existing.defenseRating != null)) {
+			print('[END_GAME_TAB] Skipping save - detected blank state, preserving existing end-game data');
+			return;
+		}
 
 		final now = DateTime.now();
 		final scout = existing != null
@@ -98,13 +128,13 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						damageState: Value(_damageState),
 						defenseRating: Value(_defenseRating),
 						defenseImpact: Value(_defenseImpact),
-						shootOnMove: _shootOnMove,
-						shootWhileCollecting: _shootWhileCollecting,
-						climbing: _climbing,
+					shootOnMove: _shootOnMove ? 1 : 0, // Convert bool to int
+					shootWhileCollecting: _shootWhileCollecting ? 1 : 0, // Convert bool to int
+					climbing: _climbing ? 1 : 0, // Convert bool to int
 						shootingMissesRange: Value(int.tryParse(_shootingMissesController.text)),
 						scouterName: Value(_scouterNameController.text),
 						comments: Value(_commentsController.text),
-						reviewRequest: _reviewRequest,
+					reviewRequest: _reviewRequest ? 1 : 0, // Convert bool to int
 						updatedAt: now,
 					)
 				: ScoutDataHelper.createNewScout(
@@ -116,19 +146,50 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						damageState: Value(_damageState),
 						defenseRating: Value(_defenseRating),
 						defenseImpact: Value(_defenseImpact),
-						shootOnMove: _shootOnMove,
-						shootWhileCollecting: _shootWhileCollecting,
-						climbing: _climbing,
-						shootingMissesRange: Value(int.tryParse(_shootingMissesController.text)),
-						scouterName: Value(_scouterNameController.text),
-						comments: Value(_commentsController.text),
-						reviewRequest: _reviewRequest,
+					shootOnMove: _shootOnMove ? 1 : 0, // Convert bool to int
+					shootWhileCollecting: _shootWhileCollecting ? 1 : 0, // Convert bool to int
+					climbing: _climbing ? 1 : 0, // Convert bool to int
+					shootingMissesRange: Value(int.tryParse(_shootingMissesController.text)),
+					scouterName: Value(_scouterNameController.text),
+					comments: Value(_commentsController.text),
+					reviewRequest: _reviewRequest ? 1 : 0, // Convert bool to int
 					);
 
 		await db.upsertScout(scout);
-		setState(() => _currentScout = scout);
+
+		// Add to upload history - end game tab completes the scout
+		try {
+			print('[SCOUT_SAVE] [end_game_tab] Deleting any existing pending entries for this match...');
+			await db.deletePendingHistoryForMatch(scout.event, scout.match, scout.team);
+			print('[SCOUT_SAVE] [end_game_tab] Creating CSV for upload history...');
+			final csvContent = CsvBuilder.buildScoutCsv([scout]);
+			print('[SCOUT_SAVE] [end_game_tab] CSV Content: $csvContent');
+			final lines = csvContent.trim().split('\n');
+			print('[SCOUT_SAVE] [end_game_tab] CSV lines: ${lines.length}');
+			if (lines.length >= 2) {
+				final headers = lines[0];
+				final dataRow = lines[1];
+				print('[SCOUT_SAVE] [end_game_tab] Inserting to upload history - Headers: $headers');
+				print('[SCOUT_SAVE] [end_game_tab] Inserting to upload history - Data: $dataRow');
+				await db.insertUploadHistory(
+					event: scout.event,
+					match: scout.match,
+					team: scout.team,
+					csvHeaders: headers,
+					csvData: dataRow,
+					status: 'pending',
+				);
+				print('[SCOUT_SAVE] [end_game_tab] Successfully inserted to upload history');
+			} else {
+				print('[SCOUT_SAVE] [end_game_tab] CSV has less than 2 lines, skipping upload history insertion');
+			}
+		} catch (e) {
+			print('[SCOUT_SAVE] [end_game_tab] Error adding to upload history: $e');
+			// Don't fail the save if upload history fails
+		}
 
 		if (mounted) {
+			setState(() => _currentScout = scout);
 			ScaffoldMessenger.of(context).showSnackBar(
 				const SnackBar(content: Text('End Game data saved')),
 			);
@@ -162,6 +223,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										value: _shootOnMove,
 										onChanged: (value) {
 											setState(() => _shootOnMove = value ?? false);
+											_saveTab(); // Auto-save when checkbox changes
 										},
 										contentPadding: EdgeInsets.zero,
 									),
@@ -170,6 +232,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										value: _shootWhileCollecting,
 										onChanged: (value) {
 											setState(() => _shootWhileCollecting = value ?? false);
+											_saveTab(); // Auto-save when checkbox changes
 										},
 										contentPadding: EdgeInsets.zero,
 									),
@@ -178,6 +241,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										value: _climbing,
 										onChanged: (value) {
 											setState(() => _climbing = value ?? false);
+											_saveTab(); // Auto-save when checkbox changes
 										},
 										contentPadding: EdgeInsets.zero,
 									),
@@ -354,8 +418,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										subtitle: const Text('Fall asleep? Watch the wrong robot? Press the wrong button?'),
 										value: _reviewRequest,
 										onChanged: (value) {
-											setState(() => _reviewRequest = value ?? false);
-										},
+										setState(() => _reviewRequest = value ?? false);
+										_saveTab(); // Auto-save when checkbox changes
+									},
 										contentPadding: EdgeInsets.zero,
 									),
 									const SizedBox(height: 12),

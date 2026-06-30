@@ -4,6 +4,7 @@ import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
 import '../../services/form_validation.dart';
 import '../../services/scout_data_helper.dart';
+import '../../services/csv_builder.dart';
 
 class ScouterInfoTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -69,7 +70,7 @@ class _ScouterInfoTabState extends ConsumerState<ScouterInfoTab> {
 					_teamController.text = scout.team;
 					_scouterNameController.text = scout.scouterName ?? '';
 					_commentsController.text = scout.comments ?? '';
-					_reviewRequest = scout.reviewRequest;
+				_reviewRequest = scout.reviewRequest == 1; // Convert int to bool
 				});
 			}
 		}
@@ -110,17 +111,12 @@ class _ScouterInfoTabState extends ConsumerState<ScouterInfoTab> {
 			team: _teamController.text,
 			scouterName: _scouterNameController.text,
 			comments: _commentsController.text,
-			reviewRequest: _reviewRequest,
+			reviewRequest: _reviewRequest ? 1 : 0, // Convert bool to int
 			createdAt: _currentScout?.createdAt ?? now,
 			updatedAt: now,
 			synced: false,
 			startingPosition: _currentScout?.startingPosition,
-			noShow: _currentScout?.noShow ?? false,
-			autoFuelAlliance: _currentScout?.autoFuelAlliance,
-			autoFuelNeutral: _currentScout?.autoFuelNeutral,
-			autoFuelOpponent: _currentScout?.autoFuelOpponent,
-			autoFuelDepot: _currentScout?.autoFuelDepot,
-			autoFuelOutpost: _currentScout?.autoFuelOutpost,
+			noShow: _currentScout?.noShow ?? 0,
 			autoClimbLevel: _currentScout?.autoClimbLevel,
 			teleopFuelAlliance: _currentScout?.teleopFuelAlliance,
 			teleopFuelNeutral: _currentScout?.teleopFuelNeutral,
@@ -131,9 +127,9 @@ class _ScouterInfoTabState extends ConsumerState<ScouterInfoTab> {
 			teleopZoneInteractions: _currentScout?.teleopZoneInteractions,
 			climbPosition: _currentScout?.climbPosition,
 			climbMethod: _currentScout?.climbMethod,
-			shootOnMove: _currentScout?.shootOnMove ?? false,
-			shootWhileCollecting: _currentScout?.shootWhileCollecting ?? false,
-			climbing: _currentScout?.climbing ?? false,
+			shootOnMove: _currentScout?.shootOnMove ?? 0,
+			shootWhileCollecting: _currentScout?.shootWhileCollecting ?? 0,
+			climbing: _currentScout?.climbing ?? 0,
 			fuelStrategy: _currentScout?.fuelStrategy,
 			shootingLocations: _currentScout?.shootingLocations,
 			damageState: _currentScout?.damageState,
