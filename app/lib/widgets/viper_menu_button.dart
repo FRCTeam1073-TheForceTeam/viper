@@ -17,13 +17,13 @@ class ViperMenuButton extends ConsumerWidget {
 	void _registerTranslations() {
 		AppLocalizations.addI18n({
 			'change_match': {
-				'en': 'Change Match',
-				'es': 'Cambiar partido',
-				'pt': 'Alterar Partida',
-				'fr': 'Changer Match',
-				'zh_tw': '更改比賽',
-				'he': 'שנה משחק',
-				'tr': 'Maçı Değiştir',
+				'en': 'Choose match',
+				'es': 'Elegir partido',
+				'pt': 'Escolher partida',
+				'fr': 'Choisir le match',
+				'zh_tw': '選擇比賽',
+				'he': 'בחר משחק',
+				'tr': 'Maçı Seç',
 			},
 			'change_robot_position': {
 				'en': 'Change Robot',

@@ -5,6 +5,7 @@ import '../providers/app_providers.dart';
 import '../services/localization.dart';
 import '../providers/locale_provider.dart';
 import '../constants/colors.dart';
+import '../widgets/viper_menu_button.dart';
 
 class UploadDataScreen extends ConsumerStatefulWidget {
 	const UploadDataScreen({Key? key}) : super(key: key);
@@ -128,6 +129,8 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 			});
 		}
 
+		final syncState = ref.watch(syncStateProvider);
+
 		return WillPopScope(
 			onWillPop: () async {
 				// Navigate back to scouting
@@ -138,13 +141,13 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 				appBar: AppBar(
 					title: Text(t('upload_data')),
 					centerTitle: true,
-					automaticallyImplyLeading: true,
-					leading: IconButton(
-						icon: const Icon(Icons.arrow_back),
-						onPressed: () {
-							ref.read(navigationProvider.notifier).navigateTo(NavScreen.scouting);
-						},
-					),
+					automaticallyImplyLeading: false,
+					actions: [
+						ViperMenuButton(
+							isSyncing: syncState.isSyncing,
+							pendingCount: syncState.pendingCount,
+						),
+					],
 				),
 				body: SingleChildScrollView(
 					child: Padding(
@@ -453,7 +456,9 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 
 		final pairs = <String>[];
 		for (int i = 0; i < headerList.length && i < dataList.length; i++) {
-			pairs.add('${headerList[i]}=${dataList[i]}');
+			final header = headerList[i].trim();
+			final value = dataList[i].trim();
+			pairs.add('$header=$value');
 		}
 
 		return pairs.join('\n');
