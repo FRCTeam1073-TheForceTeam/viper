@@ -609,6 +609,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	bool _valuesExpanded = false;
 	bool _timelineExpanded = false;
 	bool _listenerRegistered = false;
+	late ScoutDatabase _database;
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -651,7 +652,13 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		super.initState();
 		// Initialize i18n for auto tab
 		_initAutoTabTranslations();
+		// Cache database reference for use in deactivate() (before ref becomes invalid)
+		_initDatabase();
 		_loadScout();
+	}
+
+	Future<void> _initDatabase() async {
+		_database = await ref.read(databaseProvider.future);
 	}
 
 	@override
@@ -707,7 +714,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	Future<void> _saveTab() async {
 		if (widget.matchNumber == null || widget.teamNumber == null) return;
 
-		final db = await ref.read(databaseProvider.future);
+		final db = _database;
 		final autoState = ref.read(autoTabControllerProvider);
 
 		// Guard: don't save if all counters are zero and timeline is empty (indicates incomplete state)

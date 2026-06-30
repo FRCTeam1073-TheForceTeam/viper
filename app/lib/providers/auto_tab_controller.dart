@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
+import 'active_zone_provider.dart';
 
 /// Timeline event entry: tracks when an action happened and its value
 /// Format matches web app: time:field:value
@@ -229,7 +230,9 @@ class AutoTabState {
 
 /// Controller for auto tab state
 class AutoTabNotifier extends StateNotifier<AutoTabState> {
-	AutoTabNotifier() : super(AutoTabState());
+	final Ref _ref;
+
+	AutoTabNotifier(this._ref) : super(AutoTabState());
 
 	/// Record an action (button click, fuel add, etc.)
 	void recordAction({
@@ -275,6 +278,8 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					neutralTime: newState.neutralTime + zoneElapsedSeconds,
 				);
 			}
+			// Update shared active zone provider
+			_ref.read(activeZoneProvider.notifier).state = newZone;
 		}
 
 		switch (field) {
@@ -387,6 +392,8 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: newZone == 'neutral' ? 'alliancePass' : 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				// Update shared active zone provider
+				_ref.read(activeZoneProvider.notifier).state = newZone;
 			case 'auto_trench_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchDepotAllianceToNeutral:
@@ -395,6 +402,8 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				// Update shared active zone provider
+				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_bump_depot_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpDepotAllianceToNeutral:
@@ -403,6 +412,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_bump_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					bumpOutpostAllianceToNeutral:
@@ -411,6 +421,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_trench_outpost_alliance_to_neutral':
 				newState = newState.copyWith(
 					trenchOutpostAllianceToNeutral:
@@ -419,6 +430,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_trench_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchDepotNeutralToAlliance:
@@ -427,6 +439,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'alliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_bump_depot_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpDepotNeutralToAlliance:
@@ -435,6 +448,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'alliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_bump_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					bumpOutpostNeutralToAlliance:
@@ -443,6 +457,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'alliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_trench_outpost_neutral_to_alliance':
 				newState = newState.copyWith(
 					trenchOutpostNeutralToAlliance:
@@ -451,6 +466,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 					activeFuelTarget: 'alliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
+				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_fuel_score':
 				newState = newState.copyWith(
 					fuelScore: (newState.fuelScore - actionValue).clamp(0, 999),
@@ -560,5 +576,5 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 
 /// Riverpod provider for auto tab controller
 final autoTabControllerProvider = StateNotifierProvider<AutoTabNotifier, AutoTabState>((ref) {
-	return AutoTabNotifier();
+	return AutoTabNotifier(ref);
 });

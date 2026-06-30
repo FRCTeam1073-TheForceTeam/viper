@@ -1,9 +1,345 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:drift/drift.dart' show Value;
+import '../../constants/colors.dart';
 import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
+import '../../providers/tele_tab_controller.dart';
+import '../../providers/field_side_provider.dart';
+import '../../providers/locale_provider.dart';
 import '../../services/scout_data_helper.dart';
+import '../../services/localization.dart';
+import '../../widgets/tele_field_overlay.dart';
+import '../../widgets/tele_values_table.dart';
+
+/// Initialize Tele Tab translations
+void _initTeleTabTranslations() {
+	AppLocalizations.addI18n({
+		// Tab header
+		'tele_heading': {
+			'en': 'Teleop Period',
+			'es': 'Período de Teleoperación',
+			'pt': 'Período de Teleoperação',
+			'fr': 'Période Téléopérée',
+			'zh_tw': '遙控操作期間',
+			'he': 'תקופת טלאופ',
+			'tr': 'Teleop Dönemi',
+		},
+
+		// Section headers
+		'field_interactions': {
+			'en': 'Field Interactions',
+			'es': 'Interacciones de Campo',
+			'pt': 'Interações de Campo',
+			'fr': 'Interactions sur le Terrain',
+			'zh_tw': '場地交互',
+			'he': 'אינטראקציות שדה',
+			'tr': 'Saha Etkileşimleri',
+		},
+		'fuel_scoring': {
+			'en': 'Fuel Scoring',
+			'es': 'Puntuación de Combustible',
+			'pt': 'Pontuação de Combustível',
+			'fr': 'Marquage de Carburant',
+			'zh_tw': '燃料評分',
+			'he': 'ניקוד דלק',
+			'tr': 'Yakıt Puanlaması',
+		},
+		'climb': {
+			'en': 'Climb',
+			'es': 'Escalada',
+			'pt': 'Escalada',
+			'fr': 'Escalade',
+			'zh_tw': '攀爬',
+			'he': 'טיפוס',
+			'tr': 'Tırmanış',
+		},
+		'timeline': {
+			'en': 'Timeline',
+			'es': 'Cronograma',
+			'pt': 'Cronograma',
+			'fr': 'Chronologie',
+			'zh_tw': '時間表',
+			'he': 'ציר הזמן',
+			'tr': 'Zaman Çizelgesi',
+		},
+		'values': {
+			'en': 'Values',
+			'es': 'Valores',
+			'pt': 'Valores',
+			'fr': 'Valeurs',
+			'zh_tw': '值',
+			'he': 'ערכים',
+			'tr': 'Değerler',
+		},
+
+		// Movement labels
+		'trench_outpost_neutral_to_opponent': {
+			'en': 'Trench Outpost → Opponent',
+			'es': 'Trinchera Puesto Avanzado → Oponente',
+			'pt': 'Trincheira Avanço → Oponente',
+			'fr': 'Tranchée Avant-Poste → Opposant',
+			'zh_tw': '壕溝哨站 → 對手',
+			'he': 'משק עמוק צפוי → יריב',
+			'tr': 'Hendek Karakol → Rakip',
+		},
+		'bump_outpost_neutral_to_opponent': {
+			'en': 'Bump Outpost → Opponent',
+			'es': 'Golpe Puesto Avanzado → Oponente',
+			'pt': 'Bump Avanço → Oponente',
+			'fr': 'Bump Avant-Poste → Opposant',
+			'zh_tw': '碰撞哨站 → 對手',
+			'he': 'דחיפה אחסון צפוי → יריב',
+			'tr': 'Bump Karakol → Rakip',
+		},
+		'bump_depot_neutral_to_opponent': {
+			'en': 'Bump Depot → Opponent',
+			'es': 'Golpe Depósito → Oponente',
+			'pt': 'Bump Depósito → Oponente',
+			'fr': 'Bump Dépôt → Opposant',
+			'zh_tw': '碰撞倉庫 → 對手',
+			'he': 'דחיפה אחסון → יריב',
+			'tr': 'Bump Depo → Rakip',
+		},
+		'trench_depot_neutral_to_opponent': {
+			'en': 'Trench Depot → Opponent',
+			'es': 'Trinchera Depósito → Oponente',
+			'pt': 'Trincheira Depósito → Oponente',
+			'fr': 'Tranchée Dépôt → Opposant',
+			'zh_tw': '壕溝倉庫 → 對手',
+			'he': 'משק אחסון עמוק → יריב',
+			'tr': 'Hendek Depo → Rakip',
+		},
+		'trench_outpost_opponent_to_neutral': {
+			'en': 'Trench Outpost ← Opponent',
+			'es': 'Trinchera Puesto Avanzado ← Oponente',
+			'pt': 'Trincheira Avanço ← Oponente',
+			'fr': 'Tranchée Avant-Poste ← Opposant',
+			'zh_tw': '壕溝哨站 ← 對手',
+			'he': 'משק עמוק צפוי ← יריב',
+			'tr': 'Hendek Karakol ← Rakip',
+		},
+		'bump_outpost_opponent_to_neutral': {
+			'en': 'Bump Outpost ← Opponent',
+			'es': 'Golpe Puesto Avanzado ← Oponente',
+			'pt': 'Bump Avanço ← Oponente',
+			'fr': 'Bump Avant-Poste ← Opposant',
+			'zh_tw': '碰撞哨站 ← 對手',
+			'he': 'דחיפה אחסון צפוי ← יריב',
+			'tr': 'Bump Karakol ← Rakip',
+		},
+		'bump_depot_opponent_to_neutral': {
+			'en': 'Bump Depot ← Opponent',
+			'es': 'Golpe Depósito ← Oponente',
+			'pt': 'Bump Depósito ← Oponente',
+			'fr': 'Bump Dépôt ← Opposant',
+			'zh_tw': '碰撞倉庫 ← 對手',
+			'he': 'דחיפה אחסון ← יריב',
+			'tr': 'Bump Depo ← Rakip',
+		},
+		'trench_depot_opponent_to_neutral': {
+			'en': 'Trench Depot ← Opponent',
+			'es': 'Trinchera Depósito ← Oponente',
+			'pt': 'Trincheira Depósito ← Oponente',
+			'fr': 'Tranchée Dépôt ← Opposant',
+			'zh_tw': '壕溝倉庫 ← 對手',
+			'he': 'משק אחסון עמוק ← יריב',
+			'tr': 'Hendek Depo ← Rakip',
+		},
+
+		// Fuel labels
+		'fuel_alliance_dump': {
+			'en': 'Fuel Alliance Dump',
+			'es': 'Descarga de Alianza',
+			'pt': 'Descarga de Aliança',
+			'fr': 'Vidage Alliance',
+			'zh_tw': '聯盟傾倒',
+			'he': 'זריקת ברית',
+			'tr': 'İttifak Boşaltma',
+		},
+		'fuel_outpost': {
+			'en': 'Fuel Outpost',
+			'es': 'Combustible Puesto Avanzado',
+			'pt': 'Combustível Avanço',
+			'fr': 'Carburant Avant-Poste',
+			'zh_tw': '燃料前哨',
+			'he': 'דלק אחסון צפוי',
+			'tr': 'Yakıt Karakolu',
+		},
+		'fuel_opponent_alliance_pass': {
+			'en': 'Opponent Alliance Pass',
+			'es': 'Pase de Alianza del Oponente',
+			'pt': 'Passe de Aliança do Oponente',
+			'fr': 'Passe Alliance Adversaire',
+			'zh_tw': '對手聯盟通道',
+			'he': 'מעבר ברית של היריב',
+			'tr': 'Rakip İttifak Geçiti',
+		},
+		'fuel_opponent_neutral_pass': {
+			'en': 'Opponent Neutral Pass',
+			'es': 'Pase Neutral del Oponente',
+			'pt': 'Passe Neutra do Oponente',
+			'fr': 'Passe Neutre Adversaire',
+			'zh_tw': '對手中立通道',
+			'he': 'מעבר ניטראלי של היריב',
+			'tr': 'Rakip Nötr Geçiti',
+		},
+
+		// Zone time labels
+		'opponent_time': {
+			'en': 'Opponent Time',
+			'es': 'Tiempo del Oponente',
+			'pt': 'Tempo do Oponente',
+			'fr': 'Temps Adversaire',
+			'zh_tw': '對手時間',
+			'he': 'זמן יריב',
+			'tr': 'Rakip Süresi',
+		},
+
+		// Action buttons
+		'undo': {
+			'en': 'Undo',
+			'es': 'Deshacer',
+			'pt': 'Desfazer',
+			'fr': 'Annuler',
+			'zh_tw': '撤銷',
+			'he': 'בטל',
+			'tr': 'Geri Al',
+		},
+		'reset': {
+			'en': 'Reset',
+			'es': 'Reiniciar',
+			'pt': 'Redefinir',
+			'fr': 'Réinitialiser',
+			'zh_tw': '重置',
+			'he': 'אתחול',
+			'tr': 'Sıfırla',
+		},
+
+		// Max fuel label
+		'fuel_capacity_label': {
+			'en': 'Max fuel:',
+			'es': 'Capacidad de combustible:',
+			'pt': 'Combustível máximo:',
+			'fr': 'Carburant max :',
+			'zh_tw': '最大燃料：',
+			'he': 'דלק מקסימלי:',
+			'tr': 'Maksimum yakıt:',
+		},
+
+		// Shared tele labels (from web app analysis)
+		'fuel_score': {
+			'en': 'Fuel Score',
+			'es': 'Puntuación de Combustible',
+			'pt': 'Pontuação de Combustível',
+			'fr': 'Score de Carburant',
+			'zh_tw': '燃料評分',
+			'he': 'ניקוד דלק',
+			'tr': 'Yakıt Puanı',
+		},
+		'fuel_neutral_pass': {
+			'en': 'Neutral Pass',
+			'es': 'Pase Neutral',
+			'pt': 'Passagem Neutra',
+			'fr': 'Passe Neutre',
+			'zh_tw': '中立通行',
+			'he': 'מעבר ניטראלי',
+			'tr': 'Tarafsız Geçiş',
+		},
+		'alliance_time': {
+			'en': 'Alliance Time',
+			'es': 'Tiempo de Alianza',
+			'pt': 'Tempo da Aliança',
+			'fr': 'Temps d\'Alliance',
+			'zh_tw': '聯盟時間',
+			'he': 'זמן הברית',
+			'tr': 'İttifak Süresi',
+		},
+		'neutral_time': {
+			'en': 'Neutral Time',
+			'es': 'Tiempo Neutral',
+			'pt': 'Tempo Neutro',
+			'fr': 'Temps Neutre',
+			'zh_tw': '中立時間',
+			'he': 'זמן ניטראלי',
+			'tr': 'Tarafsız Süresi',
+		},
+
+		// Movement labels for tele (reuse shared ones where available)
+		'trench_depot_alliance_to_neutral': {
+			'en': 'Trench Depot → Neutral',
+			'es': 'Trinchera Depósito → Neutral',
+			'pt': 'Trincheira Depósito → Neutro',
+			'fr': 'Tranchée Dépôt → Neutre',
+			'zh_tw': '壕溝倉庫 → 中立',
+			'he': 'משק אחסון עמוק → ניטראלי',
+			'tr': 'Hendek Depo → Tarafsız',
+		},
+		'bump_depot_alliance_to_neutral': {
+			'en': 'Bump Depot → Neutral',
+			'es': 'Golpe Depósito → Neutral',
+			'pt': 'Bump Depósito → Neutro',
+			'fr': 'Bump Dépôt → Neutre',
+			'zh_tw': '碰撞倉庫 → 中立',
+			'he': 'דחיפה אחסון → ניטראלי',
+			'tr': 'Bump Depo → Tarafsız',
+		},
+		'bump_outpost_alliance_to_neutral': {
+			'en': 'Bump Outpost → Neutral',
+			'es': 'Golpe Puesto Avanzado → Neutral',
+			'pt': 'Bump Avanço → Neutro',
+			'fr': 'Bump Avant-Poste → Neutre',
+			'zh_tw': '碰撞哨站 → 中立',
+			'he': 'דחיפה אחסון צפוי → ניטראלי',
+			'tr': 'Bump Karakol → Tarafsız',
+		},
+		'trench_outpost_alliance_to_neutral': {
+			'en': 'Trench Outpost → Neutral',
+			'es': 'Trinchera Puesto Avanzado → Neutral',
+			'pt': 'Trincheira Avanço → Neutro',
+			'fr': 'Tranchée Avant-Poste → Neutre',
+			'zh_tw': '壕溝哨站 → 中立',
+			'he': 'משק עמוק צפוי → ניטראלי',
+			'tr': 'Hendek Karakol → Tarafsız',
+		},
+		'trench_depot_neutral_to_alliance': {
+			'en': 'Trench Depot ← Neutral',
+			'es': 'Trinchera Depósito ← Neutral',
+			'pt': 'Trincheira Depósito ← Neutro',
+			'fr': 'Tranchée Dépôt ← Neutre',
+			'zh_tw': '壕溝倉庫 ← 中立',
+			'he': 'משק אחסון עמוק ← ניטראלי',
+			'tr': 'Hendek Depo ← Tarafsız',
+		},
+		'bump_depot_neutral_to_alliance': {
+			'en': 'Bump Depot ← Neutral',
+			'es': 'Golpe Depósito ← Neutral',
+			'pt': 'Bump Depósito ← Neutro',
+			'fr': 'Bump Dépôt ← Neutre',
+			'zh_tw': '碰撞倉庫 ← 中立',
+			'he': 'דחיפה אחסון ← ניטראלי',
+			'tr': 'Bump Depo ← Tarafsız',
+		},
+		'bump_outpost_neutral_to_alliance': {
+			'en': 'Bump Outpost ← Neutral',
+			'es': 'Golpe Puesto Avanzado ← Neutral',
+			'pt': 'Bump Avanço ← Neutro',
+			'fr': 'Bump Avant-Poste ← Neutre',
+			'zh_tw': '碰撞哨站 ← 中立',
+			'he': 'דחיפה אחסון צפוי ← ניטראלי',
+			'tr': 'Bump Karakol ← Tarafsız',
+		},
+		'trench_outpost_neutral_to_alliance': {
+			'en': 'Trench Outpost ← Neutral',
+			'es': 'Trinchera Puesto Avanzado ← Neutral',
+			'pt': 'Trincheira Avanço ← Neutro',
+			'fr': 'Tranchée Avant-Poste ← Neutre',
+			'zh_tw': '壕溝哨站 ← 中立',
+			'he': 'משק עמוק צפוי ← ניטראלי',
+			'tr': 'Hendek Karakol ← Tarafsız',
+		},
+	});
+}
 
 class TeleopTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -22,48 +358,47 @@ class TeleopTab extends ConsumerStatefulWidget {
 }
 
 class _TeleopTabState extends ConsumerState<TeleopTab> {
-	late TextEditingController _fuelAllianceController;
-	late TextEditingController _fuelNeutralController;
-	late TextEditingController _fuelOpponentController;
-	late TextEditingController _alliancePassesController;
-	late TextEditingController _opponentPassesController;
-
-	int _climbLevel = 0;
 	ScoutData? _currentScout;
+	bool _valuesExpanded = false;
+	bool _timelineExpanded = false;
+	bool _listenerRegistered = false;
+	late ScoutDatabase _database;
+
+	String _translate(String key, {Map<String, String>? variables}) {
+		final locale = ref.read(selectedLocaleProvider);
+		return AppLocalizations.translate(key, locale: locale, variables: variables);
+	}
+
+	/// Get team color based on bot position
+	Color _getTeamColor(String? botPosition) {
+		if (botPosition == null) return AppColors.blueTeamColor;
+		return botPosition.startsWith('R') ? AppColors.redTeamColor : AppColors.blueTeamColor;
+	}
+
+	/// Get responsive font size based on screen width
+	double _getResponsiveFontSize(double baseSize) {
+		final screenWidth = MediaQuery.of(context).size.width;
+		if (screenWidth < 400) return baseSize * 0.85;
+		return baseSize;
+	}
 
 	@override
 	void initState() {
 		super.initState();
-		_fuelAllianceController = TextEditingController();
-		_fuelNeutralController = TextEditingController();
-		_fuelOpponentController = TextEditingController();
-		_alliancePassesController = TextEditingController();
-		_opponentPassesController = TextEditingController();
+		_initTeleTabTranslations();
+		// Cache database reference for use in deactivate() (before ref becomes invalid)
+		_initDatabase();
 		_loadScout();
+	}
+
+	Future<void> _initDatabase() async {
+		_database = await ref.read(databaseProvider.future);
 	}
 
 	@override
 	void deactivate() {
-		// Save before widget is deactivated (removed from tree)
 		_saveTab();
 		super.deactivate();
-	}
-
-	@override
-	void dispose() {
-		_fuelAllianceController.dispose();
-		_fuelNeutralController.dispose();
-		_fuelOpponentController.dispose();
-		_alliancePassesController.dispose();
-		_opponentPassesController.dispose();
-		super.dispose();
-	}
-
-	@override
-	void didChangeDependencies() {
-		super.didChangeDependencies();
-		// Reload scout data whenever this tab becomes visible
-		_loadScout();
 	}
 
 	Future<void> _loadScout() async {
@@ -74,16 +409,43 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 				widget.matchNumber!,
 				widget.teamNumber!,
 			);
-			if (scout != null) {
+			if (scout != null && mounted) {
 				setState(() {
 					_currentScout = scout;
-					_fuelAllianceController.text = (scout.teleopFuelAlliance ?? 0).toString();
-					_fuelNeutralController.text = (scout.teleopFuelNeutral ?? 0).toString();
-					_fuelOpponentController.text = (scout.teleopFuelOpponent ?? 0).toString();
-					_alliancePassesController.text = (scout.teleopAlliancePasses ?? 0).toString();
-					_opponentPassesController.text = (scout.teleopOpponentPasses ?? 0).toString();
-					_climbLevel = scout.teleopClimbLevel ?? 0;
 				});
+
+				// Load tele data into controller
+				final controller = ref.read(teleTabControllerProvider.notifier);
+				final teleData = {
+					'tele_trench_depot_alliance_to_neutral': scout.teleTrenchDepotAllianceToNeutral,
+					'tele_bump_depot_alliance_to_neutral': scout.teleBumpDepotAllianceToNeutral,
+					'tele_bump_outpost_alliance_to_neutral': scout.teleBumpOutpostAllianceToNeutral,
+					'tele_trench_outpost_alliance_to_neutral': scout.teleTrenchOutpostAllianceToNeutral,
+					'tele_trench_depot_neutral_to_alliance': scout.teleTrenchDepotNeutralToAlliance,
+					'tele_bump_depot_neutral_to_alliance': scout.teleBumpDepotNeutralToAlliance,
+					'tele_bump_outpost_neutral_to_alliance': scout.teleBumpOutpostNeutralToAlliance,
+					'tele_trench_outpost_neutral_to_alliance': scout.teleTrenchOutpostNeutralToAlliance,
+					'tele_trench_outpost_neutral_to_opponent': scout.teleTrenchOutpostNeutralToOpponent,
+					'tele_bump_outpost_neutral_to_opponent': scout.teleBumpOutpostNeutralToOpponent,
+					'tele_bump_depot_neutral_to_opponent': scout.teleBumpDepotNeutralToOpponent,
+					'tele_trench_depot_neutral_to_opponent': scout.teleTrenchDepotNeutralToOpponent,
+					'tele_trench_outpost_opponent_to_neutral': scout.teleTrenchOutpostOpponentToNeutral,
+					'tele_bump_outpost_opponent_to_neutral': scout.teleBumpOutpostOpponentToNeutral,
+					'tele_bump_depot_opponent_to_neutral': scout.teleBumpDepotOpponentToNeutral,
+					'tele_trench_depot_opponent_to_neutral': scout.teleTrenchDepotOpponentToNeutral,
+					'tele_fuel_score': scout.teleFuelScore,
+					'tele_fuel_alliance_dump': scout.teleFuelAllianceDump,
+					'tele_fuel_outpost': scout.teleFuelOutpost,
+					'tele_fuel_neutral_alliance_pass': scout.teleFuelNeutralAlliancePass,
+					'tele_fuel_opponent_neutral_pass': scout.teleFuelOpponentNeutralPass,
+					'tele_fuel_opponent_alliance_pass': scout.teleFuelOpponentAlliancePass,
+					'tele_alliance_time': scout.teleAllianceTime,
+					'tele_neutral_time': scout.teleNeutralTime,
+					'tele_opponent_time': scout.teleOpponentTime,
+					'tele_climb_level': scout.teleClimbLevel ?? 0,
+					'tele_timeline': scout.teleTimeline,
+				};
+				controller.loadFromData(teleData);
 			}
 		}
 	}
@@ -91,167 +453,409 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 	Future<void> _saveTab() async {
 		if (widget.matchNumber == null || widget.teamNumber == null) return;
 
-		final db = await ref.read(databaseProvider.future);
+		final db = _database;
+		final teleState = ref.read(teleTabControllerProvider);
+
+		// Guard: don't save if all counters are zero and timeline is empty
+		final allCountersZero = teleState.trenchDepotAllianceToNeutral == 0 &&
+			teleState.bumpDepotAllianceToNeutral == 0 &&
+			teleState.bumpOutpostAllianceToNeutral == 0 &&
+			teleState.trenchOutpostAllianceToNeutral == 0 &&
+			teleState.trenchDepotNeutralToAlliance == 0 &&
+			teleState.bumpDepotNeutralToAlliance == 0 &&
+			teleState.bumpOutpostNeutralToAlliance == 0 &&
+			teleState.trenchOutpostNeutralToAlliance == 0 &&
+			teleState.trenchOutpostNeutralToOpponent == 0 &&
+			teleState.bumpOutpostNeutralToOpponent == 0 &&
+			teleState.bumpDepotNeutralToOpponent == 0 &&
+			teleState.trenchDepotNeutralToOpponent == 0 &&
+			teleState.trenchOutpostOpponentToNeutral == 0 &&
+			teleState.bumpOutpostOpponentToNeutral == 0 &&
+			teleState.bumpDepotOpponentToNeutral == 0 &&
+			teleState.trenchDepotOpponentToNeutral == 0 &&
+			teleState.fuelScore == 0 &&
+			teleState.fuelAllianceDump == 0 &&
+			teleState.fuelOutpost == 0 &&
+			teleState.fuelNeutralAlliancePass == 0 &&
+			teleState.fuelOpponentNeutralPass == 0 &&
+			teleState.fuelOpponentAlliancePass == 0;
+
+		if (allCountersZero && _currentScout != null && _currentScout!.teleFuelScore > 0) {
+			print('[TELE_TAB] Skipping save - detected blank state, preserving existing data');
+			return;
+		}
+
 		final existing = _currentScout ?? await db.getScout(
 			widget.eventId,
 			widget.matchNumber!,
 			widget.teamNumber!,
 		);
 
-		// Guard: don't save if all teleop fields are empty but existing scout has data
-		final allFieldsEmpty = _fuelAllianceController.text.isEmpty &&
-			_fuelNeutralController.text.isEmpty &&
-			_fuelOpponentController.text.isEmpty &&
-			_alliancePassesController.text.isEmpty &&
-			_opponentPassesController.text.isEmpty &&
-			_climbLevel == null;
-
-		if (allFieldsEmpty && existing != null &&
-			(existing.teleopFuelAlliance != null || existing.teleopClimbLevel != null)) {
-			print('[TELEOP_TAB] Skipping save - detected blank state, preserving existing teleop data');
-			return;
-		}
-
 		final now = DateTime.now();
+		final timelineStr = TeleTimelineEvent.formatTimeline(teleState.timeline);
+
 		final scout = existing != null
 				? existing.copyWith(
-						teleopFuelAlliance: Value(int.tryParse(_fuelAllianceController.text)),
-						teleopFuelNeutral: Value(int.tryParse(_fuelNeutralController.text)),
-						teleopFuelOpponent: Value(int.tryParse(_fuelOpponentController.text)),
-						teleopAlliancePasses: Value(int.tryParse(_alliancePassesController.text)),
-						teleopOpponentPasses: Value(int.tryParse(_opponentPassesController.text)),
-						teleopClimbLevel: Value(_climbLevel),
-						updatedAt: now,
-					)
+					teleTrenchDepotAllianceToNeutral: teleState.trenchDepotAllianceToNeutral,
+					teleBumpDepotAllianceToNeutral: teleState.bumpDepotAllianceToNeutral,
+					teleBumpOutpostAllianceToNeutral: teleState.bumpOutpostAllianceToNeutral,
+					teleTrenchOutpostAllianceToNeutral: teleState.trenchOutpostAllianceToNeutral,
+					teleTrenchDepotNeutralToAlliance: teleState.trenchDepotNeutralToAlliance,
+					teleBumpDepotNeutralToAlliance: teleState.bumpDepotNeutralToAlliance,
+					teleBumpOutpostNeutralToAlliance: teleState.bumpOutpostNeutralToAlliance,
+					teleTrenchOutpostNeutralToAlliance: teleState.trenchOutpostNeutralToAlliance,
+					teleTrenchOutpostNeutralToOpponent: teleState.trenchOutpostNeutralToOpponent,
+					teleBumpOutpostNeutralToOpponent: teleState.bumpOutpostNeutralToOpponent,
+					teleBumpDepotNeutralToOpponent: teleState.bumpDepotNeutralToOpponent,
+					teleTrenchDepotNeutralToOpponent: teleState.trenchDepotNeutralToOpponent,
+					teleTrenchOutpostOpponentToNeutral: teleState.trenchOutpostOpponentToNeutral,
+					teleBumpOutpostOpponentToNeutral: teleState.bumpOutpostOpponentToNeutral,
+					teleBumpDepotOpponentToNeutral: teleState.bumpDepotOpponentToNeutral,
+					teleTrenchDepotOpponentToNeutral: teleState.trenchDepotOpponentToNeutral,
+					teleFuelScore: teleState.fuelScore,
+					teleFuelAllianceDump: teleState.fuelAllianceDump,
+					teleFuelOutpost: teleState.fuelOutpost,
+					teleFuelNeutralAlliancePass: teleState.fuelNeutralAlliancePass,
+					teleFuelOpponentNeutralPass: teleState.fuelOpponentNeutralPass,
+					teleFuelOpponentAlliancePass: teleState.fuelOpponentAlliancePass,
+					teleAllianceTime: teleState.allianceTime,
+					teleNeutralTime: teleState.neutralTime,
+					teleOpponentTime: teleState.opponentTime,
+					teleClimbLevel: Value(teleState.climbLevel),
+					teleTimeline: Value(timelineStr),
+					updatedAt: now,
+				)
 				: ScoutDataHelper.createNewScout(
-						event: widget.eventId,
-						match: widget.matchNumber!,
-						team: widget.teamNumber!,
-					).copyWith(
-						teleopFuelAlliance: Value(int.tryParse(_fuelAllianceController.text)),
-						teleopFuelNeutral: Value(int.tryParse(_fuelNeutralController.text)),
-						teleopFuelOpponent: Value(int.tryParse(_fuelOpponentController.text)),
-						teleopAlliancePasses: Value(int.tryParse(_alliancePassesController.text)),
-						teleopOpponentPasses: Value(int.tryParse(_opponentPassesController.text)),
-						teleopClimbLevel: Value(_climbLevel),
-					);
+					event: widget.eventId,
+					match: widget.matchNumber!,
+					team: widget.teamNumber!,
+			).copyWith(
+				teleTrenchDepotAllianceToNeutral: teleState.trenchDepotAllianceToNeutral,
+				teleBumpDepotAllianceToNeutral: teleState.bumpDepotAllianceToNeutral,
+				teleBumpOutpostAllianceToNeutral: teleState.bumpOutpostAllianceToNeutral,
+				teleTrenchOutpostAllianceToNeutral: teleState.trenchOutpostAllianceToNeutral,
+				teleTrenchDepotNeutralToAlliance: teleState.trenchDepotNeutralToAlliance,
+				teleBumpDepotNeutralToAlliance: teleState.bumpDepotNeutralToAlliance,
+				teleBumpOutpostNeutralToAlliance: teleState.bumpOutpostNeutralToAlliance,
+				teleTrenchOutpostNeutralToAlliance: teleState.trenchOutpostNeutralToAlliance,
+				teleTrenchOutpostNeutralToOpponent: teleState.trenchOutpostNeutralToOpponent,
+				teleBumpOutpostNeutralToOpponent: teleState.bumpOutpostNeutralToOpponent,
+				teleBumpDepotNeutralToOpponent: teleState.bumpDepotNeutralToOpponent,
+				teleTrenchDepotNeutralToOpponent: teleState.trenchDepotNeutralToOpponent,
+				teleTrenchOutpostOpponentToNeutral: teleState.trenchOutpostOpponentToNeutral,
+				teleBumpOutpostOpponentToNeutral: teleState.bumpOutpostOpponentToNeutral,
+				teleBumpDepotOpponentToNeutral: teleState.bumpDepotOpponentToNeutral,
+				teleTrenchDepotOpponentToNeutral: teleState.trenchDepotOpponentToNeutral,
+				teleFuelScore: teleState.fuelScore,
+				teleFuelAllianceDump: teleState.fuelAllianceDump,
+				teleFuelOutpost: teleState.fuelOutpost,
+				teleFuelNeutralAlliancePass: teleState.fuelNeutralAlliancePass,
+				teleFuelOpponentNeutralPass: teleState.fuelOpponentNeutralPass,
+				teleFuelOpponentAlliancePass: teleState.fuelOpponentAlliancePass,
+				teleAllianceTime: teleState.allianceTime,
+				teleNeutralTime: teleState.neutralTime,
+				teleOpponentTime: teleState.opponentTime,
+				teleClimbLevel: Value(teleState.climbLevel),
+				teleTimeline: Value(timelineStr),
+				updatedAt: now,
+			);
 
 		await db.upsertScout(scout);
 		if (mounted) {
 			setState(() => _currentScout = scout);
-			ScaffoldMessenger.of(context).showSnackBar(
-				const SnackBar(content: Text('Teleop data saved')),
-			);
 		}
-	}
-
-	Widget _buildFuelInput(String label, TextEditingController controller) {
-		return Expanded(
-			child: TextFormField(
-				controller: controller,
-				decoration: InputDecoration(
-					labelText: label,
-					border: const OutlineInputBorder(),
-				),
-				keyboardType: TextInputType.number,
-			),
-		);
 	}
 
 	@override
 	Widget build(BuildContext context) {
+		final fieldSide = ref.watch(selectedFieldSideProvider);
+		final teleState = ref.watch(teleTabControllerProvider);
+		final botPosition = ref.watch(selectedBotPositionProvider);
+		final teamColor = _getTeamColor(botPosition);
+
+		// Auto-save whenever tele tab state changes
+		if (!_listenerRegistered) {
+			_listenerRegistered = true;
+			ref.listen<TeleTabState>(teleTabControllerProvider, (previous, next) {
+				if (previous != null && previous != next) {
+					_saveTab();
+				}
+			});
+		}
+
 		return SingleChildScrollView(
-			padding: const EdgeInsets.all(16),
+			padding: const EdgeInsets.symmetric(vertical: 8),
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.stretch,
 				children: [
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										'Fuel Scoring',
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 16),
-									Row(
+					// Field Overlay
+					Padding(
+						padding: const EdgeInsets.symmetric(horizontal: 16),
+						child: TeleFieldOverlay(
+							fieldSide: fieldSide,
+							activeZone: teleState.activeZone,
+							climbLevel: teleState.climbLevel,
+							botPosition: botPosition,
+							activeFuelTarget: teleState.activeFuelTarget,
+							onMovementTapped: (field, action) {
+								ref.read(teleTabControllerProvider.notifier).recordAction(
+									type: 'movement',
+									field: field,
+									value: 1,
+									actionLabel: action,
+									valueLabel: '+1',
+								);
+							},
+							onClimbTapped: () {
+								if (teleState.climbLevel < 3) {
+									ref.read(teleTabControllerProvider.notifier).recordAction(
+										type: 'climb',
+										field: 'tele_climb_level',
+										value: teleState.climbLevel + 1,
+										actionLabel: 'Climb',
+										valueLabel: '${teleState.climbLevel + 1}',
+									);
+								}
+							},
+							onFuelTargetTapped: (targetName) {
+								ref.read(teleTabControllerProvider.notifier).changeFuelTarget(targetName);
+							},
+						),
+					),
+
+					const SizedBox(height: 16),
+
+					// Two-column layout: fuel and info
+					Padding(
+						padding: const EdgeInsets.symmetric(horizontal: 16),
+						child: Row(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								// LEFT COLUMN: Fuel and Tables
+								Expanded(
+									flex: 3,
+									child: Column(
+										crossAxisAlignment: CrossAxisAlignment.center,
 										children: [
-											_buildFuelInput('Alliance', _fuelAllianceController),
-											const SizedBox(width: 8),
-											_buildFuelInput('Neutral', _fuelNeutralController),
-											const SizedBox(width: 8),
-											_buildFuelInput('Opponent', _fuelOpponentController),
+											// Fuel buttons row
+											Row(
+												mainAxisAlignment: MainAxisAlignment.center,
+												children: [
+													_buildFuelButton('1', 1, teleState, ref),
+													const SizedBox(width: 8),
+													_buildFuelButton('5', 5, teleState, ref),
+													const SizedBox(width: 8),
+													_buildFuelButton('10', 10, teleState, ref),
+												],
+											),
+											const SizedBox(height: 8),
+											// Max fuel display and toggle buttons
+											Row(
+												mainAxisAlignment: MainAxisAlignment.center,
+												children: [
+													_buildMaxFuelDisplay(ref),
+													TextButton(
+														onPressed: () {
+															setState(() => _valuesExpanded = !_valuesExpanded);
+														},
+														child: Text('${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}'),
+													),
+													const SizedBox(width: 8),
+													TextButton(
+														onPressed: () {
+															setState(() => _timelineExpanded = !_timelineExpanded);
+														},
+														child: Text('${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}'),
+													),
+												],
+											),
+											const SizedBox(height: 12),
+											// Values Table
+											if (_valuesExpanded) ...[
+												TeleValuesTable(
+													key: const ValueKey('tele_values_table'),
+													trenchDepotAllianceToNeutral: teleState.trenchDepotAllianceToNeutral,
+													bumpDepotAllianceToNeutral: teleState.bumpDepotAllianceToNeutral,
+													bumpOutpostAllianceToNeutral: teleState.bumpOutpostAllianceToNeutral,
+													trenchOutpostAllianceToNeutral: teleState.trenchOutpostAllianceToNeutral,
+													trenchDepotNeutralToAlliance: teleState.trenchDepotNeutralToAlliance,
+													bumpDepotNeutralToAlliance: teleState.bumpDepotNeutralToAlliance,
+													bumpOutpostNeutralToAlliance: teleState.bumpOutpostNeutralToAlliance,
+													trenchOutpostNeutralToAlliance: teleState.trenchOutpostNeutralToAlliance,
+													trenchOutpostNeutralToOpponent: teleState.trenchOutpostNeutralToOpponent,
+													bumpOutpostNeutralToOpponent: teleState.bumpOutpostNeutralToOpponent,
+													bumpDepotNeutralToOpponent: teleState.bumpDepotNeutralToOpponent,
+													trenchDepotNeutralToOpponent: teleState.trenchDepotNeutralToOpponent,
+													trenchOutpostOpponentToNeutral: teleState.trenchOutpostOpponentToNeutral,
+													bumpOutpostOpponentToNeutral: teleState.bumpOutpostOpponentToNeutral,
+													bumpDepotOpponentToNeutral: teleState.bumpDepotOpponentToNeutral,
+													trenchDepotOpponentToNeutral: teleState.trenchDepotOpponentToNeutral,
+													fuelScore: teleState.fuelScore,
+													fuelAllianceDump: teleState.fuelAllianceDump,
+													fuelOutpost: teleState.fuelOutpost,
+													fuelNeutralAlliancePass: teleState.fuelNeutralAlliancePass,
+													fuelOpponentNeutralPass: teleState.fuelOpponentNeutralPass,
+													fuelOpponentAlliancePass: teleState.fuelOpponentAlliancePass,
+													allianceTime: teleState.allianceTime,
+													neutralTime: teleState.neutralTime,
+													opponentTime: teleState.opponentTime,
+												),
+												const SizedBox(height: 12),
+											],
 										],
 									),
-								],
-							),
-						),
-					),
-					const SizedBox(height: 16),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										'Fuel Passes',
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 16),
-									Row(
+								),
+								const SizedBox(width: 16),
+								// RIGHT COLUMN: Info
+								Expanded(
+									flex: 1,
+									child: Column(
+										crossAxisAlignment: CrossAxisAlignment.stretch,
 										children: [
-											_buildFuelInput('Alliance', _alliancePassesController),
-											const SizedBox(width: 8),
-											_buildFuelInput('Opponent', _opponentPassesController),
+											// Undo button
+											FilledButton(
+												style: FilledButton.styleFrom(
+													backgroundColor: teleState.timeline.isNotEmpty
+														? AppColors.buttonBgColor
+														: Colors.grey.shade700,
+													foregroundColor: teleState.timeline.isNotEmpty
+														? AppColors.buttonFgColor
+														: Colors.grey.shade500,
+													padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+													shape: RoundedRectangleBorder(
+														borderRadius: BorderRadius.circular(8),
+													),
+												),
+												onPressed: teleState.timeline.isNotEmpty
+													? () {
+														ref.read(teleTabControllerProvider.notifier).undo();
+													}
+													: null,
+												child: Text(
+													_translate('undo'),
+													style: TextStyle(fontSize: _getResponsiveFontSize(12)),
+												),
+											),
+											const SizedBox(height: 8),
+											// Robot indicator
+											Container(
+												padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+												decoration: BoxDecoration(
+													color: teamColor,
+													borderRadius: BorderRadius.circular(4),
+												),
+												child: Center(
+													child: Text(
+														'$botPosition ${widget.teamNumber ?? ''}',
+														style: TextStyle(
+															fontSize: _getResponsiveFontSize(12),
+															fontWeight: FontWeight.bold,
+															color: AppColors.mainFgColor,
+														),
+													),
+												),
+											),
 										],
 									),
-								],
-							),
+								),
+							],
 						),
 					),
+
 					const SizedBox(height: 16),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										'Climb Level (0-3)',
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 16),
-									Slider(
-										value: _climbLevel.toDouble(),
-										min: 0,
-										max: 3,
-										divisions: 3,
-										label: '$_climbLevel',
-										onChanged: (value) {
-											setState(() => _climbLevel = value.toInt());
-										},
-									),
-									Center(
-										child: Text(
-											'Level: $_climbLevel',
-											style: Theme.of(context).textTheme.bodyLarge,
-										),
-									),
-								],
-							),
-						),
-					),
-					const SizedBox(height: 16),
-					ElevatedButton.icon(
-						onPressed: _saveTab,
-						icon: const Icon(Icons.save),
-						label: const Text('Save Teleop'),
-					),
 				],
 			),
+		);
+	}
+
+	/// Build a fuel quick-add button
+	Widget _buildFuelButton(
+		String label,
+		int amount,
+		TeleTabState teleState,
+		WidgetRef ref,
+	) {
+		// Map activeFuelTarget to field name
+		String getFuelField() {
+			switch (teleState.activeFuelTarget) {
+				case 'hub':
+					return 'tele_fuel_score';
+				case 'allianceDump':
+					return 'tele_fuel_alliance_dump';
+				case 'outpost':
+					return 'tele_fuel_outpost';
+				case 'neutralAlliancePass':
+					return 'tele_fuel_neutral_alliance_pass';
+				case 'opponentAlliancePass':
+					return 'tele_fuel_opponent_alliance_pass';
+				case 'opponentNeutralPass':
+					return 'tele_fuel_opponent_neutral_pass';
+				default:
+					return 'tele_fuel_score';
+			}
+		}
+
+		return SizedBox(
+			width: 70,
+			height: 70,
+			child: ElevatedButton(
+				onPressed: () {
+					ref.read(teleTabControllerProvider.notifier).recordAction(
+						type: 'fuel',
+						field: getFuelField(),
+						value: amount,
+						actionLabel: 'Fuel',
+						valueLabel: '+$amount',
+					);
+				},
+				style: ElevatedButton.styleFrom(
+					backgroundColor: const Color(0xFFF1CE03),
+					foregroundColor: Colors.black87,
+					padding: EdgeInsets.zero,
+					shape: RoundedRectangleBorder(
+						borderRadius: BorderRadius.circular(50),
+					),
+				),
+				child: Text(
+					label,
+					style: TextStyle(
+						fontSize: _getResponsiveFontSize(18),
+						fontWeight: FontWeight.bold,
+					),
+				),
+			),
+		);
+	}
+
+	/// Build max fuel display widget
+	Widget _buildMaxFuelDisplay(WidgetRef ref) {
+		return ref.watch(pitScoutingDataProvider).when(
+			data: (pitData) {
+				final teamNumber = widget.teamNumber;
+				if (teamNumber == null) {
+					return const SizedBox.shrink();
+				}
+
+				final teamData = pitData[teamNumber] as Map<String, dynamic>?;
+				final fuelCapacity = int.tryParse((teamData?['fuel_capacity'] ?? '0').toString()) ?? 0;
+
+				if (fuelCapacity <= 0) {
+					return const SizedBox.shrink();
+				}
+
+				return Padding(
+					padding: const EdgeInsets.only(right: 8),
+					child: Text(
+						'${_translate('fuel_capacity_label')} $fuelCapacity',
+						style: TextStyle(
+							fontSize: _getResponsiveFontSize(12),
+							fontWeight: FontWeight.w500,
+						),
+					),
+				);
+			},
+			loading: () => const SizedBox.shrink(),
+			error: (_, __) => const SizedBox.shrink(),
 		);
 	}
 }

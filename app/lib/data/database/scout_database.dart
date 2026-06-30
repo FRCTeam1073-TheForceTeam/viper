@@ -68,17 +68,47 @@ class Scout extends Table {
 	IntColumn get autoAllianceTime => integer().withDefault(const Constant(0))();
 	IntColumn get autoNeutralTime => integer().withDefault(const Constant(0))();
 
-	// Timeline events (JSON array of {time, action, value}) - covers both auto and teleop
+	// Timeline events (JSON array of {time, action, value}) - covers auto period only
 	TextColumn get timeline => text().nullable()();
 
-	// Teleop Tab
-	IntColumn get teleopFuelAlliance => integer().nullable()();
-	IntColumn get teleopFuelNeutral => integer().nullable()();
-	IntColumn get teleopFuelOpponent => integer().nullable()();
-	IntColumn get teleopClimbLevel => integer().nullable()();
-	IntColumn get teleopAlliancePasses => integer().nullable()();
-	IntColumn get teleopOpponentPasses => integer().nullable()();
-	TextColumn get teleopZoneInteractions => text().nullable()();
+	// Tele Tab - Movement counters (alliance ↔ neutral)
+	IntColumn get teleTrenchDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get teleTrenchOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get teleTrenchDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
+	IntColumn get teleTrenchOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
+
+	// Tele Tab - Movement counters (neutral ↔ opponent)
+	IntColumn get teleTrenchOutpostNeutralToOpponent => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpOutpostNeutralToOpponent => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpDepotNeutralToOpponent => integer().withDefault(const Constant(0))();
+	IntColumn get teleTrenchDepotNeutralToOpponent => integer().withDefault(const Constant(0))();
+	IntColumn get teleTrenchOutpostOpponentToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpOutpostOpponentToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get teleBumpDepotOpponentToNeutral => integer().withDefault(const Constant(0))();
+	IntColumn get teleTrenchDepotOpponentToNeutral => integer().withDefault(const Constant(0))();
+
+	// Tele Tab - Fuel scoring
+	IntColumn get teleFuelScore => integer().withDefault(const Constant(0))();
+	IntColumn get teleFuelAllianceDump => integer().withDefault(const Constant(0))();
+	IntColumn get teleFuelOutpost => integer().withDefault(const Constant(0))();
+	IntColumn get teleFuelNeutralAlliancePass => integer().withDefault(const Constant(0))();
+	IntColumn get teleFuelOpponentNeutralPass => integer().withDefault(const Constant(0))();
+	IntColumn get teleFuelOpponentAlliancePass => integer().withDefault(const Constant(0))();
+
+	// Tele Tab - Zone times (in seconds)
+	IntColumn get teleAllianceTime => integer().withDefault(const Constant(0))();
+	IntColumn get teleNeutralTime => integer().withDefault(const Constant(0))();
+	IntColumn get teleOpponentTime => integer().withDefault(const Constant(0))();
+
+	// Tele Tab - Climb (renamed from teleopClimbLevel)
+	IntColumn get teleClimbLevel => integer().nullable()();
+
+	// Tele Tab - Timeline events
+	TextColumn get teleTimeline => text().nullable()();
 
 	// End Game Tab
 	TextColumn get climbPosition => text().nullable()();
@@ -137,7 +167,7 @@ class ScoutDatabase extends _$ScoutDatabase {
 	ScoutDatabase() : super(_openConnection());
 
 	@override
-	int get schemaVersion => 7;
+	int get schemaVersion => 8;
 
 	@override
 	MigrationStrategy get migration {
@@ -177,6 +207,37 @@ class ScoutDatabase extends _$ScoutDatabase {
 				if (from < 7) {
 					// Schema v7: Add timeline column to Scout table
 					await migrator.addColumn(scout, scout.timeline);
+				}
+				if (from < 8) {
+					// Schema v8: Add new tele tab columns with proper naming
+					// Add all the new tele columns (old placeholder columns remain unused)
+					await migrator.addColumn(scout, scout.teleTrenchDepotAllianceToNeutral);
+					await migrator.addColumn(scout, scout.teleBumpDepotAllianceToNeutral);
+					await migrator.addColumn(scout, scout.teleBumpOutpostAllianceToNeutral);
+					await migrator.addColumn(scout, scout.teleTrenchOutpostAllianceToNeutral);
+					await migrator.addColumn(scout, scout.teleTrenchDepotNeutralToAlliance);
+					await migrator.addColumn(scout, scout.teleBumpDepotNeutralToAlliance);
+					await migrator.addColumn(scout, scout.teleBumpOutpostNeutralToAlliance);
+					await migrator.addColumn(scout, scout.teleTrenchOutpostNeutralToAlliance);
+					await migrator.addColumn(scout, scout.teleTrenchOutpostNeutralToOpponent);
+					await migrator.addColumn(scout, scout.teleBumpOutpostNeutralToOpponent);
+					await migrator.addColumn(scout, scout.teleBumpDepotNeutralToOpponent);
+					await migrator.addColumn(scout, scout.teleTrenchDepotNeutralToOpponent);
+					await migrator.addColumn(scout, scout.teleTrenchOutpostOpponentToNeutral);
+					await migrator.addColumn(scout, scout.teleBumpOutpostOpponentToNeutral);
+					await migrator.addColumn(scout, scout.teleBumpDepotOpponentToNeutral);
+					await migrator.addColumn(scout, scout.teleTrenchDepotOpponentToNeutral);
+					await migrator.addColumn(scout, scout.teleFuelScore);
+					await migrator.addColumn(scout, scout.teleFuelAllianceDump);
+					await migrator.addColumn(scout, scout.teleFuelOutpost);
+					await migrator.addColumn(scout, scout.teleFuelNeutralAlliancePass);
+					await migrator.addColumn(scout, scout.teleFuelOpponentNeutralPass);
+					await migrator.addColumn(scout, scout.teleFuelOpponentAlliancePass);
+					await migrator.addColumn(scout, scout.teleAllianceTime);
+					await migrator.addColumn(scout, scout.teleNeutralTime);
+					await migrator.addColumn(scout, scout.teleOpponentTime);
+					await migrator.addColumn(scout, scout.teleClimbLevel);
+					await migrator.addColumn(scout, scout.teleTimeline);
 				}
 			},
 		);

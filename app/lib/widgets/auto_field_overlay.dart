@@ -250,6 +250,7 @@ class AutoFieldOverlay extends StatelessWidget {
 		// Position: swap left/right and top/bottom edges with same percentages when needed
 		final rightPixels = button.rightPercent * fieldWidth / 100;
 		final leftPixels = button.rightPercent * fieldWidth / 100;
+		final leftFromLeftPercent = button.leftPercent != null ? button.leftPercent! * fieldWidth / 100 : null;
 		final topPixels = button.topPercent != null ? button.topPercent! * fieldHeight / 100 : null;
 		final bottomPixels = button.bottomPercent != null ? button.bottomPercent! * fieldHeight / 100 : null;
 		final bottomFromTopPixels = button.topPercent != null ? button.topPercent! * fieldHeight / 100 : null;
@@ -260,6 +261,42 @@ class AutoFieldOverlay extends StatelessWidget {
 			? button.imagePath.replaceAll('arrow-left.png', 'TEMP').replaceAll('arrow-right.png', 'arrow-left.png').replaceAll('TEMP', 'arrow-right.png')
 			: button.imagePath;
 
+		// Handle leftPercent (opponent zone buttons)
+		if (button.leftPercent != null) {
+			return Positioned(
+				left: swapButtonSides ? null : leftFromLeftPercent,
+				right: swapButtonSides ? leftFromLeftPercent : null,
+				top: swapButtonSides ? bottomFromTopPixels : topPixels,
+				bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
+				child: GestureDetector(
+					onTap: () => onMovementTapped(button.field, button.label),
+					child: Tooltip(
+						message: button.label,
+						child: Container(
+							width: buttonWidth,
+							height: buttonHeight,
+							decoration: BoxDecoration(
+								borderRadius: BorderRadius.circular(buttonWidth * 0.1),
+								color: AppColors.buttonBgColor,
+								boxShadow: [
+									BoxShadow(
+										color: Colors.black.withValues(alpha: 0.4),
+										blurRadius: 4,
+										offset: const Offset(0, 2),
+									),
+								],
+							),
+							child: Image.asset(
+								imagePath,
+								fit: BoxFit.contain,
+							),
+						),
+					),
+				),
+			);
+		}
+
+		// Handle rightPercent (alliance/neutral buttons)
 		return Positioned(
 			right: swapButtonSides ? null : rightPixels,
 			left: swapButtonSides ? leftPixels : null,

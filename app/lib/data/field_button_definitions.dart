@@ -11,8 +11,12 @@ class FieldButton {
 	final String label;
 
 	/// Right position as percentage of field width (0-100)
-	/// Use for positioning from the right edge
+	/// Use for positioning from the right edge (alliance/neutral buttons typically)
 	final double rightPercent;
+
+	/// Left position as percentage of field width (0-100)
+	/// Use for positioning from the left edge (opponent zone buttons)
+	final double? leftPercent;
 
 	/// Bottom position as percentage of field height (0-100)
 	/// Use when positioning from bottom
@@ -25,7 +29,7 @@ class FieldButton {
 	/// Path to button image asset
 	final String imagePath;
 
-	/// Zone where this button is visible ('alliance' or 'neutral')
+	/// Zone where this button is visible ('alliance', 'neutral', or 'opponent')
 	final String zone;
 
 	/// Button width as percentage of field width (for sizing)
@@ -37,7 +41,8 @@ class FieldButton {
 	const FieldButton({
 		required this.field,
 		required this.label,
-		required this.rightPercent,
+		this.rightPercent = 0.0,
+		this.leftPercent,
 		this.bottomPercent,
 		this.topPercent,
 		required this.imagePath,
@@ -130,5 +135,147 @@ final List<FieldButton> fieldButtonDefinitions = [
 		topPercent: 5.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'neutral',
+	),
+];
+
+/// Tele tab button definitions for the 2026 FRC game field
+/// Same positions as auto but with tele prefixes and added opponent zone buttons
+final List<FieldButton> teleFieldButtonDefinitions = [
+	// ============ ALLIANCE → NEUTRAL (Exit to Neutral) ============
+	FieldButton(
+		field: 'tele_trench_depot_alliance_to_neutral',
+		label: 'Depot Trench to Neutral',
+		rightPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+	),
+	FieldButton(
+		field: 'tele_bump_depot_alliance_to_neutral',
+		label: 'Depot Bump to Neutral',
+		rightPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_alliance_to_neutral',
+		label: 'Outpost Bump to Neutral',
+		rightPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+	),
+	FieldButton(
+		field: 'tele_trench_outpost_alliance_to_neutral',
+		label: 'Outpost Trench to Neutral',
+		rightPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+	),
+
+	// ============ NEUTRAL → ALLIANCE (Entry from Neutral) ============
+	FieldButton(
+		field: 'tele_trench_depot_neutral_to_alliance',
+		label: 'Depot Trench to Alliance',
+		rightPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+	),
+	FieldButton(
+		field: 'tele_bump_depot_neutral_to_alliance',
+		label: 'Depot Bump to Alliance',
+		rightPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_neutral_to_alliance',
+		label: 'Outpost Bump to Alliance',
+		rightPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+	),
+	FieldButton(
+		field: 'tele_trench_outpost_neutral_to_alliance',
+		label: 'Outpost Trench to Alliance',
+		rightPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+	),
+
+	// ============ NEUTRAL → OPPONENT (Exit to Opponent) ============
+	// Arrow buttons positioned at left:26% from left edge (opponent side)
+	FieldButton(
+		field: 'tele_trench_outpost_neutral_to_opponent',
+		label: 'Outpost Trench to Opponent',
+		leftPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_neutral_to_opponent',
+		label: 'Outpost Bump to Opponent',
+		leftPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+	),
+	FieldButton(
+		field: 'tele_bump_depot_neutral_to_opponent',
+		label: 'Depot Bump to Opponent',
+		leftPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+	),
+	FieldButton(
+		field: 'tele_trench_depot_neutral_to_opponent',
+		label: 'Depot Trench to Opponent',
+		leftPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+	),
+
+	// ============ OPPONENT → NEUTRAL (Entry from Opponent) ============
+	// Arrow buttons positioned at left:26% from left edge (opponent side)
+	FieldButton(
+		field: 'tele_trench_outpost_opponent_to_neutral',
+		label: 'Outpost Trench to Neutral',
+		leftPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_opponent_to_neutral',
+		label: 'Outpost Bump to Neutral',
+		leftPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
+	),
+	FieldButton(
+		field: 'tele_bump_depot_opponent_to_neutral',
+		label: 'Depot Bump to Neutral',
+		leftPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
+	),
+	FieldButton(
+		field: 'tele_trench_depot_opponent_to_neutral',
+		label: 'Depot Trench to Neutral',
+		leftPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
 	),
 ];
