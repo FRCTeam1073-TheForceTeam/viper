@@ -110,104 +110,113 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 		// orientLeft: R1 R2 R3 on left (red), B3 B2 B1 on right (blue)
 		// orientRight: B1 B2 B3 on left (blue), R3 R2 R1 on right (red)
 
-		if (isRotated) {
-			return Row(
-				mainAxisAlignment: MainAxisAlignment.center,
-				crossAxisAlignment: CrossAxisAlignment.center,
-				children: [
-					// Blue team on left
-					SizedBox(
-						width: 80,
-						child: Column(
-								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-							children: [
-								_buildPositionButton('B1', false, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('B2', false, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('B3', false, selectedPosition),
-							],
-						),
-					),
-					const SizedBox(width: 16),
-					// Field image - expands to fill
-					Expanded(
-						child: GestureDetector(
-							onTap: _toggleOrientation,
-							child: Image.asset(
-								'assets/images/field.png',
-								fit: BoxFit.contain,
-							),
-						),
-					),
-					const SizedBox(width: 16),
-					// Red team on right
-					SizedBox(
-						width: 80,
-						child: Column(
-								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-							children: [
-								_buildPositionButton('R3', true, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('R2', true, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('R1', true, selectedPosition),
-							],
-						),
-					),
-				],
-			);
-		} else {
-			return Row(
-				mainAxisAlignment: MainAxisAlignment.center,
-				crossAxisAlignment: CrossAxisAlignment.center,
-				children: [
-					// Red team on left
-					SizedBox(
-						width: 80,
-						child: Column(
-								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-							children: [
-								_buildPositionButton('R1', true, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('R2', true, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('R3', true, selectedPosition),
-							],
-						),
-					),
-					const SizedBox(width: 16),
-					// Field image - expands to fill (rotated for orientRight)
-					Expanded(
-						child: Transform.rotate(
-							angle: pi, // 180° in radians
-							child: GestureDetector(
-								onTap: _toggleOrientation,
-								child: Image.asset(
-									'assets/images/field.png',
-									fit: BoxFit.contain,
+		return LayoutBuilder(
+			builder: (context, constraints) {
+				// Calculate field image height based on available width
+				// Field aspect ratio is 1.875:1 (30:16)
+				final fieldWidth = constraints.maxWidth - 80 - 16 - 80 - 16; // account for buttons and spacing
+				final fieldHeight = (fieldWidth / 1.875) * 0.92; // reduce by 8% to account for button padding
+
+				if (isRotated) {
+					return Row(
+						mainAxisAlignment: MainAxisAlignment.center,
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: [
+							// Blue team on left
+							SizedBox(
+								width: 80,
+								height: fieldHeight,
+								child: Column(
+									children: [
+										Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+									],
 								),
 							),
-						),
-					),
-					const SizedBox(width: 16),
-					// Blue team on right
-					SizedBox(
-						width: 80,
-						child: Column(
-								mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-							children: [
-								_buildPositionButton('B3', false, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('B2', false, selectedPosition),
-								const SizedBox(height: 16),
-								_buildPositionButton('B1', false, selectedPosition),
-							],
-						),
-					),
-				],
-			);
-		}
+							const SizedBox(width: 16),
+							// Field image - expands to fill
+							Expanded(
+								child: GestureDetector(
+									onTap: _toggleOrientation,
+									child: Image.asset(
+										'assets/images/field.png',
+										fit: BoxFit.contain,
+									),
+								),
+							),
+							const SizedBox(width: 16),
+							// Red team on right
+							SizedBox(
+								width: 80,
+								height: fieldHeight,
+								child: Column(
+									children: [
+										Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+									],
+								),
+							),
+						],
+					);
+				} else {
+					return Row(
+						mainAxisAlignment: MainAxisAlignment.center,
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: [
+							// Red team on left
+							SizedBox(
+								width: 80,
+								height: fieldHeight,
+								child: Column(
+									children: [
+										Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+									],
+								),
+							),
+							const SizedBox(width: 16),
+							// Field image - expands to fill (rotated for orientRight)
+							Expanded(
+								child: Transform.rotate(
+									angle: pi, // 180° in radians
+									child: GestureDetector(
+										onTap: _toggleOrientation,
+										child: Image.asset(
+											'assets/images/field.png',
+											fit: BoxFit.contain,
+										),
+									),
+								),
+							),
+							const SizedBox(width: 16),
+							// Blue team on right
+							SizedBox(
+								width: 80,
+								height: fieldHeight,
+								child: Column(
+									children: [
+										Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+										const SizedBox(height: 4),
+										Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+									],
+								),
+							),
+						],
+					);
+				}
+			},
+		);
 	}
 
 	@override

@@ -86,8 +86,6 @@ class AutoFieldOverlay extends StatelessWidget {
 		// Buttons are inside the rotated container, so they stay on the team's side
 		final swapButtonSides = isBlueTeam;
 
-		print('🔵 AutoFieldOverlay: botPosition=$botPosition, fieldSide=${fieldSide.name}, shouldRotate=$shouldRotate, swapButtonSides=$swapButtonSides');
-
 
 		// Team color for UI elements - use globally defined app colors
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
