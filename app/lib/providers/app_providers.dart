@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:logger/logger.dart';
+import 'dart:convert';
 import '../data/database/scout_database.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/csv_builder.dart';
@@ -442,6 +443,89 @@ final eventListProvider = FutureProvider((ref) async {
 
 		// Return empty list to allow offline/no-server operation
 		return [];
+	}
+});
+
+// ============================================================================
+// PIT SCOUTING DATA (fuel capacity, etc.)
+// ============================================================================
+
+final pitScoutingDataProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+	try {
+		final db = await ref.watch(databaseProvider.future);
+		final selectedEvent = ref.watch(selectedEventProvider);
+
+		// If no event selected, return empty map
+		if (selectedEvent == null) {
+			return {};
+		}
+
+		final dbConfig = await db.getCurrentConfig();
+		if (!_isValidServerUrl(dbConfig?.backendUrl)) {
+			// No valid server configured, try to load from cache
+			final prefs = await ref.watch(sharedPreferencesProvider.future);
+			final cacheKey = 'pit_scouting_data_cache_$selectedEvent';
+			final cachedJson = prefs.getString(cacheKey);
+			if (cachedJson != null) {
+				Logger().i('📦 Loading cached pit scouting data (no server configured)');
+				try {
+					final jsonData = jsonDecode(cachedJson) as Map<String, dynamic>;
+					return jsonData;
+				} catch (e) {
+					Logger().e('Error decoding cached pit scouting data: $e');
+				}
+			}
+			return {};
+		}
+
+		final logger = Logger();
+		final apiClient = await ref.watch(apiClientProvider.future);
+		final prefs = await ref.watch(sharedPreferencesProvider.future);
+		final cacheKey = 'pit_scouting_data_cache_$selectedEvent';
+
+		// Try to load from cache first to show immediately
+		Map<String, dynamic>? cachedData;
+		final cachedJson = prefs.getString(cacheKey);
+		if (cachedJson != null) {
+			logger.i('📦 Loading cached pit scouting data for event: $selectedEvent');
+			try {
+				cachedData = jsonDecode(cachedJson) as Map<String, dynamic>;
+			} catch (e) {
+				logger.w('Error decoding cached pit scouting data: $e');
+			}
+		}
+
+		// Fetch fresh data from server
+		try {
+			final freshData = await apiClient.fetchPitScoutingData(selectedEvent);
+
+			if (freshData.isNotEmpty) {
+				// Cache the fresh data as JSON
+				try {
+					await prefs.setString(cacheKey, jsonEncode(freshData));
+					logger.i('💾 Pit scouting data cached for ${freshData.length} teams');
+				} catch (e) {
+					logger.w('Could not cache pit scouting data: $e');
+				}
+				logger.i('✅ Fresh pit scouting data loaded for ${freshData.length} teams');
+				return freshData;
+			} else if (cachedData != null && cachedData.isNotEmpty) {
+				// Server returned empty, use cache
+				logger.i('⚠️  Server returned no pit scouting data, using cache');
+				return cachedData;
+			}
+		} catch (e) {
+			logger.w('Failed to fetch pit scouting data: $e');
+			if (cachedData != null && cachedData.isNotEmpty) {
+				logger.i('⚠️  Server fetch failed, using cached pit scouting data');
+				return cachedData;
+			}
+		}
+
+		return cachedData ?? {};
+	} catch (e) {
+		Logger().e('Error in pitScoutingDataProvider: $e');
+		return {};
 	}
 });
 

@@ -498,6 +498,41 @@ class ViperApiClient {
 		}
 	}
 
+	/// Fetch pit scouting data CSV for a specific event
+	/// Returns map of team data with fuel_capacity and other pit scout info
+	Future<Map<String, dynamic>> fetchPitScoutingData(String eventId) async {
+		try {
+			final path = '/data/$eventId.pit.csv';
+			final fullUrl = '$baseUrl$path';
+			_logger.i('📡 Fetching pit scouting data from: $fullUrl');
+
+			final response = await _dio.get(path);
+
+			if (response.statusCode != 200) {
+				throw Exception(
+					'Failed to fetch pit scouting data: HTTP ${response.statusCode}',
+				);
+			}
+
+			final csvString = response.data as String;
+			final csvData = csvToArrayOfMaps(csvString);
+			final data = <String, dynamic>{};
+
+			for (final teamData in csvData) {
+				final team = (teamData['team'] ?? '').toString().trim();
+				if (team.isNotEmpty) {
+					data[team] = teamData;
+				}
+			}
+
+			_logger.i('✅ Parsed pit scouting data for ${data.length} teams');
+			return data;
+		} catch (e) {
+			_logger.e('Error fetching pit scouting data for $eventId: $e');
+			return {};
+		}
+	}
+
 	/// Extract year from eventId
 	/// Examples: "2026demo" -> "2026", "2025falb" -> "2025"
 	String _extractYearFromEventId(String eventId) {

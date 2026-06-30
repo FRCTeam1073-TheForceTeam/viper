@@ -151,7 +151,7 @@ void _initAutoTabTranslations() {
 			'en': 'Trench Outpost ← Neutral',
 			'es': 'Trinchera Puesto Avanzado ← Neutral',
 			'pt': 'Trincheira Avanço ← Neutro',
-			'fr': 'Tranchée Avant-Poste ← Neutre',
+			'fr': 'Tranchée Avant-poste Neutre à l\'alliance en auto',
 			'zh_tw': '壕溝哨站 ← 中立',
 			'he': 'משק עמוק צפוי ← ניטראלי',
 			'tr': 'Hendek Karakol ← Tarafsız',
@@ -421,6 +421,17 @@ void _initAutoTabTranslations() {
 			'zh_tw': '停止自動計時器',
 			'he': 'עצור טיימר אוטומטי',
 			'tr': 'Otomatik Zamanlayıcı Durdur',
+		},
+
+		// Max fuel label
+		'fuel_capacity_label': {
+			'en': 'Max fuel:',
+			'es': 'Capacidad de combustible:',
+			'pt': 'Combustível máximo:',
+			'fr': 'Carburant max :',
+			'zh_tw': '最大燃料：',
+			'he': 'דלק מקסימלי:',
+			'tr': 'Maksimum yakıt:',
 		},
 
 		// Summary text
@@ -888,10 +899,11 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 									],
 								),
 								const SizedBox(height: 8),
-								// Values and timeline toggle buttons row
+								// Max fuel display and toggle buttons row
 								Row(
 								mainAxisAlignment: MainAxisAlignment.center,
 									children: [
+										_buildMaxFuelDisplay(ref),
 										TextButton(
 											onPressed: () {
 												setState(() => _valuesExpanded = !_valuesExpanded);
@@ -1057,6 +1069,38 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					),
 				),
 			),
+		);
+	}
+
+	/// Build max fuel display widget from pit scouting data
+	Widget _buildMaxFuelDisplay(WidgetRef ref) {
+		return ref.watch(pitScoutingDataProvider).when(
+			data: (pitData) {
+				final teamNumber = widget.teamNumber;
+				if (teamNumber == null) {
+					return const SizedBox.shrink();
+				}
+
+				final teamData = pitData[teamNumber] as Map<String, dynamic>?;
+				final fuelCapacity = int.tryParse((teamData?['fuel_capacity'] ?? '0').toString()) ?? 0;
+
+				if (fuelCapacity <= 0) {
+					return const SizedBox.shrink();
+				}
+
+				return Padding(
+					padding: const EdgeInsets.only(right: 8),
+					child: Text(
+						'${_translate('fuel_capacity_label')} $fuelCapacity',
+						style: TextStyle(
+							fontSize: _getResponsiveFontSize(12),
+							fontWeight: FontWeight.w500,
+						),
+					),
+				);
+			},
+			loading: () => const SizedBox.shrink(),
+			error: (_, __) => const SizedBox.shrink(),
 		);
 	}
 }
