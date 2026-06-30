@@ -2,8 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Field side where the scouter is positioned
-/// left = default starting position for blue team (no rotation for blue team, 180° for red team)
-/// right = opposite side (180° for blue team, no rotation for red team)
+/// Determines field rotation: FieldSide.left rotates the field 180°, FieldSide.right shows it normally
 enum FieldSide {
 	left,
 	right,

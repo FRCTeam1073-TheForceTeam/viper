@@ -26,4 +26,4 @@ tmp
 /app/ios/Flutter/
 /app/android/.gradle/
 /app/android/local.properties
-/app/*.g.dart
+*.g.dart

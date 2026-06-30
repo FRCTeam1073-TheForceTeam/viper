@@ -63,7 +63,7 @@ class FieldButton {
 /// - Climb selector at top-right (right:3%, top:40%)
 final List<FieldButton> fieldButtonDefinitions = [
 	// ============ ALLIANCE → NEUTRAL (Exit to Neutral) ============
-	// Arrow-left buttons positioned at right:26% from right edge
+	// Arrow buttons positioned at right:26% from right edge
 	FieldButton(
 		field: 'auto_trench_depot_alliance_to_neutral',
 		label: 'Depot Trench to Neutral',
@@ -98,7 +98,7 @@ final List<FieldButton> fieldButtonDefinitions = [
 	),
 
 	// ============ NEUTRAL → ALLIANCE (Entry from Neutral) ============
-	// Arrow-right buttons positioned at right:26% from right edge (mirror layout)
+	// Arrow buttons positioned at right:26% from right edge (mirror layout)
 	FieldButton(
 		field: 'auto_trench_depot_neutral_to_alliance',
 		label: 'Depot Trench to Alliance',
