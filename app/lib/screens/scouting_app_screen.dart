@@ -153,6 +153,9 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 					eventId: widget.selectedEvent.eventId,
 					matchNumber: selectedMatch.match,
 					teamNumber: selectedMatch.team,
+					onNextMatch: () {
+						_tabController.animateTo(0);
+					},
 				);
 			default:
 				return const SizedBox();
@@ -208,7 +211,10 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 													startTime: _matchStartTime,
 													onAutoEnded: () {
 														// Auto period ended, automatically proceed to tele tab
-														_tabController.animateTo(2);
+														// But only if currently on auto tab
+														if (_tabController.index == 1) {
+															_tabController.animateTo(2);
+														}
 													},
 												),
 											),

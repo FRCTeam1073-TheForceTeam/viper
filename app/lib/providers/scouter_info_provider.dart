@@ -1,23 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Scouter info data - stored in-memory via provider, exported to CSV at upload
-class ScoterInfoData {
+class ScouterInfoData {
 	final String? scouterName;
 	final String? comments;
 	final bool reviewRequest;
 
-	const ScoterInfoData({
+	const ScouterInfoData({
 		this.scouterName,
 		this.comments,
 		this.reviewRequest = false,
 	});
 
-	ScoterInfoData copyWith({
+	ScouterInfoData copyWith({
 		String? scouterName,
 		String? comments,
 		bool? reviewRequest,
 	}) {
-		return ScoterInfoData(
+		return ScouterInfoData(
 			scouterName: scouterName ?? this.scouterName,
 			comments: comments ?? this.comments,
 			reviewRequest: reviewRequest ?? this.reviewRequest,
@@ -25,18 +25,18 @@ class ScoterInfoData {
 	}
 }
 
-class ScoterInfoNotifier extends StateNotifier<ScoterInfoData> {
-	ScoterInfoNotifier() : super(const ScoterInfoData());
+class ScouterInfoNotifier extends StateNotifier<ScouterInfoData> {
+	ScouterInfoNotifier() : super(const ScouterInfoData());
 
-	void update(ScoterInfoData data) {
+	void update(ScouterInfoData data) {
 		state = data;
 	}
 
 	void reset() {
-		state = const ScoterInfoData();
+		state = const ScouterInfoData();
 	}
 }
 
-final scoterInfoProvider = StateNotifierProvider<ScoterInfoNotifier, ScoterInfoData>((ref) {
-	return ScoterInfoNotifier();
+final scouterInfoProvider = StateNotifierProvider<ScouterInfoNotifier, ScouterInfoData>((ref) {
+	return ScouterInfoNotifier();
 });

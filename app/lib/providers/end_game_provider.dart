@@ -2,61 +2,77 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// End game match data - stored in-memory via provider, exported to CSV at upload
 class EndGameData {
-	final String? climbMethod; // Rungs, Uprights, Flip, No Climb
-	final String? climbPosition;
+	final String? autoClimbPosition; // "Xx Yy" percent coordinates
+	final String? teleClimbPosition; // "Xx Yy" percent coordinates
+	final String? climbMethod; // Rungs, Uprights, Flip
 	final bool shootOnMove;
 	final bool shootWhileCollecting;
-	final bool climbing;
+	final bool shootTurret;
+	final bool shootClimbing;
 	final String? fuelStrategy; // Carried, Pushed, Passed, Received
-	final String? shootingLocations;
-	final int damageState; // 0-100%
-	final String? defenseRating; // Good, Bad, Great
-	final String? defenseMethods;
-	final String? defenseImpact; // Slowed, Unaffected, Turned tables
-	final int? shootingMissesRange;
+	final String? bricked; // No, Some, Half, Most, All (or '' for None)
+	final String? defenseRating; // None, Bad, Ineffective, Good, Great (stored as '' for None)
+	final bool defenseCollected;
+	final bool defenseHit;
+	final bool defenseBlocked;
+	final bool defensePinned;
+	final String? defended; // Undefended, Turned tables, Unaffected, Slowed, Slowed greatly (or '' for Undefended)
+	final String? misses; // 0-1, 1-10, 10-30, 30-60, 60-100
 
 	const EndGameData({
+		this.autoClimbPosition,
+		this.teleClimbPosition,
 		this.climbMethod,
-		this.climbPosition,
 		this.shootOnMove = false,
 		this.shootWhileCollecting = false,
-		this.climbing = false,
+		this.shootTurret = false,
+		this.shootClimbing = false,
 		this.fuelStrategy,
-		this.shootingLocations,
-		this.damageState = 0,
+		this.bricked,
 		this.defenseRating,
-		this.defenseMethods,
-		this.defenseImpact,
-		this.shootingMissesRange,
+		this.defenseCollected = false,
+		this.defenseHit = false,
+		this.defenseBlocked = false,
+		this.defensePinned = false,
+		this.defended,
+		this.misses,
 	});
 
 	EndGameData copyWith({
+		String? autoClimbPosition,
+		String? teleClimbPosition,
 		String? climbMethod,
-		String? climbPosition,
 		bool? shootOnMove,
 		bool? shootWhileCollecting,
-		bool? climbing,
+		bool? shootTurret,
+		bool? shootClimbing,
 		String? fuelStrategy,
-		String? shootingLocations,
-		int? damageState,
+		String? bricked,
 		String? defenseRating,
-		String? defenseMethods,
-		String? defenseImpact,
-		int? shootingMissesRange,
+		bool? defenseCollected,
+		bool? defenseHit,
+		bool? defenseBlocked,
+		bool? defensePinned,
+		String? defended,
+		String? misses,
 	}) {
 		return EndGameData(
+			autoClimbPosition: autoClimbPosition ?? this.autoClimbPosition,
+			teleClimbPosition: teleClimbPosition ?? this.teleClimbPosition,
 			climbMethod: climbMethod ?? this.climbMethod,
-			climbPosition: climbPosition ?? this.climbPosition,
 			shootOnMove: shootOnMove ?? this.shootOnMove,
 			shootWhileCollecting: shootWhileCollecting ?? this.shootWhileCollecting,
-			climbing: climbing ?? this.climbing,
+			shootTurret: shootTurret ?? this.shootTurret,
+			shootClimbing: shootClimbing ?? this.shootClimbing,
 			fuelStrategy: fuelStrategy ?? this.fuelStrategy,
-			shootingLocations: shootingLocations ?? this.shootingLocations,
-			damageState: damageState ?? this.damageState,
+			bricked: bricked ?? this.bricked,
 			defenseRating: defenseRating ?? this.defenseRating,
-			defenseMethods: defenseMethods ?? this.defenseMethods,
-			defenseImpact: defenseImpact ?? this.defenseImpact,
-			shootingMissesRange: shootingMissesRange ?? this.shootingMissesRange,
+			defenseCollected: defenseCollected ?? this.defenseCollected,
+			defenseHit: defenseHit ?? this.defenseHit,
+			defenseBlocked: defenseBlocked ?? this.defenseBlocked,
+			defensePinned: defensePinned ?? this.defensePinned,
+			defended: defended ?? this.defended,
+			misses: misses ?? this.misses,
 		);
 	}
 }

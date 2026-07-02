@@ -34,7 +34,7 @@ class Event extends Table {
 }
 
 // Scout table REMOVED - all scouting data now stored in-memory via providers
-// See: scoutProvider, timelineProvider, endGameProvider, scoterInfoProvider, preMatchProvider
+// See: scoutProvider, timelineProvider, endGameProvider, scouterInfoProvider, preMatchProvider
 // Scouting data is exported to CSV at upload time, not persisted to database
 
 /// Upload history - tracks pending/uploaded/failed scouting data batches
@@ -71,56 +71,15 @@ class ScoutDatabase extends _$ScoutDatabase {
 	MigrationStrategy get migration {
 		return MigrationStrategy(
 			onUpgrade: (migrator, from, to) async {
-				if (from < 2) {
-					// Add username and password columns to ServerConfig table
-					await migrator.addColumn(
-						serverConfig,
-						serverConfig.username,
-					);
-					await migrator.addColumn(
-						serverConfig,
-						serverConfig.password,
-					);
-				}
-				if (from < 3) {
-					// Create UploadHistory table
-					await migrator.createTable(uploadHistory);
-				}
-				if (from < 4) {
-					// Add event, match, team columns to UploadHistory table
-					await migrator.addColumn(uploadHistory, uploadHistory.event);
-					await migrator.addColumn(uploadHistory, uploadHistory.match);
-					await migrator.addColumn(uploadHistory, uploadHistory.team);
-				}
-				if (from < 5) {
-					// Schema v5: Removed unused auto fuel fields from UI/code
-					// Old databases may still have these columns, but they're ignored
-					// No migration needed as new databases won't have them
-				}
-				if (from < 6) {
-					// Schema v6: Convert boolean fields to integers (0/1)
-					// SQLite handles this automatically when columns already exist
-					// New databases created with v6+ will have these as integers from the start
-				}
-				if (from < 7) {
-					// Schema v7: Old Scout table schema changes - ignored now
-				}
-				if (from < 8) {
-					// Schema v8: Old Scout table schema changes - ignored now
-				}
-				if (from < 9) {
-					// Schema v9: Removed scouting counter persistence - ignored now
-				}
 				if (from < 10) {
-					// Schema v10: Dropped Scout table completely
-					// All scouting data now stored in-memory via providers
-					// No migration needed - old databases will keep the table, new ones don't create it
+					//  No migration needed yet, app not yet released
 				}
 			},
 		);
 	}
 
-	// =========================================================================	// ServerConfig Queries
+	// =========================================================================
+	// ServerConfig Queries
 	// =========================================================================
 
 	/// Get the current server configuration
