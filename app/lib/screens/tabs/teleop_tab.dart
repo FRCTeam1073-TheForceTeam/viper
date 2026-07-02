@@ -755,6 +755,23 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 													),
 												),
 											),
+											const SizedBox(height: 8),
+											// End game button
+											FilledButton(
+												style: FilledButton.styleFrom(
+													backgroundColor: AppColors.buttonBgColor,
+													foregroundColor: AppColors.buttonFgColor,
+													padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+													shape: RoundedRectangleBorder(
+														borderRadius: BorderRadius.circular(8),
+													),
+												),
+												onPressed: _saveTab,
+												child: Text(
+													'End Game »',
+													style: TextStyle(fontSize: _getResponsiveFontSize(12)),
+												),
+											),
 										],
 									),
 								),
