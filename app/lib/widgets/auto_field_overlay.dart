@@ -43,7 +43,7 @@ class AutoFieldOverlay extends StatelessWidget {
 	/// Whether to show the Start Auto button (false after match starts)
 	final bool showStartButton;
 
-	/// Text label for Start Auto button (should be translated)
+	/// Text label for Start Auto button (must be translated by caller)
 	final String startAutoButtonLabel;
 
 	/// Robot position (bot position like 'R1', 'B1', etc.)
@@ -70,7 +70,7 @@ class AutoFieldOverlay extends StatelessWidget {
 		this.onClimbToggled,
 		this.onStartAutoTapped,
 		this.showStartButton = true,
-		this.startAutoButtonLabel = 'Start Auto',
+		this.startAutoButtonLabel = '',
 		this.botPosition,
 		this.activeFuelTarget = 'hub',
 		this.onFuelTargetTapped,
@@ -227,6 +227,10 @@ class AutoFieldOverlay extends StatelessWidget {
 										shouldRotate: shouldRotate,
 										swapButtonSides: swapButtonSides,
 									),
+
+									// Start Auto button (only show if match hasn't started)
+									if (showStartButton)
+										_buildStartAutoButton(maxWidth, fieldHeight, shouldRotate, swapButtonSides),
 							],
 						),
 					),
@@ -444,24 +448,27 @@ class AutoFieldOverlay extends StatelessWidget {
 	}
 
 	/// Build Start Auto button overlay
-	/// Positioned at left:9%, top:15% with 10% width and "Start Auto" label (matching web app)
+	/// Positioned at 9% from right edge, 15% from top (appears on left after rotation)
 	Widget _buildStartAutoButton(
 		double fieldWidth,
 		double fieldHeight,
 		bool shouldRotate,
+		bool swapButtonSides,
 	) {
 		final buttonSize = 10.0 * fieldWidth / 100;
-		final padding = buttonSize * 0.2; // Padding around text content
+		final padding = buttonSize * 0.2;
+		final edgePx = 9.0 * fieldWidth / 100;
+		final topPx = 15.0 * fieldHeight / 100;
 
 		return Positioned(
-			left: 9.0 * fieldWidth / 100,
-			top: 15.0 * fieldHeight / 100,
+			right: edgePx,
+			top: topPx,
 			child: GestureDetector(
 				onTap: () => onStartAutoTapped?.call(),
 				child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Container(
-						padding: EdgeInsets.all(padding),
+						padding: EdgeInsets.symmetric(horizontal: padding, vertical: padding * 4),
 						decoration: BoxDecoration(
 							borderRadius: BorderRadius.circular(buttonSize * 0.15),
 							color: AppColors.buttonBgColor,

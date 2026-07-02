@@ -33,111 +33,9 @@ class Event extends Table {
 	Set<Column> get primaryKey => {eventId};
 }
 
-/// Scout entry - represents one match scouting report
-@DataClassName('ScoutData')
-class Scout extends Table {
-	// Composite primary key: event + match + team
-	TextColumn get event => text()();
-	TextColumn get match => text()();
-	TextColumn get team => text()();
-
-	// Pre-Match Tab
-	TextColumn get startingPosition => text().nullable()();
-	IntColumn get noShow => integer().withDefault(const Constant(0))(); // 0=false, 1=true
-
-	// Auto Tab - Movement counters (field interactions)
-	IntColumn get autoTrenchDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get autoBumpDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get autoBumpOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get autoTrenchOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get autoTrenchDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
-	IntColumn get autoBumpDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
-	IntColumn get autoBumpOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
-	IntColumn get autoTrenchOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
-
-	// Auto Tab - Climb level
-	IntColumn get autoClimbLevel => integer().nullable()();
-
-	// Auto Tab - Fuel scoring and collection
-	IntColumn get autoFuelScore => integer().withDefault(const Constant(0))();
-	IntColumn get autoFuelNeutralAlliancePass => integer().withDefault(const Constant(0))();
-	IntColumn get autoCollectOutpost => integer().withDefault(const Constant(0))(); // 0=false, 1=true
-	IntColumn get autoCollectDepot => integer().withDefault(const Constant(0))(); // 0=false, 1=true
-
-	// Auto Tab - Zone times (in seconds)
-	IntColumn get autoAllianceTime => integer().withDefault(const Constant(0))();
-	IntColumn get autoNeutralTime => integer().withDefault(const Constant(0))();
-
-	// Timeline events (JSON array of {time, action, value}) - covers auto period only
-	TextColumn get timeline => text().nullable()();
-
-	// Tele Tab - Movement counters (alliance ↔ neutral)
-	IntColumn get teleTrenchDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpDepotAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get teleTrenchOutpostAllianceToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get teleTrenchDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpDepotNeutralToAlliance => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
-	IntColumn get teleTrenchOutpostNeutralToAlliance => integer().withDefault(const Constant(0))();
-
-	// Tele Tab - Movement counters (neutral ↔ opponent)
-	IntColumn get teleTrenchOutpostNeutralToOpponent => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpOutpostNeutralToOpponent => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpDepotNeutralToOpponent => integer().withDefault(const Constant(0))();
-	IntColumn get teleTrenchDepotNeutralToOpponent => integer().withDefault(const Constant(0))();
-	IntColumn get teleTrenchOutpostOpponentToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpOutpostOpponentToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get teleBumpDepotOpponentToNeutral => integer().withDefault(const Constant(0))();
-	IntColumn get teleTrenchDepotOpponentToNeutral => integer().withDefault(const Constant(0))();
-
-	// Tele Tab - Fuel scoring
-	IntColumn get teleFuelScore => integer().withDefault(const Constant(0))();
-	IntColumn get teleFuelAllianceDump => integer().withDefault(const Constant(0))();
-	IntColumn get teleFuelOutpost => integer().withDefault(const Constant(0))();
-	IntColumn get teleFuelNeutralAlliancePass => integer().withDefault(const Constant(0))();
-	IntColumn get teleFuelOpponentNeutralPass => integer().withDefault(const Constant(0))();
-	IntColumn get teleFuelOpponentAlliancePass => integer().withDefault(const Constant(0))();
-
-	// Tele Tab - Zone times (in seconds)
-	IntColumn get teleAllianceTime => integer().withDefault(const Constant(0))();
-	IntColumn get teleNeutralTime => integer().withDefault(const Constant(0))();
-	IntColumn get teleOpponentTime => integer().withDefault(const Constant(0))();
-
-	// Tele Tab - Climb (renamed from teleopClimbLevel)
-	IntColumn get teleClimbLevel => integer().nullable()();
-
-	// Tele Tab - Timeline events
-	TextColumn get teleTimeline => text().nullable()();
-
-	// End Game Tab
-	TextColumn get climbPosition => text().nullable()();
-	TextColumn get climbMethod => text().nullable()(); // Rungs, Uprights, Flip, No Climb
-	IntColumn get shootOnMove => integer().withDefault(const Constant(0))(); // 0=false, 1=true
-	IntColumn get shootWhileCollecting => integer().withDefault(const Constant(0))(); // 0=false, 1=true
-	IntColumn get climbing => integer().withDefault(const Constant(0))(); // 0=false, 1=true
-	TextColumn get fuelStrategy => text().nullable()(); // Carried, Pushed, Passed, Received
-	TextColumn get shootingLocations => text().nullable()();
-	IntColumn get damageState => integer().nullable()(); // 0-100%
-	TextColumn get defenseRating => text().nullable()(); // Good, Bad, Great
-	TextColumn get defenseMethods => text().nullable()();
-	TextColumn get defenseImpact => text().nullable()(); // Slowed, Unaffected, Turned tables
-	IntColumn get shootingMissesRange => integer().nullable()();
-
-	// Scouter Info Tab
-	TextColumn get scouterName => text().nullable()();
-	TextColumn get comments => text().nullable()();
-	IntColumn get reviewRequest => integer().withDefault(const Constant(0))(); // 0=false, 1=true
-
-	// Metadata
-	BoolColumn get synced => boolean().withDefault(const Constant(false))();
-	DateTimeColumn get createdAt => dateTime().clientDefault(() => DateTime.now())();
-	DateTimeColumn get updatedAt => dateTime().clientDefault(() => DateTime.now())();
-	DateTimeColumn get syncedAt => dateTime().nullable()();
-
-	@override
-	Set<Column<Object>> get primaryKey => {event, match, team};
-}
+// Scout table REMOVED - all scouting data now stored in-memory via providers
+// See: scoutProvider, timelineProvider, endGameProvider, scoterInfoProvider, preMatchProvider
+// Scouting data is exported to CSV at upload time, not persisted to database
 
 /// Upload history - tracks pending/uploaded/failed scouting data batches
 @DataClassName('UploadHistoryData')
@@ -162,12 +60,12 @@ class UploadHistory extends Table {
 // DATABASE
 // ============================================================================
 
-@DriftDatabase(tables: [ServerConfig, Event, Scout, UploadHistory])
+@DriftDatabase(tables: [ServerConfig, Event, UploadHistory])
 class ScoutDatabase extends _$ScoutDatabase {
 	ScoutDatabase() : super(_openConnection());
 
 	@override
-	int get schemaVersion => 8;
+	int get schemaVersion => 10;
 
 	@override
 	MigrationStrategy get migration {
@@ -205,39 +103,18 @@ class ScoutDatabase extends _$ScoutDatabase {
 					// New databases created with v6+ will have these as integers from the start
 				}
 				if (from < 7) {
-					// Schema v7: Add timeline column to Scout table
-					await migrator.addColumn(scout, scout.timeline);
+					// Schema v7: Old Scout table schema changes - ignored now
 				}
 				if (from < 8) {
-					// Schema v8: Add new tele tab columns with proper naming
-					// Add all the new tele columns (old placeholder columns remain unused)
-					await migrator.addColumn(scout, scout.teleTrenchDepotAllianceToNeutral);
-					await migrator.addColumn(scout, scout.teleBumpDepotAllianceToNeutral);
-					await migrator.addColumn(scout, scout.teleBumpOutpostAllianceToNeutral);
-					await migrator.addColumn(scout, scout.teleTrenchOutpostAllianceToNeutral);
-					await migrator.addColumn(scout, scout.teleTrenchDepotNeutralToAlliance);
-					await migrator.addColumn(scout, scout.teleBumpDepotNeutralToAlliance);
-					await migrator.addColumn(scout, scout.teleBumpOutpostNeutralToAlliance);
-					await migrator.addColumn(scout, scout.teleTrenchOutpostNeutralToAlliance);
-					await migrator.addColumn(scout, scout.teleTrenchOutpostNeutralToOpponent);
-					await migrator.addColumn(scout, scout.teleBumpOutpostNeutralToOpponent);
-					await migrator.addColumn(scout, scout.teleBumpDepotNeutralToOpponent);
-					await migrator.addColumn(scout, scout.teleTrenchDepotNeutralToOpponent);
-					await migrator.addColumn(scout, scout.teleTrenchOutpostOpponentToNeutral);
-					await migrator.addColumn(scout, scout.teleBumpOutpostOpponentToNeutral);
-					await migrator.addColumn(scout, scout.teleBumpDepotOpponentToNeutral);
-					await migrator.addColumn(scout, scout.teleTrenchDepotOpponentToNeutral);
-					await migrator.addColumn(scout, scout.teleFuelScore);
-					await migrator.addColumn(scout, scout.teleFuelAllianceDump);
-					await migrator.addColumn(scout, scout.teleFuelOutpost);
-					await migrator.addColumn(scout, scout.teleFuelNeutralAlliancePass);
-					await migrator.addColumn(scout, scout.teleFuelOpponentNeutralPass);
-					await migrator.addColumn(scout, scout.teleFuelOpponentAlliancePass);
-					await migrator.addColumn(scout, scout.teleAllianceTime);
-					await migrator.addColumn(scout, scout.teleNeutralTime);
-					await migrator.addColumn(scout, scout.teleOpponentTime);
-					await migrator.addColumn(scout, scout.teleClimbLevel);
-					await migrator.addColumn(scout, scout.teleTimeline);
+					// Schema v8: Old Scout table schema changes - ignored now
+				}
+				if (from < 9) {
+					// Schema v9: Removed scouting counter persistence - ignored now
+				}
+				if (from < 10) {
+					// Schema v10: Dropped Scout table completely
+					// All scouting data now stored in-memory via providers
+					// No migration needed - old databases will keep the table, new ones don't create it
 				}
 			},
 		);
@@ -254,69 +131,6 @@ class ScoutDatabase extends _$ScoutDatabase {
 	/// Update or insert server configuration
 	Future<void> upsertConfig(ServerConfigData config) async {
 		await into(serverConfig).insertOnConflictUpdate(config);
-	}
-
-	// =========================================================================
-	// Scout Queries
-	// =========================================================================
-
-	/// Get all scout entries
-	Future<List<ScoutData>> getAllScouts() => select(scout).get();
-
-	/// Get scouts for a specific event
-	Future<List<ScoutData>> getScoutsForEvent(String eventId) {
-		return (select(scout)..where((s) => s.event.equals(eventId))).get();
-	}
-
-	/// Get pending (unsynced) scout entries
-	Future<List<ScoutData>> getPendingScouts() {
-		return (select(scout)..where((s) => s.synced.equals(false))).get();
-	}
-
-	/// Get a specific scout entry (composite key lookup)
-	Future<ScoutData?> getScout(String event, String match, String team) {
-		return (select(scout)
-					..where((s) =>
-							s.event.equals(event) &
-							s.match.equals(match) &
-							s.team.equals(team)))
-				.getSingleOrNull();
-	}
-
-	/// Insert or update a scout entry
-	Future<void> upsertScout(ScoutData scoutData) async {
-		await into(scout).insertOnConflictUpdate(scoutData);
-	}
-
-	/// Mark scouts as synced
-	Future<void> markAsSynced(List<String> eventMatchTeamIds) async {
-		// Parse composite keys and update
-		for (var id in eventMatchTeamIds) {
-			final parts = id.split('_');
-			if (parts.length == 3) {
-				await (update(scout)
-							..where((s) =>
-									s.event.equals(parts[0]) &
-									s.match.equals(parts[1]) &
-									s.team.equals(parts[2])))
-						.write(
-					ScoutCompanion(
-						synced: Value(true),
-						syncedAt: Value(DateTime.now()),
-					),
-				);
-			}
-		}
-	}
-
-	/// Delete a scout entry
-	Future<void> deleteScout(String event, String match, String team) async {
-		await (delete(scout)
-					..where((s) =>
-							s.event.equals(event) &
-							s.match.equals(match) &
-							s.team.equals(team)))
-				.go();
 	}
 
 	// =========================================================================

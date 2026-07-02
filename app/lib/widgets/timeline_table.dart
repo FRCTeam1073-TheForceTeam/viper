@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../../providers/auto_tab_controller.dart';
 import '../../services/localization.dart';
 
-/// Widget that displays the timeline of actions performed during auto
-class AutoTimelineTable extends StatelessWidget {
+/// Widget that displays the timeline of actions performed during a period (auto or tele)
+class TimelineTable extends StatelessWidget {
 	/// List of timeline events to display
 	final List<TimelineEvent> events;
 
-	const AutoTimelineTable({
+	const TimelineTable({
 		super.key,
 		required this.events,
 	});

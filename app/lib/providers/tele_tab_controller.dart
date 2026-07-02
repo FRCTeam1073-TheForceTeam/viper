@@ -1,71 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:convert';
 import 'active_zone_provider.dart';
+import 'auto_tab_controller.dart' show TimelineEvent;
+import 'timeline_provider.dart';
+import 'match_timer_provider.dart';
 
-/// Timeline event entry: tracks when an action happened and its value
-/// Format matches web app: time:field:value
-class TeleTimelineEvent {
-	final int timeSeconds; // Time since tele start
-	final String action; // Field name (e.g., 'tele_fuel_score')
-	final String value; // Numeric value as string (e.g., "1", "5", "-1")
-
-	TeleTimelineEvent({
-		required this.timeSeconds,
-		required this.action,
-		required this.value,
-	});
-
-	/// Convert to JSON for storage (matches web app format)
-	Map<String, dynamic> toJson() => {
-		'time': timeSeconds,
-		'action': action,
-		'value': value,
-	};
-
-	/// Create from JSON
-	factory TeleTimelineEvent.fromJson(Map<String, dynamic> json) => TeleTimelineEvent(
-		timeSeconds: json['time'] as int,
-		action: json['action'] as String,
-		value: json['value'] as String? ?? '1',
-	);
-
-	/// Format timeline list to string (time:action or time:action:value, space-separated)
-	/// Value is omitted if it equals "1" for parity with web app
-	static String formatTimeline(List<TeleTimelineEvent> events) {
-		return events.map((e) => e.value == '1' ? '${e.timeSeconds}:${e.action}' : '${e.timeSeconds}:${e.action}:${e.value}').join(' ');
-	}
-
-	/// Parse timeline string to list of events (time:action or time:action:value, space-separated)
-	/// Value defaults to "1" if not specified for parity with web app
-	static List<TeleTimelineEvent> parseTimeline(String timelineStr) {
-		final events = <TeleTimelineEvent>[];
-		if (timelineStr.isEmpty) return events;
-
-		final entries = timelineStr.split(' ');
-		for (final entry in entries) {
-			final parts = entry.split(':');
-			if (parts.length == 2) {
-				// Format: time:action (value defaults to "1")
-				events.add(TeleTimelineEvent(
-					timeSeconds: int.parse(parts[0]),
-					action: parts[1],
-					value: '1',
-				));
-			} else if (parts.length == 3) {
-				// Format: time:action:value
-				events.add(TeleTimelineEvent(
-					timeSeconds: int.parse(parts[0]),
-					action: parts[1],
-					value: parts[2],
-				));
-			}
-		}
-		return events;
-	}
-
-	@override
-	String toString() => '[$timeSeconds] $action ($value)';
-}
 
 /// State for tele tab - tracks all counters and timeline
 class TeleTabState {
@@ -111,12 +49,6 @@ class TeleTabState {
 	// Active fuel target
 	final String activeFuelTarget;
 
-	// Timeline of all events
-	final List<TeleTimelineEvent> timeline;
-
-	// Tele start time (to calculate relative timestamps)
-	final DateTime? teleStartTime;
-
 	// Last zone change time (to calculate time spent in zone)
 	final DateTime? lastZoneChangeTime;
 
@@ -149,8 +81,6 @@ class TeleTabState {
 		this.climbLevel = 0,
 		this.activeZone = 'alliance',
 		this.activeFuelTarget = 'hub',
-		this.timeline = const [],
-		this.teleStartTime,
 		this.lastZoneChangeTime,
 	});
 
@@ -184,8 +114,6 @@ class TeleTabState {
 		int? climbLevel,
 		String? activeZone,
 		String? activeFuelTarget,
-		List<TeleTimelineEvent>? timeline,
-		DateTime? teleStartTime,
 		DateTime? lastZoneChangeTime,
 	}) {
 		return TeleTabState(
@@ -217,13 +145,11 @@ class TeleTabState {
 			climbLevel: climbLevel ?? this.climbLevel,
 			activeZone: activeZone ?? this.activeZone,
 			activeFuelTarget: activeFuelTarget ?? this.activeFuelTarget,
-			timeline: timeline ?? this.timeline,
-			teleStartTime: teleStartTime ?? this.teleStartTime,
 			lastZoneChangeTime: lastZoneChangeTime ?? this.lastZoneChangeTime,
 		);
 	}
 
-	/// Convert state to map for database storage
+	/// Convert state to map for database storage (does not include timeline - handled separately)
 	Map<String, dynamic> toJson() {
 		return {
 			'tele_trench_depot_alliance_to_neutral': trenchDepotAllianceToNeutral,
@@ -252,14 +178,11 @@ class TeleTabState {
 			'tele_neutral_time': neutralTime,
 			'tele_opponent_time': opponentTime,
 			'tele_climb_level': climbLevel,
-			'tele_timeline': TeleTimelineEvent.formatTimeline(timeline),
 		};
 	}
 
-	/// Load state from map (database)
+	/// Load state from map (database) - does not include timeline, handled separately
 	factory TeleTabState.fromJson(Map<String, dynamic> json) {
-		final timeline = TeleTimelineEvent.parseTimeline(json['tele_timeline'] as String? ?? '');
-
 		return TeleTabState(
 			trenchDepotAllianceToNeutral: json['tele_trench_depot_alliance_to_neutral'] as int? ?? 0,
 			bumpDepotAllianceToNeutral: json['tele_bump_depot_alliance_to_neutral'] as int? ?? 0,
@@ -289,7 +212,6 @@ class TeleTabState {
 			climbLevel: json['tele_climb_level'] as int? ?? 0,
 			activeZone: json['tele_active_zone'] as String? ?? 'alliance',
 			activeFuelTarget: json['tele_active_fuel_target'] as String? ?? 'hub',
-			timeline: timeline,
 		);
 	}
 }
@@ -312,11 +234,12 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 		required String valueLabel, // Value label for timeline
 	}) {
 		final now = DateTime.now();
-		final startTime = state.teleStartTime ?? now;
+		final matchStartTime = _ref.read(matchTimerProvider);
+		final startTime = matchStartTime ?? now;
 		final elapsed = now.difference(startTime).inSeconds;
 
 		// Create timeline event
-		final event = TeleTimelineEvent(
+		final event = TimelineEvent(
 			timeSeconds: elapsed,
 			action: field,
 			value: value.toString(),
@@ -493,23 +416,21 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 				newState = newState.copyWith(climbLevel: value);
 		}
 
-		// Add event to timeline
-		final newTimeline = [...newState.timeline, event];
+		// Add event to shared timeline provider
+		_ref.read(timelineProvider.notifier).addEvent(event);
 
-		// Update state - set teleStartTime only on first action if not already set
+		// Update state
 		state = newState.copyWith(
-			timeline: newTimeline,
-			teleStartTime: state.teleStartTime ?? now,
 			lastZoneChangeTime: newState.lastZoneChangeTime ?? state.lastZoneChangeTime ?? now,
 		);
 	}
 
 	/// Undo the last action
 	void undo() {
-		if (state.timeline.isEmpty) return;
+		final currentTimeline = _ref.read(timelineProvider);
+		if (currentTimeline.isEmpty) return;
 
-		final lastEvent = state.timeline.last;
-		final newTimeline = state.timeline.toList()..removeLast();
+		final lastEvent = currentTimeline.last;
 
 		// Parse field name and value from timeline event
 		final field = lastEvent.action;
@@ -693,42 +614,29 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 				newState = newState.copyWith(climbLevel: actionValue);
 		}
 
-		// Update timeline and reset timer if empty
-		if (newTimeline.isEmpty) {
-			state = TeleTabState(
-				trenchDepotAllianceToNeutral: newState.trenchDepotAllianceToNeutral,
-				bumpDepotAllianceToNeutral: newState.bumpDepotAllianceToNeutral,
-				bumpOutpostAllianceToNeutral: newState.bumpOutpostAllianceToNeutral,
-				trenchOutpostAllianceToNeutral: newState.trenchOutpostAllianceToNeutral,
-				trenchDepotNeutralToAlliance: newState.trenchDepotNeutralToAlliance,
-				bumpDepotNeutralToAlliance: newState.bumpDepotNeutralToAlliance,
-				bumpOutpostNeutralToAlliance: newState.bumpOutpostNeutralToAlliance,
-				trenchOutpostNeutralToAlliance: newState.trenchOutpostNeutralToAlliance,
-				trenchOutpostNeutralToOpponent: newState.trenchOutpostNeutralToOpponent,
-				bumpOutpostNeutralToOpponent: newState.bumpOutpostNeutralToOpponent,
-				bumpDepotNeutralToOpponent: newState.bumpDepotNeutralToOpponent,
-				trenchDepotNeutralToOpponent: newState.trenchDepotNeutralToOpponent,
-				trenchOutpostOpponentToNeutral: newState.trenchOutpostOpponentToNeutral,
-				bumpOutpostOpponentToNeutral: newState.bumpOutpostOpponentToNeutral,
-				bumpDepotOpponentToNeutral: newState.bumpDepotOpponentToNeutral,
-				trenchDepotOpponentToNeutral: newState.trenchDepotOpponentToNeutral,
-				fuelScore: newState.fuelScore,
-				fuelAllianceDump: newState.fuelAllianceDump,
-				fuelOutpost: newState.fuelOutpost,
-				fuelNeutralAlliancePass: newState.fuelNeutralAlliancePass,
-				fuelOpponentNeutralPass: newState.fuelOpponentNeutralPass,
-				fuelOpponentAlliancePass: newState.fuelOpponentAlliancePass,
-				allianceTime: newState.allianceTime,
-				neutralTime: newState.neutralTime,
-				opponentTime: newState.opponentTime,
-				climbLevel: newState.climbLevel,
-				activeZone: newState.activeZone,
-				activeFuelTarget: newState.activeFuelTarget,
-				timeline: newTimeline,
-				teleStartTime: null,
-			);
-		} else {
-			state = newState.copyWith(timeline: newTimeline);
+		// Remove event from shared timeline provider
+		_ref.read(timelineProvider.notifier).undo();
+
+		// Update state (no need to reset anything, match timer is shared)
+		state = newState;
+	}
+
+	/// Reset tele state for new match
+	void reset() {
+		state = TeleTabState();
+	}
+
+	/// Start tele (initialize start time) - syncs with UI timer
+	void startTele() {
+		final now = DateTime.now();
+		_ref.read(matchTimerProvider.notifier).setStartTime(now);
+	}
+
+	/// Sync tele start time with external match timer (called when UI timer starts)
+	void syncStartTime(DateTime matchStartTime) {
+		// Always sync the shared match timer
+		if (_ref.read(matchTimerProvider) == null) {
+			_ref.read(matchTimerProvider.notifier).setStartTime(matchStartTime);
 		}
 	}
 
@@ -740,16 +648,28 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 		state = state.copyWith(activeFuelTarget: targetName);
 	}
 
-	/// Load state from data map
-	void loadFromData(Map<String, dynamic> data) {
+	/// Load state from data map and populate timeline provider
+	void loadFromData(Map<String, dynamic> data, {bool isFirstLoad = false}) {
 		state = TeleTabState.fromJson(data);
 		// Sync active zone with shared provider
 		final sharedZone = _ref.read(activeZoneProvider);
 		state = state.copyWith(activeZone: sharedZone);
+		// Only load timeline from database on first load
+		// When switching tabs on same scout, preserve in-memory timeline
+		if (isFirstLoad) {
+			final timeline = TimelineEvent.parseTimeline(data['timeline'] as String? ?? '');
+			_ref.read(timelineProvider.notifier).setTimeline(timeline);
+		}
 	}
 
-	/// Get all counters as map for database save
-	Map<String, dynamic> getCountersForSave() => state.toJson();
+	/// Get all counters and timeline as map for database save
+	Map<String, dynamic> getCountersForSave() {
+		final counters = state.toJson();
+		// Add timeline to the save data
+		final timeline = _ref.read(timelineProvider);
+		counters['timeline'] = TimelineEvent.formatTimeline(timeline);
+		return counters;
+	}
 }
 
 /// Riverpod provider for tele tab controller

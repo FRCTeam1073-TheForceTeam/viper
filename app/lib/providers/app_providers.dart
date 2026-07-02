@@ -541,12 +541,10 @@ final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
 		return {};
 	}
 
-	// Always include local scouting data
-	final localScouts = await db.getScoutsForEvent(selectedEvent);
+	// Always include local scouting data from upload history
+	// (actual scout data is in-memory via providers, not persisted in database)
 	final localMatches = <String>{};
-	for (final scout in localScouts) {
-		localMatches.add(scout.match);
-	}
+	// TODO: Could read from upload history if needed to show previously scouted matches
 
 	// Try to get server scouting data (if valid server configured)
 	final config = await db.getCurrentConfig();
@@ -600,21 +598,9 @@ final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
 	return {...localMatches, ...serverMatches};
 });
 
-final scoutListProvider = FutureProvider<List<ScoutData>>((ref) async {
-	final db = await ref.watch(databaseProvider.future);
-	final selectedEvent = ref.watch(selectedEventProvider);
-
-	if (selectedEvent == null) {
-		return [];
-	}
-
-	return db.getScoutsForEvent(selectedEvent);
-});
-
-final pendingScoutsProvider = FutureProvider<List<ScoutData>>((ref) async {
-	final db = await ref.watch(databaseProvider.future);
-	return db.getPendingScouts();
-});
+// Scout list providers removed - all scouting data now stored in-memory via providers
+// (scoutProvider, timelineProvider, endGameProvider, etc.)
+// Database no longer has scout table - see scout_data.dart for in-memory model
 
 // ============================================================================
 // SYNC STATE
@@ -680,9 +666,10 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 			}
 
 			final apiClient = await ref.read(apiClientProvider.future);
-			final pendingScouts = await db.getPendingScouts();
+			// Get pending upload history entries (CSV data pre-built at upload time)
+			final pendingHistory = await db.getPendingUploadHistory();
 
-			if (pendingScouts.isEmpty) {
+			if (pendingHistory.isEmpty) {
 				state = state.copyWith(
 					isSyncing: false,
 					lastSyncTime: DateTime.now(),
@@ -690,27 +677,26 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 				return;
 			}
 
-			// Build CSV string from pending scouts
-			final csvContent = CsvBuilder.buildScoutCsv(pendingScouts);
-
-			if (csvContent.isEmpty) {
-				state = state.copyWith(isSyncing: false);
-				return;
+			// Upload each pending entry to backend
+			List<int> uploadedIds = [];
+			for (final entry in pendingHistory) {
+				try {
+					await apiClient.uploadScoutData(entry.csvData);
+					uploadedIds.add(entry.id);
+				} catch (e) {
+					Logger().w('Failed to upload scout entry ${entry.id}: $e');
+				}
 			}
 
-			// Upload to backend
-			await apiClient.uploadScoutData(csvContent);
-
-			// Mark as synced
-			final keys = pendingScouts
-					.map((s) => '${s.event}_${s.match}_${s.team}')
-					.toList();
-			await db.markAsSynced(keys);
+			// Mark uploaded entries as synced
+			if (uploadedIds.isNotEmpty) {
+				await db.markHistoryAsUploaded(uploadedIds);
+			}
 
 			state = state.copyWith(
 				isSyncing: false,
 				lastSyncTime: DateTime.now(),
-				pendingCount: 0,
+				pendingCount: pendingHistory.length - uploadedIds.length,
 			);
 		} catch (e) {
 			state = state.copyWith(

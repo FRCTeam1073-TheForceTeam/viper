@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:drift/drift.dart' show Value;
 import '../../constants/colors.dart';
-import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/auto_tab_controller.dart';
 import '../../providers/field_side_provider.dart';
 import '../../providers/locale_provider.dart';
-import '../../services/scout_data_helper.dart';
+import '../../providers/timeline_provider.dart';
+import '../../providers/match_timer_provider.dart';
+import '../../providers/undo_coordinator.dart';
 import '../../services/localization.dart';
 import '../../widgets/auto_field_overlay.dart';
 import '../../widgets/auto_values_table.dart';
-import '../../widgets/auto_timeline_table.dart';
+import '../../widgets/timeline_table.dart';
 
 /// Initialize Auto Tab translations
 void _initAutoTabTranslations() {
@@ -605,11 +605,10 @@ class AutoTab extends ConsumerStatefulWidget {
 }
 
 class _AutoTabState extends ConsumerState<AutoTab> {
-	ScoutData? _currentScout;
 	bool _valuesExpanded = false;
 	bool _timelineExpanded = false;
 	bool _listenerRegistered = false;
-	late ScoutDatabase _database;
+	late FocusNode _focusNode;
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -652,153 +651,22 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		super.initState();
 		// Initialize i18n for auto tab
 		_initAutoTabTranslations();
-		// Cache database reference for use in deactivate() (before ref becomes invalid)
-		_initDatabase();
-		_loadScout();
+		_focusNode = FocusNode();
+		_focusNode.addListener(_onFocusChanged);
 	}
 
-	Future<void> _initDatabase() async {
-		_database = await ref.read(databaseProvider.future);
-	}
-
-	@override
-	void deactivate() {
-		// Save before widget is deactivated (removed from tree)
-		_saveTab();
-		super.deactivate();
+	void _onFocusChanged() {
 	}
 
 	@override
 	void dispose() {
+		_focusNode.removeListener(_onFocusChanged);
+		_focusNode.dispose();
 		super.dispose();
 	}
 
-	Future<void> _loadScout() async {
-		if (widget.matchNumber != null && widget.teamNumber != null) {
-			final db = await ref.read(databaseProvider.future);
-			final scout = await db.getScout(
-				widget.eventId,
-				widget.matchNumber!,
-				widget.teamNumber!,
-			);
-			if (scout != null && mounted) {
-				setState(() {
-					_currentScout = scout;
-				});
 
-				// Load auto data into controller
-				final controller = ref.read(autoTabControllerProvider.notifier);
-				final autoData = {
-					'auto_trench_depot_alliance_to_neutral': scout.autoTrenchDepotAllianceToNeutral ?? 0,
-					'auto_bump_depot_alliance_to_neutral': scout.autoBumpDepotAllianceToNeutral ?? 0,
-					'auto_bump_outpost_alliance_to_neutral': scout.autoBumpOutpostAllianceToNeutral ?? 0,
-					'auto_trench_outpost_alliance_to_neutral': scout.autoTrenchOutpostAllianceToNeutral ?? 0,
-					'auto_trench_depot_neutral_to_alliance': scout.autoTrenchDepotNeutralToAlliance ?? 0,
-					'auto_bump_depot_neutral_to_alliance': scout.autoBumpDepotNeutralToAlliance ?? 0,
-					'auto_bump_outpost_neutral_to_alliance': scout.autoBumpOutpostNeutralToAlliance ?? 0,
-					'auto_trench_outpost_neutral_to_alliance': scout.autoTrenchOutpostNeutralToAlliance ?? 0,
-					'auto_fuel_score': scout.autoFuelScore ?? 0,
-					'auto_fuel_neutral_alliance_pass': scout.autoFuelNeutralAlliancePass ?? 0,
-					'auto_collect_outpost': scout.autoCollectOutpost ?? 0, // Pass raw int, fromJson will convert
-					'auto_collect_depot': scout.autoCollectDepot ?? 0, // Pass raw int, fromJson will convert
-					'auto_alliance_time': scout.autoAllianceTime ?? 0,
-					'auto_neutral_time': scout.autoNeutralTime ?? 0,
-					'auto_climb_level': scout.autoClimbLevel ?? 0,
-					'timeline': scout.timeline,
-				};
-				controller.loadFromData(autoData);
-			}
-		}
-	}
 
-	Future<void> _saveTab() async {
-		if (widget.matchNumber == null || widget.teamNumber == null) return;
-
-		final db = _database;
-		final autoState = ref.read(autoTabControllerProvider);
-
-		// Guard: don't save if all counters are zero and timeline is empty (indicates incomplete state)
-		final allCountersZero = autoState.trenchDepotAllianceToNeutral == 0 &&
-			autoState.bumpDepotAllianceToNeutral == 0 &&
-			autoState.bumpOutpostAllianceToNeutral == 0 &&
-			autoState.trenchOutpostAllianceToNeutral == 0 &&
-			autoState.trenchDepotNeutralToAlliance == 0 &&
-			autoState.bumpDepotNeutralToAlliance == 0 &&
-			autoState.bumpOutpostNeutralToAlliance == 0 &&
-			autoState.trenchOutpostNeutralToAlliance == 0 &&
-			autoState.fuelScore == 0 &&
-			autoState.fuelNeutralAlliancePass == 0 &&
-			autoState.collectOutpost == 0 &&
-			autoState.collectDepot == 0;
-
-		// If we have existing data but now all counters are zero, skip the save to prevent overwriting
-		if (allCountersZero && _currentScout != null && _currentScout!.autoFuelScore != null) {
-			print('[AUTO_TAB] Skipping save - detected blank state, preserving existing data');
-			return;
-		}
-
-		final existing = _currentScout ?? await db.getScout(
-			widget.eventId,
-			widget.matchNumber!,
-			widget.teamNumber!,
-		);
-
-		final now = DateTime.now();
-		// Format timeline using web app format (time:action or time:action:value, space-separated)
-		final timelineStr = TimelineEvent.formatTimeline(autoState.timeline);
-
-		final scout = existing != null
-				? existing.copyWith(
-					autoTrenchDepotAllianceToNeutral: autoState.trenchDepotAllianceToNeutral,
-					autoBumpDepotAllianceToNeutral: autoState.bumpDepotAllianceToNeutral,
-					autoBumpOutpostAllianceToNeutral: autoState.bumpOutpostAllianceToNeutral,
-					autoTrenchOutpostAllianceToNeutral: autoState.trenchOutpostAllianceToNeutral,
-					autoTrenchDepotNeutralToAlliance: autoState.trenchDepotNeutralToAlliance,
-					autoBumpDepotNeutralToAlliance: autoState.bumpDepotNeutralToAlliance,
-					autoBumpOutpostNeutralToAlliance: autoState.bumpOutpostNeutralToAlliance,
-					autoTrenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
-					autoFuelScore: autoState.fuelScore,
-					autoFuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
-					autoCollectOutpost: autoState.collectOutpost, // Already stored as int
-					autoCollectDepot: autoState.collectDepot, // Already stored as int
-					autoAllianceTime: autoState.allianceTime,
-					autoNeutralTime: autoState.neutralTime,
-					autoClimbLevel: Value(autoState.climbLevel),
-					timeline: Value(timelineStr),
-					updatedAt: now,
-				)
-				: ScoutDataHelper.createNewScout(
-					event: widget.eventId,
-					match: widget.matchNumber!,
-					team: widget.teamNumber!,
-			).copyWith(
-				autoTrenchDepotAllianceToNeutral: autoState.trenchDepotAllianceToNeutral,
-				autoBumpDepotAllianceToNeutral: autoState.bumpDepotAllianceToNeutral,
-				autoBumpOutpostAllianceToNeutral: autoState.bumpOutpostAllianceToNeutral,
-				autoTrenchOutpostAllianceToNeutral: autoState.trenchOutpostAllianceToNeutral,
-				autoTrenchDepotNeutralToAlliance: autoState.trenchDepotNeutralToAlliance,
-				autoBumpDepotNeutralToAlliance: autoState.bumpDepotNeutralToAlliance,
-				autoBumpOutpostNeutralToAlliance: autoState.bumpOutpostNeutralToAlliance,
-				autoTrenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
-				autoFuelScore: autoState.fuelScore,
-				autoFuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
-				autoCollectOutpost: autoState.collectOutpost, // Already stored as int
-				autoCollectDepot: autoState.collectDepot, // Already stored as int
-				autoAllianceTime: autoState.allianceTime,
-				autoNeutralTime: autoState.neutralTime,
-				autoClimbLevel: Value(autoState.climbLevel),
-				timeline: Value(timelineStr),
-				updatedAt: now,
-			);
-
-		await db.upsertScout(scout);
-		if (mounted) {
-			setState(() => _currentScout = scout);
-		}
-	}
-
-	/// Public method to save auto tab data (called before navigating away)
-	Future<void> saveAutoData() => _saveTab();
 
 	@override
 	Widget build(BuildContext context) {
@@ -807,22 +675,14 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final teamColor = _getTeamColor(botPosition);
 
-		// Auto-save whenever auto tab state changes (only register listener once)
-		if (!_listenerRegistered) {
-			_listenerRegistered = true;
-			ref.listen<AutoTabState>(autoTabControllerProvider, (previous, next) {
-				// Skip initial load
-				if (previous != null && previous != next) {
-					_saveTab();
-				}
-			});
-		}
 
-		return SingleChildScrollView(
-			padding: const EdgeInsets.symmetric(vertical: 8),
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.stretch,
-				children: [
+		return Focus(
+			focusNode: _focusNode,
+			child: SingleChildScrollView(
+				padding: const EdgeInsets.symmetric(vertical: 8),
+				child: Column(
+					crossAxisAlignment: CrossAxisAlignment.stretch,
+					children: [
 					// Field Overlay with all integrated controls
 					// (movement buttons, fuel overlays, zone toggles, climb selector)
 					Padding(
@@ -948,9 +808,9 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								],
 								// Timeline Table
 								if (_timelineExpanded)
-									AutoTimelineTable(
+									TimelineTable(
 										key: const ValueKey('auto_timeline_table'),
-										events: autoState.timeline,
+										events: ref.watch(timelineProvider),
 									),
 							],
 						),
@@ -962,25 +822,19 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.stretch,
 							children: [
-								// Undo button
+								// Undo button (always enabled to undo either timeline events or timer start)
 								FilledButton(
 									style: FilledButton.styleFrom(
-										backgroundColor: autoState.timeline.isNotEmpty
-											? AppColors.buttonBgColor
-											: Colors.grey.shade700,
-										foregroundColor: autoState.timeline.isNotEmpty
-											? AppColors.buttonFgColor
-											: Colors.grey.shade500,
+										backgroundColor: AppColors.buttonBgColor,
+										foregroundColor: AppColors.buttonFgColor,
 										padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
 										shape: RoundedRectangleBorder(
 											borderRadius: BorderRadius.circular(8),
 										),
 									),
-									onPressed: autoState.timeline.isNotEmpty
-										? () {
-											ref.read(autoTabControllerProvider.notifier).undo();
-										}
-										: null,
+									onPressed: () {
+										undoLastAction(ref);
+									},
 									child: Text(
 										_translate('undo'),
 										style: TextStyle(fontSize: _getResponsiveFontSize(12)),
@@ -1016,7 +870,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 											borderRadius: BorderRadius.circular(8),
 										),
 									),
-									onPressed: _saveTab,
+									onPressed: () {},
 									child: Text(
 										_translate('proceed_tele_button'),
 										style: TextStyle(fontSize: _getResponsiveFontSize(12)),
@@ -1031,6 +885,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 
 		const SizedBox(height: 16),
 		],
+		),
 		),
 	);
 	}
@@ -1047,6 +902,9 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 			height: 70,
 			child: ElevatedButton(
 				onPressed: () {
+					// Start match timer if not already started
+					_startMatchIfNeeded();
+
 					// Use the correct fuel counter based on active target
 					final fuelField = autoState.activeFuelTarget == 'hub'
 						? 'auto_fuel_score'

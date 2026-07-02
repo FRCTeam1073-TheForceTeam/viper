@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:drift/drift.dart' show Value;
-import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/field_side_provider.dart';
-import '../../services/scout_data_helper.dart';
+import '../../providers/pre_match_provider.dart';
 import '../../services/localization.dart';
 import '../../constants/colors.dart';
 import '../../utils/match_name_converter.dart';
@@ -38,9 +36,6 @@ class PreMatchTab extends ConsumerStatefulWidget {
 }
 
 class _PreMatchTabState extends ConsumerState<PreMatchTab> {
-	String? _selectedPosition;
-	bool _noShow = false;
-	ScoutData? _currentScout;
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -135,88 +130,6 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 				'tr': 'Scouting Talimatları\n\nRobotunuzu izleyin ve ilgili düğmeleri tıklayarak eylemlerini kaydedin. Eylemler için kullanılan simgeler her düğmenin ne yaptığını gösterir.\n\nOtomatik bittiğinde teleop\'a geçin - düğme sizi hatırlatmak için kırmızı ve maviye yanıp sönecektir.\n\nBittikten sonra verilerinizi kaydetmek için alttaki düğmeleri kullanın.',
 			},
 		});
-
-		_loadScout();
-	}
-
-	@override
-	void deactivate() {
-		// Save before widget is deactivated (removed from tree)
-		_saveTab();
-		super.deactivate();
-	}
-
-	@override
-	void didChangeDependencies() {
-		super.didChangeDependencies();
-		// Reload scout data whenever this tab becomes visible (dependency changes)
-		_loadScout();
-	}
-
-	Future<void> _loadScout() async {
-		if (widget.matchNumber != null && widget.teamNumber != null) {
-			final db = await ref.read(databaseProvider.future);
-			final scout = await db.getScout(
-				widget.eventId,
-				widget.matchNumber!,
-				widget.teamNumber!,
-			);
-			if (scout != null) {
-				setState(() {
-					_currentScout = scout;
-					_selectedPosition = scout.startingPosition;
-					_noShow = scout.noShow == 1; // Convert int to bool
-				});
-			}
-		}
-	}
-
-	Future<void> _saveTab() async {
-		if (widget.matchNumber == null || widget.teamNumber == null) return;
-
-		final db = await ref.read(databaseProvider.future);
-		final existing =
-				_currentScout ??
-				await db.getScout(
-					widget.eventId,
-					widget.matchNumber!,
-					widget.teamNumber!,
-				);
-
-		// Guard: don't save if position is null and noShow is false but existing scout has pre-match data
-		final allFieldsEmpty = _selectedPosition == null && !_noShow;
-
-		if (allFieldsEmpty && existing != null && existing.startingPosition != null) {
-			print('[PRE_MATCH_TAB] Skipping save - detected blank state, preserving existing pre-match data');
-			return;
-		}
-
-		final now = DateTime.now();
-		final scout = existing != null
-				? existing.copyWith(
-						startingPosition: Value(_selectedPosition),
-						noShow: _noShow ? 1 : 0, // Convert bool to int
-						updatedAt: now,
-					)
-				: ScoutDataHelper.createNewScout(
-						event: widget.eventId,
-						match: widget.matchNumber!,
-						team: widget.teamNumber!,
-					).copyWith(
-						startingPosition: Value(_selectedPosition),
-						noShow: _noShow ? 1 : 0, // Convert bool to int
-					);
-
-		await db.upsertScout(scout);
-		if (mounted) {
-			setState(() => _currentScout = scout);
-		}
-
-		if (mounted) {
-			ScaffoldMessenger.of(
-				context,
-			).showSnackBar(SnackBar(content: Text(_translate('pre_match_data_saved'))));
-		}
 	}
 
 	String _getInstructionsFilePath() {
@@ -336,6 +249,9 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		// Get the field side (left or right)
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
+		// Watch pre-match provider for current state
+		final preMatchData = ref.watch(preMatchProvider);
+
 		// Get baseUrl for robot photo
 		final apiClientAsync = ref.watch(apiClientProvider);
 
@@ -384,12 +300,14 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 												// Starting position interactive area (clickable/draggable)
 												Center(
 													child: _StartingPositionArea(
-														selectedPosition: _selectedPosition,
+														selectedPosition: preMatchData.startingPosition,
 														isBlueTeam: isBlueTeam,
 														fieldSide: fieldSide,
 														onPositionChanged: (newPosition) {
 															print('💾 Saving starting position: $newPosition');
-															setState(() => _selectedPosition = newPosition);
+															ref.read(preMatchProvider.notifier).update(
+																preMatchData.copyWith(startingPosition: newPosition),
+															);
 														},
 													),
 												),
@@ -434,11 +352,12 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 										),
 										// No Show Button
 										CheckboxButton(
-											isChecked: _noShow,
+											isChecked: preMatchData.noShow,
 											translationKey: 'no_show',
 										onChanged: (intValue) {
-											setState(() => _noShow = intValue == 1); // Convert int to bool
-											_saveTab(); // Auto-save when checkbox changes
+											ref.read(preMatchProvider.notifier).update(
+												preMatchData.copyWith(noShow: intValue == 1),
+											);
 										},
 										),
 										// Proceed to Auto Button

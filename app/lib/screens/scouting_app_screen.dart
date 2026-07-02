@@ -8,7 +8,7 @@ import 'tabs/end_game_tab.dart';
 import '../widgets/viper_menu_button.dart';
 import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
-import '../providers/auto_tab_controller.dart';
+import '../providers/match_timer_provider.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
 import '../widgets/match_timer.dart';
@@ -138,6 +138,8 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 					matchStartTime: _matchStartTime,
 					onStartMatch: (startTime) {
 						setState(() => _matchStartTime = startTime);
+						// Also set the shared match timer provider
+						ref.read(matchTimerProvider.notifier).setStartTime(startTime);
 					},
 				);
 			case 2:
@@ -166,13 +168,13 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		final selectedBot = ref.watch(selectedBotPositionProvider);
 		final selectedTabIndex = ref.watch(selectedTabIndexProvider);
 
-		// Watch autoTabControllerProvider to sync _matchStartTime when undo resets autoStartTime
-		final autoState = ref.watch(autoTabControllerProvider);
-		if (autoState.autoStartTime != _matchStartTime) {
-			// Sync the local state with the provider's autoStartTime
-			// This handles undo resetting the timer
+		// Watch matchTimerProvider to get shared match start time
+		final matchStartTime = ref.watch(matchTimerProvider);
+		if (matchStartTime != _matchStartTime) {
 			WidgetsBinding.instance.addPostFrameCallback((_) {
-				setState(() => _matchStartTime = autoState.autoStartTime);
+				if (mounted) {
+					setState(() => _matchStartTime = matchStartTime);
+				}
 			});
 		}
 

@@ -1,5 +1,4 @@
 import 'package:csv/csv.dart';
-import '../data/database/scout_database.dart';
 
 class CsvBuilder {
 	/// Escape CSV field values using the same logic as server's safeCSV()
@@ -27,30 +26,25 @@ class CsvBuilder {
 		'syncedAt', // Sync timestamp
 	};
 
-	/// Build CSV string from scout entries
-	/// Returns CSV with headers and data rows
-	/// Uses toJson() for automatic schema discovery - new fields are automatically included
-	static String buildScoutCsv(List<ScoutData> scouts) {
-		if (scouts.isEmpty) {
+	/// Build CSV string from scout data maps
+	/// Accepts Map<String, dynamic> with scouting data and metadata
+	static String buildScoutCsv(List<Map<String, dynamic>> scoutDataMaps) {
+		if (scoutDataMaps.isEmpty) {
 			return '';
 		}
 
-		// Get all fields from the first scout using toJson() to determine column order
-		// This acts like "SELECT * FROM scout"
-		final firstScoutJson = scouts.first.toJson();
-		// Filter out internal-only fields
-		final allHeaders = firstScoutJson.keys.where((k) => !_excludedFields.contains(k)).toList();
-		final headers = allHeaders.map(_camelToSnakeCase).toList(); // Convert to snake_case
+		// Get all fields from the first scout to determine column order
+		final firstScout = scoutDataMaps.first;
+		final allHeaders = firstScout.keys.where((k) => !_excludedFields.contains(k)).toList();
+		final headers = allHeaders.map(_camelToSnakeCase).toList();
 
-		// Build rows using toJson() output with custom escaping
+		// Build rows with custom escaping
 		final rows = <List<dynamic>>[
-			headers.map((h) => safeCSV(h)).toList() // Escape headers too
+			headers.map((h) => safeCSV(h)).toList()
 		];
-		for (final scout in scouts) {
-			final scoutJson = scout.toJson();
+		for (final scoutData in scoutDataMaps) {
 			rows.add(allHeaders.map((header) {
-				final value = scoutJson[header];
-				// Apply custom CSV escaping to match server's safeCSV() function
+				final value = scoutData[header];
 				return safeCSV(value?.toString() ?? '');
 			}).toList());
 		}

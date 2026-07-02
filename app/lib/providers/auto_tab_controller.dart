@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:convert';
 import 'active_zone_provider.dart';
+import 'timeline_provider.dart';
+import 'match_timer_provider.dart';
 
 /// Timeline event entry: tracks when an action happened and its value
 /// Format matches web app: time:field:value
@@ -98,12 +99,6 @@ class AutoTabState {
 	// Active fuel target ('hub' or 'alliancePass')
 	final String activeFuelTarget;
 
-	// Timeline of all events
-	final List<TimelineEvent> timeline;
-
-	// Auto start time (to calculate relative timestamps)
-	final DateTime? autoStartTime;
-
 	// Last zone change time (to calculate time spent in zone)
 	final DateTime? lastZoneChangeTime;
 
@@ -125,8 +120,6 @@ class AutoTabState {
 		this.climbLevel = 0,
 		this.activeZone = 'alliance',
 		this.activeFuelTarget = 'hub',
-		this.timeline = const [],
-		this.autoStartTime,
 		this.lastZoneChangeTime,
 	});
 
@@ -149,8 +142,6 @@ class AutoTabState {
 		int? climbLevel,
 		String? activeZone,
 		String? activeFuelTarget,
-		List<TimelineEvent>? timeline,
-		DateTime? autoStartTime,
 		DateTime? lastZoneChangeTime,
 	}) {
 		return AutoTabState(
@@ -171,13 +162,11 @@ class AutoTabState {
 			climbLevel: climbLevel ?? this.climbLevel,
 			activeZone: activeZone ?? this.activeZone,
 			activeFuelTarget: activeFuelTarget ?? this.activeFuelTarget,
-			timeline: timeline ?? this.timeline,
-			autoStartTime: autoStartTime ?? this.autoStartTime,
 			lastZoneChangeTime: lastZoneChangeTime ?? this.lastZoneChangeTime,
 		);
 	}
 
-	/// Convert state to map for database storage
+	/// Convert state to map for database storage (does not include timeline - handled separately)
 	Map<String, dynamic> toJson() {
 		return {
 			'auto_trench_depot_alliance_to_neutral': trenchDepotAllianceToNeutral,
@@ -197,14 +186,11 @@ class AutoTabState {
 			'auto_climb_level': climbLevel,
 			'auto_active_zone': activeZone,
 			'auto_active_fuel_target': activeFuelTarget,
-			'timeline': TimelineEvent.formatTimeline(timeline),
 		};
 	}
 
-	/// Load state from map (database)
+	/// Load state from map (database) - does not include timeline, handled separately
 	factory AutoTabState.fromJson(Map<String, dynamic> json) {
-		final timeline = TimelineEvent.parseTimeline(json['timeline'] as String? ?? '');
-
 		return AutoTabState(
 			trenchDepotAllianceToNeutral: json['auto_trench_depot_alliance_to_neutral'] as int? ?? 0,
 			bumpDepotAllianceToNeutral: json['auto_bump_depot_alliance_to_neutral'] as int? ?? 0,
@@ -216,14 +202,13 @@ class AutoTabState {
 			trenchOutpostNeutralToAlliance: json['auto_trench_outpost_neutral_to_alliance'] as int? ?? 0,
 			fuelScore: json['auto_fuel_score'] as int? ?? 0,
 			fuelNeutralAlliancePass: json['auto_fuel_neutral_alliance_pass'] as int? ?? 0,
-		collectOutpost: json['auto_collect_outpost'] as int? ?? 0,
-		collectDepot: json['auto_collect_depot'] as int? ?? 0,
+			collectOutpost: json['auto_collect_outpost'] as int? ?? 0,
+			collectDepot: json['auto_collect_depot'] as int? ?? 0,
 			allianceTime: json['auto_alliance_time'] as int? ?? 0,
 			neutralTime: json['auto_neutral_time'] as int? ?? 0,
 			climbLevel: json['auto_climb_level'] as int? ?? 0,
 			activeZone: json['auto_active_zone'] as String? ?? 'alliance',
 			activeFuelTarget: json['auto_active_fuel_target'] as String? ?? 'hub',
-			timeline: timeline,
 		);
 	}
 }
@@ -243,7 +228,8 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 		required String valueLabel, // Value label for timeline (currently unused - numeric value is stored)
 	}) {
 		final now = DateTime.now();
-		final startTime = state.autoStartTime ?? now;
+		final matchStartTime = _ref.read(matchTimerProvider);
+		final startTime = matchStartTime ?? now;
 		final elapsed = now.difference(startTime).inSeconds;
 
 		// Create timeline event with field name and numeric value (matching web app format)
@@ -359,23 +345,21 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 				);
 		}
 
-		// Add event to timeline
-		final newTimeline = [...newState.timeline, event];
+		// Add event to shared timeline provider
+		_ref.read(timelineProvider.notifier).addEvent(event);
 
-		// Update state - set autoStartTime only on first action if not already set
+		// Update state
 		state = newState.copyWith(
-			timeline: newTimeline,
-			autoStartTime: state.autoStartTime ?? now,
 			lastZoneChangeTime: newState.lastZoneChangeTime ?? state.lastZoneChangeTime ?? now,
 		);
 	}
 
 	/// Undo the last action
 	void undo() {
-		if (state.timeline.isEmpty) return;
+		final currentTimeline = _ref.read(timelineProvider);
+		if (currentTimeline.isEmpty) return;
 
-		final lastEvent = state.timeline.last;
-		final newTimeline = state.timeline.toList()..removeLast();
+		final lastEvent = currentTimeline.last;
 
 		// Parse field name and value from timeline event
 		final field = lastEvent.action;
@@ -484,38 +468,18 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 				newState = newState.copyWith(climbLevel: actionValue);
 		}
 
-		// Update timeline and reset timer if empty
-		if (newTimeline.isEmpty) {
-			// Directly create new state with autoStartTime set to null (can't use copyWith for this)
-			state = AutoTabState(
-				trenchDepotAllianceToNeutral: newState.trenchDepotAllianceToNeutral,
-				bumpDepotAllianceToNeutral: newState.bumpDepotAllianceToNeutral,
-				bumpOutpostAllianceToNeutral: newState.bumpOutpostAllianceToNeutral,
-				trenchOutpostAllianceToNeutral: newState.trenchOutpostAllianceToNeutral,
-				trenchDepotNeutralToAlliance: newState.trenchDepotNeutralToAlliance,
-				bumpDepotNeutralToAlliance: newState.bumpDepotNeutralToAlliance,
-				bumpOutpostNeutralToAlliance: newState.bumpOutpostNeutralToAlliance,
-				trenchOutpostNeutralToAlliance: newState.trenchOutpostNeutralToAlliance,
-				fuelScore: newState.fuelScore,
-				fuelNeutralAlliancePass: newState.fuelNeutralAlliancePass,
-				collectOutpost: newState.collectOutpost,
-				collectDepot: newState.collectDepot,
-				allianceTime: newState.allianceTime,
-				neutralTime: newState.neutralTime,
-				climbLevel: newState.climbLevel,
-				activeZone: newState.activeZone,
-				activeFuelTarget: newState.activeFuelTarget,
-				timeline: newTimeline,
-				autoStartTime: null,
-			);
-		} else {
-			state = newState.copyWith(timeline: newTimeline);
-		}
+		// Remove event from shared timeline provider
+		_ref.read(timelineProvider.notifier).undo();
+
+		// Update state (no need to reset anything, match timer is shared)
+		state = newState;
 	}
 
 	/// Reset all state
 	void reset() {
 		state = AutoTabState();
+		_ref.read(timelineProvider.notifier).clear();
+		_ref.read(matchTimerProvider.notifier).clear();
 	}
 
 	/// Toggle zone between alliance and neutral
@@ -555,23 +519,36 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 
 	/// Start auto (initialize start time) - syncs with UI timer
 	void startAuto() {
-		state = state.copyWith(autoStartTime: DateTime.now());
+		final now = DateTime.now();
+		_ref.read(matchTimerProvider.notifier).setStartTime(now);
 	}
 
 	/// Sync auto start time with external match timer (called when UI timer starts)
 	void syncStartTime(DateTime matchStartTime) {
-		if (state.autoStartTime == null) {
-			state = state.copyWith(autoStartTime: matchStartTime);
+		if (_ref.read(matchTimerProvider) == null) {
+			_ref.read(matchTimerProvider.notifier).setStartTime(matchStartTime);
 		}
 	}
 
-	/// Load state from data map
-	void loadFromData(Map<String, dynamic> data) {
+	/// Load state from data map and populate timeline provider
+	void loadFromData(Map<String, dynamic> data, {bool isFirstLoad = false}) {
 		state = AutoTabState.fromJson(data);
+		// Only load timeline from database on first load
+		// When switching tabs on same scout, preserve in-memory timeline
+		if (isFirstLoad) {
+			final timeline = TimelineEvent.parseTimeline(data['timeline'] as String? ?? '');
+			_ref.read(timelineProvider.notifier).setTimeline(timeline);
+		}
 	}
 
-	/// Get all counters as map for database save
-	Map<String, dynamic> getCountersForSave() => state.toJson();
+	/// Get all counters and timeline as map for database save
+	Map<String, dynamic> getCountersForSave() {
+		final counters = state.toJson();
+		// Add timeline to the save data
+		final timeline = _ref.read(timelineProvider);
+		counters['timeline'] = TimelineEvent.formatTimeline(timeline);
+		return counters;
+	}
 }
 
 /// Riverpod provider for auto tab controller

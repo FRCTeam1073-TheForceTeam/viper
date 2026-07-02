@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:drift/drift.dart' show Value;
 import '../../constants/colors.dart';
-import '../../data/database/scout_database.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/tele_tab_controller.dart';
+import '../../providers/auto_tab_controller.dart' show TimelineEvent;
 import '../../providers/field_side_provider.dart';
 import '../../providers/locale_provider.dart';
-import '../../services/scout_data_helper.dart';
+import '../../providers/timeline_provider.dart';
+import '../../providers/match_timer_provider.dart';
+import '../../providers/undo_coordinator.dart';
 import '../../services/localization.dart';
 import '../../widgets/tele_field_overlay.dart';
 import '../../widgets/tele_values_table.dart';
+import '../../widgets/timeline_table.dart';
 
 /// Initialize Tele Tab translations
 void _initTeleTabTranslations() {
@@ -358,11 +360,10 @@ class TeleopTab extends ConsumerStatefulWidget {
 }
 
 class _TeleopTabState extends ConsumerState<TeleopTab> {
-	ScoutData? _currentScout;
 	bool _valuesExpanded = false;
 	bool _timelineExpanded = false;
 	bool _listenerRegistered = false;
-	late ScoutDatabase _database;
+	late FocusNode _focusNode;
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -386,185 +387,34 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 	void initState() {
 		super.initState();
 		_initTeleTabTranslations();
-		// Cache database reference for use in deactivate() (before ref becomes invalid)
-		_initDatabase();
-		_loadScout();
+		_focusNode = FocusNode();
+		_focusNode.addListener(_onFocusChanged);
 	}
 
-	Future<void> _initDatabase() async {
-		_database = await ref.read(databaseProvider.future);
+	void _onFocusChanged() {
 	}
 
 	@override
-	void deactivate() {
-		_saveTab();
-		super.deactivate();
+	void dispose() {
+		_focusNode.removeListener(_onFocusChanged);
+		_focusNode.dispose();
+		super.dispose();
 	}
 
-	Future<void> _loadScout() async {
-		if (widget.matchNumber != null && widget.teamNumber != null) {
-			final db = await ref.read(databaseProvider.future);
-			final scout = await db.getScout(
-				widget.eventId,
-				widget.matchNumber!,
-				widget.teamNumber!,
-			);
-			if (scout != null && mounted) {
-				setState(() {
-					_currentScout = scout;
-				});
-
-				// Load tele data into controller
-				final controller = ref.read(teleTabControllerProvider.notifier);
-				final teleData = {
-					'tele_trench_depot_alliance_to_neutral': scout.teleTrenchDepotAllianceToNeutral,
-					'tele_bump_depot_alliance_to_neutral': scout.teleBumpDepotAllianceToNeutral,
-					'tele_bump_outpost_alliance_to_neutral': scout.teleBumpOutpostAllianceToNeutral,
-					'tele_trench_outpost_alliance_to_neutral': scout.teleTrenchOutpostAllianceToNeutral,
-					'tele_trench_depot_neutral_to_alliance': scout.teleTrenchDepotNeutralToAlliance,
-					'tele_bump_depot_neutral_to_alliance': scout.teleBumpDepotNeutralToAlliance,
-					'tele_bump_outpost_neutral_to_alliance': scout.teleBumpOutpostNeutralToAlliance,
-					'tele_trench_outpost_neutral_to_alliance': scout.teleTrenchOutpostNeutralToAlliance,
-					'tele_trench_outpost_neutral_to_opponent': scout.teleTrenchOutpostNeutralToOpponent,
-					'tele_bump_outpost_neutral_to_opponent': scout.teleBumpOutpostNeutralToOpponent,
-					'tele_bump_depot_neutral_to_opponent': scout.teleBumpDepotNeutralToOpponent,
-					'tele_trench_depot_neutral_to_opponent': scout.teleTrenchDepotNeutralToOpponent,
-					'tele_trench_outpost_opponent_to_neutral': scout.teleTrenchOutpostOpponentToNeutral,
-					'tele_bump_outpost_opponent_to_neutral': scout.teleBumpOutpostOpponentToNeutral,
-					'tele_bump_depot_opponent_to_neutral': scout.teleBumpDepotOpponentToNeutral,
-					'tele_trench_depot_opponent_to_neutral': scout.teleTrenchDepotOpponentToNeutral,
-					'tele_fuel_score': scout.teleFuelScore,
-					'tele_fuel_alliance_dump': scout.teleFuelAllianceDump,
-					'tele_fuel_outpost': scout.teleFuelOutpost,
-					'tele_fuel_neutral_alliance_pass': scout.teleFuelNeutralAlliancePass,
-					'tele_fuel_opponent_neutral_pass': scout.teleFuelOpponentNeutralPass,
-					'tele_fuel_opponent_alliance_pass': scout.teleFuelOpponentAlliancePass,
-					'tele_alliance_time': scout.teleAllianceTime,
-					'tele_neutral_time': scout.teleNeutralTime,
-					'tele_opponent_time': scout.teleOpponentTime,
-					'tele_climb_level': scout.teleClimbLevel ?? 0,
-					'tele_timeline': scout.teleTimeline,
-				};
-				controller.loadFromData(teleData);
-			}
+	/// Start match timer with offset for auto period + gap (20s + 3s = 23s)
+	/// Used when button is pressed before timer was started in auto
+	void _startMatchIfNeeded() {
+		final currentTime = ref.read(matchTimerProvider);
+		if (currentTime == null) {
+			// Set timer to 23 seconds ago so clock shows ~23 seconds
+			final now = DateTime.now();
+			final autoAndGapDuration = const Duration(seconds: 23);
+			final startTime = now.subtract(autoAndGapDuration);
+			ref.read(matchTimerProvider.notifier).setStartTime(startTime);
 		}
 	}
 
-	Future<void> _saveTab() async {
-		if (widget.matchNumber == null || widget.teamNumber == null) return;
 
-		final db = _database;
-		final teleState = ref.read(teleTabControllerProvider);
-
-		// Guard: don't save if all counters are zero and timeline is empty
-		final allCountersZero = teleState.trenchDepotAllianceToNeutral == 0 &&
-			teleState.bumpDepotAllianceToNeutral == 0 &&
-			teleState.bumpOutpostAllianceToNeutral == 0 &&
-			teleState.trenchOutpostAllianceToNeutral == 0 &&
-			teleState.trenchDepotNeutralToAlliance == 0 &&
-			teleState.bumpDepotNeutralToAlliance == 0 &&
-			teleState.bumpOutpostNeutralToAlliance == 0 &&
-			teleState.trenchOutpostNeutralToAlliance == 0 &&
-			teleState.trenchOutpostNeutralToOpponent == 0 &&
-			teleState.bumpOutpostNeutralToOpponent == 0 &&
-			teleState.bumpDepotNeutralToOpponent == 0 &&
-			teleState.trenchDepotNeutralToOpponent == 0 &&
-			teleState.trenchOutpostOpponentToNeutral == 0 &&
-			teleState.bumpOutpostOpponentToNeutral == 0 &&
-			teleState.bumpDepotOpponentToNeutral == 0 &&
-			teleState.trenchDepotOpponentToNeutral == 0 &&
-			teleState.fuelScore == 0 &&
-			teleState.fuelAllianceDump == 0 &&
-			teleState.fuelOutpost == 0 &&
-			teleState.fuelNeutralAlliancePass == 0 &&
-			teleState.fuelOpponentNeutralPass == 0 &&
-			teleState.fuelOpponentAlliancePass == 0;
-
-		if (allCountersZero && _currentScout != null && _currentScout!.teleFuelScore > 0) {
-			print('[TELE_TAB] Skipping save - detected blank state, preserving existing data');
-			return;
-		}
-
-		final existing = _currentScout ?? await db.getScout(
-			widget.eventId,
-			widget.matchNumber!,
-			widget.teamNumber!,
-		);
-
-		final now = DateTime.now();
-		final timelineStr = TeleTimelineEvent.formatTimeline(teleState.timeline);
-
-		final scout = existing != null
-				? existing.copyWith(
-					teleTrenchDepotAllianceToNeutral: teleState.trenchDepotAllianceToNeutral,
-					teleBumpDepotAllianceToNeutral: teleState.bumpDepotAllianceToNeutral,
-					teleBumpOutpostAllianceToNeutral: teleState.bumpOutpostAllianceToNeutral,
-					teleTrenchOutpostAllianceToNeutral: teleState.trenchOutpostAllianceToNeutral,
-					teleTrenchDepotNeutralToAlliance: teleState.trenchDepotNeutralToAlliance,
-					teleBumpDepotNeutralToAlliance: teleState.bumpDepotNeutralToAlliance,
-					teleBumpOutpostNeutralToAlliance: teleState.bumpOutpostNeutralToAlliance,
-					teleTrenchOutpostNeutralToAlliance: teleState.trenchOutpostNeutralToAlliance,
-					teleTrenchOutpostNeutralToOpponent: teleState.trenchOutpostNeutralToOpponent,
-					teleBumpOutpostNeutralToOpponent: teleState.bumpOutpostNeutralToOpponent,
-					teleBumpDepotNeutralToOpponent: teleState.bumpDepotNeutralToOpponent,
-					teleTrenchDepotNeutralToOpponent: teleState.trenchDepotNeutralToOpponent,
-					teleTrenchOutpostOpponentToNeutral: teleState.trenchOutpostOpponentToNeutral,
-					teleBumpOutpostOpponentToNeutral: teleState.bumpOutpostOpponentToNeutral,
-					teleBumpDepotOpponentToNeutral: teleState.bumpDepotOpponentToNeutral,
-					teleTrenchDepotOpponentToNeutral: teleState.trenchDepotOpponentToNeutral,
-					teleFuelScore: teleState.fuelScore,
-					teleFuelAllianceDump: teleState.fuelAllianceDump,
-					teleFuelOutpost: teleState.fuelOutpost,
-					teleFuelNeutralAlliancePass: teleState.fuelNeutralAlliancePass,
-					teleFuelOpponentNeutralPass: teleState.fuelOpponentNeutralPass,
-					teleFuelOpponentAlliancePass: teleState.fuelOpponentAlliancePass,
-					teleAllianceTime: teleState.allianceTime,
-					teleNeutralTime: teleState.neutralTime,
-					teleOpponentTime: teleState.opponentTime,
-					teleClimbLevel: Value(teleState.climbLevel),
-					teleTimeline: Value(timelineStr),
-					updatedAt: now,
-				)
-				: ScoutDataHelper.createNewScout(
-					event: widget.eventId,
-					match: widget.matchNumber!,
-					team: widget.teamNumber!,
-			).copyWith(
-				teleTrenchDepotAllianceToNeutral: teleState.trenchDepotAllianceToNeutral,
-				teleBumpDepotAllianceToNeutral: teleState.bumpDepotAllianceToNeutral,
-				teleBumpOutpostAllianceToNeutral: teleState.bumpOutpostAllianceToNeutral,
-				teleTrenchOutpostAllianceToNeutral: teleState.trenchOutpostAllianceToNeutral,
-				teleTrenchDepotNeutralToAlliance: teleState.trenchDepotNeutralToAlliance,
-				teleBumpDepotNeutralToAlliance: teleState.bumpDepotNeutralToAlliance,
-				teleBumpOutpostNeutralToAlliance: teleState.bumpOutpostNeutralToAlliance,
-				teleTrenchOutpostNeutralToAlliance: teleState.trenchOutpostNeutralToAlliance,
-				teleTrenchOutpostNeutralToOpponent: teleState.trenchOutpostNeutralToOpponent,
-				teleBumpOutpostNeutralToOpponent: teleState.bumpOutpostNeutralToOpponent,
-				teleBumpDepotNeutralToOpponent: teleState.bumpDepotNeutralToOpponent,
-				teleTrenchDepotNeutralToOpponent: teleState.trenchDepotNeutralToOpponent,
-				teleTrenchOutpostOpponentToNeutral: teleState.trenchOutpostOpponentToNeutral,
-				teleBumpOutpostOpponentToNeutral: teleState.bumpOutpostOpponentToNeutral,
-				teleBumpDepotOpponentToNeutral: teleState.bumpDepotOpponentToNeutral,
-				teleTrenchDepotOpponentToNeutral: teleState.trenchDepotOpponentToNeutral,
-				teleFuelScore: teleState.fuelScore,
-				teleFuelAllianceDump: teleState.fuelAllianceDump,
-				teleFuelOutpost: teleState.fuelOutpost,
-				teleFuelNeutralAlliancePass: teleState.fuelNeutralAlliancePass,
-				teleFuelOpponentNeutralPass: teleState.fuelOpponentNeutralPass,
-				teleFuelOpponentAlliancePass: teleState.fuelOpponentAlliancePass,
-				teleAllianceTime: teleState.allianceTime,
-				teleNeutralTime: teleState.neutralTime,
-				teleOpponentTime: teleState.opponentTime,
-				teleClimbLevel: Value(teleState.climbLevel),
-				teleTimeline: Value(timelineStr),
-				updatedAt: now,
-			);
-
-		await db.upsertScout(scout);
-		if (mounted) {
-			setState(() => _currentScout = scout);
-		}
-	}
 
 	@override
 	Widget build(BuildContext context) {
@@ -573,19 +423,11 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final teamColor = _getTeamColor(botPosition);
 
-		// Auto-save whenever tele tab state changes
-		if (!_listenerRegistered) {
-			_listenerRegistered = true;
-			ref.listen<TeleTabState>(teleTabControllerProvider, (previous, next) {
-				if (previous != null && previous != next) {
-					_saveTab();
-				}
-			});
-		}
-
-		return SingleChildScrollView(
-			padding: const EdgeInsets.symmetric(vertical: 8),
-			child: Column(
+		return Focus(
+			focusNode: _focusNode,
+			child: SingleChildScrollView(
+				padding: const EdgeInsets.symmetric(vertical: 8),
+				child: Column(
 				crossAxisAlignment: CrossAxisAlignment.stretch,
 				children: [
 					// Field Overlay
@@ -598,6 +440,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 							botPosition: botPosition,
 							activeFuelTarget: teleState.activeFuelTarget,
 							onMovementTapped: (field, action) {
+								_startMatchIfNeeded();
 								ref.read(teleTabControllerProvider.notifier).recordAction(
 									type: 'movement',
 									field: field,
@@ -607,6 +450,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 								);
 							},
 							onClimbTapped: () {
+								_startMatchIfNeeded();
 								if (teleState.climbLevel < 3) {
 									ref.read(teleTabControllerProvider.notifier).recordAction(
 										type: 'climb',
@@ -702,6 +546,12 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 												),
 												const SizedBox(height: 12),
 											],
+											// Timeline Table
+											if (_timelineExpanded)
+												TimelineTable(
+													key: const ValueKey('tele_timeline_table'),
+													events: ref.watch(timelineProvider),
+												),
 										],
 									),
 								),
@@ -712,25 +562,19 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 									child: Column(
 										crossAxisAlignment: CrossAxisAlignment.stretch,
 										children: [
-											// Undo button
+											// Undo button (always enabled to undo either timeline events or timer start)
 											FilledButton(
 												style: FilledButton.styleFrom(
-													backgroundColor: teleState.timeline.isNotEmpty
-														? AppColors.buttonBgColor
-														: Colors.grey.shade700,
-													foregroundColor: teleState.timeline.isNotEmpty
-														? AppColors.buttonFgColor
-														: Colors.grey.shade500,
+													backgroundColor: AppColors.buttonBgColor,
+													foregroundColor: AppColors.buttonFgColor,
 													padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
 													shape: RoundedRectangleBorder(
 														borderRadius: BorderRadius.circular(8),
 													),
 												),
-												onPressed: teleState.timeline.isNotEmpty
-													? () {
-														ref.read(teleTabControllerProvider.notifier).undo();
-													}
-													: null,
+												onPressed: () {
+													undoLastAction(ref);
+												},
 												child: Text(
 													_translate('undo'),
 													style: TextStyle(fontSize: _getResponsiveFontSize(12)),
@@ -766,7 +610,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 														borderRadius: BorderRadius.circular(8),
 													),
 												),
-												onPressed: _saveTab,
+												onPressed: () {},
 												child: Text(
 													'End Game »',
 													style: TextStyle(fontSize: _getResponsiveFontSize(12)),
@@ -781,6 +625,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 
 					const SizedBox(height: 16),
 				],
+			),
 			),
 		);
 	}
@@ -817,6 +662,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			height: 70,
 			child: ElevatedButton(
 				onPressed: () {
+					_startMatchIfNeeded();
 					ref.read(teleTabControllerProvider.notifier).recordAction(
 						type: 'fuel',
 						field: getFuelField(),
