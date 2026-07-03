@@ -80,9 +80,6 @@ class ScoutingData extends MapDataModel {
 		FieldDescriptor(name: 'tele_climb_level'),
 		FieldDescriptor(name: 'tele_active_zone'),
 		FieldDescriptor(name: 'tele_active_fuel_target'),
-		// End game
-		FieldDescriptor(name: 'scouter'),
-		FieldDescriptor(name: 'comments'),
 	];
 
 	// UI state getters - backed by descriptor fields, so they're serialized

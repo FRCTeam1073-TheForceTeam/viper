@@ -15,6 +15,8 @@ import '../../widgets/checkbox_button_group.dart';
 import '../../widgets/descriptor_checkbox_group.dart';
 import '../../widgets/position_selector_area.dart';
 import '../../widgets/radio_button_group.dart';
+import '../../widgets/descriptor_text_field.dart';
+import '../../widgets/descriptor_text_area.dart';
 import '../../constants/colors.dart';
 import '../../models/match_model.dart';
 import '../../models/field_descriptor.dart';
@@ -38,8 +40,6 @@ class EndGameTab extends ConsumerStatefulWidget {
 }
 
 class _EndGameTabState extends ConsumerState<EndGameTab> {
-	late TextEditingController _scouterNameController;
-	late TextEditingController _commentsController;
 	String? _lastScoutAction;
 
 	String _translate(String key, {Map<String, String>? variables}) {
@@ -50,9 +50,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	@override
 	void initState() {
 		super.initState();
-		_scouterNameController = TextEditingController();
-		_commentsController = TextEditingController();
-
 		// Load last scout action from SharedPreferences
 		_loadLastScoutAction();
 
@@ -841,8 +838,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 
 	@override
 	void dispose() {
-		_scouterNameController.dispose();
-		_commentsController.dispose();
 		super.dispose();
 	}
 
@@ -991,10 +986,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final matches = ref.watch(matchListProvider);
 		final fieldSide = ref.watch(selectedFieldSideProvider);
-
-		// Sync text controllers with scouting data values
-		_scouterNameController.text = scoutingData.getFieldValue('scouter').asString();
-		_commentsController.text = scoutingData.getFieldValue('comments').asString();
 
 		// Read climb levels from scouting data
 		final autoClimbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
@@ -1556,33 +1547,27 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										provider: scoutingDataProvider,
 									),
 									const SizedBox(height: 16),
-									TextField(
-										controller: _scouterNameController,
-										decoration: InputDecoration(
-											labelText: _translate('scouter_name_question'),
-											border: const OutlineInputBorder(),
+									DescriptorTextField.forField(
+										descriptor: FieldDescriptor(
+											name: 'scouter',
+											uiLabelKey: 'scouter_name_question',
 										),
+										model: scoutingData,
+										ref: ref,
+										provider: scoutingDataProvider,
 										maxLength: 32,
-										onChanged: (value) {
-											ref.read(scoutingDataProvider.notifier).update(
-												scoutingData.updateField('scouter', value),
-											);
-										},
 									),
 									const SizedBox(height: 16),
-									TextField(
-										controller: _commentsController,
-										decoration: InputDecoration(
-											labelText: _translate('comments_question'),
-											border: const OutlineInputBorder(),
+									DescriptorTextArea.forField(
+										descriptor: FieldDescriptor(
+											name: 'comments',
+											uiLabelKey: 'comments_question',
 										),
-										maxLines: 5,
+										model: scoutingData,
+										ref: ref,
+										provider: scoutingDataProvider,
 										minLines: 3,
-										onChanged: (value) {
-											ref.read(scoutingDataProvider.notifier).update(
-												scoutingData.updateField('comments', value),
-											);
-										},
+										maxLines: 5,
 									),
 								],
 							),
