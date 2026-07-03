@@ -12,6 +12,7 @@ import '../../services/localization.dart';
 import '../../services/csv_builder.dart';
 import '../../widgets/checkbox_button.dart';
 import '../../widgets/checkbox_button_group.dart';
+import '../../widgets/descriptor_checkbox_group.dart';
 import '../../widgets/radio_button_group.dart';
 import '../../constants/colors.dart';
 import '../../models/match_model.dart';
@@ -839,12 +840,12 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			final endGame = ref.read(endGameProvider);
 			if (climbType == 'auto') {
 				ref.read(endGameProvider.notifier).update(
-					endGame.copyWith(autoClimbPosition: positionStr),
+					endGame.updateField("autoClimbPosition", positionStr),
 				);
 				print('   Updated autoClimbPosition to: $positionStr');
 			} else if (climbType == 'tele') {
 				ref.read(endGameProvider.notifier).update(
-					endGame.copyWith(teleClimbPosition: positionStr),
+					endGame.updateField("teleClimbPosition", positionStr),
 				);
 				print('   Updated teleClimbPosition to: $positionStr');
 			}
@@ -915,11 +916,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												final endGame = ref.read(endGameProvider);
 												if (climbType == 'auto') {
 													ref.read(endGameProvider.notifier).update(
-														endGame.copyWith(autoClimbPosition: null),
+														endGame.updateField("autoClimbPosition", null),
 													);
 												} else if (climbType == 'tele') {
 													ref.read(endGameProvider.notifier).update(
-														endGame.copyWith(teleClimbPosition: null),
+														endGame.updateField("teleClimbPosition", null),
 													);
 												}
 											},
@@ -1214,7 +1215,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											selectedValue: endGame.climbMethod,
 											onChanged: (value) {
 												ref.read(endGameProvider.notifier).update(
-													endGame.copyWith(climbMethod: value),
+													endGame.updateField("climbMethod", value),
 												);
 											},
 										),
@@ -1237,42 +1238,12 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									CheckboxButtonGroup(
-										options: const [
-											CheckboxButtonOption(translationKey: 'shoot_move_desc'),
-											CheckboxButtonOption(translationKey: 'shoot_collecting_desc'),
-											CheckboxButtonOption(translationKey: 'shoot_turret_desc'),
-											CheckboxButtonOption(translationKey: 'shoot_climbing_desc'),
-										],
-										selectedValues: [
-											endGame.shootOnMove,
-											endGame.shootWhileCollecting,
-											endGame.shootTurret,
-											endGame.shootClimbing,
-										],
-										onChanged: (index) {
-											switch (index) {
-												case 0:
-													ref.read(endGameProvider.notifier).update(
-														endGame.copyWith(shootOnMove: !endGame.shootOnMove),
-													);
-													break;
-												case 1:
-													ref.read(endGameProvider.notifier).update(
-														endGame.copyWith(shootWhileCollecting: !endGame.shootWhileCollecting),
-													);
-													break;
-												case 2:
-													ref.read(endGameProvider.notifier).update(
-														endGame.copyWith(shootTurret: !endGame.shootTurret),
-													);
-													break;
-												case 3:
-													ref.read(endGameProvider.notifier).update(
-														endGame.copyWith(shootClimbing: !endGame.shootClimbing),
-													);
-													break;
-											}
+									DescriptorCheckboxGroup(
+										object: endGame,
+										onChanged: (fieldName, newValue) {
+											ref.read(endGameProvider.notifier).update(
+												endGame.updateField(fieldName, newValue),
+											);
 										},
 									),
 								],
@@ -1320,7 +1291,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										selectedValue: endGame.fuelStrategy,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(fuelStrategy: value),
+												endGame.updateField("fuelStrategy", value),
 											);
 										},
 									),
@@ -1374,7 +1345,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										selectedValue: endGame.bricked,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(bricked: value),
+												endGame.updateField("bricked", value),
 											);
 										},
 									),
@@ -1428,7 +1399,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										selectedValue: endGame.defenseRating,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(defenseRating: value),
+												endGame.updateField("defenseRating", value),
 											);
 										},
 									),
@@ -1452,42 +1423,12 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											style: Theme.of(context).textTheme.titleMedium,
 										),
 										const SizedBox(height: 12),
-										CheckboxButtonGroup(
-											options: const [
-												CheckboxButtonOption(translationKey: 'defense_collected_desc'),
-												CheckboxButtonOption(translationKey: 'defense_hit_desc'),
-												CheckboxButtonOption(translationKey: 'defense_blocked_desc'),
-												CheckboxButtonOption(translationKey: 'defense_pinned_desc'),
-											],
-											selectedValues: [
-												endGame.defenseCollected,
-												endGame.defenseHit,
-												endGame.defenseBlocked,
-												endGame.defensePinned,
-											],
-											onChanged: (index) {
-												switch (index) {
-													case 0:
-														ref.read(endGameProvider.notifier).update(
-															endGame.copyWith(defenseCollected: !endGame.defenseCollected),
-														);
-														break;
-													case 1:
-														ref.read(endGameProvider.notifier).update(
-															endGame.copyWith(defenseHit: !endGame.defenseHit),
-														);
-														break;
-													case 2:
-														ref.read(endGameProvider.notifier).update(
-															endGame.copyWith(defenseBlocked: !endGame.defenseBlocked),
-														);
-														break;
-													case 3:
-														ref.read(endGameProvider.notifier).update(
-															endGame.copyWith(defensePinned: !endGame.defensePinned),
-														);
-														break;
-												}
+										DescriptorCheckboxGroup(
+											object: endGame,
+											onChanged: (fieldName, newValue) {
+												ref.read(endGameProvider.notifier).update(
+													endGame.updateField(fieldName, newValue),
+												);
 											},
 										),
 									],
@@ -1540,7 +1481,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										selectedValue: endGame.defended,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(defended: value),
+												endGame.updateField("defended", value),
 											);
 										},
 									),
@@ -1589,7 +1530,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										selectedValue: endGame.misses,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(misses: value),
+												endGame.updateField("misses", value),
 											);
 										},
 									),
@@ -1621,7 +1562,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										translationKey: 'review_requested_button',
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(reviewRequest: value == 1),
+												endGame.updateField("reviewRequest", value == 1),
 											);
 										},
 									),
@@ -1635,7 +1576,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										maxLength: 32,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(scouterName: value),
+												endGame.updateField("scouterName", value),
 											);
 										},
 									),
@@ -1650,7 +1591,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										minLines: 3,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(comments: value),
+												endGame.updateField("comments", value),
 											);
 										},
 									),
