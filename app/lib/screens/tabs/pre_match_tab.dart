@@ -12,6 +12,7 @@ import '../../services/localization.dart';
 import '../../constants/colors.dart';
 import '../../utils/match_name_converter.dart';
 import '../../widgets/checkbox_button.dart';
+import '../../models/field_descriptor.dart';
 
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -249,8 +250,8 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		// Get the field side (left or right)
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
-		// Watch pre-match provider for current state
-		final preMatchData = ref.watch(preMatchProvider);
+		// Read pre-match provider (don't watch to avoid rebuilding on updates)
+		final preMatchData = ref.read(preMatchProvider);
 
 		// Get baseUrl for robot photo
 		final apiClientAsync = ref.watch(apiClientProvider);
@@ -300,13 +301,13 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 												// Starting position interactive area (clickable/draggable)
 												Center(
 													child: _StartingPositionArea(
-														selectedPosition: preMatchData.startingPosition,
+														selectedPosition: preMatchData.getFieldValue('starting_position').asString(),
 														isBlueTeam: isBlueTeam,
 														fieldSide: fieldSide,
 														onPositionChanged: (newPosition) {
 															print('💾 Saving starting position: $newPosition');
 															ref.read(preMatchProvider.notifier).update(
-																preMatchData.copyWith(startingPosition: newPosition),
+																preMatchData.updateField('starting_position', newPosition),
 															);
 														},
 													),
@@ -351,14 +352,14 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 											),
 										),
 										// No Show Button
-										CheckboxButton(
-											isChecked: preMatchData.noShow,
-											translationKey: 'no_show',
-										onChanged: (intValue) {
-											ref.read(preMatchProvider.notifier).update(
-												preMatchData.copyWith(noShow: intValue == 1),
-											);
-										},
+										CheckboxButton.forField(
+											descriptor: FieldDescriptor(
+												name: 'no_show',
+												uiLabelKey: 'no_show',
+											),
+											model: preMatchData,
+											ref: ref,
+											provider: preMatchProvider,
 										),
 										// Proceed to Auto Button
 										FilledButton(

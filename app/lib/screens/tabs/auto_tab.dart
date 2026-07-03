@@ -686,9 +686,9 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						child: AutoFieldOverlay(
 							fieldSide: fieldSide,
 							activeZone: autoState.activeZone,
-							collectDepot: autoState.collectDepot == 1, // Convert int to bool
-							collectOutpost: autoState.collectOutpost == 1, // Convert int to bool
-							climbLevel: autoState.climbLevel,
+							collectDepot: autoState.getFieldValue('auto_collect_depot').asInt() == 1, // Convert int to bool
+							collectOutpost: autoState.getFieldValue('auto_collect_outpost').asInt() == 1, // Convert int to bool
+							climbLevel: autoState.getFieldValue('auto_climb_level').asInt(),
 							botPosition: botPosition,
 							showStartButton: widget.matchStartTime == null,
 							onMovementTapped: (field, action) {
@@ -719,13 +719,13 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								// Start match timer if not already started
 								_startMatchIfNeeded();
 
-								if (autoState.climbLevel < 1) {
+								if (autoState.getFieldValue('auto_climb_level').asInt() < 1) {
 									ref.read(autoTabControllerProvider.notifier).recordAction(
 										type: 'climb',
 										field: 'auto_climb_level',
-										value: autoState.climbLevel + 1,
+										value: autoState.getFieldValue('auto_climb_level').asInt() + 1,
 										actionLabel: 'Climb',
-										valueLabel: '${autoState.climbLevel + 1}',
+										valueLabel: '${autoState.getFieldValue('auto_climb_level').asInt() + 1}',
 									);
 								}
 							},
@@ -789,18 +789,18 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								if (_valuesExpanded) ...[
 									AutoValuesTable(
 										key: const ValueKey('auto_values_table'),
-										trenchDepotAllianceToNeutral: autoState.trenchDepotAllianceToNeutral,
-										bumpDepotAllianceToNeutral: autoState.bumpDepotAllianceToNeutral,
-										bumpOutpostAllianceToNeutral: autoState.bumpOutpostAllianceToNeutral,
-										trenchOutpostAllianceToNeutral: autoState.trenchOutpostAllianceToNeutral,
-										trenchDepotNeutralToAlliance: autoState.trenchDepotNeutralToAlliance,
-										bumpDepotNeutralToAlliance: autoState.bumpDepotNeutralToAlliance,
-										bumpOutpostNeutralToAlliance: autoState.bumpOutpostNeutralToAlliance,
-										trenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
-										fuelScore: autoState.fuelScore,
-										fuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
-										allianceTime: autoState.allianceTime,
-										neutralTime: autoState.neutralTime,
+										trenchDepotAllianceToNeutral: autoState.getFieldValue('auto_trench_depot_alliance_to_neutral').asInt(),
+										bumpDepotAllianceToNeutral: autoState.getFieldValue('auto_bump_depot_alliance_to_neutral').asInt(),
+										bumpOutpostAllianceToNeutral: autoState.getFieldValue('auto_bump_outpost_alliance_to_neutral').asInt(),
+										trenchOutpostAllianceToNeutral: autoState.getFieldValue('auto_trench_outpost_alliance_to_neutral').asInt(),
+										trenchDepotNeutralToAlliance: autoState.getFieldValue('auto_trench_depot_neutral_to_alliance').asInt(),
+										bumpDepotNeutralToAlliance: autoState.getFieldValue('auto_bump_depot_neutral_to_alliance').asInt(),
+										bumpOutpostNeutralToAlliance: autoState.getFieldValue('auto_bump_outpost_neutral_to_alliance').asInt(),
+										trenchOutpostNeutralToAlliance: autoState.getFieldValue('auto_trench_outpost_neutral_to_alliance').asInt(),
+										fuelScore: autoState.getFieldValue('auto_fuel_score').asInt(),
+										fuelNeutralAlliancePass: autoState.getFieldValue('auto_fuel_neutral_alliance_pass').asInt(),
+										allianceTime: autoState.getFieldValue('auto_alliance_time').asInt(),
+										neutralTime: autoState.getFieldValue('auto_neutral_time').asInt(),
 									),
 									const SizedBox(height: 12),
 								],

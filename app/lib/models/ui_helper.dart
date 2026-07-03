@@ -11,9 +11,10 @@ class UiHelper {
 	) {
 		final values = <bool>[];
 		for (final desc in object.descriptors) {
-			if (desc.uiLabelKey != null && desc.type == FieldType.bool) {
-				final value = object.values[desc.fieldName] as bool? ?? false;
-				values.add(value);
+			if (desc.uiLabelKey != null) {
+				// Parse bool value from string storage
+				final strValue = object.values[desc.name] as String?;
+				values.add(desc.withValue(strValue).asBool());
 			}
 		}
 		return values;
@@ -24,7 +25,7 @@ class UiHelper {
 		List<FieldDescriptor> descriptors,
 	) {
 		return descriptors
-				.where((d) => d.uiLabelKey != null && d.type == FieldType.bool)
+				.where((d) => d.uiLabelKey != null)
 				.toList();
 	}
 }

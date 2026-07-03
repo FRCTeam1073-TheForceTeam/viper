@@ -1,56 +1,44 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/field_descriptor.dart';
+import '../models/map_data_model.dart';
+import '../models/serialization_helper.dart';
 
-/// Pre-match data - stored in-memory via provider, exported to CSV at upload
-class PreMatchData {
-	final String? startingPosition;
-	final bool noShow;
+/// Pre-match data - map-based with typed accessors
+class PreMatchData extends MapDataModel {
+	PreMatchData([Map<String, dynamic>? initialValues])
+		: super(initialValues ?? {});
 
-	const PreMatchData({
-		this.startingPosition,
-		this.noShow = false,
-	});
+	PreMatchData.empty() : super.empty();
 
-	PreMatchData copyWith({
-		String? startingPosition,
-		bool? noShow,
-	}) {
-		return PreMatchData(
-			startingPosition: startingPosition ?? this.startingPosition,
-			noShow: noShow ?? this.noShow,
-		);
-	}
+	static const List<FieldDescriptor> _descriptors = [
+		FieldDescriptor(name: 'starting_position'),
+	];
 
-	Map<String, dynamic> toMap() {
-		return {
-			'starting_position': startingPosition,
-			'no_show': noShow ? 1 : 0,
-		};
-	}
+	@override
+	List<FieldDescriptor> get descriptors => _descriptors;
 
-	static PreMatchData fromMap(Map<String, dynamic> map) {
-		return PreMatchData(
-			startingPosition: map['starting_position'] as String?,
-			noShow: (map['no_show'] as int?) == 1,
-		);
+	@override
+	PreMatchData updateField(String fieldName, dynamic value) {
+		return PreMatchData(updateFieldValues(fieldName, value));
 	}
 }
 
 class PreMatchNotifier extends StateNotifier<PreMatchData> {
-	PreMatchNotifier() : super(const PreMatchData());
+	PreMatchNotifier() : super(PreMatchData.empty());
 
 	void update(PreMatchData data) {
 		state = data;
 	}
 
 	void reset() {
-		state = const PreMatchData();
+		state = PreMatchData.empty();
 	}
 
 	void loadFromData(Map<String, dynamic> data) {
 		try {
-			if (data.containsKey('starting_position') || data.containsKey('no_show')) {
-				state = PreMatchData.fromMap(data);
-			}
+			final newState = PreMatchData();
+			newState.loadFromMap(data);
+			state = newState;
 		} catch (e) {
 			print('Error loading pre-match data: $e');
 		}

@@ -40,7 +40,7 @@ class DescriptorCheckboxGroup extends StatelessWidget {
 				if (index >= 0 && index < checkboxFields.length) {
 					final field = checkboxFields[index];
 					final currentValue = selectedValues[index];
-					onChanged(field.fieldName, !currentValue);
+					onChanged(field.name, !currentValue);
 				}
 			},
 		);

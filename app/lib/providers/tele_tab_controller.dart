@@ -1,218 +1,89 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/field_descriptor.dart';
+import '../models/map_data_model.dart';
+import '../models/serialization_helper.dart';
 import 'active_zone_provider.dart';
 import 'auto_tab_controller.dart' show TimelineEvent;
 import 'timeline_provider.dart';
 import 'match_timer_provider.dart';
 
 
-/// State for tele tab - tracks all counters and timeline
-class TeleTabState {
-	// Movement counters (alliance ↔ neutral)
-	final int trenchDepotAllianceToNeutral;
-	final int bumpDepotAllianceToNeutral;
-	final int bumpOutpostAllianceToNeutral;
-	final int trenchOutpostAllianceToNeutral;
-	final int trenchDepotNeutralToAlliance;
-	final int bumpDepotNeutralToAlliance;
-	final int bumpOutpostNeutralToAlliance;
-	final int trenchOutpostNeutralToAlliance;
-
-	// Movement counters (neutral ↔ opponent)
-	final int trenchOutpostNeutralToOpponent;
-	final int bumpOutpostNeutralToOpponent;
-	final int bumpDepotNeutralToOpponent;
-	final int trenchDepotNeutralToOpponent;
-	final int trenchOutpostOpponentToNeutral;
-	final int bumpOutpostOpponentToNeutral;
-	final int bumpDepotOpponentToNeutral;
-	final int trenchDepotOpponentToNeutral;
-
-	// Fuel scoring
-	final int fuelScore;
-	final int fuelAllianceDump;
-	final int fuelOutpost;
-	final int fuelNeutralAlliancePass;
-	final int fuelOpponentNeutralPass;
-	final int fuelOpponentAlliancePass;
-
-	// Zone times
-	final int allianceTime;
-	final int neutralTime;
-	final int opponentTime;
-
-	// Climb level
-	final int climbLevel;
-
-	// Active zone for button filtering ('alliance', 'neutral', or 'opponent')
+/// State for tele tab - map-based data with UI state
+class TeleTabState extends MapDataModel {
+	// UI state (not serialized)
 	final String activeZone;
-
-	// Active fuel target
 	final String activeFuelTarget;
-
-	// Last zone change time (to calculate time spent in zone)
 	final DateTime? lastZoneChangeTime;
 
-	TeleTabState({
-		this.trenchDepotAllianceToNeutral = 0,
-		this.bumpDepotAllianceToNeutral = 0,
-		this.bumpOutpostAllianceToNeutral = 0,
-		this.trenchOutpostAllianceToNeutral = 0,
-		this.trenchDepotNeutralToAlliance = 0,
-		this.bumpDepotNeutralToAlliance = 0,
-		this.bumpOutpostNeutralToAlliance = 0,
-		this.trenchOutpostNeutralToAlliance = 0,
-		this.trenchOutpostNeutralToOpponent = 0,
-		this.bumpOutpostNeutralToOpponent = 0,
-		this.bumpDepotNeutralToOpponent = 0,
-		this.trenchDepotNeutralToOpponent = 0,
-		this.trenchOutpostOpponentToNeutral = 0,
-		this.bumpOutpostOpponentToNeutral = 0,
-		this.bumpDepotOpponentToNeutral = 0,
-		this.trenchDepotOpponentToNeutral = 0,
-		this.fuelScore = 0,
-		this.fuelAllianceDump = 0,
-		this.fuelOutpost = 0,
-		this.fuelNeutralAlliancePass = 0,
-		this.fuelOpponentNeutralPass = 0,
-		this.fuelOpponentAlliancePass = 0,
-		this.allianceTime = 0,
-		this.neutralTime = 0,
-		this.opponentTime = 0,
-		this.climbLevel = 0,
-		this.activeZone = 'alliance',
-		this.activeFuelTarget = 'hub',
-		this.lastZoneChangeTime,
-	});
+	TeleTabState([Map<String, dynamic>? initialValues, this.activeZone = 'alliance', this.activeFuelTarget = 'hub', this.lastZoneChangeTime])
+		: super(initialValues ?? {});
 
-	/// Create a copy with updated fields
+	TeleTabState.empty()
+		: activeZone = 'alliance',
+			activeFuelTarget = 'hub',
+			lastZoneChangeTime = null,
+			super.empty();
+
+	@override
+	List<FieldDescriptor> get descriptors => _descriptors;
+
+	static const List<FieldDescriptor> _descriptors = [
+		FieldDescriptor(name: 'tele_trench_depot_alliance_to_neutral'),
+		FieldDescriptor(name: 'tele_bump_depot_alliance_to_neutral'),
+		FieldDescriptor(name: 'tele_bump_outpost_alliance_to_neutral'),
+		FieldDescriptor(name: 'tele_trench_outpost_alliance_to_neutral'),
+		FieldDescriptor(name: 'tele_trench_depot_neutral_to_alliance'),
+		FieldDescriptor(name: 'tele_bump_depot_neutral_to_alliance'),
+		FieldDescriptor(name: 'tele_bump_outpost_neutral_to_alliance'),
+		FieldDescriptor(name: 'tele_trench_outpost_neutral_to_alliance'),
+		FieldDescriptor(name: 'tele_trench_outpost_neutral_to_opponent'),
+		FieldDescriptor(name: 'tele_bump_outpost_neutral_to_opponent'),
+		FieldDescriptor(name: 'tele_bump_depot_neutral_to_opponent'),
+		FieldDescriptor(name: 'tele_trench_depot_neutral_to_opponent'),
+		FieldDescriptor(name: 'tele_trench_outpost_opponent_to_neutral'),
+		FieldDescriptor(name: 'tele_bump_outpost_opponent_to_neutral'),
+		FieldDescriptor(name: 'tele_bump_depot_opponent_to_neutral'),
+		FieldDescriptor(name: 'tele_trench_depot_opponent_to_neutral'),
+		FieldDescriptor(name: 'tele_fuel_score'),
+		FieldDescriptor(name: 'tele_fuel_alliance_dump'),
+		FieldDescriptor(name: 'tele_fuel_outpost'),
+		FieldDescriptor(name: 'tele_fuel_neutral_alliance_pass'),
+		FieldDescriptor(name: 'tele_fuel_opponent_neutral_pass'),
+		FieldDescriptor(name: 'tele_fuel_opponent_alliance_pass'),
+		FieldDescriptor(name: 'tele_alliance_time'),
+		FieldDescriptor(name: 'tele_neutral_time'),
+		FieldDescriptor(name: 'tele_opponent_time'),
+		FieldDescriptor(name: 'tele_climb_level'),
+	];
+
+
+	/// Create a copy with updated fields (preserves UI state)
 	TeleTabState copyWith({
-		int? trenchDepotAllianceToNeutral,
-		int? bumpDepotAllianceToNeutral,
-		int? bumpOutpostAllianceToNeutral,
-		int? trenchOutpostAllianceToNeutral,
-		int? trenchDepotNeutralToAlliance,
-		int? bumpDepotNeutralToAlliance,
-		int? bumpOutpostNeutralToAlliance,
-		int? trenchOutpostNeutralToAlliance,
-		int? trenchOutpostNeutralToOpponent,
-		int? bumpOutpostNeutralToOpponent,
-		int? bumpDepotNeutralToOpponent,
-		int? trenchDepotNeutralToOpponent,
-		int? trenchOutpostOpponentToNeutral,
-		int? bumpOutpostOpponentToNeutral,
-		int? bumpDepotOpponentToNeutral,
-		int? trenchDepotOpponentToNeutral,
-		int? fuelScore,
-		int? fuelAllianceDump,
-		int? fuelOutpost,
-		int? fuelNeutralAlliancePass,
-		int? fuelOpponentNeutralPass,
-		int? fuelOpponentAlliancePass,
-		int? allianceTime,
-		int? neutralTime,
-		int? opponentTime,
-		int? climbLevel,
+		Map<String, String>? data,
 		String? activeZone,
 		String? activeFuelTarget,
 		DateTime? lastZoneChangeTime,
 	}) {
+		final result = {...this.values};
+		if (data != null) {
+			for (final desc in descriptors) {
+				if (data.containsKey(desc.name)) {
+					result[desc.name] = data[desc.name];
+				}
+			}
+		}
+
 		return TeleTabState(
-			trenchDepotAllianceToNeutral: trenchDepotAllianceToNeutral ?? this.trenchDepotAllianceToNeutral,
-			bumpDepotAllianceToNeutral: bumpDepotAllianceToNeutral ?? this.bumpDepotAllianceToNeutral,
-			bumpOutpostAllianceToNeutral: bumpOutpostAllianceToNeutral ?? this.bumpOutpostAllianceToNeutral,
-			trenchOutpostAllianceToNeutral: trenchOutpostAllianceToNeutral ?? this.trenchOutpostAllianceToNeutral,
-			trenchDepotNeutralToAlliance: trenchDepotNeutralToAlliance ?? this.trenchDepotNeutralToAlliance,
-			bumpDepotNeutralToAlliance: bumpDepotNeutralToAlliance ?? this.bumpDepotNeutralToAlliance,
-			bumpOutpostNeutralToAlliance: bumpOutpostNeutralToAlliance ?? this.bumpOutpostNeutralToAlliance,
-			trenchOutpostNeutralToAlliance: trenchOutpostNeutralToAlliance ?? this.trenchOutpostNeutralToAlliance,
-			trenchOutpostNeutralToOpponent: trenchOutpostNeutralToOpponent ?? this.trenchOutpostNeutralToOpponent,
-			bumpOutpostNeutralToOpponent: bumpOutpostNeutralToOpponent ?? this.bumpOutpostNeutralToOpponent,
-			bumpDepotNeutralToOpponent: bumpDepotNeutralToOpponent ?? this.bumpDepotNeutralToOpponent,
-			trenchDepotNeutralToOpponent: trenchDepotNeutralToOpponent ?? this.trenchDepotNeutralToOpponent,
-			trenchOutpostOpponentToNeutral: trenchOutpostOpponentToNeutral ?? this.trenchOutpostOpponentToNeutral,
-			bumpOutpostOpponentToNeutral: bumpOutpostOpponentToNeutral ?? this.bumpOutpostOpponentToNeutral,
-			bumpDepotOpponentToNeutral: bumpDepotOpponentToNeutral ?? this.bumpDepotOpponentToNeutral,
-			trenchDepotOpponentToNeutral: trenchDepotOpponentToNeutral ?? this.trenchDepotOpponentToNeutral,
-			fuelScore: fuelScore ?? this.fuelScore,
-			fuelAllianceDump: fuelAllianceDump ?? this.fuelAllianceDump,
-			fuelOutpost: fuelOutpost ?? this.fuelOutpost,
-			fuelNeutralAlliancePass: fuelNeutralAlliancePass ?? this.fuelNeutralAlliancePass,
-			fuelOpponentNeutralPass: fuelOpponentNeutralPass ?? this.fuelOpponentNeutralPass,
-			fuelOpponentAlliancePass: fuelOpponentAlliancePass ?? this.fuelOpponentAlliancePass,
-			allianceTime: allianceTime ?? this.allianceTime,
-			neutralTime: neutralTime ?? this.neutralTime,
-			opponentTime: opponentTime ?? this.opponentTime,
-			climbLevel: climbLevel ?? this.climbLevel,
-			activeZone: activeZone ?? this.activeZone,
-			activeFuelTarget: activeFuelTarget ?? this.activeFuelTarget,
-			lastZoneChangeTime: lastZoneChangeTime ?? this.lastZoneChangeTime,
+			result,
+			activeZone ?? this.activeZone,
+			activeFuelTarget ?? this.activeFuelTarget,
+			lastZoneChangeTime ?? this.lastZoneChangeTime,
 		);
 	}
 
-	/// Convert state to map for database storage (does not include timeline - handled separately)
-	Map<String, dynamic> toMap() {
-		return {
-			'tele_trench_depot_alliance_to_neutral': trenchDepotAllianceToNeutral,
-			'tele_bump_depot_alliance_to_neutral': bumpDepotAllianceToNeutral,
-			'tele_bump_outpost_alliance_to_neutral': bumpOutpostAllianceToNeutral,
-			'tele_trench_outpost_alliance_to_neutral': trenchOutpostAllianceToNeutral,
-			'tele_trench_depot_neutral_to_alliance': trenchDepotNeutralToAlliance,
-			'tele_bump_depot_neutral_to_alliance': bumpDepotNeutralToAlliance,
-			'tele_bump_outpost_neutral_to_alliance': bumpOutpostNeutralToAlliance,
-			'tele_trench_outpost_neutral_to_alliance': trenchOutpostNeutralToAlliance,
-			'tele_trench_outpost_neutral_to_opponent': trenchOutpostNeutralToOpponent,
-			'tele_bump_outpost_neutral_to_opponent': bumpOutpostNeutralToOpponent,
-			'tele_bump_depot_neutral_to_opponent': bumpDepotNeutralToOpponent,
-			'tele_trench_depot_neutral_to_opponent': trenchDepotNeutralToOpponent,
-			'tele_trench_outpost_opponent_to_neutral': trenchOutpostOpponentToNeutral,
-			'tele_bump_outpost_opponent_to_neutral': bumpOutpostOpponentToNeutral,
-			'tele_bump_depot_opponent_to_neutral': bumpDepotOpponentToNeutral,
-			'tele_trench_depot_opponent_to_neutral': trenchDepotOpponentToNeutral,
-			'tele_fuel_score': fuelScore,
-			'tele_fuel_alliance_dump': fuelAllianceDump,
-			'tele_fuel_outpost': fuelOutpost,
-			'tele_fuel_neutral_alliance_pass': fuelNeutralAlliancePass,
-			'tele_fuel_opponent_neutral_pass': fuelOpponentNeutralPass,
-			'tele_fuel_opponent_alliance_pass': fuelOpponentAlliancePass,
-			'tele_alliance_time': allianceTime,
-			'tele_neutral_time': neutralTime,
-			'tele_opponent_time': opponentTime,
-			'tele_climb_level': climbLevel,
-		};
-	}
-
-	/// Load state from map (database) - does not include timeline, handled separately
-	factory TeleTabState.fromMap(Map<String, dynamic> data) {
-		return TeleTabState(
-			trenchDepotAllianceToNeutral: data['tele_trench_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpDepotAllianceToNeutral: data['tele_bump_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpOutpostAllianceToNeutral: data['tele_bump_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchOutpostAllianceToNeutral: data['tele_trench_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchDepotNeutralToAlliance: data['tele_trench_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpDepotNeutralToAlliance: data['tele_bump_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpOutpostNeutralToAlliance: data['tele_bump_outpost_neutral_to_alliance'] as int? ?? 0,
-			trenchOutpostNeutralToAlliance: data['tele_trench_outpost_neutral_to_alliance'] as int? ?? 0,
-			trenchOutpostNeutralToOpponent: data['tele_trench_outpost_neutral_to_opponent'] as int? ?? 0,
-			bumpOutpostNeutralToOpponent: data['tele_bump_outpost_neutral_to_opponent'] as int? ?? 0,
-			bumpDepotNeutralToOpponent: data['tele_bump_depot_neutral_to_opponent'] as int? ?? 0,
-			trenchDepotNeutralToOpponent: data['tele_trench_depot_neutral_to_opponent'] as int? ?? 0,
-			trenchOutpostOpponentToNeutral: data['tele_trench_outpost_opponent_to_neutral'] as int? ?? 0,
-			bumpOutpostOpponentToNeutral: data['tele_bump_outpost_opponent_to_neutral'] as int? ?? 0,
-			bumpDepotOpponentToNeutral: data['tele_bump_depot_opponent_to_neutral'] as int? ?? 0,
-			trenchDepotOpponentToNeutral: data['tele_trench_depot_opponent_to_neutral'] as int? ?? 0,
-			fuelScore: data['tele_fuel_score'] as int? ?? 0,
-			fuelAllianceDump: data['tele_fuel_alliance_dump'] as int? ?? 0,
-			fuelOutpost: data['tele_fuel_outpost'] as int? ?? 0,
-			fuelNeutralAlliancePass: data['tele_fuel_neutral_alliance_pass'] as int? ?? 0,
-			fuelOpponentNeutralPass: data['tele_fuel_opponent_neutral_pass'] as int? ?? 0,
-			fuelOpponentAlliancePass: data['tele_fuel_opponent_alliance_pass'] as int? ?? 0,
-			allianceTime: data['tele_alliance_time'] as int? ?? 0,
-			neutralTime: data['tele_neutral_time'] as int? ?? 0,
-			opponentTime: data['tele_opponent_time'] as int? ?? 0,
-			climbLevel: data['tele_climb_level'] as int? ?? 0,
-			activeZone: data['tele_active_zone'] as String? ?? 'alliance',
-			activeFuelTarget: data['tele_active_fuel_target'] as String? ?? 'hub',
-		);
+	@override
+	TeleTabState updateField(String fieldName, dynamic value) {
+		return TeleTabState(updateFieldValues(fieldName, value), activeZone, activeFuelTarget, lastZoneChangeTime);
 	}
 }
 
@@ -220,7 +91,7 @@ class TeleTabState {
 class TeleTabNotifier extends StateNotifier<TeleTabState> {
 	final Ref _ref;
 
-	TeleTabNotifier(this._ref) : super(TeleTabState()) {
+	TeleTabNotifier(this._ref) : super(TeleTabState.empty()) {
 		// Initialize active zone from shared provider
 		state = state.copyWith(activeZone: _ref.read(activeZoneProvider));
 	}
@@ -264,16 +135,19 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 			final zoneElapsedSeconds = now.difference(lastZoneTime).inSeconds;
 
 			if (state.activeZone == 'alliance' && zoneElapsedSeconds > 0) {
+				final currentTime = newState.getFieldValue('tele_alliance_time').asInt();
 				newState = newState.copyWith(
-					allianceTime: newState.allianceTime + zoneElapsedSeconds,
+					data: {'tele_alliance_time': (currentTime + zoneElapsedSeconds).toString()},
 				);
 			} else if (state.activeZone == 'neutral' && zoneElapsedSeconds > 0) {
+				final currentTime = newState.getFieldValue('tele_neutral_time').asInt();
 				newState = newState.copyWith(
-					neutralTime: newState.neutralTime + zoneElapsedSeconds,
+					data: {'tele_neutral_time': (currentTime + zoneElapsedSeconds).toString()},
 				);
 			} else if (state.activeZone == 'opponent' && zoneElapsedSeconds > 0) {
+				final currentTime = newState.getFieldValue('tele_opponent_time').asInt();
 				newState = newState.copyWith(
-					opponentTime: newState.opponentTime + zoneElapsedSeconds,
+					data: {'tele_opponent_time': (currentTime + zoneElapsedSeconds).toString()},
 				);
 			}
 			// Update shared active zone provider
@@ -283,137 +157,153 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 		// Update counters based on field name
 		switch (field) {
 			case 'tele_trench_depot_alliance_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchDepotAllianceToNeutral: newState.trenchDepotAllianceToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_depot_alliance_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpDepotAllianceToNeutral: newState.bumpDepotAllianceToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_outpost_alliance_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpOutpostAllianceToNeutral: newState.bumpOutpostAllianceToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_trench_outpost_alliance_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchOutpostAllianceToNeutral: newState.trenchOutpostAllianceToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_trench_depot_neutral_to_alliance':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchDepotNeutralToAlliance: newState.trenchDepotNeutralToAlliance + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_depot_neutral_to_alliance':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpDepotNeutralToAlliance: newState.bumpDepotNeutralToAlliance + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_outpost_neutral_to_alliance':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpOutpostNeutralToAlliance: newState.bumpOutpostNeutralToAlliance + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_trench_outpost_neutral_to_alliance':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchOutpostNeutralToAlliance: newState.trenchOutpostNeutralToAlliance + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_trench_outpost_neutral_to_opponent':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchOutpostNeutralToOpponent: newState.trenchOutpostNeutralToOpponent + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_outpost_neutral_to_opponent':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpOutpostNeutralToOpponent: newState.bumpOutpostNeutralToOpponent + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_depot_neutral_to_opponent':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpDepotNeutralToOpponent: newState.bumpDepotNeutralToOpponent + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_trench_depot_neutral_to_opponent':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchDepotNeutralToOpponent: newState.trenchDepotNeutralToOpponent + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_trench_outpost_opponent_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchOutpostOpponentToNeutral: newState.trenchOutpostOpponentToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_outpost_opponent_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpOutpostOpponentToNeutral: newState.bumpOutpostOpponentToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_bump_depot_opponent_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					bumpDepotOpponentToNeutral: newState.bumpDepotOpponentToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_trench_depot_opponent_to_neutral':
+				final val = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					trenchDepotOpponentToNeutral: newState.trenchDepotOpponentToNeutral + value,
+					data: {field: (val + value).toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: now,
 				);
 			case 'tele_fuel_score':
-				newState = newState.copyWith(fuelScore: newState.fuelScore + value);
+				final val = newState.getFieldValue(field).asInt();
+				newState = newState.copyWith(data: {field: (val + value).toString()});
 			case 'tele_fuel_alliance_dump':
-				newState = newState.copyWith(fuelAllianceDump: newState.fuelAllianceDump + value);
+				final val = newState.getFieldValue(field).asInt();
+				newState = newState.copyWith(data: {field: (val + value).toString()});
 			case 'tele_fuel_outpost':
-				newState = newState.copyWith(fuelOutpost: newState.fuelOutpost + value);
+				final val = newState.getFieldValue(field).asInt();
+				newState = newState.copyWith(data: {field: (val + value).toString()});
 			case 'tele_fuel_neutral_alliance_pass':
-				newState = newState.copyWith(
-					fuelNeutralAlliancePass: newState.fuelNeutralAlliancePass + value,
-				);
+				final val = newState.getFieldValue(field).asInt();
+				newState = newState.copyWith(data: {field: (val + value).toString()});
 			case 'tele_fuel_opponent_alliance_pass':
-				newState = newState.copyWith(
-					fuelOpponentAlliancePass: newState.fuelOpponentAlliancePass + value,
-				);
+				final val = newState.getFieldValue(field).asInt();
+				newState = newState.copyWith(data: {field: (val + value).toString()});
 			case 'tele_fuel_opponent_neutral_pass':
-				newState = newState.copyWith(
-					fuelOpponentNeutralPass: newState.fuelOpponentNeutralPass + value,
-				);
+				final val = newState.getFieldValue(field).asInt();
+				newState = newState.copyWith(data: {field: (val + value).toString()});
 			case 'tele_climb_level':
-				newState = newState.copyWith(climbLevel: value);
+				newState = newState.copyWith(data: {field: value.toString()});
 		}
 
 		// Add event to shared timeline provider
@@ -440,178 +330,169 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 		TeleTabState newState = state;
 		switch (field) {
 			case 'tele_trench_depot_alliance_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchDepotAllianceToNeutral:
-						(newState.trenchDepotAllianceToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'tele_bump_depot_alliance_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpDepotAllianceToNeutral:
-						(newState.bumpDepotAllianceToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'tele_bump_outpost_alliance_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpOutpostAllianceToNeutral:
-						(newState.bumpOutpostAllianceToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'tele_trench_outpost_alliance_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchOutpostAllianceToNeutral:
-						(newState.trenchOutpostAllianceToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'tele_trench_depot_neutral_to_alliance':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchDepotNeutralToAlliance:
-						(newState.trenchDepotNeutralToAlliance - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_bump_depot_neutral_to_alliance':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpDepotNeutralToAlliance:
-						(newState.bumpDepotNeutralToAlliance - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_bump_outpost_neutral_to_alliance':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpOutpostNeutralToAlliance:
-						(newState.bumpOutpostNeutralToAlliance - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_trench_outpost_neutral_to_alliance':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchOutpostNeutralToAlliance:
-						(newState.trenchOutpostNeutralToAlliance - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_trench_outpost_neutral_to_opponent':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchOutpostNeutralToOpponent:
-						(newState.trenchOutpostNeutralToOpponent - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_bump_outpost_neutral_to_opponent':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpOutpostNeutralToOpponent:
-						(newState.bumpOutpostNeutralToOpponent - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_bump_depot_neutral_to_opponent':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpDepotNeutralToOpponent:
-						(newState.bumpDepotNeutralToOpponent - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_trench_depot_neutral_to_opponent':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchDepotNeutralToOpponent:
-						(newState.trenchDepotNeutralToOpponent - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'neutralAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'tele_trench_outpost_opponent_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchOutpostOpponentToNeutral:
-						(newState.trenchOutpostOpponentToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'opponent';
 			case 'tele_bump_outpost_opponent_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpOutpostOpponentToNeutral:
-						(newState.bumpOutpostOpponentToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'opponent';
 			case 'tele_bump_depot_opponent_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					bumpDepotOpponentToNeutral:
-						(newState.bumpDepotOpponentToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'opponent';
 			case 'tele_trench_depot_opponent_to_neutral':
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchDepotOpponentToNeutral:
-						(newState.trenchDepotOpponentToNeutral - actionValue).clamp(0, 999),
+					data: {field: val.toString()},
 					activeZone: 'opponent',
 					activeFuelTarget: 'opponentAlliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'opponent';
 			case 'tele_fuel_score':
-				newState = newState.copyWith(
-					fuelScore: (newState.fuelScore - actionValue).clamp(0, 999),
-				);
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
+				newState = newState.copyWith(data: {field: val.toString()});
 			case 'tele_fuel_alliance_dump':
-				newState = newState.copyWith(
-					fuelAllianceDump: (newState.fuelAllianceDump - actionValue).clamp(0, 999),
-				);
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
+				newState = newState.copyWith(data: {field: val.toString()});
 			case 'tele_fuel_outpost':
-				newState = newState.copyWith(
-					fuelOutpost: (newState.fuelOutpost - actionValue).clamp(0, 999),
-				);
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
+				newState = newState.copyWith(data: {field: val.toString()});
 			case 'tele_fuel_neutral_alliance_pass':
-				newState = newState.copyWith(
-					fuelNeutralAlliancePass:
-						(newState.fuelNeutralAlliancePass - actionValue).clamp(0, 999),
-				);
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
+				newState = newState.copyWith(data: {field: val.toString()});
 			case 'tele_fuel_opponent_alliance_pass':
-				newState = newState.copyWith(
-					fuelOpponentAlliancePass:
-						(newState.fuelOpponentAlliancePass - actionValue).clamp(0, 999),
-				);
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
+				newState = newState.copyWith(data: {field: val.toString()});
 			case 'tele_fuel_opponent_neutral_pass':
-				newState = newState.copyWith(
-					fuelOpponentNeutralPass:
-						(newState.fuelOpponentNeutralPass - actionValue).clamp(0, 999),
-				);
+				final val = (newState.getFieldValue(field).asInt() - actionValue).clamp(0, 999);
+				newState = newState.copyWith(data: {field: val.toString()});
 			case 'tele_climb_level':
-				newState = newState.copyWith(climbLevel: actionValue);
+				newState = newState.copyWith(data: {field: actionValue.toString()});
 		}
 
 		// Remove event from shared timeline provider
@@ -623,7 +504,7 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 
 	/// Reset tele state for new match
 	void reset() {
-		state = TeleTabState();
+		state = TeleTabState.empty();
 	}
 
 	/// Start tele (initialize start time) - syncs with UI timer
@@ -651,24 +532,24 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 	/// Load state from data map and populate timeline provider
 	void loadFromData(Map<String, dynamic> data, {bool isFirstLoad = false}) {
 		if (isFirstLoad) {
-			// Reset to start fresh before loading existing data
 			reset();
-			state = TeleTabState.fromMap(data);
-			// Sync active zone with shared provider
+			final newState = TeleTabState.empty();
+			newState.loadFromMap(data);
 			final sharedZone = _ref.read(activeZoneProvider);
-			state = state.copyWith(activeZone: sharedZone);
-			// Timeline is kept empty so new button clicks record fresh events
+			state = newState.updateField('activeZone', sharedZone) as TeleTabState;
 			_ref.read(timelineProvider.notifier).clear();
 		}
 	}
 
 	/// Get all counters and timeline as map for database save
 	Map<String, dynamic> getCountersForSave() {
-		final counters = state.toMap();
+		final counters = state.values;
+		// All field names are already in CSV format
+		final result = <String, dynamic>{...counters};
 		// Add timeline to the save data
 		final timeline = _ref.read(timelineProvider);
-		counters['timeline'] = TimelineEvent.formatTimeline(timeline);
-		return counters;
+		result['timeline'] = TimelineEvent.formatTimeline(timeline);
+		return result;
 	}
 }
 

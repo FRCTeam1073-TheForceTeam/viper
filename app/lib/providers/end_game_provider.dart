@@ -11,58 +11,46 @@ class EndGameData extends MapDataModel {
 
 	EndGameData.empty() : super.empty();
 
+	static final Map<String, FieldDescriptor> _registeredDescriptors = {};
+
+	static void registerDescriptor(FieldDescriptor descriptor) {
+		_registeredDescriptors[descriptor.name] = descriptor;
+	}
+
 	@override
-	List<FieldDescriptor> get descriptors => _descriptors;
+	List<FieldDescriptor> get descriptors {
+		final baseDescriptors = _descriptors.toList();
+		final registered = _registeredDescriptors.values.where(
+			(d) => !baseDescriptors.any((bd) => bd.name == d.name),
+		);
+		return [...baseDescriptors, ...registered];
+	}
 
 	// Field descriptors: single source of truth for all end-game fields
-	static final _descriptors = [
-		StringFieldDescriptor(fieldName: 'autoClimbPosition', csvKey: 'auto_climb_position'),
-		StringFieldDescriptor(fieldName: 'teleClimbPosition', csvKey: 'tele_climb_position'),
-		StringFieldDescriptor(fieldName: 'climbMethod', csvKey: 'climb_method'),
-		BoolFieldDescriptor(fieldName: 'shootOnMove', csvKey: 'shoot_move', uiLabelKey: 'shoot_move_desc'),
-		BoolFieldDescriptor(fieldName: 'shootWhileCollecting', csvKey: 'shoot_collecting', uiLabelKey: 'shoot_collecting_desc'),
-		BoolFieldDescriptor(fieldName: 'shootTurret', csvKey: 'shoot_turret', uiLabelKey: 'shoot_turret_desc'),
-		BoolFieldDescriptor(fieldName: 'shootClimbing', csvKey: 'shoot_climbing', uiLabelKey: 'shoot_climbing_desc'),
-		StringFieldDescriptor(fieldName: 'fuelStrategy', csvKey: 'fuel_to_alliance'),
-		StringFieldDescriptor(fieldName: 'bricked', csvKey: 'bricked'),
-		StringFieldDescriptor(fieldName: 'defenseRating', csvKey: 'defense'),
-		BoolFieldDescriptor(fieldName: 'defenseCollected', csvKey: 'defense_collected', uiLabelKey: 'defense_collected_desc'),
-		BoolFieldDescriptor(fieldName: 'defenseHit', csvKey: 'defense_hit', uiLabelKey: 'defense_hit_desc'),
-		BoolFieldDescriptor(fieldName: 'defenseBlocked', csvKey: 'defense_blocked', uiLabelKey: 'defense_blocked_desc'),
-		BoolFieldDescriptor(fieldName: 'defensePinned', csvKey: 'defense_pinned', uiLabelKey: 'defense_pinned_desc'),
-		StringFieldDescriptor(fieldName: 'defended', csvKey: 'defended'),
-		StringFieldDescriptor(fieldName: 'misses', csvKey: 'misses'),
-		StringFieldDescriptor(fieldName: 'scouterName', csvKey: 'scouter'),
-		BoolFieldDescriptor(fieldName: 'reviewRequest', csvKey: 'review_requested', uiLabelKey: 'review_requested_button'),
-		StringFieldDescriptor(fieldName: 'comments', csvKey: 'comments'),
+	static const List<FieldDescriptor> _descriptors = [
+		FieldDescriptor(name: 'auto_climb_position'),
+		FieldDescriptor(name: 'tele_climb_position'),
+		FieldDescriptor(name: 'climb_method'),
+		FieldDescriptor(name: 'shoot_move', uiLabelKey: 'shoot_move_desc'),
+		FieldDescriptor(name: 'shoot_collecting', uiLabelKey: 'shoot_collecting_desc'),
+		FieldDescriptor(name: 'shoot_turret', uiLabelKey: 'shoot_turret_desc'),
+		FieldDescriptor(name: 'shoot_climbing', uiLabelKey: 'shoot_climbing_desc'),
+		FieldDescriptor(name: 'fuel_to_alliance'),
+		FieldDescriptor(name: 'bricked'),
+		FieldDescriptor(name: 'defense'),
+		FieldDescriptor(name: 'defense_collected', uiLabelKey: 'defense_collected_desc'),
+		FieldDescriptor(name: 'defense_hit', uiLabelKey: 'defense_hit_desc'),
+		FieldDescriptor(name: 'defense_blocked', uiLabelKey: 'defense_blocked_desc'),
+		FieldDescriptor(name: 'defense_pinned', uiLabelKey: 'defense_pinned_desc'),
+		FieldDescriptor(name: 'defended'),
+		FieldDescriptor(name: 'misses'),
+		FieldDescriptor(name: 'scouter'),
+		FieldDescriptor(name: 'comments'),
 	];
-
-	// Typed getters - generated from descriptors
-	String? get autoClimbPosition => values['autoClimbPosition'] as String?;
-	String? get teleClimbPosition => values['teleClimbPosition'] as String?;
-	String? get climbMethod => values['climbMethod'] as String?;
-	bool get shootOnMove => values['shootOnMove'] as bool? ?? false;
-	bool get shootWhileCollecting => values['shootWhileCollecting'] as bool? ?? false;
-	bool get shootTurret => values['shootTurret'] as bool? ?? false;
-	bool get shootClimbing => values['shootClimbing'] as bool? ?? false;
-	String? get fuelStrategy => values['fuelStrategy'] as String?;
-	String? get bricked => values['bricked'] as String?;
-	String? get defenseRating => values['defenseRating'] as String?;
-	bool get defenseCollected => values['defenseCollected'] as bool? ?? false;
-	bool get defenseHit => values['defenseHit'] as bool? ?? false;
-	bool get defenseBlocked => values['defenseBlocked'] as bool? ?? false;
-	bool get defensePinned => values['defensePinned'] as bool? ?? false;
-	String? get defended => values['defended'] as String?;
-	String? get misses => values['misses'] as String?;
-	String? get scouterName => values['scouterName'] as String?;
-	bool get reviewRequest => values['reviewRequest'] as bool? ?? false;
-	String? get comments => values['comments'] as String?;
 
 	@override
 	EndGameData updateField(String fieldName, dynamic value) {
-		final newValues = {...values};
-		newValues[fieldName] = value;
-		return EndGameData(newValues);
+		return EndGameData(updateFieldValues(fieldName, value));
 	}
 }
 
@@ -78,12 +66,15 @@ class EndGameNotifier extends StateNotifier<EndGameData> {
 	}
 
 	void loadFromData(Map<String, dynamic> data) {
-		print('[END_GAME_LOAD] Received data with ${data.length} keys');
-		final parsedValues = SerializationHelper.fromMap(EndGameData._descriptors, data);
-		print('[END_GAME_LOAD] After SerializationHelper.fromMap: ${parsedValues.length} values');
-		print('[END_GAME_LOAD] shootOnMove = ${parsedValues['shootOnMove']}');
-		state = EndGameData(parsedValues);
-		print('[END_GAME_LOAD] State updated: shootOnMove = ${state.shootOnMove}');
+		try {
+			print('[END_GAME_LOAD] Received data with ${data.length} keys');
+			final newState = EndGameData();
+			newState.loadFromMap(data);
+			state = newState;
+			print('[END_GAME_LOAD] State updated');
+		} catch (e) {
+			print('Error loading end-game data: $e');
+		}
 	}
 }
 

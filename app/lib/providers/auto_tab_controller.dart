@@ -1,4 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/field_descriptor.dart';
+import '../models/map_data_model.dart';
+import '../models/serialization_helper.dart';
 import 'active_zone_provider.dart';
 import 'timeline_provider.dart';
 import 'match_timer_provider.dart';
@@ -68,146 +71,71 @@ class TimelineEvent {
 	String toString() => '[$timeSeconds] $action ($value)';
 }
 
-/// State for auto tab - tracks all counters and timeline
-class AutoTabState {
-	// Movement counters (field interactions)
-	final int trenchDepotAllianceToNeutral;
-	final int bumpDepotAllianceToNeutral;
-	final int bumpOutpostAllianceToNeutral;
-	final int trenchOutpostAllianceToNeutral;
-	final int trenchDepotNeutralToAlliance;
-	final int bumpDepotNeutralToAlliance;
-	final int bumpOutpostNeutralToAlliance;
-	final int trenchOutpostNeutralToAlliance;
-
-	// Fuel and collection
-	final int fuelScore; // Fuel shot in hub
-	final int fuelNeutralAlliancePass; // Fuel passed from neutral
-	final int collectOutpost; // 0 or 1
-	final int collectDepot; // 0 or 1
-
-	// Zone times
-	final int allianceTime;
-	final int neutralTime;
-
-	// Climb level
-	final int climbLevel;
-
-	// Active zone for button filtering ('alliance' or 'neutral')
+/// State for auto tab - map-based data with UI state
+class AutoTabState extends MapDataModel {
+	// UI state (not serialized)
 	final String activeZone;
-
-	// Active fuel target ('hub' or 'alliancePass')
 	final String activeFuelTarget;
-
-	// Last zone change time (to calculate time spent in zone)
 	final DateTime? lastZoneChangeTime;
 
-	AutoTabState({
-		this.trenchDepotAllianceToNeutral = 0,
-		this.bumpDepotAllianceToNeutral = 0,
-		this.bumpOutpostAllianceToNeutral = 0,
-		this.trenchOutpostAllianceToNeutral = 0,
-		this.trenchDepotNeutralToAlliance = 0,
-		this.bumpDepotNeutralToAlliance = 0,
-		this.bumpOutpostNeutralToAlliance = 0,
-		this.trenchOutpostNeutralToAlliance = 0,
-		this.fuelScore = 0,
-		this.fuelNeutralAlliancePass = 0,
-		this.collectOutpost = 0,
-		this.collectDepot = 0,
-		this.allianceTime = 0,
-		this.neutralTime = 0,
-		this.climbLevel = 0,
-		this.activeZone = 'alliance',
-		this.activeFuelTarget = 'hub',
-		this.lastZoneChangeTime,
-	});
+	AutoTabState([Map<String, dynamic>? initialValues, this.activeZone = 'alliance', this.activeFuelTarget = 'hub', this.lastZoneChangeTime])
+		: super(initialValues ?? {});
 
-	/// Create a copy with updated fields
+	AutoTabState.empty()
+		: activeZone = 'alliance',
+			activeFuelTarget = 'hub',
+			lastZoneChangeTime = null,
+			super.empty();
+
+	@override
+	List<FieldDescriptor> get descriptors => _descriptors;
+
+	static const List<FieldDescriptor> _descriptors = [
+		FieldDescriptor(name: 'auto_trench_depot_alliance_to_neutral'),
+		FieldDescriptor(name: 'auto_bump_depot_alliance_to_neutral'),
+		FieldDescriptor(name: 'auto_bump_outpost_alliance_to_neutral'),
+		FieldDescriptor(name: 'auto_trench_outpost_alliance_to_neutral'),
+		FieldDescriptor(name: 'auto_trench_depot_neutral_to_alliance'),
+		FieldDescriptor(name: 'auto_bump_depot_neutral_to_alliance'),
+		FieldDescriptor(name: 'auto_bump_outpost_neutral_to_alliance'),
+		FieldDescriptor(name: 'auto_trench_outpost_neutral_to_alliance'),
+		FieldDescriptor(name: 'auto_fuel_score'),
+		FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass'),
+		FieldDescriptor(name: 'auto_collect_outpost'),
+		FieldDescriptor(name: 'auto_collect_depot'),
+		FieldDescriptor(name: 'auto_alliance_time'),
+		FieldDescriptor(name: 'auto_neutral_time'),
+		FieldDescriptor(name: 'auto_climb_level'),
+	];
+
+
+	/// Create a copy with updated fields (preserves UI state)
 	AutoTabState copyWith({
-		int? trenchDepotAllianceToNeutral,
-		int? bumpDepotAllianceToNeutral,
-		int? bumpOutpostAllianceToNeutral,
-		int? trenchOutpostAllianceToNeutral,
-		int? trenchDepotNeutralToAlliance,
-		int? bumpDepotNeutralToAlliance,
-		int? bumpOutpostNeutralToAlliance,
-		int? trenchOutpostNeutralToAlliance,
-		int? fuelScore,
-		int? fuelNeutralAlliancePass,
-		int? collectOutpost,
-		int? collectDepot,
-		int? allianceTime,
-		int? neutralTime,
-		int? climbLevel,
+		Map<String, String>? data,
 		String? activeZone,
 		String? activeFuelTarget,
 		DateTime? lastZoneChangeTime,
 	}) {
+		final result = {...this.values};
+		if (data != null) {
+			for (final desc in descriptors) {
+				if (data.containsKey(desc.name)) {
+					result[desc.name] = data[desc.name];
+				}
+			}
+		}
+
 		return AutoTabState(
-			trenchDepotAllianceToNeutral: trenchDepotAllianceToNeutral ?? this.trenchDepotAllianceToNeutral,
-			bumpDepotAllianceToNeutral: bumpDepotAllianceToNeutral ?? this.bumpDepotAllianceToNeutral,
-			bumpOutpostAllianceToNeutral: bumpOutpostAllianceToNeutral ?? this.bumpOutpostAllianceToNeutral,
-			trenchOutpostAllianceToNeutral: trenchOutpostAllianceToNeutral ?? this.trenchOutpostAllianceToNeutral,
-			trenchDepotNeutralToAlliance: trenchDepotNeutralToAlliance ?? this.trenchDepotNeutralToAlliance,
-			bumpDepotNeutralToAlliance: bumpDepotNeutralToAlliance ?? this.bumpDepotNeutralToAlliance,
-			bumpOutpostNeutralToAlliance: bumpOutpostNeutralToAlliance ?? this.bumpOutpostNeutralToAlliance,
-			trenchOutpostNeutralToAlliance: trenchOutpostNeutralToAlliance ?? this.trenchOutpostNeutralToAlliance,
-			fuelScore: fuelScore ?? this.fuelScore,
-			fuelNeutralAlliancePass: fuelNeutralAlliancePass ?? this.fuelNeutralAlliancePass,
-			collectOutpost: collectOutpost ?? this.collectOutpost,
-			collectDepot: collectDepot ?? this.collectDepot,
-			allianceTime: allianceTime ?? this.allianceTime,
-			neutralTime: neutralTime ?? this.neutralTime,
-			climbLevel: climbLevel ?? this.climbLevel,
-			activeZone: activeZone ?? this.activeZone,
-			activeFuelTarget: activeFuelTarget ?? this.activeFuelTarget,
-			lastZoneChangeTime: lastZoneChangeTime ?? this.lastZoneChangeTime,
+			result,
+			activeZone ?? this.activeZone,
+			activeFuelTarget ?? this.activeFuelTarget,
+			lastZoneChangeTime ?? this.lastZoneChangeTime,
 		);
 	}
 
-	/// Convert state to map for database storage (does not include timeline - handled separately)
-	Map<String, dynamic> toMap() {
-		return {
-			'auto_trench_depot_alliance_to_neutral': trenchDepotAllianceToNeutral,
-			'auto_bump_depot_alliance_to_neutral': bumpDepotAllianceToNeutral,
-			'auto_bump_outpost_alliance_to_neutral': bumpOutpostAllianceToNeutral,
-			'auto_trench_outpost_alliance_to_neutral': trenchOutpostAllianceToNeutral,
-			'auto_trench_depot_neutral_to_alliance': trenchDepotNeutralToAlliance,
-			'auto_bump_depot_neutral_to_alliance': bumpDepotNeutralToAlliance,
-			'auto_bump_outpost_neutral_to_alliance': bumpOutpostNeutralToAlliance,
-			'auto_trench_outpost_neutral_to_alliance': trenchOutpostNeutralToAlliance,
-			'auto_fuel_score': fuelScore,
-			'auto_fuel_neutral_alliance_pass': fuelNeutralAlliancePass,
-			'auto_collect_outpost': collectOutpost,
-			'auto_collect_depot': collectDepot,
-			'auto_alliance_time': allianceTime,
-			'auto_neutral_time': neutralTime,
-			'auto_climb_level': climbLevel,
-		};
-	}
-
-	/// Load state from map (database) - does not include timeline, handled separately
-	factory AutoTabState.fromMap(Map<String, dynamic> data) {
-		return AutoTabState(
-			trenchDepotAllianceToNeutral: data['auto_trench_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpDepotAllianceToNeutral: data['auto_bump_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpOutpostAllianceToNeutral: data['auto_bump_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchOutpostAllianceToNeutral: data['auto_trench_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchDepotNeutralToAlliance: data['auto_trench_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpDepotNeutralToAlliance: data['auto_bump_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpOutpostNeutralToAlliance: data['auto_bump_outpost_neutral_to_alliance'] as int? ?? 0,
-			trenchOutpostNeutralToAlliance: data['auto_trench_outpost_neutral_to_alliance'] as int? ?? 0,
-			fuelScore: data['auto_fuel_score'] as int? ?? 0,
-			fuelNeutralAlliancePass: data['auto_fuel_neutral_alliance_pass'] as int? ?? 0,
-			collectOutpost: data['auto_collect_outpost'] as int? ?? 0,
-			collectDepot: data['auto_collect_depot'] as int? ?? 0,
-			allianceTime: data['auto_alliance_time'] as int? ?? 0,
-			neutralTime: data['auto_neutral_time'] as int? ?? 0,
-			climbLevel: data['auto_climb_level'] as int? ?? 0,
-			activeZone: data['auto_active_zone'] as String? ?? 'alliance',
-			activeFuelTarget: data['auto_active_fuel_target'] as String? ?? 'hub',
-		);
+	@override
+	AutoTabState updateField(String fieldName, dynamic value) {
+		return AutoTabState(updateFieldValues(fieldName, value), activeZone, activeFuelTarget, lastZoneChangeTime);
 	}
 }
 
@@ -215,7 +143,7 @@ class AutoTabState {
 class AutoTabNotifier extends StateNotifier<AutoTabState> {
 	final Ref _ref;
 
-	AutoTabNotifier(this._ref) : super(AutoTabState());
+	AutoTabNotifier(this._ref) : super(AutoTabState.empty());
 
 	/// Record an action (button click, fuel add, etc.)
 	void recordAction({
@@ -254,12 +182,14 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 			final zoneElapsedSeconds = now.difference(lastZoneTime).inSeconds;
 
 			if (state.activeZone == 'alliance' && zoneElapsedSeconds > 0) {
+				final currentTime = newState.getFieldValue('auto_alliance_time').asInt();
 				newState = newState.copyWith(
-					allianceTime: newState.allianceTime + zoneElapsedSeconds,
+					data: MapDataModel.fieldValue('auto_alliance_time', currentTime + zoneElapsedSeconds),
 				);
 			} else if (state.activeZone == 'neutral' && zoneElapsedSeconds > 0) {
+				final currentTime = newState.getFieldValue('auto_neutral_time').asInt();
 				newState = newState.copyWith(
-					neutralTime: newState.neutralTime + zoneElapsedSeconds,
+					data: {'auto_neutral_time': (currentTime + zoneElapsedSeconds).toString()},
 				);
 			}
 			// Update shared active zone provider
@@ -268,73 +198,34 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 
 		switch (field) {
 			case 'auto_trench_depot_alliance_to_neutral':
-				newState = newState.copyWith(
-					trenchDepotAllianceToNeutral: newState.trenchDepotAllianceToNeutral + value,
-					activeZone: 'neutral',
-					activeFuelTarget: 'alliancePass',
-					lastZoneChangeTime: now,
-				);
 			case 'auto_bump_depot_alliance_to_neutral':
-				newState = newState.copyWith(
-					bumpDepotAllianceToNeutral: newState.bumpDepotAllianceToNeutral + value,
-					activeZone: 'neutral',
-					activeFuelTarget: 'alliancePass',
-					lastZoneChangeTime: now,
-				);
 			case 'auto_bump_outpost_alliance_to_neutral':
-				newState = newState.copyWith(
-					bumpOutpostAllianceToNeutral: newState.bumpOutpostAllianceToNeutral + value,
-					activeZone: 'neutral',
-					activeFuelTarget: 'alliancePass',
-					lastZoneChangeTime: now,
-				);
 			case 'auto_trench_outpost_alliance_to_neutral':
-				newState = newState.copyWith(
-					trenchOutpostAllianceToNeutral: newState.trenchOutpostAllianceToNeutral + value,
-					activeZone: 'neutral',
-					activeFuelTarget: 'alliancePass',
-					lastZoneChangeTime: now,
-				);
 			case 'auto_trench_depot_neutral_to_alliance':
-				newState = newState.copyWith(
-					trenchDepotNeutralToAlliance: newState.trenchDepotNeutralToAlliance + value,
-					activeZone: 'alliance',
-					activeFuelTarget: 'hub',
-					lastZoneChangeTime: now,
-				);
 			case 'auto_bump_depot_neutral_to_alliance':
-				newState = newState.copyWith(
-					bumpDepotNeutralToAlliance: newState.bumpDepotNeutralToAlliance + value,
-					activeZone: 'alliance',
-					activeFuelTarget: 'hub',
-					lastZoneChangeTime: now,
-				);
 			case 'auto_bump_outpost_neutral_to_alliance':
-				newState = newState.copyWith(
-					bumpOutpostNeutralToAlliance: newState.bumpOutpostNeutralToAlliance + value,
-					activeZone: 'alliance',
-					activeFuelTarget: 'hub',
-					lastZoneChangeTime: now,
-				);
 			case 'auto_trench_outpost_neutral_to_alliance':
+				final currentValue = newState.getFieldValue(field).asInt();
+				final newValue = currentValue + value;
+				final isToNeutral = field.endsWith('_to_neutral');
 				newState = newState.copyWith(
-					trenchOutpostNeutralToAlliance: newState.trenchOutpostNeutralToAlliance + value,
-					activeZone: 'alliance',
-					activeFuelTarget: 'hub',
+					data: {field: newValue.toString()},
+					activeZone: isToNeutral ? 'neutral' : 'alliance',
+					activeFuelTarget: isToNeutral ? 'alliancePass' : 'hub',
 					lastZoneChangeTime: now,
 				);
 			case 'auto_fuel_score':
-				newState = newState.copyWith(fuelScore: newState.fuelScore + value);
 			case 'auto_fuel_neutral_alliance_pass':
+				final currentValue = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					fuelNeutralAlliancePass: newState.fuelNeutralAlliancePass + value,
+					data: {field: (currentValue + value).toString()},
 				);
 			case 'auto_collect_outpost':
-				newState = newState.copyWith(collectOutpost: value);
 			case 'auto_collect_depot':
-				newState = newState.copyWith(collectDepot: value);
 			case 'auto_climb_level':
-				newState = newState.copyWith(climbLevel: value);
+				newState = newState.copyWith(
+					data: {field: value.toString()},
+				);
 			case 'auto_zone_change':
 				// Zone change: toggle zone
 				newState = newState.copyWith(
@@ -377,93 +268,43 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 				// Update shared active zone provider
 				_ref.read(activeZoneProvider.notifier).state = newZone;
 			case 'auto_trench_depot_alliance_to_neutral':
-				newState = newState.copyWith(
-					trenchDepotAllianceToNeutral:
-						(newState.trenchDepotAllianceToNeutral - actionValue).clamp(0, 999),
-					activeZone: 'alliance',
-					activeFuelTarget: 'hub',
-					lastZoneChangeTime: state.lastZoneChangeTime,
-				);
-				// Update shared active zone provider
-				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_bump_depot_alliance_to_neutral':
-				newState = newState.copyWith(
-					bumpDepotAllianceToNeutral:
-						(newState.bumpDepotAllianceToNeutral - actionValue).clamp(0, 999),
-					activeZone: 'alliance',
-					activeFuelTarget: 'hub',
-					lastZoneChangeTime: state.lastZoneChangeTime,
-				);
-				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_bump_outpost_alliance_to_neutral':
-				newState = newState.copyWith(
-					bumpOutpostAllianceToNeutral:
-						(newState.bumpOutpostAllianceToNeutral - actionValue).clamp(0, 999),
-					activeZone: 'alliance',
-					activeFuelTarget: 'hub',
-					lastZoneChangeTime: state.lastZoneChangeTime,
-				);
-				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_trench_outpost_alliance_to_neutral':
+				final currentValue = newState.getFieldValue(field).asInt();
+				final newValue = (currentValue - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchOutpostAllianceToNeutral:
-						(newState.trenchOutpostAllianceToNeutral - actionValue).clamp(0, 999),
+					data: {field: newValue.toString()},
 					activeZone: 'alliance',
 					activeFuelTarget: 'hub',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'alliance';
 			case 'auto_trench_depot_neutral_to_alliance':
-				newState = newState.copyWith(
-					trenchDepotNeutralToAlliance:
-						(newState.trenchDepotNeutralToAlliance - actionValue).clamp(0, 999),
-					activeZone: 'neutral',
-					activeFuelTarget: 'alliancePass',
-					lastZoneChangeTime: state.lastZoneChangeTime,
-				);
-				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_bump_depot_neutral_to_alliance':
-				newState = newState.copyWith(
-					bumpDepotNeutralToAlliance:
-						(newState.bumpDepotNeutralToAlliance - actionValue).clamp(0, 999),
-					activeZone: 'neutral',
-					activeFuelTarget: 'alliancePass',
-					lastZoneChangeTime: state.lastZoneChangeTime,
-				);
-				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_bump_outpost_neutral_to_alliance':
-				newState = newState.copyWith(
-					bumpOutpostNeutralToAlliance:
-						(newState.bumpOutpostNeutralToAlliance - actionValue).clamp(0, 999),
-					activeZone: 'neutral',
-					activeFuelTarget: 'alliancePass',
-					lastZoneChangeTime: state.lastZoneChangeTime,
-				);
-				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_trench_outpost_neutral_to_alliance':
+				final currentValue = newState.getFieldValue(field).asInt();
+				final newValue = (currentValue - actionValue).clamp(0, 999);
 				newState = newState.copyWith(
-					trenchOutpostNeutralToAlliance:
-						(newState.trenchOutpostNeutralToAlliance - actionValue).clamp(0, 999),
+					data: {field: newValue.toString()},
 					activeZone: 'neutral',
 					activeFuelTarget: 'alliancePass',
 					lastZoneChangeTime: state.lastZoneChangeTime,
 				);
 				_ref.read(activeZoneProvider.notifier).state = 'neutral';
 			case 'auto_fuel_score':
-				newState = newState.copyWith(
-					fuelScore: (newState.fuelScore - actionValue).clamp(0, 999),
-				);
 			case 'auto_fuel_neutral_alliance_pass':
+				final currentValue = newState.getFieldValue(field).asInt();
 				newState = newState.copyWith(
-					fuelNeutralAlliancePass:
-						(newState.fuelNeutralAlliancePass - actionValue).clamp(0, 999),
+					data: {field: ((currentValue - actionValue).clamp(0, 999)).toString()},
 				);
 			case 'auto_collect_outpost':
-				newState = newState.copyWith(collectOutpost: actionValue);
 			case 'auto_collect_depot':
-				newState = newState.copyWith(collectDepot: actionValue);
 			case 'auto_climb_level':
-				newState = newState.copyWith(climbLevel: actionValue);
+				newState = newState.copyWith(
+					data: {field: actionValue.toString()},
+				);
 		}
 
 		// Remove event from shared timeline provider
@@ -475,7 +316,7 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 
 	/// Reset all state
 	void reset() {
-		state = AutoTabState();
+		state = AutoTabState.empty();
 		_ref.read(timelineProvider.notifier).clear();
 		_ref.read(matchTimerProvider.notifier).clear();
 	}
@@ -531,22 +372,23 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 	/// Load state from data map and populate timeline provider
 	void loadFromData(Map<String, dynamic> data, {bool isFirstLoad = false}) {
 		if (isFirstLoad) {
-			// Reset to start fresh before loading existing data
 			reset();
-			// Load the data (counters, times, etc.)
-			state = AutoTabState.fromMap(data);
-			// Timeline is kept empty so new button clicks record fresh events
+			final newState = AutoTabState.empty();
+			newState.loadFromMap(data);
+			state = newState;
 			_ref.read(timelineProvider.notifier).clear();
 		}
 	}
 
 	/// Get all counters and timeline as map for database save
 	Map<String, dynamic> getCountersForSave() {
-		final counters = state.toMap();
+		final counters = state.values;
+		// All field names are already in CSV format
+		final result = <String, dynamic>{...counters};
 		// Add timeline to the save data
 		final timeline = _ref.read(timelineProvider);
-		counters['timeline'] = TimelineEvent.formatTimeline(timeline);
-		return counters;
+		result['timeline'] = TimelineEvent.formatTimeline(timeline);
+		return result;
 	}
 }
 

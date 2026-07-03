@@ -1,77 +1,41 @@
-enum FieldType { string, bool, integer }
-
+/// Field metadata - stores everything as strings, typed getters parse on demand
 class FieldDescriptor {
-	final String fieldName;        // Property name in the class (e.g., 'shootOnMove')
-	final String csvKey;           // CSV column name (e.g., 'shoot_move')
-	final FieldType type;
-	final dynamic defaultValue;
-	final String? uiLabelKey;      // Translation key for checkbox/radio label (optional)
-	final dynamic Function(dynamic)? getter;  // Extract value from object (e.g., (obj) => obj.shootOnMove)
+	final String name;  // Single source of truth: used for storage, CSV, and access
+	final String? uiLabelKey;
+	final String? _value;
 
-	FieldDescriptor({
-		required this.fieldName,
-		required this.csvKey,
-		required this.type,
-		required this.defaultValue,
+	const FieldDescriptor({
+		required this.name,
 		this.uiLabelKey,
-		this.getter,
-	});
+		String? value,
+	}) : _value = value;
 
-	/// Parse a value from CSV (handles type conversion)
-	dynamic fromCsv(dynamic value) {
-		if (value == null) return defaultValue;
-		switch (type) {
-			case FieldType.bool:
-				if (value is bool) return value;
-				if (value is int) return value == 1;
-				if (value is String) return value == '1';
-				return defaultValue;
-			case FieldType.integer:
-				if (value is int) return value;
-				if (value is String) return int.tryParse(value) ?? defaultValue;
-				return defaultValue;
-			case FieldType.string:
-				if (value is String) return value.isEmpty ? null : value;
-				return value?.toString();
-		}
+	/// Create a copy with a new value
+	FieldDescriptor withValue(String? newValue) {
+		return FieldDescriptor(
+			name: name,
+			uiLabelKey: uiLabelKey,
+			value: newValue,
+		);
 	}
 
-	/// Serialize a value to CSV format
-	dynamic toCsv(dynamic value) {
-		if (value == null) return null;
-		switch (type) {
-			case FieldType.bool:
-				return (value as bool) ? 1 : 0;
-			case FieldType.integer:
-				return value;
-			case FieldType.string:
-				return value;
-		}
+	/// Parse as bool with default
+	bool asBool() {
+		if (_value == null) return false;
+		return _value == '1' || _value!.toLowerCase() == 'true';
 	}
-}
 
-/// Helper to bulk-define bool fields with the same defaults
-class BoolFieldDescriptor extends FieldDescriptor {
-	BoolFieldDescriptor({
-		required super.fieldName,
-		required super.csvKey,
-		super.uiLabelKey,
-		super.getter,
-		bool defaultValue = false,
-	}) : super(
-		type: FieldType.bool,
-		defaultValue: defaultValue,
-	);
-}
+	/// Parse as int with default
+	int asInt() {
+		if (_value == null) return 0;
+		return int.tryParse(_value ?? '') ?? 0;
+	}
 
-class StringFieldDescriptor extends FieldDescriptor {
-	StringFieldDescriptor({
-		required super.fieldName,
-		required super.csvKey,
-		super.uiLabelKey,
-		super.getter,
-	}) : super(
-		type: FieldType.string,
-		defaultValue: null,
-	);
+	/// Get as string with default
+	String asString() {
+		return (_value == null || _value!.isEmpty) ? '' : _value!;
+	}
+
+	/// Get the UI label key, defaulting to the field name if not specified
+	String get uiLabel => uiLabelKey ?? name;
 }

@@ -209,9 +209,9 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 							ref.read(teleTabControllerProvider.notifier).loadFromData(matchData, isFirstLoad: true);
 
 							print('[SCOUT_LOAD] Loading end-game data...');
-							print('[SCOUT_LOAD] endGame before: shootOnMove=${ref.read(endGameProvider).shootOnMove}');
+							print('[SCOUT_LOAD] endGame before: shoot_move=${ref.read(endGameProvider).getFieldValue('shoot_move').asInt()}');
 							ref.read(endGameProvider.notifier).loadFromData(matchData);
-							print('[SCOUT_LOAD] endGame after: shootOnMove=${ref.read(endGameProvider).shootOnMove}');
+							print('[SCOUT_LOAD] endGame after: shoot_move=${ref.read(endGameProvider).getFieldValue('shoot_move').asInt()}');
 
 							// Load timeline and set match timer to last event's timestamp
 							print('[SCOUT_LOAD] Loading timeline...');

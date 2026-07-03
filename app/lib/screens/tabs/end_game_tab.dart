@@ -16,6 +16,7 @@ import '../../widgets/descriptor_checkbox_group.dart';
 import '../../widgets/radio_button_group.dart';
 import '../../constants/colors.dart';
 import '../../models/match_model.dart';
+import '../../models/field_descriptor.dart';
 
 class EndGameTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -714,13 +715,13 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'tr': 'İzcisi',
 			},
 			'review_requested_legend': {
-				'en': 'Request Review',
-				'es': 'Solicitar Revisión',
-				'pt': 'Solicitar Revisão',
-				'fr': 'Demander Examen',
-				'zh_tw': '要求審查',
-				'he': 'בקש סקירה',
-				'tr': 'İnceleme İste',
+				'en': 'Fall asleep? Watch the wrong robot? Press the wrong button?',
+				'pt': 'Adormeceu? Assistiu ao robô errado? Pressionou o botão errado?',
+				'fr': 'Vous vous êtes endormi ? Vous avez regardé le mauvais robot ? Vous avez appuyé sur le mauvais bouton ?',
+				'zh_tw': '睡著了？看錯機器人？按錯按鈕了？',
+				'he': 'נרדמת? צפה ברובוט הלא נכון? לחץ על הכפתור הלא נכון?',
+				'tr': 'Uyudun mu? Yanlış robotu mu izliyorsun? Yanlış düğmeye mi bastınız?',
+				'es': 'Este equipo solicitó revisión',
 			},
 			'review_requested_button': {
 				'en': 'Request Review',
@@ -840,12 +841,12 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			final endGame = ref.read(endGameProvider);
 			if (climbType == 'auto') {
 				ref.read(endGameProvider.notifier).update(
-					endGame.updateField("autoClimbPosition", positionStr),
+					endGame.updateField('auto_climb_position', positionStr),
 				);
 				print('   Updated autoClimbPosition to: $positionStr');
 			} else if (climbType == 'tele') {
 				ref.read(endGameProvider.notifier).update(
-					endGame.updateField("teleClimbPosition", positionStr),
+					endGame.updateField('tele_climb_position', positionStr),
 				);
 				print('   Updated teleClimbPosition to: $positionStr');
 			}
@@ -916,11 +917,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												final endGame = ref.read(endGameProvider);
 												if (climbType == 'auto') {
 													ref.read(endGameProvider.notifier).update(
-														endGame.updateField("autoClimbPosition", null),
+														endGame.updateField('auto_climb_position', ''),
 													);
 												} else if (climbType == 'tele') {
 													ref.read(endGameProvider.notifier).update(
-														endGame.updateField("teleClimbPosition", null),
+														endGame.updateField('tele_climb_position', ''),
 													);
 												}
 											},
@@ -1125,12 +1126,12 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		final teleState = ref.watch(teleTabControllerProvider);
 
 		// Sync text controllers with endGame values
-		_scouterNameController.text = endGame.scouterName ?? '';
-		_commentsController.text = endGame.comments ?? '';
+		_scouterNameController.text = endGame.getFieldValue('scouter').asString();
+		_commentsController.text = endGame.getFieldValue('comments').asString();
 
 		// Read climb levels from auto and tele tab state
-		final autoClimbLevel = autoState.climbLevel;
-		final teleClimbLevel = teleState.climbLevel;
+		final autoClimbLevel = autoState.getFieldValue('auto_climb_level').asInt();
+		final teleClimbLevel = teleState.getFieldValue('tele_climb_level').asInt();
 
 		final isBlueTeam = widget.teamNumber?.startsWith('B') ?? false;
 		final climbAreaImage = isBlueTeam
@@ -1162,7 +1163,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						_buildClimbPositionMap(
 							title: 'auto_climb_legend',
 							climbType: 'auto',
-							position: endGame.autoClimbPosition ?? '',
+							position: endGame.getFieldValue('auto_climb_position').asString(),
 							imagePath: climbAreaImage,
 							context: context,
 						),
@@ -1174,7 +1175,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						_buildClimbPositionMap(
 							title: 'tele_climb_legend',
 							climbType: 'tele',
-							position: endGame.teleClimbPosition ?? '',
+							position: endGame.getFieldValue('tele_climb_position').asString(),
 							imagePath: climbAreaImage,
 							context: context,
 						),
@@ -1212,10 +1213,10 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 													descKey: 'climb_method_flip_desc',
 												),
 											],
-											selectedValue: endGame.climbMethod,
+											selectedValue: endGame.getFieldValue('climb_method').asString(),
 											onChanged: (value) {
 												ref.read(endGameProvider.notifier).update(
-													endGame.updateField("climbMethod", value),
+													endGame.updateField('climb_method', value),
 												);
 											},
 										),
@@ -1288,10 +1289,10 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'fuel_received_desc',
 											),
 										],
-										selectedValue: endGame.fuelStrategy,
+										selectedValue: endGame.getFieldValue('fuel_to_alliance').asString(),
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("fuelStrategy", value),
+												endGame.updateField('fuel_to_alliance', value),
 											);
 										},
 									),
@@ -1342,10 +1343,10 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'bricked_all_desc',
 											),
 										],
-										selectedValue: endGame.bricked,
+										selectedValue: endGame.getFieldValue('bricked').asString(),
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("bricked", value),
+												endGame.updateField('bricked', value),
 											);
 										},
 									),
@@ -1396,10 +1397,10 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'defense_great_desc',
 											),
 										],
-										selectedValue: endGame.defenseRating,
+										selectedValue: endGame.getFieldValue('defense').asString(),
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("defenseRating", value),
+												endGame.updateField('defense', value),
 											);
 										},
 									),
@@ -1411,7 +1412,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 					const SizedBox(height: 16),
 
 					// Defense Methods (conditional: defenseRating != '')
-					if (endGame.defenseRating != null && endGame.defenseRating != '')
+					if (endGame.getFieldValue('defense').asString().isNotEmpty)
 						Card(
 							child: Padding(
 								padding: const EdgeInsets.all(16),
@@ -1478,10 +1479,10 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'defended_slowed_greatly_desc',
 											),
 										],
-										selectedValue: endGame.defended,
+										selectedValue: endGame.getFieldValue('defended').asString(),
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("defended", value),
+												endGame.updateField('defended', value),
 											);
 										},
 									),
@@ -1527,10 +1528,10 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												labelKey: 'misses_60_100',
 											),
 										],
-										selectedValue: endGame.misses,
+										selectedValue: endGame.getFieldValue('misses').asString(),
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("misses", value),
+												endGame.updateField('misses', value),
 											);
 										},
 									),
@@ -1557,14 +1558,23 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 							child: Column(
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: [
-									CheckboxButton(
-										isChecked: endGame.reviewRequest,
-										translationKey: 'review_requested_button',
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("reviewRequest", value == 1),
-											);
-										},
+									Text(
+										_translate('review_requested_legend'),
+										style: const TextStyle(
+											fontSize: 14,
+											fontStyle: FontStyle.italic,
+											color: Colors.grey,
+										),
+									),
+									const SizedBox(height: 8),
+									CheckboxButton.forField(
+										descriptor: FieldDescriptor(
+											name: 'review_requested',
+											uiLabelKey: 'review_requested_button',
+										),
+										model: endGame,
+										ref: ref,
+										provider: endGameProvider,
 									),
 									const SizedBox(height: 16),
 									TextField(
@@ -1576,7 +1586,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										maxLength: 32,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("scouterName", value),
+												endGame.updateField('scouter', value),
 											);
 										},
 									),
@@ -1591,7 +1601,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										minLines: 3,
 										onChanged: (value) {
 											ref.read(endGameProvider.notifier).update(
-												endGame.updateField("comments", value),
+												endGame.updateField('comments', value),
 											);
 										},
 									),
