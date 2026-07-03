@@ -73,4 +73,11 @@ abstract class MapDataModel {
 		}
 		return result;
 	}
+
+	/// Register a field descriptor with this model
+	/// Override in subclasses that support dynamic descriptor registration
+	void registerDescriptor(FieldDescriptor descriptor) {
+		// Default implementation - do nothing
+		// Subclasses override if they support registration
+	}
 }

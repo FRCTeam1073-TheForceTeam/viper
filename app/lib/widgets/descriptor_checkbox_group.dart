@@ -46,17 +46,9 @@ class DescriptorCheckboxGroup extends StatelessWidget {
 	}
 
 	static void _registerDescriptors(MapDataModel object, List<FieldDescriptor> descriptors) {
-		try {
-			// Try to register if supported by this model type
-			final type = object.runtimeType;
-			final typeName = type.toString();
-			if (typeName.contains('EndGameData') || typeName.contains('Data')) {
-				for (final descriptor in descriptors) {
-					(type as dynamic).registerDescriptor(descriptor);
-				}
-			}
-		} catch (e) {
-			// If registration fails, descriptors will be used as-is
+		// Register descriptors with the model instance
+		for (final descriptor in descriptors) {
+			object.registerDescriptor(descriptor);
 		}
 	}
 

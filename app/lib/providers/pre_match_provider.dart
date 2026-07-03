@@ -10,16 +10,27 @@ class PreMatchData extends MapDataModel {
 
 	PreMatchData.empty() : super.empty();
 
-	static const List<FieldDescriptor> _descriptors = [
-		FieldDescriptor(name: 'starting_position'),
-	];
+	static final Map<String, FieldDescriptor> _registeredDescriptors = {};
+
+	static const List<FieldDescriptor> _descriptors = [];
 
 	@override
-	List<FieldDescriptor> get descriptors => _descriptors;
+	List<FieldDescriptor> get descriptors {
+		final baseDescriptors = _descriptors.toList();
+		final registered = _registeredDescriptors.values.where(
+			(d) => !baseDescriptors.any((bd) => bd.name == d.name),
+		);
+		return [...baseDescriptors, ...registered];
+	}
 
 	@override
 	PreMatchData updateField(String fieldName, dynamic value) {
 		return PreMatchData(updateFieldValues(fieldName, value));
+	}
+
+	@override
+	void registerDescriptor(FieldDescriptor descriptor) {
+		_registeredDescriptors[descriptor.name] = descriptor;
 	}
 }
 

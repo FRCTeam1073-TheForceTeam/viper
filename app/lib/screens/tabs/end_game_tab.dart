@@ -5,6 +5,7 @@ import '../../providers/app_providers.dart';
 import '../../providers/end_game_provider.dart';
 import '../../providers/pre_match_provider.dart';
 import '../../providers/locale_provider.dart';
+import '../../providers/field_side_provider.dart';
 import '../../providers/auto_tab_controller.dart';
 import '../../providers/tele_tab_controller.dart';
 import '../../providers/timeline_provider.dart';
@@ -13,6 +14,7 @@ import '../../services/csv_builder.dart';
 import '../../widgets/checkbox_button.dart';
 import '../../widgets/checkbox_button_group.dart';
 import '../../widgets/descriptor_checkbox_group.dart';
+import '../../widgets/position_selector_area.dart';
 import '../../widgets/radio_button_group.dart';
 import '../../constants/colors.dart';
 import '../../models/match_model.dart';
@@ -272,6 +274,24 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'zh_tw': '留在聯盟區並從其他機器人接收燃料。',
 				'he': 'נשאר באזור הברית וקיבל דלק מרובוטים אחרים.',
 				'tr': 'İttifak bölgesinde kaldı ve diğer botlardan yakıt aldı.',
+			},
+			'shooting_locations_legend': {
+				'en': 'Were there a limited set of locations from which team _TEAMNUM_ could score fuel that could be defended? If so, mark them.',
+				'es': '¿Había un conjunto limitado de ubicaciones desde donde el equipo _TEAMNUM_ podría anotar combustible que pudiera ser defendido? Si es así, márquelos.',
+				'pt': 'Havia um conjunto limitado de locais de onde a equipe _TEAMNUM_ poderia marcar combustível que pudesse ser defendido? Se sim, marque-os.',
+				'fr': 'Y avait-il un ensemble limité d\'emplacements à partir desquels l\'équipe _TEAMNUM_ pouvait marquer du carburant qui pouvait être défendu? Si oui, marquez-les.',
+				'zh_tw': '隊伍_TEAMNUM_是否有一組有限的位置可以得分燃料可以防守?如果是，請標記它們。',
+				'he': 'האם היו סט מוגבל של מיקומים מהם צוות _TEAMNUM_ יכול היה לצבור דלק שניתן להגן עליו? אם כן, סמן אותם.',
+				'tr': 'Takım _TEAMNUM_ savunulabilecek yakıt puanı alabileceği sınırlı bir konum seti var mıydı? Varsa, işaretleyin.',
+			},
+			'undo_button': {
+				'en': 'Undo',
+				'es': 'Deshacer',
+				'pt': 'Desfazer',
+				'fr': 'Annuler',
+				'zh_tw': '撤銷',
+				'he': 'בטל',
+				'tr': 'Geri Al',
 			},
 			'bricked_legend': {
 				'en': 'Was team _TEAMNUM_ bricked?',
@@ -819,149 +839,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		await prefs.setString('lastScoutAction', action);
 	}
 
-	void _handleClimbPositionTap(TapDownDetails details, String climbType, BuildContext context, GlobalKey mapKey) {
-		if (mapKey.currentContext == null) {
-			print('❌ Climb position tap: mapKey.currentContext is null');
-			return;
-		}
-
-		try {
-			final RenderBox renderBox = mapKey.currentContext!.findRenderObject() as RenderBox;
-			final size = renderBox.size;
-			final localPosition = renderBox.globalToLocal(details.globalPosition);
-
-			// Convert tap position to percent coordinates (1-99, to avoid edges)
-			final px = ((localPosition.dx / size.width) * 100).clamp(1.0, 99.0).toInt();
-			final py = ((localPosition.dy / size.height) * 100).clamp(1.0, 99.0).toInt();
-			final positionStr = '${px}x$py';
-
-			print('✅ Climb position tap: $climbType = $positionStr (global: ${details.globalPosition}, local: ${localPosition})');
-
-			// Update endGameProvider with the position
-			final endGame = ref.read(endGameProvider);
-			if (climbType == 'auto') {
-				ref.read(endGameProvider.notifier).update(
-					endGame.updateField('auto_climb_position', positionStr),
-				);
-				print('   Updated autoClimbPosition to: $positionStr');
-			} else if (climbType == 'tele') {
-				ref.read(endGameProvider.notifier).update(
-					endGame.updateField('tele_climb_position', positionStr),
-				);
-				print('   Updated teleClimbPosition to: $positionStr');
-			}
-		} catch (e, stackTrace) {
-			print('❌ Error in climb position tap: $e');
-			print(stackTrace);
-		}
-	}
-
-	Widget _buildClimbPositionMap({
-		required String title,
-		required String climbType,
-		required String position,
-		required String imagePath,
-		required BuildContext context,
-	}) {
-		final mapKey = GlobalKey();
-		final isBlueTeam = widget.teamNumber?.startsWith('B') ?? false;
-
-		return Card(
-			child: Padding(
-				padding: const EdgeInsets.all(16),
-				child: Column(
-					crossAxisAlignment: CrossAxisAlignment.start,
-					children: [
-						Text(
-							_translate(title, variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-							style: Theme.of(context).textTheme.titleMedium,
-						),
-						const SizedBox(height: 12),
-						GestureDetector(
-							onTapDown: (details) => _handleClimbPositionTap(details, climbType, context, mapKey),
-							child: LayoutBuilder(
-								builder: (context, constraints) {
-									return Container(
-										key: mapKey,
-										height: 250,
-										width: constraints.maxWidth,
-										decoration: BoxDecoration(
-											border: Border.all(color: AppColors.mainBorderColor),
-											borderRadius: BorderRadius.circular(8),
-										),
-										child: Stack(
-											children: [
-												Image.asset(
-													imagePath,
-													fit: BoxFit.contain,
-													width: double.infinity,
-													height: double.infinity,
-												),
-												if (position.isNotEmpty)
-													_buildPositionMarker(position, isBlueTeam, constraints.maxWidth),
-											],
-										),
-									);
-								},
-							),
-						),
-						if (position.isNotEmpty)
-							Padding(
-								padding: const EdgeInsets.only(top: 8),
-								child: Row(
-									mainAxisAlignment: MainAxisAlignment.spaceBetween,
-									children: [
-										Text('Position: $position', style: const TextStyle(fontWeight: FontWeight.bold)),
-										OutlinedButton(
-											onPressed: () {
-												final endGame = ref.read(endGameProvider);
-												if (climbType == 'auto') {
-													ref.read(endGameProvider.notifier).update(
-														endGame.updateField('auto_climb_position', ''),
-													);
-												} else if (climbType == 'tele') {
-													ref.read(endGameProvider.notifier).update(
-														endGame.updateField('tele_climb_position', ''),
-													);
-												}
-											},
-											child: const Text('Clear'),
-										),
-									],
-								),
-							),
-					],
-				),
-			),
-		);
-	}
-
-	Widget _buildPositionMarker(String? position, bool isBlueTeam, double containerWidth) {
-		if (position == null || position.isEmpty) return const SizedBox.shrink();
-		// Parse position string "XxY" to get percent coordinates
-		final parts = position.toLowerCase().split('x');
-		if (parts.length != 2) return const SizedBox.shrink();
-
-		final px = double.tryParse(parts[0]) ?? 50;
-		final py = double.tryParse(parts[1]) ?? 50;
-
-		return Positioned(
-			left: (px / 100) * containerWidth - 30,  // Center the marker (60px wide)
-			top: (py / 100) * 250 - 30,   // Center the marker (60px tall)
-			child: Container(
-				width: 60,
-				height: 60,
-				decoration: BoxDecoration(
-					border: Border.all(
-						color: isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor,
-						width: 3,
-					),
-					color: Colors.grey[600],
-					borderRadius: BorderRadius.circular(3),
-				),
-			),
-		);
-	}
 
 	@override
 	void dispose() {
@@ -1124,6 +1001,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		final matches = ref.watch(matchListProvider);
 		final autoState = ref.watch(autoTabControllerProvider);
 		final teleState = ref.watch(teleTabControllerProvider);
+		final fieldSide = ref.watch(selectedFieldSideProvider);
 
 		// Sync text controllers with endGame values
 		_scouterNameController.text = endGame.getFieldValue('scouter').asString();
@@ -1133,10 +1011,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		final autoClimbLevel = autoState.getFieldValue('auto_climb_level').asInt();
 		final teleClimbLevel = teleState.getFieldValue('tele_climb_level').asInt();
 
-		final isBlueTeam = widget.teamNumber?.startsWith('B') ?? false;
-		final climbAreaImage = isBlueTeam
-			? 'assets/images/climb-area-blue.png'
-			: 'assets/images/climb-area-red.png';
+		// Determine team color from bot position (B1, B2, B3 = blue; R1, R2, R3 = red)
+		final botPosition = ref.watch(selectedBotPositionProvider);
+		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 
 		final featuredButton = matches.when(
 			data: (m) => _getFeaturedButton(m),
@@ -1159,26 +1036,60 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 					),
 
 					// Auto Climb Position (conditional: autoClimbLevel > 0)
-					if (autoClimbLevel > 0)
-						_buildClimbPositionMap(
-							title: 'auto_climb_legend',
-							climbType: 'auto',
-							position: endGame.getFieldValue('auto_climb_position').asString(),
-							imagePath: climbAreaImage,
-							context: context,
+					if (autoClimbLevel > 0) ...[
+						Padding(
+							padding: const EdgeInsets.only(bottom: 16),
+							child: Text(
+								_translate('auto_climb_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+								style: Theme.of(context).textTheme.titleMedium,
+							),
 						),
-
-					const SizedBox(height: 16),
+						Align(
+							alignment: Alignment.centerLeft,
+							child: PositionSelectorArea.forField(
+								descriptor: FieldDescriptor(name: 'auto_climb_position'),
+								model: endGame,
+								provider: endGameProvider,
+								ref: ref,
+								isBlueTeam: isBlueTeam,
+								fieldSide: fieldSide,
+								blueImagePath: 'assets/images/climb-area-blue.png',
+								redImagePath: 'assets/images/climb-area-red.png',
+								width: 209,
+								height: 249,
+								markerSize: 60,
+							),
+						),
+						const SizedBox(height: 16),
+					],
 
 					// Tele Climb Position (conditional: teleClimbLevel > 0)
-					if (teleClimbLevel > 0)
-						_buildClimbPositionMap(
-							title: 'tele_climb_legend',
-							climbType: 'tele',
-							position: endGame.getFieldValue('tele_climb_position').asString(),
-							imagePath: climbAreaImage,
-							context: context,
+					if (teleClimbLevel > 0) ...[
+						Padding(
+							padding: const EdgeInsets.only(bottom: 16),
+							child: Text(
+								_translate('tele_climb_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+								style: Theme.of(context).textTheme.titleMedium,
+							),
 						),
+						Align(
+							alignment: Alignment.centerLeft,
+							child: PositionSelectorArea.forField(
+								descriptor: FieldDescriptor(name: 'tele_climb_position'),
+								model: endGame,
+								provider: endGameProvider,
+								ref: ref,
+								isBlueTeam: isBlueTeam,
+								fieldSide: fieldSide,
+								blueImagePath: 'assets/images/climb-area-blue.png',
+								redImagePath: 'assets/images/climb-area-red.png',
+								width: 209,
+								height: 249,
+								markerSize: 60,
+							),
+						),
+						const SizedBox(height: 16),
+					],
 
 					const SizedBox(height: 16),
 
@@ -1195,7 +1106,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											style: Theme.of(context).textTheme.titleMedium,
 										),
 										const SizedBox(height: 12),
-										RadioButtonGroup(
+										RadioButtonGroup.forField(
+											descriptor: FieldDescriptor(name: 'climb_method'),
+											model: endGame,
+											ref: ref,
+											provider: endGameProvider,
 											options: [
 												RadioButtonOption(
 													value: 'rungs',
@@ -1213,12 +1128,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 													descKey: 'climb_method_flip_desc',
 												),
 											],
-											selectedValue: endGame.getFieldValue('climb_method').asString(),
-											onChanged: (value) {
-												ref.read(endGameProvider.notifier).update(
-													endGame.updateField('climb_method', value),
-												);
-											},
 										),
 									],
 								),
@@ -1273,7 +1182,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									RadioButtonGroup(
+									RadioButtonGroup.forField(
+										descriptor: FieldDescriptor(name: 'fuel_to_alliance'),
+										model: endGame,
+										ref: ref,
+										provider: endGameProvider,
 										options: [
 											RadioButtonOption(
 												value: 'carried',
@@ -1296,12 +1209,68 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'fuel_received_desc',
 											),
 										],
-										selectedValue: endGame.getFieldValue('fuel_to_alliance').asString(),
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField('fuel_to_alliance', value),
-											);
-										},
+									),
+								],
+							),
+						),
+					),
+
+					const SizedBox(height: 16),
+
+					// Shooting Locations
+					Card(
+						child: Padding(
+							padding: const EdgeInsets.all(16),
+							child: Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									Text(
+										_translate('shooting_locations_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+										style: Theme.of(context).textTheme.titleMedium,
+									),
+									const SizedBox(height: 12),
+									Align(
+										alignment: Alignment.centerLeft,
+										child: PositionSelectorArea.forField(
+											descriptor: FieldDescriptor(name: 'shooting_locations'),
+											model: endGame,
+											provider: endGameProvider,
+											ref: ref,
+											isBlueTeam: isBlueTeam,
+											fieldSide: fieldSide,
+											blueImagePath: 'assets/images/shooting-locations-blue.png',
+											redImagePath: 'assets/images/shooting-locations-red.png',
+											width: 258,
+											height: 400,
+											markerSize: 40,
+											multiSelect: true,
+										),
+									),
+									const SizedBox(height: 12),
+									Align(
+										alignment: Alignment.centerLeft,
+										child: FilledButton.icon(
+											onPressed: () {
+												// Call undo through the descriptor
+												final descriptor = FieldDescriptor(name: 'shooting_locations');
+												endGame.registerDescriptor(descriptor);
+												final currentValue = endGame.getFieldValue(descriptor.name).asString();
+												final positions = currentValue.split(' ').where((p) => p.isNotEmpty).toList();
+												if (positions.isNotEmpty) {
+													positions.removeLast();
+													final newValue = positions.join(' ');
+													print('💾 Undo: Saving shooting_locations: $newValue');
+													final updated = endGame.updateField(descriptor.name, newValue);
+													ref.read(endGameProvider.notifier).update(updated);
+												}
+											},
+											style: FilledButton.styleFrom(
+												backgroundColor: AppColors.buttonBgColor,
+												foregroundColor: AppColors.buttonFgColor,
+											),
+											icon: const Icon(Icons.undo),
+											label: Text(_translate('undo_button')),
+										),
 									),
 								],
 							),
@@ -1322,7 +1291,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									RadioButtonGroup(
+									RadioButtonGroup.forField(
+										descriptor: FieldDescriptor(name: 'bricked'),
+										model: endGame,
+										ref: ref,
+										provider: endGameProvider,
 										options: [
 											RadioButtonOption(
 												value: '',
@@ -1350,12 +1323,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'bricked_all_desc',
 											),
 										],
-										selectedValue: endGame.getFieldValue('bricked').asString(),
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField('bricked', value),
-											);
-										},
 									),
 								],
 							),
@@ -1376,7 +1343,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									RadioButtonGroup(
+									RadioButtonGroup.forField(
+										descriptor: FieldDescriptor(name: 'defense'),
+										model: endGame,
+										ref: ref,
+										provider: endGameProvider,
 										options: [
 											RadioButtonOption(
 												value: '',
@@ -1404,12 +1375,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'defense_great_desc',
 											),
 										],
-										selectedValue: endGame.getFieldValue('defense').asString(),
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField('defense', value),
-											);
-										},
 									),
 								],
 							),
@@ -1480,7 +1445,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									RadioButtonGroup(
+									RadioButtonGroup.forField(
+										descriptor: FieldDescriptor(name: 'defended'),
+										model: endGame,
+										ref: ref,
+										provider: endGameProvider,
 										options: [
 											RadioButtonOption(
 												value: '',
@@ -1508,12 +1477,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												descKey: 'defended_slowed_greatly_desc',
 											),
 										],
-										selectedValue: endGame.getFieldValue('defended').asString(),
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField('defended', value),
-											);
-										},
 									),
 								],
 							),
@@ -1534,7 +1497,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									RadioButtonGroup(
+									RadioButtonGroup.forField(
+										descriptor: FieldDescriptor(name: 'misses'),
+										model: endGame,
+										ref: ref,
+										provider: endGameProvider,
 										options: [
 											RadioButtonOption(
 												value: '0_1',
@@ -1557,12 +1524,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												labelKey: 'misses_60_100',
 											),
 										],
-										selectedValue: endGame.getFieldValue('misses').asString(),
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField('misses', value),
-											);
-										},
 									),
 								],
 							),

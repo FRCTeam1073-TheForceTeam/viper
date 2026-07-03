@@ -50,17 +50,8 @@ class CheckboxButton extends ConsumerWidget {
 	}
 
 	static void _tryRegisterDescriptor(MapDataModel model, FieldDescriptor descriptor) {
-		try {
-			// Use reflection to call registerDescriptor on the model's class
-			final type = model.runtimeType;
-			final registerMethod = type.toString();
-			// Try to register if supported by this model type
-			if (registerMethod.contains('EndGameData') || registerMethod.contains('Data')) {
-				(type as dynamic).registerDescriptor(descriptor);
-			}
-		} catch (e) {
-			// If registration fails, the descriptor will be created on-demand in the widget
-		}
+		// Register descriptor with the model instance
+		model.registerDescriptor(descriptor);
 	}
 
 	@override

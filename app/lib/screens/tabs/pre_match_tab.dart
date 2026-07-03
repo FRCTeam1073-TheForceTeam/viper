@@ -12,7 +12,9 @@ import '../../services/localization.dart';
 import '../../constants/colors.dart';
 import '../../utils/match_name_converter.dart';
 import '../../widgets/checkbox_button.dart';
+import '../../widgets/position_selector_area.dart';
 import '../../models/field_descriptor.dart';
+import '../../models/map_data_model.dart';
 
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -300,16 +302,18 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 												const SizedBox(height: 16),
 												// Starting position interactive area (clickable/draggable)
 												Center(
-													child: _StartingPositionArea(
-														selectedPosition: preMatchData.getFieldValue('starting_position').asString(),
+													child: PositionSelectorArea.forField(
+														descriptor: FieldDescriptor(name: 'starting_position'),
+														model: preMatchData,
+														provider: preMatchProvider,
+														ref: ref,
 														isBlueTeam: isBlueTeam,
 														fieldSide: fieldSide,
-														onPositionChanged: (newPosition) {
-															print('💾 Saving starting position: $newPosition');
-															ref.read(preMatchProvider.notifier).update(
-																preMatchData.updateField('starting_position', newPosition),
-															);
-														},
+														blueImagePath: 'assets/images/start-area-blue.png',
+														redImagePath: 'assets/images/start-area-red.png',
+														width: 84,
+														height: 250,
+														markerSize: 60,
 													),
 												),
 											],
@@ -428,126 +432,3 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 	}
 }
 
-/// Interactive starting position area widget (mimics web app's click-to-position behavior)
-class _StartingPositionArea extends StatefulWidget {
-	final String? selectedPosition;
-	final bool isBlueTeam;
-	final FieldSide fieldSide;
-	final Function(String) onPositionChanged;
-
-	const _StartingPositionArea({
-		required this.selectedPosition,
-		required this.isBlueTeam,
-		required this.fieldSide,
-		required this.onPositionChanged,
-	});
-
-	@override
-	State<_StartingPositionArea> createState() => _StartingPositionAreaState();
-}
-
-class _StartingPositionAreaState extends State<_StartingPositionArea> {
-	/// Parse "XxY" format (e.g., "50x50") to (x%, y%) tuple
-	static (int, int)? _parsePosition(String? pos) {
-		if (pos == null) return null;
-		final parts = pos.split('x');
-		if (parts.length != 2) return null;
-		final x = int.tryParse(parts[0]);
-		final y = int.tryParse(parts[1]);
-		return (x != null && y != null) ? (x, y) : null;
-	}
-
-	/// Convert tap position to "XxY" format based on container dimensions
-	String _getTapPosition(TapDownDetails details, Size containerSize) {
-		final dx = details.localPosition.dx;
-		final dy = details.localPosition.dy;
-
-		// Calculate percentages (clamped 1-99)
-		final pxRaw = (dx / containerSize.width) * 100;
-		final pyRaw = (dy / containerSize.height) * 100;
-		int px = pxRaw.round().clamp(1, 99);
-		int py = pyRaw.round().clamp(1, 99);
-
-		print(
-			'   Percentages: px=${pxRaw.toStringAsFixed(1)}% → $px%, py=${pyRaw.toStringAsFixed(1)}% → $py%',
-		);
-
-		return '${px}x${py}';
-	}
-
-	@override
-	Widget build(BuildContext context) {
-		final parsedPos = _parsePosition(widget.selectedPosition);
-		final imagePath = widget.isBlueTeam
-				? 'assets/images/start-area-blue.png'
-				: 'assets/images/start-area-red.png';
-
-		// Apply 180° rotation based on team color and field side
-		// Blue team on right field → rotate 180
-		// Red team on left field → rotate 180
-		final shouldRotate =
-				(widget.isBlueTeam && widget.fieldSide == FieldSide.right) ||
-				(!widget.isBlueTeam && widget.fieldSide == FieldSide.left);
-
-		print(
-			'🔄 Start Area Rotation: ${widget.isBlueTeam ? 'BLUE' : 'RED'} team, ${widget.fieldSide.name} field → ${shouldRotate ? '180°' : '0°'}',
-		);
-
-		return Transform.rotate(
-			angle: shouldRotate ? pi : 0, // 180° in radians
-			child: GestureDetector(
-				onTapDown: (details) {
-					// Start area dimensions match web app CSS: 8.4em width, 25em height
-					// Approximate pixel dimensions for a reasonable UI size
-					final size = Size(84, 250);
-					final newPos = _getTapPosition(details, size);
-
-					// Debug output
-					print('🎯 Starting Position Tap:');
-					print(
-						'   Raw coordinates: dx=${details.localPosition.dx.toStringAsFixed(1)}, dy=${details.localPosition.dy.toStringAsFixed(1)}',
-					);
-					print(
-						'   Container size: ${size.width.toStringAsFixed(0)} x ${size.height.toStringAsFixed(0)} px',
-					);
-					print('   ✅ New position: $newPos');
-
-					widget.onPositionChanged(newPos);
-				},
-				child: Container(
-					width: 84,
-					height: 250,
-					decoration: BoxDecoration(
-						border: Border.all(color: Colors.grey, width: 2),
-					),
-					child: Stack(
-						children: [
-							// Start area background image
-							Image.asset(imagePath, fit: BoxFit.fill, width: 84, height: 250),
-							// Robot position indicator (small square overlay)
-							if (parsedPos != null)
-								Positioned(
-									left: (parsedPos.$1 / 100) * 84 - 12.5,
-									top: (parsedPos.$2 / 100) * 250 - 12.5,
-									child: Container(
-										width: 25,
-										height: 25,
-										decoration: BoxDecoration(
-											border: Border.all(
-												color: widget.isBlueTeam
-														? AppColors.blueTeamColor
-														: AppColors.redTeamColor,
-												width: 3,
-											),
-											color: Colors.grey[600],
-											borderRadius: BorderRadius.circular(3),
-										),
-									),
-								),
-						],
-					),
-				),
-			),
-		);
-	}
-}

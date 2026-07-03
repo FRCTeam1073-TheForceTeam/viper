@@ -13,7 +13,8 @@ class EndGameData extends MapDataModel {
 
 	static final Map<String, FieldDescriptor> _registeredDescriptors = {};
 
-	static void registerDescriptor(FieldDescriptor descriptor) {
+	@override
+	void registerDescriptor(FieldDescriptor descriptor) {
 		_registeredDescriptors[descriptor.name] = descriptor;
 	}
 
@@ -26,24 +27,19 @@ class EndGameData extends MapDataModel {
 		return [...baseDescriptors, ...registered];
 	}
 
-	// Field descriptors: single source of truth for all end-game fields
+	// Field descriptors: single source of truth for non-UI fields
+	// UI-defined fields (checkboxes, radio buttons) register themselves dynamically
 	static const List<FieldDescriptor> _descriptors = [
 		FieldDescriptor(name: 'auto_climb_position'),
 		FieldDescriptor(name: 'tele_climb_position'),
-		FieldDescriptor(name: 'climb_method'),
 		FieldDescriptor(name: 'shoot_move', uiLabelKey: 'shoot_move_desc'),
 		FieldDescriptor(name: 'shoot_collecting', uiLabelKey: 'shoot_collecting_desc'),
 		FieldDescriptor(name: 'shoot_turret', uiLabelKey: 'shoot_turret_desc'),
 		FieldDescriptor(name: 'shoot_climbing', uiLabelKey: 'shoot_climbing_desc'),
-		FieldDescriptor(name: 'fuel_to_alliance'),
-		FieldDescriptor(name: 'bricked'),
-		FieldDescriptor(name: 'defense'),
 		FieldDescriptor(name: 'defense_collected', uiLabelKey: 'defense_collected_desc'),
 		FieldDescriptor(name: 'defense_hit', uiLabelKey: 'defense_hit_desc'),
 		FieldDescriptor(name: 'defense_blocked', uiLabelKey: 'defense_blocked_desc'),
 		FieldDescriptor(name: 'defense_pinned', uiLabelKey: 'defense_pinned_desc'),
-		FieldDescriptor(name: 'defended'),
-		FieldDescriptor(name: 'misses'),
 		FieldDescriptor(name: 'scouter'),
 		FieldDescriptor(name: 'comments'),
 	];

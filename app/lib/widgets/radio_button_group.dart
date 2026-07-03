@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
 import '../providers/locale_provider.dart';
 import '../services/localization.dart';
+import '../models/field_descriptor.dart';
+import '../models/map_data_model.dart';
 
 class RadioButtonOption {
 	final String? value;
@@ -32,6 +34,39 @@ class RadioButtonGroup extends ConsumerWidget {
 		required this.onChanged,
 		this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
 	}) : super(key: key);
+
+	/// Create a radio button group for a model field with automatic state binding
+	static Widget forField({
+		Key? key,
+		required FieldDescriptor descriptor,
+		required MapDataModel model,
+		required WidgetRef ref,
+		required dynamic provider,
+		required List<RadioButtonOption> options,
+		EdgeInsets padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
+	}) {
+		// Auto-register descriptor if model supports it
+		_tryRegisterDescriptor(model, descriptor);
+
+		final currentValue = model.getFieldValue(descriptor.name).asString();
+
+		return RadioButtonGroup(
+			key: key,
+			options: options,
+			selectedValue: currentValue.isEmpty ? null : currentValue,
+			onChanged: (value) {
+				ref.read(provider.notifier).update(
+					model.updateField(descriptor.name, value ?? ''),
+				);
+			},
+			padding: padding,
+		);
+	}
+
+	static void _tryRegisterDescriptor(MapDataModel model, FieldDescriptor descriptor) {
+		// Register descriptor with the model instance
+		model.registerDescriptor(descriptor);
+	}
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
