@@ -3,13 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/end_game_provider.dart';
-import '../../providers/scouter_info_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/auto_tab_controller.dart';
 import '../../providers/tele_tab_controller.dart';
+import '../../providers/timeline_provider.dart';
 import '../../services/localization.dart';
 import '../../services/csv_builder.dart';
 import '../../widgets/checkbox_button.dart';
+import '../../widgets/checkbox_button_group.dart';
 import '../../widgets/radio_button_group.dart';
 import '../../constants/colors.dart';
 import '../../models/match_model.dart';
@@ -816,27 +817,39 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	}
 
 	void _handleClimbPositionTap(TapDownDetails details, String climbType, BuildContext context, GlobalKey mapKey) {
-		if (mapKey.currentContext == null) return;
+		if (mapKey.currentContext == null) {
+			print('❌ Climb position tap: mapKey.currentContext is null');
+			return;
+		}
 
-		final RenderBox renderBox = mapKey.currentContext!.findRenderObject() as RenderBox;
-		final size = renderBox.size;
-		final localPosition = renderBox.globalToLocal(details.globalPosition);
+		try {
+			final RenderBox renderBox = mapKey.currentContext!.findRenderObject() as RenderBox;
+			final size = renderBox.size;
+			final localPosition = renderBox.globalToLocal(details.globalPosition);
 
-		// Convert tap position to percent coordinates (1-99, to avoid edges)
-		final px = ((localPosition.dx / size.width) * 100).clamp(1.0, 99.0).toInt();
-		final py = ((localPosition.dy / size.height) * 100).clamp(1.0, 99.0).toInt();
-		final positionStr = '${px}x$py';
+			// Convert tap position to percent coordinates (1-99, to avoid edges)
+			final px = ((localPosition.dx / size.width) * 100).clamp(1.0, 99.0).toInt();
+			final py = ((localPosition.dy / size.height) * 100).clamp(1.0, 99.0).toInt();
+			final positionStr = '${px}x$py';
 
-		// Update endGameProvider with the position
-		final endGame = ref.read(endGameProvider);
-		if (climbType == 'auto') {
-			ref.read(endGameProvider.notifier).update(
-				endGame.copyWith(autoClimbPosition: positionStr),
-			);
-		} else if (climbType == 'tele') {
-			ref.read(endGameProvider.notifier).update(
-				endGame.copyWith(teleClimbPosition: positionStr),
-			);
+			print('✅ Climb position tap: $climbType = $positionStr (global: ${details.globalPosition}, local: ${localPosition})');
+
+			// Update endGameProvider with the position
+			final endGame = ref.read(endGameProvider);
+			if (climbType == 'auto') {
+				ref.read(endGameProvider.notifier).update(
+					endGame.copyWith(autoClimbPosition: positionStr),
+				);
+				print('   Updated autoClimbPosition to: $positionStr');
+			} else if (climbType == 'tele') {
+				ref.read(endGameProvider.notifier).update(
+					endGame.copyWith(teleClimbPosition: positionStr),
+				);
+				print('   Updated teleClimbPosition to: $positionStr');
+			}
+		} catch (e, stackTrace) {
+			print('❌ Error in climb position tap: $e');
+			print(stackTrace);
 		}
 	}
 
@@ -848,6 +861,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		required BuildContext context,
 	}) {
 		final mapKey = GlobalKey();
+		final isBlueTeam = widget.teamNumber?.startsWith('B') ?? false;
 
 		return Card(
 			child: Padding(
@@ -862,25 +876,30 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						const SizedBox(height: 12),
 						GestureDetector(
 							onTapDown: (details) => _handleClimbPositionTap(details, climbType, context, mapKey),
-							child: Container(
-								key: mapKey,
-								height: 250,
-								decoration: BoxDecoration(
-									border: Border.all(color: AppColors.mainBorderColor),
-									borderRadius: BorderRadius.circular(8),
-								),
-								child: Stack(
-									children: [
-										Image.asset(
-											imagePath,
-											fit: BoxFit.cover,
-											width: double.infinity,
-											height: double.infinity,
+							child: LayoutBuilder(
+								builder: (context, constraints) {
+									return Container(
+										key: mapKey,
+										height: 250,
+										width: constraints.maxWidth,
+										decoration: BoxDecoration(
+											border: Border.all(color: AppColors.mainBorderColor),
+											borderRadius: BorderRadius.circular(8),
 										),
-										if (position.isNotEmpty)
-											_buildPositionMarker(position),
-									],
-								),
+										child: Stack(
+											children: [
+												Image.asset(
+													imagePath,
+													fit: BoxFit.contain,
+													width: double.infinity,
+													height: double.infinity,
+												),
+												if (position.isNotEmpty)
+													_buildPositionMarker(position, isBlueTeam, constraints.maxWidth),
+											],
+										),
+									);
+								},
 							),
 						),
 						if (position.isNotEmpty)
@@ -914,7 +933,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		);
 	}
 
-	Widget _buildPositionMarker(String? position) {
+	Widget _buildPositionMarker(String? position, bool isBlueTeam, double containerWidth) {
 		if (position == null || position.isEmpty) return const SizedBox.shrink();
 		// Parse position string "XxY" to get percent coordinates
 		final parts = position.toLowerCase().split('x');
@@ -924,15 +943,18 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		final py = double.tryParse(parts[1]) ?? 50;
 
 		return Positioned(
-			left: (px / 100) * 250 - 8,  // Center the marker (16px wide)
-			top: (py / 100) * 250 - 8,   // Center the marker (16px tall)
+			left: (px / 100) * containerWidth - 30,  // Center the marker (60px wide)
+			top: (py / 100) * 250 - 30,   // Center the marker (60px tall)
 			child: Container(
-				width: 16,
-				height: 16,
+				width: 60,
+				height: 60,
 				decoration: BoxDecoration(
-					color: AppColors.buttonSelectedBgColor,
-					border: Border.all(color: AppColors.buttonFgColor, width: 2),
-					shape: BoxShape.circle,
+					border: Border.all(
+						color: isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor,
+						width: 3,
+					),
+					color: Colors.grey[600],
+					borderRadius: BorderRadius.circular(3),
 				),
 			),
 		);
@@ -975,39 +997,36 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 
 			// Read all scouting data from providers
 			final endGame = ref.read(endGameProvider);
-			final scouterInfo = ref.read(scouterInfoProvider);
 			final autoState = ref.read(autoTabControllerProvider);
 			final teleState = ref.read(teleTabControllerProvider);
+			final timeline = ref.read(timelineProvider);
 
-			// Build scout data map with camelCase keys
+			// Build scout data map by merging all provider data
+			final sessionStartTime = ref.read(scoutingSessionCreatedProvider)!;
+			final originalCreatedTime = ref.read(originalCreatedProvider);
+			final createdTime = originalCreatedTime ?? sessionStartTime;
 			final scoutDataMap = <String, dynamic>{
 				'event': selectedEvent,
 				'match': selectedMatch.match,
 				'team': selectedMatch.team,
-				// End game fields
-				'autoClimbPosition': endGame.autoClimbPosition,
-				'teleClimbPosition': endGame.teleClimbPosition,
-				'climbMethod': endGame.climbMethod,
-				'shootOnMove': endGame.shootOnMove ? 1 : 0,
-				'shootWhileCollecting': endGame.shootWhileCollecting ? 1 : 0,
-				'shootTurret': endGame.shootTurret ? 1 : 0,
-				'shootClimbing': endGame.shootClimbing ? 1 : 0,
-				'fuelStrategy': endGame.fuelStrategy,
-				'bricked': endGame.bricked,
-				'defenseRating': endGame.defenseRating,
-				'defenseCollected': endGame.defenseCollected ? 1 : 0,
-				'defenseHit': endGame.defenseHit ? 1 : 0,
-				'defenseBlocked': endGame.defenseBlocked ? 1 : 0,
-				'defensePinned': endGame.defensePinned ? 1 : 0,
-				'defended': endGame.defended,
-				'misses': endGame.misses,
-				// Scouter info
-				'scouter': scouterInfo.scouterName,
-				'reviewRequested': scouterInfo.reviewRequest ? 1 : 0,
-				'comments': scouterInfo.comments,
-				'created': DateTime.now().toIso8601String(),
-				'modified': DateTime.now().toIso8601String(),
+				'created': createdTime,
+				'modified': sessionStartTime,
 			};
+
+			// Add auto and tele tab data
+			scoutDataMap.addAll(autoState.toMap());
+			scoutDataMap.addAll(teleState.toMap());
+
+			// Add timeline once (shared between auto and tele)
+			scoutDataMap['timeline'] = TimelineEvent.formatTimeline(timeline);
+
+			// Add end game fields (matching 2026 web app schema)
+			scoutDataMap.addAll(endGame.toMap());
+
+			// Debug: log what we're about to save
+			print('[SAVE_DATA] auto_trench_depot_alliance_to_neutral=${scoutDataMap['auto_trench_depot_alliance_to_neutral']}');
+			print('[SAVE_DATA] tele_trench_depot_alliance_to_neutral=${scoutDataMap['tele_trench_depot_alliance_to_neutral']}');
+			print('[SAVE_DATA] timeline=${scoutDataMap['timeline']}');
 
 			// Build CSV
 			final csv = CsvBuilder.buildScoutCsv([scoutDataMap]);
@@ -1028,8 +1047,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			);
 
 			// Reset all scouting providers
+			ref.read(autoTabControllerProvider.notifier).reset();
+			ref.read(teleTabControllerProvider.notifier).reset();
 			ref.read(endGameProvider.notifier).reset();
-			ref.read(scouterInfoProvider.notifier).reset();
+			ref.read(originalCreatedProvider.notifier).clear();
+			ref.read(scoutingSessionCreatedProvider.notifier).clear();
 		} catch (e) {
 			print('Error saving match: $e');
 		}
@@ -1091,10 +1113,13 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	Widget build(BuildContext context) {
 		ref.watch(selectedLocaleProvider);
 		final endGame = ref.watch(endGameProvider);
-		final scouterInfo = ref.watch(scouterInfoProvider);
 		final matches = ref.watch(matchListProvider);
 		final autoState = ref.watch(autoTabControllerProvider);
 		final teleState = ref.watch(teleTabControllerProvider);
+
+		// Sync text controllers with endGame values
+		_scouterNameController.text = endGame.scouterName ?? '';
+		_commentsController.text = endGame.comments ?? '';
 
 		// Read climb levels from auto and tele tab state
 		final autoClimbLevel = autoState.climbLevel;
@@ -1206,40 +1231,42 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									CheckboxButton(
-										isChecked: endGame.shootOnMove,
-										translationKey: 'shoot_move_desc',
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(shootOnMove: value == 1),
-											);
-										},
-									),
-									CheckboxButton(
-										isChecked: endGame.shootWhileCollecting,
-										translationKey: 'shoot_collecting_desc',
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(shootWhileCollecting: value == 1),
-											);
-										},
-									),
-									CheckboxButton(
-										isChecked: endGame.shootTurret,
-										translationKey: 'shoot_turret_desc',
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(shootTurret: value == 1),
-											);
-										},
-									),
-									CheckboxButton(
-										isChecked: endGame.shootClimbing,
-										translationKey: 'shoot_climbing_desc',
-										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.copyWith(shootClimbing: value == 1),
-											);
+									CheckboxButtonGroup(
+										options: const [
+											CheckboxButtonOption(translationKey: 'shoot_move_desc'),
+											CheckboxButtonOption(translationKey: 'shoot_collecting_desc'),
+											CheckboxButtonOption(translationKey: 'shoot_turret_desc'),
+											CheckboxButtonOption(translationKey: 'shoot_climbing_desc'),
+										],
+										selectedValues: [
+											endGame.shootOnMove,
+											endGame.shootWhileCollecting,
+											endGame.shootTurret,
+											endGame.shootClimbing,
+										],
+										onChanged: (index) {
+											switch (index) {
+												case 0:
+													ref.read(endGameProvider.notifier).update(
+														endGame.copyWith(shootOnMove: !endGame.shootOnMove),
+													);
+													break;
+												case 1:
+													ref.read(endGameProvider.notifier).update(
+														endGame.copyWith(shootWhileCollecting: !endGame.shootWhileCollecting),
+													);
+													break;
+												case 2:
+													ref.read(endGameProvider.notifier).update(
+														endGame.copyWith(shootTurret: !endGame.shootTurret),
+													);
+													break;
+												case 3:
+													ref.read(endGameProvider.notifier).update(
+														endGame.copyWith(shootClimbing: !endGame.shootClimbing),
+													);
+													break;
+											}
 										},
 									),
 								],
@@ -1419,40 +1446,42 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											style: Theme.of(context).textTheme.titleMedium,
 										),
 										const SizedBox(height: 12),
-										CheckboxButton(
-											isChecked: endGame.defenseCollected,
-											translationKey: 'defense_collected_desc',
-											onChanged: (value) {
-												ref.read(endGameProvider.notifier).update(
-													endGame.copyWith(defenseCollected: value == 1),
-												);
-											},
-										),
-										CheckboxButton(
-											isChecked: endGame.defenseHit,
-											translationKey: 'defense_hit_desc',
-											onChanged: (value) {
-												ref.read(endGameProvider.notifier).update(
-													endGame.copyWith(defenseHit: value == 1),
-												);
-											},
-										),
-										CheckboxButton(
-											isChecked: endGame.defenseBlocked,
-											translationKey: 'defense_blocked_desc',
-											onChanged: (value) {
-												ref.read(endGameProvider.notifier).update(
-													endGame.copyWith(defenseBlocked: value == 1),
-												);
-											},
-										),
-										CheckboxButton(
-											isChecked: endGame.defensePinned,
-											translationKey: 'defense_pinned_desc',
-											onChanged: (value) {
-												ref.read(endGameProvider.notifier).update(
-													endGame.copyWith(defensePinned: value == 1),
-												);
+										CheckboxButtonGroup(
+											options: const [
+												CheckboxButtonOption(translationKey: 'defense_collected_desc'),
+												CheckboxButtonOption(translationKey: 'defense_hit_desc'),
+												CheckboxButtonOption(translationKey: 'defense_blocked_desc'),
+												CheckboxButtonOption(translationKey: 'defense_pinned_desc'),
+											],
+											selectedValues: [
+												endGame.defenseCollected,
+												endGame.defenseHit,
+												endGame.defenseBlocked,
+												endGame.defensePinned,
+											],
+											onChanged: (index) {
+												switch (index) {
+													case 0:
+														ref.read(endGameProvider.notifier).update(
+															endGame.copyWith(defenseCollected: !endGame.defenseCollected),
+														);
+														break;
+													case 1:
+														ref.read(endGameProvider.notifier).update(
+															endGame.copyWith(defenseHit: !endGame.defenseHit),
+														);
+														break;
+													case 2:
+														ref.read(endGameProvider.notifier).update(
+															endGame.copyWith(defenseBlocked: !endGame.defenseBlocked),
+														);
+														break;
+													case 3:
+														ref.read(endGameProvider.notifier).update(
+															endGame.copyWith(defensePinned: !endGame.defensePinned),
+														);
+														break;
+												}
 											},
 										),
 									],
@@ -1531,23 +1560,23 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									RadioButtonGroup(
 										options: [
 											RadioButtonOption(
-												value: '0-1',
+												value: '0_1',
 												labelKey: 'misses_0_1',
 											),
 											RadioButtonOption(
-												value: '1-10',
+												value: '1_10',
 												labelKey: 'misses_1_10',
 											),
 											RadioButtonOption(
-												value: '10-30',
+												value: '10_30',
 												labelKey: 'misses_10_30',
 											),
 											RadioButtonOption(
-												value: '30-60',
+												value: '30_60',
 												labelKey: 'misses_30_60',
 											),
 											RadioButtonOption(
-												value: '60-100',
+												value: '60_100',
 												labelKey: 'misses_60_100',
 											),
 										],
@@ -1582,11 +1611,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 								crossAxisAlignment: CrossAxisAlignment.start,
 								children: [
 									CheckboxButton(
-										isChecked: scouterInfo.reviewRequest,
+										isChecked: endGame.reviewRequest,
 										translationKey: 'review_requested_button',
 										onChanged: (value) {
-											ref.read(scouterInfoProvider.notifier).update(
-												scouterInfo.copyWith(reviewRequest: value == 1),
+											ref.read(endGameProvider.notifier).update(
+												endGame.copyWith(reviewRequest: value == 1),
 											);
 										},
 									),
@@ -1599,8 +1628,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										),
 										maxLength: 32,
 										onChanged: (value) {
-											ref.read(scouterInfoProvider.notifier).update(
-												scouterInfo.copyWith(scouterName: value),
+											ref.read(endGameProvider.notifier).update(
+												endGame.copyWith(scouterName: value),
 											);
 										},
 									),
@@ -1614,8 +1643,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										maxLines: 5,
 										minLines: 3,
 										onChanged: (value) {
-											ref.read(scouterInfoProvider.notifier).update(
-												scouterInfo.copyWith(comments: value),
+											ref.read(endGameProvider.notifier).update(
+												endGame.copyWith(comments: value),
 											);
 										},
 									),

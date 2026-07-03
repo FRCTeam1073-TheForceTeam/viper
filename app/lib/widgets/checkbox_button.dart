@@ -12,6 +12,7 @@ class CheckboxButton extends ConsumerWidget {
 	final String translationKey;
 	final ValueChanged<int> onChanged; // Returns 0 or 1 instead of bool
 	final EdgeInsets padding;
+	final EdgeInsets margin;
 
 	const CheckboxButton({
 		Key? key,
@@ -19,6 +20,7 @@ class CheckboxButton extends ConsumerWidget {
 		required this.translationKey,
 		required this.onChanged,
 		this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+		this.margin = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
 	}) : super(key: key);
 
 	@override
@@ -28,22 +30,25 @@ class CheckboxButton extends ConsumerWidget {
 		final locale = ref.read(selectedLocaleProvider);
 		final label = AppLocalizations.translate(translationKey, locale: locale);
 
-		return Center(
-			child: FilledButton(
-				style: FilledButton.styleFrom(
-					backgroundColor: isChecked
-						? AppColors.buttonSelectedBgColor
-						: AppColors.buttonBgColor,
-					foregroundColor: AppColors.buttonFgColor,
-					padding: padding,
-					shape: RoundedRectangleBorder(
-						borderRadius: BorderRadius.circular(8),
+		return Padding(
+			padding: margin,
+			child: Center(
+				child: FilledButton(
+					style: FilledButton.styleFrom(
+						backgroundColor: isChecked
+							? AppColors.buttonSelectedBgColor
+							: AppColors.buttonBgColor,
+						foregroundColor: AppColors.buttonFgColor,
+						padding: padding,
+						shape: RoundedRectangleBorder(
+							borderRadius: BorderRadius.circular(8),
+						),
 					),
-				),
-				onPressed: () => onChanged(isChecked ? 0 : 1), // Return 0 or 1 instead of bool
-				child: Text(
-					label,
-					style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+					onPressed: () => onChanged(isChecked ? 0 : 1), // Return 0 or 1 instead of bool
+					child: Text(
+						label,
+						style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+					),
 				),
 			),
 		);

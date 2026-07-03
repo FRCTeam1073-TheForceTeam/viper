@@ -665,16 +665,12 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		super.dispose();
 	}
 
-
-
-
 	@override
 	Widget build(BuildContext context) {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 		final autoState = ref.watch(autoTabControllerProvider);
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final teamColor = _getTeamColor(botPosition);
-
 
 		return Focus(
 			focusNode: _focusNode,

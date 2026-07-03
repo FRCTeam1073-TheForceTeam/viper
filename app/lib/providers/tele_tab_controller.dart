@@ -150,7 +150,7 @@ class TeleTabState {
 	}
 
 	/// Convert state to map for database storage (does not include timeline - handled separately)
-	Map<String, dynamic> toJson() {
+	Map<String, dynamic> toMap() {
 		return {
 			'tele_trench_depot_alliance_to_neutral': trenchDepotAllianceToNeutral,
 			'tele_bump_depot_alliance_to_neutral': bumpDepotAllianceToNeutral,
@@ -182,36 +182,36 @@ class TeleTabState {
 	}
 
 	/// Load state from map (database) - does not include timeline, handled separately
-	factory TeleTabState.fromJson(Map<String, dynamic> json) {
+	factory TeleTabState.fromMap(Map<String, dynamic> data) {
 		return TeleTabState(
-			trenchDepotAllianceToNeutral: json['tele_trench_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpDepotAllianceToNeutral: json['tele_bump_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpOutpostAllianceToNeutral: json['tele_bump_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchOutpostAllianceToNeutral: json['tele_trench_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchDepotNeutralToAlliance: json['tele_trench_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpDepotNeutralToAlliance: json['tele_bump_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpOutpostNeutralToAlliance: json['tele_bump_outpost_neutral_to_alliance'] as int? ?? 0,
-			trenchOutpostNeutralToAlliance: json['tele_trench_outpost_neutral_to_alliance'] as int? ?? 0,
-			trenchOutpostNeutralToOpponent: json['tele_trench_outpost_neutral_to_opponent'] as int? ?? 0,
-			bumpOutpostNeutralToOpponent: json['tele_bump_outpost_neutral_to_opponent'] as int? ?? 0,
-			bumpDepotNeutralToOpponent: json['tele_bump_depot_neutral_to_opponent'] as int? ?? 0,
-			trenchDepotNeutralToOpponent: json['tele_trench_depot_neutral_to_opponent'] as int? ?? 0,
-			trenchOutpostOpponentToNeutral: json['tele_trench_outpost_opponent_to_neutral'] as int? ?? 0,
-			bumpOutpostOpponentToNeutral: json['tele_bump_outpost_opponent_to_neutral'] as int? ?? 0,
-			bumpDepotOpponentToNeutral: json['tele_bump_depot_opponent_to_neutral'] as int? ?? 0,
-			trenchDepotOpponentToNeutral: json['tele_trench_depot_opponent_to_neutral'] as int? ?? 0,
-			fuelScore: json['tele_fuel_score'] as int? ?? 0,
-			fuelAllianceDump: json['tele_fuel_alliance_dump'] as int? ?? 0,
-			fuelOutpost: json['tele_fuel_outpost'] as int? ?? 0,
-			fuelNeutralAlliancePass: json['tele_fuel_neutral_alliance_pass'] as int? ?? 0,
-			fuelOpponentNeutralPass: json['tele_fuel_opponent_neutral_pass'] as int? ?? 0,
-			fuelOpponentAlliancePass: json['tele_fuel_opponent_alliance_pass'] as int? ?? 0,
-			allianceTime: json['tele_alliance_time'] as int? ?? 0,
-			neutralTime: json['tele_neutral_time'] as int? ?? 0,
-			opponentTime: json['tele_opponent_time'] as int? ?? 0,
-			climbLevel: json['tele_climb_level'] as int? ?? 0,
-			activeZone: json['tele_active_zone'] as String? ?? 'alliance',
-			activeFuelTarget: json['tele_active_fuel_target'] as String? ?? 'hub',
+			trenchDepotAllianceToNeutral: data['tele_trench_depot_alliance_to_neutral'] as int? ?? 0,
+			bumpDepotAllianceToNeutral: data['tele_bump_depot_alliance_to_neutral'] as int? ?? 0,
+			bumpOutpostAllianceToNeutral: data['tele_bump_outpost_alliance_to_neutral'] as int? ?? 0,
+			trenchOutpostAllianceToNeutral: data['tele_trench_outpost_alliance_to_neutral'] as int? ?? 0,
+			trenchDepotNeutralToAlliance: data['tele_trench_depot_neutral_to_alliance'] as int? ?? 0,
+			bumpDepotNeutralToAlliance: data['tele_bump_depot_neutral_to_alliance'] as int? ?? 0,
+			bumpOutpostNeutralToAlliance: data['tele_bump_outpost_neutral_to_alliance'] as int? ?? 0,
+			trenchOutpostNeutralToAlliance: data['tele_trench_outpost_neutral_to_alliance'] as int? ?? 0,
+			trenchOutpostNeutralToOpponent: data['tele_trench_outpost_neutral_to_opponent'] as int? ?? 0,
+			bumpOutpostNeutralToOpponent: data['tele_bump_outpost_neutral_to_opponent'] as int? ?? 0,
+			bumpDepotNeutralToOpponent: data['tele_bump_depot_neutral_to_opponent'] as int? ?? 0,
+			trenchDepotNeutralToOpponent: data['tele_trench_depot_neutral_to_opponent'] as int? ?? 0,
+			trenchOutpostOpponentToNeutral: data['tele_trench_outpost_opponent_to_neutral'] as int? ?? 0,
+			bumpOutpostOpponentToNeutral: data['tele_bump_outpost_opponent_to_neutral'] as int? ?? 0,
+			bumpDepotOpponentToNeutral: data['tele_bump_depot_opponent_to_neutral'] as int? ?? 0,
+			trenchDepotOpponentToNeutral: data['tele_trench_depot_opponent_to_neutral'] as int? ?? 0,
+			fuelScore: data['tele_fuel_score'] as int? ?? 0,
+			fuelAllianceDump: data['tele_fuel_alliance_dump'] as int? ?? 0,
+			fuelOutpost: data['tele_fuel_outpost'] as int? ?? 0,
+			fuelNeutralAlliancePass: data['tele_fuel_neutral_alliance_pass'] as int? ?? 0,
+			fuelOpponentNeutralPass: data['tele_fuel_opponent_neutral_pass'] as int? ?? 0,
+			fuelOpponentAlliancePass: data['tele_fuel_opponent_alliance_pass'] as int? ?? 0,
+			allianceTime: data['tele_alliance_time'] as int? ?? 0,
+			neutralTime: data['tele_neutral_time'] as int? ?? 0,
+			opponentTime: data['tele_opponent_time'] as int? ?? 0,
+			climbLevel: data['tele_climb_level'] as int? ?? 0,
+			activeZone: data['tele_active_zone'] as String? ?? 'alliance',
+			activeFuelTarget: data['tele_active_fuel_target'] as String? ?? 'hub',
 		);
 	}
 }
@@ -650,21 +650,21 @@ class TeleTabNotifier extends StateNotifier<TeleTabState> {
 
 	/// Load state from data map and populate timeline provider
 	void loadFromData(Map<String, dynamic> data, {bool isFirstLoad = false}) {
-		state = TeleTabState.fromJson(data);
-		// Sync active zone with shared provider
-		final sharedZone = _ref.read(activeZoneProvider);
-		state = state.copyWith(activeZone: sharedZone);
-		// Only load timeline from database on first load
-		// When switching tabs on same scout, preserve in-memory timeline
 		if (isFirstLoad) {
-			final timeline = TimelineEvent.parseTimeline(data['timeline'] as String? ?? '');
-			_ref.read(timelineProvider.notifier).setTimeline(timeline);
+			// Reset to start fresh before loading existing data
+			reset();
+			state = TeleTabState.fromMap(data);
+			// Sync active zone with shared provider
+			final sharedZone = _ref.read(activeZoneProvider);
+			state = state.copyWith(activeZone: sharedZone);
+			// Timeline is kept empty so new button clicks record fresh events
+			_ref.read(timelineProvider.notifier).clear();
 		}
 	}
 
 	/// Get all counters and timeline as map for database save
 	Map<String, dynamic> getCountersForSave() {
-		final counters = state.toJson();
+		final counters = state.toMap();
 		// Add timeline to the save data
 		final timeline = _ref.read(timelineProvider);
 		counters['timeline'] = TimelineEvent.formatTimeline(timeline);

@@ -9,6 +9,9 @@ import '../widgets/viper_menu_button.dart';
 import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../providers/match_timer_provider.dart';
+import '../providers/auto_tab_controller.dart';
+import '../providers/tele_tab_controller.dart';
+import '../providers/end_game_provider.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
 import '../widgets/match_timer.dart';
@@ -35,6 +38,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 	String? _teamNumber;
 	late TabController _tabController;
 	DateTime? _matchStartTime;
+	String? _lastLoadedMatchKey;
 
 	String _translate(String key) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -170,6 +174,39 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
 		final selectedTabIndex = ref.watch(selectedTabIndexProvider);
+
+		// Load existing scout data when match changes
+		final existingData = ref.watch(existingScoutDataProvider);
+		final selectedMatch = ref.watch(selectedMatchProvider);
+		final selectedEvent = ref.watch(selectedEventProvider);
+		final currentMatchKey = '${selectedEvent}_${selectedMatch.match}_${selectedMatch.team}';
+
+		// Only load data if we're loading a different match than before
+		if (currentMatchKey != _lastLoadedMatchKey) {
+			_lastLoadedMatchKey = currentMatchKey;
+			existingData.whenData((data) {
+				if (data != null) {
+					// Delay provider modification until after widget tree is built
+					WidgetsBinding.instance.addPostFrameCallback((_) {
+						// Preserve original created timestamp from previous scouting session
+						if (data['created'] != null) {
+							ref.read(originalCreatedProvider.notifier).setFromExistingData(data['created'] as String);
+						}
+						// Initialize session start time to now
+						ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
+						ref.read(autoTabControllerProvider.notifier).loadFromData(data, isFirstLoad: true);
+						ref.read(teleTabControllerProvider.notifier).loadFromData(data, isFirstLoad: true);
+						ref.read(endGameProvider.notifier).loadFromData(data);
+					});
+				} else {
+					// No existing data - initialize a new session
+					WidgetsBinding.instance.addPostFrameCallback((_) {
+						ref.read(originalCreatedProvider.notifier).clear();
+						ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
+					});
+				}
+			});
+		}
 
 		// Watch matchTimerProvider to get shared match start time
 		final matchStartTime = ref.watch(matchTimerProvider);

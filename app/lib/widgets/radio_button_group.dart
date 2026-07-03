@@ -38,20 +38,24 @@ class RadioButtonGroup extends ConsumerWidget {
 		ref.watch(selectedLocaleProvider);
 		final locale = ref.read(selectedLocaleProvider);
 
-		return Column(
-			children: options.map((option) {
-				final isSelected = selectedValue == option.value;
-				final label = AppLocalizations.translate(option.labelKey, locale: locale);
-				final desc = option.descKey != null
-					? AppLocalizations.translate(option.descKey!, locale: locale)
-					: null;
+		// Check if any option has a description
+		final hasDescriptions = options.any((option) => option.descKey != null);
 
-				return Padding(
-					padding: padding,
-					child: Row(
-						children: [
-							Expanded(
-								child: FilledButton(
+		if (hasDescriptions) {
+			// Use Column layout when there are descriptions
+			return Column(
+				children: options.map((option) {
+					final isSelected = selectedValue == option.value;
+					final label = AppLocalizations.translate(option.labelKey, locale: locale);
+					final desc = option.descKey != null
+						? AppLocalizations.translate(option.descKey!, locale: locale)
+						: null;
+
+					return Padding(
+						padding: padding,
+						child: Row(
+							children: [
+								FilledButton(
 									style: FilledButton.styleFrom(
 										backgroundColor: isSelected
 											? AppColors.buttonSelectedBgColor
@@ -68,24 +72,52 @@ class RadioButtonGroup extends ConsumerWidget {
 										style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
 									),
 								),
-							),
-							if (desc != null) ...[
-								const SizedBox(width: 12),
-								Expanded(
-									flex: 2,
-									child: Text(
-										desc,
-										style: TextStyle(
-											fontSize: 14,
-											color: Theme.of(context).textTheme.bodyMedium?.color,
+								if (desc != null) ...[
+									const SizedBox(width: 12),
+									Expanded(
+										flex: 2,
+										child: Text(
+											desc,
+											style: TextStyle(
+												fontSize: 14,
+												color: Theme.of(context).textTheme.bodyMedium?.color,
+											),
 										),
 									),
-								),
+								],
 							],
-						],
-					),
-				);
-			}).toList(),
-		);
+						),
+					);
+				}).toList(),
+			);
+		} else {
+			// Use Wrap layout when there are no descriptions
+			return Wrap(
+				spacing: 12,
+				runSpacing: 12,
+				children: options.map((option) {
+					final isSelected = selectedValue == option.value;
+					final label = AppLocalizations.translate(option.labelKey, locale: locale);
+
+					return FilledButton(
+						style: FilledButton.styleFrom(
+							backgroundColor: isSelected
+								? AppColors.buttonSelectedBgColor
+								: AppColors.buttonBgColor,
+							foregroundColor: AppColors.buttonFgColor,
+							padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+							shape: RoundedRectangleBorder(
+								borderRadius: BorderRadius.circular(8),
+							),
+						),
+						onPressed: () => onChanged(isSelected ? null : option.value),
+						child: Text(
+							label,
+							style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+						),
+					);
+				}).toList(),
+			);
+		}
 	}
 }

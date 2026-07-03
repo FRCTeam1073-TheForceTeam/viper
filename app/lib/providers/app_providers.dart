@@ -1143,4 +1143,81 @@ final selectedTabIndexProvider =
 	return _SelectedTabNotifier();
 });
 
+// ============================================================================
+// SCOUTING SESSION TIMESTAMPS
+// ============================================================================
+
+/// Tracks the original created timestamp from loaded data (if re-scouting)
+class _OriginalCreatedTimestampNotifier extends StateNotifier<String?> {
+	_OriginalCreatedTimestampNotifier() : super(null);
+
+	void setFromExistingData(String createdTime) {
+		state = createdTime;
+	}
+
+	void clear() {
+		state = null;
+	}
+}
+
+final originalCreatedProvider =
+	StateNotifierProvider<_OriginalCreatedTimestampNotifier, String?>((ref) {
+	return _OriginalCreatedTimestampNotifier();
+});
+
+/// Tracks when the current scouting session started (when auto tab was first loaded)
+class _ScoutingSessionTimestampNotifier extends StateNotifier<String?> {
+	_ScoutingSessionTimestampNotifier() : super(null);
+
+	void initializeNewSession() {
+		state = DateTime.now().toIso8601String();
+	}
+
+	void clear() {
+		state = null;
+	}
+}
+
+final scoutingSessionCreatedProvider =
+	StateNotifierProvider<_ScoutingSessionTimestampNotifier, String?>((ref) {
+	return _ScoutingSessionTimestampNotifier();
+});
+
+// ============================================================================
+// LOAD EXISTING SCOUT DATA
+// ============================================================================
+
+/// Provider that loads existing scout data for the selected match when it changes
+final existingScoutDataProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+	final selectedMatch = ref.watch(selectedMatchProvider);
+	final selectedEvent = ref.watch(selectedEventProvider);
+
+	if (selectedMatch.match == null || selectedMatch.team == null || selectedEvent == null) {
+		return null;
+	}
+
+	try {
+		final db = await ref.watch(databaseProvider.future);
+		final data = await db.getMatchData(selectedEvent, selectedMatch.match!, selectedMatch.team!);
+
+		if (data == null) {
+			return null;
+		}
+
+		// Parse using csvToArrayOfMaps which handles unescaping
+		// Create a mini CSV with headers + single data row
+		final csv = data.csvHeaders + '\n' + data.csvData;
+		final parsed = csvToArrayOfMaps(csv);
+
+		if (parsed.isEmpty) {
+			return null;
+		}
+
+		return parsed.first;
+	} catch (e) {
+		Logger().e('Error loading existing scout data: $e');
+		return null;
+	}
+});
+
 // CONNECTIVITY (SIMPLIFIED - TODO: Fix)

@@ -167,7 +167,7 @@ class AutoTabState {
 	}
 
 	/// Convert state to map for database storage (does not include timeline - handled separately)
-	Map<String, dynamic> toJson() {
+	Map<String, dynamic> toMap() {
 		return {
 			'auto_trench_depot_alliance_to_neutral': trenchDepotAllianceToNeutral,
 			'auto_bump_depot_alliance_to_neutral': bumpDepotAllianceToNeutral,
@@ -184,31 +184,29 @@ class AutoTabState {
 			'auto_alliance_time': allianceTime,
 			'auto_neutral_time': neutralTime,
 			'auto_climb_level': climbLevel,
-			'auto_active_zone': activeZone,
-			'auto_active_fuel_target': activeFuelTarget,
 		};
 	}
 
 	/// Load state from map (database) - does not include timeline, handled separately
-	factory AutoTabState.fromJson(Map<String, dynamic> json) {
+	factory AutoTabState.fromMap(Map<String, dynamic> data) {
 		return AutoTabState(
-			trenchDepotAllianceToNeutral: json['auto_trench_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpDepotAllianceToNeutral: json['auto_bump_depot_alliance_to_neutral'] as int? ?? 0,
-			bumpOutpostAllianceToNeutral: json['auto_bump_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchOutpostAllianceToNeutral: json['auto_trench_outpost_alliance_to_neutral'] as int? ?? 0,
-			trenchDepotNeutralToAlliance: json['auto_trench_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpDepotNeutralToAlliance: json['auto_bump_depot_neutral_to_alliance'] as int? ?? 0,
-			bumpOutpostNeutralToAlliance: json['auto_bump_outpost_neutral_to_alliance'] as int? ?? 0,
-			trenchOutpostNeutralToAlliance: json['auto_trench_outpost_neutral_to_alliance'] as int? ?? 0,
-			fuelScore: json['auto_fuel_score'] as int? ?? 0,
-			fuelNeutralAlliancePass: json['auto_fuel_neutral_alliance_pass'] as int? ?? 0,
-			collectOutpost: json['auto_collect_outpost'] as int? ?? 0,
-			collectDepot: json['auto_collect_depot'] as int? ?? 0,
-			allianceTime: json['auto_alliance_time'] as int? ?? 0,
-			neutralTime: json['auto_neutral_time'] as int? ?? 0,
-			climbLevel: json['auto_climb_level'] as int? ?? 0,
-			activeZone: json['auto_active_zone'] as String? ?? 'alliance',
-			activeFuelTarget: json['auto_active_fuel_target'] as String? ?? 'hub',
+			trenchDepotAllianceToNeutral: data['auto_trench_depot_alliance_to_neutral'] as int? ?? 0,
+			bumpDepotAllianceToNeutral: data['auto_bump_depot_alliance_to_neutral'] as int? ?? 0,
+			bumpOutpostAllianceToNeutral: data['auto_bump_outpost_alliance_to_neutral'] as int? ?? 0,
+			trenchOutpostAllianceToNeutral: data['auto_trench_outpost_alliance_to_neutral'] as int? ?? 0,
+			trenchDepotNeutralToAlliance: data['auto_trench_depot_neutral_to_alliance'] as int? ?? 0,
+			bumpDepotNeutralToAlliance: data['auto_bump_depot_neutral_to_alliance'] as int? ?? 0,
+			bumpOutpostNeutralToAlliance: data['auto_bump_outpost_neutral_to_alliance'] as int? ?? 0,
+			trenchOutpostNeutralToAlliance: data['auto_trench_outpost_neutral_to_alliance'] as int? ?? 0,
+			fuelScore: data['auto_fuel_score'] as int? ?? 0,
+			fuelNeutralAlliancePass: data['auto_fuel_neutral_alliance_pass'] as int? ?? 0,
+			collectOutpost: data['auto_collect_outpost'] as int? ?? 0,
+			collectDepot: data['auto_collect_depot'] as int? ?? 0,
+			allianceTime: data['auto_alliance_time'] as int? ?? 0,
+			neutralTime: data['auto_neutral_time'] as int? ?? 0,
+			climbLevel: data['auto_climb_level'] as int? ?? 0,
+			activeZone: data['auto_active_zone'] as String? ?? 'alliance',
+			activeFuelTarget: data['auto_active_fuel_target'] as String? ?? 'hub',
 		);
 	}
 }
@@ -532,18 +530,19 @@ class AutoTabNotifier extends StateNotifier<AutoTabState> {
 
 	/// Load state from data map and populate timeline provider
 	void loadFromData(Map<String, dynamic> data, {bool isFirstLoad = false}) {
-		state = AutoTabState.fromJson(data);
-		// Only load timeline from database on first load
-		// When switching tabs on same scout, preserve in-memory timeline
 		if (isFirstLoad) {
-			final timeline = TimelineEvent.parseTimeline(data['timeline'] as String? ?? '');
-			_ref.read(timelineProvider.notifier).setTimeline(timeline);
+			// Reset to start fresh before loading existing data
+			reset();
+			// Load the data (counters, times, etc.)
+			state = AutoTabState.fromMap(data);
+			// Timeline is kept empty so new button clicks record fresh events
+			_ref.read(timelineProvider.notifier).clear();
 		}
 	}
 
 	/// Get all counters and timeline as map for database save
 	Map<String, dynamic> getCountersForSave() {
-		final counters = state.toJson();
+		final counters = state.toMap();
 		// Add timeline to the save data
 		final timeline = _ref.read(timelineProvider);
 		counters['timeline'] = TimelineEvent.formatTimeline(timeline);

@@ -129,8 +129,14 @@ class ScoutDatabase extends _$ScoutDatabase {
 		required String csvHeaders,
 		required String csvData,
 		required String status,
-	}) {
-		return into(uploadHistory).insertOnConflictUpdate(
+	}) async {
+		// Delete existing row for this match to avoid unique constraint conflicts
+		await (delete(uploadHistory)
+				..where((h) => h.event.equals(event) & h.match.equals(match) & h.team.equals(team)))
+			.go();
+
+		// Insert the new row
+		return into(uploadHistory).insert(
 			UploadHistoryCompanion(
 				event: Value(event),
 				match: Value(match),
@@ -214,6 +220,18 @@ class ScoutDatabase extends _$ScoutDatabase {
 	/// Clear all upload history
 	Future<void> clearUploadHistory() async {
 		await delete(uploadHistory).go();
+	}
+
+	/// Get the most recent upload history entry for an event/match/team
+	Future<UploadHistoryData?> getMatchData(String event, String match, String team) async {
+		return (select(uploadHistory)
+					..where((h) =>
+							h.event.equals(event) &
+							h.match.equals(match) &
+							h.team.equals(team))
+					..orderBy([(u) => OrderingTerm(expression: u.createdAt, mode: OrderingMode.desc)])
+					..limit(1))
+				.getSingleOrNull();
 	}
 }
 
