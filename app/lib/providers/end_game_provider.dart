@@ -117,6 +117,20 @@ class EndGameData {
 class EndGameNotifier extends StateNotifier<EndGameData> {
 	EndGameNotifier() : super(const EndGameData());
 
+	// Helper functions to safely convert CSV data types
+	String? _toString(dynamic value) {
+		if (value == null) return null;
+		if (value is String) return value.isEmpty ? null : value;
+		return value.toString();
+	}
+
+	int _toInt(dynamic value) {
+		if (value == null) return 0;
+		if (value is int) return value;
+		if (value is String) return int.tryParse(value) ?? 0;
+		return 0;
+	}
+
 	void update(EndGameData data) {
 		state = data;
 	}
@@ -127,21 +141,21 @@ class EndGameNotifier extends StateNotifier<EndGameData> {
 
 	void loadFromData(Map<String, dynamic> data) {
 		state = EndGameData(
-			autoClimbPosition: data['auto_climb_position'] as String?,
-			teleClimbPosition: data['tele_climb_position'] as String?,
-			climbMethod: data['climb_method'] as String?,
-			shootOnMove: (data['shoot_move'] as int? ?? 0) == 1,
-			shootWhileCollecting: (data['shoot_collecting'] as int? ?? 0) == 1,
-			shootTurret: (data['shoot_turret'] as int? ?? 0) == 1,
-			shootClimbing: (data['shoot_climbing'] as int? ?? 0) == 1,
-			fuelStrategy: data['fuel_to_alliance'] as String?,
-			bricked: data['bricked'] as String?,
-			defenseRating: data['defense'] as String?,
-			defenseCollected: (data['defense_collected'] as int? ?? 0) == 1,
-			defenseHit: (data['defense_hit'] as int? ?? 0) == 1,
-			defenseBlocked: (data['defense_blocked'] as int? ?? 0) == 1,
-			defensePinned: (data['defense_pinned'] as int? ?? 0) == 1,
-			defended: data['defended'] as String?,
+			autoClimbPosition: _toString(data['auto_climb_position']),
+			teleClimbPosition: _toString(data['tele_climb_position']),
+			climbMethod: _toString(data['climb_method']),
+			shootOnMove: _toInt(data['shoot_move']) == 1,
+			shootWhileCollecting: _toInt(data['shoot_collecting']) == 1,
+			shootTurret: _toInt(data['shoot_turret']) == 1,
+			shootClimbing: _toInt(data['shoot_climbing']) == 1,
+			fuelStrategy: _toString(data['fuel_to_alliance']),
+			bricked: _toString(data['bricked']),
+			defenseRating: _toString(data['defense']),
+			defenseCollected: _toInt(data['defense_collected']) == 1,
+			defenseHit: _toInt(data['defense_hit']) == 1,
+			defenseBlocked: _toInt(data['defense_blocked']) == 1,
+			defensePinned: _toInt(data['defense_pinned']) == 1,
+			defended: _toString(data['defended']),
 			misses: data['misses'] as String?,
 			scouterName: data['scouter'] as String?,
 			reviewRequest: (data['review_requested'] as int? ?? 0) == 1,

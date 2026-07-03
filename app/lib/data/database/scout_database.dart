@@ -222,16 +222,32 @@ class ScoutDatabase extends _$ScoutDatabase {
 		await delete(uploadHistory).go();
 	}
 
-	/// Get the most recent upload history entry for an event/match/team
+	/// Get pending uploads for an event/match/team
+	/// Only checks local pending data (not yet sent to server)
+	/// Does NOT check server data (that's handled by existingScoutDataProvider checking SharedPreferences cache)
 	Future<UploadHistoryData?> getMatchData(String event, String match, String team) async {
-		return (select(uploadHistory)
+		print('[DATA_LOAD] Looking for local data: event=$event, match=$match, team=$team');
+
+		// Priority 1: Pending uploads (data not yet sent to server)
+		print('[DATA_LOAD] ✓ Priority 1: Checking for pending uploads (status=pending)...');
+		final pendingData = await (select(uploadHistory)
 					..where((h) =>
 							h.event.equals(event) &
 							h.match.equals(match) &
-							h.team.equals(team))
+							h.team.equals(team) &
+							h.uploadStatus.equals('pending'))
 					..orderBy([(u) => OrderingTerm(expression: u.createdAt, mode: OrderingMode.desc)])
 					..limit(1))
 				.getSingleOrNull();
+
+		if (pendingData != null) {
+			print('[DATA_LOAD] ✅ Found pending data (not yet sent to server)');
+			print('[DATA_LOAD]    Created: ${pendingData.createdAt}, Status: ${pendingData.uploadStatus}');
+			return pendingData;
+		}
+
+		print('[DATA_LOAD] ✗ No pending data found, will check server cache next');
+		return null;
 	}
 }
 

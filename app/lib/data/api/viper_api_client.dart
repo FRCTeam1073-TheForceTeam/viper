@@ -291,6 +291,30 @@ class ViperApiClient {
 		}
 	}
 
+	/// Fetch scouting CSV for a specific event
+	Future<String?> fetchScoutingCsv(String eventId) async {
+		try {
+			final path = '/data/$eventId.scouting.csv';
+			final fullUrl = '$baseUrl$path';
+			_logger.i('📡 Fetching scouting CSV from: $fullUrl');
+
+			final response = await _dio.get(path);
+
+			if (response.statusCode != 200) {
+				throw Exception(
+					'Failed to fetch scouting data: HTTP ${response.statusCode}',
+				);
+			}
+
+			final csvString = response.data as String;
+			_logger.d('Raw scouting CSV response length: ${csvString.length} characters');
+			return csvString;
+		} catch (e) {
+			_logger.e('Error fetching scouting CSV for $eventId: $e');
+			return null;
+		}
+	}
+
 	// =========================================================================
 	// ROBOT PHOTOS
 	// =========================================================================

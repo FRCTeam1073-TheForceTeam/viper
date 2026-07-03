@@ -13,6 +13,7 @@ import '../providers/pre_match_provider.dart';
 import '../providers/auto_tab_controller.dart';
 import '../providers/tele_tab_controller.dart';
 import '../providers/end_game_provider.dart';
+import '../providers/timeline_provider.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
 import '../widgets/match_timer.dart';
@@ -177,43 +178,71 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		final selectedTabIndex = ref.watch(selectedTabIndexProvider);
 
 		// Load existing scout data when match changes
-		final existingData = ref.watch(existingScoutDataProvider);
 		final selectedMatch = ref.watch(selectedMatchProvider);
 		final selectedEvent = ref.watch(selectedEventProvider);
+		print('[SCREEN_BUILD] Watching existingScoutDataProvider, selectedEvent=$selectedEvent, selectedMatch=${selectedMatch.match}');
+		final existingData = ref.watch(existingScoutDataProvider);
 		final currentMatchKey = '${selectedEvent}_${selectedMatch.match}_${selectedMatch.team}';
+		print('[SCREEN_BUILD] currentMatchKey=$currentMatchKey, existingData=${existingData.when(data: (d) => d != null ? "HAS DATA" : "NULL", loading: () => "LOADING", error: (e, st) => "ERROR")}');
 
 		// Only load data if we're loading a different match than before
 		if (currentMatchKey != _lastLoadedMatchKey) {
 			_lastLoadedMatchKey = currentMatchKey;
-			existingData.whenData((data) {
+			// Invalidate the provider to force it to re-execute with new match parameters
+			print('[SCREEN_BUILD] Match changed, invalidating existingScoutDataProvider');
+			ref.invalidate(existingScoutDataProvider);
+			// Re-watch the provider to get the fresh data
+			final freshData = ref.watch(existingScoutDataProvider);
+			freshData.whenData((data) {
 				if (data != null) {
+					print('[SCOUT_LOAD] ✅ Existing data found, loading providers...');
 					// Delay provider modification until after widget tree is built
 					WidgetsBinding.instance.addPostFrameCallback((_) {
 						// Preserve original created timestamp from previous scouting session
 						if (data['created'] != null) {
+							print('[SCOUT_LOAD] Setting original created time: ${data['created']}');
 							ref.read(originalCreatedProvider.notifier).setFromExistingData(data['created'] as String);
 						}
 						// Initialize session start time to now
 						ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
+
+						// Load all scouting data providers
+						print('[SCOUT_LOAD] Loading pre-match data...');
 						ref.read(preMatchProvider.notifier).loadFromData(data);
+
+						print('[SCOUT_LOAD] Loading auto tab data...');
 						ref.read(autoTabControllerProvider.notifier).loadFromData(data, isFirstLoad: true);
+
+						print('[SCOUT_LOAD] Loading tele tab data...');
 						ref.read(teleTabControllerProvider.notifier).loadFromData(data, isFirstLoad: true);
+
+						print('[SCOUT_LOAD] Loading end-game data...');
 						ref.read(endGameProvider.notifier).loadFromData(data);
 
 						// Load timeline and set match timer to last event's timestamp
+						print('[SCOUT_LOAD] Loading timeline...');
 						if (data['timeline'] != null && (data['timeline'] as String).isNotEmpty) {
 							final timelineEvents = TimelineEvent.parseTimeline(data['timeline'] as String);
+							print('[SCOUT_LOAD] Loaded ${timelineEvents.length} timeline events into provider');
+							ref.read(timelineProvider.notifier).setTimeline(timelineEvents);
+
 							if (timelineEvents.isNotEmpty) {
 								final lastEventSeconds = timelineEvents.last.timeSeconds;
+								print('[SCOUT_LOAD] Timeline last event at ${lastEventSeconds}s, setting match timer...');
 								// Calculate when the match should have started to reach this time
 								final matchStartTime = DateTime.now().subtract(Duration(seconds: lastEventSeconds));
 								ref.read(matchTimerProvider.notifier).setStartTime(matchStartTime);
 							}
+						} else {
+							print('[SCOUT_LOAD] No timeline data in CSV');
 						}
+						print('[SCOUT_LOAD] ✅ All data loaded successfully');
 					});
 				} else {
+					print('[SCOUT_LOAD] ✅ No existing data found, starting fresh');
 					// No existing data - initialize a new session and reset all scouting data
 					WidgetsBinding.instance.addPostFrameCallback((_) {
+						print('[SCOUT_LOAD] Resetting all providers for fresh scouting session');
 						ref.read(originalCreatedProvider.notifier).clear();
 						ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
 						ref.read(preMatchProvider.notifier).reset();
@@ -221,6 +250,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 						ref.read(teleTabControllerProvider.notifier).reset();
 						ref.read(endGameProvider.notifier).reset();
 						// Navigate to pre-match tab
+						print('[SCOUT_LOAD] Navigating to pre-match tab');
 						_tabController.animateTo(0);
 					});
 				}

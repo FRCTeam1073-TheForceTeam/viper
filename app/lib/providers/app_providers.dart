@@ -574,9 +574,9 @@ final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
 	// Fetch fresh data from server
 	try {
 		final apiClient = await ref.watch(apiClientProvider.future);
-		final serverCsv = await apiClient.fetchRaw('/data/$selectedEvent.scouting.csv');
+		final serverCsv = await apiClient.fetchScoutingCsv(selectedEvent);
 
-		if (serverCsv.isNotEmpty) {
+		if (serverCsv != null && serverCsv.isNotEmpty) {
 			// Cache the fresh CSV
 			await sharedPrefs.setString(cacheKey, serverCsv);
 
@@ -1189,18 +1189,75 @@ final scoutingSessionCreatedProvider =
 
 /// Provider that loads existing scout data for the selected match when it changes
 final existingScoutDataProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
+	print('[PROVIDER_EXEC] existingScoutDataProvider started');
 	final selectedMatch = ref.watch(selectedMatchProvider);
 	final selectedEvent = ref.watch(selectedEventProvider);
 
+	print('[PROVIDER_EXEC] selectedEvent=$selectedEvent, match=${selectedMatch.match}, team=${selectedMatch.team}');
+
 	if (selectedMatch.match == null || selectedMatch.team == null || selectedEvent == null) {
+		print('[PROVIDER_EXEC] Missing parameters, returning null');
 		return null;
 	}
 
+	print('[SCOUT_LOAD] existingScoutDataProvider starting for event=$selectedEvent, match=${selectedMatch.match}, team=${selectedMatch.team}');
+
 	try {
 		final db = await ref.watch(databaseProvider.future);
-		final data = await db.getMatchData(selectedEvent, selectedMatch.match!, selectedMatch.team!);
+		print('[SCOUT_LOAD] Database ready, calling getMatchData()...');
+		var data = await db.getMatchData(selectedEvent, selectedMatch.match!, selectedMatch.team!);
+		print('[SCOUT_LOAD] getMatchData returned: ${data != null ? "DATA FOUND" : "null"}');
+		if (data != null) {
+			print('[SCOUT_LOAD] 📦 Using local data (not from cache)');
+			final csv = data.csvHeaders + '\n' + data.csvData;
+			final parsed = csvToArrayOfMaps(csv);
+			print('[SCOUT_LOAD] Parsed local data: ${parsed.isNotEmpty ? parsed.first.toString() : "EMPTY"}');
+			return parsed.isNotEmpty ? parsed.first : null;
+		}
+
+		// If no local data, try to fetch from server CSV cache
+		if (data == null) {
+			print('[SCOUT_LOAD] No local data, checking server CSV cache...');
+			final sharedPrefs = await ref.watch(sharedPreferencesProvider.future);
+			final cacheKey = 'scouting_csv_cache_$selectedEvent';
+			final cachedCsv = sharedPrefs.getString(cacheKey);
+			print('[SCOUT_LOAD] DEBUG: cachedCsv = ${cachedCsv != null ? "LENGTH=${cachedCsv.length}" : "NULL"}');
+
+			if (cachedCsv != null && cachedCsv.isNotEmpty) {
+				print('[SCOUT_LOAD] ENTERING CSV PARSE BLOCK');
+				print('[SCOUT_LOAD] DEBUG: Entering CSV cache block, cachedCsv length = ${cachedCsv.length}');
+				try {
+					print('[SCOUT_LOAD] Found server CSV in cache (${cachedCsv.length} chars), parsing...');
+					final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(cachedCsv);
+					print('[SCOUT_LOAD] ✅ CSV parsed successfully: ${scoutingData.length} entries');
+
+					if (scoutingData.isEmpty) {
+						print('[SCOUT_LOAD] CSV is empty after parsing!');
+						return null;
+					}
+
+					print('[SCOUT_LOAD] Searching for match=${selectedMatch.match}, team=${selectedMatch.team}');
+					// Find matching entry in server CSV
+					for (final entry in scoutingData) {
+						final csvMatch = entry['match']?.toString();
+						final csvTeam = entry['team']?.toString();
+						if (csvMatch == selectedMatch.match && csvTeam == selectedMatch.team) {
+							print('[SCOUT_LOAD] ✅ FOUND match in CSV!');
+							return entry;
+						}
+					}
+					print('[SCOUT_LOAD] ✗ Match not found in CSV entries');
+				} catch (e, st) {
+					print('[SCOUT_LOAD] ❌ ERROR in CSV parsing: $e');
+					print('[SCOUT_LOAD] Stack: $st');
+				}
+			} else {
+				print('[SCOUT_LOAD] ❌ No CSV cache or empty');
+			}
+		}
 
 		if (data == null) {
+			print('[SCOUT_LOAD] No data found locally or on server');
 			return null;
 		}
 
