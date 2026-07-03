@@ -10,9 +10,7 @@ import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../providers/match_timer_provider.dart';
 import '../providers/pre_match_provider.dart';
-import '../providers/auto_tab_controller.dart';
-import '../providers/tele_tab_controller.dart';
-import '../providers/end_game_provider.dart';
+import '../providers/scouting_data_provider.dart';
 import '../providers/timeline_provider.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
@@ -202,16 +200,8 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 							print('[SCOUT_LOAD] Loading pre-match data...');
 							ref.read(preMatchProvider.notifier).loadFromData(matchData);
 
-							print('[SCOUT_LOAD] Loading auto tab data...');
-							ref.read(autoTabControllerProvider.notifier).loadFromData(matchData, isFirstLoad: true);
-
-							print('[SCOUT_LOAD] Loading tele tab data...');
-							ref.read(teleTabControllerProvider.notifier).loadFromData(matchData, isFirstLoad: true);
-
-							print('[SCOUT_LOAD] Loading end-game data...');
-							print('[SCOUT_LOAD] endGame before: shoot_move=${ref.read(endGameProvider).getFieldValue('shoot_move').asInt()}');
-							ref.read(endGameProvider.notifier).loadFromData(matchData);
-							print('[SCOUT_LOAD] endGame after: shoot_move=${ref.read(endGameProvider).getFieldValue('shoot_move').asInt()}');
+							print('[SCOUT_LOAD] Loading unified scouting data (auto, tele, end-game)...');
+							ref.read(scoutingDataProvider.notifier).loadFromServerData(matchData);
 
 							// Load timeline and set match timer to last event's timestamp
 							print('[SCOUT_LOAD] Loading timeline...');
@@ -240,9 +230,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 							ref.read(originalCreatedProvider.notifier).clear();
 							ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
 							ref.read(preMatchProvider.notifier).reset();
-							ref.read(autoTabControllerProvider.notifier).reset();
-							ref.read(teleTabControllerProvider.notifier).reset();
-							ref.read(endGameProvider.notifier).reset();
+							ref.read(scoutingDataProvider.notifier).reset();
 							// Navigate to pre-match tab
 							print('[SCOUT_LOAD] Navigating to pre-match tab');
 							_tabController.animateTo(0);

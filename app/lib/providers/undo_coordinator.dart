@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'timeline_provider.dart';
-import 'auto_tab_controller.dart';
-import 'tele_tab_controller.dart';
+import 'scouting_data_provider.dart';
 import 'match_timer_provider.dart';
 
 /// Coordinates undo between auto and tele tabs based on which period the last timeline event belongs to
@@ -20,9 +19,9 @@ void undoLastAction(WidgetRef ref) {
 
 	// Determine which period this event belongs to
 	if (field.startsWith('auto_')) {
-		ref.read(autoTabControllerProvider.notifier).undo();
+		ref.read(scoutingDataProvider.notifier).undoAuto();
 	} else if (field.startsWith('tele_')) {
-		ref.read(teleTabControllerProvider.notifier).undo();
+		ref.read(scoutingDataProvider.notifier).undoTele();
 	}
 
 	// After undo, check if timeline is now empty

@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/app_providers.dart';
-import '../../providers/end_game_provider.dart';
+import '../../providers/scouting_data_provider.dart';
 import '../../providers/pre_match_provider.dart';
+import '../../providers/timeline_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/field_side_provider.dart';
-import '../../providers/auto_tab_controller.dart';
-import '../../providers/tele_tab_controller.dart';
 import '../../providers/timeline_provider.dart';
 import '../../services/localization.dart';
 import '../../services/csv_builder.dart';
@@ -877,9 +876,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 
 			// Read all scouting data from providers
 			final preMatch = ref.read(preMatchProvider);
-			final endGame = ref.read(endGameProvider);
-			final autoState = ref.read(autoTabControllerProvider);
-			final teleState = ref.read(teleTabControllerProvider);
+			final scoutingData = ref.read(scoutingDataProvider);
 			final timeline = ref.read(timelineProvider);
 
 			// Build scout data map by merging all provider data
@@ -897,15 +894,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			// Add pre-match data
 			scoutDataMap.addAll(preMatch.toMap());
 
-			// Add auto and tele tab data
-			scoutDataMap.addAll(autoState.toMap());
-			scoutDataMap.addAll(teleState.toMap());
+			// Add unified scouting data (auto, tele, and end-game)
+			scoutDataMap.addAll(scoutingData.toMap());
 
 			// Add timeline once (shared between auto and tele)
 			scoutDataMap['timeline'] = TimelineEvent.formatTimeline(timeline);
-
-			// Add end game fields (matching 2026 web app schema)
-			scoutDataMap.addAll(endGame.toMap());
 
 			// Debug: log what we're about to save
 			print('[SAVE_DATA] auto_trench_depot_alliance_to_neutral=${scoutDataMap['auto_trench_depot_alliance_to_neutral']}');
@@ -932,9 +925,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 
 			// Reset all scouting providers
 			ref.read(preMatchProvider.notifier).reset();
-			ref.read(autoTabControllerProvider.notifier).reset();
-			ref.read(teleTabControllerProvider.notifier).reset();
-			ref.read(endGameProvider.notifier).reset();
+			ref.read(scoutingDataProvider.notifier).reset();
 			ref.read(originalCreatedProvider.notifier).clear();
 			ref.read(scoutingSessionCreatedProvider.notifier).clear();
 		} catch (e) {
@@ -997,19 +988,17 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	@override
 	Widget build(BuildContext context) {
 		ref.watch(selectedLocaleProvider);
-		final endGame = ref.watch(endGameProvider);
+		final scoutingData = ref.watch(scoutingDataProvider);
 		final matches = ref.watch(matchListProvider);
-		final autoState = ref.watch(autoTabControllerProvider);
-		final teleState = ref.watch(teleTabControllerProvider);
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
-		// Sync text controllers with endGame values
-		_scouterNameController.text = endGame.getFieldValue('scouter').asString();
-		_commentsController.text = endGame.getFieldValue('comments').asString();
+		// Sync text controllers with scouting data values
+		_scouterNameController.text = scoutingData.getFieldValue('scouter').asString();
+		_commentsController.text = scoutingData.getFieldValue('comments').asString();
 
-		// Read climb levels from auto and tele tab state
-		final autoClimbLevel = autoState.getFieldValue('auto_climb_level').asInt();
-		final teleClimbLevel = teleState.getFieldValue('tele_climb_level').asInt();
+		// Read climb levels from scouting data
+		final autoClimbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
+		final teleClimbLevel = scoutingData.getFieldValue('tele_climb_level').asInt();
 
 		// Determine team color from bot position (B1, B2, B3 = blue; R1, R2, R3 = red)
 		final botPosition = ref.watch(selectedBotPositionProvider);
@@ -1048,8 +1037,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 							alignment: Alignment.centerLeft,
 							child: PositionSelectorArea.forField(
 								descriptor: FieldDescriptor(name: 'auto_climb_position'),
-								model: endGame,
-								provider: endGameProvider,
+								model: scoutingData,
+								provider: scoutingDataProvider,
 								ref: ref,
 								isBlueTeam: isBlueTeam,
 								fieldSide: fieldSide,
@@ -1076,8 +1065,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 							alignment: Alignment.centerLeft,
 							child: PositionSelectorArea.forField(
 								descriptor: FieldDescriptor(name: 'tele_climb_position'),
-								model: endGame,
-								provider: endGameProvider,
+								model: scoutingData,
+								provider: scoutingDataProvider,
 								ref: ref,
 								isBlueTeam: isBlueTeam,
 								fieldSide: fieldSide,
@@ -1108,9 +1097,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										const SizedBox(height: 12),
 										RadioButtonGroup.forField(
 											descriptor: FieldDescriptor(name: 'climb_method'),
-											model: endGame,
+											model: scoutingData,
 											ref: ref,
-											provider: endGameProvider,
+											provider: scoutingDataProvider,
 											options: [
 												RadioButtonOption(
 													value: 'rungs',
@@ -1149,7 +1138,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									),
 									const SizedBox(height: 12),
 									DescriptorCheckboxGroup.forFields(
-										object: endGame,
+										object: scoutingData,
 										descriptors: [
 											FieldDescriptor(name: 'shoot_move', uiLabelKey: 'shoot_move_desc'),
 											FieldDescriptor(name: 'shoot_collecting', uiLabelKey: 'shoot_collecting_desc'),
@@ -1157,8 +1146,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											FieldDescriptor(name: 'shoot_climbing', uiLabelKey: 'shoot_climbing_desc'),
 										],
 										onChanged: (fieldName, newValue) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField(fieldName, newValue),
+											ref.read(scoutingDataProvider.notifier).update(
+												scoutingData.updateField(fieldName, newValue),
 											);
 										},
 									),
@@ -1184,9 +1173,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'fuel_to_alliance'),
-										model: endGame,
+										model: scoutingData,
 										ref: ref,
-										provider: endGameProvider,
+										provider: scoutingDataProvider,
 										options: [
 											RadioButtonOption(
 												value: 'carried',
@@ -1233,8 +1222,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										alignment: Alignment.centerLeft,
 										child: PositionSelectorArea.forField(
 											descriptor: FieldDescriptor(name: 'shooting_locations'),
-											model: endGame,
-											provider: endGameProvider,
+											model: scoutingData,
+											provider: scoutingDataProvider,
 											ref: ref,
 											isBlueTeam: isBlueTeam,
 											fieldSide: fieldSide,
@@ -1253,15 +1242,15 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											onPressed: () {
 												// Call undo through the descriptor
 												final descriptor = FieldDescriptor(name: 'shooting_locations');
-												endGame.registerDescriptor(descriptor);
-												final currentValue = endGame.getFieldValue(descriptor.name).asString();
+												scoutingData.registerDescriptor(descriptor);
+												final currentValue = scoutingData.getFieldValue(descriptor.name).asString();
 												final positions = currentValue.split(' ').where((p) => p.isNotEmpty).toList();
 												if (positions.isNotEmpty) {
 													positions.removeLast();
 													final newValue = positions.join(' ');
 													print('💾 Undo: Saving shooting_locations: $newValue');
-													final updated = endGame.updateField(descriptor.name, newValue);
-													ref.read(endGameProvider.notifier).update(updated);
+													final updated = scoutingData.updateField(descriptor.name, newValue);
+													ref.read(scoutingDataProvider.notifier).update(updated);
 												}
 											},
 											style: FilledButton.styleFrom(
@@ -1293,9 +1282,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'bricked'),
-										model: endGame,
+										model: scoutingData,
 										ref: ref,
-										provider: endGameProvider,
+										provider: scoutingDataProvider,
 										options: [
 											RadioButtonOption(
 												value: '',
@@ -1345,9 +1334,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'defense'),
-										model: endGame,
+										model: scoutingData,
 										ref: ref,
-										provider: endGameProvider,
+										provider: scoutingDataProvider,
 										options: [
 											RadioButtonOption(
 												value: '',
@@ -1384,7 +1373,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 					const SizedBox(height: 16),
 
 					// Defense Methods (conditional: defenseRating != '')
-					if (endGame.getFieldValue('defense').asString().isNotEmpty)
+					if (scoutingData.getFieldValue('defense').asString().isNotEmpty)
 						Card(
 							child: Padding(
 								padding: const EdgeInsets.all(16),
@@ -1397,7 +1386,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										),
 										const SizedBox(height: 12),
 										DescriptorCheckboxGroup.forFields(
-											object: endGame,
+											object: scoutingData,
 											descriptors: [
 												FieldDescriptor(
 													name: 'defense_collected',
@@ -1421,8 +1410,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 												),
 											],
 											onChanged: (fieldName, newValue) {
-												ref.read(endGameProvider.notifier).update(
-													endGame.updateField(fieldName, newValue),
+												ref.read(scoutingDataProvider.notifier).update(
+													scoutingData.updateField(fieldName, newValue),
 												);
 											},
 										),
@@ -1447,9 +1436,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'defended'),
-										model: endGame,
+										model: scoutingData,
 										ref: ref,
-										provider: endGameProvider,
+										provider: scoutingDataProvider,
 										options: [
 											RadioButtonOption(
 												value: '',
@@ -1499,9 +1488,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'misses'),
-										model: endGame,
+										model: scoutingData,
 										ref: ref,
-										provider: endGameProvider,
+										provider: scoutingDataProvider,
 										options: [
 											RadioButtonOption(
 												value: '0_1',
@@ -1562,9 +1551,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											name: 'review_requested',
 											uiLabelKey: 'review_requested_button',
 										),
-										model: endGame,
+										model: scoutingData,
 										ref: ref,
-										provider: endGameProvider,
+										provider: scoutingDataProvider,
 									),
 									const SizedBox(height: 16),
 									TextField(
@@ -1575,8 +1564,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										),
 										maxLength: 32,
 										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField('scouter', value),
+											ref.read(scoutingDataProvider.notifier).update(
+												scoutingData.updateField('scouter', value),
 											);
 										},
 									),
@@ -1590,8 +1579,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										maxLines: 5,
 										minLines: 3,
 										onChanged: (value) {
-											ref.read(endGameProvider.notifier).update(
-												endGame.updateField('comments', value),
+											ref.read(scoutingDataProvider.notifier).update(
+												scoutingData.updateField('comments', value),
 											);
 										},
 									),

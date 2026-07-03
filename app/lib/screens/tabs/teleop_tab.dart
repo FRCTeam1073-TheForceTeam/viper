@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/colors.dart';
 import '../../providers/app_providers.dart';
-import '../../providers/tele_tab_controller.dart';
-import '../../providers/auto_tab_controller.dart' show TimelineEvent;
+import '../../providers/scouting_data_provider.dart';
 import '../../providers/field_side_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/timeline_provider.dart';
@@ -13,6 +12,37 @@ import '../../services/localization.dart';
 import '../../widgets/tele_field_overlay.dart';
 import '../../widgets/tele_values_table.dart';
 import '../../widgets/timeline_table.dart';
+
+typedef TeleTabRecord = ({
+	String activeZone,
+	String activeFuelTarget,
+	int trenchDepotAllianceToNeutral,
+	int bumpDepotAllianceToNeutral,
+	int bumpOutpostAllianceToNeutral,
+	int trenchOutpostAllianceToNeutral,
+	int trenchDepotNeutralToAlliance,
+	int bumpDepotNeutralToAlliance,
+	int bumpOutpostNeutralToAlliance,
+	int trenchOutpostNeutralToAlliance,
+	int trenchOutpostNeutralToOpponent,
+	int bumpOutpostNeutralToOpponent,
+	int bumpDepotNeutralToOpponent,
+	int trenchDepotNeutralToOpponent,
+	int trenchOutpostOpponentToNeutral,
+	int bumpOutpostOpponentToNeutral,
+	int bumpDepotOpponentToNeutral,
+	int trenchDepotOpponentToNeutral,
+	int fuelScore,
+	int fuelAllianceDump,
+	int fuelOutpost,
+	int fuelNeutralAlliancePass,
+	int fuelOpponentNeutralPass,
+	int fuelOpponentAlliancePass,
+	int allianceTime,
+	int neutralTime,
+	int opponentTime,
+	int climbLevel,
+});
 
 /// Initialize Tele Tab translations
 void _initTeleTabTranslations() {
@@ -419,7 +449,36 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 	@override
 	Widget build(BuildContext context) {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
-		final teleState = ref.watch(teleTabControllerProvider);
+		final teleState = ref.watch(scoutingDataProvider.select((data) => (
+			activeZone: data.teleActiveZone,
+			activeFuelTarget: data.teleActiveFuelTarget,
+			trenchDepotAllianceToNeutral: data.getFieldValue('tele_trench_depot_alliance_to_neutral').asInt(),
+			bumpDepotAllianceToNeutral: data.getFieldValue('tele_bump_depot_alliance_to_neutral').asInt(),
+			bumpOutpostAllianceToNeutral: data.getFieldValue('tele_bump_outpost_alliance_to_neutral').asInt(),
+			trenchOutpostAllianceToNeutral: data.getFieldValue('tele_trench_outpost_alliance_to_neutral').asInt(),
+			trenchDepotNeutralToAlliance: data.getFieldValue('tele_trench_depot_neutral_to_alliance').asInt(),
+			bumpDepotNeutralToAlliance: data.getFieldValue('tele_bump_depot_neutral_to_alliance').asInt(),
+			bumpOutpostNeutralToAlliance: data.getFieldValue('tele_bump_outpost_neutral_to_alliance').asInt(),
+			trenchOutpostNeutralToAlliance: data.getFieldValue('tele_trench_outpost_neutral_to_alliance').asInt(),
+			trenchOutpostNeutralToOpponent: data.getFieldValue('tele_trench_outpost_neutral_to_opponent').asInt(),
+			bumpOutpostNeutralToOpponent: data.getFieldValue('tele_bump_outpost_neutral_to_opponent').asInt(),
+			bumpDepotNeutralToOpponent: data.getFieldValue('tele_bump_depot_neutral_to_opponent').asInt(),
+			trenchDepotNeutralToOpponent: data.getFieldValue('tele_trench_depot_neutral_to_opponent').asInt(),
+			trenchOutpostOpponentToNeutral: data.getFieldValue('tele_trench_outpost_opponent_to_neutral').asInt(),
+			bumpOutpostOpponentToNeutral: data.getFieldValue('tele_bump_outpost_opponent_to_neutral').asInt(),
+			bumpDepotOpponentToNeutral: data.getFieldValue('tele_bump_depot_opponent_to_neutral').asInt(),
+			trenchDepotOpponentToNeutral: data.getFieldValue('tele_trench_depot_opponent_to_neutral').asInt(),
+			fuelScore: data.getFieldValue('tele_fuel_score').asInt(),
+			fuelAllianceDump: data.getFieldValue('tele_fuel_alliance_dump').asInt(),
+			fuelOutpost: data.getFieldValue('tele_fuel_outpost').asInt(),
+			fuelNeutralAlliancePass: data.getFieldValue('tele_fuel_neutral_alliance_pass').asInt(),
+			fuelOpponentNeutralPass: data.getFieldValue('tele_fuel_opponent_neutral_pass').asInt(),
+			fuelOpponentAlliancePass: data.getFieldValue('tele_fuel_opponent_alliance_pass').asInt(),
+			allianceTime: data.getFieldValue('tele_alliance_time').asInt(),
+			neutralTime: data.getFieldValue('tele_neutral_time').asInt(),
+			opponentTime: data.getFieldValue('tele_opponent_time').asInt(),
+			climbLevel: data.getFieldValue('tele_climb_level').asInt(),
+		)));
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final teamColor = _getTeamColor(botPosition);
 
@@ -436,34 +495,28 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 						child: TeleFieldOverlay(
 							fieldSide: fieldSide,
 							activeZone: teleState.activeZone,
-							climbLevel: teleState.getFieldValue('tele_climb_level').asInt(),
+							climbLevel: teleState.climbLevel,
 							botPosition: botPosition,
 							activeFuelTarget: teleState.activeFuelTarget,
 							onMovementTapped: (field, action) {
 								_startMatchIfNeeded();
-								ref.read(teleTabControllerProvider.notifier).recordAction(
-									type: 'movement',
-									field: field,
-									value: 1,
-									actionLabel: action,
-									valueLabel: '+1',
-								);
+								ref.read(scoutingDataProvider.notifier).recordTeleAction(
+						field: field,
+						value: 1,
+					);
 							},
 							onClimbTapped: () {
 								_startMatchIfNeeded();
-								final currentClimbLevel = teleState.getFieldValue('tele_climb_level').asInt();
+								final currentClimbLevel = teleState.climbLevel;
 								if (currentClimbLevel < 3) {
-									ref.read(teleTabControllerProvider.notifier).recordAction(
-										type: 'climb',
-										field: 'tele_climb_level',
-										value: currentClimbLevel + 1,
-										actionLabel: 'Climb',
-										valueLabel: '${currentClimbLevel + 1}',
-									);
+									ref.read(scoutingDataProvider.notifier).recordTeleAction(
+						field: 'tele_climb_level',
+						value: currentClimbLevel + 1,
+					);
 								}
 							},
 							onFuelTargetTapped: (targetName) {
-								ref.read(teleTabControllerProvider.notifier).changeFuelTarget(targetName);
+								ref.read(scoutingDataProvider.notifier).changeTeleFuelTarget(targetName);
 							},
 						),
 					),
@@ -519,31 +572,31 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 											if (_valuesExpanded) ...[
 												TeleValuesTable(
 													key: const ValueKey('tele_values_table'),
-													trenchDepotAllianceToNeutral: teleState.getFieldValue('tele_trench_depot_alliance_to_neutral').asInt(),
-													bumpDepotAllianceToNeutral: teleState.getFieldValue('tele_bump_depot_alliance_to_neutral').asInt(),
-													bumpOutpostAllianceToNeutral: teleState.getFieldValue('tele_bump_outpost_alliance_to_neutral').asInt(),
-													trenchOutpostAllianceToNeutral: teleState.getFieldValue('tele_trench_outpost_alliance_to_neutral').asInt(),
-													trenchDepotNeutralToAlliance: teleState.getFieldValue('tele_trench_depot_neutral_to_alliance').asInt(),
-													bumpDepotNeutralToAlliance: teleState.getFieldValue('tele_bump_depot_neutral_to_alliance').asInt(),
-													bumpOutpostNeutralToAlliance: teleState.getFieldValue('tele_bump_outpost_neutral_to_alliance').asInt(),
-													trenchOutpostNeutralToAlliance: teleState.getFieldValue('tele_trench_outpost_neutral_to_alliance').asInt(),
-													trenchOutpostNeutralToOpponent: teleState.getFieldValue('tele_trench_outpost_neutral_to_opponent').asInt(),
-													bumpOutpostNeutralToOpponent: teleState.getFieldValue('tele_bump_outpost_neutral_to_opponent').asInt(),
-													bumpDepotNeutralToOpponent: teleState.getFieldValue('tele_bump_depot_neutral_to_opponent').asInt(),
-													trenchDepotNeutralToOpponent: teleState.getFieldValue('tele_trench_depot_neutral_to_opponent').asInt(),
-													trenchOutpostOpponentToNeutral: teleState.getFieldValue('tele_trench_outpost_opponent_to_neutral').asInt(),
-													bumpOutpostOpponentToNeutral: teleState.getFieldValue('tele_bump_outpost_opponent_to_neutral').asInt(),
-													bumpDepotOpponentToNeutral: teleState.getFieldValue('tele_bump_depot_opponent_to_neutral').asInt(),
-													trenchDepotOpponentToNeutral: teleState.getFieldValue('tele_trench_depot_opponent_to_neutral').asInt(),
-													fuelScore: teleState.getFieldValue('tele_fuel_score').asInt(),
-													fuelAllianceDump: teleState.getFieldValue('tele_fuel_alliance_dump').asInt(),
-													fuelOutpost: teleState.getFieldValue('tele_fuel_outpost').asInt(),
-													fuelNeutralAlliancePass: teleState.getFieldValue('tele_fuel_neutral_alliance_pass').asInt(),
-													fuelOpponentNeutralPass: teleState.getFieldValue('tele_fuel_opponent_neutral_pass').asInt(),
-													fuelOpponentAlliancePass: teleState.getFieldValue('tele_fuel_opponent_alliance_pass').asInt(),
-													allianceTime: teleState.getFieldValue('tele_alliance_time').asInt(),
-													neutralTime: teleState.getFieldValue('tele_neutral_time').asInt(),
-													opponentTime: teleState.getFieldValue('tele_opponent_time').asInt(),
+													trenchDepotAllianceToNeutral: teleState.trenchDepotAllianceToNeutral,
+													bumpDepotAllianceToNeutral: teleState.bumpDepotAllianceToNeutral,
+													bumpOutpostAllianceToNeutral: teleState.bumpOutpostAllianceToNeutral,
+													trenchOutpostAllianceToNeutral: teleState.trenchOutpostAllianceToNeutral,
+													trenchDepotNeutralToAlliance: teleState.trenchDepotNeutralToAlliance,
+													bumpDepotNeutralToAlliance: teleState.bumpDepotNeutralToAlliance,
+													bumpOutpostNeutralToAlliance: teleState.bumpOutpostNeutralToAlliance,
+													trenchOutpostNeutralToAlliance: teleState.trenchOutpostNeutralToAlliance,
+													trenchOutpostNeutralToOpponent: teleState.trenchOutpostNeutralToOpponent,
+													bumpOutpostNeutralToOpponent: teleState.bumpOutpostNeutralToOpponent,
+													bumpDepotNeutralToOpponent: teleState.bumpDepotNeutralToOpponent,
+													trenchDepotNeutralToOpponent: teleState.trenchDepotNeutralToOpponent,
+													trenchOutpostOpponentToNeutral: teleState.trenchOutpostOpponentToNeutral,
+													bumpOutpostOpponentToNeutral: teleState.bumpOutpostOpponentToNeutral,
+													bumpDepotOpponentToNeutral: teleState.bumpDepotOpponentToNeutral,
+													trenchDepotOpponentToNeutral: teleState.trenchDepotOpponentToNeutral,
+													fuelScore: teleState.fuelScore,
+													fuelAllianceDump: teleState.fuelAllianceDump,
+													fuelOutpost: teleState.fuelOutpost,
+													fuelNeutralAlliancePass: teleState.fuelNeutralAlliancePass,
+													fuelOpponentNeutralPass: teleState.fuelOpponentNeutralPass,
+													fuelOpponentAlliancePass: teleState.fuelOpponentAlliancePass,
+													allianceTime: teleState.allianceTime,
+													neutralTime: teleState.neutralTime,
+													opponentTime: teleState.opponentTime,
 												),
 												const SizedBox(height: 12),
 											],
@@ -635,7 +688,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 	Widget _buildFuelButton(
 		String label,
 		int amount,
-		TeleTabState teleState,
+		TeleTabRecord teleState,
 		WidgetRef ref,
 	) {
 		// Map activeFuelTarget to field name
@@ -664,12 +717,9 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			child: ElevatedButton(
 				onPressed: () {
 					_startMatchIfNeeded();
-					ref.read(teleTabControllerProvider.notifier).recordAction(
-						type: 'fuel',
+					ref.read(scoutingDataProvider.notifier).recordTeleAction(
 						field: getFuelField(),
 						value: amount,
-						actionLabel: 'Fuel',
-						valueLabel: '+$amount',
 					);
 				},
 				style: ElevatedButton.styleFrom(

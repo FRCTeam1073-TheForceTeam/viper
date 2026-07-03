@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../providers/auto_tab_controller.dart';
-import '../../services/localization.dart';
+import '../providers/timeline_provider.dart';
+import '../services/localization.dart';
 
 /// Widget that displays the timeline of actions performed during a period (auto or tele)
 class TimelineTable extends StatelessWidget {

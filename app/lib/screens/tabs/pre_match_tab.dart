@@ -7,7 +7,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/field_side_provider.dart';
-import '../../providers/pre_match_provider.dart';
+import '../../providers/scouting_data_provider.dart';
 import '../../services/localization.dart';
 import '../../constants/colors.dart';
 import '../../utils/match_name_converter.dart';
@@ -252,8 +252,8 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		// Get the field side (left or right)
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
-		// Read pre-match provider (don't watch to avoid rebuilding on updates)
-		final preMatchData = ref.read(preMatchProvider);
+		// Read scouting data provider (don't watch to avoid rebuilding on updates)
+		final preMatchData = ref.read(scoutingDataProvider);
 
 		// Get baseUrl for robot photo
 		final apiClientAsync = ref.watch(apiClientProvider);
@@ -305,7 +305,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 													child: PositionSelectorArea.forField(
 														descriptor: FieldDescriptor(name: 'starting_position'),
 														model: preMatchData,
-														provider: preMatchProvider,
+														provider: scoutingDataProvider,
 														ref: ref,
 														isBlueTeam: isBlueTeam,
 														fieldSide: fieldSide,
@@ -363,7 +363,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 											),
 											model: preMatchData,
 											ref: ref,
-											provider: preMatchProvider,
+											provider: scoutingDataProvider,
 										),
 										// Proceed to Auto Button
 										FilledButton(
