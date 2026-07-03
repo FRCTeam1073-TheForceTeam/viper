@@ -9,6 +9,7 @@ import '../widgets/viper_menu_button.dart';
 import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../providers/match_timer_provider.dart';
+import '../providers/pre_match_provider.dart';
 import '../providers/auto_tab_controller.dart';
 import '../providers/tele_tab_controller.dart';
 import '../providers/end_game_provider.dart';
@@ -194,15 +195,33 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 						}
 						// Initialize session start time to now
 						ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
+						ref.read(preMatchProvider.notifier).loadFromData(data);
 						ref.read(autoTabControllerProvider.notifier).loadFromData(data, isFirstLoad: true);
 						ref.read(teleTabControllerProvider.notifier).loadFromData(data, isFirstLoad: true);
 						ref.read(endGameProvider.notifier).loadFromData(data);
+
+						// Load timeline and set match timer to last event's timestamp
+						if (data['timeline'] != null && (data['timeline'] as String).isNotEmpty) {
+							final timelineEvents = TimelineEvent.parseTimeline(data['timeline'] as String);
+							if (timelineEvents.isNotEmpty) {
+								final lastEventSeconds = timelineEvents.last.timeSeconds;
+								// Calculate when the match should have started to reach this time
+								final matchStartTime = DateTime.now().subtract(Duration(seconds: lastEventSeconds));
+								ref.read(matchTimerProvider.notifier).setStartTime(matchStartTime);
+							}
+						}
 					});
 				} else {
-					// No existing data - initialize a new session
+					// No existing data - initialize a new session and reset all scouting data
 					WidgetsBinding.instance.addPostFrameCallback((_) {
 						ref.read(originalCreatedProvider.notifier).clear();
 						ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
+						ref.read(preMatchProvider.notifier).reset();
+						ref.read(autoTabControllerProvider.notifier).reset();
+						ref.read(teleTabControllerProvider.notifier).reset();
+						ref.read(endGameProvider.notifier).reset();
+						// Navigate to pre-match tab
+						_tabController.animateTo(0);
 					});
 				}
 			});

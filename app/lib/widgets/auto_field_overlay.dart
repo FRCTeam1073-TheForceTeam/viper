@@ -31,10 +31,10 @@ class AutoFieldOverlay extends StatelessWidget {
 	/// Collection state: outpost collected
 	final bool collectOutpost;
 
-	/// Climb level (0 or 1)
+	/// Climb level (0-1)
 	final int climbLevel;
 
-	/// Called when climb selector is tapped to toggle level
+	/// Called when climb selector is tapped to increment level
 	final Function()? onClimbToggled;
 
 	/// Called when Start Auto button is tapped

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../providers/app_providers.dart';
 import '../../providers/end_game_provider.dart';
+import '../../providers/pre_match_provider.dart';
 import '../../providers/locale_provider.dart';
 import '../../providers/auto_tab_controller.dart';
 import '../../providers/tele_tab_controller.dart';
@@ -996,6 +997,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			}
 
 			// Read all scouting data from providers
+			final preMatch = ref.read(preMatchProvider);
 			final endGame = ref.read(endGameProvider);
 			final autoState = ref.read(autoTabControllerProvider);
 			final teleState = ref.read(teleTabControllerProvider);
@@ -1012,6 +1014,9 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'created': createdTime,
 				'modified': sessionStartTime,
 			};
+
+			// Add pre-match data
+			scoutDataMap.addAll(preMatch.toMap());
 
 			// Add auto and tele tab data
 			scoutDataMap.addAll(autoState.toMap());
@@ -1047,6 +1052,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			);
 
 			// Reset all scouting providers
+			ref.read(preMatchProvider.notifier).reset();
 			ref.read(autoTabControllerProvider.notifier).reset();
 			ref.read(teleTabControllerProvider.notifier).reset();
 			ref.read(endGameProvider.notifier).reset();

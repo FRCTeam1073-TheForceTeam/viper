@@ -719,13 +719,15 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								// Start match timer if not already started
 								_startMatchIfNeeded();
 
-								ref.read(autoTabControllerProvider.notifier).recordAction(
-									type: 'climb',
-									field: 'auto_climb_level',
-									value: autoState.climbLevel == 0 ? 1 : 0,
-									actionLabel: 'Climb',
-									valueLabel: '${autoState.climbLevel == 0 ? 1 : 0}',
-								);
+								if (autoState.climbLevel < 1) {
+									ref.read(autoTabControllerProvider.notifier).recordAction(
+										type: 'climb',
+										field: 'auto_climb_level',
+										value: autoState.climbLevel + 1,
+										actionLabel: 'Climb',
+										valueLabel: '${autoState.climbLevel + 1}',
+									);
+								}
 							},
 							onStartAutoTapped: () {
 								_startMatchIfNeeded();

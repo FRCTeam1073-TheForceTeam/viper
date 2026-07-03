@@ -19,6 +19,20 @@ class PreMatchData {
 			noShow: noShow ?? this.noShow,
 		);
 	}
+
+	Map<String, dynamic> toMap() {
+		return {
+			'starting_position': startingPosition,
+			'no_show': noShow ? 1 : 0,
+		};
+	}
+
+	static PreMatchData fromMap(Map<String, dynamic> map) {
+		return PreMatchData(
+			startingPosition: map['starting_position'] as String?,
+			noShow: (map['no_show'] as int?) == 1,
+		);
+	}
 }
 
 class PreMatchNotifier extends StateNotifier<PreMatchData> {
@@ -30,6 +44,16 @@ class PreMatchNotifier extends StateNotifier<PreMatchData> {
 
 	void reset() {
 		state = const PreMatchData();
+	}
+
+	void loadFromData(Map<String, dynamic> data) {
+		try {
+			if (data.containsKey('starting_position') || data.containsKey('no_show')) {
+				state = PreMatchData.fromMap(data);
+			}
+		} catch (e) {
+			print('Error loading pre-match data: $e');
+		}
 	}
 }
 
