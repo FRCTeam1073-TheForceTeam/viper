@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../models/field_descriptor.dart';
 import '../models/map_data_model.dart';
 import '../models/ui_helper.dart';
 import 'checkbox_button_group.dart';
@@ -9,17 +10,62 @@ import 'checkbox_button_group.dart';
 class DescriptorCheckboxGroup extends StatelessWidget {
 	final MapDataModel object;
 	final Function(String fieldName, bool newValue) onChanged;
+	final List<FieldDescriptor> _descriptors;
 
 	const DescriptorCheckboxGroup({
 		super.key,
 		required this.object,
 		required this.onChanged,
-	});
+	}) : _descriptors = const [];
+
+	// Private constructor for forFields factory
+	const DescriptorCheckboxGroup._({
+		super.key,
+		required this.object,
+		required this.onChanged,
+		required List<FieldDescriptor> descriptors,
+	}) : _descriptors = descriptors;
+
+	/// Create a checkbox group with inline descriptors
+	/// Automatically registers descriptors with the model
+	static Widget forFields({
+		Key? key,
+		required MapDataModel object,
+		required List<FieldDescriptor> descriptors,
+		required Function(String fieldName, bool newValue) onChanged,
+	}) {
+		// Auto-register all descriptors
+		_registerDescriptors(object, descriptors);
+
+		return DescriptorCheckboxGroup._(
+			key: key,
+			object: object,
+			onChanged: onChanged,
+			descriptors: descriptors,
+		);
+	}
+
+	static void _registerDescriptors(MapDataModel object, List<FieldDescriptor> descriptors) {
+		try {
+			// Try to register if supported by this model type
+			final type = object.runtimeType;
+			final typeName = type.toString();
+			if (typeName.contains('EndGameData') || typeName.contains('Data')) {
+				for (final descriptor in descriptors) {
+					(type as dynamic).registerDescriptor(descriptor);
+				}
+			}
+		} catch (e) {
+			// If registration fails, descriptors will be used as-is
+		}
+	}
 
 	@override
 	Widget build(BuildContext context) {
-		// Filter to only checkbox-type boolean fields with UI labels
-		final checkboxFields = UiHelper.getCheckboxDescriptors(object.descriptors);
+		// Use provided descriptors or filter from object
+		final checkboxFields = _descriptors.isNotEmpty
+			? _descriptors
+			: UiHelper.getCheckboxDescriptors(object.descriptors);
 
 		if (checkboxFields.isEmpty) {
 			return const SizedBox.shrink();
@@ -27,11 +73,17 @@ class DescriptorCheckboxGroup extends StatelessWidget {
 
 		// Build options from descriptors
 		final options = checkboxFields.map((desc) {
-			return CheckboxButtonOption(translationKey: desc.uiLabelKey!);
+			return CheckboxButtonOption(
+				labelKey: desc.uiLabelKey ?? desc.name,
+				descKey: desc.descriptionLabelKey,
+			);
 		}).toList();
 
 		// Extract values automatically from object
-		final selectedValues = UiHelper.getCheckboxValues(object);
+		final selectedValues = checkboxFields.map((desc) {
+			final strValue = object.values[desc.name] as String?;
+			return desc.withValue(strValue).asBool();
+		}).toList();
 
 		return CheckboxButtonGroup(
 			options: options,

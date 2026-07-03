@@ -226,19 +226,17 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 		ref.watch(selectedLocaleProvider);
 		final selectedPosition = ref.watch(selectedBotPositionProvider);
 		final selectedEventId = ref.watch(selectedEventProvider);
-		final eventsAsync = ref.watch(eventListProvider);
+		final events = ref.watch(eventListProvider);
 
 		// Find the event name from the event list
 		String? eventName;
-		eventsAsync.whenData((events) {
-			if (selectedEventId != null) {
-				try {
-					eventName = events.firstWhere((e) => e.eventId == selectedEventId).name;
-				} catch (e) {
-					eventName = null;
-				}
+		if (selectedEventId != null) {
+			try {
+				eventName = events.firstWhere((e) => e.eventId == selectedEventId).name;
+			} catch (e) {
+				eventName = null;
 			}
-		});
+		}
 
 		return Scaffold(
 			appBar: AppBar(

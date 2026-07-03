@@ -1239,14 +1239,21 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										style: Theme.of(context).textTheme.titleMedium,
 									),
 									const SizedBox(height: 12),
-									DescriptorCheckboxGroup(
+									DescriptorCheckboxGroup.forFields(
 										object: endGame,
+										descriptors: [
+											FieldDescriptor(name: 'shoot_move', uiLabelKey: 'shoot_move_desc'),
+											FieldDescriptor(name: 'shoot_collecting', uiLabelKey: 'shoot_collecting_desc'),
+											FieldDescriptor(name: 'shoot_turret', uiLabelKey: 'shoot_turret_desc'),
+											FieldDescriptor(name: 'shoot_climbing', uiLabelKey: 'shoot_climbing_desc'),
+										],
 										onChanged: (fieldName, newValue) {
 											ref.read(endGameProvider.notifier).update(
 												endGame.updateField(fieldName, newValue),
 											);
 										},
 									),
+									const SizedBox(height: 16),
 								],
 							),
 						),
@@ -1424,8 +1431,30 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											style: Theme.of(context).textTheme.titleMedium,
 										),
 										const SizedBox(height: 12),
-										DescriptorCheckboxGroup(
+										DescriptorCheckboxGroup.forFields(
 											object: endGame,
+											descriptors: [
+												FieldDescriptor(
+													name: 'defense_collected',
+													uiLabelKey: 'defense_collected',
+													descriptionLabelKey: 'defense_collected_desc',
+												),
+												FieldDescriptor(
+													name: 'defense_hit',
+													uiLabelKey: 'defense_hit',
+													descriptionLabelKey: 'defense_hit_desc',
+												),
+												FieldDescriptor(
+													name: 'defense_blocked',
+													uiLabelKey: 'defense_blocked',
+													descriptionLabelKey: 'defense_blocked_desc',
+												),
+												FieldDescriptor(
+													name: 'defense_pinned',
+													uiLabelKey: 'defense_pinned',
+													descriptionLabelKey: 'defense_pinned_desc',
+												),
+											],
 											onChanged: (fieldName, newValue) {
 												ref.read(endGameProvider.notifier).update(
 													endGame.updateField(fieldName, newValue),

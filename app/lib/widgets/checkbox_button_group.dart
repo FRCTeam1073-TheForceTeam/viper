@@ -5,10 +5,12 @@ import '../providers/locale_provider.dart';
 import '../services/localization.dart';
 
 class CheckboxButtonOption {
-	final String translationKey;
+	final String labelKey;
+	final String? descKey;
 
 	const CheckboxButtonOption({
-		required this.translationKey,
+		required this.labelKey,
+		this.descKey,
 	});
 }
 
@@ -30,33 +32,87 @@ class CheckboxButtonGroup extends ConsumerWidget {
 	Widget build(BuildContext context, WidgetRef ref) {
 		ref.watch(selectedLocaleProvider);
 		final locale = ref.read(selectedLocaleProvider);
+		final hasDescriptions = options.any((o) => o.descKey != null);
 
-		return Wrap(
-			spacing: 12,
-			runSpacing: 12,
-			children: List.generate(options.length, (index) {
-				final option = options[index];
-				final isChecked = selectedValues[index];
-				final label = AppLocalizations.translate(option.translationKey, locale: locale);
+		if (hasDescriptions) {
+			// Use Column layout when there are descriptions
+			return Column(
+				children: List.generate(options.length, (index) {
+					final option = options[index];
+					final isChecked = selectedValues[index];
+					final label = AppLocalizations.translate(option.labelKey, locale: locale);
+					final desc = option.descKey != null
+						? AppLocalizations.translate(option.descKey!, locale: locale)
+						: null;
 
-				return FilledButton(
-					style: FilledButton.styleFrom(
-						backgroundColor: isChecked
-							? AppColors.buttonSelectedBgColor
-							: AppColors.buttonBgColor,
-						foregroundColor: AppColors.buttonFgColor,
-						padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-						shape: RoundedRectangleBorder(
-							borderRadius: BorderRadius.circular(8),
+					return Padding(
+						padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
+						child: Row(
+							children: [
+								FilledButton(
+									style: FilledButton.styleFrom(
+										backgroundColor: isChecked
+											? AppColors.buttonSelectedBgColor
+											: AppColors.buttonBgColor,
+										foregroundColor: AppColors.buttonFgColor,
+										padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+										shape: RoundedRectangleBorder(
+											borderRadius: BorderRadius.circular(8),
+										),
+									),
+									onPressed: () => onChanged(index),
+									child: Text(
+										label,
+										style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+									),
+								),
+								if (desc != null) ...[
+									const SizedBox(width: 12),
+									Expanded(
+										flex: 2,
+										child: Text(
+											desc,
+											style: TextStyle(
+												fontSize: 14,
+												color: Theme.of(context).textTheme.bodyMedium?.color,
+											),
+										),
+									),
+								],
+							],
 						),
-					),
-					onPressed: () => onChanged(index),
-					child: Text(
-						label,
-						style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-					),
-				);
-			}),
-		);
+					);
+				}),
+			);
+		} else {
+			// Use Wrap layout when there are no descriptions
+			return Wrap(
+				spacing: 12,
+				runSpacing: 12,
+				children: List.generate(options.length, (index) {
+					final option = options[index];
+					final isChecked = selectedValues[index];
+					final label = AppLocalizations.translate(option.labelKey, locale: locale);
+
+					return FilledButton(
+						style: FilledButton.styleFrom(
+							backgroundColor: isChecked
+								? AppColors.buttonSelectedBgColor
+								: AppColors.buttonBgColor,
+							foregroundColor: AppColors.buttonFgColor,
+							padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+							shape: RoundedRectangleBorder(
+								borderRadius: BorderRadius.circular(8),
+							),
+						),
+						onPressed: () => onChanged(index),
+						child: Text(
+							label,
+							style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+						),
+					);
+				}),
+			);
+		}
 	}
 }

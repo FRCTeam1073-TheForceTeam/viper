@@ -259,7 +259,7 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 		print('[SCREEN_BUILD] EventPickerScreen.build() called');
 		// Watch locale to trigger rebuild when language changes
 		ref.watch(selectedLocaleProvider);
-		final eventListAsync = ref.watch(eventListProvider);
+		final events = ref.watch(eventListProvider);
 
 		return Scaffold(
 			appBar: AppBar(
@@ -270,98 +270,40 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 					ViperMenuButton(),
 				],
 			),
-			body: eventListAsync.when(
-				data: (events) {
-					// Always show the list view - it will be empty if there are no events
-					// The "Add Event Manually" button appears at the bottom
-					return ListView.builder(
-						itemCount: events.length + 1, // +1 for manual entry button
-						itemBuilder: (context, index) {
-							// Last item is the manual entry button
-							if (index == events.length) {
-								return Padding(
-									padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-									child: ElevatedButton.icon(
-										onPressed: () {
-											_showManualEventEntryDialog(context, ref);
-										},
-										icon: const Icon(Icons.add),
-										label: Text(_translate('add_event_manually')),
-									),
-								);
-							}
-
-							final event = events[index];
-							return EventListTile(
-								event: event,
-								onTap: () async {
-									print('[EVENT_PICKER] EventListTile.onTap called for ${event.eventId}');
-									print('[EVENT_PICKER] Calling setSelectedEvent...');
-									await ref.read(selectedEventProvider.notifier)
-											.setSelectedEvent(event.eventId);
-									print('[EVENT_PICKER] setSelectedEvent completed');
-									// Call the callback if provided
-									if (widget.onEventSelected != null) {
-										print('[EVENT_PICKER] Calling onEventSelected callback');
-										widget.onEventSelected!(event.eventId);
-									}
+			body: ListView.builder(
+				itemCount: events.length + 1, // +1 for manual entry button
+				itemBuilder: (context, index) {
+					// Last item is the manual entry button
+					if (index == events.length) {
+						return Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+							child: ElevatedButton.icon(
+								onPressed: () {
+									_showManualEventEntryDialog(context, ref);
 								},
-							);
+								icon: const Icon(Icons.add),
+								label: Text(_translate('add_event_manually')),
+							),
+						);
+					}
+
+					final event = events[index];
+					return EventListTile(
+						event: event,
+						onTap: () async {
+							print('[EVENT_PICKER] EventListTile.onTap called for ${event.eventId}');
+							print('[EVENT_PICKER] Calling setSelectedEvent...');
+							await ref.read(selectedEventProvider.notifier)
+									.setSelectedEvent(event.eventId);
+							print('[EVENT_PICKER] setSelectedEvent completed');
+							// Call the callback if provided
+							if (widget.onEventSelected != null) {
+								print('[EVENT_PICKER] Calling onEventSelected callback');
+								widget.onEventSelected!(event.eventId);
+							}
 						},
 					);
 				},
-				loading: () => const Center(
-					child: CircularProgressIndicator(),
-				),
-				error: (error, stack) => Center(
-					child: Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: [
-							Icon(
-								Icons.warning_outlined,
-								size: 64,
-								color: Colors.amber[600],
-							),
-							const SizedBox(height: 16),
-							Text(
-								_translate('no_server_connection'),
-								style: Theme.of(context).textTheme.headlineSmall,
-							),
-							const SizedBox(height: 8),
-							Padding(
-								padding: const EdgeInsets.symmetric(horizontal: 24),
-								child: Text(
-									_translate('unable_connect_server'),
-									textAlign: TextAlign.center,
-									style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-										color: Colors.grey[600],
-									),
-								),
-							),
-							const SizedBox(height: 24),
-							Row(
-								mainAxisAlignment: MainAxisAlignment.center,
-								children: [
-									ElevatedButton.icon(
-										onPressed: () {
-											_showServerConfigModal(context, ref);
-										},
-										icon: const Icon(Icons.settings),
-										label: Text(_translate('change_server')),
-									),
-									const SizedBox(width: 12),
-									ElevatedButton.icon(
-										onPressed: () {
-											_showManualEventEntryDialog(context, ref);
-										},
-										icon: const Icon(Icons.add),
-										label: Text(_translate('add_manually')),
-									),
-								],
-							),
-						],
-					),
-				),
 			),
 		);
 	}

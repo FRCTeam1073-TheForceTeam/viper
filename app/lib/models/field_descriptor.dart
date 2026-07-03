@@ -2,11 +2,13 @@
 class FieldDescriptor {
 	final String name;  // Single source of truth: used for storage, CSV, and access
 	final String? uiLabelKey;
+	final String? descriptionLabelKey;
 	final String? _value;
 
 	const FieldDescriptor({
 		required this.name,
 		this.uiLabelKey,
+		this.descriptionLabelKey,
 		String? value,
 	}) : _value = value;
 
@@ -15,6 +17,7 @@ class FieldDescriptor {
 		return FieldDescriptor(
 			name: name,
 			uiLabelKey: uiLabelKey,
+			descriptionLabelKey: descriptionLabelKey,
 			value: newValue,
 		);
 	}

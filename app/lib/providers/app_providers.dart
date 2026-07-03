@@ -366,85 +366,68 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 	return filtered;
 }
 
-final eventListProvider = FutureProvider((ref) async {
-	try {
-		// First check if we have a valid server configured
-		final db = await ref.watch(databaseProvider.future);
-		final config = await db.getCurrentConfig();
-		if (!_isValidServerUrl(config?.backendUrl)) {
-			// No valid server configured, try to load from cache
+/// StateNotifier for event list with cache-first synchronous loading
+class EventListNotifier extends StateNotifier<List<EventModel>> {
+	final Ref ref;
+	final Logger _logger = Logger();
+
+	EventListNotifier(this.ref) : super([]) {
+		_initializeWithCache();
+	}
+
+	Future<void> _initializeWithCache() async {
+		try {
+			// Load from SharedPreferences synchronously where possible
 			final prefs = await ref.watch(sharedPreferencesProvider.future);
 			final cachedCsv = prefs.getString(_eventListCsvCacheKey);
 
 			if (cachedCsv != null) {
-				final logger = Logger();
-				logger.i('📦 Loading cached event list (no server configured)');
-				final apiClient = await ref.watch(apiClientProvider.future);
-				final events = apiClient.parseEventCsv(cachedCsv);
-				return _filterAndSortEvents(events);
+				try {
+					final apiClient = await ref.watch(apiClientProvider.future);
+					final events = apiClient.parseEventCsv(cachedCsv);
+					state = _filterAndSortEvents(events);
+					_logger.i('📦 Initialized with cached events: ${events.length}');
+
+					// Fetch fresh data in background
+					_refreshInBackground(prefs);
+				} catch (e) {
+					_logger.e('Error parsing cached CSV: $e');
+				}
+			} else {
+				// No cache, fetch from server
+				_refreshInBackground(prefs);
 			}
-
-			// No cache and no server
-			return [];
+		} catch (e) {
+			_logger.e('Error initializing event list: $e');
 		}
+	}
 
-		final logger = Logger();
-		final apiClient = await ref.watch(apiClientProvider.future);
-		final prefs = await ref.watch(sharedPreferencesProvider.future);
-
-		// Try to load from cache first to show immediately
-		List<EventModel>? cachedEvents;
-		final cachedCsv = prefs.getString(_eventListCsvCacheKey);
-		if (cachedCsv != null) {
-			logger.i('📦 Loading cached event list');
-			cachedEvents = apiClient.parseEventCsv(cachedCsv);
-			logger.i('📦 Cached events loaded: ${cachedEvents.length} events');
+	Future<void> _refreshInBackground(SharedPreferences prefs) async {
+		try {
+			final apiClient = await ref.watch(apiClientProvider.future);
+			final freshCsv = await apiClient.fetchEventListCsv();
+			if (freshCsv != null) {
+				await prefs.setString(_eventListCsvCacheKey, freshCsv);
+				final events = apiClient.parseEventCsv(freshCsv);
+				state = _filterAndSortEvents(events);
+				_logger.i('✅ Updated event list from server: ${events.length}');
+			}
+		} catch (e) {
+			_logger.e('Background refresh failed: $e');
 		}
+	}
 
-		// Fetch fresh data from server
-		final freshCsv = await apiClient.fetchEventListCsv();
-
-		if (freshCsv != null) {
-			// Save to cache
-			await prefs.setString(_eventListCsvCacheKey, freshCsv);
-			logger.i('💾 Event list cached');
-
-			// Parse fresh data
-			final freshEvents = apiClient.parseEventCsv(freshCsv);
-			logger.i('✅ Fresh event list: ${freshEvents.length} events');
-			return _filterAndSortEvents(freshEvents);
-		} else if (cachedEvents != null) {
-			// Server fetch failed, use cache
-			logger.i('⚠️  Server fetch failed, using cached event list');
-			return _filterAndSortEvents(cachedEvents);
-		} else {
-			// No fresh data and no cache
-			logger.w('❌ Failed to fetch events and no cache available');
-			return [];
-		}
-	} catch (e, stack) {
-		final logger = Logger();
-		logger.e('Error in eventListProvider: $e');
-		logger.e('Stack trace: $stack');
-
-		// Try to fall back to cache
+	Future<void> refresh() async {
 		try {
 			final prefs = await ref.watch(sharedPreferencesProvider.future);
-			final cachedCsv = prefs.getString(_eventListCsvCacheKey);
-			if (cachedCsv != null) {
-				logger.i('⚠️  Using cached event list as fallback');
-				final apiClient = await ref.watch(apiClientProvider.future);
-				final cachedEvents = apiClient.parseEventCsv(cachedCsv);
-				return _filterAndSortEvents(cachedEvents);
-			}
-		} catch (cacheError) {
-			logger.e('Cache fallback failed: $cacheError');
+			await _refreshInBackground(prefs);
+		} catch (e) {
+			_logger.e('Manual refresh failed: $e');
 		}
-
-		// Return empty list to allow offline/no-server operation
-		return [];
 	}
-});
+}
+
+final eventListProvider = StateNotifierProvider((ref) => EventListNotifier(ref));
 
 // ============================================================================
 // PIT SCOUTING DATA (fuel capacity, etc.)
