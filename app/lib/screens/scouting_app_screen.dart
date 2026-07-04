@@ -167,7 +167,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 
 	@override
 	Widget build(BuildContext context) {
-		print('[SCREEN_BUILD] ScoutingAppScreen.build() called');
 		// Watch locale to trigger rebuild when language changes
 		ref.watch(selectedLocaleProvider);
 		final syncState = ref.watch(syncStateProvider);
@@ -177,7 +176,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		// Load existing scout data when match changes
 		final selectedMatch = ref.watch(selectedMatchProvider);
 		final selectedEvent = ref.watch(selectedEventProvider);
-		print('[SCREEN_BUILD] Watching existingScoutDataProvider, selectedEvent=$selectedEvent, selectedMatch=${selectedMatch.match}');
 		// Use ref.listen() instead of watch() to avoid continuous rebuilds
 		ref.listen(existingScoutDataProvider, (previous, next) {
 			next.when(
@@ -248,7 +246,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 
 		final existingData = ref.watch(existingScoutDataProvider);
 		final currentMatchKey = '${selectedEvent}_${selectedMatch.match}_${selectedMatch.team}';
-		print('[SCREEN_BUILD] currentMatchKey=$currentMatchKey, existingData=${existingData.when(data: (d) => d != null ? "HAS DATA" : "NULL", loading: () => "LOADING", error: (e, st) => "ERROR")}');
 
 		// Watch matchTimerProvider to get shared match start time
 		final matchStartTime = ref.watch(matchTimerProvider);

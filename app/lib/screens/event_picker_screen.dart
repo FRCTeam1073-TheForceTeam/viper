@@ -256,7 +256,6 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 
 	@override
 	Widget build(BuildContext context) {
-		print('[SCREEN_BUILD] EventPickerScreen.build() called');
 		// Watch locale to trigger rebuild when language changes
 		ref.watch(selectedLocaleProvider);
 		final events = ref.watch(eventListProvider);

@@ -434,7 +434,6 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 
 	@override
 	Widget build(BuildContext context) {
-		print('[SCREEN_BUILD] ServerConfigScreen.build() called');
 		// Watch locale to rebuild when language changes
 		final locale = ref.watch(selectedLocaleProvider);
 

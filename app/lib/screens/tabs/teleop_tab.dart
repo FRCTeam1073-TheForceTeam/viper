@@ -856,6 +856,12 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final botPosition = ref.watch(selectedBotPositionProvider);
 
+		// Debug: Print positioning state when Tele tab is shown
+		final isBlueTeam = botPosition?.startsWith('B') ?? false;
+		final shouldRotate = fieldSide == FieldSide.left;
+		final swapButtonSides = isBlueTeam;
+		print('[TELE_TAB] Tab=Tele, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+
 		// Instantiate overlay early so buttons register their descriptors
 		final fieldOverlay = TeleFieldOverlay(
 			key: _fieldOverlayKey,

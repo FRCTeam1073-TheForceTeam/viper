@@ -306,6 +306,9 @@ class TeleFieldOverlay extends ConsumerWidget {
 		// Button positioning depends only on team color
 		final swapButtonSides = isBlueTeam;
 
+		// Debug overlay build state
+		print('[TELE_FIELD_OVERLAY] Building: botPosition=$botPosition, fieldSide=$fieldSide, activeZone=$activeZone, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+
 		// Team color for UI elements
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 

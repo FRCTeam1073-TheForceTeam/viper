@@ -251,6 +251,9 @@ class AutoFieldOverlay extends ConsumerWidget {
 		// Buttons are inside the rotated container, so they stay on the team's side
 		final swapButtonSides = isBlueTeam;
 
+		// Debug overlay build state
+		print('[AUTO_FIELD_OVERLAY] Building: botPosition=$botPosition, fieldSide=$fieldSide, activeZone=$activeZone, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+
 
 		// Team color for UI elements - use globally defined app colors
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
@@ -322,7 +325,6 @@ class AutoFieldOverlay extends ConsumerWidget {
 										final targetName = targetNameMap[target.field] ?? '';
 										final isActive = activeFuelTarget == targetName;
 										final isVisible = target.zone == activeZone;
-										print('AUTO FUEL TARGET: target=${target.label}, targetName=$targetName, activeFuelTarget=$activeFuelTarget, isActive=$isActive');
 										return Visibility(
 											visible: isVisible,
 											maintainSize: false,
@@ -372,8 +374,6 @@ class AutoFieldOverlay extends ConsumerWidget {
 											name: 'auto_collect_depot',
 											uiLabelKey: 'collect_from_depot',
 											imagePath: 'assets/images/fuel-collect.png',
-											width: 80,
-											height: 80,
 										),
 										rightPercent: 2.0,
 										bottomPercent: 22.0,
@@ -389,8 +389,6 @@ class AutoFieldOverlay extends ConsumerWidget {
 											name: 'auto_collect_outpost',
 											uiLabelKey: 'collect_from_outpost',
 											imagePath: 'assets/images/fuel-collect.png',
-											width: 80,
-											height: 80,
 										),
 										rightPercent: 0.0,
 										topPercent: 7.0,
@@ -491,8 +489,8 @@ class AutoFieldOverlay extends ConsumerWidget {
 			key: buttonKey,
 			right: swapButtonSides ? null : rightPixels,
 			left: swapButtonSides ? leftPixels : null,
-			top: swapButtonSides ? bottomFromTopPixels : topPixels,
-			bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
+			top: swapButtonSides ? topFromBottomPixels : topPixels,
+			bottom: swapButtonSides ? bottomFromTopPixels : bottomPixels,
 			child: GestureDetector(
 				onTapDown: (details) => onMovementTapped(button.field, button.label, details.globalPosition),
 				child: Tooltip(
@@ -555,8 +553,8 @@ class AutoFieldOverlay extends ConsumerWidget {
 			key: targetKey,
 			left: swapButtonSides ? swappedLeftPx : leftPx,
 			right: swapButtonSides ? swappedRightPx : rightPx,
-			top: swapButtonSides ? swappedTopPx : topPx,
-			bottom: swapButtonSides ? swappedBottomPx : bottomPx,
+			top: swapButtonSides ? swappedBottomPx : topPx,
+			bottom: swapButtonSides ? swappedTopPx : bottomPx,
 			child: GestureDetector(
 				onTap: () {
 					print('FUEL TARGET TAPPED: ${target.label}');
@@ -592,6 +590,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 		required bool shouldRotate,
 		required bool swapButtonSides,
 	}) {
+		final buttonSize = 7.0 * fieldWidth / 100;
 		final rightPx = rightPercent * fieldWidth / 100;
 		final leftPx = rightPercent * fieldWidth / 100;
 		final topPx = topPercent != null ? topPercent * fieldHeight / 100 : null;
@@ -599,16 +598,27 @@ class AutoFieldOverlay extends ConsumerWidget {
 		final bottomFromTopPx = topPercent != null ? topPercent * fieldHeight / 100 : null;
 		final topFromBottomPx = bottomPercent != null ? bottomPercent * fieldHeight / 100 : null;
 
+		final scaledDescriptor = FieldDescriptor(
+			name: descriptor.name,
+			uiLabelKey: descriptor.uiLabelKey,
+			descriptionLabelKey: descriptor.descriptionLabelKey,
+			imagePath: descriptor.imagePath,
+			width: buttonSize,
+			height: buttonSize,
+			teleValuesTableDescription: descriptor.teleValuesTableDescription,
+			autoValuesTableDescription: descriptor.autoValuesTableDescription,
+		);
+
 		return Positioned(
 			right: swapButtonSides ? null : rightPx,
 			left: swapButtonSides ? leftPx : null,
-			top: swapButtonSides ? bottomFromTopPx : topPx,
-			bottom: swapButtonSides ? topFromBottomPx : bottomPx,
+			top: swapButtonSides ? topFromBottomPx : topPx,
+			bottom: swapButtonSides ? bottomFromTopPx : bottomPx,
 			child: Transform.rotate(
 				angle: shouldRotate ? pi : 0,
 				child: CheckboxButton(
-					descriptor: descriptor,
-					
+					descriptor: scaledDescriptor,
+
 					provider: scoutingDataProvider,
 					padding: EdgeInsets.zero,
 					margin: EdgeInsets.zero,

@@ -221,7 +221,6 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 
 	@override
 	Widget build(BuildContext context) {
-		print('[SCREEN_BUILD] BotSelectionScreen.build() called');
 		// Watch locale to trigger rebuild when language changes
 		ref.watch(selectedLocaleProvider);
 		final selectedPosition = ref.watch(selectedBotPositionProvider);

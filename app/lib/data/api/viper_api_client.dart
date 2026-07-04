@@ -114,7 +114,6 @@ class ViperApiClient {
 			}
 
 			final csvString = response.data as String;
-			_logger.d('Raw CSV response length: ${csvString.length} characters');
 			return csvString;
 		} catch (e) {
 			_logger.e('Error fetching event list CSV: $e');
@@ -127,7 +126,6 @@ class ViperApiClient {
 	List<EventModel> parseEventCsv(String csvString) {
 		try {
 			final csvData = csvToArrayOfMaps(csvString);
-			_logger.d('Parsed CSV rows: ${csvData.length}');
 
 			final events = <EventModel>[];
 
@@ -283,7 +281,6 @@ class ViperApiClient {
 			}
 
 			final csvString = response.data as String;
-			_logger.d('Raw schedule CSV response length: ${csvString.length} characters');
 			return csvString;
 		} catch (e) {
 			_logger.e('Error fetching match schedule CSV for $eventId: $e');
@@ -307,7 +304,6 @@ class ViperApiClient {
 			}
 
 			final csvString = response.data as String;
-			_logger.d('Raw scouting CSV response length: ${csvString.length} characters');
 			return csvString;
 		} catch (e) {
 			_logger.e('Error fetching scouting CSV for $eventId: $e');
@@ -327,7 +323,7 @@ class ViperApiClient {
 	String getRobotPhotoUrl(String eventId, String teamNumber) {
 		final year = _extractYearFromEventId(eventId);
 		final url = '$baseUrl/data/$year/$teamNumber.jpg';
-		_logger.d('🖼️ Robot photo URL: $url (eventId: $eventId, team: $teamNumber)');
+		print('🖼️ Robot photo URL: $url (eventId: $eventId, team: $teamNumber)');
 		return url;
 	}
 
@@ -368,7 +364,7 @@ class ViperApiClient {
 			final filesToDelete = fileList.length - _maxCachedImages;
 			for (int i = 0; i < filesToDelete; i++) {
 				await fileList[i].delete();
-				_logger.d('🗑️ Deleted cached robot photo: ${fileList[i].path}');
+				print('🗑️ Deleted cached robot photo: ${fileList[i].path}');
 			}
 		} catch (e) {
 			_logger.w('Error cleaning up robot photo cache: $e');
@@ -490,7 +486,7 @@ class ViperApiClient {
 			final path = '/data/$year/$teamNumber.jpg';
 			final fullUrl = '$baseUrl$path';
 
-			_logger.d('🔄 Background refresh started for: $fullUrl');
+			print('🔄 Background refresh started for: $fullUrl');
 
 			final response = await _dio.get<List<int>>(
 				path,

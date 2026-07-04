@@ -544,7 +544,6 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 
 	@override
 	Widget build(BuildContext context) {
-		print('[SCREEN_BUILD] MatchSelectionScreen.build() called');
 		// Watch locale to trigger rebuild when language changes
 		ref.watch(selectedLocaleProvider);
 		final matchesAsync = ref.watch(matchListProvider);

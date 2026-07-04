@@ -990,6 +990,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 
+		// Debug: Print positioning state when End Game tab is shown
+		final shouldRotate = fieldSide == FieldSide.left;
+		final swapButtonSides = isBlueTeam;
+		print('[END_GAME_TAB] Tab=End-Game, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+
 		final featuredButton = matches.when(
 			data: (m) => _getFeaturedButton(m),
 			loading: () => 'next',

@@ -931,6 +931,12 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final climbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
 
+		// Debug: Print positioning state when Auto tab is shown
+		final isBlueTeam = botPosition?.startsWith('B') ?? false;
+		final shouldRotate = fieldSide == FieldSide.left;
+		final swapButtonSides = isBlueTeam;
+		print('[AUTO_TAB] Tab=Auto, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+
 		// Instantiate overlay early so buttons register their descriptors
 		final fieldOverlay = AutoFieldOverlay(
 			key: _fieldOverlayKey,

@@ -252,6 +252,11 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		// Get the field side (left or right)
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
+		// Debug: Print positioning state when Pre-Match tab is shown
+		final shouldRotate = fieldSide == FieldSide.left;
+		final swapButtonSides = isBlueTeam;
+		print('[PRE_MATCH_TAB] Tab=Pre-Match, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+
 		// Read scouting data provider (don't watch to avoid rebuilding on updates)
 		final preMatchData = ref.read(scoutingDataProvider);
 
