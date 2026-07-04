@@ -17,6 +17,10 @@ final teleZoneChangeButtons = <FieldButton>[
 		zone: 'alliance',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(
+			name: 'tele_trench_depot_alliance_to_neutral',
+			teleCountersTableDescription: 'trench_depot_alliance_to_neutral',
+		),
 	),
 	FieldButton(
 		field: 'tele_bump_depot_alliance_to_neutral',
@@ -25,7 +29,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		bottomPercent: 21.0,
 		imagePath: 'assets/images/arrow-left.png',
 		zone: 'alliance',
-		descriptor: const FieldDescriptor(name: 'tele_bump_depot_alliance_to_neutral'),
+		descriptor: FieldDescriptor(name: 'tele_bump_depot_alliance_to_neutral', teleCountersTableDescription: 'bump_depot_alliance_to_neutral'),
 	),
 	FieldButton(
 		field: 'tele_bump_outpost_alliance_to_neutral',
@@ -34,7 +38,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 21.0,
 		imagePath: 'assets/images/arrow-left.png',
 		zone: 'alliance',
-		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_alliance_to_neutral'),
+		descriptor: FieldDescriptor(name: 'tele_bump_outpost_alliance_to_neutral', teleCountersTableDescription: 'bump_outpost_alliance_to_neutral'),
 	),
 	FieldButton(
 		field: 'tele_trench_outpost_alliance_to_neutral',
@@ -43,7 +47,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 5.0,
 		imagePath: 'assets/images/arrow-left.png',
 		zone: 'alliance',
-		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_alliance_to_neutral'),
+		descriptor: FieldDescriptor(name: 'tele_trench_outpost_alliance_to_neutral', teleCountersTableDescription: 'trench_outpost_alliance_to_neutral'),
 	),
 
 	// ============ NEUTRAL → ALLIANCE (Entry from Neutral) ============
@@ -54,7 +58,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		bottomPercent: 5.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_trench_depot_neutral_to_alliance'),
+		descriptor: FieldDescriptor(name: 'tele_trench_depot_neutral_to_alliance', teleCountersTableDescription: 'trench_depot_neutral_to_alliance'),
 	),
 	FieldButton(
 		field: 'tele_bump_depot_neutral_to_alliance',
@@ -63,7 +67,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		bottomPercent: 21.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_bump_depot_neutral_to_alliance'),
+		descriptor: FieldDescriptor(name: 'tele_bump_depot_neutral_to_alliance', teleCountersTableDescription: 'bump_depot_neutral_to_alliance'),
 	),
 	FieldButton(
 		field: 'tele_bump_outpost_neutral_to_alliance',
@@ -72,7 +76,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 21.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_neutral_to_alliance'),
+		descriptor: FieldDescriptor(name: 'tele_bump_outpost_neutral_to_alliance', teleCountersTableDescription: 'bump_outpost_neutral_to_alliance'),
 	),
 	FieldButton(
 		field: 'tele_trench_outpost_neutral_to_alliance',
@@ -81,7 +85,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 5.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_neutral_to_alliance'),
+		descriptor: FieldDescriptor(name: 'tele_trench_outpost_neutral_to_alliance', teleCountersTableDescription: 'trench_outpost_neutral_to_alliance'),
 	),
 
 	// ============ NEUTRAL → OPPONENT (Exit to Opponent) ============
@@ -92,7 +96,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		bottomPercent: 5.0,
 		imagePath: 'assets/images/arrow-left.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_neutral_to_opponent'),
+		descriptor: FieldDescriptor(name: 'tele_trench_outpost_neutral_to_opponent', teleCountersTableDescription: 'trench_outpost_neutral_to_opponent'),
 	),
 	FieldButton(
 		field: 'tele_bump_outpost_neutral_to_opponent',
@@ -101,7 +105,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		bottomPercent: 21.0,
 		imagePath: 'assets/images/arrow-left.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_neutral_to_opponent'),
+		descriptor: FieldDescriptor(name: 'tele_bump_outpost_neutral_to_opponent', teleCountersTableDescription: 'bump_outpost_neutral_to_opponent'),
 	),
 	FieldButton(
 		field: 'tele_bump_depot_neutral_to_opponent',
@@ -110,7 +114,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 21.0,
 		imagePath: 'assets/images/arrow-left.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_bump_depot_neutral_to_opponent'),
+		descriptor: FieldDescriptor(name: 'tele_bump_depot_neutral_to_opponent', teleCountersTableDescription: 'bump_depot_neutral_to_opponent'),
 	),
 	FieldButton(
 		field: 'tele_trench_depot_neutral_to_opponent',
@@ -119,7 +123,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 5.0,
 		imagePath: 'assets/images/arrow-left.png',
 		zone: 'neutral',
-		descriptor: const FieldDescriptor(name: 'tele_trench_depot_neutral_to_opponent'),
+		descriptor: FieldDescriptor(name: 'tele_trench_depot_neutral_to_opponent', teleCountersTableDescription: 'trench_depot_neutral_to_opponent'),
 	),
 
 	// ============ OPPONENT → NEUTRAL (Entry from Opponent) ============
@@ -130,7 +134,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		bottomPercent: 5.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'opponent',
-		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_opponent_to_neutral'),
+		descriptor: FieldDescriptor(name: 'tele_trench_outpost_opponent_to_neutral', teleCountersTableDescription: 'trench_outpost_opponent_to_neutral'),
 	),
 	FieldButton(
 		field: 'tele_bump_outpost_opponent_to_neutral',
@@ -139,7 +143,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		bottomPercent: 21.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'opponent',
-		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_opponent_to_neutral'),
+		descriptor: FieldDescriptor(name: 'tele_bump_outpost_opponent_to_neutral', teleCountersTableDescription: 'bump_outpost_opponent_to_neutral'),
 	),
 	FieldButton(
 		field: 'tele_bump_depot_opponent_to_neutral',
@@ -148,7 +152,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 21.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'opponent',
-		descriptor: const FieldDescriptor(name: 'tele_bump_depot_opponent_to_neutral'),
+		descriptor: FieldDescriptor(name: 'tele_bump_depot_opponent_to_neutral', teleCountersTableDescription: 'bump_depot_opponent_to_neutral'),
 	),
 	FieldButton(
 		field: 'tele_trench_depot_opponent_to_neutral',
@@ -157,7 +161,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		topPercent: 5.0,
 		imagePath: 'assets/images/arrow-right.png',
 		zone: 'opponent',
-		descriptor: const FieldDescriptor(name: 'tele_trench_depot_opponent_to_neutral'),
+		descriptor: FieldDescriptor(name: 'tele_trench_depot_opponent_to_neutral', teleCountersTableDescription: 'trench_depot_opponent_to_neutral'),
 	),
 ];
 

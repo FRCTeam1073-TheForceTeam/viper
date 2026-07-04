@@ -20,6 +20,14 @@ class ScoutingData extends MapDataModel {
 
 	@override
 	void registerDescriptor(FieldDescriptor descriptor) {
+		if (_registeredDescriptors.containsKey(descriptor.name)) {
+			// Allow re-registration of the same descriptor (widget rebuilds)
+			return;
+		}
+		// Check if it's in the static list
+		if (_staticDescriptors.any((d) => d.name == descriptor.name)) {
+			throw ArgumentError('Field descriptor conflicts with static definition: ${descriptor.name}');
+		}
 		_registeredDescriptors[descriptor.name] = descriptor;
 	}
 
@@ -34,52 +42,26 @@ class ScoutingData extends MapDataModel {
 
 	static const List<FieldDescriptor> _staticDescriptors = [
 		// Auto non-button fields
-		FieldDescriptor(name: 'auto_fuel_score'),
-		FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass'),
-		FieldDescriptor(name: 'auto_alliance_time'),
-		FieldDescriptor(name: 'auto_neutral_time'),
+		FieldDescriptor(name: 'auto_fuel_score', autoValuesTableHeading: 'auto_fuel'),
+		FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass', autoValuesTableHeading: 'auto_fuel'),
+		FieldDescriptor(name: 'auto_alliance_time', autoValuesTableHeading: 'auto_time'),
+		FieldDescriptor(name: 'auto_neutral_time', autoValuesTableHeading: 'auto_time'),
 		FieldDescriptor(name: 'auto_climb_level'),
 		FieldDescriptor(name: 'auto_active_zone'),
 		FieldDescriptor(name: 'auto_active_fuel_target'),
-		// Auto zone change buttons
-		FieldDescriptor(name: 'auto_trench_depot_alliance_to_neutral', autoCountersTableHeading: 'auto_alliance_to_neutral'),
-		FieldDescriptor(name: 'auto_bump_depot_alliance_to_neutral', autoCountersTableHeading: 'auto_alliance_to_neutral'),
-		FieldDescriptor(name: 'auto_bump_outpost_alliance_to_neutral', autoCountersTableHeading: 'auto_alliance_to_neutral'),
-		FieldDescriptor(name: 'auto_trench_outpost_alliance_to_neutral', autoCountersTableHeading: 'auto_alliance_to_neutral'),
-		FieldDescriptor(name: 'auto_trench_depot_neutral_to_alliance', autoCountersTableHeading: 'auto_neutral_to_alliance'),
-		FieldDescriptor(name: 'auto_bump_depot_neutral_to_alliance', autoCountersTableHeading: 'auto_neutral_to_alliance'),
-		FieldDescriptor(name: 'auto_bump_outpost_neutral_to_alliance', autoCountersTableHeading: 'auto_neutral_to_alliance'),
-		FieldDescriptor(name: 'auto_trench_outpost_neutral_to_alliance', autoCountersTableHeading: 'auto_neutral_to_alliance'),
 		// Tele non-button fields
-		FieldDescriptor(name: 'tele_fuel_score'),
-		FieldDescriptor(name: 'tele_fuel_alliance_dump'),
-		FieldDescriptor(name: 'tele_fuel_outpost'),
-		FieldDescriptor(name: 'tele_fuel_neutral_alliance_pass'),
-		FieldDescriptor(name: 'tele_fuel_opponent_neutral_pass'),
-		FieldDescriptor(name: 'tele_fuel_opponent_alliance_pass'),
-		FieldDescriptor(name: 'tele_alliance_time'),
-		FieldDescriptor(name: 'tele_neutral_time'),
-		FieldDescriptor(name: 'tele_opponent_time'),
+		FieldDescriptor(name: 'tele_fuel_score', teleValuesTableHeading: 'tele_fuel'),
+		FieldDescriptor(name: 'tele_fuel_alliance_dump', teleValuesTableHeading: 'tele_fuel'),
+		FieldDescriptor(name: 'tele_fuel_outpost', teleValuesTableHeading: 'tele_fuel'),
+		FieldDescriptor(name: 'tele_fuel_neutral_alliance_pass', teleValuesTableHeading: 'tele_fuel'),
+		FieldDescriptor(name: 'tele_fuel_opponent_neutral_pass', teleValuesTableHeading: 'tele_fuel'),
+		FieldDescriptor(name: 'tele_fuel_opponent_alliance_pass', teleValuesTableHeading: 'tele_fuel'),
+		FieldDescriptor(name: 'tele_alliance_time', teleValuesTableHeading: 'tele_time'),
+		FieldDescriptor(name: 'tele_neutral_time', teleValuesTableHeading: 'tele_time'),
+		FieldDescriptor(name: 'tele_opponent_time', teleValuesTableHeading: 'tele_time'),
 		FieldDescriptor(name: 'tele_climb_level'),
 		FieldDescriptor(name: 'tele_active_zone'),
 		FieldDescriptor(name: 'tele_active_fuel_target'),
-		// Tele zone change buttons
-		FieldDescriptor(name: 'tele_trench_depot_alliance_to_neutral', teleCountersTableHeading: 'tele_alliance_to_neutral'),
-		FieldDescriptor(name: 'tele_bump_depot_alliance_to_neutral', teleCountersTableHeading: 'tele_alliance_to_neutral'),
-		FieldDescriptor(name: 'tele_bump_outpost_alliance_to_neutral', teleCountersTableHeading: 'tele_alliance_to_neutral'),
-		FieldDescriptor(name: 'tele_trench_outpost_alliance_to_neutral', teleCountersTableHeading: 'tele_alliance_to_neutral'),
-		FieldDescriptor(name: 'tele_trench_depot_neutral_to_alliance', teleCountersTableHeading: 'tele_neutral_to_alliance'),
-		FieldDescriptor(name: 'tele_bump_depot_neutral_to_alliance', teleCountersTableHeading: 'tele_neutral_to_alliance'),
-		FieldDescriptor(name: 'tele_bump_outpost_neutral_to_alliance', teleCountersTableHeading: 'tele_neutral_to_alliance'),
-		FieldDescriptor(name: 'tele_trench_outpost_neutral_to_alliance', teleCountersTableHeading: 'tele_neutral_to_alliance'),
-		FieldDescriptor(name: 'tele_trench_outpost_neutral_to_opponent', teleCountersTableHeading: 'tele_neutral_to_opponent'),
-		FieldDescriptor(name: 'tele_bump_outpost_neutral_to_opponent', teleCountersTableHeading: 'tele_neutral_to_opponent'),
-		FieldDescriptor(name: 'tele_bump_depot_neutral_to_opponent', teleCountersTableHeading: 'tele_neutral_to_opponent'),
-		FieldDescriptor(name: 'tele_trench_depot_neutral_to_opponent', teleCountersTableHeading: 'tele_neutral_to_opponent'),
-		FieldDescriptor(name: 'tele_trench_outpost_opponent_to_neutral', teleCountersTableHeading: 'tele_opponent_to_neutral'),
-		FieldDescriptor(name: 'tele_bump_outpost_opponent_to_neutral', teleCountersTableHeading: 'tele_opponent_to_neutral'),
-		FieldDescriptor(name: 'tele_bump_depot_opponent_to_neutral', teleCountersTableHeading: 'tele_opponent_to_neutral'),
-		FieldDescriptor(name: 'tele_trench_depot_opponent_to_neutral', teleCountersTableHeading: 'tele_opponent_to_neutral'),
 	];
 
 	// UI state getters - backed by descriptor fields, so they're serialized

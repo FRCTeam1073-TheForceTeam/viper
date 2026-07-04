@@ -9,6 +9,10 @@ class FieldDescriptor {
 	final double? height;
 	final String? autoCountersTableHeading;  // Section heading in auto counters table
 	final String? teleCountersTableHeading;  // Section heading in tele counters table
+	final String? autoCountersTableDescription;  // Description/label for auto counters
+	final String? teleCountersTableDescription;  // Description/label for tele counters
+	final String? autoValuesTableHeading;  // Section heading in auto values table
+	final String? teleValuesTableHeading;  // Section heading in tele values table
 
 	const FieldDescriptor({
 		required this.name,
@@ -20,6 +24,10 @@ class FieldDescriptor {
 		this.height,
 		this.autoCountersTableHeading,
 		this.teleCountersTableHeading,
+		this.autoCountersTableDescription,
+		this.teleCountersTableDescription,
+		this.autoValuesTableHeading,
+		this.teleValuesTableHeading,
 	}) : _value = value;
 
 	/// Create a copy with a new value
@@ -34,6 +42,10 @@ class FieldDescriptor {
 			height: height,
 			autoCountersTableHeading: autoCountersTableHeading,
 			teleCountersTableHeading: teleCountersTableHeading,
+			autoCountersTableDescription: autoCountersTableDescription,
+			teleCountersTableDescription: teleCountersTableDescription,
+			autoValuesTableHeading: autoValuesTableHeading,
+			teleValuesTableHeading: teleValuesTableHeading,
 		);
 	}
 

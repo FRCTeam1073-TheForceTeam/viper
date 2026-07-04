@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/localization.dart';
+import '../services/localization.dart';
 import '../providers/scouting_data_provider.dart';
+import '../models/field_descriptor.dart';
 
 /// A table showing readonly counter values for the teleop period
 /// Displays all tele counters in simple 2-column layout: Count | Description
@@ -12,12 +13,24 @@ class TeleValuesTable extends ConsumerWidget {
 		return AppLocalizations.translate(key, variables: {});
 	}
 
-	int _getValue(ScoutingData data, String fieldName) {
-		return data.getFieldValue('tele_$fieldName').asInt();
-	}
-
-	/// Build all rows: 25 counter rows
+	/// Build all rows: header plus rows grouped by teleValuesTableHeading
 	List<TableRow> _buildRows(ScoutingData scoutingData) {
+		final displayFields = scoutingData.descriptors
+			.where((d) => d.teleValuesTableHeading != null || d.teleCountersTableDescription != null)
+			.toList();
+
+		// Group by heading (only fields with teleValuesTableHeading)
+		final groupedByHeading = <String, List<FieldDescriptor>>{};
+		final descriptionFields = <FieldDescriptor>[];
+
+		for (final desc in displayFields) {
+			if (desc.teleValuesTableHeading != null) {
+				groupedByHeading.putIfAbsent(desc.teleValuesTableHeading!, () => []).add(desc);
+			} else if (desc.teleCountersTableDescription != null) {
+				descriptionFields.add(desc);
+			}
+		}
+
 		return [
 			// Header row
 			TableRow(
@@ -49,35 +62,19 @@ class TeleValuesTable extends ConsumerWidget {
 					),
 				],
 			),
-			// Fuel scores
-			_buildRow(_getValue(scoutingData, 'fuel_score'), 'fuel_score'),
-			_buildRow(_getValue(scoutingData, 'fuel_alliance_dump'), 'fuel_alliance_dump'),
-			_buildRow(_getValue(scoutingData, 'fuel_outpost'), 'fuel_outpost'),
-			_buildRow(_getValue(scoutingData, 'fuel_neutral_alliance_pass'), 'fuel_neutral_pass'),
-			_buildRow(_getValue(scoutingData, 'fuel_opponent_alliance_pass'), 'fuel_opponent_alliance_pass'),
-			_buildRow(_getValue(scoutingData, 'fuel_opponent_neutral_pass'), 'fuel_opponent_neutral_pass'),
-			// Movement: Alliance ↔ Neutral
-			_buildRow(_getValue(scoutingData, 'trench_depot_alliance_to_neutral'), 'trench_depot_alliance_to_neutral'),
-			_buildRow(_getValue(scoutingData, 'bump_depot_alliance_to_neutral'), 'bump_depot_alliance_to_neutral'),
-			_buildRow(_getValue(scoutingData, 'bump_outpost_alliance_to_neutral'), 'bump_outpost_alliance_to_neutral'),
-			_buildRow(_getValue(scoutingData, 'trench_outpost_alliance_to_neutral'), 'trench_outpost_alliance_to_neutral'),
-			_buildRow(_getValue(scoutingData, 'trench_depot_neutral_to_alliance'), 'trench_depot_neutral_to_alliance'),
-			_buildRow(_getValue(scoutingData, 'bump_depot_neutral_to_alliance'), 'bump_depot_neutral_to_alliance'),
-			_buildRow(_getValue(scoutingData, 'bump_outpost_neutral_to_alliance'), 'bump_outpost_neutral_to_alliance'),
-			_buildRow(_getValue(scoutingData, 'trench_outpost_neutral_to_alliance'), 'trench_outpost_neutral_to_alliance'),
-			// Movement: Neutral ↔ Opponent
-			_buildRow(_getValue(scoutingData, 'trench_outpost_neutral_to_opponent'), 'trench_outpost_neutral_to_opponent'),
-			_buildRow(_getValue(scoutingData, 'bump_outpost_neutral_to_opponent'), 'bump_outpost_neutral_to_opponent'),
-			_buildRow(_getValue(scoutingData, 'bump_depot_neutral_to_opponent'), 'bump_depot_neutral_to_opponent'),
-			_buildRow(_getValue(scoutingData, 'trench_depot_neutral_to_opponent'), 'trench_depot_neutral_to_opponent'),
-			_buildRow(_getValue(scoutingData, 'trench_outpost_opponent_to_neutral'), 'trench_outpost_opponent_to_neutral'),
-			_buildRow(_getValue(scoutingData, 'bump_outpost_opponent_to_neutral'), 'bump_outpost_opponent_to_neutral'),
-			_buildRow(_getValue(scoutingData, 'bump_depot_opponent_to_neutral'), 'bump_depot_opponent_to_neutral'),
-			_buildRow(_getValue(scoutingData, 'trench_depot_opponent_to_neutral'), 'trench_depot_opponent_to_neutral'),
-			// Zone times
-			_buildRow(_getValue(scoutingData, 'alliance_time'), 'alliance_time'),
-			_buildRow(_getValue(scoutingData, 'neutral_time'), 'neutral_time'),
-			_buildRow(_getValue(scoutingData, 'opponent_time'), 'opponent_time'),
+			// Data rows grouped by heading
+			...groupedByHeading.entries.expand((entry) {
+				final descriptors = entry.value;
+				return descriptors.map((desc) => _buildRow(
+					scoutingData.getFieldValue(desc.name).asInt(),
+					desc.uiLabel,
+				));
+			}),
+			// Zone change fields (ungrouped)
+			...descriptionFields.map((desc) => _buildRow(
+				scoutingData.getFieldValue(desc.name).asInt(),
+				desc.uiLabel,
+			)),
 		];
 	}
 

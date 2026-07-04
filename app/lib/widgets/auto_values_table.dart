@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../services/localization.dart';
-import '../../providers/scouting_data_provider.dart';
+import '../services/localization.dart';
+import '../providers/scouting_data_provider.dart';
+import '../models/field_descriptor.dart';
 
 /// A table showing readonly counter values for the auto period
 /// Displays 12 counters in simple 2-column layout: Count | Description
@@ -12,12 +13,25 @@ class AutoValuesTable extends ConsumerWidget {
 		return AppLocalizations.translate(key, variables: {});
 	}
 
-	int _getValue(ScoutingData data, String fieldName) {
-		return data.getFieldValue('auto_$fieldName').asInt();
-	}
 
-	/// Build all rows: 12 counter rows
+	/// Build all rows: header plus rows grouped by autoValuesTableHeading
 	List<TableRow> _buildRows(ScoutingData scoutingData) {
+		final displayFields = scoutingData.descriptors
+			.where((d) => d.autoValuesTableHeading != null || d.autoCountersTableDescription != null)
+			.toList();
+
+		// Group by heading (only fields with autoValuesTableHeading)
+		final groupedByHeading = <String, List<FieldDescriptor>>{};
+		final descriptionFields = <FieldDescriptor>[];
+
+		for (final desc in displayFields) {
+			if (desc.autoValuesTableHeading != null) {
+				groupedByHeading.putIfAbsent(desc.autoValuesTableHeading!, () => []).add(desc);
+			} else if (desc.autoCountersTableDescription != null) {
+				descriptionFields.add(desc);
+			}
+		}
+
 		return [
 			// Header row
 			TableRow(
@@ -49,30 +63,19 @@ class AutoValuesTable extends ConsumerWidget {
 					),
 				],
 			),
-			// Fuel Score
-			_buildRow(_getValue(scoutingData, 'fuel_score'), 'fuel_score'),
-			// Fuel Neutral Pass
-			_buildRow(_getValue(scoutingData, 'fuel_neutral_alliance_pass'), 'fuel_neutral_alliance_pass'),
-			// Trench Depot A→N
-			_buildRow(_getValue(scoutingData, 'trench_depot_alliance_to_neutral'), 'trench_depot_alliance_to_neutral'),
-			// Bump Depot A→N
-			_buildRow(_getValue(scoutingData, 'bump_depot_alliance_to_neutral'), 'bump_depot_alliance_to_neutral'),
-			// Bump Outpost A→N
-			_buildRow(_getValue(scoutingData, 'bump_outpost_alliance_to_neutral'), 'bump_outpost_alliance_to_neutral'),
-			// Trench Outpost A→N
-			_buildRow(_getValue(scoutingData, 'trench_outpost_alliance_to_neutral'), 'trench_outpost_alliance_to_neutral'),
-			// Trench Depot N→A
-			_buildRow(_getValue(scoutingData, 'trench_depot_neutral_to_alliance'), 'trench_depot_neutral_to_alliance'),
-			// Bump Depot N→A
-			_buildRow(_getValue(scoutingData, 'bump_depot_neutral_to_alliance'), 'bump_depot_neutral_to_alliance'),
-			// Bump Outpost N→A
-			_buildRow(_getValue(scoutingData, 'bump_outpost_neutral_to_alliance'), 'bump_outpost_neutral_to_alliance'),
-			// Trench Outpost N→A
-			_buildRow(_getValue(scoutingData, 'trench_outpost_neutral_to_alliance'), 'trench_outpost_neutral_to_alliance'),
-			// Alliance Time
-			_buildRow(_getValue(scoutingData, 'alliance_time'), 'alliance_time'),
-			// Neutral Time
-			_buildRow(_getValue(scoutingData, 'neutral_time'), 'neutral_time'),
+			// Data rows grouped by heading
+			...groupedByHeading.entries.expand((entry) {
+				final descriptors = entry.value;
+				return descriptors.map((desc) => _buildRow(
+					scoutingData.getFieldValue(desc.name).asInt(),
+					desc.uiLabel,
+				));
+			}),
+			// Zone change fields (ungrouped)
+			...descriptionFields.map((desc) => _buildRow(
+				scoutingData.getFieldValue(desc.name).asInt(),
+				desc.uiLabel,
+			)),
 		];
 	}
 
@@ -114,7 +117,6 @@ class AutoValuesTable extends ConsumerWidget {
 		);
 	}
 
-	@override
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
 		final scoutingData = ref.watch(scoutingDataProvider);
