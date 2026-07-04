@@ -2,15 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
 import '../providers/locale_provider.dart';
+import '../providers/global_scouting_data.dart';
 import '../services/localization.dart';
 import '../models/field_descriptor.dart';
-import '../models/map_data_model.dart';
 
 /// Checkbox button widget that manages its own state
-/// Requires descriptor and model for full state management
 class CheckboxButton extends ConsumerStatefulWidget {
 	final FieldDescriptor descriptor;
-	final MapDataModel model;
 	final dynamic provider;
 	final EdgeInsets padding;
 	final EdgeInsets margin;
@@ -18,7 +16,6 @@ class CheckboxButton extends ConsumerStatefulWidget {
 	const CheckboxButton({
 		Key? key,
 		required this.descriptor,
-		required this.model,
 		required this.provider,
 		this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
 		this.margin = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
@@ -34,10 +31,8 @@ class _CheckboxButtonState extends ConsumerState<CheckboxButton> {
 	@override
 	void initState() {
 		super.initState();
-		// Register descriptor with model
-		widget.model.registerDescriptor(widget.descriptor);
-		// Initialize state from model
-		final storageValue = widget.model.values[widget.descriptor.name] as String?;
+		final model = getGlobalScoutingData();
+		final storageValue = model.values[widget.descriptor.name] as String?;
 		_isChecked = widget.descriptor.withValue(storageValue).asBool();
 	}
 
@@ -45,10 +40,8 @@ class _CheckboxButtonState extends ConsumerState<CheckboxButton> {
 		setState(() {
 			_isChecked = !_isChecked;
 		});
-		final updated = widget.model.updateField(
-			widget.descriptor.name,
-			_isChecked ? 1 : 0,
-		);
+		final model = getGlobalScoutingData();
+		final updated = model.updateField(widget.descriptor.name, _isChecked ? 1 : 0);
 		ref.read(widget.provider.notifier).update(updated);
 	}
 

@@ -3,6 +3,7 @@ import '../models/field_descriptor.dart';
 import '../models/map_data_model.dart';
 import 'timeline_provider.dart';
 import 'match_timer_provider.dart';
+import 'global_scouting_data.dart';
 
 /// Unified scouting data for an entire match
 class ScoutingData extends MapDataModel {
@@ -40,24 +41,16 @@ class ScoutingData extends MapDataModel {
 		return [...baseDescriptors, ...registered];
 	}
 
-	static const List<FieldDescriptor> _staticDescriptors = [
+	static final List<FieldDescriptor> _staticDescriptors = [
 		// Auto non-button fields
-		FieldDescriptor(name: 'auto_fuel_score', autoValuesTableDescription: 'fuel_score'),
-		FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass', autoValuesTableDescription: 'fuel_neutral_alliance_pass'),
-		FieldDescriptor(name: 'auto_alliance_time', autoValuesTableDescription: 'alliance_time'),
-		FieldDescriptor(name: 'auto_neutral_time', autoValuesTableDescription: 'neutral_time'),
-		FieldDescriptor(name: 'auto_climb_level'),
+		FieldDescriptor.createStatic(name: 'auto_alliance_time', autoValuesTableDescription: 'alliance_time'),
+		FieldDescriptor.createStatic(name: 'auto_neutral_time', autoValuesTableDescription: 'neutral_time'),
+		FieldDescriptor.createStatic(name: 'auto_climb_level'),
 		// Tele non-button fields
-		FieldDescriptor(name: 'tele_fuel_score', teleValuesTableDescription: 'fuel_score'),
-		FieldDescriptor(name: 'tele_fuel_alliance_dump', teleValuesTableDescription: 'fuel_alliance_dump'),
-		FieldDescriptor(name: 'tele_fuel_outpost', teleValuesTableDescription: 'fuel_outpost'),
-		FieldDescriptor(name: 'tele_fuel_neutral_alliance_pass', teleValuesTableDescription: 'fuel_neutral_alliance_pass'),
-		FieldDescriptor(name: 'tele_fuel_opponent_neutral_pass', teleValuesTableDescription: 'fuel_opponent_neutral_pass'),
-		FieldDescriptor(name: 'tele_fuel_opponent_alliance_pass', teleValuesTableDescription: 'fuel_opponent_alliance_pass'),
-		FieldDescriptor(name: 'tele_alliance_time', teleValuesTableDescription: 'alliance_time'),
-		FieldDescriptor(name: 'tele_neutral_time', teleValuesTableDescription: 'neutral_time'),
-		FieldDescriptor(name: 'tele_opponent_time', teleValuesTableDescription: 'opponent_time'),
-		FieldDescriptor(name: 'tele_climb_level'),
+		FieldDescriptor.createStatic(name: 'tele_alliance_time', teleValuesTableDescription: 'alliance_time'),
+		FieldDescriptor.createStatic(name: 'tele_neutral_time', teleValuesTableDescription: 'neutral_time'),
+		FieldDescriptor.createStatic(name: 'tele_opponent_time', teleValuesTableDescription: 'opponent_time'),
+		FieldDescriptor.createStatic(name: 'tele_climb_level'),
 	];
 
 }
@@ -86,6 +79,8 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 		state = _initializeDefaults(ScoutingData.empty());
 		_ref.read(timelineProvider.notifier).clear();
 		_ref.read(matchTimerProvider.notifier).clear();
+		_ref.read(activeZoneProvider.notifier).reset();
+		_ref.read(activeFuelTargetProvider.notifier).reset();
 		_autoLastZoneChangeTime = null;
 		_teleLastZoneChangeTime = null;
 		_activeZone = 'alliance';
@@ -97,8 +92,8 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 		newState.loadFromMap(data);
 
 		state = newState;
-		_activeZone = 'alliance';
-		_activeFuelTarget = 'hub';
+		_ref.read(activeZoneProvider.notifier).reset();
+		_ref.read(activeFuelTargetProvider.notifier).reset();
 		_autoLastZoneChangeTime = null;
 		_teleLastZoneChangeTime = null;
 	}
@@ -115,6 +110,7 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 		required String field,
 		required int value,
 	}) {
+		print('_recordAction START: phase=$phase, field=$field, value=$value, _activeZone=$_activeZone, currentFuelTarget=$_activeFuelTarget');
 		final now = DateTime.now();
 		final matchStartTime = _ref.read(matchTimerProvider);
 		final startTime = matchStartTime ?? now;
@@ -160,6 +156,8 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			}
 
 			_activeZone = newZone;
+			_ref.read(activeZoneProvider.notifier).changeZone(newZone);
+			print('ZONE SYNCED: _activeZone=$_activeZone, provider updated to $newZone');
 			if (phase == 'auto') {
 				_autoLastZoneChangeTime = now;
 			} else {
@@ -178,11 +176,18 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			newState = newState.updateField(field, newValue);
 
 			if (isToNeutral) {
-				_activeFuelTarget = 'alliancePass';
+				final targetName = phase == 'auto' ? 'alliancePass' : 'neutralAlliancePass';
+				print('ZONE CHANGE: transitioning to neutral, phase=$phase, setting fuel target to $targetName');
+				_activeFuelTarget = targetName;
+				_ref.read(activeFuelTargetProvider.notifier).changeTarget(targetName);
 			} else if (isToOpponent) {
-				_activeFuelTarget = 'opponentAlliancePass';
+				print('ZONE CHANGE: transitioning to opponent, setting fuel target to opponentNeutralPass');
+				_activeFuelTarget = 'opponentNeutralPass';
+				_ref.read(activeFuelTargetProvider.notifier).changeTarget('opponentNeutralPass');
 			} else {
+				print('ZONE CHANGE: transitioning to alliance, setting fuel target to hub');
 				_activeFuelTarget = 'hub';
+				_ref.read(activeFuelTargetProvider.notifier).changeTarget('hub');
 			}
 		} else if (field.contains('_fuel_') || field.contains('_collect_')) {
 			// Fuel or collect field
@@ -218,12 +223,21 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			if (field.endsWith('_to_neutral')) {
 				_activeZone = 'alliance';
 				_activeFuelTarget = 'hub';
+				_ref.read(activeZoneProvider.notifier).changeZone('alliance');
+				_ref.read(activeFuelTargetProvider.notifier).changeTarget('hub');
+				print('UNDO ZONE SYNCED: _activeZone=alliance, provider updated, _activeFuelTarget=hub');
 			} else if (field.endsWith('_to_alliance')) {
 				_activeZone = 'neutral';
 				_activeFuelTarget = 'alliancePass';
+				_ref.read(activeZoneProvider.notifier).changeZone('neutral');
+				_ref.read(activeFuelTargetProvider.notifier).changeTarget('alliancePass');
+				print('UNDO ZONE SYNCED: _activeZone=neutral, provider updated, _activeFuelTarget=alliancePass');
 			} else if (field.endsWith('_to_opponent')) {
 				_activeZone = 'neutral';
 				_activeFuelTarget = 'opponentAlliancePass';
+				_ref.read(activeZoneProvider.notifier).changeZone('neutral');
+				_ref.read(activeFuelTargetProvider.notifier).changeTarget('opponentAlliancePass');
+				print('UNDO ZONE SYNCED: _activeZone=neutral, provider updated, _activeFuelTarget=opponentAlliancePass');
 			}
 		} else if (field.contains('_fuel_') || field.contains('_collect_')) {
 			final currentValue = newState.getFieldValue(field).asInt();
@@ -252,6 +266,7 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			return;
 		}
 		_activeFuelTarget = targetName;
+		_ref.read(activeFuelTargetProvider.notifier).changeTarget(targetName);
 	}
 
 	void recordTeleAction({
@@ -270,10 +285,47 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			return;
 		}
 		_activeFuelTarget = targetName;
+		_ref.read(activeFuelTargetProvider.notifier).changeTarget(targetName);
 	}
 }
 
 final scoutingDataProvider =
 	StateNotifierProvider<ScoutingDataNotifier, ScoutingData>((ref) {
-	return ScoutingDataNotifier(ref);
+	final notifier = ScoutingDataNotifier(ref);
+	setGlobalScoutingData(notifier.state);
+	return notifier;
 });
+
+final activeZoneProvider =
+	StateNotifierProvider<_ActiveZoneNotifier, String>((ref) {
+	return _ActiveZoneNotifier();
+});
+
+final activeFuelTargetProvider =
+	StateNotifierProvider<_ActiveFuelTargetNotifier, String>((ref) {
+	return _ActiveFuelTargetNotifier();
+});
+
+class _ActiveZoneNotifier extends StateNotifier<String> {
+	_ActiveZoneNotifier() : super('alliance');
+
+	void changeZone(String zone) {
+		state = zone;
+	}
+
+	void reset() {
+		state = 'alliance';
+	}
+}
+
+class _ActiveFuelTargetNotifier extends StateNotifier<String> {
+	_ActiveFuelTargetNotifier() : super('hub');
+
+	void changeTarget(String target) {
+		state = target;
+	}
+
+	void reset() {
+		state = 'hub';
+	}
+}

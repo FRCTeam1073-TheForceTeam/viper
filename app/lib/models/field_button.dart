@@ -55,12 +55,7 @@ class FieldButton {
 		this.widthPercent = 7.0,
 		this.aspectRatio = 1.0,
 		this.descriptor,
-		MapDataModel? model,
-	}) : assert(bottomPercent != null || topPercent != null) {
-		if (model != null && descriptor != null) {
-			model.registerDescriptor(descriptor!);
-		}
-	}
+	}) : assert(bottomPercent != null || topPercent != null);
 
 	@override
 	String toString() =>

@@ -1,5 +1,9 @@
+import 'package:viper_scout/providers/global_scouting_data.dart';
+
 /// Field metadata - stores everything as strings, typed getters parse on demand
 class FieldDescriptor {
+	static final Map<String, FieldDescriptor> _cache = {};
+
 	final String name;  // Single source of truth: used for storage, CSV, and access
 	final String? uiLabelKey;
 	final String? descriptionLabelKey;
@@ -10,7 +14,7 @@ class FieldDescriptor {
 	final String? teleValuesTableDescription;
 	final String? autoValuesTableDescription;
 
-	const FieldDescriptor({
+	FieldDescriptor._internal({
 		required this.name,
 		this.uiLabelKey,
 		this.descriptionLabelKey,
@@ -20,11 +24,82 @@ class FieldDescriptor {
 		this.height,
 		this.teleValuesTableDescription,
 		this.autoValuesTableDescription,
-	}) : _value = value;
+		bool autoRegister = true,
+	}) : _value = value {
+		// Register with global scouting data if available (skip for static descriptors)
+		if (autoRegister) {
+			try {
+				getGlobalScoutingData().registerDescriptor(this);
+			} catch (e) {
+				// Silently ignore if global data not yet initialized
+			}
+		}
+	}
 
-	/// Create a copy with a new value
+	/// Create a static descriptor that doesn't auto-register
+	static FieldDescriptor createStatic({
+		required String name,
+		String? uiLabelKey,
+		String? descriptionLabelKey,
+		String? imagePath,
+		double? width,
+		double? height,
+		String? teleValuesTableDescription,
+		String? autoValuesTableDescription,
+	}) {
+		return FieldDescriptor._internal(
+			name: name,
+			uiLabelKey: uiLabelKey,
+			descriptionLabelKey: descriptionLabelKey,
+			imagePath: imagePath,
+			width: width,
+			height: height,
+			teleValuesTableDescription: teleValuesTableDescription,
+			autoValuesTableDescription: autoValuesTableDescription,
+			autoRegister: false,
+		);
+	}
+
+	/// Factory constructor: returns cached instance if it exists, creates new one otherwise
+	factory FieldDescriptor({
+		required String name,
+		String? uiLabelKey,
+		String? descriptionLabelKey,
+		String? value,
+		String? imagePath,
+		double? width,
+		double? height,
+		String? teleValuesTableDescription,
+		String? autoValuesTableDescription,
+	}) {
+		// Return cached instance if it exists with no value override
+		if (value == null && _cache.containsKey(name)) {
+			return _cache[name]!;
+		}
+
+		// Create new instance and cache it (only cache instances without values)
+		final descriptor = FieldDescriptor._internal(
+			name: name,
+			uiLabelKey: uiLabelKey,
+			descriptionLabelKey: descriptionLabelKey,
+			value: value,
+			imagePath: imagePath,
+			width: width,
+			height: height,
+			teleValuesTableDescription: teleValuesTableDescription,
+			autoValuesTableDescription: autoValuesTableDescription,
+		);
+
+		if (value == null) {
+			_cache[name] = descriptor;
+		}
+
+		return descriptor;
+	}
+
+	/// Create a copy with a new value (not cached since it has a specific value)
 	FieldDescriptor withValue(String? newValue) {
-		return FieldDescriptor(
+		return FieldDescriptor._internal(
 			name: name,
 			uiLabelKey: uiLabelKey,
 			descriptionLabelKey: descriptionLabelKey,

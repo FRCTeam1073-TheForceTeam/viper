@@ -70,7 +70,7 @@ class ViperApiClient {
 		final base64Str = base64Encode(bytes);
 
 		_dio.options.headers['Authorization'] = 'Basic $base64Str';
-		_logger.i('Basic auth configured for user: $username');
+		print('Basic auth configured for user: $username');
 	}
 
 	/// Configure HTTP client with custom SSL settings
@@ -103,7 +103,7 @@ class ViperApiClient {
 	Future<String?> fetchEventListCsv() async {
 		try {
 			final fullUrl = '$baseUrl/event-list.cgi';
-			_logger.i('📡 Fetching event list CSV from: $fullUrl');
+			print('📡 Fetching event list CSV from: $fullUrl');
 
 			final response = await _dio.get('/event-list.cgi');
 
@@ -162,7 +162,7 @@ class ViperApiClient {
 				}
 			}
 
-			_logger.i('✅ Successfully parsed ${events.length} events from CSV');
+			print('✅ Successfully parsed ${events.length} events from CSV');
 			return events;
 		} catch (e) {
 			_logger.e('Error parsing event CSV: $e');
@@ -175,11 +175,11 @@ class ViperApiClient {
 	Future<List<EventModel>> fetchEventList() async {
 		try {
 			final fullUrl = '$baseUrl/event-list.cgi';
-			_logger.i('📡 Fetching event list from: $fullUrl');
+			print('📡 Fetching event list from: $fullUrl');
 
 			final csvString = await fetchEventListCsv();
 			if (csvString == null) {
-				_logger.i('Returning empty event list - manual event entry will be available');
+				print('Returning empty event list - manual event entry will be available');
 				return [];
 			}
 
@@ -187,7 +187,7 @@ class ViperApiClient {
 		} catch (e) {
 			_logger.e('Error fetching event list: $e');
 			// Return empty list instead of throwing - allows offline/no-server operation
-			_logger.i('Returning empty event list - manual event entry will be available');
+			print('Returning empty event list - manual event entry will be available');
 			return [];
 		}
 	}
@@ -196,7 +196,7 @@ class ViperApiClient {
 	/// [csvContent] is the full CSV string (headers + data rows)
 	Future<Map<String, dynamic>> uploadScoutData(String csvContent) async {
 		try {
-			_logger.i('Uploading scout data');
+			print('Uploading scout data');
 
 			final response = await _dio.post(
 				'scout/upload.cgi',
@@ -212,7 +212,7 @@ class ViperApiClient {
 				);
 			}
 
-			_logger.i('Scout data uploaded successfully');
+			print('Scout data uploaded successfully');
 
 			// Parse response (expecting JSON or plain text confirmation)
 			return {'success': true, 'response': response.data};
@@ -226,13 +226,13 @@ class ViperApiClient {
 	Future<bool> testConnection() async {
 		try {
 			final fullUrl = '$baseUrl/event-list.cgi';
-			_logger.i('🔗 Testing connection to: $fullUrl');
+			print('🔗 Testing connection to: $fullUrl');
 
 			final response = await _dio.get('/event-list.cgi');
 			final isOk = response.statusCode == 200;
 
 			if (isOk) {
-				_logger.i('✅ Connection successful! (HTTP ${response.statusCode}) - $fullUrl');
+				print('✅ Connection successful! (HTTP ${response.statusCode}) - $fullUrl');
 			} else {
 				_logger.w('❌ Connection failed (HTTP ${response.statusCode}) - $fullUrl');
 			}
@@ -249,7 +249,7 @@ class ViperApiClient {
 	Future<String> fetchRaw(String path) async {
 		try {
 			final fullUrl = '$baseUrl$path';
-			_logger.i('📡 Fetching raw from: $fullUrl');
+			print('📡 Fetching raw from: $fullUrl');
 
 			final response = await _dio.get(path);
 
@@ -272,7 +272,7 @@ class ViperApiClient {
 		try {
 			final path = '/data/$eventId.schedule.csv';
 			final fullUrl = '$baseUrl$path';
-			_logger.i('📡 Fetching match schedule CSV from: $fullUrl');
+			print('📡 Fetching match schedule CSV from: $fullUrl');
 
 			final response = await _dio.get(path);
 
@@ -296,7 +296,7 @@ class ViperApiClient {
 		try {
 			final path = '/data/$eventId.scouting.csv';
 			final fullUrl = '$baseUrl$path';
-			_logger.i('📡 Fetching scouting CSV from: $fullUrl');
+			print('📡 Fetching scouting CSV from: $fullUrl');
 
 			final response = await _dio.get(path);
 
@@ -388,7 +388,7 @@ class ViperApiClient {
 			// Check cache first
 			final cacheFile = await _getCacheFile(year, teamNumber);
 			if (await cacheFile.exists()) {
-				_logger.i('📦 Loading robot photo from cache: $fullUrl');
+				print('📦 Loading robot photo from cache: $fullUrl');
 				final cachedBytes = await cacheFile.readAsBytes();
 
 				// Check if cache is stale (more than _staleCacheDays old)
@@ -396,7 +396,7 @@ class ViperApiClient {
 					final fileStat = cacheFile.statSync();
 					final age = DateTime.now().difference(fileStat.modified);
 					if (age.inDays > _staleCacheDays) {
-						_logger.i('🔄 Cache is stale (${age.inDays} days old), refreshing in background...');
+						print('🔄 Cache is stale (${age.inDays} days old), refreshing in background...');
 						// Refresh cache in background without awaiting
 						_refreshRobotPhotoCache(eventId, teamNumber);
 					}
@@ -408,7 +408,7 @@ class ViperApiClient {
 			}
 
 			// Not in cache, download it
-			_logger.i('📥 Downloading robot photo from: $fullUrl');
+			print('📥 Downloading robot photo from: $fullUrl');
 
 			final response = await _dio.get<List<int>>(
 				path,
@@ -429,7 +429,7 @@ class ViperApiClient {
 			final imageBytes = Uint8List.fromList(response.data!);
 			try {
 				await cacheFile.writeAsBytes(imageBytes);
-				_logger.i('💾 Cached robot photo: ${imageBytes.length} bytes');
+				print('💾 Cached robot photo: ${imageBytes.length} bytes');
 
 				// Cleanup cache if needed
 				await _cleanupCacheIfNeeded();
@@ -438,7 +438,7 @@ class ViperApiClient {
 				// Still return the image even if caching fails
 			}
 
-			_logger.i('✅ Robot photo downloaded: ${imageBytes.length} bytes');
+			print('✅ Robot photo downloaded: ${imageBytes.length} bytes');
 			return imageBytes;
 		} catch (e) {
 			_logger.e('Error downloading robot photo for $eventId/$teamNumber: $e');
@@ -462,18 +462,18 @@ class ViperApiClient {
 					final age = DateTime.now().difference(fileStat.modified);
 					if (age.inDays > _staleCacheDays) {
 						// Cache is stale, refresh it and wait for completion
-						_logger.i('🔄 Stale cache detected (${age.inDays} days old), refreshing for preload...');
+						print('🔄 Stale cache detected (${age.inDays} days old), refreshing for preload...');
 						await _refreshRobotPhotoCache(eventId, teamNumber);
 					} else {
 						// Cache is fresh, no need to download
-						_logger.i('📦 Cache is fresh (${age.inDays} days old), no refresh needed');
+						print('📦 Cache is fresh (${age.inDays} days old), no refresh needed');
 					}
 				} catch (e) {
 					_logger.w('Error checking cache age during preload: $e');
 				}
 			} else {
 				// Cache doesn't exist, download it
-				_logger.i('📥 No cache found, downloading for preload...');
+				print('📥 No cache found, downloading for preload...');
 				await fetchRobotPhotoBytes(eventId, teamNumber);
 			}
 		} catch (e) {
@@ -513,7 +513,7 @@ class ViperApiClient {
 
 			try {
 				await cacheFile.writeAsBytes(imageBytes);
-				_logger.i('✅ Background refresh complete: updated ${imageBytes.length} bytes for $fullUrl');
+				print('✅ Background refresh complete: updated ${imageBytes.length} bytes for $fullUrl');
 			} catch (e) {
 				_logger.w('Could not update cached robot photo during refresh: $e');
 			}
@@ -528,7 +528,7 @@ class ViperApiClient {
 		try {
 			final path = '/data/$eventId.pit.csv';
 			final fullUrl = '$baseUrl$path';
-			_logger.i('📡 Fetching pit scouting data from: $fullUrl');
+			print('📡 Fetching pit scouting data from: $fullUrl');
 
 			final response = await _dio.get(path);
 
@@ -549,7 +549,7 @@ class ViperApiClient {
 				}
 			}
 
-			_logger.i('✅ Parsed pit scouting data for ${data.length} teams');
+			print('✅ Parsed pit scouting data for ${data.length} teams');
 			return data;
 		} catch (e) {
 			_logger.e('Error fetching pit scouting data for $eventId: $e');

@@ -304,7 +304,6 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 												Center(
 													child: PositionSelectorArea.forField(
 														descriptor: FieldDescriptor(name: 'starting_position'),
-														model: preMatchData,
 														provider: scoutingDataProvider,
 														ref: ref,
 														isBlueTeam: isBlueTeam,
@@ -357,11 +356,10 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 										),
 										// No Show Button
 										CheckboxButton(
-											descriptor: const FieldDescriptor(
+											descriptor: FieldDescriptor(
 												name: 'no_show',
 												uiLabelKey: 'no_show',
 											),
-											model: preMatchData,
 											provider: scoutingDataProvider,
 										),
 										// Proceed to Auto Button

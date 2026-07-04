@@ -8,11 +8,14 @@ import '../../providers/locale_provider.dart';
 import '../../providers/timeline_provider.dart';
 import '../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
+import '../../providers/zone_buttons_provider.dart';
 import '../../services/localization.dart';
 import '../../widgets/tele_field_overlay.dart';
 import '../../widgets/values_table.dart';
 import '../../widgets/timeline_table.dart';
+import '../../widgets/popup_floater.dart';
 import '../../models/field_button.dart';
+import '../../providers/floating_popup_provider.dart';
 
 typedef TeleTabRecord = ({
 	String activeZone,
@@ -661,6 +664,9 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 	bool _timelineExpanded = false;
 	bool _listenerRegistered = false;
 	late FocusNode _focusNode;
+	final GlobalKey _undoButtonKey = GlobalKey();
+	final GlobalKey _fieldOverlayKey = GlobalKey();
+	final GlobalKey _stackKey = GlobalKey();
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -693,8 +699,10 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		_focusNode = FocusNode();
 		_focusNode.addListener(_onFocusChanged);
 
-		// Instantiate buttons with model for self-registration
-		final scoutingData = ref.read(scoutingDataProvider);
+		// Access scouting data to ensure descriptors are registered
+		ref.read(scoutingDataProvider);
+
+		// Instantiate buttons to trigger descriptor registration
 		for (final btn in teleZoneChangeButtons) {
 			FieldButton(
 				field: btn.field,
@@ -708,7 +716,6 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 				widthPercent: btn.widthPercent,
 				aspectRatio: btn.aspectRatio,
 				descriptor: btn.descriptor,
-				model: scoutingData,
 			);
 		}
 		for (final target in teleFuelTargets) {
@@ -724,12 +731,104 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 				widthPercent: target.widthPercent,
 				aspectRatio: target.aspectRatio,
 				descriptor: target.descriptor,
-				model: scoutingData,
 			);
 		}
 	}
 
 	void _onFocusChanged() {}
+
+	/// Calculate the position of the active fuel target in the field overlay
+	Offset _getActiveFuelTargetPosition(String activeFuelTarget) {
+		try {
+			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+
+			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
+			final overlaySize = overlayBox.size;
+
+			double targetX, targetY;
+
+			switch (activeFuelTarget) {
+				case 'hub':
+					targetX = overlayOffset.dx + overlaySize.width * 0.26;
+					targetY = overlayOffset.dy + overlaySize.height * 0.42;
+					break;
+				case 'allianceDump':
+					targetX = overlayOffset.dx + overlaySize.width * 0.13;
+					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
+					break;
+				case 'outpost':
+					// rightPercent: 0.0 means at right edge, so adjust for widget width
+					targetX = overlayOffset.dx + overlaySize.width - (overlaySize.width * 0.05);
+					targetY = overlayOffset.dy + overlaySize.height * 0.06;
+					break;
+				case 'neutralAlliancePass':
+					targetX = overlayOffset.dx + overlaySize.width * 0.13;
+					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
+					break;
+				case 'opponentAlliancePass':
+					targetX = overlayOffset.dx + overlaySize.width * 0.13;
+					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
+					break;
+				case 'opponentNeutralPass':
+					targetX = overlayOffset.dx + overlaySize.width * 0.465;
+					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
+					break;
+				default:
+					targetX = overlayOffset.dx + overlaySize.width / 2;
+					targetY = overlayOffset.dy + overlaySize.height / 2;
+			}
+
+			return Offset(targetX, targetY);
+		} catch (e) {
+			// Fallback to center if calculation fails
+			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+		}
+	}
+
+	/// Calculate the position for zone button popups (near center of field overlay)
+	Offset _getZoneButtonPopupPosition() {
+		try {
+			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+
+			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
+			final overlaySize = overlayBox.size;
+
+			// Position at the center-top of the field overlay for zone buttons
+			return Offset(
+				overlayOffset.dx + overlaySize.width / 2,
+				overlayOffset.dy + overlaySize.height * 0.2,
+			);
+		} catch (e) {
+			// Fallback to center if calculation fails
+			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+		}
+	}
+
+	/// Calculate the position for an undo floater by looking up the button's actual position
+	Offset? _getUndoPopupPosition(String field) {
+		try {
+			final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+			if (stackBox == null) return null;
+
+			// Look up any button by field name and get its actual position
+			final elementKeysNotifier = ref.read(uiElementKeysProvider.notifier);
+			final position = getElementPosition(field, elementKeysNotifier, stackBox: stackBox);
+			if (position != null) {
+				print('UNDO: found button $field at position: $position');
+				return position;
+			}
+
+			final scoutingData = ref.read(scoutingDataProvider);
+			final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
+			print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
+			return null;
+		} catch (e) {
+			print('_getUndoPopupPosition ERROR: $e');
+			return null;
+		}
+	}
 
 	@override
 	void dispose() {
@@ -759,18 +858,33 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 
 		// Instantiate overlay early so buttons register their descriptors
 		final fieldOverlay = TeleFieldOverlay(
+			key: _fieldOverlayKey,
 			fieldSide: fieldSide,
-			activeZone: ref.watch(scoutingDataProvider.notifier).activeZone,
+			activeZone: ref.watch(activeZoneProvider),
 			climbLevel: scoutingData.getFieldValue('tele_climb_level').asInt(),
 			botPosition: botPosition,
-			activeFuelTarget: ref
-					.watch(scoutingDataProvider.notifier)
-					.activeFuelTarget,
-			onMovementTapped: (field, action) {
+			activeFuelTarget: ref.watch(activeFuelTargetProvider),
+			onMovementTapped: (field, action, globalPosition) {
 				_startMatchIfNeeded();
 				ref
 						.read(scoutingDataProvider.notifier)
 						.recordTeleAction(field: field, value: 1);
+				// Show floating popup at the button that was tapped
+				try {
+					final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+					if (stackBox != null) {
+						// Convert button's global position to stack-relative coordinates
+						final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+						final buttonStackRelative = globalPosition - stackGlobalOffset;
+
+						print('ZONE CHANGE: button global=$globalPosition, stack global=$stackGlobalOffset, button relative to stack=$buttonStackRelative');
+						ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
+					} else {
+						print('ZONE CHANGE: stackBox is null');
+					}
+				} catch (e) {
+					print('ZONE CHANGE ERROR: $e');
+				}
 			},
 			onClimbTapped: () {
 				_startMatchIfNeeded();
@@ -784,9 +898,22 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 								field: 'tele_climb_level',
 								value: currentClimbLevel + 1,
 							);
+					// Show floating popup at left side of field, offset from top
+					try {
+						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+						if (overlayBox != null) {
+							final offset = overlayBox.localToGlobal(Offset.zero);
+							final popupX = offset.dx + 40;
+							final popupY = offset.dy + 40;
+							ref.read(floatingPopupProvider.notifier).addPopup('+1', popupX, popupY);
+						}
+					} catch (e) {
+						// Silently fail
+					}
 				}
 			},
 			onFuelTargetTapped: (targetName) {
+				print('TELE onFuelTargetTapped called: targetName=$targetName');
 				ref
 						.read(scoutingDataProvider.notifier)
 						.changeTeleFuelTarget(targetName);
@@ -794,11 +921,32 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		);
 
 		// Now access field values (buttons are registered)
+		final activeZone = ref.watch(activeZoneProvider);
+		var activeFuelTarget = ref.watch(activeFuelTargetProvider);
+
+		// Ensure fuel target is valid for tele phase and zone
+		final validTeleTargets = {'hub', 'allianceDump', 'outpost', 'neutralAlliancePass', 'opponentAlliancePass', 'opponentNeutralPass'};
+		// Map zone to valid targets for that zone
+		final allianceTargets = {'hub', 'allianceDump', 'outpost'};
+		final neutralTargets = {'neutralAlliancePass'};
+		final opponentTargets = {'opponentAlliancePass', 'opponentNeutralPass'};
+		final validTargetsForZone = activeZone == 'alliance' ? allianceTargets :
+			activeZone == 'neutral' ? neutralTargets :
+			opponentTargets;
+
+		if (!validTeleTargets.contains(activeFuelTarget) || !validTargetsForZone.contains(activeFuelTarget)) {
+			// Map zone to valid tele target if coming from auto or zone changed
+		final newTarget = activeZone == 'neutral' ? 'neutralAlliancePass' :
+			activeZone == 'opponent' ? 'opponentNeutralPass' : 'hub';
+			activeFuelTarget = newTarget;
+			Future(() {
+				ref.read(activeFuelTargetProvider.notifier).changeTarget(newTarget);
+			});
+		}
+
 		final teleState = (
-			activeZone: ref.watch(scoutingDataProvider.notifier).activeZone,
-			activeFuelTarget: ref
-					.watch(scoutingDataProvider.notifier)
-					.activeFuelTarget,
+			activeZone: activeZone,
+			activeFuelTarget: activeFuelTarget,
 			fuelScore: scoutingData.getFieldValue('tele_fuel_score').asInt(),
 			fuelAllianceDump: scoutingData
 					.getFieldValue('tele_fuel_alliance_dump')
@@ -819,14 +967,18 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			climbLevel: scoutingData.getFieldValue('tele_climb_level').asInt(),
 		);
 		final teamColor = _getTeamColor(botPosition);
+		final floatingPopups = ref.watch(floatingPopupProvider);
 
-		return Focus(
-			focusNode: _focusNode,
-			child: SingleChildScrollView(
-				padding: const EdgeInsets.symmetric(vertical: 8),
-				child: Column(
-					crossAxisAlignment: CrossAxisAlignment.stretch,
-					children: [
+		return Stack(
+			key: _stackKey,
+			children: [
+				Focus(
+					focusNode: _focusNode,
+					child: SingleChildScrollView(
+						padding: const EdgeInsets.symmetric(vertical: 8),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.stretch,
+							children: [
 						// Field Overlay
 						Padding(
 							padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -910,8 +1062,14 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 															borderRadius: BorderRadius.circular(8),
 														),
 													),
+													key: _undoButtonKey,
 													onPressed: () {
-														undoLastAction(ref);
+														undoLastAction(
+															ref,
+															context,
+															_undoButtonKey,
+															getUndoPosition: _getUndoPopupPosition,
+														);
 													},
 													child: Text(
 														_translate('undo'),
@@ -984,9 +1142,23 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 								key: const ValueKey('tele_timeline_table'),
 								events: ref.watch(timelineProvider),
 							),
-					],
-				),
+				],
 			),
+		),
+				),
+				// Floating popups layer
+				...floatingPopups.map((popup) {
+					return PopupFloater(
+						key: ValueKey(popup.id),
+						text: popup.text,
+						initialX: popup.initialX,
+						initialY: popup.initialY,
+						onAnimationComplete: () {
+							ref.read(floatingPopupProvider.notifier).removePopup(popup.id);
+						},
+					);
+				}).toList(),
+			],
 		);
 	}
 
@@ -1017,15 +1189,84 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			}
 		}
 
+		final buttonKey = GlobalKey();
+
 		return SizedBox(
 			width: 70,
 			height: 70,
 			child: ElevatedButton(
+				key: buttonKey,
 				onPressed: () {
 					_startMatchIfNeeded();
 					ref
 							.read(scoutingDataProvider.notifier)
 							.recordTeleAction(field: getFuelField(), value: amount);
+
+					// Show floating popup at the active fuel target position in the field overlay
+					try {
+						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+						final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+						if (overlayBox != null && stackBox != null) {
+							// Get overlay position and size
+							final overlayGlobalOffset = overlayBox.localToGlobal(Offset.zero);
+							final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+							final overlayStackRelative = overlayGlobalOffset - stackGlobalOffset;
+
+							// Map fuel target to position percentages
+							// See teleFuelTargets in tele_field_overlay.dart for reference
+							double rightPct = 0, topPct = 0, bottomPct = 0, leftPct = 0;
+							bool useBottom = false, useLeft = false;
+
+							switch (teleState.activeFuelTarget) {
+								case 'hub':
+									rightPct = 26.0;
+									topPct = 42.0;
+									break;
+								case 'allianceDump':
+									rightPct = 13.0;
+									bottomPct = 7.0;
+									useBottom = true;
+									break;
+								case 'outpost':
+									rightPct = 0.0;
+									topPct = 6.0;
+									break;
+								case 'neutralAlliancePass':
+									rightPct = 13.0;
+									bottomPct = 7.0;
+									useBottom = true;
+									break;
+								case 'opponentAlliancePass':
+									rightPct = 13.0;
+									bottomPct = 7.0;
+									useBottom = true;
+									break;
+								case 'opponentNeutralPass':
+									rightPct = 46.5;
+									bottomPct = 7.0;
+									useBottom = true;
+									break;
+								default:
+									rightPct = 26.0;
+									topPct = 42.0;
+									break;
+							}
+
+							// Calculate position based on percentages
+							double targetX = useLeft
+								? overlayStackRelative.dx + (overlayBox.size.width * leftPct / 100)
+								: overlayStackRelative.dx + (overlayBox.size.width * (1 - rightPct / 100));
+
+							double targetY = useBottom
+								? overlayStackRelative.dy + (overlayBox.size.height * (1 - bottomPct / 100))
+								: overlayStackRelative.dy + (overlayBox.size.height * topPct / 100);
+
+							print('FUEL BUTTON: target=${teleState.activeFuelTarget}, overlay relative to stack=$overlayStackRelative, popup position=($targetX, $targetY)');
+							ref.read(floatingPopupProvider.notifier).addPopup('+$amount', targetX, targetY);
+						}
+					} catch (e) {
+						print('FUEL BUTTON ERROR: $e');
+					}
 				},
 				style: ElevatedButton.styleFrom(
 					backgroundColor: const Color(0xFFF1CE03),

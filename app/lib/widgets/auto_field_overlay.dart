@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import '../../providers/field_side_provider.dart';
 import '../../providers/scouting_data_provider.dart';
+import '../../providers/zone_buttons_provider.dart';
 import '../../constants/colors.dart';
 import '../models/field_button.dart';
 import '../models/field_descriptor.dart';
@@ -140,6 +141,7 @@ final autoFuelTargets = <FieldButton>[
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'auto_fuel_score', autoValuesTableDescription: 'fuel_score'),
 	),
 	// Neutral zone target
 	FieldButton(
@@ -151,6 +153,7 @@ final autoFuelTargets = <FieldButton>[
 		zone: 'neutral',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass', autoValuesTableDescription: 'fuel_neutral_alliance_pass'),
 	),
 ];
 
@@ -158,8 +161,8 @@ final autoFuelTargets = <FieldButton>[
 /// Buttons use CSS-like percentage positioning and are zone-aware (alliance/neutral)
 class AutoFieldOverlay extends ConsumerWidget {
 	/// Called when a movement button is tapped
-	/// Parameters: field (movement counter name), action (label)
-	final Function(String field, String action) onMovementTapped;
+	/// Parameters: field (movement counter name), action (label), globalOffset (tap position on screen)
+	final Function(String field, String action, Offset globalOffset) onMovementTapped;
 
 	/// Current field side (red/blue) - determines field rotation
 	final FieldSide fieldSide;
@@ -231,6 +234,15 @@ class AutoFieldOverlay extends ConsumerWidget {
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
+		// Pre-register all button GlobalKeys upfront so undo popups can find them even if off-screen
+		for (final btn in autoZoneChangeButtons) {
+			ref.read(uiElementKeysProvider.notifier).getOrCreateKey(btn.field);
+		}
+		for (final target in autoFuelTargets) {
+			final registryFieldName = target.descriptor?.name ?? target.field;
+			ref.read(uiElementKeysProvider.notifier).getOrCreateKey(registryFieldName);
+		}
+
 		// Determine if field should be rotated based on field side
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 		final shouldRotate = fieldSide == FieldSide.left;
@@ -276,35 +288,56 @@ class AutoFieldOverlay extends ConsumerWidget {
 									),
 								),
 
-								// Positioned movement buttons - filtered by active zone
+								// Positioned movement buttons - render all but only show active zone
 								...autoZoneChangeButtons
-								.where((btn) => btn.zone == activeZone)
-									.map((btn) => _buildMovementButton(
-										maxWidth,
-										fieldHeight,
-										btn,
-										shouldRotate,
-										swapButtonSides,
-									)),
+									.map((btn) {
+										final buttonKey = ref.read(uiElementKeysProvider.notifier).getOrCreateKey(btn.field);
+										final isVisible = btn.zone == activeZone;
+										return Visibility(
+											visible: isVisible,
+											maintainSize: false,
+											maintainAnimation: false,
+											maintainState: false,
+											child: _buildMovementButton(
+												maxWidth,
+												fieldHeight,
+												btn,
+												shouldRotate,
+												swapButtonSides,
+												buttonKey: buttonKey,
+											),
+										);
+									}),
 
-								// Fuel target overlays - filtered by zone
+								// Fuel target overlays - render all but only show active zone
 								...(autoFuelTargets
-									.where((target) => target.zone == activeZone)
 									.map((target) {
-										// Map field names back to target names for callbacks
+										final registryFieldName = target.descriptor?.name ?? target.field;
+										final targetKey = ref.read(uiElementKeysProvider.notifier).getOrCreateKey(registryFieldName);
+
 										const targetNameMap = {
 											'auto_fuel_target_hub': 'hub',
 											'auto_fuel_target_alliance_pass': 'alliancePass',
 										};
 										final targetName = targetNameMap[target.field] ?? '';
-										return _buildFuelTarget(
-											maxWidth,
-											fieldHeight,
-											target,
-											isActive: activeFuelTarget == targetName,
-											onTap: () => onFuelTargetTapped?.call(targetName),
-											shouldRotate: shouldRotate,
-											swapButtonSides: swapButtonSides,
+										final isActive = activeFuelTarget == targetName;
+										final isVisible = target.zone == activeZone;
+										print('AUTO FUEL TARGET: target=${target.label}, targetName=$targetName, activeFuelTarget=$activeFuelTarget, isActive=$isActive');
+										return Visibility(
+											visible: isVisible,
+											maintainSize: false,
+											maintainAnimation: false,
+											maintainState: false,
+											child: _buildFuelTarget(
+												maxWidth,
+												fieldHeight,
+												target,
+												isActive: isActive,
+												onTap: () => onFuelTargetTapped?.call(targetName),
+												shouldRotate: shouldRotate,
+												swapButtonSides: swapButtonSides,
+												targetKey: targetKey,
+											),
 										);
 									}).toList()),
 
@@ -335,7 +368,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 										maxWidth,
 										fieldHeight,
 										ref,
-										descriptor: const FieldDescriptor(
+										descriptor: FieldDescriptor(
 											name: 'auto_collect_depot',
 											uiLabelKey: 'collect_from_depot',
 											imagePath: 'assets/images/fuel-collect.png',
@@ -352,7 +385,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 										maxWidth,
 										fieldHeight,
 										ref,
-										descriptor: const FieldDescriptor(
+										descriptor: FieldDescriptor(
 											name: 'auto_collect_outpost',
 											uiLabelKey: 'collect_from_outpost',
 											imagePath: 'assets/images/fuel-collect.png',
@@ -396,8 +429,9 @@ class AutoFieldOverlay extends ConsumerWidget {
 		double fieldHeight,
 		FieldButton button,
 		bool shouldRotate,
-		bool swapButtonSides,
-	) {
+		bool swapButtonSides, {
+		GlobalKey? buttonKey,
+	}) {
 		// Button dimensions
 		final buttonWidth = button.widthPercent * fieldWidth / 100;
 		final buttonHeight = buttonWidth * button.aspectRatio;
@@ -419,12 +453,13 @@ class AutoFieldOverlay extends ConsumerWidget {
 		// Handle leftPercent (opponent zone buttons)
 		if (button.leftPercent != null) {
 			return Positioned(
+				key: buttonKey,
 				left: swapButtonSides ? null : leftFromLeftPercent,
 				right: swapButtonSides ? leftFromLeftPercent : null,
 				top: swapButtonSides ? bottomFromTopPixels : topPixels,
 				bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
 				child: GestureDetector(
-					onTap: () => onMovementTapped(button.field, button.label),
+					onTapDown: (details) => onMovementTapped(button.field, button.label, details.globalPosition),
 					child: Tooltip(
 						message: button.label,
 						child: Container(
@@ -453,12 +488,13 @@ class AutoFieldOverlay extends ConsumerWidget {
 
 		// Handle rightPercent (alliance/neutral buttons)
 		return Positioned(
+			key: buttonKey,
 			right: swapButtonSides ? null : rightPixels,
 			left: swapButtonSides ? leftPixels : null,
 			top: swapButtonSides ? bottomFromTopPixels : topPixels,
 			bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
 			child: GestureDetector(
-				onTap: () => onMovementTapped(button.field, button.label),
+				onTapDown: (details) => onMovementTapped(button.field, button.label, details.globalPosition),
 				child: Tooltip(
 					message: button.label,
 					child: Container(
@@ -494,6 +530,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 		required VoidCallback onTap,
 		required bool shouldRotate,
 		required bool swapButtonSides,
+		GlobalKey? targetKey,
 	}) {
 		final size = target.widthPercent * fieldWidth / 100;
 		final imagePath = isActive
@@ -515,12 +552,16 @@ class AutoFieldOverlay extends ConsumerWidget {
 		final swappedTopPx = bottomPercent != null ? bottomPercent * fieldHeight / 100 : null;
 
 		return Positioned(
+			key: targetKey,
 			left: swapButtonSides ? swappedLeftPx : leftPx,
 			right: swapButtonSides ? swappedRightPx : rightPx,
 			top: swapButtonSides ? swappedTopPx : topPx,
 			bottom: swapButtonSides ? swappedBottomPx : bottomPx,
 			child: GestureDetector(
-				onTap: onTap,
+				onTap: () {
+					print('FUEL TARGET TAPPED: ${target.label}');
+					onTap();
+				},
 				child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Tooltip(
@@ -567,7 +608,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 				angle: shouldRotate ? pi : 0,
 				child: CheckboxButton(
 					descriptor: descriptor,
-					model: model!,
+					
 					provider: scoutingDataProvider,
 					padding: EdgeInsets.zero,
 					margin: EdgeInsets.zero,

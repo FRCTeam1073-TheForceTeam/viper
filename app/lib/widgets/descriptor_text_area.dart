@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
+import '../providers/global_scouting_data.dart';
 import '../services/localization.dart';
 import '../models/field_descriptor.dart';
-import '../models/map_data_model.dart';
 
 /// Reusable multi-line text area widget that uses field descriptors
 class DescriptorTextArea extends ConsumerWidget {
@@ -28,19 +28,15 @@ class DescriptorTextArea extends ConsumerWidget {
 	static Widget forField({
 		Key? key,
 		required FieldDescriptor descriptor,
-		required MapDataModel model,
 		required WidgetRef ref,
 		required dynamic provider,
 		EdgeInsets padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
 		int minLines = 3,
 		int maxLines = 8,
 	}) {
-		_tryRegisterDescriptor(model, descriptor);
-
 		return _DescriptorTextAreaDescriptor(
 			key: key,
 			descriptor: descriptor,
-			model: model,
 			provider: provider,
 			padding: padding,
 			minLines: minLines,
@@ -48,9 +44,6 @@ class DescriptorTextArea extends ConsumerWidget {
 		);
 	}
 
-	static void _tryRegisterDescriptor(MapDataModel model, FieldDescriptor descriptor) {
-		model.registerDescriptor(descriptor);
-	}
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
@@ -79,7 +72,6 @@ class DescriptorTextArea extends ConsumerWidget {
 /// Internal widget for descriptor-based text area with Riverpod integration
 class _DescriptorTextAreaDescriptor extends ConsumerStatefulWidget {
 	final FieldDescriptor descriptor;
-	final MapDataModel model;
 	final dynamic provider;
 	final EdgeInsets padding;
 	final int minLines;
@@ -88,7 +80,6 @@ class _DescriptorTextAreaDescriptor extends ConsumerStatefulWidget {
 	const _DescriptorTextAreaDescriptor({
 		Key? key,
 		required this.descriptor,
-		required this.model,
 		required this.provider,
 		required this.padding,
 		required this.minLines,
@@ -105,7 +96,8 @@ class _DescriptorTextAreaDescriptorState extends ConsumerState<_DescriptorTextAr
 	@override
 	void initState() {
 		super.initState();
-		final storageValue = widget.model.values[widget.descriptor.name] as String?;
+		final model = getGlobalScoutingData();
+		final storageValue = model.values[widget.descriptor.name] as String?;
 		_controller = TextEditingController(text: storageValue ?? '');
 	}
 
@@ -136,7 +128,8 @@ class _DescriptorTextAreaDescriptorState extends ConsumerState<_DescriptorTextAr
 				minLines: widget.minLines,
 				maxLines: widget.maxLines,
 				onChanged: (value) {
-					final updated = widget.model.updateField(widget.descriptor.name, value);
+					final model = getGlobalScoutingData();
+					final updated = model.updateField(widget.descriptor.name, value);
 					ref.read(widget.provider.notifier).update(updated);
 				},
 			),

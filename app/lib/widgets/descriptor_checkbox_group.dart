@@ -34,22 +34,12 @@ class DescriptorCheckboxGroup extends StatelessWidget {
 		required List<FieldDescriptor> descriptors,
 		required Function(String fieldName, bool newValue) onChanged,
 	}) {
-		// Auto-register all descriptors
-		_registerDescriptors(object, descriptors);
-
 		return DescriptorCheckboxGroup._(
 			key: key,
 			object: object,
 			onChanged: onChanged,
 			descriptors: descriptors,
 		);
-	}
-
-	static void _registerDescriptors(MapDataModel object, List<FieldDescriptor> descriptors) {
-		// Register descriptors with the model instance
-		for (final descriptor in descriptors) {
-			object.registerDescriptor(descriptor);
-		}
 	}
 
 	@override

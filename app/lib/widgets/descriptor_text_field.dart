@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
+import '../providers/global_scouting_data.dart';
 import '../services/localization.dart';
 import '../models/field_descriptor.dart';
-import '../models/map_data_model.dart';
 
 /// Reusable single-line text field widget that uses field descriptors
 class DescriptorTextField extends ConsumerWidget {
@@ -26,26 +26,18 @@ class DescriptorTextField extends ConsumerWidget {
 	static Widget forField({
 		Key? key,
 		required FieldDescriptor descriptor,
-		required MapDataModel model,
 		required WidgetRef ref,
 		required dynamic provider,
 		EdgeInsets padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
 		int? maxLength,
 	}) {
-		_tryRegisterDescriptor(model, descriptor);
-
 		return _DescriptorTextFieldDescriptor(
 			key: key,
 			descriptor: descriptor,
-			model: model,
 			provider: provider,
 			padding: padding,
 			maxLength: maxLength,
 		);
-	}
-
-	static void _tryRegisterDescriptor(MapDataModel model, FieldDescriptor descriptor) {
-		model.registerDescriptor(descriptor);
 	}
 
 	@override
@@ -74,7 +66,6 @@ class DescriptorTextField extends ConsumerWidget {
 /// Internal widget for descriptor-based text field with Riverpod integration
 class _DescriptorTextFieldDescriptor extends ConsumerStatefulWidget {
 	final FieldDescriptor descriptor;
-	final MapDataModel model;
 	final dynamic provider;
 	final EdgeInsets padding;
 	final int? maxLength;
@@ -82,7 +73,6 @@ class _DescriptorTextFieldDescriptor extends ConsumerStatefulWidget {
 	const _DescriptorTextFieldDescriptor({
 		Key? key,
 		required this.descriptor,
-		required this.model,
 		required this.provider,
 		required this.padding,
 		required this.maxLength,
@@ -98,7 +88,8 @@ class _DescriptorTextFieldDescriptorState extends ConsumerState<_DescriptorTextF
 	@override
 	void initState() {
 		super.initState();
-		final storageValue = widget.model.values[widget.descriptor.name] as String?;
+		final model = getGlobalScoutingData();
+		final storageValue = model.values[widget.descriptor.name] as String?;
 		_controller = TextEditingController(text: storageValue ?? '');
 	}
 
@@ -128,7 +119,8 @@ class _DescriptorTextFieldDescriptorState extends ConsumerState<_DescriptorTextF
 				),
 				maxLength: widget.maxLength,
 				onChanged: (value) {
-					final updated = widget.model.updateField(widget.descriptor.name, value);
+					final model = getGlobalScoutingData();
+					final updated = model.updateField(widget.descriptor.name, value);
 					ref.read(widget.provider.notifier).update(updated);
 				},
 			),

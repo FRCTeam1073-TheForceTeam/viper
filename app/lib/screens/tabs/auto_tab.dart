@@ -8,12 +8,15 @@ import '../../providers/locale_provider.dart';
 import '../../providers/timeline_provider.dart';
 import '../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
+import '../../providers/zone_buttons_provider.dart';
 import '../../services/localization.dart';
 import '../../widgets/auto_field_overlay.dart';
 import '../../widgets/values_table.dart';
 import '../../widgets/timeline_table.dart';
+import '../../widgets/popup_floater.dart';
 import '../../models/field_descriptor.dart';
 import '../../models/field_button.dart';
+import '../../providers/floating_popup_provider.dart';
 
 typedef AutoTabRecord = ({
 	String activeZone,
@@ -745,6 +748,9 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	bool _timelineExpanded = false;
 	bool _listenerRegistered = false;
 	late FocusNode _focusNode;
+	final GlobalKey _undoButtonKey = GlobalKey();
+	final GlobalKey _fieldOverlayKey = GlobalKey();
+	final GlobalKey _stackKey = GlobalKey();
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -796,9 +802,10 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		_focusNode = FocusNode();
 		_focusNode.addListener(_onFocusChanged);
 
-		// Instantiate field buttons early so their descriptors are registered
-		// before the first build (which renders the values table)
-		final scoutingData = ref.read(scoutingDataProvider);
+		// Access scouting data to ensure descriptors are registered
+		ref.read(scoutingDataProvider);
+
+		// Instantiate field buttons to trigger descriptor registration
 		for (final btn in autoZoneChangeButtons) {
 			FieldButton(
 				field: btn.field,
@@ -812,7 +819,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 				widthPercent: btn.widthPercent,
 				aspectRatio: btn.aspectRatio,
 				descriptor: btn.descriptor,
-				model: scoutingData,
 			);
 		}
 		for (final target in autoFuelTargets) {
@@ -828,12 +834,87 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 				widthPercent: target.widthPercent,
 				aspectRatio: target.aspectRatio,
 				descriptor: target.descriptor,
-				model: scoutingData,
 			);
 		}
 	}
 
 	void _onFocusChanged() {}
+
+	/// Calculate the position of the active fuel target in the field overlay
+	Offset _getActiveFuelTargetPosition(String activeFuelTarget) {
+		try {
+			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+
+			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
+			final overlaySize = overlayBox.size;
+
+			// Fuel targets are positioned on the right side of the field overlay
+			// Hub: bottom-right, Neutral Alliance Pass: middle-right
+			double targetX = overlayOffset.dx + overlaySize.width - 40; // Right side with offset
+			double targetY;
+
+			switch (activeFuelTarget) {
+				case 'hub':
+					targetY = overlayOffset.dy + overlaySize.height * 0.65; // Hub at bottom-right
+					break;
+				case 'neutralAlliancePass':
+					targetY = overlayOffset.dy + overlaySize.height * 0.35; // Neutral alliance pass at top
+					break;
+				default:
+					targetY = overlayOffset.dy + overlaySize.height / 2;
+			}
+
+			return Offset(targetX, targetY);
+		} catch (e) {
+			// Fallback to center if calculation fails
+			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+		}
+	}
+
+	/// Calculate the position for zone button popups (near center of field overlay)
+	Offset _getZoneButtonPopupPosition() {
+		try {
+			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+
+			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
+			final overlaySize = overlayBox.size;
+
+			// Position at the center-top of the field overlay for zone buttons
+			return Offset(
+				overlayOffset.dx + overlaySize.width / 2,
+				overlayOffset.dy + overlaySize.height * 0.2,
+			);
+		} catch (e) {
+			// Fallback to center if calculation fails
+			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
+		}
+	}
+
+	/// Calculate the position for an undo floater by looking up the button's actual position
+	Offset? _getUndoPopupPosition(String field) {
+		try {
+			final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+			if (stackBox == null) return null;
+
+			// Look up any button by field name and get its actual position
+			final elementKeysNotifier = ref.read(uiElementKeysProvider.notifier);
+			final position = getElementPosition(field, elementKeysNotifier, stackBox: stackBox);
+			if (position != null) {
+				print('UNDO: found button $field at position: $position');
+				return position;
+			}
+
+			final scoutingData = ref.read(scoutingDataProvider);
+			final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
+			print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
+			return null;
+		} catch (e) {
+			print('_getUndoPopupPosition ERROR: $e');
+			return null;
+		}
+	}
 
 	@override
 	void dispose() {
@@ -845,23 +926,40 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	@override
 	Widget build(BuildContext context) {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
-		final activeZone = ref.watch(scoutingDataProvider.notifier).activeZone;
+		final activeZone = ref.watch(activeZoneProvider);
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final climbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
 
 		// Instantiate overlay early so buttons register their descriptors
 		final fieldOverlay = AutoFieldOverlay(
+			key: _fieldOverlayKey,
 			fieldSide: fieldSide,
 			activeZone: activeZone,
 			climbLevel: climbLevel,
 			botPosition: botPosition,
 			showStartButton: widget.matchStartTime == null,
-			onMovementTapped: (field, action) {
+			onMovementTapped: (field, action, globalPosition) {
 				_startMatchIfNeeded();
 				ref
 						.read(scoutingDataProvider.notifier)
 						.recordAutoAction(field: field, value: 1);
+				// Show floating popup at the button that was tapped
+				try {
+					final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+					if (stackBox != null) {
+						// Convert button's global position to stack-relative coordinates
+						final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+						final buttonStackRelative = globalPosition - stackGlobalOffset;
+
+						print('ZONE CHANGE: button global=$globalPosition, stack global=$stackGlobalOffset, button relative to stack=$buttonStackRelative');
+						ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
+					} else {
+						print('ZONE CHANGE: stackBox is null');
+					}
+				} catch (e) {
+					print('ZONE CHANGE ERROR: $e');
+				}
 			},
 			onClimbToggled: () {
 				_startMatchIfNeeded();
@@ -872,15 +970,29 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								field: 'auto_climb_level',
 								value: climbLevel + 1,
 							);
+					// Show floating popup at left side of field, offset from top
+					try {
+						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+						if (overlayBox != null) {
+							final offset = overlayBox.localToGlobal(Offset.zero);
+							final popupX = offset.dx + 40;
+							final popupY = offset.dy + 40;
+							print('CLIMB: overlay position=$offset, overlay size=${overlayBox.size}, popup position=($popupX, $popupY)');
+							ref.read(floatingPopupProvider.notifier).addPopup('+1', popupX, popupY);
+						} else {
+							print('CLIMB: overlayBox is null');
+						}
+					} catch (e) {
+						print('CLIMB ERROR: $e');
+					}
 				}
 			},
 			onStartAutoTapped: () {
 				_startMatchIfNeeded();
 			},
-			activeFuelTarget: ref
-					.watch(scoutingDataProvider.notifier)
-					.activeFuelTarget,
+			activeFuelTarget: ref.watch(activeFuelTargetProvider),
 			onFuelTargetTapped: (targetName) {
+				print('onFuelTargetTapped called: targetName=$targetName');
 				ref
 						.read(scoutingDataProvider.notifier)
 						.changeAutoFuelTarget(targetName);
@@ -896,19 +1008,32 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		);
 
 		// Now access field values (buttons are registered)
-		final activeFuelTarget = ref
-				.watch(scoutingDataProvider.notifier)
-				.activeFuelTarget;
 
 		final teamColor = _getTeamColor(botPosition);
+		final floatingPopups = ref.watch(floatingPopupProvider);
+		var activeFuelTarget = ref.watch(activeFuelTargetProvider);
 
-		return Focus(
-			focusNode: _focusNode,
-			child: SingleChildScrollView(
-				padding: const EdgeInsets.symmetric(vertical: 8),
-				child: Column(
-					crossAxisAlignment: CrossAxisAlignment.stretch,
-					children: [
+		// Ensure fuel target is valid for auto phase and zone
+		final validAutoTargets = {'hub', 'alliancePass'};
+		if (!validAutoTargets.contains(activeFuelTarget)) {
+			// Map zone to valid auto target if coming from tele
+			final newTarget = activeZone == 'neutral' ? 'alliancePass' : 'hub';
+			activeFuelTarget = newTarget;
+			Future(() {
+				ref.read(activeFuelTargetProvider.notifier).changeTarget(newTarget);
+			});
+		}
+
+		return Stack(
+			key: _stackKey,
+			children: [
+				Focus(
+					focusNode: _focusNode,
+					child: SingleChildScrollView(
+						padding: const EdgeInsets.symmetric(vertical: 8),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.stretch,
+							children: [
 						// Field Overlay with all integrated controls
 						// (movement buttons, fuel overlays, zone toggles, climb selector)
 						Padding(
@@ -983,6 +1108,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 											children: [
 												// Undo button (always enabled to undo either timeline events or timer start)
 												FilledButton(
+													key: _undoButtonKey,
 													style: FilledButton.styleFrom(
 														backgroundColor: AppColors.buttonBgColor,
 														foregroundColor: AppColors.buttonFgColor,
@@ -995,7 +1121,12 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 														),
 													),
 													onPressed: () {
-														undoLastAction(ref);
+														undoLastAction(
+															ref,
+															context,
+															_undoButtonKey,
+															getUndoPosition: _getUndoPopupPosition,
+														);
 													},
 													child: Text(
 														_translate('undo'),
@@ -1073,6 +1204,20 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					],
 				),
 			),
+				),
+				// Floating popups layer
+				...floatingPopups.map((popup) {
+					return PopupFloater(
+						key: ValueKey(popup.id),
+						text: popup.text,
+						initialX: popup.initialX,
+						initialY: popup.initialY,
+						onAnimationComplete: () {
+							ref.read(floatingPopupProvider.notifier).removePopup(popup.id);
+						},
+					);
+				}).toList(),
+			],
 		);
 	}
 
@@ -1083,11 +1228,15 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		String activeFuelTarget,
 		WidgetRef ref,
 	) {
+		final buttonKey = GlobalKey();
+
 		return SizedBox(
 			width: 70,
 			height: 70,
 			child: ElevatedButton(
+				key: buttonKey,
 				onPressed: () {
+					print('FUEL BUTTON PRESSED: amount=$amount, activeFuelTarget=$activeFuelTarget');
 					// Start match timer if not already started
 					_startMatchIfNeeded();
 
@@ -1099,6 +1248,38 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					ref
 							.read(scoutingDataProvider.notifier)
 							.recordAutoAction(field: fuelField, value: amount);
+
+					// Show floating popup at the active fuel target position in the field overlay
+					try {
+						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+						final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+						if (overlayBox != null && stackBox != null) {
+							// Get overlay position and size
+							final overlayGlobalOffset = overlayBox.localToGlobal(Offset.zero);
+							final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+							final overlayStackRelative = overlayGlobalOffset - stackGlobalOffset;
+
+							// Calculate fuel target position based on active target
+							// Hub: rightPercent=26.0, topPercent=42.0
+							// AlliancePass: rightPercent=13.0, bottomPercent=7.0
+							double targetX, targetY;
+							if (activeFuelTarget == 'hub') {
+								targetX = overlayStackRelative.dx + (overlayBox.size.width * (1 - 0.26));
+								targetY = overlayStackRelative.dy + (overlayBox.size.height * 0.42);
+							} else {
+								// alliancePass
+								targetX = overlayStackRelative.dx + (overlayBox.size.width * (1 - 0.13));
+								targetY = overlayStackRelative.dy + (overlayBox.size.height * (1 - 0.07));
+							}
+
+							print('FUEL BUTTON: overlay global=$overlayGlobalOffset, stack global=$stackGlobalOffset, overlay relative to stack=$overlayStackRelative, target=$activeFuelTarget, popup position=($targetX, $targetY)');
+							ref.read(floatingPopupProvider.notifier).addPopup('+$amount', targetX, targetY);
+						} else {
+							print('FUEL BUTTON: overlayBox=$overlayBox, stackBox=$stackBox');
+						}
+					} catch (e) {
+						print('FUEL BUTTON ERROR: $e');
+					}
 				},
 				style: ElevatedButton.styleFrom(
 					backgroundColor: const Color(0xFFF1CE03),

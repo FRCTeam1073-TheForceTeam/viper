@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import '../../providers/field_side_provider.dart';
+import '../../providers/floating_popup_provider.dart';
+import '../../providers/zone_buttons_provider.dart';
 import '../../constants/colors.dart';
 import '../models/field_button.dart';
 import '../models/field_descriptor.dart';
@@ -177,6 +180,7 @@ final teleFuelTargets = <FieldButton>[
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'tele_fuel_score', teleValuesTableDescription: 'fuel_score'),
 	),
 	FieldButton(
 		field: 'tele_fuel_target_alliance_dump',
@@ -187,6 +191,7 @@ final teleFuelTargets = <FieldButton>[
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'tele_fuel_alliance_dump', teleValuesTableDescription: 'fuel_alliance_dump'),
 	),
 	FieldButton(
 		field: 'tele_fuel_target_outpost',
@@ -197,6 +202,7 @@ final teleFuelTargets = <FieldButton>[
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'tele_fuel_outpost', teleValuesTableDescription: 'fuel_outpost'),
 	),
 	// Neutral zone target
 	FieldButton(
@@ -208,6 +214,7 @@ final teleFuelTargets = <FieldButton>[
 		zone: 'neutral',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'tele_fuel_neutral_alliance_pass', teleValuesTableDescription: 'fuel_neutral_alliance_pass'),
 	),
 	// Opponent zone targets
 	FieldButton(
@@ -219,6 +226,7 @@ final teleFuelTargets = <FieldButton>[
 		zone: 'opponent',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'tele_fuel_opponent_alliance_pass', teleValuesTableDescription: 'fuel_opponent_alliance_pass'),
 	),
 	FieldButton(
 		field: 'tele_fuel_target_opponent_neutral_pass',
@@ -229,15 +237,16 @@ final teleFuelTargets = <FieldButton>[
 		zone: 'opponent',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
+		descriptor: FieldDescriptor(name: 'tele_fuel_opponent_neutral_pass', teleValuesTableDescription: 'fuel_opponent_neutral_pass'),
 	),
 ];
 
 /// Widget that displays the field with positioned buttons for robot movement interactions during teleop
 /// Supports three zones: alliance, neutral, and opponent
-class TeleFieldOverlay extends StatelessWidget {
+class TeleFieldOverlay extends ConsumerWidget {
 	/// Called when a movement button is tapped
-	/// Parameters: field (movement counter name), action (label)
-	final Function(String field, String action) onMovementTapped;
+	/// Parameters: field (movement counter name), action (label), globalOffset (tap position on screen)
+	final Function(String field, String action, Offset globalOffset) onMovementTapped;
 
 	/// Current field side (red/blue) - determines field rotation
 	final FieldSide fieldSide;
@@ -280,7 +289,16 @@ class TeleFieldOverlay extends StatelessWidget {
 	}) : super(key: key);
 
 	@override
-	Widget build(BuildContext context) {
+	Widget build(BuildContext context, WidgetRef ref) {
+		// Pre-register all button GlobalKeys upfront so undo popups can find them even if off-screen
+		for (final btn in teleZoneChangeButtons) {
+			ref.read(uiElementKeysProvider.notifier).getOrCreateKey(btn.field);
+		}
+		for (final target in teleFuelTargets) {
+			final registryFieldName = target.descriptor?.name ?? target.field;
+			ref.read(uiElementKeysProvider.notifier).getOrCreateKey(registryFieldName);
+		}
+
 		// Determine if field should be rotated based on field side
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 		final shouldRotate = fieldSide == FieldSide.left;
@@ -324,22 +342,33 @@ class TeleFieldOverlay extends StatelessWidget {
 									),
 								),
 
-								// Positioned movement buttons - filtered by active zone
+								// Positioned movement buttons - render all but only show active zone
 								...teleZoneChangeButtons
-									.where((btn) => btn.zone == activeZone)
-									.map((btn) => _buildMovementButton(
-										maxWidth,
-										fieldHeight,
-										btn,
-										shouldRotate,
-										swapButtonSides,
-									)),
+									.map((btn) {
+										final buttonKey = ref.read(uiElementKeysProvider.notifier).getOrCreateKey(btn.field);
+										final isVisible = btn.zone == activeZone;
+										return Visibility(
+											visible: isVisible,
+											maintainSize: false,
+											maintainAnimation: false,
+											maintainState: false,
+											child: _buildMovementButton(
+												maxWidth,
+												fieldHeight,
+												btn,
+												shouldRotate,
+												swapButtonSides,
+												buttonKey: buttonKey,
+											),
+										);
+									}),
 
-								// Fuel target overlays - filtered by zone
+								// Fuel target overlays - render all but only show active zone
 								...(teleFuelTargets
-									.where((target) => target.zone == activeZone)
 									.map((target) {
-										// Map field names back to target names for callbacks
+										final registryFieldName = target.descriptor?.name ?? target.field;
+										final targetKey = ref.read(uiElementKeysProvider.notifier).getOrCreateKey(registryFieldName);
+
 										const targetNameMap = {
 											'tele_fuel_target_hub': 'hub',
 											'tele_fuel_target_alliance_dump': 'allianceDump',
@@ -349,14 +378,24 @@ class TeleFieldOverlay extends StatelessWidget {
 											'tele_fuel_target_opponent_neutral_pass': 'opponentNeutralPass',
 										};
 										final targetName = targetNameMap[target.field] ?? '';
-										return _buildFuelTarget(
-											maxWidth,
-											fieldHeight,
-											target,
-											isActive: activeFuelTarget == targetName,
-											onTap: () => onFuelTargetTapped?.call(targetName),
-											shouldRotate: shouldRotate,
-											swapButtonSides: swapButtonSides,
+										final isActive = activeFuelTarget == targetName;
+										final isVisible = target.zone == activeZone;
+										print('TELE FUEL TARGET: target=${target.label}, targetName=$targetName, activeFuelTarget=$activeFuelTarget, isActive=$isActive');
+										return Visibility(
+											visible: isVisible,
+											maintainSize: false,
+											maintainAnimation: false,
+											maintainState: false,
+											child: _buildFuelTarget(
+												maxWidth,
+												fieldHeight,
+												target,
+												isActive: isActive,
+												onTap: () => onFuelTargetTapped?.call(targetName),
+												shouldRotate: shouldRotate,
+												swapButtonSides: swapButtonSides,
+												targetKey: targetKey,
+											),
 										);
 									}).toList()),
 
@@ -419,8 +458,9 @@ class TeleFieldOverlay extends StatelessWidget {
 		double fieldHeight,
 		FieldButton button,
 		bool shouldRotate,
-		bool swapButtonSides,
-	) {
+		bool swapButtonSides, {
+		GlobalKey? buttonKey,
+	}) {
 		final buttonWidth = button.widthPercent * fieldWidth / 100;
 		final buttonHeight = buttonWidth * button.aspectRatio;
 
@@ -439,12 +479,13 @@ class TeleFieldOverlay extends StatelessWidget {
 		// Handle leftPercent (opponent zone buttons)
 		if (button.leftPercent != null) {
 			return Positioned(
+				key: buttonKey,
 				left: swapButtonSides ? null : leftFromLeftPercent,
 				right: swapButtonSides ? leftFromLeftPercent : null,
 				top: swapButtonSides ? bottomFromTopPixels : topPixels,
 				bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
 				child: GestureDetector(
-					onTap: () => onMovementTapped(button.field, button.label),
+					onTapDown: (details) => onMovementTapped(button.field, button.label, details.globalPosition),
 					child: Tooltip(
 						message: button.label,
 						child: Container(
@@ -473,12 +514,13 @@ class TeleFieldOverlay extends StatelessWidget {
 
 		// Handle rightPercent (alliance/neutral buttons)
 		return Positioned(
+			key: buttonKey,
 			right: swapButtonSides ? null : rightPixels,
 			left: swapButtonSides ? leftPixels : null,
 			top: swapButtonSides ? bottomFromTopPixels : topPixels,
 			bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
 			child: GestureDetector(
-				onTap: () => onMovementTapped(button.field, button.label),
+				onTapDown: (details) => onMovementTapped(button.field, button.label, details.globalPosition),
 				child: Tooltip(
 					message: button.label,
 					child: Container(
@@ -514,6 +556,7 @@ class TeleFieldOverlay extends StatelessWidget {
 		required VoidCallback onTap,
 		required bool shouldRotate,
 		required bool swapButtonSides,
+		GlobalKey? targetKey,
 	}) {
 		final size = target.widthPercent * fieldWidth / 100;
 		final imagePath = isActive
@@ -535,12 +578,16 @@ class TeleFieldOverlay extends StatelessWidget {
 		final swappedTopPx = bottomPercent != null ? bottomPercent * fieldHeight / 100 : null;
 
 		return Positioned(
+			key: targetKey,
 			left: swapButtonSides ? swappedLeftPx : leftPx,
 			right: swapButtonSides ? swappedRightPx : rightPx,
 			top: swapButtonSides ? swappedTopPx : topPx,
 			bottom: swapButtonSides ? swappedBottomPx : bottomPx,
 			child: GestureDetector(
-				onTap: onTap,
+				onTap: () {
+					print('TELE FUEL TARGET TAPPED: ${target.label}');
+					onTap();
+				},
 				child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Tooltip(

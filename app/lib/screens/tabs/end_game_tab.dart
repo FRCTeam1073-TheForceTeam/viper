@@ -1023,7 +1023,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 							alignment: Alignment.centerLeft,
 							child: PositionSelectorArea.forField(
 								descriptor: FieldDescriptor(name: 'auto_climb_position'),
-								model: scoutingData,
 								provider: scoutingDataProvider,
 								ref: ref,
 								isBlueTeam: isBlueTeam,
@@ -1051,7 +1050,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 							alignment: Alignment.centerLeft,
 							child: PositionSelectorArea.forField(
 								descriptor: FieldDescriptor(name: 'tele_climb_position'),
-								model: scoutingData,
 								provider: scoutingDataProvider,
 								ref: ref,
 								isBlueTeam: isBlueTeam,
@@ -1083,7 +1081,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										const SizedBox(height: 12),
 										RadioButtonGroup.forField(
 											descriptor: FieldDescriptor(name: 'climb_method'),
-											model: scoutingData,
 											ref: ref,
 											provider: scoutingDataProvider,
 											options: [
@@ -1159,7 +1156,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'fuel_to_alliance'),
-										model: scoutingData,
 										ref: ref,
 										provider: scoutingDataProvider,
 										options: [
@@ -1208,7 +1204,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										alignment: Alignment.centerLeft,
 										child: PositionSelectorArea.forField(
 											descriptor: FieldDescriptor(name: 'shooting_locations'),
-											model: scoutingData,
 											provider: scoutingDataProvider,
 											ref: ref,
 											isBlueTeam: isBlueTeam,
@@ -1228,7 +1223,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											onPressed: () {
 												// Call undo through the descriptor
 												final descriptor = FieldDescriptor(name: 'shooting_locations');
-												scoutingData.registerDescriptor(descriptor);
 												final currentValue = scoutingData.getFieldValue(descriptor.name).asString();
 												final positions = currentValue.split(' ').where((p) => p.isNotEmpty).toList();
 												if (positions.isNotEmpty) {
@@ -1268,7 +1262,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'bricked'),
-										model: scoutingData,
 										ref: ref,
 										provider: scoutingDataProvider,
 										options: [
@@ -1320,7 +1313,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'defense'),
-										model: scoutingData,
 										ref: ref,
 										provider: scoutingDataProvider,
 										options: [
@@ -1422,7 +1414,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'defended'),
-										model: scoutingData,
 										ref: ref,
 										provider: scoutingDataProvider,
 										options: [
@@ -1474,7 +1465,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									const SizedBox(height: 12),
 									RadioButtonGroup.forField(
 										descriptor: FieldDescriptor(name: 'misses'),
-										model: scoutingData,
 										ref: ref,
 										provider: scoutingDataProvider,
 										options: [
@@ -1533,11 +1523,10 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									),
 									const SizedBox(height: 8),
 									CheckboxButton(
-										descriptor: const FieldDescriptor(
+										descriptor: FieldDescriptor(
 											name: 'review_requested',
 											uiLabelKey: 'review_requested_button',
 										),
-										model: scoutingData,
 										provider: scoutingDataProvider,
 									),
 									const SizedBox(height: 16),
@@ -1546,7 +1535,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											name: 'scouter',
 											uiLabelKey: 'scouter_name_question',
 										),
-										model: scoutingData,
 										ref: ref,
 										provider: scoutingDataProvider,
 										maxLength: 32,
@@ -1557,7 +1545,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											name: 'comments',
 											uiLabelKey: 'comments_question',
 										),
-										model: scoutingData,
 										ref: ref,
 										provider: scoutingDataProvider,
 										minLines: 3,

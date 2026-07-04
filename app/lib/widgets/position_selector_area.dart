@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../models/field_descriptor.dart';
-import '../models/map_data_model.dart';
 import '../providers/field_side_provider.dart';
+import '../providers/global_scouting_data.dart';
 
 /// Reusable position selector widget for field areas (starting position, climb positions, etc)
 /// Allows selecting a 2D position on a field image by tapping
@@ -36,7 +36,6 @@ class PositionSelectorArea extends StatefulWidget {
 
 	static Widget forField({
 		required FieldDescriptor descriptor,
-		required MapDataModel model,
 		required dynamic provider,
 		required dynamic ref,
 		required bool isBlueTeam,
@@ -48,10 +47,8 @@ class PositionSelectorArea extends StatefulWidget {
 		double markerSize = 25,
 		bool multiSelect = false,
 	}) {
-		// Register the field descriptor
-		model.registerDescriptor(descriptor);
-
-		// Get current value from model
+		// Get current value from global model
+		final model = getGlobalScoutingData();
 		final selectedPosition = model.getFieldValue(descriptor.name).asString();
 
 		final positionWidget = PositionSelectorArea(
@@ -68,7 +65,6 @@ class PositionSelectorArea extends StatefulWidget {
 			onPositionChanged: (newPosition) {
 				print('💾 Saving ${descriptor.name}: $newPosition');
 				final updated = model.updateField(descriptor.name, newPosition);
-				// Use ref to call the provider's notifier update
 				ref.read(provider.notifier).update(updated);
 			},
 		);

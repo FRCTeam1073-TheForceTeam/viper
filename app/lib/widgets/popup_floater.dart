@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/colors.dart';
 
 /// A floating animation widget that displays a numeric value
 /// Used to show feedback (+1, +5, +10, -1) when fuel is added
@@ -7,10 +8,10 @@ class PopupFloater extends StatefulWidget {
 	/// Text to display (e.g., "+1", "+5", "+10", "-1")
 	final String text;
 
-	/// X position (screen-relative)
+	/// X position (viewport-relative, from left)
 	final double initialX;
 
-	/// Y position (screen-relative)
+	/// Y position (viewport-relative, from top)
 	final double initialY;
 
 	/// Duration for fade-out animation
@@ -75,38 +76,43 @@ class _PopupFloaterState extends State<PopupFloater>
 
 	@override
 	Widget build(BuildContext context) {
-		// Determine if this is a negative value (red) or positive (green/yellow)
+		print('POPUP FLOATER: rendering "${widget.text}" at position (${widget.initialX}, ${widget.initialY})');
+		// Determine if this is a negative value (red) or positive (green)
 		final isNegative = widget.text.startsWith('-');
-		final textColor = isNegative ? Colors.red.shade500 : Colors.lime.shade400;
+		final textColor = isNegative
+			? Color(0xFFDD7777)  // Soft red for negative values
+			: AppColors.highlightFgColor;  // Bright green for positive values
 
 		return Positioned(
 			left: widget.initialX,
 			top: widget.initialY,
-			child: AnimatedBuilder(
-				animation: _controller,
-				builder: (context, child) {
-					return Transform.translate(
-						offset: _offsetAnimation.value,
-						child: Opacity(
-							opacity: _opacityAnimation.value,
-							child: Text(
-								widget.text,
-								style: TextStyle(
-									fontSize: 28,
-									fontWeight: FontWeight.bold,
-									color: textColor,
-									shadows: [
-										Shadow(
-											color: Colors.black.withValues(alpha: 0.5),
-											blurRadius: 4,
-											offset: const Offset(0, 2),
-										),
-									],
+			child: IgnorePointer(
+				child: AnimatedBuilder(
+					animation: _controller,
+					builder: (context, child) {
+						return Transform.translate(
+							offset: _offsetAnimation.value,
+							child: Opacity(
+								opacity: _opacityAnimation.value,
+								child: Text(
+									widget.text,
+									style: TextStyle(
+										fontSize: 28,
+										fontWeight: FontWeight.bold,
+										color: textColor,
+										shadows: [
+											Shadow(
+												color: Colors.black.withValues(alpha: 0.5),
+												blurRadius: 4,
+												offset: const Offset(0, 2),
+											),
+										],
+									),
 								),
 							),
-						),
-					);
-				},
+						);
+					},
+				),
 			),
 		);
 	}
