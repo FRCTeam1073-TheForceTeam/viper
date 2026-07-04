@@ -356,13 +356,12 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 											),
 										),
 										// No Show Button
-										CheckboxButton.forField(
-											descriptor: FieldDescriptor(
+										CheckboxButton(
+											descriptor: const FieldDescriptor(
 												name: 'no_show',
 												uiLabelKey: 'no_show',
 											),
 											model: preMatchData,
-											ref: ref,
 											provider: scoutingDataProvider,
 										),
 										// Proceed to Auto Button

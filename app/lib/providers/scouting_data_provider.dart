@@ -44,8 +44,6 @@ class ScoutingData extends MapDataModel {
 		FieldDescriptor(name: 'auto_trench_outpost_neutral_to_alliance'),
 		FieldDescriptor(name: 'auto_fuel_score'),
 		FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass'),
-		FieldDescriptor(name: 'auto_collect_outpost'),
-		FieldDescriptor(name: 'auto_collect_depot'),
 		FieldDescriptor(name: 'auto_alliance_time'),
 		FieldDescriptor(name: 'auto_neutral_time'),
 		FieldDescriptor(name: 'auto_climb_level'),

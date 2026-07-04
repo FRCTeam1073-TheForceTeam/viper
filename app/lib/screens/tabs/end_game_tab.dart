@@ -1537,13 +1537,12 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 										),
 									),
 									const SizedBox(height: 8),
-									CheckboxButton.forField(
-										descriptor: FieldDescriptor(
+									CheckboxButton(
+										descriptor: const FieldDescriptor(
 											name: 'review_requested',
 											uiLabelKey: 'review_requested_button',
 										),
 										model: scoutingData,
-										ref: ref,
 										provider: scoutingDataProvider,
 									),
 									const SizedBox(height: 16),

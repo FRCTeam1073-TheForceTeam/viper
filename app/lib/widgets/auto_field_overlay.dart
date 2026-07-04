@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import '../../providers/field_side_provider.dart';
+import '../../providers/scouting_data_provider.dart';
 import '../../constants/colors.dart';
 import '../data/field_button_definitions.dart';
+import '../models/field_descriptor.dart';
+import '../models/map_data_model.dart';
+import 'checkbox_button.dart';
 
 /// Widget that displays the field with positioned buttons for robot movement interactions
 /// Buttons use CSS-like percentage positioning and are zone-aware (alliance/neutral)
-class AutoFieldOverlay extends StatelessWidget {
+class AutoFieldOverlay extends ConsumerWidget {
 	/// Called when a movement button is tapped
 	/// Parameters: field (movement counter name), action (label)
 	final Function(String field, String action) onMovementTapped;
-
-	/// Called when collection checkboxes are tapped
-	/// Parameters: type ('depot' or 'outpost'), newValue (toggled boolean state)
-	final Function(String type, bool newValue)? onCollectionToggled;
 
 	/// Current field side (red/blue) - determines field rotation
 	final FieldSide fieldSide;
@@ -30,6 +31,12 @@ class AutoFieldOverlay extends StatelessWidget {
 
 	/// Collection state: outpost collected
 	final bool collectOutpost;
+
+	/// Model for registering descriptors
+	final MapDataModel? model;
+
+	/// Callback to record an action (field, value)
+	final Function(String field, int value)? onRecordAction;
 
 	/// Climb level (0-1)
 	final int climbLevel;
@@ -60,7 +67,6 @@ class AutoFieldOverlay extends StatelessWidget {
 	const AutoFieldOverlay({
 		Key? key,
 		required this.onMovementTapped,
-		this.onCollectionToggled,
 		this.fieldSide = FieldSide.left,
 		this.activeZone = 'alliance',
 		this.fieldWidth,
@@ -74,10 +80,12 @@ class AutoFieldOverlay extends StatelessWidget {
 		this.botPosition,
 		this.activeFuelTarget = 'hub',
 		this.onFuelTargetTapped,
+		this.model,
+		this.onRecordAction,
 	}) : super(key: key);
 
 	@override
-	Widget build(BuildContext context) {
+	Widget build(BuildContext context, WidgetRef ref) {
 		// Determine if field should be rotated based on field side
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 		final shouldRotate = fieldSide == FieldSide.left;
@@ -189,28 +197,34 @@ class AutoFieldOverlay extends StatelessWidget {
 									_buildCollectionCheckbox(
 										maxWidth,
 										fieldHeight,
-										label: 'Depot',
+										ref,
+										descriptor: const FieldDescriptor(
+											name: 'auto_collect_depot',
+											uiLabelKey: 'collect_from_depot',
+											imagePath: 'assets/images/fuel-collect.png',
+											width: 80,
+											height: 80,
+										),
 										rightPercent: 2.0,
 										bottomPercent: 22.0,
 										isChecked: collectDepot,
-										onTap: () {
-											final newValue = !collectDepot;
-											onCollectionToggled?.call('depot', newValue);
-										},
 										shouldRotate: shouldRotate,
 										swapButtonSides: swapButtonSides,
 									),
 									_buildCollectionCheckbox(
 										maxWidth,
 										fieldHeight,
-										label: 'Outpost',
+										ref,
+										descriptor: const FieldDescriptor(
+											name: 'auto_collect_outpost',
+											uiLabelKey: 'collect_from_outpost',
+											imagePath: 'assets/images/fuel-collect.png',
+											width: 80,
+											height: 80,
+										),
 										rightPercent: 0.0,
 										topPercent: 7.0,
 										isChecked: collectOutpost,
-										onTap: () {
-											final newValue = !collectOutpost;
-											onCollectionToggled?.call('outpost', newValue);
-										},
 										shouldRotate: shouldRotate,
 										swapButtonSides: swapButtonSides,
 									),
@@ -389,21 +403,18 @@ class AutoFieldOverlay extends StatelessWidget {
 		);
 	}
 
-	/// Build a collection checkbox overlay using fuel-collect.png image
 	Widget _buildCollectionCheckbox(
 		double fieldWidth,
-		double fieldHeight, {
-		required String label,
+		double fieldHeight,
+		WidgetRef ref, {
+		required FieldDescriptor descriptor,
 		required double rightPercent,
 		double? topPercent,
 		double? bottomPercent,
 		required bool isChecked,
-		required VoidCallback onTap,
 		required bool shouldRotate,
 		required bool swapButtonSides,
 	}) {
-		final size = 8.0 * fieldWidth / 100;
-
 		final rightPx = rightPercent * fieldWidth / 100;
 		final leftPx = rightPercent * fieldWidth / 100;
 		final topPx = topPercent != null ? topPercent * fieldHeight / 100 : null;
@@ -416,32 +427,14 @@ class AutoFieldOverlay extends StatelessWidget {
 			left: swapButtonSides ? leftPx : null,
 			top: swapButtonSides ? bottomFromTopPx : topPx,
 			bottom: swapButtonSides ? topFromBottomPx : bottomPx,
-			child: GestureDetector(
-				onTap: onTap,
-				child: Transform.rotate(
-					angle: shouldRotate ? pi : 0,
-					child: Container(
-						width: size,
-						height: size,
-						decoration: BoxDecoration(
-							borderRadius: BorderRadius.circular(size * 0.15),
-							color: isChecked
-								? AppColors.buttonSelectedBgColor
-								: AppColors.buttonBgColor,
-							boxShadow: [
-								BoxShadow(
-									color: Colors.black.withValues(alpha: 0.3),
-									blurRadius: 4,
-									offset: const Offset(0, 2),
-								),
-							],
-						),
-						child: Image.asset(
-							'assets/images/fuel-collect.png',
-							fit: BoxFit.contain,
-
-						),
-					),
+			child: Transform.rotate(
+				angle: shouldRotate ? pi : 0,
+				child: CheckboxButton(
+					descriptor: descriptor,
+					model: model!,
+					provider: scoutingDataProvider,
+					padding: EdgeInsets.zero,
+					margin: EdgeInsets.zero,
 				),
 			),
 		);

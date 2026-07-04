@@ -12,6 +12,7 @@ import '../../services/localization.dart';
 import '../../widgets/auto_field_overlay.dart';
 import '../../widgets/auto_values_table.dart';
 import '../../widgets/timeline_table.dart';
+import '../../models/field_descriptor.dart';
 
 typedef AutoTabRecord = ({
 	String activeZone,
@@ -26,8 +27,6 @@ typedef AutoTabRecord = ({
 	int trenchOutpostNeutralToAlliance,
 	int fuelScore,
 	int fuelNeutralAlliancePass,
-	int collectDepot,
-	int collectOutpost,
 	int climbLevel,
 	int allianceTime,
 	int neutralTime,
@@ -688,25 +687,25 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	@override
 	Widget build(BuildContext context) {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
-		final autoState = ref.watch(scoutingDataProvider.select((data) => (
-			activeZone: data.autoActiveZone,
-			activeFuelTarget: data.autoActiveFuelTarget,
-			trenchDepotAllianceToNeutral: data.getFieldValue('auto_trench_depot_alliance_to_neutral').asInt(),
-			bumpDepotAllianceToNeutral: data.getFieldValue('auto_bump_depot_alliance_to_neutral').asInt(),
-			bumpOutpostAllianceToNeutral: data.getFieldValue('auto_bump_outpost_alliance_to_neutral').asInt(),
-			trenchOutpostAllianceToNeutral: data.getFieldValue('auto_trench_outpost_alliance_to_neutral').asInt(),
-			trenchDepotNeutralToAlliance: data.getFieldValue('auto_trench_depot_neutral_to_alliance').asInt(),
-			bumpDepotNeutralToAlliance: data.getFieldValue('auto_bump_depot_neutral_to_alliance').asInt(),
-			bumpOutpostNeutralToAlliance: data.getFieldValue('auto_bump_outpost_neutral_to_alliance').asInt(),
-			trenchOutpostNeutralToAlliance: data.getFieldValue('auto_trench_outpost_neutral_to_alliance').asInt(),
-			fuelScore: data.getFieldValue('auto_fuel_score').asInt(),
-			fuelNeutralAlliancePass: data.getFieldValue('auto_fuel_neutral_alliance_pass').asInt(),
-			collectDepot: data.getFieldValue('auto_collect_depot').asInt(),
-			collectOutpost: data.getFieldValue('auto_collect_outpost').asInt(),
-			climbLevel: data.getFieldValue('auto_climb_level').asInt(),
-			allianceTime: data.getFieldValue('auto_alliance_time').asInt(),
-			neutralTime: data.getFieldValue('auto_neutral_time').asInt(),
-		)));
+		final activeZone = ref.watch(scoutingDataProvider.select((data) => data.autoActiveZone));
+		final scoutingData = ref.watch(scoutingDataProvider);
+
+		// Get current state from scouting data
+		final activeFuelTarget = scoutingData.autoActiveFuelTarget;
+		final trenchDepotAllianceToNeutral = scoutingData.getFieldValue('auto_trench_depot_alliance_to_neutral').asInt();
+		final bumpDepotAllianceToNeutral = scoutingData.getFieldValue('auto_bump_depot_alliance_to_neutral').asInt();
+		final bumpOutpostAllianceToNeutral = scoutingData.getFieldValue('auto_bump_outpost_alliance_to_neutral').asInt();
+		final trenchOutpostAllianceToNeutral = scoutingData.getFieldValue('auto_trench_outpost_alliance_to_neutral').asInt();
+		final trenchDepotNeutralToAlliance = scoutingData.getFieldValue('auto_trench_depot_neutral_to_alliance').asInt();
+		final bumpDepotNeutralToAlliance = scoutingData.getFieldValue('auto_bump_depot_neutral_to_alliance').asInt();
+		final bumpOutpostNeutralToAlliance = scoutingData.getFieldValue('auto_bump_outpost_neutral_to_alliance').asInt();
+		final trenchOutpostNeutralToAlliance = scoutingData.getFieldValue('auto_trench_outpost_neutral_to_alliance').asInt();
+		final fuelScore = scoutingData.getFieldValue('auto_fuel_score').asInt();
+		final fuelNeutralAlliancePass = scoutingData.getFieldValue('auto_fuel_neutral_alliance_pass').asInt();
+		final climbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
+		final allianceTime = scoutingData.getFieldValue('auto_alliance_time').asInt();
+		final neutralTime = scoutingData.getFieldValue('auto_neutral_time').asInt();
+
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final teamColor = _getTeamColor(botPosition);
 
@@ -723,10 +722,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						padding: const EdgeInsets.symmetric(horizontal: 16),
 						child: AutoFieldOverlay(
 							fieldSide: fieldSide,
-							activeZone: autoState.activeZone,
-							collectDepot: autoState.collectDepot == 1,
-							collectOutpost: autoState.collectOutpost == 1,
-							climbLevel: autoState.climbLevel,
+							activeZone: activeZone,
+							climbLevel: climbLevel,
 							botPosition: botPosition,
 							showStartButton: widget.matchStartTime == null,
 							onMovementTapped: (field, action) {
@@ -739,33 +736,33 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 									value: 1,
 								);
 							},
-							onCollectionToggled: (type, newValue) {
-							_startMatchIfNeeded();
-								final field = type == 'depot' ? 'auto_collect_depot' : 'auto_collect_outpost';
-								ref.read(scoutingDataProvider.notifier).recordAutoAction(
-									field: field,
-									value: newValue ? 1 : 0,
-								);
-							},
 							onClimbToggled: () {
 								// Start match timer if not already started
 								_startMatchIfNeeded();
 
-								if (autoState.climbLevel < 1) {
+								if (climbLevel < 1) {
 									ref.read(scoutingDataProvider.notifier).recordAutoAction(
 										field: 'auto_climb_level',
-										value: autoState.climbLevel + 1,
+										value: climbLevel + 1,
 									);
 								}
 							},
 							onStartAutoTapped: () {
 								_startMatchIfNeeded();
 							},
-							activeFuelTarget: autoState.activeFuelTarget,
+							activeFuelTarget: activeFuelTarget,
 							onFuelTargetTapped: (targetName) {
 								ref.read(scoutingDataProvider.notifier).changeAutoFuelTarget(targetName);
 							},
 							startAutoButtonLabel: _translate('start_auto_button'),
+							model: scoutingData,
+							onRecordAction: (field, value) {
+								_startMatchIfNeeded();
+								ref.read(scoutingDataProvider.notifier).recordAutoAction(
+									field: field,
+									value: value,
+								);
+							},
 						),
 				),
 
@@ -787,11 +784,11 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								Row(
 								mainAxisAlignment: MainAxisAlignment.center,
 									children: [
-										_buildFuelButton('1', 1, autoState, ref),
+										_buildFuelButton('1', 1, activeFuelTarget, ref),
 										const SizedBox(width: 8),
-										_buildFuelButton('5', 5, autoState, ref),
+										_buildFuelButton('5', 5, activeFuelTarget, ref),
 										const SizedBox(width: 8),
-										_buildFuelButton('10', 10, autoState, ref),
+										_buildFuelButton('10', 10, activeFuelTarget, ref),
 									],
 								),
 								const SizedBox(height: 8),
@@ -820,18 +817,18 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								if (_valuesExpanded) ...[
 									AutoValuesTable(
 										key: const ValueKey('auto_values_table'),
-										trenchDepotAllianceToNeutral: autoState.trenchDepotAllianceToNeutral,
-										bumpDepotAllianceToNeutral: autoState.bumpDepotAllianceToNeutral,
-										bumpOutpostAllianceToNeutral: autoState.bumpOutpostAllianceToNeutral,
-										trenchOutpostAllianceToNeutral: autoState.trenchOutpostAllianceToNeutral,
-										trenchDepotNeutralToAlliance: autoState.trenchDepotNeutralToAlliance,
-										bumpDepotNeutralToAlliance: autoState.bumpDepotNeutralToAlliance,
-										bumpOutpostNeutralToAlliance: autoState.bumpOutpostNeutralToAlliance,
-										trenchOutpostNeutralToAlliance: autoState.trenchOutpostNeutralToAlliance,
-										fuelScore: autoState.fuelScore,
-										fuelNeutralAlliancePass: autoState.fuelNeutralAlliancePass,
-										allianceTime: autoState.allianceTime,
-										neutralTime: autoState.neutralTime,
+										trenchDepotAllianceToNeutral: trenchDepotAllianceToNeutral,
+										bumpDepotAllianceToNeutral: bumpDepotAllianceToNeutral,
+										bumpOutpostAllianceToNeutral: bumpOutpostAllianceToNeutral,
+										trenchOutpostAllianceToNeutral: trenchOutpostAllianceToNeutral,
+										trenchDepotNeutralToAlliance: trenchDepotNeutralToAlliance,
+										bumpDepotNeutralToAlliance: bumpDepotNeutralToAlliance,
+										bumpOutpostNeutralToAlliance: bumpOutpostNeutralToAlliance,
+										trenchOutpostNeutralToAlliance: trenchOutpostNeutralToAlliance,
+										fuelScore: fuelScore,
+										fuelNeutralAlliancePass: fuelNeutralAlliancePass,
+										allianceTime: allianceTime,
+										neutralTime: neutralTime,
 									),
 									const SizedBox(height: 12),
 								],
@@ -923,7 +920,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	Widget _buildFuelButton(
 		String label,
 		int amount,
-		AutoTabRecord autoState,
+		String activeFuelTarget,
 		WidgetRef ref,
 	) {
 		return SizedBox(
@@ -935,7 +932,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					_startMatchIfNeeded();
 
 					// Use the correct fuel counter based on active target
-					final fuelField = autoState.activeFuelTarget == 'hub'
+					final fuelField = activeFuelTarget == 'hub'
 						? 'auto_fuel_score'
 						: 'auto_fuel_neutral_alliance_pass';
 

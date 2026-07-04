@@ -4,12 +4,18 @@ class FieldDescriptor {
 	final String? uiLabelKey;
 	final String? descriptionLabelKey;
 	final String? _value;
+	final String? imagePath;
+	final double? width;
+	final double? height;
 
 	const FieldDescriptor({
 		required this.name,
 		this.uiLabelKey,
 		this.descriptionLabelKey,
 		String? value,
+		this.imagePath,
+		this.width,
+		this.height,
 	}) : _value = value;
 
 	/// Create a copy with a new value
@@ -19,6 +25,9 @@ class FieldDescriptor {
 			uiLabelKey: uiLabelKey,
 			descriptionLabelKey: descriptionLabelKey,
 			value: newValue,
+			imagePath: imagePath,
+			width: width,
+			height: height,
 		);
 	}
 

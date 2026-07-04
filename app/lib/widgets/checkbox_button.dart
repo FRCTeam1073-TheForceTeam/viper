@@ -6,156 +6,130 @@ import '../services/localization.dart';
 import '../models/field_descriptor.dart';
 import '../models/map_data_model.dart';
 
-/// Reusable checkbox button widget that uses AppColors and localization
-/// Takes the current state and a callback to update it
-/// Returns 0/1 instead of bool for database compatibility
-class CheckboxButton extends ConsumerWidget {
-	final bool isChecked;
-	final String translationKey;
-	final ValueChanged<int> onChanged; // Returns 0 or 1 instead of bool
-	final EdgeInsets padding;
-	final EdgeInsets margin;
-
-	const CheckboxButton({
-		Key? key,
-		required this.isChecked,
-		required this.translationKey,
-		required this.onChanged,
-		this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-		this.margin = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-	}) : super(key: key);
-
-	/// Create checkbox button for a field - pass descriptor with field definition
-	/// Automatically registers descriptor with model
-	static Widget forField({
-		Key? key,
-		required FieldDescriptor descriptor,
-		required MapDataModel model,
-		required WidgetRef ref,
-		required dynamic provider,
-		EdgeInsets padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-		EdgeInsets margin = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-	}) {
-		// Auto-register descriptor if model supports it
-		_tryRegisterDescriptor(model, descriptor);
-
-		return _CheckboxButtonDescriptor(
-			key: key,
-			descriptor: descriptor,
-			model: model,
-			provider: provider,
-			padding: padding,
-			margin: margin,
-		);
-	}
-
-	static void _tryRegisterDescriptor(MapDataModel model, FieldDescriptor descriptor) {
-		// Register descriptor with the model instance
-		model.registerDescriptor(descriptor);
-	}
-
-	@override
-	Widget build(BuildContext context, WidgetRef ref) {
-		// Watch locale to trigger rebuild when language changes
-		ref.watch(selectedLocaleProvider);
-		final locale = ref.read(selectedLocaleProvider);
-		final label = AppLocalizations.translate(translationKey, locale: locale);
-
-		return Padding(
-			padding: margin,
-			child: Center(
-				child: FilledButton(
-					style: FilledButton.styleFrom(
-						backgroundColor: isChecked
-							? AppColors.buttonSelectedBgColor
-							: AppColors.buttonBgColor,
-						foregroundColor: AppColors.buttonFgColor,
-						padding: padding,
-						shape: RoundedRectangleBorder(
-							borderRadius: BorderRadius.circular(8),
-						),
-					),
-					onPressed: () => onChanged(isChecked ? 0 : 1), // Return 0 or 1 instead of bool
-					child: Text(
-						label,
-						style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-					),
-				),
-			),
-		);
-	}
-}
-
-/// Internal widget for descriptor-based checkbox with Riverpod integration
-class _CheckboxButtonDescriptor extends ConsumerStatefulWidget {
+/// Checkbox button widget that manages its own state
+/// Requires descriptor and model for full state management
+class CheckboxButton extends ConsumerStatefulWidget {
 	final FieldDescriptor descriptor;
 	final MapDataModel model;
 	final dynamic provider;
 	final EdgeInsets padding;
 	final EdgeInsets margin;
 
-	const _CheckboxButtonDescriptor({
+	const CheckboxButton({
 		Key? key,
 		required this.descriptor,
 		required this.model,
 		required this.provider,
-		required this.padding,
-		required this.margin,
+		this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+		this.margin = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
 	}) : super(key: key);
 
 	@override
-	ConsumerState<_CheckboxButtonDescriptor> createState() => _CheckboxButtonDescriptorState();
+	ConsumerState<CheckboxButton> createState() => _CheckboxButtonState();
 }
 
-class _CheckboxButtonDescriptorState extends ConsumerState<_CheckboxButtonDescriptor> {
-	late bool _localChecked;
+class _CheckboxButtonState extends ConsumerState<CheckboxButton> {
+	late bool _isChecked;
 
 	@override
 	void initState() {
 		super.initState();
-		// Initialize local state from model
+		// Register descriptor with model
+		widget.model.registerDescriptor(widget.descriptor);
+		// Initialize state from model
 		final storageValue = widget.model.values[widget.descriptor.name] as String?;
-		_localChecked = widget.descriptor.withValue(storageValue).asBool();
+		_isChecked = widget.descriptor.withValue(storageValue).asBool();
+	}
+
+	void _onPressed() {
+		setState(() {
+			_isChecked = !_isChecked;
+		});
+		final updated = widget.model.updateField(
+			widget.descriptor.name,
+			_isChecked ? 1 : 0,
+		);
+		ref.read(widget.provider.notifier).update(updated);
 	}
 
 	@override
 	Widget build(BuildContext context) {
+		final locale = ref.read(selectedLocaleProvider);
 		final label = AppLocalizations.translate(
 			widget.descriptor.uiLabel,
-			locale: ref.read(selectedLocaleProvider),
+			locale: locale,
 		);
 
 		return Padding(
 			padding: widget.margin,
 			child: Center(
-				child: FilledButton(
-					style: FilledButton.styleFrom(
-						backgroundColor: _localChecked
+				child: _buildButtonContent(
+					locale: locale,
+					label: label,
+					isChecked: _isChecked,
+					descriptor: widget.descriptor,
+					onPressed: _onPressed,
+					padding: widget.padding,
+				),
+			),
+		);
+	}
+
+	Widget _buildButtonContent({
+		required Locale locale,
+		required String label,
+		required bool isChecked,
+		required FieldDescriptor descriptor,
+		required VoidCallback onPressed,
+		required EdgeInsets padding,
+	}) {
+		// Handle image-based checkbox
+		if (descriptor.imagePath != null) {
+			final btnWidth = descriptor.width ?? 80.0;
+			final btnHeight = descriptor.height ?? 80.0;
+
+			return GestureDetector(
+				onTap: onPressed,
+				child: Container(
+					width: btnWidth,
+					height: btnHeight,
+					decoration: BoxDecoration(
+						borderRadius: BorderRadius.circular(8),
+						color: isChecked
 							? AppColors.buttonSelectedBgColor
 							: AppColors.buttonBgColor,
-						foregroundColor: AppColors.buttonFgColor,
-						padding: widget.padding,
-						shape: RoundedRectangleBorder(
-							borderRadius: BorderRadius.circular(8),
-						),
+						boxShadow: [
+							BoxShadow(
+								color: Colors.black.withValues(alpha: 0.3),
+								blurRadius: 4,
+								offset: const Offset(0, 2),
+							),
+						],
 					),
-					onPressed: () {
-						// Update local state immediately for UI feedback
-						setState(() {
-							_localChecked = !_localChecked;
-						});
-						// Update provider without triggering parent rebuild
-						final updated = widget.model.updateField(
-							widget.descriptor.name,
-							_localChecked ? 1 : 0,
-						);
-						ref.read(widget.provider.notifier).update(updated);
-					},
-					child: Text(
-						label,
-						style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+					child: Image.asset(
+						descriptor.imagePath!,
+						fit: BoxFit.contain,
 					),
 				),
+			);
+		}
+
+		// Handle text-based checkbox
+		return FilledButton(
+			style: FilledButton.styleFrom(
+				backgroundColor: isChecked
+					? AppColors.buttonSelectedBgColor
+					: AppColors.buttonBgColor,
+				foregroundColor: AppColors.buttonFgColor,
+				padding: padding,
+				shape: RoundedRectangleBorder(
+					borderRadius: BorderRadius.circular(8),
+				),
+			),
+			onPressed: onPressed,
+			child: Text(
+				label,
+				style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
 			),
 		);
 	}
