@@ -5,15 +5,15 @@ import '../providers/scouting_data_provider.dart';
 import '../models/field_descriptor.dart';
 
 /// Widget that displays all movement counters in a collapsible table
-/// Loops through descriptors with teleCountersTableHeading to build rows
-class TeleCountersTable extends ConsumerStatefulWidget {
-	const TeleCountersTable({Key? key}) : super(key: key);
+/// Loops through descriptors with teleValuesTableDescription to build rows
+class TeleValuesTable extends ConsumerStatefulWidget {
+	const TeleValuesTable({Key? key}) : super(key: key);
 
 	@override
-	ConsumerState<TeleCountersTable> createState() => _TeleCountersTableState();
+	ConsumerState<TeleValuesTable> createState() => _TeleValuesTableState();
 }
 
-class _TeleCountersTableState extends ConsumerState<TeleCountersTable> {
+class _TeleValuesTableState extends ConsumerState<TeleValuesTable> {
 	bool _expanded = false;
 
 	String _translate(String key) {
@@ -25,15 +25,15 @@ class _TeleCountersTableState extends ConsumerState<TeleCountersTable> {
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final teamColor = Colors.blue.shade700;
 
-		// Get all descriptors with teleCountersTableHeading
+		// Get all descriptors with teleValuesTableDescription
 		final counterDescriptors = scoutingData.descriptors
-			.where((d) => d.teleCountersTableHeading != null)
+			.where((d) => d.teleValuesTableDescription != null)
 			.toList();
 
 		// Group by heading, maintaining order of first appearance
 		final groupedByHeading = <String, List<FieldDescriptor>>{};
 		for (final desc in counterDescriptors) {
-			final heading = desc.teleCountersTableHeading!;
+			final heading = desc.teleValuesTableDescription!;
 			groupedByHeading.putIfAbsent(heading, () => []).add(desc);
 		}
 

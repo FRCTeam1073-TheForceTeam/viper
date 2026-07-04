@@ -10,7 +10,7 @@ import '../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
 import '../../services/localization.dart';
 import '../../widgets/auto_field_overlay.dart';
-import '../../widgets/auto_values_table.dart';
+import '../../widgets/values_table.dart';
 import '../../widgets/timeline_table.dart';
 import '../../models/field_descriptor.dart';
 import '../../models/field_button.dart';
@@ -578,7 +578,8 @@ void _initAutoTabTranslations() {
 			'en': 'Fuel Passed or Pushed to Alliance Zone from Neutral',
 			'es': 'Combustible Pasado o Empujado a Zona de Alianza desde Neutral',
 			'pt': 'Combustível Passado ou Empurrado para Zona de Aliança do Neutro',
-			'fr': 'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
+			'fr':
+					'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
 			'zh_tw': '燃料從中立區傳遞或推送到聯盟區',
 			'he': 'דלק עבר או נדחף לאזור הברית מהאזור הנייטרלי',
 			'tr': 'Yakıt nötr bölgeden ittifak bölgesine geçirildi veya itildi',
@@ -617,18 +618,23 @@ void _initAutoTabTranslations() {
 			'he': 'דלק עבר או נדחף לאזור הברית מהאזור הנייטרלי',
 			'tr': 'Yakıt nötr bölgeden ittifak bölgesine geçirildi veya itildi',
 			'zh_tw': '燃料從中立區傳遞或推送到聯盟區',
-			'fr': 'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
-			'pt': 'Combustível passado ou empurrado para a zona de aliança da zona neutra',
-			'es': 'Combustible pasado o empujado a la zona de alianza desde la zona neutral',
+			'fr':
+					'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
+			'pt':
+					'Combustível passado ou empurrado para a zona de aliança da zona neutra',
+			'es':
+					'Combustible pasado o empujado a la zona de alianza desde la zona neutral',
 		},
 		'auto_alliance_time': {
 			'en': 'Time spent in alliance zone during autonomous (seconds)',
 			'he': 'זמן שהייה באזור הברית במהלך אוטונומי (שניות)',
 			'tr': 'Otonom sırasında ittifak bölgesinde geçirilen süre (saniye)',
 			'zh_tw': '自主期間在聯盟區域度過的時間(秒)',
-			'fr': 'Temps passé dans la zone d\'alliance pendant l\'autonome (secondes)',
+			'fr':
+					'Temps passé dans la zone d\'alliance pendant l\'autonome (secondes)',
 			'pt': 'Tempo gasto na zona de aliança durante a autônoma (segundos)',
-			'es': 'Tiempo invertido en la zona de alianza durante autónomo (segundos)',
+			'es':
+					'Tiempo invertido en la zona de alianza durante autónomo (segundos)',
 		},
 		'auto_neutral_time': {
 			'en': 'Time spent in neutral zone during autonomous (seconds)',
@@ -742,14 +748,20 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
-		return AppLocalizations.translate(key, locale: locale, variables: variables);
+		return AppLocalizations.translate(
+			key,
+			locale: locale,
+			variables: variables,
+		);
 	}
 
 	/// Get team color based on bot position (red vs blue team)
 	Color _getTeamColor(String? botPosition) {
 		if (botPosition == null) return AppColors.blueTeamColor;
 		// Red team positions start with 'R', Blue with 'B'
-		return botPosition.startsWith('R') ? AppColors.redTeamColor : AppColors.blueTeamColor;
+		return botPosition.startsWith('R')
+				? AppColors.redTeamColor
+				: AppColors.blueTeamColor;
 	}
 
 	/// Get responsive font size based on screen width
@@ -821,8 +833,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		}
 	}
 
-	void _onFocusChanged() {
-	}
+	void _onFocusChanged() {}
 
 	@override
 	void dispose() {
@@ -834,7 +845,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 	@override
 	Widget build(BuildContext context) {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
-		final activeZone = ref.watch(scoutingDataProvider.select((data) => data.autoActiveZone));
+		final activeZone = ref.watch(scoutingDataProvider.notifier).activeZone;
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final climbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
@@ -848,40 +859,46 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 			showStartButton: widget.matchStartTime == null,
 			onMovementTapped: (field, action) {
 				_startMatchIfNeeded();
-				ref.read(scoutingDataProvider.notifier).recordAutoAction(
-					field: field,
-					value: 1,
-				);
+				ref
+						.read(scoutingDataProvider.notifier)
+						.recordAutoAction(field: field, value: 1);
 			},
 			onClimbToggled: () {
 				_startMatchIfNeeded();
 				if (climbLevel < 1) {
-					ref.read(scoutingDataProvider.notifier).recordAutoAction(
-						field: 'auto_climb_level',
-						value: climbLevel + 1,
-					);
+					ref
+							.read(scoutingDataProvider.notifier)
+							.recordAutoAction(
+								field: 'auto_climb_level',
+								value: climbLevel + 1,
+							);
 				}
 			},
 			onStartAutoTapped: () {
 				_startMatchIfNeeded();
 			},
-			activeFuelTarget: scoutingData.autoActiveFuelTarget,
+			activeFuelTarget: ref
+					.watch(scoutingDataProvider.notifier)
+					.activeFuelTarget,
 			onFuelTargetTapped: (targetName) {
-				ref.read(scoutingDataProvider.notifier).changeAutoFuelTarget(targetName);
+				ref
+						.read(scoutingDataProvider.notifier)
+						.changeAutoFuelTarget(targetName);
 			},
 			startAutoButtonLabel: _translate('start_auto_button'),
 			model: scoutingData,
 			onRecordAction: (field, value) {
 				_startMatchIfNeeded();
-				ref.read(scoutingDataProvider.notifier).recordAutoAction(
-					field: field,
-					value: value,
-				);
+				ref
+						.read(scoutingDataProvider.notifier)
+						.recordAutoAction(field: field, value: value);
 			},
 		);
 
 		// Now access field values (buttons are registered)
-		final activeFuelTarget = scoutingData.autoActiveFuelTarget;
+		final activeFuelTarget = ref
+				.watch(scoutingDataProvider.notifier)
+				.activeFuelTarget;
 
 		final teamColor = _getTeamColor(botPosition);
 
@@ -892,150 +909,171 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 				child: Column(
 					crossAxisAlignment: CrossAxisAlignment.stretch,
 					children: [
-					// Field Overlay with all integrated controls
-					// (movement buttons, fuel overlays, zone toggles, climb selector)
-					Padding(
-						padding: const EdgeInsets.symmetric(horizontal: 16),
-						child: fieldOverlay,
-					),
+						// Field Overlay with all integrated controls
+						// (movement buttons, fuel overlays, zone toggles, climb selector)
+						Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 16),
+							child: fieldOverlay,
+						),
 
-				const SizedBox(height: 16),
+						const SizedBox(height: 16),
 
-				// Two-column layout: fuel and info
-				Padding(
-					padding: const EdgeInsets.symmetric(horizontal: 16),
-					child: Row(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: [
-					// LEFT COLUMN: Fuel and Table Toggles
-					Expanded(
-					flex: 3,
-					child: Column(
-						crossAxisAlignment: CrossAxisAlignment.center,
-							children: [
-								// Fuel buttons row
-								Row(
-								mainAxisAlignment: MainAxisAlignment.center,
-									children: [
-										_buildFuelButton('1', 1, activeFuelTarget, ref),
-										const SizedBox(width: 8),
-										_buildFuelButton('5', 5, activeFuelTarget, ref),
-										const SizedBox(width: 8),
-										_buildFuelButton('10', 10, activeFuelTarget, ref),
-									],
-								),
-								const SizedBox(height: 8),
-								const SizedBox(height: 8),
-								// Max fuel display and toggle buttons row
-								Row(
-								mainAxisAlignment: MainAxisAlignment.center,
-									children: [
-										_buildMaxFuelDisplay(ref),
-										TextButton(
-											onPressed: () {
-												setState(() => _valuesExpanded = !_valuesExpanded);
-											},
-											child: Text('${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}'),
+						// Two-column layout: fuel and info
+						Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 16),
+							child: Row(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									// LEFT COLUMN: Fuel and Table Toggles
+									Expanded(
+										flex: 3,
+										child: Column(
+											crossAxisAlignment: CrossAxisAlignment.center,
+											children: [
+												// Fuel buttons row
+												Row(
+													mainAxisAlignment: MainAxisAlignment.center,
+													children: [
+														_buildFuelButton('1', 1, activeFuelTarget, ref),
+														const SizedBox(width: 8),
+														_buildFuelButton('5', 5, activeFuelTarget, ref),
+														const SizedBox(width: 8),
+														_buildFuelButton('10', 10, activeFuelTarget, ref),
+													],
+												),
+												const SizedBox(height: 8),
+												const SizedBox(height: 8),
+												// Max fuel display and toggle buttons row
+												Row(
+													mainAxisAlignment: MainAxisAlignment.center,
+													children: [
+														_buildMaxFuelDisplay(ref),
+														TextButton(
+															onPressed: () {
+																setState(
+																	() => _valuesExpanded = !_valuesExpanded,
+																);
+															},
+															child: Text(
+																'${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}',
+															),
+														),
+														const SizedBox(width: 8),
+														TextButton(
+															onPressed: () {
+																setState(
+																	() => _timelineExpanded = !_timelineExpanded,
+																);
+															},
+															child: Text(
+																'${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}',
+															),
+														),
+													],
+												),
+											],
 										),
-										const SizedBox(width: 8),
-										TextButton(
-											onPressed: () {
-												setState(() => _timelineExpanded = !_timelineExpanded);
-											},
-											child: Text('${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}'),
-										),
-									],
-								),
-								const SizedBox(height: 12),
-								// Values Table (readonly counters)
-								if (_valuesExpanded) ...[
-									const AutoValuesTable(
-										key: ValueKey('auto_values_table'),
 									),
-									const SizedBox(height: 12),
+									const SizedBox(width: 16),
+									// RIGHT COLUMN: Info Section (vertically stacked)
+									Expanded(
+										flex: 1,
+										child: Column(
+											crossAxisAlignment: CrossAxisAlignment.stretch,
+											children: [
+												// Undo button (always enabled to undo either timeline events or timer start)
+												FilledButton(
+													style: FilledButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														padding: const EdgeInsets.symmetric(
+															vertical: 12,
+															horizontal: 16,
+														),
+														shape: RoundedRectangleBorder(
+															borderRadius: BorderRadius.circular(8),
+														),
+													),
+													onPressed: () {
+														undoLastAction(ref);
+													},
+													child: Text(
+														_translate('undo'),
+														style: TextStyle(
+															fontSize: _getResponsiveFontSize(12),
+														),
+													),
+												),
+												const SizedBox(height: 8),
+												// Robot/Team indicator - team color background with contrasting text
+												Container(
+													padding: const EdgeInsets.symmetric(
+														vertical: 10,
+														horizontal: 12,
+													),
+													decoration: BoxDecoration(
+														color: teamColor,
+														borderRadius: BorderRadius.circular(4),
+													),
+													child: Center(
+														child: Text(
+															'$botPosition ${widget.teamNumber ?? ''}',
+															style: TextStyle(
+																fontSize: _getResponsiveFontSize(12),
+																fontWeight: FontWeight.bold,
+																color: AppColors.mainFgColor,
+															),
+														),
+													),
+												),
+												const SizedBox(height: 8),
+												// Tele button
+												FilledButton(
+													style: FilledButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														padding: const EdgeInsets.symmetric(
+															vertical: 12,
+															horizontal: 16,
+														),
+														shape: RoundedRectangleBorder(
+															borderRadius: BorderRadius.circular(8),
+														),
+													),
+													onPressed: () {},
+													child: Text(
+														_translate('proceed_tele_button'),
+														style: TextStyle(
+															fontSize: _getResponsiveFontSize(12),
+														),
+													),
+												),
+											],
+										),
+									),
 								],
-								// Timeline Table
-								if (_timelineExpanded)
-									TimelineTable(
-										key: const ValueKey('auto_timeline_table'),
-										events: ref.watch(timelineProvider),
-									),
-							],
+							),
 						),
-					),
-					const SizedBox(width: 16),
-					// RIGHT COLUMN: Info Section (vertically stacked)
-					Expanded(
-						flex: 1,
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.stretch,
-							children: [
-								// Undo button (always enabled to undo either timeline events or timer start)
-								FilledButton(
-									style: FilledButton.styleFrom(
-										backgroundColor: AppColors.buttonBgColor,
-										foregroundColor: AppColors.buttonFgColor,
-										padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-										shape: RoundedRectangleBorder(
-											borderRadius: BorderRadius.circular(8),
-										),
-									),
-									onPressed: () {
-										undoLastAction(ref);
-									},
-									child: Text(
-										_translate('undo'),
-										style: TextStyle(fontSize: _getResponsiveFontSize(12)),
-									),
-								),
-								const SizedBox(height: 8),
-								// Robot/Team indicator - team color background with contrasting text
-								Container(
-									padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-									decoration: BoxDecoration(
-										color: teamColor,
-										borderRadius: BorderRadius.circular(4),
-									),
-									child: Center(
-										child: Text(
-											'$botPosition ${widget.teamNumber ?? ''}',
-											style: TextStyle(
-												fontSize: _getResponsiveFontSize(12),
-												fontWeight: FontWeight.bold,
-												color: AppColors.mainFgColor,
-											),
-										),
-									),
-								),
-								const SizedBox(height: 8),
-								// Tele button
-								FilledButton(
-									style: FilledButton.styleFrom(
-										backgroundColor: AppColors.buttonBgColor,
-										foregroundColor: AppColors.buttonFgColor,
-										padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-										shape: RoundedRectangleBorder(
-											borderRadius: BorderRadius.circular(8),
-										),
-									),
-									onPressed: () {},
-									child: Text(
-										_translate('proceed_tele_button'),
-										style: TextStyle(fontSize: _getResponsiveFontSize(12)),
-									),
-								),
-							],
-						),
-					),
-				],
-			),
-		),
 
-		const SizedBox(height: 16),
-		],
-		),
-		),
-	);
+						// Values Table (readonly counters)
+						if (_valuesExpanded)
+							ValuesTable(
+								key: const ValueKey('auto_values_table'),
+								fieldSelector: (d) => d.autoValuesTableDescription,
+							),
+
+						// Timeline Table
+						if (_timelineExpanded)
+							TimelineTable(
+								key: const ValueKey('auto_timeline_table'),
+								events: ref.watch(timelineProvider),
+							),
+
+						const SizedBox(height: 16),
+					],
+				),
+			),
+		);
 	}
 
 	/// Build a fuel quick-add button
@@ -1055,13 +1093,12 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 
 					// Use the correct fuel counter based on active target
 					final fuelField = activeFuelTarget == 'hub'
-						? 'auto_fuel_score'
-						: 'auto_fuel_neutral_alliance_pass';
+							? 'auto_fuel_score'
+							: 'auto_fuel_neutral_alliance_pass';
 
-					ref.read(scoutingDataProvider.notifier).recordAutoAction(
-						field: fuelField,
-						value: amount,
-					);
+					ref
+							.read(scoutingDataProvider.notifier)
+							.recordAutoAction(field: fuelField, value: amount);
 				},
 				style: ElevatedButton.styleFrom(
 					backgroundColor: const Color(0xFFF1CE03),
@@ -1084,33 +1121,37 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 
 	/// Build max fuel display widget from pit scouting data
 	Widget _buildMaxFuelDisplay(WidgetRef ref) {
-		return ref.watch(pitScoutingDataProvider).when(
-			data: (pitData) {
-				final teamNumber = widget.teamNumber;
-				if (teamNumber == null) {
-					return const SizedBox.shrink();
-				}
+		return ref
+				.watch(pitScoutingDataProvider)
+				.when(
+					data: (pitData) {
+						final teamNumber = widget.teamNumber;
+						if (teamNumber == null) {
+							return const SizedBox.shrink();
+						}
 
-				final teamData = pitData[teamNumber] as Map<String, dynamic>?;
-				final fuelCapacity = int.tryParse((teamData?['fuel_capacity'] ?? '0').toString()) ?? 0;
+						final teamData = pitData[teamNumber] as Map<String, dynamic>?;
+						final fuelCapacity =
+								int.tryParse((teamData?['fuel_capacity'] ?? '0').toString()) ??
+								0;
 
-				if (fuelCapacity <= 0) {
-					return const SizedBox.shrink();
-				}
+						if (fuelCapacity <= 0) {
+							return const SizedBox.shrink();
+						}
 
-				return Padding(
-					padding: const EdgeInsets.only(right: 8),
-					child: Text(
-						'${_translate('fuel_capacity_label')} $fuelCapacity',
-						style: TextStyle(
-							fontSize: _getResponsiveFontSize(12),
-							fontWeight: FontWeight.w500,
-						),
-					),
+						return Padding(
+							padding: const EdgeInsets.only(right: 8),
+							child: Text(
+								'${_translate('fuel_capacity_label')} $fuelCapacity',
+								style: TextStyle(
+									fontSize: _getResponsiveFontSize(12),
+									fontWeight: FontWeight.w500,
+								),
+							),
+						);
+					},
+					loading: () => const SizedBox.shrink(),
+					error: (_, __) => const SizedBox.shrink(),
 				);
-			},
-			loading: () => const SizedBox.shrink(),
-			error: (_, __) => const SizedBox.shrink(),
-		);
 	}
 }

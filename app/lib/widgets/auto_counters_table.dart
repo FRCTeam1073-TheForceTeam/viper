@@ -5,15 +5,15 @@ import '../providers/scouting_data_provider.dart';
 import '../models/field_descriptor.dart';
 
 /// Widget that displays all movement counters in a collapsible table
-/// Loops through descriptors with autoCountersTableHeading to build rows
-class AutoCountersTable extends ConsumerStatefulWidget {
-	const AutoCountersTable({Key? key}) : super(key: key);
+/// Loops through descriptors with autoValuesTableDescription to build rows
+class AutoValuesTable extends ConsumerStatefulWidget {
+	const AutoValuesTable({Key? key}) : super(key: key);
 
 	@override
-	ConsumerState<AutoCountersTable> createState() => _AutoCountersTableState();
+	ConsumerState<AutoValuesTable> createState() => _AutoValuesTableState();
 }
 
-class _AutoCountersTableState extends ConsumerState<AutoCountersTable> {
+class _AutoValuesTableState extends ConsumerState<AutoValuesTable> {
 	bool _expanded = false;
 
 	String _translate(String key) {
@@ -25,15 +25,15 @@ class _AutoCountersTableState extends ConsumerState<AutoCountersTable> {
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final teamColor = Colors.blue.shade700;
 
-		// Get all descriptors with autoCountersTableHeading
+		// Get all descriptors with autoValuesTableDescription
 		final counterDescriptors = scoutingData.descriptors
-			.where((d) => d.autoCountersTableHeading != null)
+			.where((d) => d.autoValuesTableDescription != null)
 			.toList();
 
 		// Group by heading, maintaining order of first appearance
 		final groupedByHeading = <String, List<FieldDescriptor>>{};
 		for (final desc in counterDescriptors) {
-			final heading = desc.autoCountersTableHeading!;
+			final heading = desc.autoValuesTableDescription!;
 			groupedByHeading.putIfAbsent(heading, () => []).add(desc);
 		}
 

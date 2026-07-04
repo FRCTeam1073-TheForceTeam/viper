@@ -10,7 +10,7 @@ import '../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
 import '../../services/localization.dart';
 import '../../widgets/tele_field_overlay.dart';
-import '../../widgets/tele_values_table.dart';
+import '../../widgets/values_table.dart';
 import '../../widgets/timeline_table.dart';
 import '../../models/field_button.dart';
 
@@ -427,34 +427,46 @@ void _initTeleTabTranslations() {
 			'he': 'דלק עבר או נדחף לאזור הברית מהאזור הנייטרלי',
 			'tr': 'Yakıt nötr bölgeden ittifak bölgesine geçirildi veya itildi',
 			'zh_tw': '燃料從中立區傳遞或推送到聯盟區',
-			'fr': 'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
-			'pt': 'Combustível passado ou empurrado para a zona de aliança da zona neutra',
-			'es': 'Combustible pasado o empujado a la zona de alianza desde la zona neutral',
+			'fr':
+					'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
+			'pt':
+					'Combustível passado ou empurrado para a zona de aliança da zona neutra',
+			'es':
+					'Combustible pasado o empujado a la zona de alianza desde la zona neutral',
 		},
 		'tele_fuel_opponent_neutral_pass': {
-			'en': 'Fuel passed or pushed to the neutral zone from the opponent\'s zone',
+			'en':
+					'Fuel passed or pushed to the neutral zone from the opponent\'s zone',
 			'he': 'דלק עבר או נדחף לאזור הנייטרלי מהאזור של היריב',
 			'tr': 'Yakıt rakibin bölgesinden nötr bölgeye geçirildi veya itildi',
 			'zh_tw': '燃料從對手的區域傳遞或推送到中立區',
-			'fr': 'Carburant passé ou poussé vers la zone neutre à partir de la zone adverse',
-			'pt': 'Combustível passado ou empurrado para a zona neutra da zona do oponente',
-			'es': 'Combustible pasado o empujado a la zona neutral desde la zona del oponente',
+			'fr':
+					'Carburant passé ou poussé vers la zone neutre à partir de la zone adverse',
+			'pt':
+					'Combustível passado ou empurrado para a zona neutra da zona do oponente',
+			'es':
+					'Combustible pasado o empujado a la zona neutral desde la zona del oponente',
 		},
 		'tele_fuel_opponent_alliance_pass': {
-			'en': 'Fuel passed or pushed to the alliance zone from the opponent\'s zone',
+			'en':
+					'Fuel passed or pushed to the alliance zone from the opponent\'s zone',
 			'he': 'דלק עבר או נדחף לאזור הברית מהאזור של היריב',
 			'tr': 'Yakıt rakibin bölgesinden ittifak bölgesine geçirildi veya itildi',
 			'zh_tw': '燃料從對手的區域傳遞或推送到聯盟區',
-			'fr': 'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone adverse',
-			'pt': 'Combustível passado ou empurrado para a zona de aliança da zona do oponente',
-			'es': 'Combustible pasado o empujado a la zona de alianza desde la zona del oponente',
+			'fr':
+					'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone adverse',
+			'pt':
+					'Combustível passado ou empurrado para a zona de aliança da zona do oponente',
+			'es':
+					'Combustible pasado o empujado a la zona de alianza desde la zona del oponente',
 		},
 		'tele_alliance_time': {
 			'en': 'Time spent in alliance zone during teleop (seconds)',
 			'he': 'זמן שהייה באזור הברית במהלך teleop (שניות)',
 			'tr': 'Teleop sırasında ittifak bölgesinde geçirilen süre (saniye)',
 			'zh_tw': '遠程操作期間在聯盟區域度過的時間(秒)',
-			'fr': 'Temps passé dans la zone d\'alliance pendant le téléopération (secondes)',
+			'fr':
+					'Temps passé dans la zone d\'alliance pendant le téléopération (secondes)',
 			'pt': 'Tempo gasto na zona de aliança durante o teleop (segundos)',
 			'es': 'Tiempo invertido en la zona de alianza durante teleop (segundos)',
 		},
@@ -463,7 +475,8 @@ void _initTeleTabTranslations() {
 			'he': 'זמן שהייה באזור הנייטרלי במהלך teleop (שניות)',
 			'tr': 'Teleop sırasında nötr bölgede geçirilen süre (saniye)',
 			'zh_tw': '遠程操作期間在中立區域度過的時間(秒)',
-			'fr': 'Temps passé dans la zone neutre pendant le téléopération (secondes)',
+			'fr':
+					'Temps passé dans la zone neutre pendant le téléopération (secondes)',
 			'pt': 'Tempo gasto na zona neutra durante o teleop (segundos)',
 			'es': 'Tiempo invertido en la zona neutral durante teleop (segundos)',
 		},
@@ -472,9 +485,11 @@ void _initTeleTabTranslations() {
 			'he': 'זמן שהייה באזור של היריב במהלך teleop (שניות)',
 			'tr': 'Teleop sırasında rakip bölgesinde geçirilen süre (saniye)',
 			'zh_tw': '遠程操作期間在對手區域度過的時間(秒)',
-			'fr': 'Temps passé dans la zone adverse pendant le téléopération (secondes)',
+			'fr':
+					'Temps passé dans la zone adverse pendant le téléopération (secondes)',
 			'pt': 'Tempo gasto na zona do oponente durante o teleop (segundos)',
-			'es': 'Tiempo invertido en la zona del oponente durante teleop (segundos)',
+			'es':
+					'Tiempo invertido en la zona del oponente durante teleop (segundos)',
 		},
 
 		// Tele zone change field translations (values table)
@@ -649,13 +664,19 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 
 	String _translate(String key, {Map<String, String>? variables}) {
 		final locale = ref.read(selectedLocaleProvider);
-		return AppLocalizations.translate(key, locale: locale, variables: variables);
+		return AppLocalizations.translate(
+			key,
+			locale: locale,
+			variables: variables,
+		);
 	}
 
 	/// Get team color based on bot position
 	Color _getTeamColor(String? botPosition) {
 		if (botPosition == null) return AppColors.blueTeamColor;
-		return botPosition.startsWith('R') ? AppColors.redTeamColor : AppColors.blueTeamColor;
+		return botPosition.startsWith('R')
+				? AppColors.redTeamColor
+				: AppColors.blueTeamColor;
 	}
 
 	/// Get responsive font size based on screen width
@@ -708,8 +729,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		}
 	}
 
-	void _onFocusChanged() {
-	}
+	void _onFocusChanged() {}
 
 	@override
 	void dispose() {
@@ -731,8 +751,6 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		}
 	}
 
-
-
 	@override
 	Widget build(BuildContext context) {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
@@ -742,42 +760,59 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		// Instantiate overlay early so buttons register their descriptors
 		final fieldOverlay = TeleFieldOverlay(
 			fieldSide: fieldSide,
-			activeZone: scoutingData.teleActiveZone,
+			activeZone: ref.watch(scoutingDataProvider.notifier).activeZone,
 			climbLevel: scoutingData.getFieldValue('tele_climb_level').asInt(),
 			botPosition: botPosition,
-			activeFuelTarget: scoutingData.teleActiveFuelTarget,
+			activeFuelTarget: ref
+					.watch(scoutingDataProvider.notifier)
+					.activeFuelTarget,
 			onMovementTapped: (field, action) {
 				_startMatchIfNeeded();
-				ref.read(scoutingDataProvider.notifier).recordTeleAction(
-					field: field,
-					value: 1,
-				);
+				ref
+						.read(scoutingDataProvider.notifier)
+						.recordTeleAction(field: field, value: 1);
 			},
 			onClimbTapped: () {
 				_startMatchIfNeeded();
-				final currentClimbLevel = scoutingData.getFieldValue('tele_climb_level').asInt();
+				final currentClimbLevel = scoutingData
+						.getFieldValue('tele_climb_level')
+						.asInt();
 				if (currentClimbLevel < 3) {
-					ref.read(scoutingDataProvider.notifier).recordTeleAction(
-						field: 'tele_climb_level',
-						value: currentClimbLevel + 1,
-					);
+					ref
+							.read(scoutingDataProvider.notifier)
+							.recordTeleAction(
+								field: 'tele_climb_level',
+								value: currentClimbLevel + 1,
+							);
 				}
 			},
 			onFuelTargetTapped: (targetName) {
-				ref.read(scoutingDataProvider.notifier).changeTeleFuelTarget(targetName);
+				ref
+						.read(scoutingDataProvider.notifier)
+						.changeTeleFuelTarget(targetName);
 			},
 		);
 
 		// Now access field values (buttons are registered)
 		final teleState = (
-			activeZone: scoutingData.teleActiveZone,
-			activeFuelTarget: scoutingData.teleActiveFuelTarget,
+			activeZone: ref.watch(scoutingDataProvider.notifier).activeZone,
+			activeFuelTarget: ref
+					.watch(scoutingDataProvider.notifier)
+					.activeFuelTarget,
 			fuelScore: scoutingData.getFieldValue('tele_fuel_score').asInt(),
-			fuelAllianceDump: scoutingData.getFieldValue('tele_fuel_alliance_dump').asInt(),
+			fuelAllianceDump: scoutingData
+					.getFieldValue('tele_fuel_alliance_dump')
+					.asInt(),
 			fuelOutpost: scoutingData.getFieldValue('tele_fuel_outpost').asInt(),
-			fuelNeutralAlliancePass: scoutingData.getFieldValue('tele_fuel_neutral_alliance_pass').asInt(),
-			fuelOpponentNeutralPass: scoutingData.getFieldValue('tele_fuel_opponent_neutral_pass').asInt(),
-			fuelOpponentAlliancePass: scoutingData.getFieldValue('tele_fuel_opponent_alliance_pass').asInt(),
+			fuelNeutralAlliancePass: scoutingData
+					.getFieldValue('tele_fuel_neutral_alliance_pass')
+					.asInt(),
+			fuelOpponentNeutralPass: scoutingData
+					.getFieldValue('tele_fuel_opponent_neutral_pass')
+					.asInt(),
+			fuelOpponentAlliancePass: scoutingData
+					.getFieldValue('tele_fuel_opponent_alliance_pass')
+					.asInt(),
 			allianceTime: scoutingData.getFieldValue('tele_alliance_time').asInt(),
 			neutralTime: scoutingData.getFieldValue('tele_neutral_time').asInt(),
 			opponentTime: scoutingData.getFieldValue('tele_opponent_time').asInt(),
@@ -790,147 +825,167 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			child: SingleChildScrollView(
 				padding: const EdgeInsets.symmetric(vertical: 8),
 				child: Column(
-				crossAxisAlignment: CrossAxisAlignment.stretch,
-				children: [
-					// Field Overlay
-					Padding(
-						padding: const EdgeInsets.symmetric(horizontal: 16),
-						child: fieldOverlay,
-					),
+					crossAxisAlignment: CrossAxisAlignment.stretch,
+					children: [
+						// Field Overlay
+						Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 16),
+							child: fieldOverlay,
+						),
 
-					const SizedBox(height: 16),
+						const SizedBox(height: 16),
 
-					// Two-column layout: fuel and info
-					Padding(
-						padding: const EdgeInsets.symmetric(horizontal: 16),
-						child: Row(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: [
-								// LEFT COLUMN: Fuel and Tables
-								Expanded(
-									flex: 3,
-									child: Column(
-										crossAxisAlignment: CrossAxisAlignment.center,
-										children: [
-											// Fuel buttons row
-											Row(
-												mainAxisAlignment: MainAxisAlignment.center,
-												children: [
-													_buildFuelButton('1', 1, teleState, ref),
-													const SizedBox(width: 8),
-													_buildFuelButton('5', 5, teleState, ref),
-													const SizedBox(width: 8),
-													_buildFuelButton('10', 10, teleState, ref),
-												],
-											),
-											const SizedBox(height: 8),
-											// Max fuel display and toggle buttons row
-											Row(
-												mainAxisAlignment: MainAxisAlignment.center,
-												children: [
-													_buildMaxFuelDisplay(ref),
-													TextButton(
-														onPressed: () {
-															setState(() => _valuesExpanded = !_valuesExpanded);
-														},
-														child: Text('${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}'),
-													),
-													const SizedBox(width: 8),
-													TextButton(
-														onPressed: () {
-															setState(() => _timelineExpanded = !_timelineExpanded);
-														},
-														child: Text('${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}'),
-													),
-												],
-											),
-											const SizedBox(height: 12),
-											if (_valuesExpanded) ...[
-												TeleValuesTable(
-													key: const ValueKey('tele_values_table')
+						// Two-column layout: fuel and info
+						Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 16),
+							child: Row(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									// LEFT COLUMN: Fuel and Tables
+									Expanded(
+										flex: 3,
+										child: Column(
+											crossAxisAlignment: CrossAxisAlignment.center,
+											children: [
+												// Fuel buttons row
+												Row(
+													mainAxisAlignment: MainAxisAlignment.center,
+													children: [
+														_buildFuelButton('1', 1, teleState, ref),
+														const SizedBox(width: 8),
+														_buildFuelButton('5', 5, teleState, ref),
+														const SizedBox(width: 8),
+														_buildFuelButton('10', 10, teleState, ref),
+													],
 												),
-												const SizedBox(height: 12),
+												const SizedBox(height: 8),
+												// Max fuel display and toggle buttons row
+												Row(
+													mainAxisAlignment: MainAxisAlignment.center,
+													children: [
+														_buildMaxFuelDisplay(ref),
+														TextButton(
+															onPressed: () {
+																setState(
+																	() => _valuesExpanded = !_valuesExpanded,
+																);
+															},
+															child: Text(
+																'${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}',
+															),
+														),
+														const SizedBox(width: 8),
+														TextButton(
+															onPressed: () {
+																setState(
+																	() => _timelineExpanded = !_timelineExpanded,
+																);
+															},
+															child: Text(
+																'${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}',
+															),
+														),
+													],
+												),
 											],
-											// Timeline Table
-											if (_timelineExpanded)
-												TimelineTable(
-													key: const ValueKey('tele_timeline_table'),
-													events: ref.watch(timelineProvider),
-												),
-										],
+										),
 									),
-								),
-								const SizedBox(width: 16),
-								// RIGHT COLUMN: Info
-								Expanded(
-									flex: 1,
-									child: Column(
-										crossAxisAlignment: CrossAxisAlignment.stretch,
-										children: [
-											// Undo button (always enabled to undo either timeline events or timer start)
-											FilledButton(
-												style: FilledButton.styleFrom(
-													backgroundColor: AppColors.buttonBgColor,
-													foregroundColor: AppColors.buttonFgColor,
-													padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-													shape: RoundedRectangleBorder(
-														borderRadius: BorderRadius.circular(8),
+									const SizedBox(width: 16),
+									// RIGHT COLUMN: Info
+									Expanded(
+										flex: 1,
+										child: Column(
+											crossAxisAlignment: CrossAxisAlignment.stretch,
+											children: [
+												// Undo button (always enabled to undo either timeline events or timer start)
+												FilledButton(
+													style: FilledButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														padding: const EdgeInsets.symmetric(
+															vertical: 12,
+															horizontal: 16,
+														),
+														shape: RoundedRectangleBorder(
+															borderRadius: BorderRadius.circular(8),
+														),
 													),
-												),
-												onPressed: () {
-													undoLastAction(ref);
-												},
-												child: Text(
-													_translate('undo'),
-													style: TextStyle(fontSize: _getResponsiveFontSize(12)),
-												),
-											),
-											const SizedBox(height: 8),
-											// Robot indicator
-											Container(
-												padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-												decoration: BoxDecoration(
-													color: teamColor,
-													borderRadius: BorderRadius.circular(4),
-												),
-												child: Center(
+													onPressed: () {
+														undoLastAction(ref);
+													},
 													child: Text(
-														'$botPosition ${widget.teamNumber ?? ''}',
+														_translate('undo'),
 														style: TextStyle(
 															fontSize: _getResponsiveFontSize(12),
-															fontWeight: FontWeight.bold,
-															color: AppColors.mainFgColor,
 														),
 													),
 												),
-											),
-											const SizedBox(height: 8),
-											// End game button
-											FilledButton(
-												style: FilledButton.styleFrom(
-													backgroundColor: AppColors.buttonBgColor,
-													foregroundColor: AppColors.buttonFgColor,
-													padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-													shape: RoundedRectangleBorder(
-														borderRadius: BorderRadius.circular(8),
+												const SizedBox(height: 8),
+												// Robot indicator
+												Container(
+													padding: const EdgeInsets.symmetric(
+														vertical: 10,
+														horizontal: 12,
+													),
+													decoration: BoxDecoration(
+														color: teamColor,
+														borderRadius: BorderRadius.circular(4),
+													),
+													child: Center(
+														child: Text(
+															'$botPosition ${widget.teamNumber ?? ''}',
+															style: TextStyle(
+																fontSize: _getResponsiveFontSize(12),
+																fontWeight: FontWeight.bold,
+																color: AppColors.mainFgColor,
+															),
+														),
 													),
 												),
-												onPressed: () {},
-												child: Text(
-													'End Game »',
-													style: TextStyle(fontSize: _getResponsiveFontSize(12)),
+												const SizedBox(height: 8),
+												// End game button
+												FilledButton(
+													style: FilledButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														padding: const EdgeInsets.symmetric(
+															vertical: 12,
+															horizontal: 16,
+														),
+														shape: RoundedRectangleBorder(
+															borderRadius: BorderRadius.circular(8),
+														),
+													),
+													onPressed: () {},
+													child: Text(
+														'End Game »',
+														style: TextStyle(
+															fontSize: _getResponsiveFontSize(12),
+														),
+													),
 												),
-											),
-										],
+											],
+										),
 									),
-								),
-							],
+								],
+							),
 						),
-					),
 
-					const SizedBox(height: 16),
-				],
-			),
+						// Values Table (readonly counters)
+						if (_valuesExpanded)
+							ValuesTable(
+								key: const ValueKey('tele_values_table'),
+								fieldSelector: (d) => d.teleValuesTableDescription,
+							),
+
+						// Timeline Table
+						if (_timelineExpanded)
+							TimelineTable(
+								key: const ValueKey('tele_timeline_table'),
+								events: ref.watch(timelineProvider),
+							),
+					],
+				),
 			),
 		);
 	}
@@ -968,10 +1023,9 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			child: ElevatedButton(
 				onPressed: () {
 					_startMatchIfNeeded();
-					ref.read(scoutingDataProvider.notifier).recordTeleAction(
-						field: getFuelField(),
-						value: amount,
-					);
+					ref
+							.read(scoutingDataProvider.notifier)
+							.recordTeleAction(field: getFuelField(), value: amount);
 				},
 				style: ElevatedButton.styleFrom(
 					backgroundColor: const Color(0xFFF1CE03),
@@ -994,33 +1048,37 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 
 	/// Build max fuel display widget
 	Widget _buildMaxFuelDisplay(WidgetRef ref) {
-		return ref.watch(pitScoutingDataProvider).when(
-			data: (pitData) {
-				final teamNumber = widget.teamNumber;
-				if (teamNumber == null) {
-					return const SizedBox.shrink();
-				}
+		return ref
+				.watch(pitScoutingDataProvider)
+				.when(
+					data: (pitData) {
+						final teamNumber = widget.teamNumber;
+						if (teamNumber == null) {
+							return const SizedBox.shrink();
+						}
 
-				final teamData = pitData[teamNumber] as Map<String, dynamic>?;
-				final fuelCapacity = int.tryParse((teamData?['fuel_capacity'] ?? '0').toString()) ?? 0;
+						final teamData = pitData[teamNumber] as Map<String, dynamic>?;
+						final fuelCapacity =
+								int.tryParse((teamData?['fuel_capacity'] ?? '0').toString()) ??
+								0;
 
-				if (fuelCapacity <= 0) {
-					return const SizedBox.shrink();
-				}
+						if (fuelCapacity <= 0) {
+							return const SizedBox.shrink();
+						}
 
-				return Padding(
-					padding: const EdgeInsets.only(right: 8),
-					child: Text(
-						'${_translate('fuel_capacity_label')} $fuelCapacity',
-						style: TextStyle(
-							fontSize: _getResponsiveFontSize(12),
-							fontWeight: FontWeight.w500,
-						),
-					),
+						return Padding(
+							padding: const EdgeInsets.only(right: 8),
+							child: Text(
+								'${_translate('fuel_capacity_label')} $fuelCapacity',
+								style: TextStyle(
+									fontSize: _getResponsiveFontSize(12),
+									fontWeight: FontWeight.w500,
+								),
+							),
+						);
+					},
+					loading: () => const SizedBox.shrink(),
+					error: (_, __) => const SizedBox.shrink(),
 				);
-			},
-			loading: () => const SizedBox.shrink(),
-			error: (_, __) => const SizedBox.shrink(),
-		);
 	}
 }

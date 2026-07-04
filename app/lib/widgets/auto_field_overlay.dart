@@ -23,7 +23,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_trench_depot_alliance_to_neutral',
-			autoCountersTableDescription: 'trench_depot_alliance_to_neutral',
+			autoValuesTableDescription: 'trench_depot_alliance_to_neutral',
 		),
 	),
 	FieldButton(
@@ -37,7 +37,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_bump_depot_alliance_to_neutral',
-			autoCountersTableDescription: 'bump_depot_alliance_to_neutral',
+			autoValuesTableDescription: 'bump_depot_alliance_to_neutral',
 		),
 	),
 	FieldButton(
@@ -51,7 +51,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_bump_outpost_alliance_to_neutral',
-			autoCountersTableDescription: 'bump_outpost_alliance_to_neutral',
+			autoValuesTableDescription: 'bump_outpost_alliance_to_neutral',
 		),
 	),
 	FieldButton(
@@ -65,7 +65,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_trench_outpost_alliance_to_neutral',
-			autoCountersTableDescription: 'trench_outpost_alliance_to_neutral',
+			autoValuesTableDescription: 'trench_outpost_alliance_to_neutral',
 		),
 	),
 
@@ -81,7 +81,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_trench_depot_neutral_to_alliance',
-			autoCountersTableDescription: 'trench_depot_neutral_to_alliance',
+			autoValuesTableDescription: 'trench_depot_neutral_to_alliance',
 		),
 	),
 	FieldButton(
@@ -95,7 +95,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_bump_depot_neutral_to_alliance',
-			autoCountersTableDescription: 'bump_depot_neutral_to_alliance',
+			autoValuesTableDescription: 'bump_depot_neutral_to_alliance',
 		),
 	),
 	FieldButton(
@@ -109,7 +109,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_bump_outpost_neutral_to_alliance',
-			autoCountersTableDescription: 'bump_outpost_neutral_to_alliance',
+			autoValuesTableDescription: 'bump_outpost_neutral_to_alliance',
 		),
 	),
 	FieldButton(
@@ -123,7 +123,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		aspectRatio: 1.0,
 		descriptor: FieldDescriptor(
 			name: 'auto_trench_outpost_neutral_to_alliance',
-			autoCountersTableDescription: 'trench_outpost_neutral_to_alliance',
+			autoValuesTableDescription: 'trench_outpost_neutral_to_alliance',
 		),
 	),
 ];

@@ -4,33 +4,25 @@ import '../services/localization.dart';
 import '../providers/scouting_data_provider.dart';
 import '../models/field_descriptor.dart';
 
-/// A table showing readonly counter values for the auto period
-/// Displays 12 counters in simple 2-column layout: Count | Description
-class AutoValuesTable extends ConsumerWidget {
-	const AutoValuesTable({super.key});
+/// A generic table showing readonly counter values
+/// Displays counters in simple 2-column layout: Count | Description
+class ValuesTable extends ConsumerWidget {
+	final String? Function(FieldDescriptor) fieldSelector;
+
+	const ValuesTable({
+		required this.fieldSelector,
+		super.key,
+	});
 
 	String _translate(String key) {
 		return AppLocalizations.translate(key, variables: {});
 	}
 
-
-	/// Build all rows: header plus rows grouped by autoValuesTableHeading
+	/// Build all rows: header plus flat data rows
 	List<TableRow> _buildRows(ScoutingData scoutingData) {
 		final displayFields = scoutingData.descriptors
-			.where((d) => d.autoValuesTableHeading != null || d.autoCountersTableDescription != null)
+			.where((d) => fieldSelector(d) != null)
 			.toList();
-
-		// Group by heading (only fields with autoValuesTableHeading)
-		final groupedByHeading = <String, List<FieldDescriptor>>{};
-		final descriptionFields = <FieldDescriptor>[];
-
-		for (final desc in displayFields) {
-			if (desc.autoValuesTableHeading != null) {
-				groupedByHeading.putIfAbsent(desc.autoValuesTableHeading!, () => []).add(desc);
-			} else if (desc.autoCountersTableDescription != null) {
-				descriptionFields.add(desc);
-			}
-		}
 
 		return [
 			// Header row
@@ -63,16 +55,8 @@ class AutoValuesTable extends ConsumerWidget {
 					),
 				],
 			),
-			// Data rows grouped by heading
-			...groupedByHeading.entries.expand((entry) {
-				final descriptors = entry.value;
-				return descriptors.map((desc) => _buildRow(
-					scoutingData.getFieldValue(desc.name).asInt(),
-					desc.uiLabel,
-				));
-			}),
-			// Zone change fields (ungrouped)
-			...descriptionFields.map((desc) => _buildRow(
+			// Flat data rows
+			...displayFields.map((desc) => _buildRow(
 				scoutingData.getFieldValue(desc.name).asInt(),
 				desc.uiLabel,
 			)),
