@@ -7,6 +7,8 @@ class FieldDescriptor {
 	final String? imagePath;
 	final double? width;
 	final double? height;
+	final String? autoCountersTableHeading;  // Section heading in auto counters table
+	final String? teleCountersTableHeading;  // Section heading in tele counters table
 
 	const FieldDescriptor({
 		required this.name,
@@ -16,6 +18,8 @@ class FieldDescriptor {
 		this.imagePath,
 		this.width,
 		this.height,
+		this.autoCountersTableHeading,
+		this.teleCountersTableHeading,
 	}) : _value = value;
 
 	/// Create a copy with a new value
@@ -28,6 +32,8 @@ class FieldDescriptor {
 			imagePath: imagePath,
 			width: width,
 			height: height,
+			autoCountersTableHeading: autoCountersTableHeading,
+			teleCountersTableHeading: teleCountersTableHeading,
 		);
 	}
 

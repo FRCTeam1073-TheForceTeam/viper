@@ -355,6 +355,44 @@ void _initTeleTabTranslations() {
 			'he': 'משק עמוק צפוי ← ניטראלי',
 			'tr': 'Hendek Karakol ← Tarafsız',
 		},
+
+		// Counter table section headings
+		'tele_alliance_to_neutral': {
+			'en': 'Alliance to Neutral',
+			'es': 'Alianza a Neutral',
+			'pt': 'Aliança para Neutro',
+			'fr': 'Alliance à Neutre',
+			'zh_tw': '聯盟到中立',
+			'he': 'ברית לניטראלי',
+			'tr': 'İttifak\'tan Tarafsız\'a',
+		},
+		'tele_neutral_to_alliance': {
+			'en': 'Neutral to Alliance',
+			'es': 'Neutral a Alianza',
+			'pt': 'Neutro para Aliança',
+			'fr': 'Neutre à l\'Alliance',
+			'zh_tw': '中立到聯盟',
+			'he': 'ניטראלי לברית',
+			'tr': 'Tarafsız\'tan İttifak\'a',
+		},
+		'tele_neutral_to_opponent': {
+			'en': 'Neutral to Opponent',
+			'es': 'Neutral a Oponente',
+			'pt': 'Neutro para Oponente',
+			'fr': 'Neutre à l\'Opposant',
+			'zh_tw': '中立到對手',
+			'he': 'ניטראלי ליריב',
+			'tr': 'Tarafsız\'tan Rakip\'e',
+		},
+		'tele_opponent_to_neutral': {
+			'en': 'Opponent to Neutral',
+			'es': 'Oponente a Neutral',
+			'pt': 'Oponente para Neutro',
+			'fr': 'Opposant à Neutre',
+			'zh_tw': '對手到中立',
+			'he': 'יריב לניטראלי',
+			'tr': 'Rakip\'ten Tarafsız\'a',
+		},
 	});
 }
 
@@ -557,7 +595,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 												],
 											),
 											const SizedBox(height: 8),
-											// Max fuel display and toggle buttons
+											// Max fuel display and toggle buttons row
 											Row(
 												mainAxisAlignment: MainAxisAlignment.center,
 												children: [
@@ -578,7 +616,6 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 												],
 											),
 											const SizedBox(height: 12),
-											// Values Table
 											if (_valuesExpanded) ...[
 												TeleValuesTable(
 													key: const ValueKey('tele_values_table')

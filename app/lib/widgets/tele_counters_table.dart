@@ -5,15 +5,15 @@ import '../providers/scouting_data_provider.dart';
 import '../models/field_descriptor.dart';
 
 /// Widget that displays all movement counters in a collapsible table
-/// Loops through descriptors with autoCountersTableHeading to build rows
-class AutoCountersTable extends ConsumerStatefulWidget {
-	const AutoCountersTable({Key? key}) : super(key: key);
+/// Loops through descriptors with teleCountersTableHeading to build rows
+class TeleCountersTable extends ConsumerStatefulWidget {
+	const TeleCountersTable({Key? key}) : super(key: key);
 
 	@override
-	ConsumerState<AutoCountersTable> createState() => _AutoCountersTableState();
+	ConsumerState<TeleCountersTable> createState() => _TeleCountersTableState();
 }
 
-class _AutoCountersTableState extends ConsumerState<AutoCountersTable> {
+class _TeleCountersTableState extends ConsumerState<TeleCountersTable> {
 	bool _expanded = false;
 
 	String _translate(String key) {
@@ -25,15 +25,15 @@ class _AutoCountersTableState extends ConsumerState<AutoCountersTable> {
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final teamColor = Colors.blue.shade700;
 
-		// Get all descriptors with autoCountersTableHeading
+		// Get all descriptors with teleCountersTableHeading
 		final counterDescriptors = scoutingData.descriptors
-			.where((d) => d.autoCountersTableHeading != null)
+			.where((d) => d.teleCountersTableHeading != null)
 			.toList();
 
 		// Group by heading, maintaining order of first appearance
 		final groupedByHeading = <String, List<FieldDescriptor>>{};
 		for (final desc in counterDescriptors) {
-			final heading = desc.autoCountersTableHeading!;
+			final heading = desc.teleCountersTableHeading!;
 			groupedByHeading.putIfAbsent(heading, () => []).add(desc);
 		}
 
@@ -139,7 +139,7 @@ class _AutoCountersTableState extends ConsumerState<AutoCountersTable> {
 										child: InkWell(
 											onTap: value > 0
 												? () {
-													ref.read(scoutingDataProvider.notifier).recordAutoAction(
+													ref.read(scoutingDataProvider.notifier).recordTeleAction(
 														field: fieldName,
 														value: -1,
 													);
@@ -171,7 +171,7 @@ class _AutoCountersTableState extends ConsumerState<AutoCountersTable> {
 										color: Colors.blue.shade50,
 										child: InkWell(
 											onTap: () {
-												ref.read(scoutingDataProvider.notifier).recordAutoAction(
+												ref.read(scoutingDataProvider.notifier).recordTeleAction(
 													field: fieldName,
 													value: 1,
 												);

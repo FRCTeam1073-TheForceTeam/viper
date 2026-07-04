@@ -778,6 +778,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 									],
 								),
 								const SizedBox(height: 8),
+								const SizedBox(height: 8),
 								// Max fuel display and toggle buttons row
 								Row(
 								mainAxisAlignment: MainAxisAlignment.center,
