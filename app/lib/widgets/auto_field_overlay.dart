@@ -4,10 +4,130 @@ import 'dart:math';
 import '../../providers/field_side_provider.dart';
 import '../../providers/scouting_data_provider.dart';
 import '../../constants/colors.dart';
-import '../data/field_button_definitions.dart';
+import '../models/field_button.dart';
 import '../models/field_descriptor.dart';
 import '../models/map_data_model.dart';
 import 'checkbox_button.dart';
+
+/// Zone change buttons for auto phase
+final autoZoneChangeButtons = <FieldButton>[
+	// ============ ALLIANCE → NEUTRAL (Exit to Neutral) ============
+	FieldButton(
+		field: 'auto_trench_depot_alliance_to_neutral',
+		label: 'Depot Trench to Neutral',
+		rightPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'auto_bump_depot_alliance_to_neutral',
+		label: 'Depot Bump to Neutral',
+		rightPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		descriptor: const FieldDescriptor(name: 'auto_bump_depot_alliance_to_neutral'),
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'auto_bump_outpost_alliance_to_neutral',
+		label: 'Outpost Bump to Neutral',
+		rightPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		descriptor: const FieldDescriptor(name: 'auto_bump_outpost_alliance_to_neutral'),
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'auto_trench_outpost_alliance_to_neutral',
+		label: 'Outpost Trench to Neutral',
+		rightPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		descriptor: const FieldDescriptor(name: 'auto_trench_outpost_alliance_to_neutral'),
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+
+	// ============ NEUTRAL → ALLIANCE (Entry from Neutral) ============
+	FieldButton(
+		field: 'auto_trench_depot_neutral_to_alliance',
+		label: 'Depot Trench to Alliance',
+		rightPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'auto_trench_depot_neutral_to_alliance'),
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'auto_bump_depot_neutral_to_alliance',
+		label: 'Depot Bump to Alliance',
+		rightPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'auto_bump_depot_neutral_to_alliance'),
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'auto_bump_outpost_neutral_to_alliance',
+		label: 'Outpost Bump to Alliance',
+		rightPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'auto_bump_outpost_neutral_to_alliance'),
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'auto_trench_outpost_neutral_to_alliance',
+		label: 'Outpost Trench to Alliance',
+		rightPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'auto_trench_outpost_neutral_to_alliance'),
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+];
+
+/// Fuel target overlays for auto phase zones
+final autoFuelTargets = <FieldButton>[
+	// Alliance zone targets
+	FieldButton(
+		field: 'auto_fuel_target_hub',
+		label: 'Hub Target',
+		rightPercent: 26.0,
+		topPercent: 42.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'alliance',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+	// Neutral zone target
+	FieldButton(
+		field: 'auto_fuel_target_alliance_pass',
+		label: 'Alliance Pass',
+		rightPercent: 13.0,
+		bottomPercent: 7.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'neutral',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+];
 
 /// Widget that displays the field with positioned buttons for robot movement interactions
 /// Buttons use CSS-like percentage positioning and are zone-aware (alliance/neutral)
@@ -132,7 +252,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 								),
 
 								// Positioned movement buttons - filtered by active zone
-								...fieldButtonDefinitions
+								...autoZoneChangeButtons
 								.where((btn) => btn.zone == activeZone)
 									.map((btn) => _buildMovementButton(
 										maxWidth,
@@ -142,35 +262,27 @@ class AutoFieldOverlay extends ConsumerWidget {
 										swapButtonSides,
 									)),
 
-								// Fuel target overlays
-							// Hub target shows only in alliance zone
-							if (activeZone == 'alliance')
-								_buildFuelTarget(
-									maxWidth,
-									fieldHeight,
-									label: 'Hub Target',
-									rightPercent: 26.0,
-									topPercent: 42.0,
-									targetName: 'hub',
-									isActive: activeFuelTarget == 'hub',
-									onTap: () => onFuelTargetTapped?.call('hub'),
-									shouldRotate: shouldRotate,
-									swapButtonSides: swapButtonSides,
-								),
-							// Alliance Pass target shows only in neutral zone
-							if (activeZone == 'neutral')
-								_buildFuelTarget(
-									maxWidth,
-									fieldHeight,
-									label: 'Alliance Pass',
-									rightPercent: 13.0,
-									bottomPercent: 7.0,
-									targetName: 'alliancePass',
-									isActive: activeFuelTarget == 'alliancePass',
-									onTap: () => onFuelTargetTapped?.call('alliancePass'),
-									shouldRotate: shouldRotate,
-									swapButtonSides: swapButtonSides,
-								),
+								// Fuel target overlays - filtered by zone
+								...(autoFuelTargets
+									.where((target) => target.zone == activeZone)
+									.map((target) {
+										// Map field names back to target names for callbacks
+										const targetNameMap = {
+											'auto_fuel_target_hub': 'hub',
+											'auto_fuel_target_alliance_pass': 'alliancePass',
+										};
+										final targetName = targetNameMap[target.field] ?? '';
+										return _buildFuelTarget(
+											maxWidth,
+											fieldHeight,
+											target,
+											isActive: activeFuelTarget == targetName,
+											onTap: () => onFuelTargetTapped?.call(targetName),
+											shouldRotate: shouldRotate,
+											swapButtonSides: swapButtonSides,
+										);
+									}).toList()),
+
 								// Zone indicators (only active zone is shown)
 								if (activeZone == 'alliance')
 									_buildZoneIndicator(
@@ -351,24 +463,23 @@ class AutoFieldOverlay extends ConsumerWidget {
 	/// Build a fuel target image overlay
 	Widget _buildFuelTarget(
 		double fieldWidth,
-		double fieldHeight, {
-		required String label,
-		double? leftPercent,
-		double? rightPercent,
-		double? topPercent,
-		double? bottomPercent,
-		required String targetName,
+		double fieldHeight,
+		FieldButton target, {
 		required bool isActive,
 		required VoidCallback onTap,
 		required bool shouldRotate,
 		required bool swapButtonSides,
 	}) {
-		final size = 5.0 * fieldWidth / 100;
+		final size = target.widthPercent * fieldWidth / 100;
 		final imagePath = isActive
 			? 'assets/images/fuel-target-active.png'
-			: 'assets/images/fuel-target.png';
+			: target.imagePath;
 
 		// Calculate positions - swap edges with same percentages when rotating
+		final leftPercent = target.leftPercent;
+		final rightPercent = target.rightPercent;
+		final topPercent = target.topPercent;
+		final bottomPercent = target.bottomPercent;
 		final leftPx = leftPercent != null ? leftPercent * fieldWidth / 100 : null;
 		final rightPx = rightPercent != null ? rightPercent * fieldWidth / 100 : null;
 		final swappedRightPx = leftPercent != null ? leftPercent * fieldWidth / 100 : null;
@@ -388,7 +499,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 				child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Tooltip(
-						message: label,
+						message: target.label,
 						child: Container(
 							width: size,
 							height: size,

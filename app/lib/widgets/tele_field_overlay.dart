@@ -2,7 +2,231 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import '../../providers/field_side_provider.dart';
 import '../../constants/colors.dart';
-import '../data/field_button_definitions.dart';
+import '../models/field_button.dart';
+import '../models/field_descriptor.dart';
+
+/// Zone change buttons for tele phase
+final teleZoneChangeButtons = <FieldButton>[
+	// ============ ALLIANCE → NEUTRAL (Exit to Neutral) ============
+	FieldButton(
+		field: 'tele_trench_depot_alliance_to_neutral',
+		label: 'Depot Trench to Neutral',
+		rightPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		widthPercent: 7.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'tele_bump_depot_alliance_to_neutral',
+		label: 'Depot Bump to Neutral',
+		rightPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		descriptor: const FieldDescriptor(name: 'tele_bump_depot_alliance_to_neutral'),
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_alliance_to_neutral',
+		label: 'Outpost Bump to Neutral',
+		rightPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_alliance_to_neutral'),
+	),
+	FieldButton(
+		field: 'tele_trench_outpost_alliance_to_neutral',
+		label: 'Outpost Trench to Neutral',
+		rightPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'alliance',
+		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_alliance_to_neutral'),
+	),
+
+	// ============ NEUTRAL → ALLIANCE (Entry from Neutral) ============
+	FieldButton(
+		field: 'tele_trench_depot_neutral_to_alliance',
+		label: 'Depot Trench to Alliance',
+		rightPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_trench_depot_neutral_to_alliance'),
+	),
+	FieldButton(
+		field: 'tele_bump_depot_neutral_to_alliance',
+		label: 'Depot Bump to Alliance',
+		rightPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_bump_depot_neutral_to_alliance'),
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_neutral_to_alliance',
+		label: 'Outpost Bump to Alliance',
+		rightPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_neutral_to_alliance'),
+	),
+	FieldButton(
+		field: 'tele_trench_outpost_neutral_to_alliance',
+		label: 'Outpost Trench to Alliance',
+		rightPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_neutral_to_alliance'),
+	),
+
+	// ============ NEUTRAL → OPPONENT (Exit to Opponent) ============
+	FieldButton(
+		field: 'tele_trench_outpost_neutral_to_opponent',
+		label: 'Outpost Trench to Opponent',
+		leftPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_neutral_to_opponent'),
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_neutral_to_opponent',
+		label: 'Outpost Bump to Opponent',
+		leftPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_neutral_to_opponent'),
+	),
+	FieldButton(
+		field: 'tele_bump_depot_neutral_to_opponent',
+		label: 'Depot Bump to Opponent',
+		leftPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_bump_depot_neutral_to_opponent'),
+	),
+	FieldButton(
+		field: 'tele_trench_depot_neutral_to_opponent',
+		label: 'Depot Trench to Opponent',
+		leftPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-left.png',
+		zone: 'neutral',
+		descriptor: const FieldDescriptor(name: 'tele_trench_depot_neutral_to_opponent'),
+	),
+
+	// ============ OPPONENT → NEUTRAL (Entry from Opponent) ============
+	FieldButton(
+		field: 'tele_trench_outpost_opponent_to_neutral',
+		label: 'Outpost Trench to Neutral',
+		leftPercent: 26.0,
+		bottomPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
+		descriptor: const FieldDescriptor(name: 'tele_trench_outpost_opponent_to_neutral'),
+	),
+	FieldButton(
+		field: 'tele_bump_outpost_opponent_to_neutral',
+		label: 'Outpost Bump to Neutral',
+		leftPercent: 26.0,
+		bottomPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
+		descriptor: const FieldDescriptor(name: 'tele_bump_outpost_opponent_to_neutral'),
+	),
+	FieldButton(
+		field: 'tele_bump_depot_opponent_to_neutral',
+		label: 'Depot Bump to Neutral',
+		leftPercent: 26.0,
+		topPercent: 21.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
+		descriptor: const FieldDescriptor(name: 'tele_bump_depot_opponent_to_neutral'),
+	),
+	FieldButton(
+		field: 'tele_trench_depot_opponent_to_neutral',
+		label: 'Depot Trench to Neutral',
+		leftPercent: 26.0,
+		topPercent: 5.0,
+		imagePath: 'assets/images/arrow-right.png',
+		zone: 'opponent',
+		descriptor: const FieldDescriptor(name: 'tele_trench_depot_opponent_to_neutral'),
+	),
+];
+
+/// Fuel target overlays for tele phase zones
+final teleFuelTargets = <FieldButton>[
+	// Alliance zone targets
+	FieldButton(
+		field: 'tele_fuel_target_hub',
+		label: 'Hub Target',
+		rightPercent: 26.0,
+		topPercent: 42.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'alliance',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'tele_fuel_target_alliance_dump',
+		label: 'Alliance Dump',
+		rightPercent: 13.0,
+		bottomPercent: 7.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'alliance',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'tele_fuel_target_outpost',
+		label: 'Outpost',
+		rightPercent: 0.0,
+		topPercent: 6.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'alliance',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+	// Neutral zone target
+	FieldButton(
+		field: 'tele_fuel_target_neutral_pass',
+		label: 'Neutral Pass',
+		rightPercent: 13.0,
+		bottomPercent: 7.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'neutral',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+	// Opponent zone targets
+	FieldButton(
+		field: 'tele_fuel_target_opponent_alliance_pass',
+		label: 'Opponent Alliance Pass',
+		rightPercent: 13.0,
+		bottomPercent: 7.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'opponent',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+	FieldButton(
+		field: 'tele_fuel_target_opponent_neutral_pass',
+		label: 'Opponent Neutral Pass',
+		rightPercent: 46.5,
+		bottomPercent: 7.0,
+		imagePath: 'assets/images/fuel-target.png',
+		zone: 'opponent',
+		widthPercent: 5.0,
+		aspectRatio: 1.0,
+	),
+];
 
 /// Widget that displays the field with positioned buttons for robot movement interactions during teleop
 /// Supports three zones: alliance, neutral, and opponent
@@ -97,7 +321,7 @@ class TeleFieldOverlay extends StatelessWidget {
 								),
 
 								// Positioned movement buttons - filtered by active zone
-								...teleFieldButtonDefinitions
+								...teleZoneChangeButtons
 									.where((btn) => btn.zone == activeZone)
 									.map((btn) => _buildMovementButton(
 										maxWidth,
@@ -107,87 +331,31 @@ class TeleFieldOverlay extends StatelessWidget {
 										swapButtonSides,
 									)),
 
-								// Fuel target overlays per zone
-								// Alliance zone fuel targets
-								if (activeZone == 'alliance') ...[
-									_buildFuelTarget(
-										maxWidth,
-										fieldHeight,
-										label: 'Hub Target',
-										rightPercent: 26.0,
-										topPercent: 42.0,
-										targetName: 'hub',
-										isActive: activeFuelTarget == 'hub',
-										onTap: () => onFuelTargetTapped?.call('hub'),
-										shouldRotate: shouldRotate,
-										swapButtonSides: swapButtonSides,
-									),
-									_buildFuelTarget(
-										maxWidth,
-										fieldHeight,
-										label: 'Alliance Dump',
-										rightPercent: 13.0,
-										bottomPercent: 7.0,
-										targetName: 'allianceDump',
-										isActive: activeFuelTarget == 'allianceDump',
-										onTap: () => onFuelTargetTapped?.call('allianceDump'),
-										shouldRotate: shouldRotate,
-										swapButtonSides: swapButtonSides,
-									),
-									_buildFuelTarget(
-										maxWidth,
-										fieldHeight,
-										label: 'Outpost',
-										rightPercent: 0.0,
-										topPercent: 6.0,
-										targetName: 'outpost',
-										isActive: activeFuelTarget == 'outpost',
-										onTap: () => onFuelTargetTapped?.call('outpost'),
-										shouldRotate: shouldRotate,
-										swapButtonSides: swapButtonSides,
-									),
-								],
-								// Neutral zone fuel target
-								if (activeZone == 'neutral')
-									_buildFuelTarget(
-										maxWidth,
-										fieldHeight,
-										label: 'Neutral Pass',
-										rightPercent: 13.0,
-										bottomPercent: 7.0,
-										targetName: 'neutralAlliancePass',
-										isActive: activeFuelTarget == 'neutralAlliancePass',
-										onTap: () => onFuelTargetTapped?.call('neutralAlliancePass'),
-										shouldRotate: shouldRotate,
-										swapButtonSides: swapButtonSides,
-									),
-								// Opponent zone fuel targets
-								if (activeZone == 'opponent') ...[
-									_buildFuelTarget(
-										maxWidth,
-										fieldHeight,
-										label: 'Opponent Alliance Pass',
-										rightPercent: 13.0,
-										bottomPercent: 7.0,
-										targetName: 'opponentAlliancePass',
-										isActive: activeFuelTarget == 'opponentAlliancePass',
-										onTap: () => onFuelTargetTapped?.call('opponentAlliancePass'),
-										shouldRotate: shouldRotate,
-										swapButtonSides: swapButtonSides,
-									),
-									_buildFuelTarget(
-										maxWidth,
-										fieldHeight,
-										label: 'Opponent Neutral Pass',
-										rightPercent: 46.5,
-										bottomPercent: 7.0,
-										targetName: 'opponentNeutralPass',
-										isActive: activeFuelTarget == 'opponentNeutralPass',
-										onTap: () => onFuelTargetTapped?.call('opponentNeutralPass'),
-										shouldRotate: shouldRotate,
-										swapButtonSides: swapButtonSides,
-									),
-								],
+								// Fuel target overlays - filtered by zone
+								...(teleFuelTargets
+									.where((target) => target.zone == activeZone)
+									.map((target) {
+										// Map field names back to target names for callbacks
+										const targetNameMap = {
+											'tele_fuel_target_hub': 'hub',
+											'tele_fuel_target_alliance_dump': 'allianceDump',
+											'tele_fuel_target_outpost': 'outpost',
+											'tele_fuel_target_neutral_pass': 'neutralAlliancePass',
+											'tele_fuel_target_opponent_alliance_pass': 'opponentAlliancePass',
+											'tele_fuel_target_opponent_neutral_pass': 'opponentNeutralPass',
+										};
+										final targetName = targetNameMap[target.field] ?? '';
+										return _buildFuelTarget(
+											maxWidth,
+											fieldHeight,
+											target,
+											isActive: activeFuelTarget == targetName,
+											onTap: () => onFuelTargetTapped?.call(targetName),
+											shouldRotate: shouldRotate,
+											swapButtonSides: swapButtonSides,
+										);
+									}).toList()),
+
 
 								// Zone indicators
 								if (activeZone == 'alliance')
@@ -336,22 +504,22 @@ class TeleFieldOverlay extends StatelessWidget {
 	/// Build a fuel target image overlay
 	Widget _buildFuelTarget(
 		double fieldWidth,
-		double fieldHeight, {
-		required String label,
-		double? leftPercent,
-		double? rightPercent,
-		double? topPercent,
-		double? bottomPercent,
-		required String targetName,
+		double fieldHeight,
+		FieldButton target, {
 		required bool isActive,
 		required VoidCallback onTap,
 		required bool shouldRotate,
 		required bool swapButtonSides,
 	}) {
-		final size = 5.0 * fieldWidth / 100;
+		final size = target.widthPercent * fieldWidth / 100;
 		final imagePath = isActive
 			? 'assets/images/fuel-target-active.png'
-			: 'assets/images/fuel-target.png';
+			: target.imagePath;
+
+		final leftPercent = target.leftPercent;
+		final rightPercent = target.rightPercent;
+		final topPercent = target.topPercent;
+		final bottomPercent = target.bottomPercent;
 
 		final leftPx = leftPercent != null ? leftPercent * fieldWidth / 100 : null;
 		final rightPx = rightPercent != null ? rightPercent * fieldWidth / 100 : null;
@@ -372,7 +540,7 @@ class TeleFieldOverlay extends StatelessWidget {
 				child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Tooltip(
-						message: label,
+						message: target.label,
 						child: Container(
 							width: size,
 							height: size,

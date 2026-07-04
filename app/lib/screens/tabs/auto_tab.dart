@@ -689,24 +689,53 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 		final activeZone = ref.watch(scoutingDataProvider.select((data) => data.autoActiveZone));
 		final scoutingData = ref.watch(scoutingDataProvider);
-
-		// Get current state from scouting data
-		final activeFuelTarget = scoutingData.autoActiveFuelTarget;
-		final trenchDepotAllianceToNeutral = scoutingData.getFieldValue('auto_trench_depot_alliance_to_neutral').asInt();
-		final bumpDepotAllianceToNeutral = scoutingData.getFieldValue('auto_bump_depot_alliance_to_neutral').asInt();
-		final bumpOutpostAllianceToNeutral = scoutingData.getFieldValue('auto_bump_outpost_alliance_to_neutral').asInt();
-		final trenchOutpostAllianceToNeutral = scoutingData.getFieldValue('auto_trench_outpost_alliance_to_neutral').asInt();
-		final trenchDepotNeutralToAlliance = scoutingData.getFieldValue('auto_trench_depot_neutral_to_alliance').asInt();
-		final bumpDepotNeutralToAlliance = scoutingData.getFieldValue('auto_bump_depot_neutral_to_alliance').asInt();
-		final bumpOutpostNeutralToAlliance = scoutingData.getFieldValue('auto_bump_outpost_neutral_to_alliance').asInt();
-		final trenchOutpostNeutralToAlliance = scoutingData.getFieldValue('auto_trench_outpost_neutral_to_alliance').asInt();
-		final fuelScore = scoutingData.getFieldValue('auto_fuel_score').asInt();
-		final fuelNeutralAlliancePass = scoutingData.getFieldValue('auto_fuel_neutral_alliance_pass').asInt();
-		final climbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
-		final allianceTime = scoutingData.getFieldValue('auto_alliance_time').asInt();
-		final neutralTime = scoutingData.getFieldValue('auto_neutral_time').asInt();
-
 		final botPosition = ref.watch(selectedBotPositionProvider);
+		final climbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
+
+		// Instantiate overlay early so buttons register their descriptors
+		final fieldOverlay = AutoFieldOverlay(
+			fieldSide: fieldSide,
+			activeZone: activeZone,
+			climbLevel: climbLevel,
+			botPosition: botPosition,
+			showStartButton: widget.matchStartTime == null,
+			onMovementTapped: (field, action) {
+				_startMatchIfNeeded();
+				ref.read(scoutingDataProvider.notifier).recordAutoAction(
+					field: field,
+					value: 1,
+				);
+			},
+			onClimbToggled: () {
+				_startMatchIfNeeded();
+				if (climbLevel < 1) {
+					ref.read(scoutingDataProvider.notifier).recordAutoAction(
+						field: 'auto_climb_level',
+						value: climbLevel + 1,
+					);
+				}
+			},
+			onStartAutoTapped: () {
+				_startMatchIfNeeded();
+			},
+			activeFuelTarget: scoutingData.autoActiveFuelTarget,
+			onFuelTargetTapped: (targetName) {
+				ref.read(scoutingDataProvider.notifier).changeAutoFuelTarget(targetName);
+			},
+			startAutoButtonLabel: _translate('start_auto_button'),
+			model: scoutingData,
+			onRecordAction: (field, value) {
+				_startMatchIfNeeded();
+				ref.read(scoutingDataProvider.notifier).recordAutoAction(
+					field: field,
+					value: value,
+				);
+			},
+		);
+
+		// Now access field values (buttons are registered)
+		final activeFuelTarget = scoutingData.autoActiveFuelTarget;
+
 		final teamColor = _getTeamColor(botPosition);
 
 		return Focus(
@@ -720,51 +749,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					// (movement buttons, fuel overlays, zone toggles, climb selector)
 					Padding(
 						padding: const EdgeInsets.symmetric(horizontal: 16),
-						child: AutoFieldOverlay(
-							fieldSide: fieldSide,
-							activeZone: activeZone,
-							climbLevel: climbLevel,
-							botPosition: botPosition,
-							showStartButton: widget.matchStartTime == null,
-							onMovementTapped: (field, action) {
-								// Start match timer if not already started
-								_startMatchIfNeeded();
-
-								// Record the action (zone change is implicit in field name)
-								ref.read(scoutingDataProvider.notifier).recordAutoAction(
-									field: field,
-									value: 1,
-								);
-							},
-							onClimbToggled: () {
-								// Start match timer if not already started
-								_startMatchIfNeeded();
-
-								if (climbLevel < 1) {
-									ref.read(scoutingDataProvider.notifier).recordAutoAction(
-										field: 'auto_climb_level',
-										value: climbLevel + 1,
-									);
-								}
-							},
-							onStartAutoTapped: () {
-								_startMatchIfNeeded();
-							},
-							activeFuelTarget: activeFuelTarget,
-							onFuelTargetTapped: (targetName) {
-								ref.read(scoutingDataProvider.notifier).changeAutoFuelTarget(targetName);
-							},
-							startAutoButtonLabel: _translate('start_auto_button'),
-							model: scoutingData,
-							onRecordAction: (field, value) {
-								_startMatchIfNeeded();
-								ref.read(scoutingDataProvider.notifier).recordAutoAction(
-									field: field,
-									value: value,
-								);
-							},
-						),
-				),
+						child: fieldOverlay,
+					),
 
 				const SizedBox(height: 16),
 
@@ -815,20 +801,8 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								const SizedBox(height: 12),
 								// Values Table (readonly counters)
 								if (_valuesExpanded) ...[
-									AutoValuesTable(
-										key: const ValueKey('auto_values_table'),
-										trenchDepotAllianceToNeutral: trenchDepotAllianceToNeutral,
-										bumpDepotAllianceToNeutral: bumpDepotAllianceToNeutral,
-										bumpOutpostAllianceToNeutral: bumpOutpostAllianceToNeutral,
-										trenchOutpostAllianceToNeutral: trenchOutpostAllianceToNeutral,
-										trenchDepotNeutralToAlliance: trenchDepotNeutralToAlliance,
-										bumpDepotNeutralToAlliance: bumpDepotNeutralToAlliance,
-										bumpOutpostNeutralToAlliance: bumpOutpostNeutralToAlliance,
-										trenchOutpostNeutralToAlliance: trenchOutpostNeutralToAlliance,
-										fuelScore: fuelScore,
-										fuelNeutralAlliancePass: fuelNeutralAlliancePass,
-										allianceTime: allianceTime,
-										neutralTime: neutralTime,
+									const AutoValuesTable(
+										key: ValueKey('auto_values_table'),
 									),
 									const SizedBox(height: 12),
 								],

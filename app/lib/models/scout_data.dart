@@ -27,7 +27,7 @@ class ScoutData {
 	final DateTime createdAt;
 	final DateTime updatedAt;
 
-	const ScoutData({
+	ScoutData({
 		this.event,
 		this.match,
 		this.team,
@@ -38,7 +38,7 @@ class ScoutData {
 		this.timeline = const [],
 		this.matchStartTime,
 		this.climbMethod,
-		this.climbPosition = false,
+		this.climbPosition,
 		this.shootOnMove = false,
 		this.shootWhileCollecting = false,
 		this.climbing = false,

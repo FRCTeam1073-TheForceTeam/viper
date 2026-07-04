@@ -1,45 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../services/localization.dart';
+import '../../providers/scouting_data_provider.dart';
 
 /// A table showing readonly counter values for the auto period
 /// Displays 12 counters in simple 2-column layout: Count | Description
-class AutoValuesTable extends StatelessWidget {
-	/// Current counter values
-	final int trenchDepotAllianceToNeutral;
-	final int bumpDepotAllianceToNeutral;
-	final int bumpOutpostAllianceToNeutral;
-	final int trenchOutpostAllianceToNeutral;
-	final int trenchDepotNeutralToAlliance;
-	final int bumpDepotNeutralToAlliance;
-	final int bumpOutpostNeutralToAlliance;
-	final int trenchOutpostNeutralToAlliance;
-	final int fuelScore;
-	final int fuelNeutralAlliancePass;
-	final int allianceTime;
-	final int neutralTime;
-
-	const AutoValuesTable({
-		super.key,
-		this.trenchDepotAllianceToNeutral = 0,
-		this.bumpDepotAllianceToNeutral = 0,
-		this.bumpOutpostAllianceToNeutral = 0,
-		this.trenchOutpostAllianceToNeutral = 0,
-		this.trenchDepotNeutralToAlliance = 0,
-		this.bumpDepotNeutralToAlliance = 0,
-		this.bumpOutpostNeutralToAlliance = 0,
-		this.trenchOutpostNeutralToAlliance = 0,
-		this.fuelScore = 0,
-		this.fuelNeutralAlliancePass = 0,
-		this.allianceTime = 0,
-		this.neutralTime = 0,
-	});
+class AutoValuesTable extends ConsumerWidget {
+	const AutoValuesTable({super.key});
 
 	String _translate(String key) {
 		return AppLocalizations.translate(key, variables: {});
 	}
 
+	int _getValue(ScoutingData data, String fieldName) {
+		return data.getFieldValue('auto_$fieldName').asInt();
+	}
+
 	/// Build all rows: 12 counter rows
-	List<TableRow> _buildRows() {
+	List<TableRow> _buildRows(ScoutingData scoutingData) {
 		return [
 			// Header row
 			TableRow(
@@ -72,29 +50,29 @@ class AutoValuesTable extends StatelessWidget {
 				],
 			),
 			// Fuel Score
-			_buildRow(fuelScore, 'fuel_score'),
+			_buildRow(_getValue(scoutingData, 'fuel_score'), 'fuel_score'),
 			// Fuel Neutral Pass
-			_buildRow(fuelNeutralAlliancePass, 'auto_fuel_neutral_alliance_pass'),
+			_buildRow(_getValue(scoutingData, 'fuel_neutral_alliance_pass'), 'fuel_neutral_alliance_pass'),
 			// Trench Depot A→N
-			_buildRow(trenchDepotAllianceToNeutral, 'trench_depot_alliance_to_neutral'),
+			_buildRow(_getValue(scoutingData, 'trench_depot_alliance_to_neutral'), 'trench_depot_alliance_to_neutral'),
 			// Bump Depot A→N
-			_buildRow(bumpDepotAllianceToNeutral, 'bump_depot_alliance_to_neutral'),
+			_buildRow(_getValue(scoutingData, 'bump_depot_alliance_to_neutral'), 'bump_depot_alliance_to_neutral'),
 			// Bump Outpost A→N
-			_buildRow(bumpOutpostAllianceToNeutral, 'bump_outpost_alliance_to_neutral'),
+			_buildRow(_getValue(scoutingData, 'bump_outpost_alliance_to_neutral'), 'bump_outpost_alliance_to_neutral'),
 			// Trench Outpost A→N
-			_buildRow(trenchOutpostAllianceToNeutral, 'trench_outpost_alliance_to_neutral'),
+			_buildRow(_getValue(scoutingData, 'trench_outpost_alliance_to_neutral'), 'trench_outpost_alliance_to_neutral'),
 			// Trench Depot N→A
-			_buildRow(trenchDepotNeutralToAlliance, 'trench_depot_neutral_to_alliance'),
+			_buildRow(_getValue(scoutingData, 'trench_depot_neutral_to_alliance'), 'trench_depot_neutral_to_alliance'),
 			// Bump Depot N→A
-			_buildRow(bumpDepotNeutralToAlliance, 'bump_depot_neutral_to_alliance'),
+			_buildRow(_getValue(scoutingData, 'bump_depot_neutral_to_alliance'), 'bump_depot_neutral_to_alliance'),
 			// Bump Outpost N→A
-			_buildRow(bumpOutpostNeutralToAlliance, 'bump_outpost_neutral_to_alliance'),
+			_buildRow(_getValue(scoutingData, 'bump_outpost_neutral_to_alliance'), 'bump_outpost_neutral_to_alliance'),
 			// Trench Outpost N→A
-			_buildRow(trenchOutpostNeutralToAlliance, 'trench_outpost_neutral_to_alliance'),
+			_buildRow(_getValue(scoutingData, 'trench_outpost_neutral_to_alliance'), 'trench_outpost_neutral_to_alliance'),
 			// Alliance Time
-			_buildRow(allianceTime, 'alliance_time'),
+			_buildRow(_getValue(scoutingData, 'alliance_time'), 'alliance_time'),
 			// Neutral Time
-			_buildRow(neutralTime, 'neutral_time'),
+			_buildRow(_getValue(scoutingData, 'neutral_time'), 'neutral_time'),
 		];
 	}
 
@@ -137,7 +115,9 @@ class AutoValuesTable extends StatelessWidget {
 	}
 
 	@override
-	Widget build(BuildContext context) {
+	@override
+	Widget build(BuildContext context, WidgetRef ref) {
+		final scoutingData = ref.watch(scoutingDataProvider);
 		return Container(
 			margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
 			decoration: const BoxDecoration(
@@ -159,7 +139,7 @@ class AutoValuesTable extends StatelessWidget {
 					0: FlexColumnWidth(1),
 					1: FlexColumnWidth(2),
 				},
-				children: _buildRows(),
+				children: _buildRows(scoutingData),
 			),
 		);
 	}

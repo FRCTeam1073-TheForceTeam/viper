@@ -33,7 +33,15 @@ class ScoutingData extends MapDataModel {
 	}
 
 	static const List<FieldDescriptor> _staticDescriptors = [
-		// Auto (15 fields)
+		// Auto non-button fields
+		FieldDescriptor(name: 'auto_fuel_score'),
+		FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass'),
+		FieldDescriptor(name: 'auto_alliance_time'),
+		FieldDescriptor(name: 'auto_neutral_time'),
+		FieldDescriptor(name: 'auto_climb_level'),
+		FieldDescriptor(name: 'auto_active_zone'),
+		FieldDescriptor(name: 'auto_active_fuel_target'),
+		// Auto zone change buttons
 		FieldDescriptor(name: 'auto_trench_depot_alliance_to_neutral'),
 		FieldDescriptor(name: 'auto_bump_depot_alliance_to_neutral'),
 		FieldDescriptor(name: 'auto_bump_outpost_alliance_to_neutral'),
@@ -42,14 +50,20 @@ class ScoutingData extends MapDataModel {
 		FieldDescriptor(name: 'auto_bump_depot_neutral_to_alliance'),
 		FieldDescriptor(name: 'auto_bump_outpost_neutral_to_alliance'),
 		FieldDescriptor(name: 'auto_trench_outpost_neutral_to_alliance'),
-		FieldDescriptor(name: 'auto_fuel_score'),
-		FieldDescriptor(name: 'auto_fuel_neutral_alliance_pass'),
-		FieldDescriptor(name: 'auto_alliance_time'),
-		FieldDescriptor(name: 'auto_neutral_time'),
-		FieldDescriptor(name: 'auto_climb_level'),
-		FieldDescriptor(name: 'auto_active_zone'),
-		FieldDescriptor(name: 'auto_active_fuel_target'),
-		// Tele (25 fields)
+		// Tele non-button fields
+		FieldDescriptor(name: 'tele_fuel_score'),
+		FieldDescriptor(name: 'tele_fuel_alliance_dump'),
+		FieldDescriptor(name: 'tele_fuel_outpost'),
+		FieldDescriptor(name: 'tele_fuel_neutral_alliance_pass'),
+		FieldDescriptor(name: 'tele_fuel_opponent_neutral_pass'),
+		FieldDescriptor(name: 'tele_fuel_opponent_alliance_pass'),
+		FieldDescriptor(name: 'tele_alliance_time'),
+		FieldDescriptor(name: 'tele_neutral_time'),
+		FieldDescriptor(name: 'tele_opponent_time'),
+		FieldDescriptor(name: 'tele_climb_level'),
+		FieldDescriptor(name: 'tele_active_zone'),
+		FieldDescriptor(name: 'tele_active_fuel_target'),
+		// Tele zone change buttons
 		FieldDescriptor(name: 'tele_trench_depot_alliance_to_neutral'),
 		FieldDescriptor(name: 'tele_bump_depot_alliance_to_neutral'),
 		FieldDescriptor(name: 'tele_bump_outpost_alliance_to_neutral'),
@@ -66,18 +80,6 @@ class ScoutingData extends MapDataModel {
 		FieldDescriptor(name: 'tele_bump_outpost_opponent_to_neutral'),
 		FieldDescriptor(name: 'tele_bump_depot_opponent_to_neutral'),
 		FieldDescriptor(name: 'tele_trench_depot_opponent_to_neutral'),
-		FieldDescriptor(name: 'tele_fuel_score'),
-		FieldDescriptor(name: 'tele_fuel_alliance_dump'),
-		FieldDescriptor(name: 'tele_fuel_outpost'),
-		FieldDescriptor(name: 'tele_fuel_neutral_alliance_pass'),
-		FieldDescriptor(name: 'tele_fuel_opponent_neutral_pass'),
-		FieldDescriptor(name: 'tele_fuel_opponent_alliance_pass'),
-		FieldDescriptor(name: 'tele_alliance_time'),
-		FieldDescriptor(name: 'tele_neutral_time'),
-		FieldDescriptor(name: 'tele_opponent_time'),
-		FieldDescriptor(name: 'tele_climb_level'),
-		FieldDescriptor(name: 'tele_active_zone'),
-		FieldDescriptor(name: 'tele_active_fuel_target'),
 	];
 
 	// UI state getters - backed by descriptor fields, so they're serialized

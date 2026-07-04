@@ -895,11 +895,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			// Add timeline once (shared between auto and tele)
 			scoutDataMap['timeline'] = TimelineEvent.formatTimeline(timeline);
 
-			// Debug: log what we're about to save
-			print('[SAVE_DATA] auto_trench_depot_alliance_to_neutral=${scoutDataMap['auto_trench_depot_alliance_to_neutral']}');
-			print('[SAVE_DATA] tele_trench_depot_alliance_to_neutral=${scoutDataMap['tele_trench_depot_alliance_to_neutral']}');
-			print('[SAVE_DATA] timeline=${scoutDataMap['timeline']}');
-
 			// Build CSV
 			final csv = CsvBuilder.buildScoutCsv([scoutDataMap]);
 			final lines = csv.split('\n');
