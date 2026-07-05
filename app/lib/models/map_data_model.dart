@@ -54,9 +54,7 @@ abstract class MapDataModel {
 	/// Get typed field value by binding descriptor to storage value
 	FieldDescriptor getFieldValue(String name) {
 		final desc = getDescriptor(name);
-		if (desc == null) {
-			throw ArgumentError('No descriptor found for field: $name');
-		}
+		if (desc == null) return FieldDescriptor(name: name);
 		return desc.withValue(values[name] as String?);
 	}
 

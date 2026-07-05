@@ -9,6 +9,7 @@ import '../../providers/timeline_provider.dart';
 import '../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
 import '../../providers/zone_buttons_provider.dart';
+import '../../providers/button_position_provider.dart';
 import '../../services/localization.dart';
 import '../../widgets/tele_field_overlay.dart';
 import '../../widgets/values_table.dart';
@@ -809,21 +810,33 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 	/// Calculate the position for an undo floater by looking up the button's actual position
 	Offset? _getUndoPopupPosition(String field) {
 		try {
-			final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
-			if (stackBox == null) return null;
-
-			// Look up any button by field name and get its actual position
-			final elementKeysNotifier = ref.read(uiElementKeysProvider.notifier);
-			final position = getElementPosition(field, elementKeysNotifier, stackBox: stackBox);
-			if (position != null) {
-				print('UNDO: found button $field at position: $position');
-				return position;
+			// Look up button position from the provider (stored relative to field overlay)
+			var position = ref.read(buttonPositionProvider)[field];
+			if (position == null) {
+				final scoutingData = ref.read(scoutingDataProvider);
+				final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
+				print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
+				return null;
 			}
 
-			final scoutingData = ref.read(scoutingDataProvider);
-			final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
-			print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
-			return null;
+			// Convert from field-overlay-relative to outer-stack-relative coordinates
+			final fieldOverlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+			final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+
+			if (fieldOverlayBox != null && stackBox != null) {
+				// Get the field overlay's position within the outer stack
+				final fieldOverlayGlobal = fieldOverlayBox.localToGlobal(Offset.zero);
+				final stackGlobal = stackBox.localToGlobal(Offset.zero);
+				final fieldOverlayOffset = fieldOverlayGlobal - stackGlobal;
+
+				// Add the field overlay's offset to get stack-relative coordinates
+				position = position + fieldOverlayOffset;
+				print('UNDO: found button $field at position: $position (after offset adjustment)');
+			} else {
+				print('UNDO: could not get render boxes for offset calculation');
+			}
+
+			return position;
 		} catch (e) {
 			print('_getUndoPopupPosition ERROR: $e');
 			return null;

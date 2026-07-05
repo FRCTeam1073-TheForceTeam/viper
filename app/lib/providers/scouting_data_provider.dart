@@ -92,10 +92,13 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 		newState.loadFromMap(data);
 
 		state = newState;
-		_ref.read(activeZoneProvider.notifier).reset();
-		_ref.read(activeFuelTargetProvider.notifier).reset();
 		_autoLastZoneChangeTime = null;
 		_teleLastZoneChangeTime = null;
+		// Always reset to alliance/hub when loading. Each phase will set its own zone.
+		_activeZone = 'alliance';
+		_activeFuelTarget = 'hub';
+		_ref.read(activeZoneProvider.notifier).changeZone(_activeZone);
+		_ref.read(activeFuelTargetProvider.notifier).changeTarget(_activeFuelTarget);
 	}
 
 	void syncStartTime(DateTime matchStartTime) {
@@ -110,7 +113,9 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 		required String field,
 		required int value,
 	}) {
-		print('_recordAction START: phase=$phase, field=$field, value=$value, _activeZone=$_activeZone, currentFuelTarget=$_activeFuelTarget');
+		// Read current zone from provider (source of truth) instead of internal variable
+		final currentZone = _ref.read(activeZoneProvider);
+		print('[RECORD_ACTION] phase=$phase, field=$field, value=$value, currentZone=$currentZone, currentFuelTarget=$_activeFuelTarget');
 		final now = DateTime.now();
 		final matchStartTime = _ref.read(matchTimerProvider);
 		final startTime = matchStartTime ?? now;
@@ -139,25 +144,32 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			newZone = 'opponent';
 		}
 
+		print('[RECORD_ACTION] Determined newZone=$newZone from field=$field');
+
 		// Update time accumulators if zone is changing
-		if (newZone != null && newZone != _activeZone) {
+		if (newZone != null && newZone != currentZone) {
 			final lastZoneTime = lastZoneChangeTime ?? startTime;
 			final zoneElapsedSeconds = now.difference(lastZoneTime).inSeconds;
 
-			if (_activeZone == 'alliance' && zoneElapsedSeconds > 0) {
+			print('[ZONE_TIME_UPDATE] currentZone=$currentZone, newZone=$newZone, elapsed=$zoneElapsedSeconds seconds');
+
+			if (currentZone == 'alliance' && zoneElapsedSeconds > 0) {
 				final currentTime = newState.getFieldValue(allianceTimeKey).asInt();
 				newState = newState.updateField(allianceTimeKey, currentTime + zoneElapsedSeconds);
-			} else if (_activeZone == 'neutral' && zoneElapsedSeconds > 0) {
+				print('[ZONE_TIME_UPDATE] Updated alliance time to ${currentTime + zoneElapsedSeconds}');
+			} else if (currentZone == 'neutral' && zoneElapsedSeconds > 0) {
 				final currentTime = newState.getFieldValue(neutralTimeKey).asInt();
 				newState = newState.updateField(neutralTimeKey, currentTime + zoneElapsedSeconds);
-			} else if (_activeZone == 'opponent' && zoneElapsedSeconds > 0) {
+				print('[ZONE_TIME_UPDATE] Updated neutral time to ${currentTime + zoneElapsedSeconds}');
+			} else if (currentZone == 'opponent' && zoneElapsedSeconds > 0) {
+				print('[ZONE_TIME_UPDATE] ERROR: Attempting to update opponent time in $phase phase!');
 				final currentTime = newState.getFieldValue(opponentTimeKey).asInt();
 				newState = newState.updateField(opponentTimeKey, currentTime + zoneElapsedSeconds);
 			}
 
 			_activeZone = newZone;
 			_ref.read(activeZoneProvider.notifier).changeZone(newZone);
-			print('ZONE SYNCED: _activeZone=$_activeZone, provider updated to $newZone');
+			print('ZONE SYNCED: Updated internal zone to $newZone and provider');
 			if (phase == 'auto') {
 				_autoLastZoneChangeTime = now;
 			} else {

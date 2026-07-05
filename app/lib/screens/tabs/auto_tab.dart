@@ -9,6 +9,7 @@ import '../../providers/timeline_provider.dart';
 import '../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
 import '../../providers/zone_buttons_provider.dart';
+import '../../providers/button_position_provider.dart';
 import '../../services/localization.dart';
 import '../../widgets/auto_field_overlay.dart';
 import '../../widgets/values_table.dart';
@@ -892,24 +893,36 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		}
 	}
 
-	/// Calculate the position for an undo floater by looking up the button's actual position
+	/// Calculate the position for an undo floater by looking up the button's stored position
 	Offset? _getUndoPopupPosition(String field) {
 		try {
-			final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
-			if (stackBox == null) return null;
-
-			// Look up any button by field name and get its actual position
-			final elementKeysNotifier = ref.read(uiElementKeysProvider.notifier);
-			final position = getElementPosition(field, elementKeysNotifier, stackBox: stackBox);
-			if (position != null) {
-				print('UNDO: found button $field at position: $position');
-				return position;
+			// Look up button position from the provider (stored relative to field overlay)
+			var position = ref.read(buttonPositionProvider)[field];
+			if (position == null) {
+				final scoutingData = ref.read(scoutingDataProvider);
+				final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
+				print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
+				return null;
 			}
 
-			final scoutingData = ref.read(scoutingDataProvider);
-			final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
-			print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
-			return null;
+			// Convert from field-overlay-relative to outer-stack-relative coordinates
+			final fieldOverlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+			final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+
+			if (fieldOverlayBox != null && stackBox != null) {
+				// Get the field overlay's position within the outer stack
+				final fieldOverlayGlobal = fieldOverlayBox.localToGlobal(Offset.zero);
+				final stackGlobal = stackBox.localToGlobal(Offset.zero);
+				final fieldOverlayOffset = fieldOverlayGlobal - stackGlobal;
+
+				// Add the field overlay's offset to get stack-relative coordinates
+				position = position + fieldOverlayOffset;
+				print('UNDO: found button $field at position: $position (after offset adjustment)');
+			} else {
+				print('UNDO: could not get render boxes for offset calculation');
+			}
+
+			return position;
 		} catch (e) {
 			print('_getUndoPopupPosition ERROR: $e');
 			return null;
@@ -930,6 +943,13 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final scoutingData = ref.watch(scoutingDataProvider);
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final climbLevel = scoutingData.getFieldValue('auto_climb_level').asInt();
+
+		// Reset zone if it's invalid for auto phase (opponent should never happen in auto)
+		if (activeZone == 'opponent') {
+			WidgetsBinding.instance.addPostFrameCallback((_) {
+				ref.read(activeZoneProvider.notifier).changeZone('alliance');
+			});
+		}
 
 		// Debug: Print positioning state when Auto tab is shown
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;

@@ -76,7 +76,6 @@ class _PopupFloaterState extends State<PopupFloater>
 
 	@override
 	Widget build(BuildContext context) {
-		print('POPUP FLOATER: rendering "${widget.text}" at position (${widget.initialX}, ${widget.initialY})');
 		// Determine if this is a negative value (red) or positive (green)
 		final isNegative = widget.text.startsWith('-');
 		final textColor = isNegative

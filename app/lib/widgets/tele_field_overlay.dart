@@ -4,6 +4,7 @@ import 'dart:math';
 import '../../providers/field_side_provider.dart';
 import '../../providers/floating_popup_provider.dart';
 import '../../providers/zone_buttons_provider.dart';
+import '../../providers/button_position_provider.dart';
 import '../../constants/colors.dart';
 import '../models/field_button.dart';
 import '../models/field_descriptor.dart';
@@ -319,6 +320,9 @@ class TeleFieldOverlay extends ConsumerWidget {
 				final maxWidth = fieldWidth ?? constraints.maxWidth;
 				final fieldHeight = maxWidth / 1.875;
 
+				// Register button positions for undo popup placement
+				_registerButtonPositions(ref, maxWidth, fieldHeight, activeZone, swapButtonSides, shouldRotate);
+
 				return Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Container(
@@ -383,7 +387,6 @@ class TeleFieldOverlay extends ConsumerWidget {
 										final targetName = targetNameMap[target.field] ?? '';
 										final isActive = activeFuelTarget == targetName;
 										final isVisible = target.zone == activeZone;
-										print('TELE FUEL TARGET: target=${target.label}, targetName=$targetName, activeFuelTarget=$activeFuelTarget, isActive=$isActive');
 										return Visibility(
 											visible: isVisible,
 											maintainSize: false,
@@ -485,8 +488,8 @@ class TeleFieldOverlay extends ConsumerWidget {
 				key: buttonKey,
 				left: swapButtonSides ? null : leftFromLeftPercent,
 				right: swapButtonSides ? leftFromLeftPercent : null,
-				top: swapButtonSides ? bottomFromTopPixels : topPixels,
-				bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
+				top: swapButtonSides ? topFromBottomPixels : topPixels,
+				bottom: swapButtonSides ? bottomFromTopPixels : bottomPixels,
 				child: GestureDetector(
 					onTapDown: (details) => onMovementTapped(button.field, button.label, details.globalPosition),
 					child: Tooltip(
@@ -520,8 +523,8 @@ class TeleFieldOverlay extends ConsumerWidget {
 			key: buttonKey,
 			right: swapButtonSides ? null : rightPixels,
 			left: swapButtonSides ? leftPixels : null,
-			top: swapButtonSides ? bottomFromTopPixels : topPixels,
-			bottom: swapButtonSides ? topFromBottomPixels : bottomPixels,
+			top: swapButtonSides ? topFromBottomPixels : topPixels,
+			bottom: swapButtonSides ? bottomFromTopPixels : bottomPixels,
 			child: GestureDetector(
 				onTapDown: (details) => onMovementTapped(button.field, button.label, details.globalPosition),
 				child: Tooltip(
@@ -711,5 +714,93 @@ class TeleFieldOverlay extends ConsumerWidget {
 				),
 			),
 		);
+	}
+
+	/// Register button positions for undo popup placement
+	void _registerButtonPositions(
+		WidgetRef ref,
+		double fieldWidth,
+		double fieldHeight,
+		String activeZone,
+		bool swapButtonSides,
+		bool shouldRotate,
+	) {
+		final positionProvider = ref.read(buttonPositionProvider.notifier);
+		final positions = <String, Offset>{};
+
+		// Calculate movement button positions
+		for (final btn in teleZoneChangeButtons) {
+			if (btn.zone != activeZone) continue;
+
+			final buttonWidth = btn.widthPercent * fieldWidth / 100;
+			final buttonHeight = buttonWidth * btn.aspectRatio;
+
+			double centerX, centerY;
+
+			final topPx = btn.topPercent != null ? btn.topPercent! * fieldHeight / 100 : null;
+			final bottomPx = btn.bottomPercent != null ? btn.bottomPercent! * fieldHeight / 100 : null;
+
+			if (btn.leftPercent != null) {
+				final leftPx = btn.leftPercent! * fieldWidth / 100;
+				centerX = swapButtonSides ? (fieldWidth - leftPx - buttonWidth / 2) : (leftPx + buttonWidth / 2);
+				// For leftPercent buttons: top: topPercent, bottom: bottomPercent (no swap even when swapButtonSides)
+				centerY = topPx != null ? topPx + buttonHeight / 2 : (bottomPx != null ? fieldHeight - bottomPx - buttonHeight / 2 : fieldHeight / 2);
+			} else {
+				final rightPx = btn.rightPercent * fieldWidth / 100;
+				centerX = swapButtonSides ? (rightPx + buttonWidth / 2) : (fieldWidth - rightPx - buttonWidth / 2);
+				// For rightPercent buttons: top: topPercent, bottom: bottomPercent (NO swap in tele!)
+				centerY = topPx != null ? topPx + buttonHeight / 2 : (bottomPx != null ? fieldHeight - bottomPx - buttonHeight / 2 : fieldHeight / 2);
+			}
+
+			positions[btn.field] = Offset(centerX, centerY);
+		}
+
+		// Calculate fuel target positions
+		for (final target in teleFuelTargets) {
+			if (target.zone != activeZone) continue;
+
+			final size = target.widthPercent * fieldWidth / 100;
+
+			final leftPercent = target.leftPercent;
+			final rightPercent = target.rightPercent;
+			final topPercent = target.topPercent;
+			final bottomPercent = target.bottomPercent;
+
+			final leftPx = leftPercent != null ? leftPercent * fieldWidth / 100 : null;
+			final rightPx = rightPercent != null ? rightPercent * fieldWidth / 100 : null;
+			final topPx = topPercent != null ? topPercent * fieldHeight / 100 : null;
+			final bottomPx = bottomPercent != null ? bottomPercent * fieldHeight / 100 : null;
+
+			double centerX = fieldWidth / 2;
+			double centerY = fieldHeight / 2;
+
+			if (swapButtonSides) {
+				if (leftPx != null) centerX = fieldWidth - leftPx - size / 2;
+				if (rightPx != null) centerX = rightPx + size / 2;
+				if (bottomPx != null) centerY = topPx != null ? topPx + size / 2 : fieldHeight / 2;
+				if (topPx != null) centerY = bottomPx != null ? fieldHeight - bottomPx - size / 2 : fieldHeight / 2;
+			} else {
+				if (leftPx != null) centerX = leftPx + size / 2;
+				if (rightPx != null) centerX = fieldWidth - rightPx - size / 2;
+				if (topPx != null) centerY = topPx + size / 2;
+				if (bottomPx != null) centerY = fieldHeight - bottomPx - size / 2;
+			}
+
+			final registryFieldName = target.descriptor?.name ?? target.field;
+			positions[registryFieldName] = Offset(centerX, centerY);
+		}
+
+		// When field is rotated 180 degrees, transform coordinates to account for rotation
+		if (shouldRotate) {
+			final rotatedPositions = <String, Offset>{};
+			for (final entry in positions.entries) {
+				final pos = entry.value;
+				// 180-degree rotation: (x, y) -> (fieldWidth - x, fieldHeight - y)
+				rotatedPositions[entry.key] = Offset(fieldWidth - pos.dx, fieldHeight - pos.dy);
+			}
+			positionProvider.setButtonPositions(rotatedPositions);
+		} else {
+			positionProvider.setButtonPositions(positions);
+		}
 	}
 }
