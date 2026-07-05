@@ -611,6 +611,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 			height: buttonSize,
 			teleValuesTableDescription: descriptor.teleValuesTableDescription,
 			autoValuesTableDescription: descriptor.autoValuesTableDescription,
+			value: '', // Force new instance, prevents caching to use updated width/height
 		);
 
 		return Positioned(

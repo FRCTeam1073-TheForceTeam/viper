@@ -873,11 +873,21 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 		final shouldRotate = fieldSide == FieldSide.left;
 		final swapButtonSides = isBlueTeam;
-		print('[TELE_TAB] Tab=Tele, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+		final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+		print('[TELE_TAB] Tab=Tele, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate, isLandscape=$isLandscape');
+
+		// In landscape, constrain field width based on screen height to maintain aspect ratio and leave room for controls
+		double? constrainedFieldWidth;
+		if (isLandscape) {
+			final screenHeight = MediaQuery.of(context).size.height;
+			final maxFieldHeight = screenHeight * 0.5;
+			constrainedFieldWidth = maxFieldHeight * 1.875; // Maintain 1.875:1 aspect ratio
+		}
 
 		// Instantiate overlay early so buttons register their descriptors
 		final fieldOverlay = TeleFieldOverlay(
 			key: _fieldOverlayKey,
+			fieldWidth: constrainedFieldWidth,
 			fieldSide: fieldSide,
 			activeZone: ref.watch(activeZoneProvider),
 			climbLevel: scoutingData.getFieldValue('tele_climb_level').asInt(),
@@ -1001,7 +1011,9 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 						// Field Overlay
 						Padding(
 							padding: const EdgeInsets.symmetric(horizontal: 16),
-							child: fieldOverlay,
+							child: Center(
+								child: fieldOverlay,
+							),
 						),
 
 						const SizedBox(height: 16),

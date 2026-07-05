@@ -955,11 +955,21 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 		final shouldRotate = fieldSide == FieldSide.left;
 		final swapButtonSides = isBlueTeam;
-		print('[AUTO_TAB] Tab=Auto, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
+		final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+		print('[AUTO_TAB] Tab=Auto, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate, isLandscape=$isLandscape');
+
+		// In landscape, constrain field width based on screen height to maintain aspect ratio and leave room for controls
+		double? constrainedFieldWidth;
+		if (isLandscape) {
+			final screenHeight = MediaQuery.of(context).size.height;
+			final maxFieldHeight = screenHeight * 0.5;
+			constrainedFieldWidth = maxFieldHeight * 1.875; // Maintain 1.875:1 aspect ratio
+		}
 
 		// Instantiate overlay early so buttons register their descriptors
 		final fieldOverlay = AutoFieldOverlay(
 			key: _fieldOverlayKey,
+			fieldWidth: constrainedFieldWidth,
 			fieldSide: fieldSide,
 			activeZone: activeZone,
 			climbLevel: climbLevel,
@@ -1064,7 +1074,9 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						// (movement buttons, fuel overlays, zone toggles, climb selector)
 						Padding(
 							padding: const EdgeInsets.symmetric(horizontal: 16),
-							child: fieldOverlay,
+							child: Center(
+								child: fieldOverlay,
+							),
 						),
 
 						const SizedBox(height: 16),
