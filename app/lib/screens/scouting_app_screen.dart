@@ -6,6 +6,7 @@ import 'tabs/auto_tab.dart';
 import 'tabs/teleop_tab.dart';
 import 'tabs/end_game_tab.dart';
 import '../widgets/viper_menu_button.dart';
+import '../widgets/instant_tab_bar_view.dart';
 import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../providers/match_timer_provider.dart';
@@ -55,8 +56,10 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 	void initState() {
 		super.initState();
 
-		// Get initial tab index from provider
-		final initialTabIndex = ref.read(selectedTabIndexProvider);
+		// Always start on pre-match tab (index 0) when screen loads
+		// This ensures we don't show the wrong tab when switching matches
+		final initialTabIndex = 0;
+		print('[SCOUT_INIT] Creating TabController with initialIndex: $initialTabIndex');
 
 		// Initialize TabController with 4 tabs
 		_tabController = TabController(length: 4, vsync: this, initialIndex: initialTabIndex);
@@ -182,10 +185,13 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 				data: (matchData) {
 					print('[SCOUT_LOAD] existingScoutDataProvider completed with data=${matchData != null}');
 					if (matchData != null) {
-						print('[SCOUT_LOAD] ✅ Existing data found, loading providers...');
+						print('[SCOUT_LOAD] ✅ Existing data found, resetting tab to pre-match');
+						_tabController.index = 0;
+						ref.read(selectedTabIndexProvider.notifier).setTabIndex(0);
 						// Delay provider modification until after widget tree is built
 						WidgetsBinding.instance.addPostFrameCallback((_) {
 							print('[SCOUT_LOAD] POST_FRAME_CALLBACK executing');
+
 							// Preserve original created timestamp from previous scouting session
 							if (matchData['created'] != null) {
 								print('[SCOUT_LOAD] Setting original created time: ${matchData['created']}');
@@ -260,10 +266,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		final isBlueTeam = selectedBot?.startsWith('B') ?? false;
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
 
-		return DefaultTabController(
-			length: 4,
-			initialIndex: selectedTabIndex,
-			child: Scaffold(
+		return Scaffold(
 				body: CustomScrollView(
 					slivers: [
 						SliverAppBar(
@@ -367,8 +370,9 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 										bottom: BorderSide(color: AppColors.mainBorderColor, width: 1),
 									),
 								),
-								child: TabBarView(
+								child: InstantTabBarView(
 									controller: _tabController,
+									physics: const NeverScrollableScrollPhysics(),
 									children: [
 										_buildTabContent(ref, 0),
 										_buildTabContent(ref, 1),
@@ -380,7 +384,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 						),
 					],
 				),
-			),
 		);
 	}
 }
