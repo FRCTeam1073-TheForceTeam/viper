@@ -644,7 +644,8 @@ class AutoFieldOverlay extends ConsumerWidget {
 		final topPx = 15.0 * fieldHeight / 100;
 
 		return Positioned(
-			right: edgePx,
+			right: swapButtonSides ? edgePx : null,
+			left: swapButtonSides ? null : edgePx,
 			top: topPx,
 			child: GestureDetector(
 				onTap: () => onStartAutoTapped?.call(),
