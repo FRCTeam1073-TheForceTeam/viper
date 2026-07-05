@@ -118,7 +118,6 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 	}) {
 		// Read current zone from provider (source of truth) instead of internal variable
 		final currentZone = _ref.read(activeZoneProvider);
-		print('[RECORD_ACTION] phase=$phase, field=$field, value=$value, currentZone=$currentZone, currentFuelTarget=$_activeFuelTarget');
 		final now = DateTime.now();
 		final matchStartTime = _ref.read(matchTimerProvider);
 		final startTime = matchStartTime ?? now;
@@ -147,32 +146,26 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			newZone = 'opponent';
 		}
 
-		print('[RECORD_ACTION] Determined newZone=$newZone from field=$field');
 
 		// Update time accumulators if zone is changing
 		if (newZone != null && newZone != currentZone) {
 			final lastZoneTime = lastZoneChangeTime ?? startTime;
 			final zoneElapsedSeconds = now.difference(lastZoneTime).inSeconds;
 
-			print('[ZONE_TIME_UPDATE] currentZone=$currentZone, newZone=$newZone, elapsed=$zoneElapsedSeconds seconds');
 
 			if (currentZone == 'alliance' && zoneElapsedSeconds > 0) {
 				final currentTime = newState.getFieldValue(allianceTimeKey).asInt();
 				newState = newState.updateField(allianceTimeKey, currentTime + zoneElapsedSeconds);
-				print('[ZONE_TIME_UPDATE] Updated alliance time to ${currentTime + zoneElapsedSeconds}');
 			} else if (currentZone == 'neutral' && zoneElapsedSeconds > 0) {
 				final currentTime = newState.getFieldValue(neutralTimeKey).asInt();
 				newState = newState.updateField(neutralTimeKey, currentTime + zoneElapsedSeconds);
-				print('[ZONE_TIME_UPDATE] Updated neutral time to ${currentTime + zoneElapsedSeconds}');
 			} else if (currentZone == 'opponent' && zoneElapsedSeconds > 0) {
-				print('[ZONE_TIME_UPDATE] ERROR: Attempting to update opponent time in $phase phase!');
 				final currentTime = newState.getFieldValue(opponentTimeKey).asInt();
 				newState = newState.updateField(opponentTimeKey, currentTime + zoneElapsedSeconds);
 			}
 
 			_activeZone = newZone;
 			_ref.read(activeZoneProvider.notifier).changeZone(newZone);
-			print('ZONE SYNCED: Updated internal zone to $newZone and provider');
 			if (phase == 'auto') {
 				_autoLastZoneChangeTime = now;
 			} else {
@@ -192,15 +185,12 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 
 			if (isToNeutral) {
 				final targetName = phase == 'auto' ? 'alliancePass' : 'neutralAlliancePass';
-				print('ZONE CHANGE: transitioning to neutral, phase=$phase, setting fuel target to $targetName');
 				_activeFuelTarget = targetName;
 				_ref.read(activeFuelTargetProvider.notifier).changeTarget(targetName);
 			} else if (isToOpponent) {
-				print('ZONE CHANGE: transitioning to opponent, setting fuel target to opponentNeutralPass');
 				_activeFuelTarget = 'opponentNeutralPass';
 				_ref.read(activeFuelTargetProvider.notifier).changeTarget('opponentNeutralPass');
 			} else {
-				print('ZONE CHANGE: transitioning to alliance, setting fuel target to hub');
 				_activeFuelTarget = 'hub';
 				_ref.read(activeFuelTargetProvider.notifier).changeTarget('hub');
 			}
@@ -241,19 +231,16 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 				_activeFuelTarget = 'hub';
 				_ref.read(activeZoneProvider.notifier).changeZone('alliance');
 				_ref.read(activeFuelTargetProvider.notifier).changeTarget('hub');
-				print('UNDO ZONE SYNCED: _activeZone=alliance, provider updated, _activeFuelTarget=hub');
 			} else if (field.endsWith('_to_alliance')) {
 				_activeZone = 'neutral';
 				_activeFuelTarget = 'alliancePass';
 				_ref.read(activeZoneProvider.notifier).changeZone('neutral');
 				_ref.read(activeFuelTargetProvider.notifier).changeTarget('alliancePass');
-				print('UNDO ZONE SYNCED: _activeZone=neutral, provider updated, _activeFuelTarget=alliancePass');
 			} else if (field.endsWith('_to_opponent')) {
 				_activeZone = 'neutral';
 				_activeFuelTarget = 'opponentAlliancePass';
 				_ref.read(activeZoneProvider.notifier).changeZone('neutral');
 				_ref.read(activeFuelTargetProvider.notifier).changeTarget('opponentAlliancePass');
-				print('UNDO ZONE SYNCED: _activeZone=neutral, provider updated, _activeFuelTarget=opponentAlliancePass');
 			}
 		} else if (field.contains('_fuel_') || field.contains('_collect_')) {
 			final currentValue = newState.getFieldValue(field).asInt();

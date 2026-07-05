@@ -133,9 +133,7 @@ class _MenuContent extends ConsumerWidget {
 						icon: const Icon(Icons.storage),
 						label: Text(t('change_server')),
 						onPressed: () {
-							print('[KEBAB_MENU] ✓ Change Server clicked');
 							Navigator.pop(context);
-							print('[KEBAB_MENU] → Calling navigateTo(server)');
 							navigateTo(NavigationTarget.server);
 						},
 					),
@@ -145,9 +143,7 @@ class _MenuContent extends ConsumerWidget {
 							icon: const Icon(Icons.event),
 							label: Text(t('change_event')),
 							onPressed: () {
-								print('[KEBAB_MENU] ✓ Change Event clicked');
 								Navigator.pop(context);
-								print('[KEBAB_MENU] → Calling navigateTo(event)');
 								navigateTo(NavigationTarget.event);
 							},
 						),
@@ -158,9 +154,7 @@ class _MenuContent extends ConsumerWidget {
 							icon: const Icon(Icons.sports_esports),
 							label: Text(t('change_robot_position')),
 							onPressed: () {
-								print('[KEBAB_MENU] ✓ Change Robot Position clicked');
 								Navigator.pop(context);
-								print('[KEBAB_MENU] → Calling navigateTo(botSelection)');
 								navigateTo(NavigationTarget.botSelection);
 							},
 						),
@@ -171,9 +165,7 @@ class _MenuContent extends ConsumerWidget {
 							icon: const Icon(Icons.sports),
 							label: Text(t('change_match')),
 							onPressed: () {
-								print('[KEBAB_MENU] ✓ Change Match clicked');
 								Navigator.pop(context);
-								print('[KEBAB_MENU] → Calling navigateTo(match)');
 								navigateTo(NavigationTarget.match);
 							},
 						),
@@ -184,9 +176,7 @@ class _MenuContent extends ConsumerWidget {
 							icon: const Icon(Icons.cloud_upload),
 							label: Text(t('upload_data')),
 							onPressed: () {
-								print('[KEBAB_MENU] ✓ Upload Data clicked');
 								Navigator.pop(context);
-								print('[KEBAB_MENU] → Calling navigateTo(upload)');
 								navigateTo(NavigationTarget.upload);
 							},
 						),

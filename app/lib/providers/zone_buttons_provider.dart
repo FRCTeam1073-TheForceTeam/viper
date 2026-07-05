@@ -59,7 +59,6 @@ Offset? getElementPosition(
 	// Check both cache and state via notifier's getElement method
 	final key = notifier.getElement(fieldName);
 	if (key == null) {
-		print('getElementPosition: "$fieldName" not found in notifier');
 		return null;
 	}
 
@@ -76,7 +75,6 @@ Offset? getElementPosition(
 
 		return globalOffset;
 	} catch (e) {
-		print('getElementPosition ERROR for $fieldName: $e');
 		return null;
 	}
 }

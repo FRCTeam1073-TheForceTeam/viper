@@ -308,7 +308,6 @@ class TeleFieldOverlay extends ConsumerWidget {
 		final swapButtonSides = isBlueTeam;
 
 		// Debug overlay build state
-		print('[TELE_FIELD_OVERLAY] Building: botPosition=$botPosition, fieldSide=$fieldSide, activeZone=$activeZone, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
 
 		// Team color for UI elements
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
@@ -591,7 +590,6 @@ class TeleFieldOverlay extends ConsumerWidget {
 			bottom: swapButtonSides ? swappedBottomPx : bottomPx,
 			child: GestureDetector(
 				onTap: () {
-					print('TELE FUEL TARGET TAPPED: ${target.label}');
 					onTap();
 				},
 				child: Transform.rotate(

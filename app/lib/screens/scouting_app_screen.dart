@@ -59,7 +59,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		// Always start on pre-match tab (index 0) when screen loads
 		// This ensures we don't show the wrong tab when switching matches
 		final initialTabIndex = 0;
-		print('[SCOUT_INIT] Creating TabController with initialIndex: $initialTabIndex');
 
 		// Initialize TabController with 4 tabs
 		_tabController = TabController(length: 4, vsync: this, initialIndex: initialTabIndex);
@@ -183,69 +182,53 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		ref.listen(existingScoutDataProvider, (previous, next) {
 			next.when(
 				data: (matchData) {
-					print('[SCOUT_LOAD] existingScoutDataProvider completed with data=${matchData != null}');
 					if (matchData != null) {
-						print('[SCOUT_LOAD] ✅ Existing data found, resetting tab to pre-match');
 						_tabController.index = 0;
 						ref.read(selectedTabIndexProvider.notifier).setTabIndex(0);
 						// Delay provider modification until after widget tree is built
 						WidgetsBinding.instance.addPostFrameCallback((_) {
-							print('[SCOUT_LOAD] POST_FRAME_CALLBACK executing');
 
 							// Preserve original created timestamp from previous scouting session
 							if (matchData['created'] != null) {
-								print('[SCOUT_LOAD] Setting original created time: ${matchData['created']}');
 								ref.read(originalCreatedProvider.notifier).setFromExistingData(matchData['created'] as String);
 							}
 							// Initialize session start time to now
 							ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
 
 							// Load all scouting data providers
-							print('[SCOUT_LOAD] Loading pre-match data...');
 							ref.read(preMatchProvider.notifier).loadFromData(matchData);
 
-							print('[SCOUT_LOAD] Loading unified scouting data (auto, tele, end-game)...');
 							ref.read(scoutingDataProvider.notifier).loadFromServerData(matchData);
 
 							// Load timeline and set match timer to last event's timestamp
-							print('[SCOUT_LOAD] Loading timeline...');
 							if (matchData['timeline'] != null && (matchData['timeline'] as String).isNotEmpty) {
 								final timelineEvents = TimelineEvent.parseTimeline(matchData['timeline'] as String);
-								print('[SCOUT_LOAD] Loaded ${timelineEvents.length} timeline events into provider');
 								ref.read(timelineProvider.notifier).setTimeline(timelineEvents);
 
 								if (timelineEvents.isNotEmpty) {
 									final lastEventSeconds = timelineEvents.last.timeSeconds;
-									print('[SCOUT_LOAD] Timeline last event at ${lastEventSeconds}s, setting match timer...');
 									// Calculate when the match should have started to reach this time
 									final matchStartTime = DateTime.now().subtract(Duration(seconds: lastEventSeconds));
 									ref.read(matchTimerProvider.notifier).setStartTime(matchStartTime);
 								}
 							} else {
-								print('[SCOUT_LOAD] No timeline data in CSV');
 							}
-							print('[SCOUT_LOAD] ✅ All data loaded successfully');
 						});
 					} else if (matchData == null) {
-						print('[SCOUT_LOAD] ✅ No existing data found, starting fresh');
 						// No existing data - initialize a new session and reset all scouting data
 						WidgetsBinding.instance.addPostFrameCallback((_) {
-							print('[SCOUT_LOAD] Resetting all providers for fresh scouting session');
 							ref.read(originalCreatedProvider.notifier).clear();
 							ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
 							ref.read(preMatchProvider.notifier).reset();
 							ref.read(scoutingDataProvider.notifier).reset();
 							// Navigate to pre-match tab
-							print('[SCOUT_LOAD] Navigating to pre-match tab');
 							_tabController.animateTo(0);
 						});
 					}
 				},
 				loading: () {
-					print('[SCOUT_LOAD] existingScoutDataProvider LOADING');
 				},
 				error: (err, st) {
-					print('[SCOUT_LOAD] existingScoutDataProvider ERROR: $err');
 				},
 			);
 		});

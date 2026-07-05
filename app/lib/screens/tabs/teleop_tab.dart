@@ -815,7 +815,6 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 			if (position == null) {
 				final scoutingData = ref.read(scoutingDataProvider);
 				final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
-				print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
 				return null;
 			}
 
@@ -831,14 +830,11 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 
 				// Add the field overlay's offset to get stack-relative coordinates
 				position = position + fieldOverlayOffset;
-				print('UNDO: found button $field at position: $position (after offset adjustment)');
 			} else {
-				print('UNDO: could not get render boxes for offset calculation');
 			}
 
 			return position;
 		} catch (e) {
-			print('_getUndoPopupPosition ERROR: $e');
 			return null;
 		}
 	}
@@ -874,7 +870,6 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		final shouldRotate = fieldSide == FieldSide.left;
 		final swapButtonSides = isBlueTeam;
 		final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-		print('[TELE_TAB] Tab=Tele, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate, isLandscape=$isLandscape');
 
 		// In landscape, constrain field width based on screen height to maintain aspect ratio and leave room for controls
 		double? constrainedFieldWidth;
@@ -906,13 +901,10 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 						final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
 						final buttonStackRelative = globalPosition - stackGlobalOffset;
 
-						print('ZONE CHANGE: button global=$globalPosition, stack global=$stackGlobalOffset, button relative to stack=$buttonStackRelative');
 						ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
 					} else {
-						print('ZONE CHANGE: stackBox is null');
 					}
 				} catch (e) {
-					print('ZONE CHANGE ERROR: $e');
 				}
 			},
 			onClimbTapped: () {
@@ -942,7 +934,6 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 				}
 			},
 			onFuelTargetTapped: (targetName) {
-				print('TELE onFuelTargetTapped called: targetName=$targetName');
 				ref
 						.read(scoutingDataProvider.notifier)
 						.changeTeleFuelTarget(targetName);
@@ -1292,11 +1283,9 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 								? overlayStackRelative.dy + (overlayBox.size.height * (1 - bottomPct / 100))
 								: overlayStackRelative.dy + (overlayBox.size.height * topPct / 100);
 
-							print('FUEL BUTTON: target=${teleState.activeFuelTarget}, overlay relative to stack=$overlayStackRelative, popup position=($targetX, $targetY)');
 							ref.read(floatingPopupProvider.notifier).addPopup('+$amount', targetX, targetY);
 						}
 					} catch (e) {
-						print('FUEL BUTTON ERROR: $e');
 					}
 				},
 				style: ElevatedButton.styleFrom(

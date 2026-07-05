@@ -100,13 +100,11 @@ class _HomeRouter extends ConsumerWidget {
 		ref.listen(appStateProvider, (previous, next) {
 			next.whenData((appState) {
 				final isInitialized = ref.read(appInitializedProvider);
-				print('[HOME_ROUTER] App state listener: $appState (initialized: $isInitialized)');
 
 				// Only auto-navigate during initialization
 				if (isInitialized) {
 					// After initialization, app state changes don't trigger navigation
 					// User controls where they go - respect their choices
-					print('[HOME_ROUTER] Already initialized - skipping auto-navigation');
 					return;
 				}
 
@@ -117,26 +115,21 @@ class _HomeRouter extends ConsumerWidget {
 						// Don't navigate yet
 						break;
 					case AppState.needsServer:
-						print('[HOME_ROUTER] Navigating to server config');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.server);
 						navigated = true;
 					case AppState.needsEvent:
-						print('[HOME_ROUTER] Navigating to event picker');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
 						navigated = true;
 					case AppState.needsBotSelection:
-						print('[HOME_ROUTER] Navigating to bot selection');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.botSelection);
 						navigated = true;
 					default:
-						print('[HOME_ROUTER] Navigating to match selection (default)');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
 						navigated = true;
 				}
 
 				// Mark initialized once we've determined the initial page to show
 				if (navigated) {
-					print('[HOME_ROUTER] ✅ Initialization complete - disabling auto-navigation');
 					ref.read(appInitializedProvider.notifier).markInitialized();
 				}
 			});
@@ -152,56 +145,44 @@ class _HomeRouter extends ConsumerWidget {
 			);
 		}
 
-		print('[HOME_ROUTER] ═══════════════════════════════════════════════════════');
-		print('[HOME_ROUTER] Showing screen: $nav');
-		print('[HOME_ROUTER] ═══════════════════════════════════════════════════════');
 
 		switch (nav) {
 			case NavScreen.server:
-				print('[HOME_ROUTER] → Loading: ServerConfigScreen');
 				return ServerConfigScreen(
 					onServerConfigured: (_) {
 						// After server config is saved, navigate directly to event picker
-						print('[HOME_ROUTER] Server configured, navigating to event picker');
 						// Invalidate eventListProvider to ensure it fetches with new server config
 						ref.invalidate(eventListProvider);
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
 					},
 				);
 			case NavScreen.eventPicker:
-				print('[HOME_ROUTER] → Loading: EventPickerScreen');
 					return EventPickerScreen(
 						onEventSelected: (eventId) {
 							// After event selection, navigate directly to bot selection
-							print('[HOME_ROUTER] Event selected, navigating to bot selection');
 							ref.read(navigationProvider.notifier).navigateTo(NavScreen.botSelection);
 						},
 					);
 			case NavScreen.botSelection:
-				print('[HOME_ROUTER] → Loading: BotSelectionScreen');
 				return BotSelectionScreen(
 					onBotSelected: (bot) {
 						ref.read(selectedBotPositionProvider.notifier).setPosition(bot);
 						// After bot selection, navigate directly to match selection
-						print('[HOME_ROUTER] Bot selected, navigating to match selection');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
 					},
 				);
 			case NavScreen.matchSelection:
-				print('[HOME_ROUTER] → Loading: MatchSelectionScreen');
 				final botPosition = ref.watch(selectedBotPositionProvider);
 				return MatchSelectionScreen(
 					botPosition: botPosition ?? '',
 					onMatchSelected: (matchNumber, teamNumber) {
 						ref.read(selectedMatchProvider.notifier).setMatch(matchNumber, teamNumber);
 						// After match selection, navigate directly to scouting
-						print('[HOME_ROUTER] Match selected, navigating to scouting');
 						ref.read(navigationProvider.notifier).navigateTo(NavScreen.scouting);
 					},
 				);
 
 			case NavScreen.scouting:
-				print('[HOME_ROUTER] → Loading: ScoutingAppScreen');
 				return FutureBuilder(
 					future: _getSelectedEventForScouting(ref),
 					builder: (context, snapshot) {
@@ -220,7 +201,6 @@ class _HomeRouter extends ConsumerWidget {
 				);
 
 		case NavScreen.uploadData:
-			print('[HOME_ROUTER] → Loading: UploadDataScreen');
 			return const UploadDataScreen();
 		}
 	}

@@ -36,7 +36,6 @@ void undoLastAction(
 
 		// Try to get position from callback first
 		Offset? popupPosition = getUndoPosition?.call(field);
-		print('UNDO COORDINATOR: getUndoPosition callback returned: $popupPosition');
 
 		// Fall back to position above undo button if callback didn't provide position
 		if (popupPosition == null) {

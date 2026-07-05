@@ -253,7 +253,6 @@ class AutoFieldOverlay extends ConsumerWidget {
 		final swapButtonSides = isBlueTeam;
 
 		// Debug overlay build state
-		print('[AUTO_FIELD_OVERLAY] Building: botPosition=$botPosition, fieldSide=$fieldSide, activeZone=$activeZone, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate');
 
 
 		// Team color for UI elements - use globally defined app colors
@@ -561,7 +560,6 @@ class AutoFieldOverlay extends ConsumerWidget {
 			bottom: swapButtonSides ? swappedTopPx : bottomPx,
 			child: GestureDetector(
 				onTap: () {
-					print('FUEL TARGET TAPPED: ${target.label}');
 					onTap();
 				},
 				child: Transform.rotate(

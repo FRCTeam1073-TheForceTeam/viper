@@ -344,7 +344,6 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 			apiClient.preloadRobotPhoto(match.matchNumber, team).then((_) {
 				if (mounted) {
 					_preloadedCount++;
-					print('📸 Preloaded photo ${currentIndex + 1}/${indices.length}: $team');
 					// Continue with next photo after a small delay to avoid overwhelming the system
 					Future.delayed(const Duration(milliseconds: 100), () {
 						if (mounted) {
@@ -354,7 +353,6 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 				}
 			}).catchError((e) {
 				// Error preloading, continue anyway
-				print('⚠️ Error preloading photo for team $team: $e');
 				if (mounted) {
 					Future.delayed(const Duration(milliseconds: 100), () {
 						if (mounted) {

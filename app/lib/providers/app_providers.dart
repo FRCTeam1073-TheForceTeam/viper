@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:drift/drift.dart' show Value;
 import 'package:logger/logger.dart';
 import 'dart:convert';
+import '../services/logger_service.dart';
 import '../data/database/scout_database.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/csv_builder.dart';
@@ -56,12 +57,10 @@ class NavigationNotifier extends StateNotifier<NavScreen?> {
 	NavigationNotifier() : super(null);
 
 	void navigateTo(NavScreen screen) {
-		print('[NAVIGATION] User selected: $screen');
 		state = screen;
 	}
 
 	void clear() {
-		print('[NAVIGATION] Cleared navigation');
 		state = null;
 	}
 }
@@ -77,7 +76,6 @@ class _AppInitializedNotifier extends StateNotifier<bool> {
 
 	Future<void> markInitialized() async {
 		state = true;
-		print('[APP_INIT] ✅ App initialized - auto-navigation disabled for this session');
 	}
 }
 
@@ -88,8 +86,6 @@ final appInitializedProvider = StateNotifierProvider<_AppInitializedNotifier, bo
 /// Determines the current app state based on persisted database data
 /// When called, evaluates the current state and sets forced navigation accordingly
 final appStateProvider = FutureProvider<AppState>((ref) async {
-	print('[APP_STATE] ═══════════════════════════════════════════════════════');
-	print('[APP_STATE] Evaluating app state...');
 
 	final db = await ref.watch(databaseProvider.future);
 	final config = await db.getCurrentConfig();
@@ -99,28 +95,22 @@ final appStateProvider = FutureProvider<AppState>((ref) async {
 	// Treat empty, null, or invalid URLs (like bare "https://") as not configured
 	final isValidServerUrl = _isValidServerUrl(config?.backendUrl);
 	if (!isValidServerUrl) {
-		print('[APP_STATE] No valid server configured (url: "${config?.backendUrl}") → needsServer');
-		print('[APP_STATE] ═══════════════════════════════════════════════════════');
 		return AppState.needsServer;
 	}
 
-	print('[APP_STATE] Server configured (${config!.backendUrl}), continuing to check other requirements...');
 
 	// Wait for SharedPreferences to load before evaluating post-server state
 	// This ensures selectedBotPositionProvider has loaded the persisted bot position
 	await ref.watch(sharedPreferencesProvider.future);
 
 	// Restore the selected event from the database if it exists
-	if (config.selectedEventId?.isNotEmpty ?? false) {
-		print('[APP_STATE] Restoring selected event from database: ${config.selectedEventId}');
-		ref.read(selectedEventProvider.notifier).state = config.selectedEventId;
+	if (config?.selectedEventId?.isNotEmpty ?? false) {
+		ref.read(selectedEventProvider.notifier).state = config!.selectedEventId;
 	}
 
 	// Now evaluate post-server state
 	final nextState = _evaluatePostServerState(config, ref);
 
-	print('[APP_STATE] Next state: $nextState');
-	print('[APP_STATE] ═══════════════════════════════════════════════════════');
 
 	return nextState;
 });
@@ -140,27 +130,21 @@ bool _isValidServerUrl(String? url) {
 AppState _evaluatePostServerState(ServerConfigData? config, Ref ref) {
 	// Check if event is selected
 	if ((config?.selectedEventId?.isNotEmpty ?? false) == false) {
-		print('[APP_STATE] No event selected → needsEvent');
 		return AppState.needsEvent;
 	}
 
 	// Check if bot position is selected
 	final botPosition = ref.watch(selectedBotPositionProvider);
-	print('[APP_STATE] Bot position: $botPosition (${botPosition == null ? "null" : botPosition.isEmpty ? "empty string" : "set"})');
 	if (botPosition == null || botPosition.isEmpty) {
-		print('[APP_STATE] No bot position selected → needsBotSelection');
 		return AppState.needsBotSelection;
 	}
 
 	// Check if match is selected for this session
 	final matchSelection = ref.watch(selectedMatchProvider);
-	print('[APP_STATE] Match selection: match=${matchSelection.match}, team=${matchSelection.team}');
 	if (matchSelection.match == null || matchSelection.team == null) {
-		print('[APP_STATE] No match selected → needsMatchSelection');
 		return AppState.needsMatchSelection;
 	}
 
-	print('[APP_STATE] All prerequisites met → scouting');
 	return AppState.scouting;
 }
 
@@ -230,25 +214,18 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 	}
 
 	Future<void> setSelectedEvent(String eventId) async {
-		print('[SELECTED_EVENT_NOTIFIER] setSelectedEvent($eventId) called');
 		state = eventId;
-		print('[SELECTED_EVENT_NOTIFIER] state set to $eventId');
 		final db = await ref.read(databaseProvider.future);
-		print('[SELECTED_EVENT_NOTIFIER] got database');
 		final config = await db.getCurrentConfig();
-		print('[SELECTED_EVENT_NOTIFIER] got config: $config');
 
 		if (config != null) {
-			print('[SELECTED_EVENT_NOTIFIER] upserting config with selectedEventId=$eventId');
 			await db.upsertConfig(
 				config.copyWith(
 					selectedEventId: Value(eventId),
 					lastEventChangeDate: Value(DateTime.now()),
 				),
 			);
-			print('[SELECTED_EVENT_NOTIFIER] upsertConfig completed');
 		} else {
-			print('[SELECTED_EVENT_NOTIFIER] creating new config with selectedEventId=$eventId');
 			await db.upsertConfig(
 				ServerConfigData(
 					id: 1,
@@ -259,7 +236,6 @@ class SelectedEventNotifier extends StateNotifier<String?> {
 					lastEventChangeDate: DateTime.now(),
 				),
 			);
-			print('[SELECTED_EVENT_NOTIFIER] upsertConfig (new) completed');
 		}
 	}
 }
@@ -334,7 +310,7 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 	final currentYear = DateTime.now().year;
 
 	// Log filtering info
-	final logger = Logger();
+	final logger = getLogger();
 	logger.i('🎯 EVENT LIST FILTERING:');
 	logger.i('   Total events: ${events.length}');
 	logger.i('   Current year: $currentYear');
@@ -344,15 +320,9 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 	for (var e in events) {
 		byYear[e.season] = (byYear[e.season] ?? 0) + 1;
 	}
-	logger.i('   Events by year: $byYear');
 
 	// Filter to current season only
 	final filtered = events.where((e) => e.season == currentYear).toList();
-	logger.i('   After filtering: ${filtered.length} events');
-
-	if (filtered.isNotEmpty) {
-		logger.d('   Filtered events: ${filtered.map((e) => e.eventId).join(", ")}');
-	}
 
 	// Sort by start date, most recent first
 	// Events with no start date are placed at the bottom
@@ -369,7 +339,7 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 /// StateNotifier for event list with cache-first synchronous loading
 class EventListNotifier extends StateNotifier<List<EventModel>> {
 	final Ref ref;
-	final Logger _logger = Logger();
+	final Logger _logger = getLogger();
 
 	EventListNotifier(this.ref) : super([]) {
 		_initializeWithCache();
@@ -450,18 +420,18 @@ final pitScoutingDataProvider = FutureProvider<Map<String, dynamic>>((ref) async
 			final cacheKey = 'pit_scouting_data_cache_$selectedEvent';
 			final cachedJson = prefs.getString(cacheKey);
 			if (cachedJson != null) {
-				Logger().i('📦 Loading cached pit scouting data (no server configured)');
+				getLogger().i('📦 Loading cached pit scouting data (no server configured)');
 				try {
 					final jsonData = jsonDecode(cachedJson) as Map<String, dynamic>;
 					return jsonData;
 				} catch (e) {
-					Logger().e('Error decoding cached pit scouting data: $e');
+					getLogger().e('Error decoding cached pit scouting data: $e');
 				}
 			}
 			return {};
 		}
 
-		final logger = Logger();
+		final logger = getLogger();
 		final apiClient = await ref.watch(apiClientProvider.future);
 		final prefs = await ref.watch(sharedPreferencesProvider.future);
 		final cacheKey = 'pit_scouting_data_cache_$selectedEvent';
@@ -507,7 +477,7 @@ final pitScoutingDataProvider = FutureProvider<Map<String, dynamic>>((ref) async
 
 		return cachedData ?? {};
 	} catch (e) {
-		Logger().e('Error in pitScoutingDataProvider: $e');
+		getLogger().e('Error in pitScoutingDataProvider: $e');
 		return {};
 	}
 });
@@ -550,7 +520,7 @@ final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
 				}
 			}
 		} catch (e) {
-			Logger().w('Failed to parse cached scouting CSV: $e');
+			getLogger().w('Failed to parse cached scouting CSV: $e');
 		}
 	}
 
@@ -574,7 +544,7 @@ final scoutedMatchesProvider = FutureProvider<Set<String>>((ref) async {
 		}
 	} catch (e) {
 		// If download fails, keep cached/empty server matches
-		Logger().w('Failed to download event scouting data: $e');
+		getLogger().w('Failed to download event scouting data: $e');
 	}
 
 	// Combine server matches (fresh or cached) with local matches
@@ -667,7 +637,7 @@ class SyncStateNotifier extends StateNotifier<SyncState> {
 					await apiClient.uploadScoutData(entry.csvData);
 					uploadedIds.add(entry.id);
 				} catch (e) {
-					Logger().w('Failed to upload scout entry ${entry.id}: $e');
+					getLogger().w('Failed to upload scout entry ${entry.id}: $e');
 				}
 			}
 
@@ -745,18 +715,14 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 	/// Initialize upload page - clean up old history and load current data
 	Future<void> initializeUploadPage() async {
 		try {
-			print('[UPLOAD_STATE] Initializing upload page...');
 			final db = await ref.read(databaseProvider.future);
 
 			// Clean up uploaded history older than 18 days
-			print('[UPLOAD_STATE] Cleaning up history older than 18 days');
 			await db.deleteOldUploadedHistory(daysOld: 18);
 
 			// Load current data
 			await _loadUploadData();
-			print('[UPLOAD_STATE] Upload page initialized successfully');
 		} catch (e) {
-			print('[UPLOAD_STATE] Error initializing upload page: $e');
 			state = state.copyWith(error: 'Failed to initialize upload page: $e');
 		}
 	}
@@ -764,12 +730,10 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 	/// Reload upload data from database
 	Future<void> _loadUploadData() async {
 		try {
-			print('[UPLOAD_STATE] Loading upload data...');
 			final db = await ref.read(databaseProvider.future);
 
 			// Get all pending entries
 			final allPending = await db.getAllPendingUploadHistory();
-			print('[UPLOAD_STATE] Found ${allPending.length} pending entries');
 
 			// Split into ready (first 10) and later (rest)
 			final readyToUpload = allPending.length > BATCH_SIZE
@@ -779,7 +743,6 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 					? allPending.sublist(BATCH_SIZE)
 				: <UploadHistoryData>[];
 
-			print('[UPLOAD_STATE] Ready to upload: ${readyToUpload.length}, Upload later: ${uploadLater.length}');
 
 			// Get history (uploaded + failed + deleted)
 			final uploaded = await db.getUploadHistoryByStatus('uploaded');
@@ -787,7 +750,6 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 			final deleted = await db.getUploadHistoryByStatus('deleted');
 			final history = [...uploaded, ...failed, ...deleted];
 
-			print('[UPLOAD_STATE] History: ${history.length} entries (uploaded: ${uploaded.length}, failed: ${failed.length}, deleted: ${deleted.length})');
 
 			state = state.copyWith(
 				readyToUpload: readyToUpload,
@@ -795,9 +757,7 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 				history: history,
 				error: null,
 			);
-			print('[UPLOAD_STATE] State updated successfully');
 		} catch (e) {
-			print('[UPLOAD_STATE] Error loading upload data: $e');
 			state = state.copyWith(error: 'Failed to load upload data: $e');
 		}
 	}
@@ -876,13 +836,10 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 	/// Soft-delete an entry (moves to history with deleted status)
 	Future<void> deleteEntry(int id) async {
 		try {
-			print('[UPLOAD_STATE] Soft-deleting entry $id');
 			final db = await ref.read(databaseProvider.future);
 			await db.softDeleteHistoryEntry(id);
-			print('[UPLOAD_STATE] Entry $id marked as deleted');
 			await _loadUploadData();
 		} catch (e) {
-			print('[UPLOAD_STATE] Error deleting entry: $e');
 			state = state.copyWith(error: 'Failed to delete entry: $e');
 		}
 	}
@@ -901,13 +858,10 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 	/// Restore a deleted entry back to ready to upload
 	Future<void> restoreDeletedEntry(int id) async {
 		try {
-			print('[UPLOAD_STATE] Restoring deleted entry $id');
 			final db = await ref.read(databaseProvider.future);
 			await db.restoreDeletedEntry(id);
-			print('[UPLOAD_STATE] Entry $id restored to pending');
 			await _loadUploadData();
 		} catch (e) {
-			print('[UPLOAD_STATE] Error restoring entry: $e');
 			state = state.copyWith(error: 'Failed to restore entry: $e');
 		}
 	}
@@ -938,7 +892,6 @@ final _ensureSelectedEventProvider = FutureProvider<String?>((ref) async {
 	for (int i = 0; i < 50; i++) {
 		final event = ref.watch(selectedEventProvider);
 		if (event != null) {
-			print('[ENSURE_SELECTED_EVENT] Found event on retry $i: $event');
 			return event;
 		}
 		// Wait a bit and retry
@@ -946,7 +899,6 @@ final _ensureSelectedEventProvider = FutureProvider<String?>((ref) async {
 	}
 	// Even if still null, return what we have
 	final finalEvent = ref.watch(selectedEventProvider);
-	print('[ENSURE_SELECTED_EVENT] Final result after 50 retries: $finalEvent');
 	return finalEvent;
 });
 
@@ -954,25 +906,21 @@ final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 	// First check if we have a valid server configured
 	final db = await ref.watch(databaseProvider.future);
 	final config = await db.getCurrentConfig();
-	print('[MATCH_LIST] Config: backendUrl=${config?.backendUrl}');
 	if (!_isValidServerUrl(config?.backendUrl)) {
 		// No valid server configured, return empty list
-		print('[MATCH_LIST] No valid server configured, returning empty list');
 		return [];
 	}
 
 	final apiClient = await ref.watch(apiClientProvider.future);
 	// Use the helper provider to ensure event is loaded
 	final selectedEvent = await ref.watch(_ensureSelectedEventProvider.future);
-	print('[MATCH_LIST] Selected event: $selectedEvent');
 
 	if (selectedEvent == null) {
-		print('[MATCH_LIST] No event selected, returning empty list');
 		return [];
 	}
 
 	try {
-		final logger = Logger();
+		final logger = getLogger();
 		final prefs = await ref.watch(sharedPreferencesProvider.future);
 
 		// Create cache key specific to this event
@@ -982,45 +930,36 @@ final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 		List<MatchModel>? cachedMatches;
 		final cachedCsv = prefs.getString(cacheKey);
 		if (cachedCsv != null) {
-			print('[MATCH_LIST] 📦 Loading cached match schedule for event: $selectedEvent');
 			logger.i('📦 Loading cached match schedule for event: $selectedEvent');
 			cachedMatches = _parseScheduleCSV(cachedCsv);
-			print('[MATCH_LIST] 📦 Cached matches loaded: ${cachedMatches.length} matches');
 			logger.i('📦 Cached matches loaded: ${cachedMatches.length} matches');
 		}
 
 		// Fetch fresh data from server
-		print('[MATCH_LIST] 📡 Fetching fresh match schedule from server for event: $selectedEvent');
 		logger.i('📡 Fetching fresh match schedule from server');
 		final scheduleUrl = '/data/$selectedEvent.schedule.csv';
 		final freshCsv = await apiClient.fetchMatchScheduleCsv(selectedEvent);
-		print('[MATCH_LIST] Fresh CSV response: ${freshCsv?.length ?? 0} bytes');
 
 		if (freshCsv != null && freshCsv.isNotEmpty) {
 			// Save to cache
 			await prefs.setString(cacheKey, freshCsv);
-			print('[MATCH_LIST] 💾 Match schedule cached for event: $selectedEvent');
 			logger.i('💾 Match schedule cached for event: $selectedEvent');
 
 			// Parse fresh data
 			final freshMatches = _parseScheduleCSV(freshCsv);
-			print('[MATCH_LIST] ✅ Fresh match schedule: ${freshMatches.length} matches');
 			logger.i('✅ Fresh match schedule: ${freshMatches.length} matches');
 			return freshMatches;
 		} else if (cachedMatches != null && cachedMatches.isNotEmpty) {
 			// Server fetch failed, use cache
-			print('[MATCH_LIST] ⚠️  Server fetch failed, using cached match schedule');
 			logger.i('⚠️  Server fetch failed, using cached match schedule');
 			return cachedMatches;
 		} else {
 			// No fresh data and no cache
-			print('[MATCH_LIST] ❌ Failed to fetch matches and no cache available');
 			logger.w('❌ Failed to fetch matches and no cache available');
 			return [];
 		}
 	} catch (e) {
-		print('[MATCH_LIST] Error fetching matches: $e');
-		Logger().e('Failed to fetch matches: $e');
+		getLogger().e('Failed to fetch matches: $e');
 		// Try to fall back to cache
 		try {
 			final prefs = await ref.watch(sharedPreferencesProvider.future);
@@ -1029,12 +968,12 @@ final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 				final cacheKey = 'match_list_csv_cache_$selectedEvent';
 				final cachedCsv = prefs.getString(cacheKey);
 				if (cachedCsv != null) {
-					Logger().i('⚠️  Using cached match schedule as fallback');
+					getLogger().i('⚠️  Using cached match schedule as fallback');
 					return _parseScheduleCSV(cachedCsv);
 				}
 			}
 		} catch (cacheError) {
-			Logger().e('Cache fallback failed: $cacheError');
+			getLogger().e('Cache fallback failed: $cacheError');
 		}
 		return [];
 	}
@@ -1050,7 +989,7 @@ List<MatchModel> _parseScheduleCSV(String csvContent) {
 	final matchIndex = headers.indexOf('Match');
 
 	if (matchIndex == -1) {
-		Logger().w('Match column not found in schedule');
+		getLogger().w('Match column not found in schedule');
 		return [];
 	}
 
@@ -1094,36 +1033,27 @@ class _NavigationCommandNotifier extends StateNotifier<NavigationTarget?> {
 	/// Navigate to the specified target - sets forced navigation to display that screen directly
 	Future<void> navigateTo(NavigationTarget target) async {
 		try {
-			print('[NAV_COMMAND] ═══════════════════════════════════════════════════════');
-			print('[NAV_COMMAND] Navigation requested: $target');
 
 			// Map NavigationTarget to NavScreen for direct navigation
 			switch (target) {
 				case NavigationTarget.server:
-					print('[NAV_COMMAND] Navigating to ServerConfigScreen');
 					ref.read(navigationProvider.notifier).navigateTo(NavScreen.server);
 
 				case NavigationTarget.event:
-					print('[NAV_COMMAND] Navigating to EventPickerScreen');
 					ref.read(navigationProvider.notifier).navigateTo(NavScreen.eventPicker);
 
 				case NavigationTarget.botSelection:
-					print('[NAV_COMMAND] Navigating to BotSelectionScreen');
 					ref.read(navigationProvider.notifier).navigateTo(NavScreen.botSelection);
 
 				case NavigationTarget.match:
-					print('[NAV_COMMAND] Navigating to MatchSelectionScreen');
 					ref.read(navigationProvider.notifier).navigateTo(NavScreen.matchSelection);
 
 				case NavigationTarget.upload:
-					print('[NAV_COMMAND] Navigating to UploadDataScreen');
 					ref.read(navigationProvider.notifier).navigateTo(NavScreen.uploadData);
 			}
 
-			print('[NAV_COMMAND] ═══════════════════════════════════════════════════════');
 		} catch (e) {
-			print('[NAV_COMMAND] ERROR: $e');
-			Logger().e('Navigation error: $e');
+			getLogger().e('Navigation error: $e');
 		}
 	}
 }
@@ -1199,75 +1129,53 @@ final scoutingSessionCreatedProvider =
 
 /// Provider that loads existing scout data for the selected match when it changes
 final existingScoutDataProvider = FutureProvider<Map<String, dynamic>?>((ref) async {
-	print('[PROVIDER_EXEC] existingScoutDataProvider started');
 	final selectedMatch = ref.watch(selectedMatchProvider);
 	final selectedEvent = ref.watch(selectedEventProvider);
 
-	print('[PROVIDER_EXEC] selectedEvent=$selectedEvent, match=${selectedMatch.match}, team=${selectedMatch.team}');
 
 	if (selectedMatch.match == null || selectedMatch.team == null || selectedEvent == null) {
-		print('[PROVIDER_EXEC] Missing parameters, returning null');
 		return null;
 	}
 
-	print('[SCOUT_LOAD] existingScoutDataProvider starting for event=$selectedEvent, match=${selectedMatch.match}, team=${selectedMatch.team}');
 
 	try {
 		final db = await ref.watch(databaseProvider.future);
-		print('[SCOUT_LOAD] Database ready, calling getMatchData()...');
 		var data = await db.getMatchData(selectedEvent, selectedMatch.match!, selectedMatch.team!);
-		print('[SCOUT_LOAD] getMatchData returned: ${data != null ? "DATA FOUND" : "null"}');
 		if (data != null) {
-			print('[SCOUT_LOAD] 📦 Using local data (not from cache)');
 			final csv = data.csvHeaders + '\n' + data.csvData;
 			final parsed = csvToArrayOfMaps(csv);
-			print('[SCOUT_LOAD] Parsed local data: ${parsed.isNotEmpty ? parsed.first.toString() : "EMPTY"}');
 			return parsed.isNotEmpty ? parsed.first : null;
 		}
 
 		// If no local data, try to fetch from server CSV cache
 		if (data == null) {
-			print('[SCOUT_LOAD] No local data, checking server CSV cache...');
 			final sharedPrefs = await ref.watch(sharedPreferencesProvider.future);
 			final cacheKey = 'scouting_csv_cache_$selectedEvent';
 			final cachedCsv = sharedPrefs.getString(cacheKey);
-			print('[SCOUT_LOAD] DEBUG: cachedCsv = ${cachedCsv != null ? "LENGTH=${cachedCsv.length}" : "NULL"}');
 
 			if (cachedCsv != null && cachedCsv.isNotEmpty) {
-				print('[SCOUT_LOAD] ENTERING CSV PARSE BLOCK');
-				print('[SCOUT_LOAD] DEBUG: Entering CSV cache block, cachedCsv length = ${cachedCsv.length}');
 				try {
-					print('[SCOUT_LOAD] Found server CSV in cache (${cachedCsv.length} chars), parsing...');
 					final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(cachedCsv);
-					print('[SCOUT_LOAD] ✅ CSV parsed successfully: ${scoutingData.length} entries');
 
 					if (scoutingData.isEmpty) {
-						print('[SCOUT_LOAD] CSV is empty after parsing!');
 						return null;
 					}
 
-					print('[SCOUT_LOAD] Searching for match=${selectedMatch.match}, team=${selectedMatch.team}');
 					// Find matching entry in server CSV
 					for (final entry in scoutingData) {
 						final csvMatch = entry['match']?.toString();
 						final csvTeam = entry['team']?.toString();
 						if (csvMatch == selectedMatch.match && csvTeam == selectedMatch.team) {
-							print('[SCOUT_LOAD] ✅ FOUND match in CSV!');
 							return entry;
 						}
 					}
-					print('[SCOUT_LOAD] ✗ Match not found in CSV entries');
 				} catch (e, st) {
-					print('[SCOUT_LOAD] ❌ ERROR in CSV parsing: $e');
-					print('[SCOUT_LOAD] Stack: $st');
 				}
 			} else {
-				print('[SCOUT_LOAD] ❌ No CSV cache or empty');
 			}
 		}
 
 		if (data == null) {
-			print('[SCOUT_LOAD] No data found locally or on server');
 			return null;
 		}
 
@@ -1282,7 +1190,7 @@ final existingScoutDataProvider = FutureProvider<Map<String, dynamic>?>((ref) as
 
 		return parsed.first;
 	} catch (e) {
-		Logger().e('Error loading existing scout data: $e');
+		getLogger().e('Error loading existing scout data: $e');
 		return null;
 	}
 });

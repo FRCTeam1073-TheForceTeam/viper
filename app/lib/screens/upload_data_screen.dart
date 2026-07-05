@@ -142,7 +142,6 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 		if (!_initialized) {
 			_initialized = true;
 			WidgetsBinding.instance.addPostFrameCallback((_) {
-				print('[UPLOAD_DATA_SCREEN] Initializing upload page');
 				ref.read(uploadPageStateProvider.notifier).initializeUploadPage();
 			});
 		}
@@ -174,34 +173,43 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 							crossAxisAlignment: CrossAxisAlignment.stretch,
 							children: [
 								// Upload All button
-								ElevatedButton.icon(
-									icon: uploadState.isUploading
-											? const SizedBox(
-													width: 20,
-													height: 20,
-													child: CircularProgressIndicator(strokeWidth: 2),
-												)
-											: const Icon(Icons.cloud_upload),
-									label: Text(
-										uploadState.isUploading ? t('uploading') : t('upload_all'),
+								if (uploadState.readyToUpload.isNotEmpty ||
+										uploadState.uploadLater.isNotEmpty)
+									Center(
+										child: Padding(
+											padding: const EdgeInsets.all(48),
+											child: ElevatedButton.icon(
+													icon: uploadState.isUploading
+															? const SizedBox(
+																	width: 20,
+																	height: 20,
+																	child: CircularProgressIndicator(strokeWidth: 2),
+																)
+															: const Icon(Icons.cloud_upload),
+													label: Text(
+														uploadState.isUploading ? t('uploading') : t('upload_all'),
+														style: const TextStyle(fontSize: 20),
+													),
+													onPressed:
+															uploadState.isUploading ||
+																	(uploadState.readyToUpload.isEmpty &&
+																			uploadState.uploadLater.isEmpty)
+															? null
+															: () {
+																	ref
+																			.read(uploadPageStateProvider.notifier)
+																			.uploadReadyEntries();
+																},
+													style: ElevatedButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														disabledBackgroundColor: AppColors.buttonBgColor,
+														disabledForegroundColor: AppColors.mainBorderColor,
+														padding: const EdgeInsets.all(96),
+													),
+											),
+										),
 									),
-									onPressed:
-											uploadState.isUploading ||
-													(uploadState.readyToUpload.isEmpty &&
-															uploadState.uploadLater.isEmpty)
-											? null
-											: () {
-													ref
-															.read(uploadPageStateProvider.notifier)
-															.uploadReadyEntries();
-												},
-									style: ElevatedButton.styleFrom(
-										backgroundColor: AppColors.buttonBgColor,
-										foregroundColor: AppColors.buttonFgColor,
-										disabledBackgroundColor: AppColors.buttonBgColor,
-										disabledForegroundColor: AppColors.mainBorderColor,
-									),
-								),
 
 								// Error message
 								if (uploadState.error != null)
@@ -355,7 +363,7 @@ class _UploadSection extends StatefulWidget {
 }
 
 class _UploadSectionState extends State<_UploadSection> {
-	bool _expanded = true;
+	bool _expanded = false;
 
 	@override
 	Widget build(BuildContext context) {
@@ -405,23 +413,26 @@ class _UploadSectionState extends State<_UploadSection> {
 											],
 										),
 									),
-									if (widget.onClearHistory != null)
-										ElevatedButton.icon(
-											icon: const Icon(Icons.delete_outline, size: 16),
-											label: Text(t('clear_history')),
-											onPressed: widget.onClearHistory,
-											style: ElevatedButton.styleFrom(
-												backgroundColor: AppColors.buttonBgColor,
-												foregroundColor: AppColors.buttonFgColor,
-												disabledBackgroundColor: AppColors.buttonBgColor,
-												disabledForegroundColor: AppColors.mainBorderColor,
-											),
-										),
 								],
 							),
 						),
 					),
-				if (_expanded)
+				if (_expanded) ...[
+					if (widget.onClearHistory != null)
+						Padding(
+							padding: const EdgeInsets.only(bottom: 12),
+							child: ElevatedButton.icon(
+								icon: const Icon(Icons.delete_outline, size: 16),
+								label: Text(t('clear_history')),
+								onPressed: widget.onClearHistory,
+								style: ElevatedButton.styleFrom(
+									backgroundColor: AppColors.buttonBgColor,
+									foregroundColor: AppColors.buttonFgColor,
+									disabledBackgroundColor: AppColors.buttonBgColor,
+									disabledForegroundColor: AppColors.mainBorderColor,
+								),
+							),
+						),
 					...widget.entries.map((entry) {
 						return Padding(
 							padding: const EdgeInsets.symmetric(vertical: 8),
@@ -438,6 +449,7 @@ class _UploadSectionState extends State<_UploadSection> {
 							),
 						);
 					}).toList(),
+				],
 			],
 		);
 	}
@@ -485,13 +497,6 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 	String _formatAsKeyValue(String headers, String data) {
 		final headerList = headers.split(',');
 		final dataList = data.split(',');
-		print(
-			'[CSV_PARSE] Headers: ${headerList.length} | Data values: ${dataList.length}',
-		);
-		if (headerList.length != dataList.length) {
-			print('[CSV_PARSE] MISMATCH! Headers: $headerList');
-			print('[CSV_PARSE] MISMATCH! Data: $dataList');
-		}
 		final pairs = <String>[];
 		for (int i = 0; i < headerList.length && i < dataList.length; i++) {
 			final header = headerList[i].trim();

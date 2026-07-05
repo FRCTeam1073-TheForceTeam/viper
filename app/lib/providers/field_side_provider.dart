@@ -34,9 +34,7 @@ class FieldSideNotifier extends StateNotifier<FieldSide> {
 		try {
 			final prefs = await SharedPreferences.getInstance();
 			await prefs.setString('fieldSide', side.name);
-			print('📍 Field side changed to: ${side.name}');
 		} catch (e) {
-			print('⚠️ Failed to save field side: $e');
 		}
 	}
 

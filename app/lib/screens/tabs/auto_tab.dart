@@ -901,7 +901,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 			if (position == null) {
 				final scoutingData = ref.read(scoutingDataProvider);
 				final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
-				print('UNDO: button $field not found. Registered descriptors: ${registeredNames.join(", ")}');
 				return null;
 			}
 
@@ -917,14 +916,11 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 
 				// Add the field overlay's offset to get stack-relative coordinates
 				position = position + fieldOverlayOffset;
-				print('UNDO: found button $field at position: $position (after offset adjustment)');
 			} else {
-				print('UNDO: could not get render boxes for offset calculation');
 			}
 
 			return position;
 		} catch (e) {
-			print('_getUndoPopupPosition ERROR: $e');
 			return null;
 		}
 	}
@@ -956,7 +952,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final shouldRotate = fieldSide == FieldSide.left;
 		final swapButtonSides = isBlueTeam;
 		final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-		print('[AUTO_TAB] Tab=Auto, botPosition=$botPosition, fieldSide=$fieldSide, swapButtonSides=$swapButtonSides, shouldRotate=$shouldRotate, isLandscape=$isLandscape');
 
 		// In landscape, constrain field width based on screen height to maintain aspect ratio and leave room for controls
 		double? constrainedFieldWidth;
@@ -988,13 +983,10 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
 						final buttonStackRelative = globalPosition - stackGlobalOffset;
 
-						print('ZONE CHANGE: button global=$globalPosition, stack global=$stackGlobalOffset, button relative to stack=$buttonStackRelative');
 						ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
 					} else {
-						print('ZONE CHANGE: stackBox is null');
 					}
 				} catch (e) {
-					print('ZONE CHANGE ERROR: $e');
 				}
 			},
 			onClimbToggled: () {
@@ -1013,13 +1005,10 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							final offset = overlayBox.localToGlobal(Offset.zero);
 							final popupX = offset.dx + 40;
 							final popupY = offset.dy + 40;
-							print('CLIMB: overlay position=$offset, overlay size=${overlayBox.size}, popup position=($popupX, $popupY)');
 							ref.read(floatingPopupProvider.notifier).addPopup('+1', popupX, popupY);
 						} else {
-							print('CLIMB: overlayBox is null');
 						}
 					} catch (e) {
-						print('CLIMB ERROR: $e');
 					}
 				}
 			},
@@ -1028,7 +1017,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 			},
 			activeFuelTarget: ref.watch(activeFuelTargetProvider),
 			onFuelTargetTapped: (targetName) {
-				print('onFuelTargetTapped called: targetName=$targetName');
 				ref
 						.read(scoutingDataProvider.notifier)
 						.changeAutoFuelTarget(targetName);
@@ -1274,7 +1262,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 			child: ElevatedButton(
 				key: buttonKey,
 				onPressed: () {
-					print('FUEL BUTTON PRESSED: amount=$amount, activeFuelTarget=$activeFuelTarget');
 					// Start match timer if not already started
 					_startMatchIfNeeded();
 
@@ -1310,13 +1297,10 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								targetY = overlayStackRelative.dy + (overlayBox.size.height * (1 - 0.07));
 							}
 
-							print('FUEL BUTTON: overlay global=$overlayGlobalOffset, stack global=$stackGlobalOffset, overlay relative to stack=$overlayStackRelative, target=$activeFuelTarget, popup position=($targetX, $targetY)');
 							ref.read(floatingPopupProvider.notifier).addPopup('+$amount', targetX, targetY);
 						} else {
-							print('FUEL BUTTON: overlayBox=$overlayBox, stackBox=$stackBox');
 						}
 					} catch (e) {
-						print('FUEL BUTTON ERROR: $e');
 					}
 				},
 				style: ElevatedButton.styleFrom(

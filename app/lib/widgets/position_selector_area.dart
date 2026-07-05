@@ -63,7 +63,6 @@ class PositionSelectorArea extends StatefulWidget {
 			markerSize: markerSize,
 			multiSelect: multiSelect,
 			onPositionChanged: (newPosition) {
-				print('💾 Saving ${descriptor.name}: $newPosition');
 				final updated = model.updateField(descriptor.name, newPosition);
 				ref.read(provider.notifier).update(updated);
 			},

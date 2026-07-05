@@ -22,7 +22,6 @@ class FloatingPopupNotifier extends StateNotifier<List<FloatingPopup>> {
 	/// Add a floating popup
 	void addPopup(String text, double x, double y) {
 		final id = '${DateTime.now().millisecondsSinceEpoch}_${state.length}';
-		print('POPUP PROVIDER: adding popup "$text" at position ($x, $y)');
 		state = [...state, FloatingPopup(id: id, text: text, initialX: x, initialY: y)];
 	}
 

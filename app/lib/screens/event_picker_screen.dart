@@ -290,14 +290,10 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 					return EventListTile(
 						event: event,
 						onTap: () async {
-							print('[EVENT_PICKER] EventListTile.onTap called for ${event.eventId}');
-							print('[EVENT_PICKER] Calling setSelectedEvent...');
 							await ref.read(selectedEventProvider.notifier)
 									.setSelectedEvent(event.eventId);
-							print('[EVENT_PICKER] setSelectedEvent completed');
 							// Call the callback if provided
 							if (widget.onEventSelected != null) {
-								print('[EVENT_PICKER] Calling onEventSelected callback');
 								widget.onEventSelected!(event.eventId);
 							}
 						},
@@ -327,7 +323,6 @@ class _EventListTileState extends State<EventListTile> {
 
 	@override
 	Widget build(BuildContext context) {
-		print('[EVENT_LIST_TILE] build() called, _isLoading=$_isLoading');
 		return Card(
 			margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
 			child: ListTile(
@@ -362,21 +357,15 @@ class _EventListTileState extends State<EventListTile> {
 	}
 
 	Future<void> _handleTap() async {
-		print('[EVENT_LIST_TILE] _handleTap() called');
 		setState(() {
-			print('[EVENT_LIST_TILE] setState _isLoading = true');
 			_isLoading = true;
 		});
 		try {
-			print('[EVENT_LIST_TILE] Awaiting widget.onTap()...');
 			await widget.onTap();
-			print('[EVENT_LIST_TILE] widget.onTap() completed');
 		} finally {
 			if (mounted) {
-				print('[EVENT_LIST_TILE] setState _isLoading = false');
 				setState(() => _isLoading = false);
 			} else {
-				print('[EVENT_LIST_TILE] Widget already unmounted, skipping setState');
 			}
 		}
 	}

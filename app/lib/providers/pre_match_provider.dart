@@ -51,7 +51,6 @@ class PreMatchNotifier extends StateNotifier<PreMatchData> {
 			newState.loadFromMap(data);
 			state = newState;
 		} catch (e) {
-			print('Error loading pre-match data: $e');
 		}
 	}
 }

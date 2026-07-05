@@ -63,9 +63,7 @@ class AppLocalizations {
 
 	/// Debug: Print all registered translation keys
 	static void debugPrintKeys() {
-		print('Registered translation keys: ${_translations.keys.toList()}');
 		for (var key in _translations.keys) {
-			print('  $key: ${_translations[key]?.keys.toList()}');
 		}
 	}
 }
