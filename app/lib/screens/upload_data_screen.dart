@@ -109,6 +109,24 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 				'he': 'העלה מחדש',
 				'tr': 'Yeniden Yükle',
 			},
+			'deleted': {
+				'en': 'Deleted',
+				'es': 'Eliminado',
+				'pt': 'Excluído',
+				'fr': 'Supprimé',
+				'zh_tw': '已刪除',
+				'he': 'נמחק',
+				'tr': 'Silindi',
+			},
+			'restore': {
+				'en': 'Restore',
+				'es': 'Restaurar',
+				'pt': 'Restaurar',
+				'fr': 'Restaurer',
+				'zh_tw': '恢復',
+				'he': 'שחזר',
+				'tr': 'Geri Yükle',
+			},
 		});
 	}
 
@@ -158,26 +176,31 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 								// Upload All button
 								ElevatedButton.icon(
 									icon: uploadState.isUploading
-										? const SizedBox(
-											width: 20,
-											height: 20,
-											child: CircularProgressIndicator(strokeWidth: 2),
-										)
-										: const Icon(Icons.cloud_upload),
+											? const SizedBox(
+													width: 20,
+													height: 20,
+													child: CircularProgressIndicator(strokeWidth: 2),
+												)
+											: const Icon(Icons.cloud_upload),
 									label: Text(
-										uploadState.isUploading
-											? t('uploading')
-											: t('upload_all'),
+										uploadState.isUploading ? t('uploading') : t('upload_all'),
 									),
-									onPressed: uploadState.isUploading ||
-											(uploadState.readyToUpload.isEmpty &&
-												uploadState.uploadLater.isEmpty)
-										? null
-										: () {
-											ref
-												.read(uploadPageStateProvider.notifier)
-												.uploadReadyEntries();
-										},
+									onPressed:
+											uploadState.isUploading ||
+													(uploadState.readyToUpload.isEmpty &&
+															uploadState.uploadLater.isEmpty)
+											? null
+											: () {
+													ref
+															.read(uploadPageStateProvider.notifier)
+															.uploadReadyEntries();
+												},
+									style: ElevatedButton.styleFrom(
+										backgroundColor: AppColors.buttonBgColor,
+										foregroundColor: AppColors.buttonFgColor,
+										disabledBackgroundColor: AppColors.buttonBgColor,
+										disabledForegroundColor: AppColors.mainBorderColor,
+									),
 								),
 
 								// Error message
@@ -187,13 +210,15 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 										child: Container(
 											padding: const EdgeInsets.all(12),
 											decoration: BoxDecoration(
-												color: Colors.red.shade100,
+												color: AppColors.mainBgColor,
 												borderRadius: BorderRadius.circular(8),
-												border: Border.all(color: Colors.red),
+												border: Border.all(
+													color: AppColors.buttonDisabledDecorationColor,
+												),
 											),
 											child: Text(
 												uploadState.error!,
-												style: TextStyle(color: Colors.red.shade900),
+												style: const TextStyle(color: AppColors.alertFgColor),
 											),
 										),
 									),
@@ -208,8 +233,8 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 										showReupload: false,
 										onDelete: (id) {
 											ref
-												.read(uploadPageStateProvider.notifier)
-												.deleteEntry(id);
+													.read(uploadPageStateProvider.notifier)
+													.deleteEntry(id);
 										},
 										onReupload: (_) {},
 										locale: locale,
@@ -227,8 +252,8 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 											showReupload: false,
 											onDelete: (id) {
 												ref
-													.read(uploadPageStateProvider.notifier)
-													.deleteEntry(id);
+														.read(uploadPageStateProvider.notifier)
+														.deleteEntry(id);
 											},
 											onReupload: (_) {},
 											locale: locale,
@@ -243,28 +268,33 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 											title: t('history'),
 											entries: uploadState.history,
 											showDelete: true,
-											showReupload: uploadState.history
-													.any((h) =>
-														h.uploadStatus ==
-														'uploaded')
-												? true
-												: false,
+											showReupload:
+													uploadState.history.any(
+														(h) => h.uploadStatus == 'uploaded',
+													)
+													? true
+													: false,
+											showRestore: uploadState.history.any(
+												(h) => h.uploadStatus == 'deleted',
+											),
 											onDelete: (id) {
 												ref
-													.read(uploadPageStateProvider
-														.notifier)
-													.deleteEntry(id);
+														.read(uploadPageStateProvider.notifier)
+														.deleteEntry(id);
 											},
 											onReupload: (id) {
 												ref
-													.read(uploadPageStateProvider
-														.notifier)
-													.reuploadEntry(id);
+														.read(uploadPageStateProvider.notifier)
+														.reuploadEntry(id);
+											},
+											onRestore: (id) {
+												ref
+														.read(uploadPageStateProvider.notifier)
+														.restoreDeletedEntry(id);
 											},
 											onClearHistory: () {
 												ref
-													.read(uploadPageStateProvider
-														.notifier)
+														.read(uploadPageStateProvider.notifier)
 														.clearAllHistory();
 											},
 											locale: locale,
@@ -273,8 +303,8 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 
 								// Empty state message
 								if (uploadState.readyToUpload.isEmpty &&
-									uploadState.uploadLater.isEmpty &&
-									uploadState.history.isEmpty)
+										uploadState.uploadLater.isEmpty &&
+										uploadState.history.isEmpty)
 									Padding(
 										padding: const EdgeInsets.only(top: 48),
 										child: Center(
@@ -298,8 +328,10 @@ class _UploadSection extends StatefulWidget {
 	final List<UploadHistoryData> entries;
 	final bool showDelete;
 	final bool showReupload;
+	final bool showRestore;
 	final Function(int) onDelete;
 	final Function(int) onReupload;
+	final Function(int) onRestore;
 	final Locale locale;
 	final VoidCallback? onClearHistory;
 
@@ -311,8 +343,12 @@ class _UploadSection extends StatefulWidget {
 		required this.onDelete,
 		required this.onReupload,
 		required this.locale,
+		this.showRestore = false,
+		this.onRestore = _defaultRestore,
 		this.onClearHistory,
 	});
+
+	static void _defaultRestore(int id) {}
 
 	@override
 	State<_UploadSection> createState() => _UploadSectionState();
@@ -323,7 +359,8 @@ class _UploadSectionState extends State<_UploadSection> {
 
 	@override
 	Widget build(BuildContext context) {
-		String t(String key) => AppLocalizations.translate(key, locale: widget.locale);
+		String t(String key) =>
+				AppLocalizations.translate(key, locale: widget.locale);
 
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,10 +380,8 @@ class _UploadSectionState extends State<_UploadSection> {
 												const SizedBox(width: 8),
 												Text(
 													widget.title,
-													style:
-														Theme.of(context).textTheme.titleMedium?.copyWith(
-														fontWeight: FontWeight.bold,
-													),
+													style: Theme.of(context).textTheme.titleMedium
+															?.copyWith(fontWeight: FontWeight.bold),
 												),
 												const SizedBox(width: 8),
 												Container(
@@ -355,14 +390,14 @@ class _UploadSectionState extends State<_UploadSection> {
 														vertical: 2,
 													),
 													decoration: BoxDecoration(
-														color: Colors.blue.shade100,
+														color: AppColors.highlightBgColor,
 														borderRadius: BorderRadius.circular(12),
 													),
 													child: Text(
 														'${widget.entries.length}',
 														style: TextStyle(
 															fontSize: 12,
-															color: Colors.blue.shade900,
+															color: AppColors.highlightFgColor,
 															fontWeight: FontWeight.bold,
 														),
 													),
@@ -372,10 +407,15 @@ class _UploadSectionState extends State<_UploadSection> {
 									),
 									if (widget.onClearHistory != null)
 										ElevatedButton.icon(
-											icon: const Icon(Icons.delete_outline,
-													size: 16),
+											icon: const Icon(Icons.delete_outline, size: 16),
 											label: Text(t('clear_history')),
 											onPressed: widget.onClearHistory,
+											style: ElevatedButton.styleFrom(
+												backgroundColor: AppColors.buttonBgColor,
+												foregroundColor: AppColors.buttonFgColor,
+												disabledBackgroundColor: AppColors.buttonBgColor,
+												disabledForegroundColor: AppColors.mainBorderColor,
+											),
 										),
 								],
 							),
@@ -388,10 +428,12 @@ class _UploadSectionState extends State<_UploadSection> {
 							child: _UploadEntryCard(
 								entry: entry,
 								showDelete: widget.showDelete,
-								showReupload: widget.showReupload &&
-									entry.uploadStatus == 'uploaded',
+								showReupload:
+										widget.showReupload && entry.uploadStatus == 'uploaded',
+								showRestore: widget.showRestore && entry.uploadStatus == 'deleted',
 								onDelete: () => widget.onDelete(entry.id),
 								onReupload: () => widget.onReupload(entry.id),
+								onRestore: () => widget.onRestore(entry.id),
 								locale: widget.locale,
 							),
 						);
@@ -405,10 +447,11 @@ class _UploadEntryCard extends StatefulWidget {
 	final UploadHistoryData entry;
 	final bool showDelete;
 	final bool showReupload;
+	final bool showRestore;
 	final VoidCallback onDelete;
 	final VoidCallback onReupload;
+	final VoidCallback onRestore;
 	final Locale locale;
-
 	const _UploadEntryCard({
 		required this.entry,
 		required this.showDelete,
@@ -416,15 +459,16 @@ class _UploadEntryCard extends StatefulWidget {
 		required this.onDelete,
 		required this.onReupload,
 		required this.locale,
+		this.showRestore = false,
+		this.onRestore = _noop,
 	});
-
+	static void _noop() {}
 	@override
 	State<_UploadEntryCard> createState() => _UploadEntryCardState();
 }
 
 class _UploadEntryCardState extends State<_UploadEntryCard> {
 	late ScrollController _horizontalScrollController;
-
 	@override
 	void initState() {
 		super.initState();
@@ -441,42 +485,40 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 	String _formatAsKeyValue(String headers, String data) {
 		final headerList = headers.split(',');
 		final dataList = data.split(',');
-
-		print('[CSV_PARSE] Headers: ${headerList.length} | Data values: ${dataList.length}');
+		print(
+			'[CSV_PARSE] Headers: ${headerList.length} | Data values: ${dataList.length}',
+		);
 		if (headerList.length != dataList.length) {
 			print('[CSV_PARSE] MISMATCH! Headers: $headerList');
 			print('[CSV_PARSE] MISMATCH! Data: $dataList');
 		}
-
 		final pairs = <String>[];
 		for (int i = 0; i < headerList.length && i < dataList.length; i++) {
 			final header = headerList[i].trim();
 			final value = dataList[i].trim();
 			pairs.add('$header=$value');
 		}
-
 		return pairs.join('\n');
 	}
 
 	@override
 	Widget build(BuildContext context) {
-		String t(String key) => AppLocalizations.translate(key, locale: widget.locale);
-
+		String t(String key) =>
+				AppLocalizations.translate(key, locale: widget.locale);
 		// Parse CSV data to extract team and match info
 		// Format: team,match,... from csvData
 		final dataParts = widget.entry.csvData.split(',');
 		final team = dataParts.isNotEmpty ? dataParts[0] : '?';
 		final match = dataParts.length > 1 ? dataParts[1] : '?';
-
 		// Format date
 		final dateStr = widget.entry.createdAt.toString().split('.')[0];
-
 		final statusColor = widget.entry.uploadStatus == 'uploaded'
-			? Colors.green
-			: widget.entry.uploadStatus == 'failed'
+				? Colors.green
+				: widget.entry.uploadStatus == 'failed'
 				? Colors.red
+				: widget.entry.uploadStatus == 'deleted'
+				? Colors.grey
 				: Colors.orange;
-
 		return Card(
 			child: Padding(
 				padding: const EdgeInsets.all(12),
@@ -505,12 +547,9 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 												padding: const EdgeInsets.only(top: 4),
 												child: Text(
 													dateStr,
-													style: Theme.of(context)
-														.textTheme
-														.bodySmall
-														?.copyWith(
-													color: Colors.grey,
-												),
+													style: Theme.of(
+														context,
+													).textTheme.bodySmall?.copyWith(color: Colors.grey),
 												),
 											),
 										],
@@ -539,7 +578,7 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 								),
 							],
 						),
-						if (widget.showDelete || widget.showReupload)
+						if (widget.showDelete || widget.showReupload || widget.showRestore)
 							Padding(
 								padding: const EdgeInsets.only(top: 12),
 								child: Row(
@@ -552,6 +591,27 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 													icon: const Icon(Icons.refresh, size: 16),
 													label: Text(t('reupload')),
 													onPressed: widget.onReupload,
+													style: ElevatedButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														disabledBackgroundColor: AppColors.buttonBgColor,
+														disabledForegroundColor: AppColors.mainBorderColor,
+													),
+												),
+											),
+										if (widget.showRestore)
+											Padding(
+												padding: const EdgeInsets.only(right: 8),
+												child: ElevatedButton.icon(
+													icon: const Icon(Icons.restore, size: 16),
+													label: Text(t('restore')),
+													onPressed: widget.onRestore,
+													style: ElevatedButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														disabledBackgroundColor: AppColors.buttonBgColor,
+														disabledForegroundColor: AppColors.mainBorderColor,
+													),
 												),
 											),
 										if (widget.showDelete)
@@ -560,7 +620,11 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 												label: Text(t('delete')),
 												onPressed: widget.onDelete,
 												style: ElevatedButton.styleFrom(
-													foregroundColor: Colors.red,
+													backgroundColor: AppColors.buttonBgColor,
+													foregroundColor:
+															AppColors.buttonDisabledDecorationColor,
+													disabledBackgroundColor: AppColors.buttonBgColor,
+													disabledForegroundColor: AppColors.mainBorderColor,
 												),
 											),
 									],
@@ -584,7 +648,10 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 										scrollDirection: Axis.horizontal,
 										controller: _horizontalScrollController,
 										child: SelectableText(
-											_formatAsKeyValue(widget.entry.csvHeaders, widget.entry.csvData),
+											_formatAsKeyValue(
+												widget.entry.csvHeaders,
+												widget.entry.csvData,
+											),
 											style: const TextStyle(
 												fontFamily: 'monospace',
 												fontSize: 12,

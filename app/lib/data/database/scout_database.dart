@@ -49,6 +49,7 @@ class UploadHistory extends Table {
 	TextColumn get csvHeaders => text()();
 	TextColumn get csvData => text()();
 	DateTimeColumn get createdAt => dateTime().clientDefault(() => DateTime.now())();
+	BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
 
 	@override
 	List<Set<Column<Object>>> get uniqueKeys => [
@@ -65,14 +66,14 @@ class ScoutDatabase extends _$ScoutDatabase {
 	ScoutDatabase() : super(_openConnection());
 
 	@override
-	int get schemaVersion => 10;
+	int get schemaVersion => 11;
 
 	@override
 	MigrationStrategy get migration {
 		return MigrationStrategy(
 			onUpgrade: (migrator, from, to) async {
-				if (from < 10) {
-					//  No migration needed yet, app not yet released
+				if (from < 11) {
+					await migrator.addColumn(uploadHistory, uploadHistory.isDeleted);
 				}
 			},
 		);
@@ -148,24 +149,31 @@ class ScoutDatabase extends _$ScoutDatabase {
 		);
 	}
 
-	/// Get upload history entries by status
+	/// Get upload history entries by status (excluding soft-deleted except for 'deleted' status)
 	Future<List<UploadHistoryData>> getUploadHistoryByStatus(String status) {
-		return (select(uploadHistory)..where((h) => h.uploadStatus.equals(status)))
-				.get();
+		if (status == 'deleted') {
+			// Include items marked as deleted
+			return (select(uploadHistory)..where((h) => h.uploadStatus.equals(status))).get();
+		} else {
+			// Exclude soft-deleted items for other statuses
+			return (select(uploadHistory)
+						..where((h) => h.uploadStatus.equals(status) & h.isDeleted.equals(false)))
+					.get();
+		}
 	}
 
-	/// Get pending upload history entries (first N entries)
+	/// Get pending upload history entries (first N entries, excluding soft-deleted)
 	Future<List<UploadHistoryData>> getPendingUploadHistory({int limit = 10}) {
 		return (select(uploadHistory)
-					..where((h) => h.uploadStatus.equals('pending'))
+					..where((h) => h.uploadStatus.equals('pending') & h.isDeleted.equals(false))
 					..limit(limit))
 				.get();
 	}
 
-	/// Get all pending upload entries (no limit)
+	/// Get all pending upload entries (no limit, excluding soft-deleted)
 	Future<List<UploadHistoryData>> getAllPendingUploadHistory() {
 		return (select(uploadHistory)
-					..where((h) => h.uploadStatus.equals('pending')))
+					..where((h) => h.uploadStatus.equals('pending') & h.isDeleted.equals(false)))
 				.get();
 	}
 
@@ -191,7 +199,27 @@ class ScoutDatabase extends _$ScoutDatabase {
 		);
 	}
 
-	/// Delete an upload history entry
+	/// Soft-delete an upload history entry (marks as deleted, keeps in history)
+	Future<void> softDeleteHistoryEntry(int id) async {
+		await (update(uploadHistory)..where((h) => h.id.equals(id))).write(
+			const UploadHistoryCompanion(
+				isDeleted: Value(true),
+				uploadStatus: Value('deleted'),
+			),
+		);
+	}
+
+	/// Restore a soft-deleted entry back to pending
+	Future<void> restoreDeletedEntry(int id) async {
+		await (update(uploadHistory)..where((h) => h.id.equals(id))).write(
+			const UploadHistoryCompanion(
+				isDeleted: Value(false),
+				uploadStatus: Value('pending'),
+			),
+		);
+	}
+
+	/// Hard-delete an upload history entry (removes from database)
 	Future<void> deleteHistoryEntry(int id) async {
 		await (delete(uploadHistory)..where((h) => h.id.equals(id))).go();
 	}
@@ -235,7 +263,8 @@ class ScoutDatabase extends _$ScoutDatabase {
 							h.event.equals(event) &
 							h.match.equals(match) &
 							h.team.equals(team) &
-							h.uploadStatus.equals('pending'))
+							h.uploadStatus.equals('pending') &
+							h.isDeleted.equals(false))
 					..orderBy([(u) => OrderingTerm(expression: u.createdAt, mode: OrderingMode.desc)])
 					..limit(1))
 				.getSingleOrNull();

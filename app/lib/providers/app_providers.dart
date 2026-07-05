@@ -781,12 +781,13 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 
 			print('[UPLOAD_STATE] Ready to upload: ${readyToUpload.length}, Upload later: ${uploadLater.length}');
 
-			// Get history (uploaded + failed)
+			// Get history (uploaded + failed + deleted)
 			final uploaded = await db.getUploadHistoryByStatus('uploaded');
 			final failed = await db.getUploadHistoryByStatus('failed');
-			final history = [...uploaded, ...failed];
+			final deleted = await db.getUploadHistoryByStatus('deleted');
+			final history = [...uploaded, ...failed, ...deleted];
 
-			print('[UPLOAD_STATE] History: ${history.length} entries');
+			print('[UPLOAD_STATE] History: ${history.length} entries (uploaded: ${uploaded.length}, failed: ${failed.length}, deleted: ${deleted.length})');
 
 			state = state.copyWith(
 				readyToUpload: readyToUpload,
@@ -872,13 +873,16 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 		}
 	}
 
-	/// Delete an entry
+	/// Soft-delete an entry (moves to history with deleted status)
 	Future<void> deleteEntry(int id) async {
 		try {
+			print('[UPLOAD_STATE] Soft-deleting entry $id');
 			final db = await ref.read(databaseProvider.future);
-			await db.deleteHistoryEntry(id);
+			await db.softDeleteHistoryEntry(id);
+			print('[UPLOAD_STATE] Entry $id marked as deleted');
 			await _loadUploadData();
 		} catch (e) {
+			print('[UPLOAD_STATE] Error deleting entry: $e');
 			state = state.copyWith(error: 'Failed to delete entry: $e');
 		}
 	}
@@ -891,6 +895,20 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 			await _loadUploadData();
 		} catch (e) {
 			state = state.copyWith(error: 'Failed to mark for reupload: $e');
+		}
+	}
+
+	/// Restore a deleted entry back to ready to upload
+	Future<void> restoreDeletedEntry(int id) async {
+		try {
+			print('[UPLOAD_STATE] Restoring deleted entry $id');
+			final db = await ref.read(databaseProvider.future);
+			await db.restoreDeletedEntry(id);
+			print('[UPLOAD_STATE] Entry $id restored to pending');
+			await _loadUploadData();
+		} catch (e) {
+			print('[UPLOAD_STATE] Error restoring entry: $e');
+			state = state.copyWith(error: 'Failed to restore entry: $e');
 		}
 	}
 
