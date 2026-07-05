@@ -8,21 +8,21 @@ import 'screens/tabs/auto_tab.dart';
 import 'screens/tabs/teleop_tab.dart';
 import 'screens/tabs/end_game_tab.dart';
 
-class Season2026Module implements SeasonModule {
+class SeasonFtc202526Module implements SeasonModule {
 	@override
-	String get season => '2026';
+	String get season => '2025-26';
 
 	@override
-	String get fieldImageAsset => 'assets/2026/images/field.png';
+	String get fieldImageAsset => 'assets/2025-26/images/field.png';
 
 	@override
-	int get autoPeriodMs => 20000;
+	int get autoPeriodMs => 30000;
 
 	@override
-	int get autoGapMs => 3000;
+	int get autoGapMs => 5000;
 
 	@override
-	List<String> get botPositions => const ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'];
+	List<String> get botPositions => const ['R1', 'R2', 'B1', 'B2'];
 
 	@override
 	Widget buildPreMatchTab({

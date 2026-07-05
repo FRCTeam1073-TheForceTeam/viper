@@ -283,6 +283,8 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 												padding: const EdgeInsets.only(left: 16),
 												child: MatchTimer(
 													startTime: _matchStartTime,
+													autoPeriodMs: _seasonModule!.autoPeriodMs,
+													autoGapMs: _seasonModule!.autoGapMs,
 													onAutoEnded: () {
 														// Auto period ended, automatically proceed to tele tab
 														// But only if currently on auto tab

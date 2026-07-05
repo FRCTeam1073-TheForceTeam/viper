@@ -7,6 +7,12 @@ class MatchTimer extends StatefulWidget {
 	/// Timestamp when the match started (0 if not started)
 	final DateTime? startTime;
 
+	/// Autonomous period length in milliseconds, before the gap to teleop
+	final int autoPeriodMs;
+
+	/// Gap between autonomous ending and teleop being controllable, in milliseconds
+	final int autoGapMs;
+
 	/// Callback when auto period ends and teleop should begin
 	final VoidCallback? onAutoEnded;
 
@@ -16,6 +22,8 @@ class MatchTimer extends StatefulWidget {
 	const MatchTimer({
 		Key? key,
 		this.startTime,
+		required this.autoPeriodMs,
+		required this.autoGapMs,
 		this.onAutoEnded,
 		this.textStyle,
 	}) : super(key: key);
@@ -29,14 +37,12 @@ class _MatchTimerState extends State<MatchTimer> {
 	String _displayTime = '0:00';
 	bool _autoEnded = false;
 
-	// Match timing constants (from web app)
-	static const int autoMs = 20000; // 20 seconds
-	static const int autoGapMs = 3000; // 3-second gap
-	static const int teleSwitchTimeMs = autoMs + autoGapMs; // 23 seconds total
+	late int _teleSwitchTimeMs;
 
 	@override
 	void initState() {
 		super.initState();
+		_teleSwitchTimeMs = widget.autoPeriodMs + widget.autoGapMs;
 		if (widget.startTime != null) {
 			_startTimer();
 		}
@@ -45,6 +51,9 @@ class _MatchTimerState extends State<MatchTimer> {
 	@override
 	void didUpdateWidget(MatchTimer oldWidget) {
 		super.didUpdateWidget(oldWidget);
+		if (widget.autoPeriodMs != oldWidget.autoPeriodMs || widget.autoGapMs != oldWidget.autoGapMs) {
+			_teleSwitchTimeMs = widget.autoPeriodMs + widget.autoGapMs;
+		}
 		if (widget.startTime != oldWidget.startTime) {
 			_updateTimer?.cancel();
 			// Reset flag only if we have a new start time
@@ -61,7 +70,7 @@ class _MatchTimerState extends State<MatchTimer> {
 		// Check if we're already past the auto switch time
 		if (widget.startTime != null) {
 			final elapsedMs = DateTime.now().difference(widget.startTime!).inMilliseconds;
-			if (elapsedMs >= teleSwitchTimeMs) {
+			if (elapsedMs >= _teleSwitchTimeMs) {
 				_autoEnded = true;
 				// Don't call the callback - we're already past auto end time
 			}
@@ -85,7 +94,7 @@ class _MatchTimerState extends State<MatchTimer> {
 		final gameTimeMs = elapsedMs.clamp(0, 999999);
 
 		// Check if auto period has ended and trigger callback
-		if (gameTimeMs >= teleSwitchTimeMs && !_autoEnded) {
+		if (gameTimeMs >= _teleSwitchTimeMs && !_autoEnded) {
 			_autoEnded = true;
 			widget.onAutoEnded?.call();
 		}

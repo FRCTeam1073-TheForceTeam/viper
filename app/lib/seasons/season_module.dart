@@ -9,6 +9,15 @@ abstract class SeasonModule {
 	/// e.g. 'assets/2026/images/field.png'
 	String get fieldImageAsset;
 
+	/// Autonomous period length in milliseconds, before the gap to teleop
+	int get autoPeriodMs;
+
+	/// Gap between autonomous ending and teleop being controllable, in milliseconds
+	int get autoGapMs;
+
+	/// Alliance position codes shown on the bot-selection screen for this season's robots-per-alliance count
+	List<String> get botPositions;
+
 	// Tab builders — signatures match the existing tab widget constructors
 	Widget buildPreMatchTab({
 		required String eventId,

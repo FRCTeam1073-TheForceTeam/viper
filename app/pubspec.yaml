@@ -99,6 +99,14 @@ flutter:
     - assets/2026/scouting-instructions.zh_tw.md
     - assets/2026/scouting-instructions.he.md
     - assets/2026/scouting-instructions.tr.md
+    - assets/2025-26/images/
+    - assets/2025-26/scouting-instructions.md
+    - assets/2025-26/scouting-instructions.es.md
+    - assets/2025-26/scouting-instructions.pt.md
+    - assets/2025-26/scouting-instructions.fr.md
+    - assets/2025-26/scouting-instructions.zh_tw.md
+    - assets/2025-26/scouting-instructions.he.md
+    - assets/2025-26/scouting-instructions.tr.md
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

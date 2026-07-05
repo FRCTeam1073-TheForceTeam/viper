@@ -42,6 +42,15 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 		return seasonModuleFor(season)?.fieldImageAsset ?? seasonModuleFor(defaultSeason)!.fieldImageAsset;
 	}
 
+	/// Get the bot positions for this event's season
+	List<String> _getBotPositions() {
+		if (widget.eventId == null || widget.eventId!.isEmpty) {
+			return seasonModuleFor(defaultSeason)?.botPositions ?? const ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'];
+		}
+		final season = EventModel.seasonFromEventId(widget.eventId!);
+		return seasonModuleFor(season)?.botPositions ?? seasonModuleFor(defaultSeason)!.botPositions;
+	}
+
 	@override
 	void initState() {
 		super.initState();
@@ -141,11 +150,11 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 								height: fieldHeight,
 								child: Column(
 									children: [
-										Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+										if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+										if (positions.contains('B1') && positions.contains('B2')) const SizedBox(height: 4),
+										if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+										if (positions.contains('B2') && positions.contains('B3')) const SizedBox(height: 4),
+										if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
 									],
 								),
 							),
@@ -167,11 +176,11 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 								height: fieldHeight,
 								child: Column(
 									children: [
-										Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+										if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+										if (positions.contains('R3') && positions.contains('R2')) const SizedBox(height: 4),
+										if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+										if (positions.contains('R2') && positions.contains('R1')) const SizedBox(height: 4),
+										if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
 									],
 								),
 							),
@@ -188,11 +197,11 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 								height: fieldHeight,
 								child: Column(
 									children: [
-										Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+										if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+										if (positions.contains('R1') && positions.contains('R2')) const SizedBox(height: 4),
+										if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+										if (positions.contains('R2') && positions.contains('R3')) const SizedBox(height: 4),
+										if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
 									],
 								),
 							),
@@ -217,11 +226,11 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 								height: fieldHeight,
 								child: Column(
 									children: [
-										Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
-										const SizedBox(height: 4),
-										Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+										if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+										if (positions.contains('B3') && positions.contains('B2')) const SizedBox(height: 4),
+										if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+										if (positions.contains('B2') && positions.contains('B1')) const SizedBox(height: 4),
+										if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
 									],
 								),
 							),
@@ -286,12 +295,12 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 								// First orientation (normal)
 								Padding(
 									padding: const EdgeInsets.all(16.0),
-									child: _buildFieldLayout(isRotated: false, positions: const ['R1', 'R2', 'R3', 'B1', 'B2', 'B3'], selectedPosition: selectedPosition),
+									child: _buildFieldLayout(isRotated: false, positions: _getBotPositions(), selectedPosition: selectedPosition),
 								),
 								// Second orientation (rotated)
 								Padding(
 									padding: const EdgeInsets.all(16.0),
-									child: _buildFieldLayout(isRotated: true, positions: const ['B1', 'B2', 'B3', 'R1', 'R2', 'R3'], selectedPosition: selectedPosition),
+									child: _buildFieldLayout(isRotated: true, positions: _getBotPositions().reversed.toList(), selectedPosition: selectedPosition),
 								),
 							],
 						),
