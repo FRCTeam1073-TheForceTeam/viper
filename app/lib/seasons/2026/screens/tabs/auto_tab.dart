@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../constants/colors.dart';
-import '../../providers/app_providers.dart';
+import '../../../../constants/colors.dart';
+import '../../../../providers/app_providers.dart';
 import '../../providers/scouting_data_provider.dart';
-import '../../providers/field_side_provider.dart';
-import '../../providers/locale_provider.dart';
-import '../../providers/timeline_provider.dart';
-import '../../providers/match_timer_provider.dart';
+import '../../../../providers/field_side_provider.dart';
+import '../../../../providers/locale_provider.dart';
+import '../../../../providers/timeline_provider.dart';
+import '../../../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
-import '../../providers/zone_buttons_provider.dart';
-import '../../providers/button_position_provider.dart';
-import '../../services/localization.dart';
+import '../../../../providers/zone_buttons_provider.dart';
+import '../../../../providers/button_position_provider.dart';
+import '../../../../services/localization.dart';
 import '../../widgets/auto_field_overlay.dart';
 import '../../widgets/values_table.dart';
-import '../../widgets/timeline_table.dart';
-import '../../widgets/popup_floater.dart';
-import '../../models/field_descriptor.dart';
-import '../../models/field_button.dart';
-import '../../providers/floating_popup_provider.dart';
+import '../../../../widgets/timeline_table.dart';
+import '../../../../widgets/popup_floater.dart';
+import '../../../../models/field_descriptor.dart';
+import '../../../../models/field_button.dart';
+import '../../../../providers/floating_popup_provider.dart';
 
 typedef AutoTabRecord = ({
 	String activeZone,

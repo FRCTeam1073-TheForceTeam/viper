@@ -9,6 +9,7 @@ import '../data/api/viper_api_client.dart';
 import '../services/csv_builder.dart';
 import '../services/csv_parser.dart';
 import '../models/match_model.dart';
+import '../seasons/season_registry.dart';
 
 // ============================================================================
 // APP STATE
@@ -306,23 +307,22 @@ const String _eventListCsvCacheKey = 'event_list_csv_cache';
 
 /// Helper to filter and sort events
 List<EventModel> _filterAndSortEvents(List<EventModel> events) {
-	// Get current year
-	final currentYear = DateTime.now().year;
-
+	// Import at file top: import '../seasons/season_registry.dart';
 	// Log filtering info
 	final logger = getLogger();
 	logger.i('🎯 EVENT LIST FILTERING:');
 	logger.i('   Total events: ${events.length}');
-	logger.i('   Current year: $currentYear');
+	logger.i('   Supported seasons: ${seasonModules.keys.join(', ')}');
 
-	// Show breakdown by year
-	final byYear = <int, int>{};
+	// Show breakdown by season
+	final bySeason = <String, int>{};
 	for (var e in events) {
-		byYear[e.season] = (byYear[e.season] ?? 0) + 1;
+		bySeason[e.season] = (bySeason[e.season] ?? 0) + 1;
 	}
+	logger.i('   Events by season: $bySeason');
 
-	// Filter to current season only
-	final filtered = events.where((e) => e.season == currentYear).toList();
+	// Filter to supported seasons only
+	final filtered = events.where((e) => seasonModules.containsKey(e.season)).toList();
 
 	// Sort by start date, most recent first
 	// Events with no start date are placed at the bottom

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'timeline_provider.dart';
+import '../../../providers/timeline_provider.dart';
 import 'scouting_data_provider.dart';
-import 'match_timer_provider.dart';
-import 'floating_popup_provider.dart';
+import '../../../providers/match_timer_provider.dart';
+import '../../../providers/floating_popup_provider.dart';
 
 /// Callback to get the position for the undo floater based on the field being undone
 typedef UndoPositionCallback = Offset? Function(String field);

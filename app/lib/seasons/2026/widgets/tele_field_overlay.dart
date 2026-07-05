@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
-import '../../providers/field_side_provider.dart';
-import '../../providers/floating_popup_provider.dart';
-import '../../providers/zone_buttons_provider.dart';
-import '../../providers/button_position_provider.dart';
-import '../../constants/colors.dart';
-import '../models/field_button.dart';
-import '../models/field_descriptor.dart';
+import '../../../providers/field_side_provider.dart';
+import '../../../providers/floating_popup_provider.dart';
+import '../../../providers/zone_buttons_provider.dart';
+import '../../../providers/button_position_provider.dart';
+import '../../../../constants/colors.dart';
+import '../../../../models/field_button.dart';
+import '../../../../models/field_descriptor.dart';
 
 /// Zone change buttons for tele phase
 final teleZoneChangeButtons = <FieldButton>[
@@ -17,7 +17,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Trench to Neutral',
 		rightPercent: 26.0,
 		bottomPercent: 5.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -31,7 +31,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Bump to Neutral',
 		rightPercent: 26.0,
 		bottomPercent: 21.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		descriptor: FieldDescriptor(name: 'tele_bump_depot_alliance_to_neutral', teleValuesTableDescription: 'bump_depot_alliance_to_neutral'),
 	),
@@ -40,7 +40,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Bump to Neutral',
 		rightPercent: 26.0,
 		topPercent: 21.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		descriptor: FieldDescriptor(name: 'tele_bump_outpost_alliance_to_neutral', teleValuesTableDescription: 'bump_outpost_alliance_to_neutral'),
 	),
@@ -49,7 +49,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Trench to Neutral',
 		rightPercent: 26.0,
 		topPercent: 5.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		descriptor: FieldDescriptor(name: 'tele_trench_outpost_alliance_to_neutral', teleValuesTableDescription: 'trench_outpost_alliance_to_neutral'),
 	),
@@ -60,7 +60,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Trench to Alliance',
 		rightPercent: 26.0,
 		bottomPercent: 5.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_trench_depot_neutral_to_alliance', teleValuesTableDescription: 'trench_depot_neutral_to_alliance'),
 	),
@@ -69,7 +69,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Bump to Alliance',
 		rightPercent: 26.0,
 		bottomPercent: 21.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_bump_depot_neutral_to_alliance', teleValuesTableDescription: 'bump_depot_neutral_to_alliance'),
 	),
@@ -78,7 +78,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Bump to Alliance',
 		rightPercent: 26.0,
 		topPercent: 21.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_bump_outpost_neutral_to_alliance', teleValuesTableDescription: 'bump_outpost_neutral_to_alliance'),
 	),
@@ -87,7 +87,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Trench to Alliance',
 		rightPercent: 26.0,
 		topPercent: 5.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_trench_outpost_neutral_to_alliance', teleValuesTableDescription: 'trench_outpost_neutral_to_alliance'),
 	),
@@ -98,7 +98,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Trench to Opponent',
 		leftPercent: 26.0,
 		bottomPercent: 5.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_trench_outpost_neutral_to_opponent', teleValuesTableDescription: 'trench_outpost_neutral_to_opponent'),
 	),
@@ -107,7 +107,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Bump to Opponent',
 		leftPercent: 26.0,
 		bottomPercent: 21.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_bump_outpost_neutral_to_opponent', teleValuesTableDescription: 'bump_outpost_neutral_to_opponent'),
 	),
@@ -116,7 +116,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Bump to Opponent',
 		leftPercent: 26.0,
 		topPercent: 21.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_bump_depot_neutral_to_opponent', teleValuesTableDescription: 'bump_depot_neutral_to_opponent'),
 	),
@@ -125,7 +125,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Trench to Opponent',
 		leftPercent: 26.0,
 		topPercent: 5.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'neutral',
 		descriptor: FieldDescriptor(name: 'tele_trench_depot_neutral_to_opponent', teleValuesTableDescription: 'trench_depot_neutral_to_opponent'),
 	),
@@ -136,7 +136,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Trench to Neutral',
 		leftPercent: 26.0,
 		bottomPercent: 5.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'opponent',
 		descriptor: FieldDescriptor(name: 'tele_trench_outpost_opponent_to_neutral', teleValuesTableDescription: 'trench_outpost_opponent_to_neutral'),
 	),
@@ -145,7 +145,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Bump to Neutral',
 		leftPercent: 26.0,
 		bottomPercent: 21.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'opponent',
 		descriptor: FieldDescriptor(name: 'tele_bump_outpost_opponent_to_neutral', teleValuesTableDescription: 'bump_outpost_opponent_to_neutral'),
 	),
@@ -154,7 +154,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Bump to Neutral',
 		leftPercent: 26.0,
 		topPercent: 21.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'opponent',
 		descriptor: FieldDescriptor(name: 'tele_bump_depot_opponent_to_neutral', teleValuesTableDescription: 'bump_depot_opponent_to_neutral'),
 	),
@@ -163,7 +163,7 @@ final teleZoneChangeButtons = <FieldButton>[
 		label: 'Depot Trench to Neutral',
 		leftPercent: 26.0,
 		topPercent: 5.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'opponent',
 		descriptor: FieldDescriptor(name: 'tele_trench_depot_opponent_to_neutral', teleValuesTableDescription: 'trench_depot_opponent_to_neutral'),
 	),
@@ -177,7 +177,7 @@ final teleFuelTargets = <FieldButton>[
 		label: 'Hub Target',
 		rightPercent: 26.0,
 		topPercent: 42.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -188,7 +188,7 @@ final teleFuelTargets = <FieldButton>[
 		label: 'Alliance Dump',
 		rightPercent: 13.0,
 		bottomPercent: 7.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -199,7 +199,7 @@ final teleFuelTargets = <FieldButton>[
 		label: 'Outpost',
 		rightPercent: 0.0,
 		topPercent: 6.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -211,7 +211,7 @@ final teleFuelTargets = <FieldButton>[
 		label: 'Neutral Pass',
 		rightPercent: 13.0,
 		bottomPercent: 7.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'neutral',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -223,7 +223,7 @@ final teleFuelTargets = <FieldButton>[
 		label: 'Opponent Alliance Pass',
 		rightPercent: 13.0,
 		bottomPercent: 7.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'opponent',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -234,7 +234,7 @@ final teleFuelTargets = <FieldButton>[
 		label: 'Opponent Neutral Pass',
 		rightPercent: 46.5,
 		bottomPercent: 7.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'opponent',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -339,8 +339,8 @@ class TeleFieldOverlay extends ConsumerWidget {
 										image: DecorationImage(
 											image: AssetImage(
 												fieldSide == FieldSide.left
-													? 'assets/images/field.png'
-													: 'assets/images/field-rotated.png',
+													? 'assets/2026/images/field.png'
+													: 'assets/2026/images/field-rotated.png',
 											),
 											fit: BoxFit.contain,
 										),
@@ -565,7 +565,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 	}) {
 		final size = target.widthPercent * fieldWidth / 100;
 		final imagePath = isActive
-			? 'assets/images/fuel-target-active.png'
+			? 'assets/2026/images/fuel-target-active.png'
 			: target.imagePath;
 
 		final leftPercent = target.leftPercent;

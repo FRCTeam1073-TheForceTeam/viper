@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../providers/app_providers.dart';
+import '../../../../providers/app_providers.dart';
 import '../../providers/scouting_data_provider.dart';
-import '../../providers/pre_match_provider.dart';
-import '../../providers/timeline_provider.dart';
-import '../../providers/locale_provider.dart';
-import '../../providers/field_side_provider.dart';
-import '../../providers/timeline_provider.dart';
-import '../../services/localization.dart';
-import '../../services/csv_builder.dart';
-import '../../widgets/checkbox_button.dart';
-import '../../widgets/checkbox_button_group.dart';
-import '../../widgets/descriptor_checkbox_group.dart';
-import '../../widgets/position_selector_area.dart';
-import '../../widgets/radio_button_group.dart';
-import '../../widgets/descriptor_text_field.dart';
-import '../../widgets/descriptor_text_area.dart';
-import '../../constants/colors.dart';
-import '../../models/match_model.dart';
-import '../../models/field_descriptor.dart';
+import '../../../../providers/pre_match_provider.dart';
+import '../../../../providers/timeline_provider.dart';
+import '../../../../providers/locale_provider.dart';
+import '../../../../providers/field_side_provider.dart';
+import '../../../../providers/timeline_provider.dart';
+import '../../../../services/localization.dart';
+import '../../../../services/csv_builder.dart';
+import '../../../../widgets/checkbox_button.dart';
+import '../../../../widgets/checkbox_button_group.dart';
+import '../../../../widgets/descriptor_checkbox_group.dart';
+import '../../../../widgets/position_selector_area.dart';
+import '../../../../widgets/radio_button_group.dart';
+import '../../../../widgets/descriptor_text_field.dart';
+import '../../../../widgets/descriptor_text_area.dart';
+import '../../../../constants/colors.dart';
+import '../../../../models/match_model.dart';
+import '../../../../models/field_descriptor.dart';
 
 class EndGameTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -1030,8 +1030,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 								ref: ref,
 								isBlueTeam: isBlueTeam,
 								fieldSide: fieldSide,
-								blueImagePath: 'assets/images/climb-area-blue.png',
-								redImagePath: 'assets/images/climb-area-red.png',
+								blueImagePath: 'assets/2026/images/climb-area-blue.png',
+								redImagePath: 'assets/2026/images/climb-area-red.png',
 								width: 209,
 								height: 249,
 								markerSize: 60,
@@ -1057,8 +1057,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 								ref: ref,
 								isBlueTeam: isBlueTeam,
 								fieldSide: fieldSide,
-								blueImagePath: 'assets/images/climb-area-blue.png',
-								redImagePath: 'assets/images/climb-area-red.png',
+								blueImagePath: 'assets/2026/images/climb-area-blue.png',
+								redImagePath: 'assets/2026/images/climb-area-red.png',
 								width: 209,
 								height: 249,
 								markerSize: 60,
@@ -1211,8 +1211,8 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 											ref: ref,
 											isBlueTeam: isBlueTeam,
 											fieldSide: fieldSide,
-											blueImagePath: 'assets/images/shooting-locations-blue.png',
-											redImagePath: 'assets/images/shooting-locations-red.png',
+											blueImagePath: 'assets/2026/images/shooting-locations-blue.png',
+											redImagePath: 'assets/2026/images/shooting-locations-red.png',
 											width: 258,
 											height: 400,
 											markerSize: 40,

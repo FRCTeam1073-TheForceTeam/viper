@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import '../../providers/app_providers.dart';
-import '../../providers/locale_provider.dart';
-import '../../providers/field_side_provider.dart';
+import '../../../../providers/app_providers.dart';
+import '../../../../providers/locale_provider.dart';
+import '../../../../providers/field_side_provider.dart';
 import '../../providers/scouting_data_provider.dart';
-import '../../services/localization.dart';
-import '../../constants/colors.dart';
-import '../../utils/match_name_converter.dart';
-import '../../widgets/checkbox_button.dart';
-import '../../widgets/position_selector_area.dart';
-import '../../models/field_descriptor.dart';
-import '../../models/map_data_model.dart';
+import '../../../../services/localization.dart';
+import '../../../../constants/colors.dart';
+import '../../../../utils/match_name_converter.dart';
+import '../../../../widgets/checkbox_button.dart';
+import '../../../../widgets/position_selector_area.dart';
+import '../../../../models/field_descriptor.dart';
+import '../../../../models/map_data_model.dart';
 
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -207,7 +207,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 									}
 
 									final image = Image.asset(
-										'assets/images/$imagePath',
+										'assets/2026/images/$imagePath',
 										fit: BoxFit.contain,
 									);
 
@@ -312,8 +312,8 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 														ref: ref,
 														isBlueTeam: isBlueTeam,
 														fieldSide: fieldSide,
-														blueImagePath: 'assets/images/start-area-blue.png',
-														redImagePath: 'assets/images/start-area-red.png',
+														blueImagePath: 'assets/2026/images/start-area-blue.png',
+														redImagePath: 'assets/2026/images/start-area-red.png',
 														width: 84,
 														height: 250,
 														markerSize: 60,

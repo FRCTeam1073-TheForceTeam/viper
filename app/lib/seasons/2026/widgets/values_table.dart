@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/localization.dart';
+import '../../../services/localization.dart';
 import '../providers/scouting_data_provider.dart';
-import '../models/field_descriptor.dart';
+import '../../../../models/field_descriptor.dart';
 
 /// A generic table showing readonly counter values
 /// Displays counters in simple 2-column layout: Count | Description

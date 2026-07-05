@@ -23,11 +23,20 @@ class EventModel {
 		this.endDate,
 	});
 
-	/// Extract season year from eventId (e.g., "2024flbr" -> 2024)
-	int get season => int.parse(eventId.substring(0, 4));
+	/// Extract season from eventId, matching the web app's convention:
+	/// '2026casf' -> '2026', '2025-26test' -> '2025-26'
+	static String seasonFromEventId(String eventId) {
+		final match = RegExp(r'^(\d{4}(?:-\d{2})?)').firstMatch(eventId);
+		// TODO: use defaultSeason from seasons/season_registry.dart once available
+		// For now, hardcode fallback to avoid circular dependency during init
+		return match?.group(1) ?? '2026';
+	}
+
+	/// Get season identifier for this event
+	String get season => EventModel.seasonFromEventId(eventId);
 
 	/// Check if this event is from a specific season
-	bool isFromSeason(int year) => season == year;
+	bool isFromSeason(String season) => this.season == season;
 }
 
 class ViperApiClient {
@@ -323,7 +332,7 @@ class ViperApiClient {
 	/// Build the full URL for a robot photo
 	/// Returns URL like: http://localhost:8080/data/2026/1234.jpg
 	String getRobotPhotoUrl(String eventId, String teamNumber) {
-		final year = _extractYearFromEventId(eventId);
+		final year = _extractSeasonFromEventId(eventId);
 		final url = '$baseUrl/data/$year/$teamNumber.jpg';
 		return url;
 	}
@@ -377,7 +386,7 @@ class ViperApiClient {
 	/// If cache is stale (>7 days old), returns cached version but refreshes in background
 	Future<Uint8List?> fetchRobotPhotoBytes(String eventId, String teamNumber) async {
 		try {
-			final year = _extractYearFromEventId(eventId);
+			final year = _extractSeasonFromEventId(eventId);
 			final path = '/data/$year/$teamNumber.jpg';
 			final fullUrl = '$baseUrl$path';
 
@@ -442,7 +451,7 @@ class ViperApiClient {
 	/// Waits for stale cache to be refreshed before returning
 	Future<void> preloadRobotPhoto(String eventId, String teamNumber) async {
 		try {
-			final year = _extractYearFromEventId(eventId);
+			final year = _extractSeasonFromEventId(eventId);
 
 			// Check cache first
 			final cacheFile = await _getCacheFile(year, teamNumber);
@@ -474,7 +483,7 @@ class ViperApiClient {
 	/// Returns immediately without awaiting
 	Future<void> _refreshRobotPhotoCache(String eventId, String teamNumber) async {
 		try {
-			final year = _extractYearFromEventId(eventId);
+			final year = _extractSeasonFromEventId(eventId);
 			final path = '/data/$year/$teamNumber.jpg';
 			final fullUrl = '$baseUrl$path';
 
@@ -541,15 +550,8 @@ class ViperApiClient {
 		}
 	}
 
-	/// Extract year from eventId
-	/// Examples: "2026demo" -> "2026", "2025falb" -> "2025"
-	String _extractYearFromEventId(String eventId) {
-		final yearMatch = RegExp(r'(\d{4})').firstMatch(eventId);
-		if (yearMatch != null) {
-			return yearMatch.group(1) ?? '2026';
-		}
-		return '2026'; // Default year
-	}
+	/// Extract season from eventId using the shared static helper
+	String _extractSeasonFromEventId(String eventId) => EventModel.seasonFromEventId(eventId);
 
 	// =========================================================================
 	// PRIVATE HELPERS

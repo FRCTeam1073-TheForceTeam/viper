@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
-import '../../providers/field_side_provider.dart';
-import '../../providers/scouting_data_provider.dart';
-import '../../providers/zone_buttons_provider.dart';
-import '../../providers/button_position_provider.dart';
-import '../../constants/colors.dart';
-import '../models/field_button.dart';
-import '../models/field_descriptor.dart';
-import '../models/map_data_model.dart';
-import 'checkbox_button.dart';
+import '../../../providers/field_side_provider.dart';
+import '../providers/scouting_data_provider.dart';
+import '../../../providers/zone_buttons_provider.dart';
+import '../../../providers/button_position_provider.dart';
+import '../../../../constants/colors.dart';
+import '../../../../models/field_button.dart';
+import '../../../../models/field_descriptor.dart';
+import '../../../../models/map_data_model.dart';
+import '../../../widgets/checkbox_button.dart';
 
 /// Zone change buttons for auto phase
 final autoZoneChangeButtons = <FieldButton>[
@@ -19,7 +19,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Depot Trench to Neutral',
 		rightPercent: 26.0,
 		bottomPercent: 5.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -33,7 +33,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Depot Bump to Neutral',
 		rightPercent: 26.0,
 		bottomPercent: 21.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -47,7 +47,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Bump to Neutral',
 		rightPercent: 26.0,
 		topPercent: 21.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -61,7 +61,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Trench to Neutral',
 		rightPercent: 26.0,
 		topPercent: 5.0,
-		imagePath: 'assets/images/arrow-left.png',
+		imagePath: 'assets/2026/images/arrow-left.png',
 		zone: 'alliance',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -77,7 +77,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Depot Trench to Alliance',
 		rightPercent: 26.0,
 		bottomPercent: 5.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -91,7 +91,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Depot Bump to Alliance',
 		rightPercent: 26.0,
 		bottomPercent: 21.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -105,7 +105,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Bump to Alliance',
 		rightPercent: 26.0,
 		topPercent: 21.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -119,7 +119,7 @@ final autoZoneChangeButtons = <FieldButton>[
 		label: 'Outpost Trench to Alliance',
 		rightPercent: 26.0,
 		topPercent: 5.0,
-		imagePath: 'assets/images/arrow-right.png',
+		imagePath: 'assets/2026/images/arrow-right.png',
 		zone: 'neutral',
 		widthPercent: 7.0,
 		aspectRatio: 1.0,
@@ -138,7 +138,7 @@ final autoFuelTargets = <FieldButton>[
 		label: 'Hub Target',
 		rightPercent: 26.0,
 		topPercent: 42.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'alliance',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -150,7 +150,7 @@ final autoFuelTargets = <FieldButton>[
 		label: 'Alliance Pass',
 		rightPercent: 13.0,
 		bottomPercent: 7.0,
-		imagePath: 'assets/images/fuel-target.png',
+		imagePath: 'assets/2026/images/fuel-target.png',
 		zone: 'neutral',
 		widthPercent: 5.0,
 		aspectRatio: 1.0,
@@ -285,8 +285,8 @@ class AutoFieldOverlay extends ConsumerWidget {
 										image: DecorationImage(
 											image: AssetImage(
 											fieldSide == FieldSide.left
-													? 'assets/images/field.png'
-													: 'assets/images/field-rotated.png',
+													? 'assets/2026/images/field.png'
+													: 'assets/2026/images/field-rotated.png',
 											),
 											fit: BoxFit.contain, // Use contain instead of cover to avoid clipping
 										),
@@ -376,7 +376,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 										descriptor: FieldDescriptor(
 											name: 'auto_collect_depot',
 											uiLabelKey: 'collect_from_depot',
-											imagePath: 'assets/images/fuel-collect.png',
+											imagePath: 'assets/2026/images/fuel-collect.png',
 										),
 										rightPercent: 2.0,
 										bottomPercent: 22.0,
@@ -391,7 +391,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 										descriptor: FieldDescriptor(
 											name: 'auto_collect_outpost',
 											uiLabelKey: 'collect_from_outpost',
-											imagePath: 'assets/images/fuel-collect.png',
+											imagePath: 'assets/2026/images/fuel-collect.png',
 										),
 										rightPercent: 0.0,
 										topPercent: 7.0,
@@ -535,7 +535,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 	}) {
 		final size = target.widthPercent * fieldWidth / 100;
 		final imagePath = isActive
-			? 'assets/images/fuel-target-active.png'
+			? 'assets/2026/images/fuel-target-active.png'
 			: target.imagePath;
 
 		// Calculate positions - swap edges with same percentages when rotating

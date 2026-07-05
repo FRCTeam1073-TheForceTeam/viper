@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/field_descriptor.dart';
-import '../models/map_data_model.dart';
-import 'timeline_provider.dart';
-import 'match_timer_provider.dart';
-import 'global_scouting_data.dart';
+import '../../../models/field_descriptor.dart';
+import '../../../models/map_data_model.dart';
+import '../../../providers/timeline_provider.dart';
+import '../../../providers/match_timer_provider.dart';
+import '../../../providers/global_scouting_data.dart';
 
 /// Unified scouting data for an entire match
 class ScoutingData extends MapDataModel {

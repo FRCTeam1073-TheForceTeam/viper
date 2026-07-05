@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../services/localization.dart';
+import '../../../../services/localization.dart';
 
 /// Widget that displays 3 quick-add buttons for fuel scoring
 /// Uses large, accessible circular buttons for quick tapping during match

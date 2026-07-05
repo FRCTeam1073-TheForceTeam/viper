@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/localization.dart';
+import '../../../services/localization.dart';
 import '../providers/scouting_data_provider.dart';
-import '../models/field_descriptor.dart';
+import '../../../../models/field_descriptor.dart';
 
 /// Widget that displays all movement counters in a collapsible table
 /// Loops through descriptors with autoValuesTableDescription to build rows

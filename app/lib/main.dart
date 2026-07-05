@@ -164,7 +164,9 @@ class _HomeRouter extends ConsumerWidget {
 						},
 					);
 			case NavScreen.botSelection:
+				final selectedEventId = ref.watch(selectedEventProvider);
 				return BotSelectionScreen(
+					eventId: selectedEventId,
 					onBotSelected: (bot) {
 						ref.read(selectedBotPositionProvider.notifier).setPosition(bot);
 						// After bot selection, navigate directly to match selection

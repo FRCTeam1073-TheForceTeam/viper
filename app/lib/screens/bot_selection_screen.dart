@@ -7,12 +7,16 @@ import '../providers/field_side_provider.dart';
 import '../providers/locale_provider.dart';
 import '../services/localization.dart';
 import '../widgets/viper_menu_button.dart';
+import '../seasons/season_registry.dart';
+import '../data/api/viper_api_client.dart';
 
 class BotSelectionScreen extends ConsumerStatefulWidget {
+	final String? eventId;
 	final Function(String) onBotSelected;
 
 	const BotSelectionScreen({
 		Key? key,
+		this.eventId,
 		required this.onBotSelected,
 	}) : super(key: key);
 
@@ -27,6 +31,15 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 	String _translate(String key) {
 		final locale = ref.read(selectedLocaleProvider);
 		return AppLocalizations.translate(key, locale: locale);
+	}
+
+	/// Get the field image asset path based on the event's season
+	String _getFieldImageAsset() {
+		if (widget.eventId == null || widget.eventId!.isEmpty) {
+			return seasonModuleFor(defaultSeason)?.fieldImageAsset ?? 'assets/2026/images/field.png';
+		}
+		final season = EventModel.seasonFromEventId(widget.eventId!);
+		return seasonModuleFor(season)?.fieldImageAsset ?? seasonModuleFor(defaultSeason)!.fieldImageAsset;
 	}
 
 	@override
@@ -142,7 +155,7 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 								child: GestureDetector(
 									onTap: _toggleOrientation,
 									child: Image.asset(
-										'assets/images/field.png',
+										_getFieldImageAsset(),
 										fit: BoxFit.contain,
 									),
 								),
@@ -191,7 +204,7 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 									child: GestureDetector(
 										onTap: _toggleOrientation,
 										child: Image.asset(
-											'assets/images/field.png',
+											_getFieldImageAsset(),
 											fit: BoxFit.contain,
 										),
 									),

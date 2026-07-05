@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'server_config_screen.dart';
-import 'tabs/pre_match_tab.dart';
-import 'tabs/auto_tab.dart';
-import 'tabs/teleop_tab.dart';
-import 'tabs/end_game_tab.dart';
 import '../widgets/viper_menu_button.dart';
 import '../widgets/instant_tab_bar_view.dart';
 import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../providers/match_timer_provider.dart';
 import '../providers/pre_match_provider.dart';
-import '../providers/scouting_data_provider.dart';
 import '../providers/timeline_provider.dart';
+import '../seasons/season_registry.dart';
+import '../seasons/season_module.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/localization.dart';
 import '../widgets/match_timer.dart';
@@ -39,6 +36,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 	String? _teamNumber;
 	late TabController _tabController;
 	DateTime? _matchStartTime;
+	SeasonModule? _seasonModule;
 
 	String _translate(String key) {
 		final locale = ref.read(selectedLocaleProvider);
@@ -55,6 +53,9 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 	@override
 	void initState() {
 		super.initState();
+
+		// Resolve season module based on event
+		_seasonModule = seasonModuleFor(widget.selectedEvent.season);
 
 		// Always start on pre-match tab (index 0) when screen loads
 		// This ensures we don't show the wrong tab when switching matches
@@ -122,10 +123,15 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 	Widget _buildTabContent(WidgetRef ref, int tabIndex) {
 		final botPosition = ref.watch(selectedBotPositionProvider);
 		final selectedMatch = ref.watch(selectedMatchProvider);
+		final module = _seasonModule;
+
+		if (module == null) {
+			return const SizedBox(); // Should not happen if build() gate works
+		}
 
 		switch (tabIndex) {
 			case 0:
-				return PreMatchTab(
+				return module.buildPreMatchTab(
 					eventId: widget.selectedEvent.eventId,
 					eventName: widget.selectedEvent.name,
 					botPosition: botPosition,
@@ -136,7 +142,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 					},
 				);
 			case 1:
-				return AutoTab(
+				return module.buildAutoTab(
 					eventId: widget.selectedEvent.eventId,
 					matchNumber: selectedMatch.match,
 					teamNumber: selectedMatch.team,
@@ -148,13 +154,13 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 					},
 				);
 			case 2:
-				return TeleopTab(
+				return module.buildTeleopTab(
 					eventId: widget.selectedEvent.eventId,
 					matchNumber: selectedMatch.match,
 					teamNumber: selectedMatch.team,
 				);
 			case 3:
-				return EndGameTab(
+				return module.buildEndGameTab(
 					eventId: widget.selectedEvent.eventId,
 					matchNumber: selectedMatch.match,
 					teamNumber: selectedMatch.team,
@@ -195,10 +201,8 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 							// Initialize session start time to now
 							ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
 
-							// Load all scouting data providers
-							ref.read(preMatchProvider.notifier).loadFromData(matchData);
-
-							ref.read(scoutingDataProvider.notifier).loadFromServerData(matchData);
+							// Load all scouting data providers via the season module
+							_seasonModule?.loadMatchData(ref, matchData);
 
 							// Load timeline and set match timer to last event's timestamp
 							if (matchData['timeline'] != null && (matchData['timeline'] as String).isNotEmpty) {
@@ -219,8 +223,7 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 						WidgetsBinding.instance.addPostFrameCallback((_) {
 							ref.read(originalCreatedProvider.notifier).clear();
 							ref.read(scoutingSessionCreatedProvider.notifier).initializeNewSession();
-							ref.read(preMatchProvider.notifier).reset();
-							ref.read(scoutingDataProvider.notifier).reset();
+							_seasonModule?.resetMatchData(ref);
 							// Navigate to pre-match tab
 							_tabController.animateTo(0);
 						});
@@ -248,6 +251,15 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 
 		final isBlueTeam = selectedBot?.startsWith('B') ?? false;
 		final teamColor = isBlueTeam ? AppColors.blueTeamColor : AppColors.redTeamColor;
+
+		// Gate: check if the selected event's season is supported
+		if (_seasonModule == null) {
+			return Scaffold(
+				body: Center(
+					child: Text(_translate('season_not_implemented')),
+				),
+			);
+		}
 
 		return Scaffold(
 				body: CustomScrollView(
