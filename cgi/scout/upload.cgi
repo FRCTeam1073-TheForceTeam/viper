@@ -34,20 +34,20 @@ foreach my $row (@{$uCsv}){
 		$csvHeaders = $row;
 		$uHead = { map { $csvHeaders->[$_] => $_ } 0..(scalar(@{$csvHeaders})-1) };
 		foreach my $key (qw(event team)){
-			$webutil->error("Missing column", "Expected $key CSV heading") if (! exists $uHead->{$key});
+			$webutil->badRequest("Missing column", "Expected $key CSV heading") if (! exists $uHead->{$key});
 		}
 		foreach my $name (@{$csvHeaders}){
-			$webutil->error("Unexpected CSV heading",$name) if($name !~ /^[a-zA-Z0-9_\-]+$/);
+			$webutil->badRequest("Unexpected CSV heading", $name) if($name !~ /^[a-zA-Z0-9_\-]+$/);
 		}
 	} else {
-		$webutil->error("Didn't find a header row starting with 'event' before other data") if (!$csvHeaders);
-		$webutil->error("Bad row size", "CSV row size (".(scalar @{$row}).") doesn't match heading row size(".(scalar keys %{$uHead}).")\n".join(",",keys %{$uHead})."\n".join(",", @{$row})) if (scalar keys %{$uHead} != scalar @{$row});
-		$webutil->error("Unexpected event name",$row->[$uHead->{'event'}]) if($row->[$uHead->{'event'}] !~ /^20\d\d[a-zA-Z0-9\-]+$/);
-		$webutil->error("Unexpected team name",$row->[$uHead->{'team'}]) if($row->[$uHead->{'team'}] !~ /^[0-9]+$/);
+		$webutil->badRequest("Didn't find a header row starting with 'event' before other data") if (!$csvHeaders);
+		$webutil->badRequest("Bad row size", "CSV row size (".(scalar @{$row}).") doesn't match heading row size(".(scalar keys %{$uHead}).")\n".join(",",keys %{$uHead})."\n".join(",", @{$row})) if (scalar keys %{$uHead} != scalar @{$row});
+		$webutil->badRequest("Unexpected event name",$row->[$uHead->{'event'}]) if($row->[$uHead->{'event'}] !~ /^20\d\d[a-zA-Z0-9\-]+$/);
+		$webutil->badRequest("Unexpected team name",$row->[$uHead->{'team'}]) if($row->[$uHead->{'team'}] !~ /^[0-9]+$/);
 		my $eventCsv = $pitCsv;
 		my $eventHeaders = $pitHeaders;
 		if (exists $uHead->{'match'}){
-			$webutil->error("Unexpected match name",$row->[$uHead->{'match'}]) if($row->[$uHead->{'match'}] !~ /^[0-9]*[a-z]+[0-9]+$/);
+			$webutil->badRequest("Unexpected match name",$row->[$uHead->{'match'}]) if($row->[$uHead->{'match'}] !~ /^[0-9]*[a-z]+[0-9]+$/);
 			$eventCsv = $scoutCsv;
 			$eventHeaders = $scoutHeaders;
 		} elsif (exists $uHead->{'defense_tips'}){
@@ -56,7 +56,7 @@ foreach my $row (@{$uCsv}){
 		}
 		$eventCsv->{$row->[$uHead->{'event'}]} = [] if (! exists  $eventCsv->{$row->[$uHead->{'event'}]});
 		$eventHeaders->{$row->[$uHead->{'event'}]} = $csvHeaders;
-		push(@{$eventCsv->{$row->[$uHead->{'event'}]}}, $row)
+		push(@{$eventCsv->{$row->[$uHead->{'event'}]}}, $row);
 	}
 }
 
@@ -70,7 +70,7 @@ for my $param ($cgi->param){
 		my $photo=$2;
 		my $success = 0;
 		my $data = $cgi->param($param);
-		$webutil->error("Photo is not 'data:image/jpeg;base64,'",$data) if($data !~ /^data:image\/jpeg;base64,/);
+		$webutil->badRequest("Photo is not 'data:image/jpeg;base64,'",$data) if($data !~ /^data:image\/jpeg;base64,/);
 		$data =~ s/^data:image\/jpeg;base64,//g;
 		my $decodedImage = decode_base64($data);
 		if ($dbh){

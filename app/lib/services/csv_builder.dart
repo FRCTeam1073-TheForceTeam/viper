@@ -1,5 +1,3 @@
-import 'package:csv/csv.dart';
-
 class CsvBuilder {
 	/// Escape CSV field values using the same logic as server's safeCSV()
 	/// Matches: /www/scout.js safeCSV() function
@@ -26,30 +24,50 @@ class CsvBuilder {
 		'syncedAt', // Sync timestamp
 	};
 
-	/// Build CSV string from scout data maps
+	/// Build CSV string from scout data maps without quoting (matching server expectations)
 	/// Accepts Map<String, dynamic> with scouting data and metadata
 	static String buildScoutCsv(List<Map<String, dynamic>> scoutDataMaps) {
 		if (scoutDataMaps.isEmpty) {
 			return '';
 		}
 
-		// Get all fields from the first scout to determine column order
+		// Start with fields from the first scout to preserve header order
 		final firstScout = scoutDataMaps.first;
-		final allHeaders = firstScout.keys.where((k) => !_excludedFields.contains(k)).toList();
-		final headers = allHeaders.map(_camelToSnakeCase).toList();
+		final allHeaders = <String>[];
 
-		// Build rows with custom escaping
-		final rows = <List<dynamic>>[
-			headers.map((h) => safeCSV(h)).toList()
-		];
-		for (final scoutData in scoutDataMaps) {
-			rows.add(allHeaders.map((header) {
-				final value = scoutData[header];
-				return safeCSV(value?.toString() ?? '');
-			}).toList());
+		// Add fields from first scout in their original order
+		for (final key in firstScout.keys) {
+			if (!_excludedFields.contains(key)) {
+				allHeaders.add(key);
+			}
 		}
 
-		// Convert to CSV string
-		return const ListToCsvConverter().convert(rows);
+		// Add any new fields from subsequent scouts (preserving their order)
+		for (int i = 1; i < scoutDataMaps.length; i++) {
+			for (final key in scoutDataMaps[i].keys) {
+				if (!_excludedFields.contains(key) && !allHeaders.contains(key)) {
+					allHeaders.add(key);
+				}
+			}
+		}
+
+		final headers = allHeaders.map(_camelToSnakeCase).toList();
+
+		// Build CSV manually with safeCSV escaping and no quoting
+		final csvLines = <String>[];
+
+		// Add header row with escaped field names
+		csvLines.add(headers.map((h) => safeCSV(h)).join(','));
+
+		// Add data rows with escaped field values
+		for (final scoutData in scoutDataMaps) {
+			final rowValues = allHeaders.map((header) {
+				final value = scoutData[header];
+				return safeCSV(value?.toString() ?? '');
+			}).toList();
+			csvLines.add(rowValues.join(','));
+		}
+
+		return csvLines.join('\n');
 	}
 }

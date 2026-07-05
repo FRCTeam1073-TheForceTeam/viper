@@ -73,10 +73,12 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 
 	void update(ScoutingData data) {
 		state = data;
+		setGlobalScoutingData(data);
 	}
 
 	void reset() {
 		state = _initializeDefaults(ScoutingData.empty());
+		setGlobalScoutingData(state);
 		_ref.read(timelineProvider.notifier).clear();
 		_ref.read(matchTimerProvider.notifier).clear();
 		_ref.read(activeZoneProvider.notifier).reset();
@@ -92,6 +94,7 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 		newState.loadFromMap(data);
 
 		state = newState;
+		setGlobalScoutingData(state);
 		_autoLastZoneChangeTime = null;
 		_teleLastZoneChangeTime = null;
 		// Always reset to alliance/hub when loading. Each phase will set its own zone.
@@ -212,6 +215,7 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 
 		_ref.read(timelineProvider.notifier).addEvent(event);
 		state = newState;
+		setGlobalScoutingData(newState);
 	}
 
 	// Parameterized undo for both phases
@@ -260,6 +264,7 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 
 		_ref.read(timelineProvider.notifier).undo();
 		state = newState;
+		setGlobalScoutingData(newState);
 	}
 
 	void recordAutoAction({

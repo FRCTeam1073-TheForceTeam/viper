@@ -194,26 +194,41 @@ class ViperApiClient {
 	/// [csvContent] is the full CSV string (headers + data rows)
 	Future<Map<String, dynamic>> uploadScoutData(String csvContent) async {
 		try {
-			print('Uploading scout data');
+			final uploadUrl = '$baseUrl/scout/upload.cgi';
+			print('Uploading scout data to: $uploadUrl');
+			print('Request body size: ${csvContent.length} bytes');
 
 			final response = await _dio.post(
-				'scout/upload.cgi',
+				'/scout/upload.cgi',
 				data: {'csv': csvContent},
 				options: Options(
 					contentType: Headers.formUrlEncodedContentType,
+					headers: {'Accept': 'application/json'},
 				),
 			);
 
-			if (response.statusCode != 200) {
-				throw Exception(
-					'Upload failed: HTTP ${response.statusCode}',
-				);
+			final statusCode = response.statusCode ?? 0;
+			final isSuccess = statusCode >= 200 && statusCode < 400;
+			if (!isSuccess) {
+				final errorMsg = 'Upload failed: HTTP $statusCode\n'
+					'URL: $uploadUrl\n'
+					'Response: ${response.data}';
+				throw Exception(errorMsg);
 			}
 
 			print('Scout data uploaded successfully');
 
 			// Parse response (expecting JSON or plain text confirmation)
 			return {'success': true, 'response': response.data};
+		} on DioException catch (e) {
+			final uploadUrl = '$baseUrl/scout/upload.cgi';
+			final errorMsg = 'Error uploading scout data:\n'
+				'URL: $uploadUrl\n'
+				'Status: ${e.response?.statusCode}\n'
+				'Response: ${e.response?.data}\n'
+				'Error: ${e.message}';
+			_logger.e(errorMsg);
+			rethrow;
 		} catch (e) {
 			_logger.e('Error uploading scout data: $e');
 			rethrow;

@@ -50,7 +50,7 @@ class RadioButtonGroup extends ConsumerWidget {
 		return RadioButtonGroup(
 			key: key,
 			options: options,
-			selectedValue: currentValue.isEmpty ? null : currentValue,
+			selectedValue: currentValue,
 			onChanged: (value) {
 				final updated = model.updateField(descriptor.name, value ?? '');
 				ref.read(provider.notifier).update(updated);

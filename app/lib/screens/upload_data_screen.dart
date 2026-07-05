@@ -239,63 +239,35 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 								if (uploadState.history.isNotEmpty)
 									Padding(
 										padding: const EdgeInsets.only(top: 24),
-										child: Column(
-											crossAxisAlignment: CrossAxisAlignment.start,
-											children: [
-												Row(
-													mainAxisAlignment:
-														MainAxisAlignment.spaceBetween,
-													children: [
-														Text(
-															t('history'),
-															style: Theme.of(context)
-																	.textTheme
-																	.titleMedium
-																	?.copyWith(
-																fontWeight: FontWeight.bold,
-															),
-														),
-														ElevatedButton.icon(
-															icon: const Icon(Icons.delete_outline,
-																	size: 16),
-															label: Text(t('clear_history')),
-															onPressed: () {
-																ref
-																	.read(uploadPageStateProvider
-																		.notifier)
-																	.clearAllHistory();
-															},
-														),
-													],
-												),
-												Padding(
-													padding: const EdgeInsets.only(top: 12),
-													child: _UploadSection(
-														title: '',
-														entries: uploadState.history,
-														showDelete: true,
-														showReupload: uploadState.history
-																.any((h) =>
-																	h.uploadStatus ==
-																	'uploaded')
-															? true
-															: false,
-														onDelete: (id) {
-															ref
-																.read(uploadPageStateProvider
-																	.notifier)
-																.deleteEntry(id);
-														},
-														onReupload: (id) {
-															ref
-																.read(uploadPageStateProvider
-																	.notifier)
-																.reuploadEntry(id);
-														},
-														locale: locale,
-													),
-												),
-											],
+										child: _UploadSection(
+											title: t('history'),
+											entries: uploadState.history,
+											showDelete: true,
+											showReupload: uploadState.history
+													.any((h) =>
+														h.uploadStatus ==
+														'uploaded')
+												? true
+												: false,
+											onDelete: (id) {
+												ref
+													.read(uploadPageStateProvider
+														.notifier)
+													.deleteEntry(id);
+											},
+											onReupload: (id) {
+												ref
+													.read(uploadPageStateProvider
+														.notifier)
+													.reuploadEntry(id);
+											},
+											onClearHistory: () {
+												ref
+													.read(uploadPageStateProvider
+														.notifier)
+														.clearAllHistory();
+											},
+											locale: locale,
 										),
 									),
 
@@ -329,6 +301,7 @@ class _UploadSection extends StatefulWidget {
 	final Function(int) onDelete;
 	final Function(int) onReupload;
 	final Locale locale;
+	final VoidCallback? onClearHistory;
 
 	const _UploadSection({
 		required this.title,
@@ -338,6 +311,7 @@ class _UploadSection extends StatefulWidget {
 		required this.onDelete,
 		required this.onReupload,
 		required this.locale,
+		this.onClearHistory,
 	});
 
 	@override
@@ -360,35 +334,49 @@ class _UploadSectionState extends State<_UploadSection> {
 						child: Container(
 							padding: const EdgeInsets.symmetric(vertical: 12),
 							child: Row(
+								mainAxisAlignment: MainAxisAlignment.spaceBetween,
 								children: [
-									Icon(_expanded ? Icons.expand_less : Icons.expand_more),
-									const SizedBox(width: 8),
-									Text(
-										widget.title,
-										style:
-											Theme.of(context).textTheme.titleMedium?.copyWith(
-											fontWeight: FontWeight.bold,
+									Expanded(
+										child: Row(
+											children: [
+												Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+												const SizedBox(width: 8),
+												Text(
+													widget.title,
+													style:
+														Theme.of(context).textTheme.titleMedium?.copyWith(
+														fontWeight: FontWeight.bold,
+													),
+												),
+												const SizedBox(width: 8),
+												Container(
+													padding: const EdgeInsets.symmetric(
+														horizontal: 8,
+														vertical: 2,
+													),
+													decoration: BoxDecoration(
+														color: Colors.blue.shade100,
+														borderRadius: BorderRadius.circular(12),
+													),
+													child: Text(
+														'${widget.entries.length}',
+														style: TextStyle(
+															fontSize: 12,
+															color: Colors.blue.shade900,
+															fontWeight: FontWeight.bold,
+														),
+													),
+												),
+											],
 										),
 									),
-									const SizedBox(width: 8),
-									Container(
-										padding: const EdgeInsets.symmetric(
-											horizontal: 8,
-											vertical: 2,
+									if (widget.onClearHistory != null)
+										ElevatedButton.icon(
+											icon: const Icon(Icons.delete_outline,
+													size: 16),
+											label: Text(t('clear_history')),
+											onPressed: widget.onClearHistory,
 										),
-										decoration: BoxDecoration(
-											color: Colors.blue.shade100,
-											borderRadius: BorderRadius.circular(12),
-										),
-										child: Text(
-											'${widget.entries.length}',
-											style: TextStyle(
-												fontSize: 12,
-												color: Colors.blue.shade900,
-												fontWeight: FontWeight.bold,
-											),
-										),
-									),
 								],
 							),
 						),
@@ -453,6 +441,12 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 	String _formatAsKeyValue(String headers, String data) {
 		final headerList = headers.split(',');
 		final dataList = data.split(',');
+
+		print('[CSV_PARSE] Headers: ${headerList.length} | Data values: ${dataList.length}');
+		if (headerList.length != dataList.length) {
+			print('[CSV_PARSE] MISMATCH! Headers: $headerList');
+			print('[CSV_PARSE] MISMATCH! Data: $dataList');
+		}
 
 		final pairs = <String>[];
 		for (int i = 0; i < headerList.length && i < dataList.length; i++) {

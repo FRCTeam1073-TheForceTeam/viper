@@ -702,6 +702,8 @@ class UploadPageState {
 	final String? error;
 	final DateTime? lastUploadTime;
 
+	static const _unspecified = Object();
+
 	UploadPageState({
 		this.readyToUpload = const [],
 		this.uploadLater = const [],
@@ -716,7 +718,7 @@ class UploadPageState {
 		List<UploadHistoryData>? uploadLater,
 		List<UploadHistoryData>? history,
 		bool? isUploading,
-		String? error,
+		Object? error = _unspecified,
 		DateTime? lastUploadTime,
 	}) {
 		return UploadPageState(
@@ -724,7 +726,7 @@ class UploadPageState {
 			uploadLater: uploadLater ?? this.uploadLater,
 			history: history ?? this.history,
 			isUploading: isUploading ?? this.isUploading,
-			error: error ?? this.error,
+			error: error == _unspecified ? this.error : error as String?,
 			lastUploadTime: lastUploadTime ?? this.lastUploadTime,
 		);
 	}
@@ -823,23 +825,29 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 
 			final apiClient = await ref.read(apiClientProvider.future);
 
-			// Combine CSV headers and data from all ready entries
-			String? headers;
-			final csvDataLines = <String>[];
+			// Parse CSV entries and rebuild combined CSV using buildScoutCsv
+			// This ensures all records have consistent columns
+			final scoutDataMaps = <Map<String, dynamic>>[];
 
 			for (var entry in state.readyToUpload) {
-				if (headers == null) {
-					headers = entry.csvHeaders;
+				final headers = entry.csvHeaders.split(',');
+				final values = entry.csvData.split(',');
+
+				// Create a map for this record, pairing headers with values
+				final recordMap = <String, dynamic>{};
+				for (int i = 0; i < headers.length && i < values.length; i++) {
+					recordMap[headers[i].trim()] = values[i].trim();
 				}
-				csvDataLines.add(entry.csvData);
+				scoutDataMaps.add(recordMap);
 			}
 
-			if (headers == null || csvDataLines.isEmpty) {
+			if (scoutDataMaps.isEmpty) {
 				state = state.copyWith(isUploading: false);
 				return;
 			}
 
-			final csvContent = headers + '\n' + csvDataLines.join('\n');
+			// Build combined CSV with all records, ensuring consistent column structure
+			final csvContent = CsvBuilder.buildScoutCsv(scoutDataMaps);
 
 			// Upload to backend
 			await apiClient.uploadScoutData(csvContent);
@@ -854,6 +862,7 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 			state = state.copyWith(
 				isUploading: false,
 				lastUploadTime: DateTime.now(),
+				error: null,
 			);
 		} catch (e) {
 			state = state.copyWith(

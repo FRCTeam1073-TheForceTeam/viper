@@ -9,7 +9,7 @@ import 'checkbox_button_group.dart';
 /// Eliminates hardcoded selectedValues arrays and switch statements.
 class DescriptorCheckboxGroup extends StatelessWidget {
 	final MapDataModel object;
-	final Function(String fieldName, bool newValue) onChanged;
+	final Function(String fieldName, String newValue) onChanged;
 	final List<FieldDescriptor> _descriptors;
 
 	const DescriptorCheckboxGroup({
@@ -32,7 +32,7 @@ class DescriptorCheckboxGroup extends StatelessWidget {
 		Key? key,
 		required MapDataModel object,
 		required List<FieldDescriptor> descriptors,
-		required Function(String fieldName, bool newValue) onChanged,
+		required Function(String fieldName, String newValue) onChanged,
 	}) {
 		return DescriptorCheckboxGroup._(
 			key: key,
@@ -74,7 +74,8 @@ class DescriptorCheckboxGroup extends StatelessWidget {
 				if (index >= 0 && index < checkboxFields.length) {
 					final field = checkboxFields[index];
 					final currentValue = selectedValues[index];
-					onChanged(field.name, !currentValue);
+					final newValue = (!currentValue) ? '1' : '0';
+					onChanged(field.name, newValue);
 				}
 			},
 		);
