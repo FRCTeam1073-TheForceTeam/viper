@@ -310,7 +310,8 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 	// Import at file top: import '../seasons/season_registry.dart';
 	// Log filtering info
 	final logger = getLogger();
-	logger.i('🎯 EVENT LIST FILTERING:');
+	print('🎯 _filterAndSortEvents called with ${events.length} events');
+	logger.i('🎯 EVENT LIST FETCHED:');
 	logger.i('   Total events: ${events.length}');
 	logger.i('   Supported seasons: ${seasonModules.keys.join(', ')}');
 
@@ -319,21 +320,32 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 	for (var e in events) {
 		bySeason[e.season] = (bySeason[e.season] ?? 0) + 1;
 	}
+	print('   Events by season: $bySeason');
 	logger.i('   Events by season: $bySeason');
 
-	// Filter to supported seasons only
-	final filtered = events.where((e) => seasonModules.containsKey(e.season)).toList();
-
-	// Sort by start date, most recent first
+	// Sort by start date, most recent first (don't filter by season - show all seasons in dropdown)
 	// Events with no start date are placed at the bottom
-	filtered.sort((a, b) {
+	events.sort((a, b) {
 		if (a.startDate == null && b.startDate == null) return 0;
 		if (a.startDate == null) return 1;
 		if (b.startDate == null) return -1;
 		return b.startDate!.compareTo(a.startDate!);
 	});
 
-	return filtered;
+	print('🎯 Returning ${events.length} events (all seasons included)');
+	return events;
+}
+
+/// Extract unique seasons from events, sorted with most recent first
+List<String> _extractAndSortSeasons(List<EventModel> events) {
+	final seasons = <String>{};
+	for (var event in events) {
+		seasons.add(event.season);
+	}
+	final sorted = seasons.toList();
+	sorted.sort((a, b) => b.compareTo(a)); // Reverse sort for most recent first
+	print('📊 _extractAndSortSeasons: ${events.length} events -> ${sorted.length} seasons: $sorted');
+	return sorted;
 }
 
 /// StateNotifier for event list with cache-first synchronous loading
@@ -398,6 +410,84 @@ class EventListNotifier extends StateNotifier<List<EventModel>> {
 }
 
 final eventListProvider = StateNotifierProvider((ref) => EventListNotifier(ref));
+
+// ============================================================================
+// SELECTED SEASON
+// ============================================================================
+
+/// Get all unique seasons from the event list (including unsupported seasons), sorted most recent first
+final availableSeasonsProvider = Provider<List<String>>((ref) {
+	final events = ref.watch(eventListProvider); // Use eventListProvider which has all events before filtering
+	final seasons = _extractAndSortSeasons(events);
+	print('📅 [availableSeasonsProvider] Computing: ${seasons.length} seasons - $seasons');
+	getLogger().i('📅 Available seasons provider: ${seasons.length} seasons - $seasons');
+	return seasons;
+});
+
+/// Track the selected season for filtering events
+class _SelectedSeasonNotifier extends StateNotifier<String?> {
+	final SharedPreferences? _prefs;
+
+	_SelectedSeasonNotifier(this._prefs, String? initialSeason) : super(initialSeason);
+
+	Future<void> setSelectedSeason(String season) async {
+		state = season;
+		if (_prefs != null) {
+			await _prefs!.setString('selected_season', season);
+		}
+	}
+}
+
+final selectedSeasonProvider = StateNotifierProvider<_SelectedSeasonNotifier, String?>((ref) {
+	// Get SharedPreferences to check for saved season preference
+	final prefsAsync = ref.watch(sharedPreferencesProvider);
+	final seasons = ref.watch(availableSeasonsProvider);
+
+	print('🎯 [selectedSeasonProvider] Creating notifier with ${seasons.length} available seasons: $seasons');
+
+	return prefsAsync.when(
+		data: (prefs) {
+			final savedSeason = prefs.getString('selected_season');
+			// Use saved season if it exists and is still available, otherwise use most recent
+			final initialSeason = (savedSeason != null && seasons.contains(savedSeason))
+				? savedSeason
+				: (seasons.isNotEmpty ? seasons.first : null);
+			print('🎯 [selectedSeasonProvider] data: initialSeason=$initialSeason, saved=$savedSeason');
+			getLogger().i('🎯 Selected season initialized: $initialSeason (available: $seasons)');
+			return _SelectedSeasonNotifier(prefs, initialSeason);
+		},
+		loading: () {
+			final initialSeason = seasons.isNotEmpty ? seasons.first : null;
+			print('🎯 [selectedSeasonProvider] loading: initialSeason=$initialSeason');
+			getLogger().i('🎯 Selected season initializing (loading): $initialSeason (available: $seasons)');
+			return _SelectedSeasonNotifier(null, initialSeason);
+		},
+		error: (error, stack) {
+			final initialSeason = seasons.isNotEmpty ? seasons.first : null;
+			print('🎯 [selectedSeasonProvider] error: initialSeason=$initialSeason, error=$error');
+			getLogger().i('🎯 Selected season initializing (error): $initialSeason (available: $seasons)');
+			return _SelectedSeasonNotifier(null, initialSeason);
+		},
+	);
+});
+
+/// Get events filtered by the selected season
+final filteredEventsBySeasonProvider = Provider<List<EventModel>>((ref) {
+	final allEvents = ref.watch(eventListProvider);
+	final selectedSeason = ref.watch(selectedSeasonProvider);
+
+	if (selectedSeason == null || selectedSeason.isEmpty) {
+		// No season selected - return all events
+		getLogger().i('🎬 Filtered events: no season selected, showing ${allEvents.length} events');
+		return allEvents;
+	}
+
+	// Filter to selected season (show all events even if season not supported for scouting)
+	final filtered = allEvents.where((e) => e.season == selectedSeason).toList();
+	final isSupported = seasonModules.containsKey(selectedSeason);
+	getLogger().i('🎬 Filtered events for season $selectedSeason: ${filtered.length} events (scouting supported: $isSupported)');
+	return filtered;
+});
 
 // ============================================================================
 // PIT SCOUTING DATA (fuel capacity, etc.)

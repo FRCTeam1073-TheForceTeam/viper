@@ -11,8 +11,7 @@ import '../../../../services/csv_builder.dart';
 import '../../../../constants/colors.dart';
 import '../../../../widgets/checkbox_button.dart';
 import '../../../../widgets/radio_button_group.dart';
-import '../../../../widgets/descriptor_text_field.dart';
-import '../../../../widgets/descriptor_text_area.dart';
+import '../../../../widgets/end_game_data_section.dart';
 import '../../../../models/field_descriptor.dart';
 
 class EndGameTab extends ConsumerStatefulWidget {
@@ -43,7 +42,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	void initState() {
 		super.initState();
 
-		// Register FTC-specific end-game translations
+		// Register FTC-specific end-game translations (season-specific only)
 		AppLocalizations.addI18n({
 			'returned_base': {
 				'en': 'Returned to base:',
@@ -225,6 +224,16 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		}
 	}
 
+	Future<void> _goToQRCode() async {
+		await _saveCurrentMatch();
+		await (await SharedPreferences.getInstance()).setString('lastScoutAction', 'qr');
+		if (mounted) {
+			ScaffoldMessenger.of(context).showSnackBar(
+				const SnackBar(content: Text('QR Code feature coming soon')),
+			);
+		}
+	}
+
 	@override
 	Widget build(BuildContext context) {
 		ref.watch(selectedLocaleProvider);
@@ -305,56 +314,16 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 					Card(
 						child: Padding(
 							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(_translate('review_requested_legend'), style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey)),
-									const SizedBox(height: 8),
-									CheckboxButton(
-										descriptor: FieldDescriptor(name: 'review_requested', uiLabelKey: 'review_requested_button'),
-										provider: scoutingDataProvider,
-									),
-									const SizedBox(height: 16),
-									DescriptorTextField.forField(
-										descriptor: FieldDescriptor(name: 'scouter', uiLabelKey: 'scouter_name_question'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										maxLength: 32,
-									),
-									const SizedBox(height: 16),
-									DescriptorTextArea.forField(
-										descriptor: FieldDescriptor(name: 'comments', uiLabelKey: 'comments_question'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										minLines: 3,
-										maxLines: 5,
-									),
-								],
-							),
+							child: Text(_translate('review_requested_legend'), style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey)),
 						),
 					),
-					const SizedBox(height: 24),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.stretch,
-								children: [
-									Text(_translate('save_data_question'), style: Theme.of(context).textTheme.titleMedium),
-									const SizedBox(height: 16),
-									FilledButton(
-										onPressed: _goToNextMatch,
-										child: Text(_translate('next_match_button')),
-									),
-									const SizedBox(height: 12),
-									FilledButton(
-										style: FilledButton.styleFrom(backgroundColor: AppColors.buttonBgColor),
-										onPressed: _goToUpload,
-										child: Text(_translate('upload_data_button')),
-									),
-								],
-							),
-						),
+					const SizedBox(height: 16),
+					EndGameDataSection(
+						scoutingDataProvider: scoutingDataProvider,
+						onNextMatch: _goToNextMatch,
+						onUpload: _goToUpload,
+						onQRCode: _goToQRCode,
+						featuredButton: 'next',
 					),
 				],
 			),

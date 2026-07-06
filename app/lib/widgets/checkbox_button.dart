@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
 import '../providers/locale_provider.dart';
-import '../providers/global_scouting_data.dart';
 import '../services/localization.dart';
 import '../models/field_descriptor.dart';
 
@@ -31,7 +30,7 @@ class _CheckboxButtonState extends ConsumerState<CheckboxButton> {
 	@override
 	void initState() {
 		super.initState();
-		final model = getGlobalScoutingData();
+		final model = ref.read(widget.provider);
 		final storageValue = model.values[widget.descriptor.name] as String?;
 		_isChecked = widget.descriptor.withValue(storageValue).asBool();
 	}
@@ -40,7 +39,7 @@ class _CheckboxButtonState extends ConsumerState<CheckboxButton> {
 		setState(() {
 			_isChecked = !_isChecked;
 		});
-		final model = getGlobalScoutingData();
+		final model = ref.read(widget.provider);
 		final updated = model.updateField(widget.descriptor.name, _isChecked ? 1 : 0);
 		ref.read(widget.provider.notifier).update(updated);
 	}

@@ -258,7 +258,28 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 	Widget build(BuildContext context) {
 		// Watch locale to trigger rebuild when language changes
 		ref.watch(selectedLocaleProvider);
-		final events = ref.watch(eventListProvider);
+		final filteredEvents = ref.watch(filteredEventsBySeasonProvider);
+		final availableSeasons = ref.watch(availableSeasonsProvider);
+		final selectedSeason = ref.watch(selectedSeasonProvider);
+
+		// Debug logging
+		print('🔍 EventPickerScreen build:');
+		print('   Available seasons: $availableSeasons');
+		print('   Selected season: $selectedSeason');
+		print('   Filtered events count: ${filteredEvents.length}');
+
+		// Register season dropdown translations
+		AppLocalizations.addI18n({
+			'choose_season': {
+				'en': 'Choose season…',
+				'es': 'Elige una temporada',
+				'pt': 'Escolha a temporada…',
+				'fr': 'Choisir la saison…',
+				'zh_tw': '選擇季節…',
+				'he': 'בחר עונה…',
+				'tr': 'Sezonu seç...',
+			},
+		});
 
 		return Scaffold(
 			appBar: AppBar(
@@ -269,36 +290,64 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 					ViperMenuButton(),
 				],
 			),
-			body: ListView.builder(
-				itemCount: events.length + 1, // +1 for manual entry button
-				itemBuilder: (context, index) {
-					// Last item is the manual entry button
-					if (index == events.length) {
-						return Padding(
-							padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-							child: ElevatedButton.icon(
-								onPressed: () {
-									_showManualEventEntryDialog(context, ref);
+			body: Column(
+				children: [
+					// Season dropdown (show only if multiple seasons available)
+					if (availableSeasons.length > 1)
+						Padding(
+							padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+							child: DropdownButton<String>(
+								isExpanded: true,
+								value: selectedSeason,
+								hint: Text(_translate('choose_season')),
+								items: availableSeasons
+									.map((season) => DropdownMenuItem(
+										value: season,
+										child: Text(season),
+									))
+									.toList(),
+								onChanged: (String? season) async {
+									if (season != null && season.isNotEmpty) {
+										await ref.read(selectedSeasonProvider.notifier).setSelectedSeason(season);
+									}
 								},
-								icon: const Icon(Icons.add),
-								label: Text(_translate('add_event_manually')),
 							),
-						);
-					}
+						),
+					// Events list
+					Expanded(
+						child: ListView.builder(
+							itemCount: filteredEvents.length + 1, // +1 for manual entry button
+							itemBuilder: (context, index) {
+								// Last item is the manual entry button
+								if (index == filteredEvents.length) {
+									return Padding(
+										padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+										child: ElevatedButton.icon(
+											onPressed: () {
+												_showManualEventEntryDialog(context, ref);
+											},
+											icon: const Icon(Icons.add),
+											label: Text(_translate('add_event_manually')),
+										),
+									);
+								}
 
-					final event = events[index];
-					return EventListTile(
-						event: event,
-						onTap: () async {
-							await ref.read(selectedEventProvider.notifier)
-									.setSelectedEvent(event.eventId);
-							// Call the callback if provided
-							if (widget.onEventSelected != null) {
-								widget.onEventSelected!(event.eventId);
-							}
-						},
-					);
-				},
+								final event = filteredEvents[index];
+								return EventListTile(
+									event: event,
+									onTap: () async {
+										await ref.read(selectedEventProvider.notifier)
+												.setSelectedEvent(event.eventId);
+										// Call the callback if provided
+										if (widget.onEventSelected != null) {
+											widget.onEventSelected!(event.eventId);
+										}
+									},
+								);
+							},
+						),
+					),
+				],
 			),
 		);
 	}

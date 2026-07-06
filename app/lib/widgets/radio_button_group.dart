@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
 import '../providers/locale_provider.dart';
-import '../providers/global_scouting_data.dart';
 import '../services/localization.dart';
 import '../models/field_descriptor.dart';
 
@@ -44,7 +43,7 @@ class RadioButtonGroup extends ConsumerWidget {
 		required List<RadioButtonOption> options,
 		EdgeInsets padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
 	}) {
-		final model = getGlobalScoutingData();
+		final model = ref.watch(provider);
 		final currentValue = model.getFieldValue(descriptor.name).asString();
 
 		return RadioButtonGroup(
@@ -52,7 +51,8 @@ class RadioButtonGroup extends ConsumerWidget {
 			options: options,
 			selectedValue: currentValue,
 			onChanged: (value) {
-				final updated = model.updateField(descriptor.name, value ?? '');
+				final currentModel = ref.read(provider);
+				final updated = currentModel.updateField(descriptor.name, value ?? '');
 				ref.read(provider.notifier).update(updated);
 			},
 			padding: padding,

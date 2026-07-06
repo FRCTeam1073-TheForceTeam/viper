@@ -7,6 +7,7 @@ import '../../../../providers/floating_popup_provider.dart';
 import '../../../../services/localization.dart';
 import '../../../../constants/colors.dart';
 import '../../../../widgets/counter_button_row.dart';
+import '../../../../widgets/popup_floater.dart';
 
 class TeleopTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -142,17 +143,13 @@ class PopupFloaterWidget extends ConsumerWidget {
 
 		return Stack(
 			children: floatingPopups.map((popup) {
-				return Positioned(
-					left: popup.initialX,
-					top: popup.initialY,
-					child: Text(
-						popup.text,
-						style: const TextStyle(
-							fontSize: 20,
-							fontWeight: FontWeight.bold,
-							color: Colors.green,
-						),
-					),
+				return PopupFloater(
+					text: popup.text,
+					initialX: popup.initialX,
+					initialY: popup.initialY,
+					onAnimationComplete: () {
+						ref.read(floatingPopupProvider.notifier).removePopup(popup.id);
+					},
 				);
 			}).toList(),
 		);

@@ -10,6 +10,7 @@ import '../../../../services/localization.dart';
 import '../../../../constants/colors.dart';
 import '../../../../widgets/checkbox_button.dart';
 import '../../../../widgets/counter_button_row.dart';
+import '../../../../widgets/popup_floater.dart';
 import '../../../../models/field_descriptor.dart';
 
 class AutoTab extends ConsumerStatefulWidget {
@@ -259,17 +260,13 @@ class PopupFloaterWidget extends ConsumerWidget {
 
 		return Stack(
 			children: floatingPopups.map((popup) {
-				return Positioned(
-					left: popup.initialX,
-					top: popup.initialY,
-					child: Text(
-						popup.text,
-						style: const TextStyle(
-							fontSize: 20,
-							fontWeight: FontWeight.bold,
-							color: Colors.green,
-						),
-					),
+				return PopupFloater(
+					text: popup.text,
+					initialX: popup.initialX,
+					initialY: popup.initialY,
+					onAnimationComplete: () {
+						ref.read(floatingPopupProvider.notifier).removePopup(popup.id);
+					},
 				);
 			}).toList(),
 		);

@@ -15,8 +15,7 @@ import '../../../../widgets/checkbox_button_group.dart';
 import '../../../../widgets/descriptor_checkbox_group.dart';
 import '../../../../widgets/position_selector_area.dart';
 import '../../../../widgets/radio_button_group.dart';
-import '../../../../widgets/descriptor_text_field.dart';
-import '../../../../widgets/descriptor_text_area.dart';
+import '../../../../widgets/end_game_data_section.dart';
 import '../../../../constants/colors.dart';
 import '../../../../models/match_model.dart';
 import '../../../../models/field_descriptor.dart';
@@ -739,24 +738,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'tr': 'Uyudun mu? Yanlış robotu mu izliyorsun? Yanlış düğmeye mi bastınız?',
 				'es': 'Este equipo solicitó revisión',
 			},
-			'review_requested_button': {
-				'en': 'Request Review',
-				'es': 'Solicitar Revisión',
-				'pt': 'Solicitar Revisão',
-				'fr': 'Demander Examen',
-				'zh_tw': '要求審查',
-				'he': 'בקש סקירה',
-				'tr': 'İnceleme İste',
-			},
-			'scouter_name_question': {
-				'en': 'Scouter Name',
-				'es': 'Nombre del explorador',
-				'pt': 'Nome do Explorador',
-				'fr': 'Nom de l\'éclaireur',
-				'zh_tw': '偵查員名稱',
-				'he': 'שם הסוקר',
-				'tr': 'İzcinin Adı',
-			},
 			'scouter_name_placeholder': {
 				'en': 'Scouter name',
 				'es': 'Nombre del explorador',
@@ -766,15 +747,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'he': 'שם הסוקר',
 				'tr': 'İzcinin adı',
 			},
-			'comments_question': {
-				'en': 'Comments',
-				'es': 'Comentarios',
-				'pt': 'Comentários',
-				'fr': 'Commentaires',
-				'zh_tw': '評論',
-				'he': 'הערות',
-				'tr': 'Yorumlar',
-			},
 			'comments_placeholder': {
 				'en': 'Comments',
 				'es': 'Comentarios...',
@@ -783,42 +755,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'zh_tw': '評論',
 				'he': 'הערות',
 				'tr': 'Yorumlar',
-			},
-			'save_data_question': {
-				'en': 'Save data:',
-				'es': '¿Guardar',
-				'pt': 'Salvar dados:',
-				'fr': 'Sauvegarder les données :',
-				'zh_tw': '儲存資料：',
-				'he': 'שמור נתונים:',
-				'tr': 'Verileri kaydet:',
-			},
-			'next_match_button': {
-				'en': 'Next Match',
-				'es': 'Siguiente partida',
-				'pt': 'Próxima partida',
-				'fr': 'Prochain match',
-				'zh_tw': '下一場比賽',
-				'he': 'המשחק הבא',
-				'tr': 'Sonraki Maç',
-			},
-			'upload_data_button': {
-				'en': 'Upload Data',
-				'es': 'Cargar datos',
-				'pt': 'Carregar dados',
-				'fr': 'Télécharger les données',
-				'zh_tw': '上傳數據',
-				'he': 'העלה נתונים',
-				'tr': 'Verileri Yükle',
-			},
-			'qr_code_button': {
-				'en': 'QR Code',
-				'es': 'Código QR',
-				'pt': 'Código QR',
-				'fr': 'Code QR',
-				'zh_tw': 'QR 圖碼',
-				'he': 'קוד QR',
-				'tr': 'QR Kodu',
 			},
 		});
 	}
@@ -1512,113 +1448,25 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 					Card(
 						child: Padding(
 							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('review_requested_legend'),
-										style: const TextStyle(
-											fontSize: 14,
-											fontStyle: FontStyle.italic,
-											color: Colors.grey,
-										),
-									),
-									const SizedBox(height: 8),
-									CheckboxButton(
-										descriptor: FieldDescriptor(
-											name: 'review_requested',
-											uiLabelKey: 'review_requested_button',
-										),
-										provider: scoutingDataProvider,
-									),
-									const SizedBox(height: 16),
-									DescriptorTextField.forField(
-										descriptor: FieldDescriptor(
-											name: 'scouter',
-											uiLabelKey: 'scouter_name_question',
-										),
-										ref: ref,
-										provider: scoutingDataProvider,
-										maxLength: 32,
-									),
-									const SizedBox(height: 16),
-									DescriptorTextArea.forField(
-										descriptor: FieldDescriptor(
-											name: 'comments',
-											uiLabelKey: 'comments_question',
-										),
-										ref: ref,
-										provider: scoutingDataProvider,
-										minLines: 3,
-										maxLines: 5,
-									),
-								],
+							child: Text(
+								_translate('review_requested_legend'),
+								style: const TextStyle(
+									fontSize: 14,
+									fontStyle: FontStyle.italic,
+									color: Colors.grey,
+								),
 							),
 						),
 					),
 
-					const SizedBox(height: 24),
+					const SizedBox(height: 16),
 
-					// Done Buttons
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.stretch,
-								children: [
-									Text(
-										_translate('save_data_question'),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 16),
-									// Featured button
-									if (featuredButton == 'next')
-										FilledButton(
-											onPressed: _goToNextMatch,
-											child: Text(_translate('next_match_button')),
-										)
-									else if (featuredButton == 'upload')
-										FilledButton(
-											onPressed: _goToUpload,
-											child: Text(_translate('upload_data_button')),
-										)
-									else if (featuredButton == 'qr')
-										FilledButton(
-											onPressed: _goToQRCode,
-											child: Text(_translate('qr_code_button')),
-										),
-									const SizedBox(height: 12),
-									// Other buttons (smaller)
-									Row(
-										children: [
-											if (featuredButton != 'next')
-												Expanded(
-													child: OutlinedButton(
-														onPressed: _goToNextMatch,
-														child: Text(_translate('next_match_button')),
-													),
-												),
-											if (featuredButton != 'next') const SizedBox(width: 8),
-											if (featuredButton != 'upload')
-												Expanded(
-													child: OutlinedButton(
-														onPressed: _goToUpload,
-														child: Text(_translate('upload_data_button')),
-													),
-												),
-											if (featuredButton != 'upload') const SizedBox(width: 8),
-											if (featuredButton != 'qr')
-												Expanded(
-													child: OutlinedButton(
-														onPressed: _goToQRCode,
-														child: Text(_translate('qr_code_button')),
-													),
-												),
-										],
-									),
-								],
-							),
-						),
+					EndGameDataSection(
+						scoutingDataProvider: scoutingDataProvider,
+						onNextMatch: _goToNextMatch,
+						onUpload: _goToUpload,
+						onQRCode: _goToQRCode,
+						featuredButton: featuredButton,
 					),
 				],
 			),

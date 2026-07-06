@@ -91,6 +91,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 
 	@override
 	Widget build(BuildContext context) {
+		ref.watch(scoutingDataProvider);
 		ref.watch(selectedLocaleProvider);
 
 		return SingleChildScrollView(

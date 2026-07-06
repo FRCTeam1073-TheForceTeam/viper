@@ -123,14 +123,22 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 		);
 	}
 
+	bool _isFtcSeason(String? season) {
+		return season != null && season.contains('-');
+	}
+
 	Widget _buildFieldLayout({
 		required bool isRotated,
 		required List<String> positions,
 		required String? selectedPosition,
 	}) {
-		// Create the layout based on field orientation
-		// orientLeft: R1 R2 R3 on left (red), B3 B2 B1 on right (blue)
-		// orientRight: B1 B2 B3 on left (blue), R3 R2 R1 on right (red)
+		// For FTC (seasons like 2025-26), swap sides: Blue on left, Red on right
+		// For FRC (seasons like 2026), keep as-is: Red on left, Blue on right
+		final isFtc = _isFtcSeason(
+			widget.eventId != null
+				? EventModel.seasonFromEventId(widget.eventId!)
+				: seasonModuleFor(defaultSeason)?.season
+		);
 
 		return LayoutBuilder(
 			builder: (context, constraints) {
@@ -140,76 +148,28 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 				final fieldHeight = (fieldWidth / 1.875) * 0.92; // reduce by 8% to account for button padding
 
 				if (isRotated) {
-					return Row(
-						mainAxisAlignment: MainAxisAlignment.center,
-						crossAxisAlignment: CrossAxisAlignment.center,
-						children: [
-							// Blue team on left
-							SizedBox(
-								width: 80,
-								height: fieldHeight,
-								child: Column(
-									children: [
-										if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
-										if (positions.contains('B1') && positions.contains('B2')) const SizedBox(height: 4),
-										if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
-										if (positions.contains('B2') && positions.contains('B3')) const SizedBox(height: 4),
-										if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
-									],
-								),
-							),
-							const SizedBox(width: 16),
-							// Field image - expands to fill
-							Expanded(
-								child: GestureDetector(
-									onTap: _toggleOrientation,
-									child: Image.asset(
-										_getFieldImageAsset(),
-										fit: BoxFit.contain,
+					if (isFtc) {
+						return Row(
+							mainAxisAlignment: MainAxisAlignment.center,
+							crossAxisAlignment: CrossAxisAlignment.center,
+							children: [
+								// Red team on left (FTC rotated)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+											if (positions.contains('R1') && positions.contains('R2')) const SizedBox(height: 4),
+											if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+											if (positions.contains('R2') && positions.contains('R3')) const SizedBox(height: 4),
+											if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+										],
 									),
 								),
-							),
-							const SizedBox(width: 16),
-							// Red team on right
-							SizedBox(
-								width: 80,
-								height: fieldHeight,
-								child: Column(
-									children: [
-										if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
-										if (positions.contains('R3') && positions.contains('R2')) const SizedBox(height: 4),
-										if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
-										if (positions.contains('R2') && positions.contains('R1')) const SizedBox(height: 4),
-										if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
-									],
-								),
-							),
-						],
-					);
-				} else {
-					return Row(
-						mainAxisAlignment: MainAxisAlignment.center,
-						crossAxisAlignment: CrossAxisAlignment.center,
-						children: [
-							// Red team on left
-							SizedBox(
-								width: 80,
-								height: fieldHeight,
-								child: Column(
-									children: [
-										if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
-										if (positions.contains('R1') && positions.contains('R2')) const SizedBox(height: 4),
-										if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
-										if (positions.contains('R2') && positions.contains('R3')) const SizedBox(height: 4),
-										if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
-									],
-								),
-							),
-							const SizedBox(width: 16),
-							// Field image - expands to fill (rotated for orientRight)
-							Expanded(
-								child: Transform.rotate(
-									angle: pi, // 180° in radians
+								const SizedBox(width: 16),
+								// Field image - expands to fill
+								Expanded(
 									child: GestureDetector(
 										onTap: _toggleOrientation,
 										child: Image.asset(
@@ -218,24 +178,173 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 										),
 									),
 								),
-							),
-							const SizedBox(width: 16),
-							// Blue team on right
-							SizedBox(
-								width: 80,
-								height: fieldHeight,
-								child: Column(
-									children: [
-										if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
-										if (positions.contains('B3') && positions.contains('B2')) const SizedBox(height: 4),
-										if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
-										if (positions.contains('B2') && positions.contains('B1')) const SizedBox(height: 4),
-										if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
-									],
+								const SizedBox(width: 16),
+								// Blue team on right (FTC rotated)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+											if (positions.contains('B3') && positions.contains('B2')) const SizedBox(height: 4),
+											if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+											if (positions.contains('B2') && positions.contains('B1')) const SizedBox(height: 4),
+											if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+										],
+									),
 								),
-							),
-						],
-					);
+							],
+						);
+					} else {
+						return Row(
+							mainAxisAlignment: MainAxisAlignment.center,
+							crossAxisAlignment: CrossAxisAlignment.center,
+							children: [
+								// Blue team on left (FRC rotated)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+											if (positions.contains('B1') && positions.contains('B2')) const SizedBox(height: 4),
+											if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+											if (positions.contains('B2') && positions.contains('B3')) const SizedBox(height: 4),
+											if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+										],
+									),
+								),
+								const SizedBox(width: 16),
+								// Field image - expands to fill
+								Expanded(
+									child: GestureDetector(
+										onTap: _toggleOrientation,
+										child: Image.asset(
+											_getFieldImageAsset(),
+											fit: BoxFit.contain,
+										),
+									),
+								),
+								const SizedBox(width: 16),
+								// Red team on right (FRC rotated)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+											if (positions.contains('R3') && positions.contains('R2')) const SizedBox(height: 4),
+											if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+											if (positions.contains('R2') && positions.contains('R1')) const SizedBox(height: 4),
+											if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+										],
+									),
+								),
+							],
+						);
+					}
+				} else {
+					if (isFtc) {
+						return Row(
+							mainAxisAlignment: MainAxisAlignment.center,
+							crossAxisAlignment: CrossAxisAlignment.center,
+							children: [
+								// Blue team on left (FTC normal)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+											if (positions.contains('B1') && positions.contains('B2')) const SizedBox(height: 4),
+											if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+											if (positions.contains('B2') && positions.contains('B3')) const SizedBox(height: 4),
+											if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+										],
+									),
+								),
+								const SizedBox(width: 16),
+								// Field image - expands to fill
+								Expanded(
+									child: Transform.rotate(
+										angle: pi, // 180° in radians
+										child: GestureDetector(
+											onTap: _toggleOrientation,
+											child: Image.asset(
+												_getFieldImageAsset(),
+												fit: BoxFit.contain,
+											),
+										),
+									),
+								),
+								const SizedBox(width: 16),
+								// Red team on right (FTC normal)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+											if (positions.contains('R3') && positions.contains('R2')) const SizedBox(height: 4),
+											if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+											if (positions.contains('R2') && positions.contains('R1')) const SizedBox(height: 4),
+											if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+										],
+									),
+								),
+							],
+						);
+					} else {
+						return Row(
+							mainAxisAlignment: MainAxisAlignment.center,
+							crossAxisAlignment: CrossAxisAlignment.center,
+							children: [
+								// Red team on left (FRC normal)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('R1')) Expanded(child: _buildPositionButton('R1', true, selectedPosition)),
+											if (positions.contains('R1') && positions.contains('R2')) const SizedBox(height: 4),
+											if (positions.contains('R2')) Expanded(child: _buildPositionButton('R2', true, selectedPosition)),
+											if (positions.contains('R2') && positions.contains('R3')) const SizedBox(height: 4),
+											if (positions.contains('R3')) Expanded(child: _buildPositionButton('R3', true, selectedPosition)),
+										],
+									),
+								),
+								const SizedBox(width: 16),
+								// Field image - expands to fill (rotated for orientRight)
+								Expanded(
+									child: Transform.rotate(
+										angle: pi, // 180° in radians
+										child: GestureDetector(
+											onTap: _toggleOrientation,
+											child: Image.asset(
+												_getFieldImageAsset(),
+												fit: BoxFit.contain,
+											),
+										),
+									),
+								),
+								const SizedBox(width: 16),
+								// Blue team on right (FRC normal)
+								SizedBox(
+									width: 80,
+									height: fieldHeight,
+									child: Column(
+										children: [
+											if (positions.contains('B3')) Expanded(child: _buildPositionButton('B3', false, selectedPosition)),
+											if (positions.contains('B3') && positions.contains('B2')) const SizedBox(height: 4),
+											if (positions.contains('B2')) Expanded(child: _buildPositionButton('B2', false, selectedPosition)),
+											if (positions.contains('B2') && positions.contains('B1')) const SizedBox(height: 4),
+											if (positions.contains('B1')) Expanded(child: _buildPositionButton('B1', false, selectedPosition)),
+										],
+									),
+								),
+							],
+						);
+					}
 				}
 			},
 		);

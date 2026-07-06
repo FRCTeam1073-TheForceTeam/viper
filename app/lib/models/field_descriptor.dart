@@ -31,7 +31,7 @@ class FieldDescriptor {
 			try {
 				getGlobalScoutingData().registerDescriptor(this);
 			} catch (e) {
-				// Silently ignore if global data not yet initialized
+				// Silently ignore if global data not yet initialized or conflicts with static
 			}
 		}
 	}
@@ -74,7 +74,14 @@ class FieldDescriptor {
 	}) {
 		// Return cached instance if it exists with no value override
 		if (value == null && _cache.containsKey(name)) {
-			return _cache[name]!;
+			final cached = _cache[name]!;
+			// Ensure cached descriptor registers itself (in case registration was missed before)
+			try {
+				getGlobalScoutingData().registerDescriptor(cached);
+			} catch (e) {
+				// Silently ignore if global data not yet initialized
+			}
+			return cached;
 		}
 
 		// Create new instance and cache it (only cache instances without values)

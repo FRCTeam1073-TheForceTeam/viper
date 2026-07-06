@@ -107,6 +107,15 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 				'he': 'סוף',
 				'tr': 'Son',
 			},
+			'season_not_implemented': {
+				'en': 'Scouting for this season is not available in the mobile app',
+				'es': 'El scouting para esta temporada no está disponible en la aplicación móvil',
+				'pt': 'O scouting para esta temporada não está disponível no aplicativo móvel',
+				'fr': 'Le repérage pour cette saison n\'est pas disponible dans l\'application mobile',
+				'zh_tw': '此應用程式不支援此季節的偵察',
+				'he': 'סקאוטינג לעונה זו אינו זמין באפליקציה הנייד',
+				'tr': 'Bu sezon için izcilik mobil uygulamada mevcut değildir',
+			},
 		});
 
 		// Use prefilled values if provided
@@ -255,8 +264,35 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		// Gate: check if the selected event's season is supported
 		if (_seasonModule == null) {
 			return Scaffold(
+				appBar: AppBar(
+					title: Text(widget.selectedEvent.name),
+					elevation: 0,
+					automaticallyImplyLeading: false,
+					actions: [
+						ViperMenuButton(),
+					],
+				),
 				body: Center(
-					child: Text(_translate('season_not_implemented')),
+					child: Padding(
+						padding: const EdgeInsets.all(16),
+						child: Column(
+							mainAxisAlignment: MainAxisAlignment.center,
+							children: [
+								Text(
+									_translate('season_not_implemented'),
+									textAlign: TextAlign.center,
+									style: Theme.of(context).textTheme.titleLarge,
+								),
+								const SizedBox(height: 24),
+								ElevatedButton(
+									onPressed: () async {
+										await ref.read(navigationCommandProvider.notifier).navigateTo(NavigationTarget.event);
+									},
+									child: Text(_translate('select_event')),
+								),
+							],
+						),
+					),
 				),
 			);
 		}
