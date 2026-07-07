@@ -854,9 +854,13 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 			// Map zone to valid auto target if coming from tele
 			final newTarget = activeZone == 'neutral' ? 'alliancePass' : 'hub';
 			activeFuelTarget = newTarget;
-			Future(() {
-				ref.read(activeFuelTargetProvider.notifier).changeTarget(newTarget);
-			});
+			if (mounted) {
+				Future(() {
+					if (mounted) {
+						ref.read(activeFuelTargetProvider.notifier).changeTarget(newTarget);
+					}
+				});
+			}
 		}
 
 		return Stack(

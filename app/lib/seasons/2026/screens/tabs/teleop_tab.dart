@@ -881,9 +881,13 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		final newTarget = activeZone == 'neutral' ? 'neutralAlliancePass' :
 			activeZone == 'opponent' ? 'opponentNeutralPass' : 'hub';
 			activeFuelTarget = newTarget;
-			Future(() {
-				ref.read(activeFuelTargetProvider.notifier).changeTarget(newTarget);
-			});
+			if (mounted) {
+				Future(() {
+					if (mounted) {
+						ref.read(activeFuelTargetProvider.notifier).changeTarget(newTarget);
+					}
+				});
+			}
 		}
 
 		final teleState = (
