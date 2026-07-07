@@ -1000,30 +1000,25 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 												),
 												const SizedBox(height: 8),
 												// Tele button
-												Row(
-													mainAxisAlignment: MainAxisAlignment.end,
-													children: [
-														FilledButton(
-															style: FilledButton.styleFrom(
-																backgroundColor: AppColors.buttonBgColor,
-																foregroundColor: AppColors.buttonFgColor,
-																padding: const EdgeInsets.symmetric(
-																	vertical: 12,
-																	horizontal: 16,
-																),
-																shape: RoundedRectangleBorder(
-																	borderRadius: BorderRadius.circular(8),
-																),
-															),
-															onPressed: widget.onProceedToTele,
-															child: Text(
-																_translate('proceed_tele_button'),
-																style: TextStyle(
-																	fontSize: _getResponsiveFontSize(12),
-																),
-															),
+												FilledButton(
+													style: FilledButton.styleFrom(
+														backgroundColor: AppColors.buttonBgColor,
+														foregroundColor: AppColors.buttonFgColor,
+														padding: const EdgeInsets.symmetric(
+															vertical: 12,
+															horizontal: 16,
 														),
-													],
+														shape: RoundedRectangleBorder(
+															borderRadius: BorderRadius.circular(8),
+														),
+													),
+													onPressed: widget.onProceedToTele,
+													child: Text(
+														_translate('proceed_tele_button'),
+														style: TextStyle(
+															fontSize: _getResponsiveFontSize(12),
+														),
+													),
 												),
 											],
 										),

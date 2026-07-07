@@ -959,6 +959,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 															],
 														),
 														const SizedBox(height: 8),
+														const SizedBox(height: 8),
 														// Max fuel display and toggle buttons row
 														Row(
 															mainAxisAlignment: MainAxisAlignment.center,
@@ -1050,30 +1051,25 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 														),
 														const SizedBox(height: 8),
 														// End game button
-														Row(
-															mainAxisAlignment: MainAxisAlignment.end,
-															children: [
-																FilledButton(
-																	style: FilledButton.styleFrom(
-																		backgroundColor: AppColors.buttonBgColor,
-																		foregroundColor: AppColors.buttonFgColor,
-																		padding: const EdgeInsets.symmetric(
-																			vertical: 12,
-																			horizontal: 16,
-																		),
-																		shape: RoundedRectangleBorder(
-																			borderRadius: BorderRadius.circular(8),
-																		),
-																	),
-																	onPressed: widget.onProceedToEndGame,
-																	child: Text(
-																		'End Game »',
-																		style: TextStyle(
-																			fontSize: _getResponsiveFontSize(12),
-																		),
-																	),
+														FilledButton(
+															style: FilledButton.styleFrom(
+																backgroundColor: AppColors.buttonBgColor,
+																foregroundColor: AppColors.buttonFgColor,
+																padding: const EdgeInsets.symmetric(
+																	vertical: 12,
+																	horizontal: 16,
 																),
-															],
+																shape: RoundedRectangleBorder(
+																	borderRadius: BorderRadius.circular(8),
+																),
+															),
+															onPressed: widget.onProceedToEndGame,
+															child: Text(
+																'End Game »',
+																style: TextStyle(
+																	fontSize: _getResponsiveFontSize(12),
+																),
+															),
 														),
 													],
 												),
@@ -1122,6 +1118,8 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		TeleTabRecord teleState,
 		WidgetRef ref,
 	) {
+		final buttonKey = GlobalKey();
+
 		// Map activeFuelTarget to field name
 		String getFuelField() {
 			switch (teleState.activeFuelTarget) {
@@ -1144,18 +1142,30 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 
 		final field = getFuelField();
 
-		return Expanded(
-			child: FilledButton(
-				style: FilledButton.styleFrom(
-					backgroundColor: AppColors.buttonBgColor,
-					foregroundColor: AppColors.buttonFgColor,
-					padding: const EdgeInsets.symmetric(vertical: 12),
+		return SizedBox(
+			width: 70,
+			height: 70,
+			child: ElevatedButton(
+				key: buttonKey,
+				style: ElevatedButton.styleFrom(
+					backgroundColor: const Color(0xFFF1CE03),
+					foregroundColor: Colors.black87,
+					padding: EdgeInsets.zero,
+					shape: RoundedRectangleBorder(
+						borderRadius: BorderRadius.circular(50),
+					),
 				),
 				onPressed: () {
 					_startMatchIfNeeded();
 					ref.read(scoutingDataProvider.notifier).recordTeleAction(field: field, value: amount);
 				},
-				child: Text(label),
+				child: Text(
+					label,
+					style: TextStyle(
+						fontSize: _getResponsiveFontSize(18),
+						fontWeight: FontWeight.bold,
+					),
+				),
 			),
 		);
 	}
@@ -1166,9 +1176,15 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		final fuelScore = scoutingData.getFieldValue('tele_fuel_score').asInt();
 		final totalFuel = fuelScore; // Placeholder: accumulate all fuel sources
 
-		return Text(
-			'${_translate('fuel_capacity_label')} $totalFuel',
-			style: const TextStyle(fontWeight: FontWeight.bold),
+		return Padding(
+			padding: const EdgeInsets.only(right: 8),
+			child: Text(
+				'${_translate('fuel_capacity_label')} $totalFuel',
+				style: TextStyle(
+					fontSize: _getResponsiveFontSize(12),
+					fontWeight: FontWeight.w500,
+				),
+			),
 		);
 	}
 }
