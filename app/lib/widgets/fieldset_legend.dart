@@ -6,18 +6,20 @@ import '../constants/colors.dart';
 
 class FieldsetLegend extends ConsumerWidget {
 	final Widget child;
-	final String legendKey;
+	final String? legendKey;
+	final String? legendText;
 
 	const FieldsetLegend({
 		super.key,
 		required this.child,
-		required this.legendKey,
-	});
+		this.legendKey,
+		this.legendText,
+	}) : assert(legendKey != null || legendText != null, 'Either legendKey or legendText must be provided');
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
 		final locale = ref.watch(selectedLocaleProvider);
-		final legendText = AppLocalizations.translate(legendKey, locale: locale);
+		final displayText = legendText ?? AppLocalizations.translate(legendKey!, locale: locale);
 
 		return Stack(
 			clipBehavior: Clip.none,
@@ -38,7 +40,7 @@ class FieldsetLegend extends ConsumerWidget {
 						color: AppColors.mainBgColor,
 						padding: const EdgeInsets.symmetric(horizontal: 8),
 						child: Text(
-							legendText,
+							displayText,
 							style: const TextStyle(fontSize: 14, color: AppColors.mainFgColor),
 						),
 					),

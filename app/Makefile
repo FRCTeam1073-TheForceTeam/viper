@@ -4,6 +4,7 @@ linux: build
 
 .PHONY: build
 build:
+	flutter analyze
 	dart run build_runner build
 
 .PHONY: fresh

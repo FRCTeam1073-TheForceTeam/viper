@@ -13,6 +13,7 @@ import '../../../../widgets/descriptor_checkbox_group.dart';
 import '../../../../widgets/position_selector_area.dart';
 import '../../../../widgets/radio_button_group.dart';
 import '../../../../widgets/end_game_data_section.dart';
+import '../../../../widgets/fieldset_legend.dart';
 import '../../../../constants/colors.dart';
 import '../../../../models/match_model.dart';
 import '../../../../models/field_descriptor.dart';
@@ -999,282 +1000,240 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 
 					// Climb Method (conditional: teleClimbLevel > 1)
 					if (teleClimbLevel > 1)
-						Card(
-							child: Padding(
-								padding: const EdgeInsets.all(16),
-								child: Column(
-									crossAxisAlignment: CrossAxisAlignment.start,
-									children: [
-										Text(
-											_translate('climb_method_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-											style: Theme.of(context).textTheme.titleMedium,
-										),
-										const SizedBox(height: 12),
-										RadioButtonGroup.forField(
-											descriptor: FieldDescriptor(name: 'climb_method'),
-											ref: ref,
-											provider: scoutingDataProvider,
-											options: [
-												RadioButtonOption(
-													value: 'rungs',
-													labelKey: 'climb_method_rungs',
-													descKey: 'climb_method_rungs_desc',
-												),
-												RadioButtonOption(
-													value: 'uprights',
-													labelKey: 'climb_method_uprights',
-													descKey: 'climb_method_uprights_desc',
-												),
-												RadioButtonOption(
-													value: 'flip',
-													labelKey: 'climb_method_flip',
-													descKey: 'climb_method_flip_desc',
-												),
-											],
-										),
-									],
-								),
+						FieldsetLegend(
+							legendText: _translate('climb_method_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+							child: Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									RadioButtonGroup.forField(
+										descriptor: FieldDescriptor(name: 'climb_method'),
+										ref: ref,
+										provider: scoutingDataProvider,
+										options: [
+											RadioButtonOption(
+												value: 'rungs',
+												labelKey: 'climb_method_rungs',
+												descKey: 'climb_method_rungs_desc',
+											),
+											RadioButtonOption(
+												value: 'uprights',
+												labelKey: 'climb_method_uprights',
+												descKey: 'climb_method_uprights_desc',
+											),
+											RadioButtonOption(
+												value: 'flip',
+												labelKey: 'climb_method_flip',
+												descKey: 'climb_method_flip_desc',
+											),
+										],
+									),
+								],
 							),
 						),
 
 					const SizedBox(height: 16),
 
 					// Demonstrated Capabilities
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('demonstrated_capabilities', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 12),
-									DescriptorCheckboxGroup.forFields(
-										object: scoutingData,
-										descriptors: [
-											FieldDescriptor(name: 'shoot_move', uiLabelKey: 'shoot_move_desc'),
-											FieldDescriptor(name: 'shoot_collecting', uiLabelKey: 'shoot_collecting_desc'),
-											FieldDescriptor(name: 'shoot_turret', uiLabelKey: 'shoot_turret_desc'),
-											FieldDescriptor(name: 'shoot_climbing', uiLabelKey: 'shoot_climbing_desc'),
-										],
-										onChanged: (fieldName, newValue) {
-											ref.read(scoutingDataProvider.notifier).update(
-												scoutingData.updateField(fieldName, newValue),
-											);
-										},
-									),
-									const SizedBox(height: 16),
-								],
-							),
+					FieldsetLegend(
+						legendText: _translate('demonstrated_capabilities', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								DescriptorCheckboxGroup.forFields(
+									object: scoutingData,
+									descriptors: [
+										FieldDescriptor(name: 'shoot_move', uiLabelKey: 'shoot_move_desc'),
+										FieldDescriptor(name: 'shoot_collecting', uiLabelKey: 'shoot_collecting_desc'),
+										FieldDescriptor(name: 'shoot_turret', uiLabelKey: 'shoot_turret_desc'),
+										FieldDescriptor(name: 'shoot_climbing', uiLabelKey: 'shoot_climbing_desc'),
+									],
+									onChanged: (fieldName, newValue) {
+										ref.read(scoutingDataProvider.notifier).update(
+											scoutingData.updateField(fieldName, newValue),
+										);
+									},
+								),
+								const SizedBox(height: 16),
+							],
 						),
 					),
 
 					const SizedBox(height: 16),
 
 					// Fuel Strategy
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('fuel_strategy_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 12),
-									RadioButtonGroup.forField(
-										descriptor: FieldDescriptor(name: 'fuel_to_alliance'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										options: [
-											RadioButtonOption(
-												value: 'carried',
-												labelKey: 'fuel_carried_label',
-												descKey: 'fuel_carried_desc',
-											),
-											RadioButtonOption(
-												value: 'pushed',
-												labelKey: 'fuel_pushed_label',
-												descKey: 'fuel_pushed_desc',
-											),
-											RadioButtonOption(
-												value: 'passed',
-												labelKey: 'fuel_passed_label',
-												descKey: 'fuel_passed_desc',
-											),
-											RadioButtonOption(
-												value: 'received',
-												labelKey: 'fuel_received_label',
-												descKey: 'fuel_received_desc',
-											),
-										],
-									),
-								],
-							),
+					FieldsetLegend(
+						legendText: _translate('fuel_strategy_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								RadioButtonGroup.forField(
+									descriptor: FieldDescriptor(name: 'fuel_to_alliance'),
+									ref: ref,
+									provider: scoutingDataProvider,
+									options: [
+										RadioButtonOption(
+											value: 'carried',
+											labelKey: 'fuel_carried_label',
+											descKey: 'fuel_carried_desc',
+										),
+										RadioButtonOption(
+											value: 'pushed',
+											labelKey: 'fuel_pushed_label',
+											descKey: 'fuel_pushed_desc',
+										),
+										RadioButtonOption(
+											value: 'passed',
+											labelKey: 'fuel_passed_label',
+											descKey: 'fuel_passed_desc',
+										),
+										RadioButtonOption(
+											value: 'received',
+											labelKey: 'fuel_received_label',
+											descKey: 'fuel_received_desc',
+										),
+									],
+								),
+							],
 						),
 					),
 
 					const SizedBox(height: 16),
 
 					// Shooting Locations
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('shooting_locations_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
+					FieldsetLegend(
+						legendText: _translate('shooting_locations_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								Align(
+									alignment: Alignment.centerLeft,
+									child: PositionSelectorArea.forField(
+										descriptor: FieldDescriptor(name: 'shooting_locations'),
+										provider: scoutingDataProvider,
+										ref: ref,
+										isBlueTeam: isBlueTeam,
+										fieldSide: fieldSide,
+										blueImagePath: 'assets/2026/images/shooting-locations-blue.png',
+										redImagePath: 'assets/2026/images/shooting-locations-red.png',
+										width: 258,
+										height: 400,
+										markerSize: 40,
+										multiSelect: true,
 									),
-									const SizedBox(height: 12),
-									Align(
-										alignment: Alignment.centerLeft,
-										child: PositionSelectorArea.forField(
-											descriptor: FieldDescriptor(name: 'shooting_locations'),
-											provider: scoutingDataProvider,
-											ref: ref,
-											isBlueTeam: isBlueTeam,
-											fieldSide: fieldSide,
-											blueImagePath: 'assets/2026/images/shooting-locations-blue.png',
-											redImagePath: 'assets/2026/images/shooting-locations-red.png',
-											width: 258,
-											height: 400,
-											markerSize: 40,
-											multiSelect: true,
+								),
+								const SizedBox(height: 12),
+								Align(
+									alignment: Alignment.centerLeft,
+									child: FilledButton.icon(
+										onPressed: () {
+											// Call undo through the descriptor
+											final descriptor = FieldDescriptor(name: 'shooting_locations');
+											final currentValue = scoutingData.getFieldValue(descriptor.name).asString();
+											final positions = currentValue.split(' ').where((p) => p.isNotEmpty).toList();
+											if (positions.isNotEmpty) {
+												positions.removeLast();
+												final newValue = positions.join(' ');
+												final updated = scoutingData.updateField(descriptor.name, newValue);
+												ref.read(scoutingDataProvider.notifier).update(updated);
+											}
+										},
+										style: FilledButton.styleFrom(
+											backgroundColor: AppColors.buttonBgColor,
+											foregroundColor: AppColors.buttonFgColor,
 										),
+										icon: const Icon(Icons.undo),
+										label: Text(_translate('undo_button')),
 									),
-									const SizedBox(height: 12),
-									Align(
-										alignment: Alignment.centerLeft,
-										child: FilledButton.icon(
-											onPressed: () {
-												// Call undo through the descriptor
-												final descriptor = FieldDescriptor(name: 'shooting_locations');
-												final currentValue = scoutingData.getFieldValue(descriptor.name).asString();
-												final positions = currentValue.split(' ').where((p) => p.isNotEmpty).toList();
-												if (positions.isNotEmpty) {
-													positions.removeLast();
-													final newValue = positions.join(' ');
-													final updated = scoutingData.updateField(descriptor.name, newValue);
-													ref.read(scoutingDataProvider.notifier).update(updated);
-												}
-											},
-											style: FilledButton.styleFrom(
-												backgroundColor: AppColors.buttonBgColor,
-												foregroundColor: AppColors.buttonFgColor,
-											),
-											icon: const Icon(Icons.undo),
-											label: Text(_translate('undo_button')),
-										),
-									),
-								],
-							),
+								),
+							],
 						),
 					),
 
 					const SizedBox(height: 16),
 
 					// Bricked
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('bricked_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 12),
-									RadioButtonGroup.forField(
-										descriptor: FieldDescriptor(name: 'bricked'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										options: [
-											RadioButtonOption(
-												value: '',
-												labelKey: 'bricked_no',
-												descKey: 'bricked_no_desc',
-											),
-											RadioButtonOption(
-												value: 'some',
-												labelKey: 'bricked_some',
-												descKey: 'bricked_some_desc',
-											),
-											RadioButtonOption(
-												value: 'half',
-												labelKey: 'bricked_half',
-												descKey: 'bricked_half_desc',
-											),
-											RadioButtonOption(
-												value: 'most',
-												labelKey: 'bricked_most',
-												descKey: 'bricked_most_desc',
-											),
-											RadioButtonOption(
-												value: 'all',
-												labelKey: 'bricked_all',
-												descKey: 'bricked_all_desc',
-											),
-										],
-									),
-								],
-							),
+					FieldsetLegend(
+						legendText: _translate('bricked_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								RadioButtonGroup.forField(
+									descriptor: FieldDescriptor(name: 'bricked'),
+									ref: ref,
+									provider: scoutingDataProvider,
+									options: [
+										RadioButtonOption(
+											value: '',
+											labelKey: 'bricked_no',
+											descKey: 'bricked_no_desc',
+										),
+										RadioButtonOption(
+											value: 'some',
+											labelKey: 'bricked_some',
+											descKey: 'bricked_some_desc',
+										),
+										RadioButtonOption(
+											value: 'half',
+											labelKey: 'bricked_half',
+											descKey: 'bricked_half_desc',
+										),
+										RadioButtonOption(
+											value: 'most',
+											labelKey: 'bricked_most',
+											descKey: 'bricked_most_desc',
+										),
+										RadioButtonOption(
+											value: 'all',
+											labelKey: 'bricked_all',
+											descKey: 'bricked_all_desc',
+										),
+									],
+								),
+							],
 						),
 					),
 
 					const SizedBox(height: 16),
 
 					// Defense Rating
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('defense_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 12),
-									RadioButtonGroup.forField(
-										descriptor: FieldDescriptor(name: 'defense'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										options: [
-											RadioButtonOption(
-												value: '',
-												labelKey: 'defense_none',
-												descKey: 'defense_none_desc',
-											),
-											RadioButtonOption(
-												value: 'bad',
-												labelKey: 'defense_bad',
-												descKey: 'defense_bad_desc',
-											),
-											RadioButtonOption(
-												value: 'ineffective',
-												labelKey: 'defense_ineffective',
-												descKey: 'defense_ineffective_desc',
-											),
-											RadioButtonOption(
-												value: 'good',
-												labelKey: 'defense_good',
-												descKey: 'defense_good_desc',
-											),
-											RadioButtonOption(
-												value: 'great',
-												labelKey: 'defense_great',
-												descKey: 'defense_great_desc',
-											),
-										],
-									),
-								],
-							),
+					FieldsetLegend(
+						legendText: _translate('defense_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								RadioButtonGroup.forField(
+									descriptor: FieldDescriptor(name: 'defense'),
+									ref: ref,
+									provider: scoutingDataProvider,
+									options: [
+										RadioButtonOption(
+											value: '',
+											labelKey: 'defense_none',
+											descKey: 'defense_none_desc',
+										),
+										RadioButtonOption(
+											value: 'bad',
+											labelKey: 'defense_bad',
+											descKey: 'defense_bad_desc',
+										),
+										RadioButtonOption(
+											value: 'ineffective',
+											labelKey: 'defense_ineffective',
+											descKey: 'defense_ineffective_desc',
+										),
+										RadioButtonOption(
+											value: 'good',
+											labelKey: 'defense_good',
+											descKey: 'defense_good_desc',
+										),
+										RadioButtonOption(
+											value: 'great',
+											labelKey: 'defense_great',
+											descKey: 'defense_great_desc',
+										),
+									],
+								),
+							],
 						),
 					),
 
@@ -1282,146 +1241,125 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 
 					// Defense Methods (conditional: defenseRating != '')
 					if (scoutingData.getFieldValue('defense').asString().isNotEmpty)
-						Card(
-							child: Padding(
-								padding: const EdgeInsets.all(16),
-								child: Column(
-									crossAxisAlignment: CrossAxisAlignment.start,
-									children: [
-										Text(
-											_translate('defense_methods_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-											style: Theme.of(context).textTheme.titleMedium,
-										),
-										const SizedBox(height: 12),
-										DescriptorCheckboxGroup.forFields(
-											object: scoutingData,
-											descriptors: [
-												FieldDescriptor(
-													name: 'defense_collected',
-													uiLabelKey: 'defense_collected',
-													descriptionLabelKey: 'defense_collected_desc',
-												),
-												FieldDescriptor(
-													name: 'defense_hit',
-													uiLabelKey: 'defense_hit',
-													descriptionLabelKey: 'defense_hit_desc',
-												),
-												FieldDescriptor(
-													name: 'defense_blocked',
-													uiLabelKey: 'defense_blocked',
-													descriptionLabelKey: 'defense_blocked_desc',
-												),
-												FieldDescriptor(
-													name: 'defense_pinned',
-													uiLabelKey: 'defense_pinned',
-													descriptionLabelKey: 'defense_pinned_desc',
-												),
-											],
-											onChanged: (fieldName, newValue) {
-												ref.read(scoutingDataProvider.notifier).update(
-													scoutingData.updateField(fieldName, newValue),
-												);
-											},
-										),
-									],
-								),
+						FieldsetLegend(
+							legendText: _translate('defense_methods_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+							child: Column(
+								crossAxisAlignment: CrossAxisAlignment.start,
+								children: [
+									DescriptorCheckboxGroup.forFields(
+										object: scoutingData,
+										descriptors: [
+											FieldDescriptor(
+												name: 'defense_collected',
+												uiLabelKey: 'defense_collected',
+												descriptionLabelKey: 'defense_collected_desc',
+											),
+											FieldDescriptor(
+												name: 'defense_hit',
+												uiLabelKey: 'defense_hit',
+												descriptionLabelKey: 'defense_hit_desc',
+											),
+											FieldDescriptor(
+												name: 'defense_blocked',
+												uiLabelKey: 'defense_blocked',
+												descriptionLabelKey: 'defense_blocked_desc',
+											),
+											FieldDescriptor(
+												name: 'defense_pinned',
+												uiLabelKey: 'defense_pinned',
+												descriptionLabelKey: 'defense_pinned_desc',
+											),
+										],
+										onChanged: (fieldName, newValue) {
+											ref.read(scoutingDataProvider.notifier).update(
+												scoutingData.updateField(fieldName, newValue),
+											);
+										},
+									),
+								],
 							),
 						),
 
 					const SizedBox(height: 16),
 
 					// Defended
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('defended_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 12),
-									RadioButtonGroup.forField(
-										descriptor: FieldDescriptor(name: 'defended'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										options: [
-											RadioButtonOption(
-												value: '',
-												labelKey: 'defended_undefended',
-												descKey: 'defended_undefended_desc',
-											),
-											RadioButtonOption(
-												value: 'turned-tables',
-												labelKey: 'defended_turned_tables',
-												descKey: 'defended_turned_tables_desc',
-											),
-											RadioButtonOption(
-												value: 'unaffected',
-												labelKey: 'defended_unaffected',
-												descKey: 'defended_unaffected_desc',
-											),
-											RadioButtonOption(
-												value: 'slowed',
-												labelKey: 'defended_slowed',
-												descKey: 'defended_slowed_desc',
-											),
-											RadioButtonOption(
-												value: 'slowed-greatly',
-												labelKey: 'defended_slowed_greatly',
-												descKey: 'defended_slowed_greatly_desc',
-											),
-										],
-									),
-								],
-							),
+					FieldsetLegend(
+						legendText: _translate('defended_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								RadioButtonGroup.forField(
+									descriptor: FieldDescriptor(name: 'defended'),
+									ref: ref,
+									provider: scoutingDataProvider,
+									options: [
+										RadioButtonOption(
+											value: '',
+											labelKey: 'defended_undefended',
+											descKey: 'defended_undefended_desc',
+										),
+										RadioButtonOption(
+											value: 'turned-tables',
+											labelKey: 'defended_turned_tables',
+											descKey: 'defended_turned_tables_desc',
+										),
+										RadioButtonOption(
+											value: 'unaffected',
+											labelKey: 'defended_unaffected',
+											descKey: 'defended_unaffected_desc',
+										),
+										RadioButtonOption(
+											value: 'slowed',
+											labelKey: 'defended_slowed',
+											descKey: 'defended_slowed_desc',
+										),
+										RadioButtonOption(
+											value: 'slowed-greatly',
+											labelKey: 'defended_slowed_greatly',
+											descKey: 'defended_slowed_greatly_desc',
+										),
+									],
+								),
+							],
 						),
 					),
 
 					const SizedBox(height: 16),
 
 					// Misses
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(
-										_translate('misses_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
-										style: Theme.of(context).textTheme.titleMedium,
-									),
-									const SizedBox(height: 12),
-									RadioButtonGroup.forField(
-										descriptor: FieldDescriptor(name: 'misses'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										options: [
-											RadioButtonOption(
-												value: '0_1',
-												labelKey: 'misses_0_1',
-											),
-											RadioButtonOption(
-												value: '1_10',
-												labelKey: 'misses_1_10',
-											),
-											RadioButtonOption(
-												value: '10_30',
-												labelKey: 'misses_10_30',
-											),
-											RadioButtonOption(
-												value: '30_60',
-												labelKey: 'misses_30_60',
-											),
-											RadioButtonOption(
-												value: '60_100',
-												labelKey: 'misses_60_100',
-											),
-										],
-									),
-								],
-							),
+					FieldsetLegend(
+						legendText: _translate('misses_legend', variables: {'TEAMNUM': widget.teamNumber ?? ''}),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								RadioButtonGroup.forField(
+									descriptor: FieldDescriptor(name: 'misses'),
+									ref: ref,
+									provider: scoutingDataProvider,
+									options: [
+										RadioButtonOption(
+											value: '0_1',
+											labelKey: 'misses_0_1',
+										),
+										RadioButtonOption(
+											value: '1_10',
+											labelKey: 'misses_1_10',
+										),
+										RadioButtonOption(
+											value: '10_30',
+											labelKey: 'misses_10_30',
+										),
+										RadioButtonOption(
+											value: '30_60',
+											labelKey: 'misses_30_60',
+										),
+										RadioButtonOption(
+											value: '60_100',
+											labelKey: 'misses_60_100',
+										),
+									],
+								),
+							],
 						),
 					),
 

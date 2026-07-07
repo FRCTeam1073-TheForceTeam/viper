@@ -11,6 +11,7 @@ import '../../../../services/csv_builder.dart';
 import '../../../../widgets/checkbox_button.dart';
 import '../../../../widgets/radio_button_group.dart';
 import '../../../../widgets/end_game_data_section.dart';
+import '../../../../widgets/fieldset_legend.dart';
 import '../../../../models/field_descriptor.dart';
 
 class EndGameTab extends ConsumerStatefulWidget {
@@ -233,71 +234,59 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.stretch,
 				children: [
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(_translate('returned_base'), style: Theme.of(context).textTheme.titleMedium),
-									const SizedBox(height: 12),
-									RadioButtonGroup.forField(
-										descriptor: FieldDescriptor(name: 'base_return'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										options: [
-											RadioButtonOption(value: 'partially', labelKey: 'returned_base_partially'),
-											RadioButtonOption(value: 'alone', labelKey: 'returned_base_alone'),
-											RadioButtonOption(value: 'under', labelKey: 'returned_base_under'),
-											RadioButtonOption(value: 'above', labelKey: 'returned_base_above'),
-										],
-									),
-								],
-							),
+					FieldsetLegend(
+						legendText: _translate('returned_base'),
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								RadioButtonGroup.forField(
+									descriptor: FieldDescriptor(name: 'base_return'),
+									ref: ref,
+									provider: scoutingDataProvider,
+									options: [
+										RadioButtonOption(value: 'partially', labelKey: 'returned_base_partially'),
+										RadioButtonOption(value: 'alone', labelKey: 'returned_base_alone'),
+										RadioButtonOption(value: 'under', labelKey: 'returned_base_under'),
+										RadioButtonOption(value: 'above', labelKey: 'returned_base_above'),
+									],
+								),
+							],
 						),
 					),
 					const SizedBox(height: 16),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(_translate('during_auto'), style: Theme.of(context).textTheme.titleMedium),
-									const SizedBox(height: 12),
-									RadioButtonGroup.forField(
-										descriptor: FieldDescriptor(name: 'auto_patterns'),
-										ref: ref,
-										provider: scoutingDataProvider,
-										options: [
-											RadioButtonOption(value: 'obelisk', labelKey: 'during_auto_obelisk'),
-											RadioButtonOption(value: 'purple', labelKey: 'during_auto_purple'),
-										],
-									),
-									const SizedBox(height: 16),
-									CheckboxButton(
-										descriptor: FieldDescriptor(name: 'auto_took_turns', uiLabelKey: 'during_auto_took_turns'),
-										provider: scoutingDataProvider,
-									),
-								],
-							),
+					FieldsetLegend(
+						legendKey: 'during_auto',
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								RadioButtonGroup.forField(
+									descriptor: FieldDescriptor(name: 'auto_patterns'),
+									ref: ref,
+									provider: scoutingDataProvider,
+									options: [
+										RadioButtonOption(value: 'obelisk', labelKey: 'during_auto_obelisk'),
+										RadioButtonOption(value: 'purple', labelKey: 'during_auto_purple'),
+									],
+								),
+								const SizedBox(height: 16),
+								CheckboxButton(
+									descriptor: FieldDescriptor(name: 'auto_took_turns', uiLabelKey: 'during_auto_took_turns'),
+									provider: scoutingDataProvider,
+								),
+							],
 						),
 					),
 					const SizedBox(height: 16),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Column(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									Text(_translate('during_tele'), style: Theme.of(context).textTheme.titleMedium),
-									const SizedBox(height: 12),
-									CheckboxButton(
-										descriptor: FieldDescriptor(name: 'tele_patterns', uiLabelKey: 'during_tele_patterns'),
-										provider: scoutingDataProvider,
-									),
-								],
-							),
+					FieldsetLegend(
+						legendKey: 'during_tele',
+						child: Column(
+							crossAxisAlignment: CrossAxisAlignment.start,
+							children: [
+								CheckboxButton(
+									descriptor: FieldDescriptor(name: 'tele_patterns', uiLabelKey: 'during_tele_patterns'),
+									provider: scoutingDataProvider,
+								),
+							],
 						),
 					),
 					const SizedBox(height: 16),
