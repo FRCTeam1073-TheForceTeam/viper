@@ -34,12 +34,14 @@ abstract class SeasonModule {
 		required String? teamNumber,
 		DateTime? matchStartTime,
 		required void Function(DateTime) onStartMatch,
+		required VoidCallback onProceedToTele,
 	});
 
 	Widget buildTeleopTab({
 		required String eventId,
 		required String? matchNumber,
 		required String? teamNumber,
+		required VoidCallback onProceedToEndGame,
 	});
 
 	Widget buildEndGameTab({

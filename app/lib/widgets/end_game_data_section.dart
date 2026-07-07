@@ -5,7 +5,9 @@ import '../services/localization.dart';
 import '../widgets/descriptor_text_field.dart';
 import '../widgets/descriptor_text_area.dart';
 import '../widgets/checkbox_button.dart';
+import '../widgets/fieldset_legend.dart';
 import '../models/field_descriptor.dart';
+import '../constants/colors.dart';
 
 /// Evergreen end-game data section with scouter name, comments, and save buttons.
 /// Registers its own i18n translations.
@@ -48,18 +50,45 @@ class _EndGameDataSectionState extends ConsumerState<EndGameDataSection> {
 				'he': 'בקש סקירה',
 				'tr': 'İnceleme İsteyin',
 			},
+			'review_requested_legend': {
+				'en': 'Fall asleep? Watch the wrong robot? Press the wrong button?',
+				'es': 'Este equipo solicitó revisión',
+				'pt': 'Adormeceu? Assistiu ao robô errado? Pressionou o botão errado?',
+				'fr': 'Vous vous êtes endormi ? Vous avez regardé le mauvais robot ? Vous avez appuyé sur le mauvais bouton ?',
+				'zh_tw': '睡著了？看錯機器人？按錯按鈕了？',
+				'he': 'נרדמת? צפה ברובוט הלא נכון? לחץ על הכפתור הלא נכון?',
+				'tr': 'Uyudun mu? Yanlış robotu mu izliyorsun? Yanlış düğmeye mi bastınız?',
+			},
 			'scouter_name_question': {
-				'en': 'Scouter Name',
-				'es': 'Nombre del explorador',
-				'pt': 'Nome do Explorador',
-				'fr': 'Nom de l\'éclaireur',
-				'zh_tw': '偵查員名稱',
-				'he': 'שם סקאוטר',
-				'tr': 'İzci Adı',
+				'en': 'Name:',
+				'es': '¿Cuál es tu nombre?',
+				'pt': 'Nome:',
+				'fr': 'Nom :',
+				'zh_tw': '姓名：',
+				'he': 'שֵׁם:',
+				'tr': 'Ad:',
+			},
+			'scouter_name_placeholder': {
+				'en': 'Scouter Team, First name, Last initial, Eg. 1234 Pat Q',
+				'es': 'Tu nombre...',
+				'pt': 'Equipe do Scouter, Primeiro nome, Inicial do último, Ex.: 1234 Pat Q',
+				'fr': 'Équipe du recruteur, Prénom, Initiale du nom, ex.: 1234 Pat Q',
+				'zh_tw': '童子軍隊伍，名字，姓氏首字母，例如。 1234 還',
+				'he': 'צוות צופים, שם פרטי, ראשי תיבות אחרון, למשל. 1234 Pat Q',
+				'tr': 'Scouter Takımı, Adı, Soyadı, Örn. 1234 Pat Q',
 			},
 			'comments_question': {
+				'en': 'Comments:',
+				'es': '¿Comentarios?',
+				'pt': 'Comentários:',
+				'fr': 'Commentaires :',
+				'zh_tw': '評論：',
+				'he': 'הערות:',
+				'tr': 'Yorumlar:',
+			},
+			'comments_placeholder': {
 				'en': 'Comments',
-				'es': 'Comentarios',
+				'es': 'Comentarios...',
 				'pt': 'Comentários',
 				'fr': 'Commentaires',
 				'zh_tw': '評論',
@@ -112,97 +141,135 @@ class _EndGameDataSectionState extends ConsumerState<EndGameDataSection> {
 		return Column(
 			crossAxisAlignment: CrossAxisAlignment.stretch,
 			children: [
-				// Review requested checkbox, scouter name, and comments
-				Card(
-					child: Padding(
-						padding: const EdgeInsets.all(16),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.start,
-							children: [
-								CheckboxButton(
-									descriptor: FieldDescriptor(name: 'review_requested', uiLabelKey: 'review_requested_button'),
-									provider: widget.scoutingDataProvider,
-								),
-								const SizedBox(height: 16),
-								DescriptorTextField.forField(
-									descriptor: FieldDescriptor(name: 'scouter', uiLabelKey: 'scouter_name_question'),
-									ref: ref,
-									provider: widget.scoutingDataProvider,
-									maxLength: 32,
-								),
-								const SizedBox(height: 16),
-								DescriptorTextArea.forField(
-									descriptor: FieldDescriptor(name: 'comments', uiLabelKey: 'comments_question'),
-									ref: ref,
-									provider: widget.scoutingDataProvider,
-									minLines: 3,
-									maxLines: 5,
-								),
-							],
-						),
+				// Review requested checkbox with legend on border
+				FieldsetLegend(
+					legendKey: 'review_requested_legend',
+					child: Row(
+						mainAxisSize: MainAxisSize.min,
+						children: [
+							CheckboxButton(
+								descriptor: FieldDescriptor(name: 'review_requested', uiLabelKey: 'review_requested_button'),
+								provider: widget.scoutingDataProvider,
+							),
+						],
+					),
+				),
+				const SizedBox(height: 24),
+
+				// Scouter name
+				FieldsetLegend(
+					legendKey: 'scouter_name_question',
+					child: DescriptorTextField.forField(
+						descriptor: FieldDescriptor(name: 'scouter', uiLabelKey: 'scouter_name_placeholder'),
+						ref: ref,
+						provider: widget.scoutingDataProvider,
+						maxLength: 32,
+					),
+				),
+				const SizedBox(height: 24),
+
+				// Comments
+				FieldsetLegend(
+					legendKey: 'comments_question',
+					child: DescriptorTextArea.forField(
+						descriptor: FieldDescriptor(name: 'comments', uiLabelKey: 'comments_placeholder'),
+						ref: ref,
+						provider: widget.scoutingDataProvider,
+						minLines: 3,
+						maxLines: 5,
 					),
 				),
 				const SizedBox(height: 24),
 
 				// Save data buttons
-				Card(
-					child: Padding(
-						padding: const EdgeInsets.all(16),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.stretch,
-							children: [
-								Text(
-									_translate('save_data_question'),
-									style: Theme.of(context).textTheme.titleMedium,
-								),
-								const SizedBox(height: 16),
-								// Featured button
-								if (widget.featuredButton == 'next' && widget.onNextMatch != null)
-									FilledButton(
+				FieldsetLegend(
+					legendKey: 'save_data_question',
+					child: Column(
+						crossAxisAlignment: CrossAxisAlignment.center,
+						children: [
+							// Featured button
+							if (widget.featuredButton == 'next' && widget.onNextMatch != null)
+								SizedBox(
+									height: 60,
+									child: FilledButton(
+										style: FilledButton.styleFrom(
+											backgroundColor: AppColors.buttonBgColor,
+											foregroundColor: AppColors.buttonFgColor,
+											padding: const EdgeInsets.symmetric(horizontal: 96),
+											shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+										),
 										onPressed: widget.onNextMatch,
-										child: Text(_translate('next_match_button')),
-									)
-								else if (widget.featuredButton == 'upload' && widget.onUpload != null)
-									FilledButton(
-										onPressed: widget.onUpload,
-										child: Text(_translate('upload_data_button')),
-									)
-								else if (widget.featuredButton == 'qr' && widget.onQRCode != null)
-									FilledButton(
-										onPressed: widget.onQRCode,
-										child: Text(_translate('qr_code_button')),
+										child: Text(_translate('next_match_button'), style: const TextStyle(fontSize: 20)),
 									),
-								if (widget.featuredButton != null) const SizedBox(height: 12),
-								// Other buttons (smaller)
-								Row(
-									children: [
-										if (widget.featuredButton != 'next' && widget.onNextMatch != null)
-											Expanded(
-												child: OutlinedButton(
-													onPressed: widget.onNextMatch,
-													child: Text(_translate('next_match_button')),
-												),
-											),
-										if (widget.featuredButton != 'next' && widget.onNextMatch != null) const SizedBox(width: 8),
-										if (widget.featuredButton != 'upload' && widget.onUpload != null)
-											Expanded(
-												child: OutlinedButton(
-													onPressed: widget.onUpload,
-													child: Text(_translate('upload_data_button')),
-												),
-											),
-										if (widget.featuredButton != 'upload' && widget.onUpload != null) const SizedBox(width: 8),
-										if (widget.featuredButton != 'qr' && widget.onQRCode != null)
-											Expanded(
-												child: OutlinedButton(
-													onPressed: widget.onQRCode,
-													child: Text(_translate('qr_code_button')),
-												),
-											),
-									],
+								)
+							else if (widget.featuredButton == 'upload' && widget.onUpload != null)
+								SizedBox(
+									height: 60,
+									child: FilledButton(
+										style: FilledButton.styleFrom(
+											backgroundColor: AppColors.buttonBgColor,
+											foregroundColor: AppColors.buttonFgColor,
+											padding: const EdgeInsets.symmetric(horizontal: 96),
+											shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+										),
+										onPressed: widget.onUpload,
+										child: Text(_translate('upload_data_button'), style: const TextStyle(fontSize: 20)),
+									),
+								)
+							else if (widget.featuredButton == 'qr' && widget.onQRCode != null)
+								SizedBox(
+									height: 60,
+									child: FilledButton(
+										style: FilledButton.styleFrom(
+											backgroundColor: AppColors.buttonBgColor,
+											foregroundColor: AppColors.buttonFgColor,
+											padding: const EdgeInsets.symmetric(horizontal: 96),
+											shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+										),
+										onPressed: widget.onQRCode,
+										child: Text(_translate('qr_code_button'), style: const TextStyle(fontSize: 20)),
+									),
 								),
-							],
-						),
+							if (widget.featuredButton != null) const SizedBox(height: 12),
+							// Other buttons (smaller)
+							Row(
+								mainAxisAlignment: MainAxisAlignment.center,
+								children: [
+									if (widget.featuredButton != 'next' && widget.onNextMatch != null)
+										FilledButton(
+												style: FilledButton.styleFrom(
+													backgroundColor: AppColors.buttonBgColor,
+													foregroundColor: AppColors.buttonFgColor,
+													shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+												),
+												onPressed: widget.onNextMatch,
+												child: Text(_translate('next_match_button')),
+											),
+									if (widget.featuredButton != 'next' && widget.onNextMatch != null) const SizedBox(width: 8),
+									if (widget.featuredButton != 'upload' && widget.onUpload != null)
+										FilledButton(
+												style: FilledButton.styleFrom(
+													backgroundColor: AppColors.buttonBgColor,
+													foregroundColor: AppColors.buttonFgColor,
+													shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+												),
+												onPressed: widget.onUpload,
+												child: Text(_translate('upload_data_button')),
+											),
+									if (widget.featuredButton != 'upload' && widget.onUpload != null) const SizedBox(width: 8),
+									if (widget.featuredButton != 'qr' && widget.onQRCode != null)
+										FilledButton(
+												style: FilledButton.styleFrom(
+													backgroundColor: AppColors.buttonBgColor,
+													foregroundColor: AppColors.buttonFgColor,
+													shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+												),
+												onPressed: widget.onQRCode,
+												child: Text(_translate('qr_code_button')),
+											),
+								],
+							),
+						],
 					),
 				),
 			],

@@ -50,6 +50,7 @@ class Season2026Module implements SeasonModule {
 		required String? teamNumber,
 		DateTime? matchStartTime,
 		required void Function(DateTime) onStartMatch,
+		required VoidCallback onProceedToTele,
 	}) {
 		return AutoTab(
 			eventId: eventId,
@@ -57,6 +58,7 @@ class Season2026Module implements SeasonModule {
 			teamNumber: teamNumber,
 			matchStartTime: matchStartTime,
 			onStartMatch: onStartMatch,
+			onProceedToTele: onProceedToTele,
 		);
 	}
 
@@ -65,11 +67,13 @@ class Season2026Module implements SeasonModule {
 		required String eventId,
 		required String? matchNumber,
 		required String? teamNumber,
+		required VoidCallback onProceedToEndGame,
 	}) {
 		return TeleopTab(
 			eventId: eventId,
 			matchNumber: matchNumber,
 			teamNumber: teamNumber,
+			onProceedToEndGame: onProceedToEndGame,
 		);
 	}
 

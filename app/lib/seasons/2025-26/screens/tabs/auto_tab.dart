@@ -19,6 +19,7 @@ class AutoTab extends ConsumerStatefulWidget {
 	final String? teamNumber;
 	final DateTime? matchStartTime;
 	final void Function(DateTime) onStartMatch;
+	final VoidCallback onProceedToTele;
 
 	const AutoTab({
 		Key? key,
@@ -27,6 +28,7 @@ class AutoTab extends ConsumerStatefulWidget {
 		required this.teamNumber,
 		this.matchStartTime,
 		required this.onStartMatch,
+		required this.onProceedToTele,
 	}) : super(key: key);
 
 	@override
@@ -135,58 +137,74 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					child: Column(
 						crossAxisAlignment: CrossAxisAlignment.stretch,
 						children: [
-							FilledButton(
-								key: _undoButtonKey,
-								onPressed: () => undoLastAction(ref, context, _undoButtonKey),
-								style: FilledButton.styleFrom(
-									backgroundColor: AppColors.buttonBgColor,
-									foregroundColor: AppColors.buttonFgColor,
+							Align(
+								alignment: Alignment.centerLeft,
+								child: FilledButton(
+									key: _undoButtonKey,
+									onPressed: () => undoLastAction(ref, context, _undoButtonKey),
+									style: FilledButton.styleFrom(
+										backgroundColor: AppColors.buttonBgColor,
+										foregroundColor: AppColors.buttonFgColor,
+									),
+									child: Text(_translate('undo')),
 								),
-								child: Text(_translate('undo')),
 							),
 							const SizedBox(height: 16),
-							CheckboxButton(
-								descriptor: FieldDescriptor(name: 'auto_leave', uiLabelKey: 'auto_leave'),
-								provider: scoutingDataProvider,
+							Align(
+								alignment: Alignment.centerLeft,
+								child: CheckboxButton(
+									descriptor: FieldDescriptor(name: 'auto_leave', uiLabelKey: 'auto_leave'),
+									provider: scoutingDataProvider,
+								),
 							),
 							const SizedBox(height: 16),
 							Text(_translate('use_preset'), style: Theme.of(context).textTheme.titleSmall),
 							const SizedBox(height: 12),
-							ArtifactPresetCheckbox(
-								fieldName: 'auto_preset_4',
-								icons: const [ArtifactColor.green, ArtifactColor.purple, ArtifactColor.purple],
-								direction: Axis.horizontal,
-								mirrorForBlue: true,
-								isBlueTeam: isBlueTeam,
-								provider: scoutingDataProvider,
-								onTap: _startMatchIfNeeded,
-							),
-							ArtifactPresetCheckbox(
-								fieldName: 'auto_preset_3',
-								icons: const [ArtifactColor.purple, ArtifactColor.green, ArtifactColor.purple],
-								direction: Axis.horizontal,
-								mirrorForBlue: false,
-								isBlueTeam: isBlueTeam,
-								provider: scoutingDataProvider,
-								onTap: _startMatchIfNeeded,
-							),
-							ArtifactPresetCheckbox(
-								fieldName: 'auto_preset_2',
-								icons: const [ArtifactColor.purple, ArtifactColor.purple, ArtifactColor.green],
-								direction: Axis.horizontal,
-								mirrorForBlue: true,
-								isBlueTeam: isBlueTeam,
-								provider: scoutingDataProvider,
-								onTap: _startMatchIfNeeded,
-							),
-							ArtifactPresetCheckbox(
-								fieldName: 'auto_preset_1',
-								icons: const [ArtifactColor.purple, ArtifactColor.green, ArtifactColor.purple],
-								direction: Axis.vertical,
-								mirrorForBlue: false,
-								isBlueTeam: isBlueTeam,
-								provider: scoutingDataProvider,
-								onTap: _startMatchIfNeeded,
+							Row(
+								mainAxisSize: MainAxisSize.min,
+								children: [
+									Column(
+										crossAxisAlignment: CrossAxisAlignment.start,
+										children: [
+											ArtifactPresetCheckbox(
+												fieldName: 'auto_preset_4',
+												icons: const [ArtifactColor.green, ArtifactColor.purple, ArtifactColor.purple],
+												direction: Axis.horizontal,
+												mirrorForBlue: true,
+												isBlueTeam: isBlueTeam,
+												provider: scoutingDataProvider,
+												onTap: _startMatchIfNeeded,
+											),
+											ArtifactPresetCheckbox(
+												fieldName: 'auto_preset_3',
+												icons: const [ArtifactColor.purple, ArtifactColor.green, ArtifactColor.purple],
+												direction: Axis.horizontal,
+												mirrorForBlue: false,
+												isBlueTeam: isBlueTeam,
+												provider: scoutingDataProvider,
+												onTap: _startMatchIfNeeded,
+											),
+											ArtifactPresetCheckbox(
+												fieldName: 'auto_preset_2',
+												icons: const [ArtifactColor.purple, ArtifactColor.purple, ArtifactColor.green],
+												direction: Axis.horizontal,
+												mirrorForBlue: true,
+												isBlueTeam: isBlueTeam,
+												provider: scoutingDataProvider,
+												onTap: _startMatchIfNeeded,
+											),
+											ArtifactPresetCheckbox(
+												fieldName: 'auto_preset_1',
+												icons: const [ArtifactColor.purple, ArtifactColor.green, ArtifactColor.purple],
+												direction: Axis.vertical,
+												mirrorForBlue: false,
+												isBlueTeam: isBlueTeam,
+												provider: scoutingDataProvider,
+												onTap: _startMatchIfNeeded,
+											),
+										],
+									),
+								],
 							),
 							const SizedBox(height: 16),
 							CounterButtonRow(
@@ -232,13 +250,19 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								},
 							),
 							const SizedBox(height: 24),
-							FilledButton(
-								style: FilledButton.styleFrom(
-									backgroundColor: AppColors.buttonBgColor,
-									foregroundColor: AppColors.buttonFgColor,
-								),
-								onPressed: () {}, // wired by scouting_app_screen.dart
-								child: Text(_translate('proceed_tele_button')),
+							Row(
+								mainAxisAlignment: MainAxisAlignment.end,
+								children: [
+									FilledButton(
+										style: FilledButton.styleFrom(
+											backgroundColor: AppColors.buttonBgColor,
+											foregroundColor: AppColors.buttonFgColor,
+											shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+										),
+										onPressed: widget.onProceedToTele,
+										child: Text(_translate('proceed_tele_button')),
+									),
+								],
 							),
 						],
 					),

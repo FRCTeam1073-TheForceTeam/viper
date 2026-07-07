@@ -648,12 +648,14 @@ class TeleopTab extends ConsumerStatefulWidget {
 	final String eventId;
 	final String? matchNumber;
 	final String? teamNumber;
+	final VoidCallback onProceedToEndGame;
 
 	const TeleopTab({
 		Key? key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
+		required this.onProceedToEndGame,
 	}) : super(key: key);
 
 	@override
@@ -999,174 +1001,179 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 						child: Column(
 							crossAxisAlignment: CrossAxisAlignment.stretch,
 							children: [
-						// Field Overlay
-						Padding(
-							padding: const EdgeInsets.symmetric(horizontal: 16),
-							child: Center(
-								child: fieldOverlay,
-							),
-						),
+								// Field Overlay
+								Padding(
+									padding: const EdgeInsets.symmetric(horizontal: 16),
+									child: Center(
+										child: fieldOverlay,
+									),
+								),
 
-						const SizedBox(height: 16),
+								const SizedBox(height: 16),
 
-						// Two-column layout: fuel and info
-						Padding(
-							padding: const EdgeInsets.symmetric(horizontal: 16),
-							child: Row(
-								crossAxisAlignment: CrossAxisAlignment.start,
-								children: [
-									// LEFT COLUMN: Fuel and Tables
-									Expanded(
-										flex: 3,
-										child: Column(
-											crossAxisAlignment: CrossAxisAlignment.center,
-											children: [
-												// Fuel buttons row
-												Row(
-													mainAxisAlignment: MainAxisAlignment.center,
+								// Two-column layout: fuel and info
+								Padding(
+									padding: const EdgeInsets.symmetric(horizontal: 16),
+									child: Row(
+										crossAxisAlignment: CrossAxisAlignment.start,
+										children: [
+											// LEFT COLUMN: Fuel and Tables
+											Expanded(
+												flex: 3,
+												child: Column(
+													crossAxisAlignment: CrossAxisAlignment.center,
 													children: [
-														_buildFuelButton('1', 1, teleState, ref),
-														const SizedBox(width: 8),
-														_buildFuelButton('5', 5, teleState, ref),
-														const SizedBox(width: 8),
-														_buildFuelButton('10', 10, teleState, ref),
+														// Fuel buttons row
+														Row(
+															mainAxisAlignment: MainAxisAlignment.center,
+															children: [
+																_buildFuelButton('1', 1, teleState, ref),
+																const SizedBox(width: 8),
+																_buildFuelButton('5', 5, teleState, ref),
+																const SizedBox(width: 8),
+																_buildFuelButton('10', 10, teleState, ref),
+															],
+														),
+														const SizedBox(height: 8),
+														// Max fuel display and toggle buttons row
+														Row(
+															mainAxisAlignment: MainAxisAlignment.center,
+															children: [
+																_buildMaxFuelDisplay(ref),
+																TextButton(
+																	onPressed: () {
+																		setState(
+																			() => _valuesExpanded = !_valuesExpanded,
+																		);
+																	},
+																	child: Text(
+																		'${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}',
+																	),
+																),
+																const SizedBox(width: 8),
+																TextButton(
+																	onPressed: () {
+																		setState(
+																			() => _timelineExpanded = !_timelineExpanded,
+																		);
+																	},
+																	child: Text(
+																		'${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}',
+																	),
+																),
+															],
+														),
 													],
 												),
-												const SizedBox(height: 8),
-												// Max fuel display and toggle buttons row
-												Row(
-													mainAxisAlignment: MainAxisAlignment.center,
+											),
+											const SizedBox(width: 16),
+											// RIGHT COLUMN: Info
+											Expanded(
+												flex: 1,
+												child: Column(
+													crossAxisAlignment: CrossAxisAlignment.stretch,
 													children: [
-														_buildMaxFuelDisplay(ref),
-														TextButton(
+														// Undo button (always enabled to undo either timeline events or timer start)
+														FilledButton(
+															style: FilledButton.styleFrom(
+																backgroundColor: AppColors.buttonBgColor,
+																foregroundColor: AppColors.buttonFgColor,
+																padding: const EdgeInsets.symmetric(
+																	vertical: 12,
+																	horizontal: 16,
+																),
+																shape: RoundedRectangleBorder(
+																	borderRadius: BorderRadius.circular(8),
+																),
+															),
+															key: _undoButtonKey,
 															onPressed: () {
-																setState(
-																	() => _valuesExpanded = !_valuesExpanded,
+																undoLastAction(
+																	ref,
+																	context,
+																	_undoButtonKey,
+																	getUndoPosition: _getUndoPopupPosition,
 																);
 															},
 															child: Text(
-																'${_valuesExpanded ? '▼' : '▶'} ${_translate('values')}',
+																_translate('undo'),
+																style: TextStyle(
+																	fontSize: _getResponsiveFontSize(12),
+																),
 															),
 														),
-														const SizedBox(width: 8),
-														TextButton(
-															onPressed: () {
-																setState(
-																	() => _timelineExpanded = !_timelineExpanded,
-																);
-															},
-															child: Text(
-																'${_timelineExpanded ? '▼' : '▶'} ${_translate('timeline')}',
+														const SizedBox(height: 8),
+														// Robot indicator
+														Container(
+															padding: const EdgeInsets.symmetric(
+																vertical: 10,
+																horizontal: 12,
 															),
+															decoration: BoxDecoration(
+																color: teamColor,
+																borderRadius: BorderRadius.circular(4),
+															),
+															child: Center(
+																child: Text(
+																	'$botPosition ${widget.teamNumber ?? ''}',
+																	style: TextStyle(
+																		fontSize: _getResponsiveFontSize(12),
+																		fontWeight: FontWeight.bold,
+																		color: AppColors.mainFgColor,
+																	),
+																),
+															),
+														),
+														const SizedBox(height: 8),
+														// End game button
+														Row(
+															mainAxisAlignment: MainAxisAlignment.end,
+															children: [
+																FilledButton(
+																	style: FilledButton.styleFrom(
+																		backgroundColor: AppColors.buttonBgColor,
+																		foregroundColor: AppColors.buttonFgColor,
+																		padding: const EdgeInsets.symmetric(
+																			vertical: 12,
+																			horizontal: 16,
+																		),
+																		shape: RoundedRectangleBorder(
+																			borderRadius: BorderRadius.circular(8),
+																		),
+																	),
+																	onPressed: widget.onProceedToEndGame,
+																	child: Text(
+																		'End Game »',
+																		style: TextStyle(
+																			fontSize: _getResponsiveFontSize(12),
+																		),
+																	),
+																),
+															],
 														),
 													],
 												),
-											],
-										),
+											),
+										],
 									),
-									const SizedBox(width: 16),
-									// RIGHT COLUMN: Info
-									Expanded(
-										flex: 1,
-										child: Column(
-											crossAxisAlignment: CrossAxisAlignment.stretch,
-											children: [
-												// Undo button (always enabled to undo either timeline events or timer start)
-												FilledButton(
-													style: FilledButton.styleFrom(
-														backgroundColor: AppColors.buttonBgColor,
-														foregroundColor: AppColors.buttonFgColor,
-														padding: const EdgeInsets.symmetric(
-															vertical: 12,
-															horizontal: 16,
-														),
-														shape: RoundedRectangleBorder(
-															borderRadius: BorderRadius.circular(8),
-														),
-													),
-													key: _undoButtonKey,
-													onPressed: () {
-														undoLastAction(
-															ref,
-															context,
-															_undoButtonKey,
-															getUndoPosition: _getUndoPopupPosition,
-														);
-													},
-													child: Text(
-														_translate('undo'),
-														style: TextStyle(
-															fontSize: _getResponsiveFontSize(12),
-														),
-													),
-												),
-												const SizedBox(height: 8),
-												// Robot indicator
-												Container(
-													padding: const EdgeInsets.symmetric(
-														vertical: 10,
-														horizontal: 12,
-													),
-													decoration: BoxDecoration(
-														color: teamColor,
-														borderRadius: BorderRadius.circular(4),
-													),
-													child: Center(
-														child: Text(
-															'$botPosition ${widget.teamNumber ?? ''}',
-															style: TextStyle(
-																fontSize: _getResponsiveFontSize(12),
-																fontWeight: FontWeight.bold,
-																color: AppColors.mainFgColor,
-															),
-														),
-													),
-												),
-												const SizedBox(height: 8),
-												// End game button
-												FilledButton(
-													style: FilledButton.styleFrom(
-														backgroundColor: AppColors.buttonBgColor,
-														foregroundColor: AppColors.buttonFgColor,
-														padding: const EdgeInsets.symmetric(
-															vertical: 12,
-															horizontal: 16,
-														),
-														shape: RoundedRectangleBorder(
-															borderRadius: BorderRadius.circular(8),
-														),
-													),
-													onPressed: () {},
-													child: Text(
-														'End Game »',
-														style: TextStyle(
-															fontSize: _getResponsiveFontSize(12),
-														),
-													),
-												),
-											],
-										),
+								),
+
+								// Values Table (readonly counters)
+								if (_valuesExpanded)
+									ValuesTable(
+										key: const ValueKey('tele_values_table'),
+										fieldSelector: (d) => d.teleValuesTableDescription,
 									),
-								],
-							),
+
+								// Timeline Table
+								if (_timelineExpanded)
+									TimelineTable(
+										key: const ValueKey('tele_timeline_table'),
+										events: ref.watch(timelineProvider),
+									),
+							],
 						),
-
-						// Values Table (readonly counters)
-						if (_valuesExpanded)
-							ValuesTable(
-								key: const ValueKey('tele_values_table'),
-								fieldSelector: (d) => d.teleValuesTableDescription,
-							),
-
-						// Timeline Table
-						if (_timelineExpanded)
-							TimelineTable(
-								key: const ValueKey('tele_timeline_table'),
-								events: ref.watch(timelineProvider),
-							),
-				],
-			),
-		),
+					),
 				),
 				// Floating popups layer
 				...floatingPopups.map((popup) {
@@ -1202,144 +1209,42 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 					return 'tele_fuel_outpost';
 				case 'neutralAlliancePass':
 					return 'tele_fuel_neutral_alliance_pass';
-				case 'opponentAlliancePass':
-					return 'tele_fuel_opponent_alliance_pass';
 				case 'opponentNeutralPass':
 					return 'tele_fuel_opponent_neutral_pass';
+				case 'opponentAlliancePass':
+					return 'tele_fuel_opponent_alliance_pass';
 				default:
 					return 'tele_fuel_score';
 			}
 		}
 
-		final buttonKey = GlobalKey();
+		final field = getFuelField();
 
-		return SizedBox(
-			width: 70,
-			height: 70,
-			child: ElevatedButton(
-				key: buttonKey,
+		return Expanded(
+			child: FilledButton(
+				style: FilledButton.styleFrom(
+					backgroundColor: AppColors.buttonBgColor,
+					foregroundColor: AppColors.buttonFgColor,
+					padding: const EdgeInsets.symmetric(vertical: 12),
+				),
 				onPressed: () {
 					_startMatchIfNeeded();
-					ref
-							.read(scoutingDataProvider.notifier)
-							.recordTeleAction(field: getFuelField(), value: amount);
-
-					// Show floating popup at the active fuel target position in the field overlay
-					try {
-						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-						final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
-						if (overlayBox != null && stackBox != null) {
-							// Get overlay position and size
-							final overlayGlobalOffset = overlayBox.localToGlobal(Offset.zero);
-							final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
-							final overlayStackRelative = overlayGlobalOffset - stackGlobalOffset;
-
-							// Map fuel target to position percentages
-							// See teleFuelTargets in tele_field_overlay.dart for reference
-							double rightPct = 0, topPct = 0, bottomPct = 0, leftPct = 0;
-							bool useBottom = false, useLeft = false;
-
-							switch (teleState.activeFuelTarget) {
-								case 'hub':
-									rightPct = 26.0;
-									topPct = 42.0;
-									break;
-								case 'allianceDump':
-									rightPct = 13.0;
-									bottomPct = 7.0;
-									useBottom = true;
-									break;
-								case 'outpost':
-									rightPct = 0.0;
-									topPct = 6.0;
-									break;
-								case 'neutralAlliancePass':
-									rightPct = 13.0;
-									bottomPct = 7.0;
-									useBottom = true;
-									break;
-								case 'opponentAlliancePass':
-									rightPct = 13.0;
-									bottomPct = 7.0;
-									useBottom = true;
-									break;
-								case 'opponentNeutralPass':
-									rightPct = 46.5;
-									bottomPct = 7.0;
-									useBottom = true;
-									break;
-								default:
-									rightPct = 26.0;
-									topPct = 42.0;
-									break;
-							}
-
-							// Calculate position based on percentages
-							double targetX = useLeft
-								? overlayStackRelative.dx + (overlayBox.size.width * leftPct / 100)
-								: overlayStackRelative.dx + (overlayBox.size.width * (1 - rightPct / 100));
-
-							double targetY = useBottom
-								? overlayStackRelative.dy + (overlayBox.size.height * (1 - bottomPct / 100))
-								: overlayStackRelative.dy + (overlayBox.size.height * topPct / 100);
-
-							ref.read(floatingPopupProvider.notifier).addPopup('+$amount', targetX, targetY);
-						}
-					} catch (e) {
-					}
+					ref.read(scoutingDataProvider.notifier).recordTeleAction(field: field, value: amount);
 				},
-				style: ElevatedButton.styleFrom(
-					backgroundColor: const Color(0xFFF1CE03),
-					foregroundColor: Colors.black87,
-					padding: EdgeInsets.zero,
-					shape: RoundedRectangleBorder(
-						borderRadius: BorderRadius.circular(50),
-					),
-				),
-				child: Text(
-					label,
-					style: TextStyle(
-						fontSize: _getResponsiveFontSize(18),
-						fontWeight: FontWeight.bold,
-					),
-				),
+				child: Text(label),
 			),
 		);
 	}
 
-	/// Build max fuel display widget
+	/// Build max fuel display and optional reset button
 	Widget _buildMaxFuelDisplay(WidgetRef ref) {
-		return ref
-				.watch(pitScoutingDataProvider)
-				.when(
-					data: (pitData) {
-						final teamNumber = widget.teamNumber;
-						if (teamNumber == null) {
-							return const SizedBox.shrink();
-						}
+		final scoutingData = ref.watch(scoutingDataProvider);
+		final fuelScore = scoutingData.getFieldValue('tele_fuel_score').asInt();
+		final totalFuel = fuelScore; // Placeholder: accumulate all fuel sources
 
-						final teamData = pitData[teamNumber] as Map<String, dynamic>?;
-						final fuelCapacity =
-								int.tryParse((teamData?['fuel_capacity'] ?? '0').toString()) ??
-								0;
-
-						if (fuelCapacity <= 0) {
-							return const SizedBox.shrink();
-						}
-
-						return Padding(
-							padding: const EdgeInsets.only(right: 8),
-							child: Text(
-								'${_translate('fuel_capacity_label')} $fuelCapacity',
-								style: TextStyle(
-									fontSize: _getResponsiveFontSize(12),
-									fontWeight: FontWeight.w500,
-								),
-							),
-						);
-					},
-					loading: () => const SizedBox.shrink(),
-					error: (_, __) => const SizedBox.shrink(),
-				);
+		return Text(
+			'${_translate('fuel_capacity_label')} $totalFuel',
+			style: const TextStyle(fontWeight: FontWeight.bold),
+		);
 	}
 }

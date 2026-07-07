@@ -143,15 +143,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'he': 'יצר תבניות התואמות מוטיב',
 				'tr': 'Motifle eşleşen desenler oluşturuldu',
 			},
-			'review_requested_legend': {
-				'en': 'Fall asleep? Watch the wrong robot? Press the wrong button?',
-				'es': 'Este equipo solicitó revisión',
-				'pt': 'Adormeceu? Assistiu ao robô errado? Pressionou o botão errado?',
-				'fr': 'Vous vous êtes endormi ? Vous avez regardé le mauvais robot ? Vous avez appuyé sur le mauvais bouton ?',
-				'zh_tw': '睡著了？看錯機器人？按錯按鈕了？',
-				'he': 'נרדמת? צפה ברובוט הלא נכון? לחץ על הכפתור הלא נכון?',
-				'tr': 'Uyudun mu? Yanlış robotu mu izliyorsun? Yanlış düğmeye mi bastınız?',
-			},
 		});
 	}
 
@@ -308,13 +299,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 									),
 								],
 							),
-						),
-					),
-					const SizedBox(height: 16),
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Text(_translate('review_requested_legend'), style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.grey)),
 						),
 					),
 					const SizedBox(height: 16),

@@ -402,7 +402,7 @@ void _initAutoTabTranslations() {
 		'neutral_time': {
 			'en': 'Neutral Time',
 			'es': 'Tiempo Neutral',
-			'pt': 'Tempo Neutro',
+			'pt': 'Tiempo Neutral',
 			'fr': 'Temps Neutre',
 			'zh_tw': '中立時間',
 			'he': 'זמן ניטראלי',
@@ -730,6 +730,7 @@ class AutoTab extends ConsumerStatefulWidget {
 	final String? teamNumber;
 	final DateTime? matchStartTime;
 	final Function(DateTime)? onStartMatch;
+	final VoidCallback onProceedToTele;
 
 	const AutoTab({
 		Key? key,
@@ -738,6 +739,7 @@ class AutoTab extends ConsumerStatefulWidget {
 		required this.teamNumber,
 		this.matchStartTime,
 		this.onStartMatch,
+		required this.onProceedToTele,
 	}) : super(key: key);
 
 	@override
@@ -1185,25 +1187,30 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 												),
 												const SizedBox(height: 8),
 												// Tele button
-												FilledButton(
-													style: FilledButton.styleFrom(
-														backgroundColor: AppColors.buttonBgColor,
-														foregroundColor: AppColors.buttonFgColor,
-														padding: const EdgeInsets.symmetric(
-															vertical: 12,
-															horizontal: 16,
+												Row(
+													mainAxisAlignment: MainAxisAlignment.end,
+													children: [
+														FilledButton(
+															style: FilledButton.styleFrom(
+																backgroundColor: AppColors.buttonBgColor,
+																foregroundColor: AppColors.buttonFgColor,
+																padding: const EdgeInsets.symmetric(
+																	vertical: 12,
+																	horizontal: 16,
+																),
+																shape: RoundedRectangleBorder(
+																	borderRadius: BorderRadius.circular(8),
+																),
+															),
+															onPressed: widget.onProceedToTele,
+															child: Text(
+																_translate('proceed_tele_button'),
+																style: TextStyle(
+																	fontSize: _getResponsiveFontSize(12),
+																),
+															),
 														),
-														shape: RoundedRectangleBorder(
-															borderRadius: BorderRadius.circular(8),
-														),
-													),
-													onPressed: () {},
-													child: Text(
-														_translate('proceed_tele_button'),
-														style: TextStyle(
-															fontSize: _getResponsiveFontSize(12),
-														),
-													),
+													],
 												),
 											],
 										),
@@ -1230,7 +1237,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 					],
 				),
 			),
-				),
+			),
 				// Floating popups layer
 				...floatingPopups.map((popup) {
 					return PopupFloater(

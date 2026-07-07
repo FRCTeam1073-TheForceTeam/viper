@@ -727,7 +727,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				'fr': 'Éclaireur',
 				'zh_tw': '偵查員',
 				'he': 'סוקר',
-				'tr': 'İzcisi',
+				'tr': 'İzcski',
 			},
 			'review_requested_legend': {
 				'en': 'Fall asleep? Watch the wrong robot? Press the wrong button?',
@@ -1441,21 +1441,6 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 						child: Text(
 							_translate('scouter_header'),
 							style: Theme.of(context).textTheme.headlineSmall,
-						),
-					),
-
-					// Scouter Info Card
-					Card(
-						child: Padding(
-							padding: const EdgeInsets.all(16),
-							child: Text(
-								_translate('review_requested_legend'),
-								style: const TextStyle(
-									fontSize: 14,
-									fontStyle: FontStyle.italic,
-									color: Colors.grey,
-								),
-							),
 						),
 					),
 

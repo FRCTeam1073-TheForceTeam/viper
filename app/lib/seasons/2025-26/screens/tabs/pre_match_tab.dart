@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/scouting_data_provider.dart';
 import '../../../../providers/locale_provider.dart';
 import '../../../../services/localization.dart';
+import '../../../../constants/colors.dart';
 import '../../../../widgets/checkbox_button.dart';
 import '../../../../widgets/radio_button_group.dart';
 import '../../../../models/field_descriptor.dart';
@@ -99,9 +100,12 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 			child: Column(
 				crossAxisAlignment: CrossAxisAlignment.stretch,
 				children: [
-					CheckboxButton(
-						descriptor: FieldDescriptor(name: 'no_show', uiLabelKey: 'no_show'),
-						provider: scoutingDataProvider,
+					Align(
+						alignment: Alignment.centerLeft,
+						child: CheckboxButton(
+							descriptor: FieldDescriptor(name: 'no_show', uiLabelKey: 'no_show'),
+							provider: scoutingDataProvider,
+						),
 					),
 					const SizedBox(height: 16),
 					Text(
@@ -119,9 +123,19 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 						],
 					),
 					const SizedBox(height: 24),
-					FilledButton(
-						onPressed: widget.onProceedToAuto,
-						child: Text(_translate('proceed_auto_button')),
+					Row(
+						mainAxisAlignment: MainAxisAlignment.end,
+						children: [
+							FilledButton(
+								style: FilledButton.styleFrom(
+									backgroundColor: AppColors.buttonBgColor,
+									foregroundColor: AppColors.buttonFgColor,
+									shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+								),
+								onPressed: widget.onProceedToAuto,
+								child: Text(_translate('proceed_auto_button')),
+							),
+						],
 					),
 				],
 			),

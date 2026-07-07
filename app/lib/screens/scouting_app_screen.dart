@@ -161,12 +161,18 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 						// Also set the shared match timer provider
 						ref.read(matchTimerProvider.notifier).setStartTime(startTime);
 					},
+					onProceedToTele: () {
+						_tabController.animateTo(2);
+					},
 				);
 			case 2:
 				return module.buildTeleopTab(
 					eventId: widget.selectedEvent.eventId,
 					matchNumber: selectedMatch.match,
 					teamNumber: selectedMatch.team,
+					onProceedToEndGame: () {
+						_tabController.animateTo(3);
+					},
 				);
 			case 3:
 				return module.buildEndGameTab(

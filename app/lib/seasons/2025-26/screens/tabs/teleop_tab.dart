@@ -13,12 +13,14 @@ class TeleopTab extends ConsumerStatefulWidget {
 	final String eventId;
 	final String? matchNumber;
 	final String? teamNumber;
+	final VoidCallback onProceedToEndGame;
 
 	const TeleopTab({
 		Key? key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
+		required this.onProceedToEndGame,
 	}) : super(key: key);
 
 	@override
@@ -65,14 +67,17 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 					child: Column(
 						crossAxisAlignment: CrossAxisAlignment.stretch,
 						children: [
-							FilledButton(
-								key: _undoButtonKey,
-								onPressed: () => undoLastAction(ref, context, _undoButtonKey),
-								style: FilledButton.styleFrom(
-									backgroundColor: AppColors.buttonBgColor,
-									foregroundColor: AppColors.buttonFgColor,
+							Align(
+								alignment: Alignment.centerLeft,
+								child: FilledButton(
+									key: _undoButtonKey,
+									onPressed: () => undoLastAction(ref, context, _undoButtonKey),
+									style: FilledButton.styleFrom(
+										backgroundColor: AppColors.buttonBgColor,
+										foregroundColor: AppColors.buttonFgColor,
+									),
+									child: Text(_translate('undo')),
 								),
-								child: Text(_translate('undo')),
 							),
 							const SizedBox(height: 16),
 							CounterButtonRow(
@@ -115,13 +120,19 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 								},
 							),
 							const SizedBox(height: 24),
-							FilledButton(
-								style: FilledButton.styleFrom(
-									backgroundColor: AppColors.buttonBgColor,
-									foregroundColor: AppColors.buttonFgColor,
-								),
-								onPressed: () {}, // wired by scouting_app_screen.dart
-								child: Text(_translate('proceed_end_button')),
+							Row(
+								mainAxisAlignment: MainAxisAlignment.end,
+								children: [
+									FilledButton(
+										style: FilledButton.styleFrom(
+											backgroundColor: AppColors.buttonBgColor,
+											foregroundColor: AppColors.buttonFgColor,
+											shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+										),
+										onPressed: widget.onProceedToEndGame,
+										child: Text(_translate('proceed_end_button')),
+									),
+								],
 							),
 						],
 					),
