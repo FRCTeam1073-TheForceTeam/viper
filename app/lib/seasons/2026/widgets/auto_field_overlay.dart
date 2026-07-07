@@ -191,7 +191,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 	final int climbLevel;
 
 	/// Called when climb selector is tapped to increment level
-	final Function()? onClimbToggled;
+	final Function(Offset globalPosition)? onClimbToggled;
 
 	/// Called when Start Auto button is tapped
 	final Function()? onStartAutoTapped;
@@ -405,7 +405,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 										maxWidth,
 										fieldHeight,
 										climbLevel: climbLevel,
-										onTap: () => onClimbToggled?.call(),
+										onTap: (globalPosition) => onClimbToggled?.call(globalPosition),
 										teamColor: fieldSide == FieldSide.left
 											? Colors.red.shade700
 											: Colors.blue.shade700,
@@ -733,7 +733,7 @@ class AutoFieldOverlay extends ConsumerWidget {
 		double fieldWidth,
 		double fieldHeight, {
 		required int climbLevel,
-		required VoidCallback onTap,
+		required Function(Offset globalPosition) onTap,
 		required Color teamColor,
 		required bool shouldRotate,
 		required bool swapButtonSides,
@@ -750,31 +750,39 @@ class AutoFieldOverlay extends ConsumerWidget {
 			right: swapButtonSides ? null : rightPx,
 			left: swapButtonSides ? leftPx : null,
 			top: swapButtonSides ? bottomPx : topPx,
-			child: GestureDetector(
-				onTap: onTap,
-				child: Transform.rotate(
-					angle: shouldRotate ? pi : 0,
-					child: Container(
-						width: size,
-						height: size,
-						decoration: BoxDecoration(
-							borderRadius: BorderRadius.circular(size * 0.15),
-							color: AppColors.buttonBgColor,
-							boxShadow: [
-								BoxShadow(
-									color: Colors.black.withValues(alpha: 0.5),
-									blurRadius: 6,
-									offset: const Offset(0, 3),
-								),
-							],
-						),
-						child: Center(
-							child: Text(
-								climbLevel.toString(),
-								style: TextStyle(
-									color: AppColors.buttonFgColor,
-									fontSize: fontSize,
-									fontWeight: FontWeight.bold,
+			child: Builder(
+				builder: (context) => GestureDetector(
+					onTap: () {
+						final renderBox = context.findRenderObject() as RenderBox?;
+						if (renderBox != null) {
+							final globalPosition = renderBox.localToGlobal(Offset(renderBox.size.width / 2, renderBox.size.height / 2));
+							onTap(globalPosition);
+						}
+					},
+					child: Transform.rotate(
+						angle: shouldRotate ? pi : 0,
+						child: Container(
+							width: size,
+							height: size,
+							decoration: BoxDecoration(
+								borderRadius: BorderRadius.circular(size * 0.15),
+								color: AppColors.buttonBgColor,
+								boxShadow: [
+									BoxShadow(
+										color: Colors.black.withValues(alpha: 0.5),
+										blurRadius: 6,
+										offset: const Offset(0, 3),
+									),
+								],
+							),
+							child: Center(
+								child: Text(
+									climbLevel.toString(),
+									style: TextStyle(
+										color: AppColors.buttonFgColor,
+										fontSize: fontSize,
+										fontWeight: FontWeight.bold,
+									),
 								),
 							),
 						),
@@ -863,6 +871,21 @@ class AutoFieldOverlay extends ConsumerWidget {
 			final registryFieldName = target.descriptor?.name ?? target.field;
 			positions[registryFieldName] = Offset(centerX, centerY);
 		}
+
+		// Register climb widget position
+		final climbSize = 8.0 * fieldWidth / 100;
+		final climbRightPx = 3.0 * fieldWidth / 100;
+		final climbLeftPx = 3.0 * fieldWidth / 100;
+		final climbTopPx = 40.0 * fieldHeight / 100;
+
+		double climbCenterX;
+		if (swapButtonSides) {
+			climbCenterX = climbLeftPx + climbSize / 2;
+		} else {
+			climbCenterX = fieldWidth - climbRightPx - climbSize / 2;
+		}
+		final climbCenterY = climbTopPx + climbSize / 2;
+		positions['auto_climb_level'] = Offset(climbCenterX, climbCenterY);
 
 		// When field is rotated 180 degrees, transform coordinates to account for rotation
 		if (shouldRotate) {

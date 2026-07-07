@@ -199,8 +199,9 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			final currentValue = newState.getFieldValue(field).asInt();
 			newState = newState.updateField(field, currentValue + value);
 		} else if (field.endsWith('_level')) {
-			// Climb level (set directly)
-			newState = newState.updateField(field, value);
+			// Climb level (increment)
+			final currentValue = newState.getFieldValue(field).asInt();
+			newState = newState.updateField(field, currentValue + value);
 		}
 
 		_ref.read(timelineProvider.notifier).addEvent(event);
@@ -246,7 +247,8 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 			final currentValue = newState.getFieldValue(field).asInt();
 			newState = newState.updateField(field, (currentValue - actionValue).clamp(0, 999));
 		} else if (field.endsWith('_level')) {
-			newState = newState.updateField(field, actionValue);
+			final currentValue = newState.getFieldValue(field).asInt();
+			newState = newState.updateField(field, (currentValue - actionValue).clamp(0, 999));
 		}
 
 		_ref.read(timelineProvider.notifier).undo();

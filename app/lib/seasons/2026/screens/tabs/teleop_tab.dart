@@ -829,7 +829,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 					ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
 				}
 			},
-			onClimbTapped: () {
+			onClimbTapped: (globalPosition) {
 				_startMatchIfNeeded();
 				final currentClimbLevel = scoutingData
 						.getFieldValue('tele_climb_level')
@@ -839,16 +839,15 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 							.read(scoutingDataProvider.notifier)
 							.recordTeleAction(
 								field: 'tele_climb_level',
-								value: currentClimbLevel + 1,
+								value: 1,
 							);
-					// Show floating popup at left side of field, offset from top
+					// Show floating popup at the climb widget position
 					try {
-						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-						if (overlayBox != null) {
-							final offset = overlayBox.localToGlobal(Offset.zero);
-							final popupX = offset.dx + 40;
-							final popupY = offset.dy + 40;
-							ref.read(floatingPopupProvider.notifier).addPopup('+1', popupX, popupY);
+						final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+						if (stackBox != null) {
+							final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+							final climbStackRelative = globalPosition - stackGlobalOffset;
+							ref.read(floatingPopupProvider.notifier).addPopup('+1', climbStackRelative.dx, climbStackRelative.dy);
 						}
 					} catch (e) {
 						// Silently fail

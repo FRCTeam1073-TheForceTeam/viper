@@ -262,7 +262,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 	final int climbLevel;
 
 	/// Called when climb selector is tapped to increment level (max 3)
-	final Function()? onClimbTapped;
+	final Function(Offset globalPosition)? onClimbTapped;
 
 	/// Robot position (bot position like 'R1', 'B1', etc.)
 	/// Used to determine if field should be rotated based on team color
@@ -441,7 +441,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 									maxWidth,
 									fieldHeight,
 									climbLevel: climbLevel,
-									onTap: () => onClimbTapped?.call(),
+									onTap: (globalPosition) => onClimbTapped?.call(globalPosition),
 									teamColor: fieldSide == FieldSide.left
 										? Colors.red.shade700
 										: Colors.blue.shade700,
@@ -662,7 +662,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 		double fieldWidth,
 		double fieldHeight, {
 		required int climbLevel,
-		required VoidCallback onTap,
+		required Function(Offset globalPosition) onTap,
 		required Color teamColor,
 		required bool shouldRotate,
 		required bool swapButtonSides,
@@ -679,9 +679,16 @@ class TeleFieldOverlay extends ConsumerWidget {
 			right: swapButtonSides ? null : rightPx,
 			left: swapButtonSides ? leftPx : null,
 			top: swapButtonSides ? bottomPx : topPx,
-			child: GestureDetector(
-				onTap: onTap,
-				child: Transform.rotate(
+			child: Builder(
+				builder: (context) => GestureDetector(
+					onTap: () {
+						final renderBox = context.findRenderObject() as RenderBox?;
+						if (renderBox != null) {
+							final globalPosition = renderBox.localToGlobal(Offset(renderBox.size.width / 2, renderBox.size.height / 2));
+							onTap(globalPosition);
+						}
+					},
+					child: Transform.rotate(
 					angle: shouldRotate ? pi : 0,
 					child: Container(
 						width: size,
@@ -710,6 +717,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 					),
 				),
 			),
+		),
 		);
 	}
 
@@ -786,6 +794,21 @@ class TeleFieldOverlay extends ConsumerWidget {
 			final registryFieldName = target.descriptor?.name ?? target.field;
 			positions[registryFieldName] = Offset(centerX, centerY);
 		}
+
+		// Register climb widget position
+		final climbSize = 8.0 * fieldWidth / 100;
+		final climbRightPx = 3.0 * fieldWidth / 100;
+		final climbLeftPx = 3.0 * fieldWidth / 100;
+		final climbTopPx = 40.0 * fieldHeight / 100;
+
+		double climbCenterX;
+		if (swapButtonSides) {
+			climbCenterX = climbLeftPx + climbSize / 2;
+		} else {
+			climbCenterX = fieldWidth - climbRightPx - climbSize / 2;
+		}
+		final climbCenterY = climbTopPx + climbSize / 2;
+		positions['tele_climb_level'] = Offset(climbCenterX, climbCenterY);
 
 		// When field is rotated 180 degrees, transform coordinates to account for rotation
 		if (shouldRotate) {
