@@ -36,7 +36,7 @@ class SerializationHelper {
 		return result;
 	}
 
-	/// Helper: extract typed values from a Map<String, dynamic>.
+	/// Helper: extract typed values from a `Map<String, dynamic>`.
 	static T? getFieldValue<T>(Map<String, dynamic> map, String key) {
 		final value = map[key];
 		if (value is T) return value;

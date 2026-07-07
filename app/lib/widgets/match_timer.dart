@@ -20,13 +20,13 @@ class MatchTimer extends StatefulWidget {
 	final TextStyle? textStyle;
 
 	const MatchTimer({
-		Key? key,
+		super.key,
 		this.startTime,
 		required this.autoPeriodMs,
 		required this.autoGapMs,
 		this.onAutoEnded,
 		this.textStyle,
-	}) : super(key: key);
+	});
 
 	@override
 	State<MatchTimer> createState() => _MatchTimerState();

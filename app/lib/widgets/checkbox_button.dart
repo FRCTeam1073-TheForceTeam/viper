@@ -13,12 +13,12 @@ class CheckboxButton extends ConsumerStatefulWidget {
 	final EdgeInsets margin;
 
 	const CheckboxButton({
-		Key? key,
+		super.key,
 		required this.descriptor,
 		required this.provider,
 		this.padding = const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
 		this.margin = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<CheckboxButton> createState() => _CheckboxButtonState();

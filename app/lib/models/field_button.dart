@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'field_descriptor.dart';
-import 'map_data_model.dart' show MapDataModel;
 
 /// Data class representing a positioned button on the field
 /// Uses CSS-like percentage positioning for responsive field display
@@ -43,7 +42,7 @@ class FieldButton {
 	/// Field descriptor defining this button's data field (optional)
 	final FieldDescriptor? descriptor;
 
-	FieldButton({
+	const FieldButton({
 		required this.field,
 		required this.label,
 		this.rightPercent = 0.0,

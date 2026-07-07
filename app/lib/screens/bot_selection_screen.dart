@@ -15,10 +15,10 @@ class BotSelectionScreen extends ConsumerStatefulWidget {
 	final Function(String) onBotSelected;
 
 	const BotSelectionScreen({
-		Key? key,
+		super.key,
 		this.eventId,
 		required this.onBotSelected,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<BotSelectionScreen> createState() => _BotSelectionScreenState();
@@ -376,7 +376,7 @@ class _BotSelectionScreenState extends ConsumerState<BotSelectionScreen> {
 					children: [
 						if (eventName != null)
 							Text(
-								eventName!,
+								eventName,
 								style: Theme.of(context).textTheme.titleMedium?.copyWith(
 									color: Colors.white,
 								),

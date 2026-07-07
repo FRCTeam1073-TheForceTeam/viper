@@ -111,8 +111,6 @@ class ViperApiClient {
 	/// Returns the raw CSV string for caching purposes
 	Future<String?> fetchEventListCsv() async {
 		try {
-			final fullUrl = '$baseUrl/event-list.cgi';
-
 			final response = await _dio.get('/event-list.cgi');
 
 			if (response.statusCode != 200) {
@@ -179,8 +177,6 @@ class ViperApiClient {
 	/// Returns list of events parsed from CSV response
 	Future<List<EventModel>> fetchEventList() async {
 		try {
-			final fullUrl = '$baseUrl/event-list.cgi';
-
 			final csvString = await fetchEventListCsv();
 			if (csvString == null) {
 				return [];
@@ -282,7 +278,6 @@ class ViperApiClient {
 	Future<String?> fetchMatchScheduleCsv(String eventId) async {
 		try {
 			final path = '/data/$eventId.schedule.csv';
-			final fullUrl = '$baseUrl$path';
 
 			final response = await _dio.get(path);
 
@@ -304,7 +299,6 @@ class ViperApiClient {
 	Future<String?> fetchScoutingCsv(String eventId) async {
 		try {
 			final path = '/data/$eventId.scouting.csv';
-			final fullUrl = '$baseUrl$path';
 
 			final response = await _dio.get(path);
 
@@ -367,7 +361,7 @@ class ViperApiClient {
 			}
 
 			// Sort by modification time (oldest first)
-			final fileList = files.where((f) => f is File).cast<File>().toList();
+			final fileList = files.whereType<File>().toList();
 			fileList.sort((a, b) => a.statSync().modified.compareTo(b.statSync().modified));
 
 			// Delete oldest files until we're under the limit
@@ -388,7 +382,6 @@ class ViperApiClient {
 		try {
 			final year = _extractSeasonFromEventId(eventId);
 			final path = '/data/$year/$teamNumber.jpg';
-			final fullUrl = '$baseUrl$path';
 
 			// Check cache first
 			final cacheFile = await _getCacheFile(year, teamNumber);
@@ -485,8 +478,6 @@ class ViperApiClient {
 		try {
 			final year = _extractSeasonFromEventId(eventId);
 			final path = '/data/$year/$teamNumber.jpg';
-			final fullUrl = '$baseUrl$path';
-
 
 			final response = await _dio.get<List<int>>(
 				path,
@@ -494,12 +485,12 @@ class ViperApiClient {
 			);
 
 			if (response.statusCode != 200) {
-				_logger.w('Background refresh failed: HTTP ${response.statusCode} for $fullUrl');
+				_logger.w('Background refresh failed: HTTP ${response.statusCode} for $year/$teamNumber.jpg');
 				return;
 			}
 
 			if (response.data == null || response.data!.isEmpty) {
-				_logger.w('Background refresh returned empty data for $fullUrl');
+				_logger.w('Background refresh returned empty data for $year/$teamNumber.jpg');
 				return;
 			}
 
@@ -522,7 +513,6 @@ class ViperApiClient {
 	Future<Map<String, dynamic>> fetchPitScoutingData(String eventId) async {
 		try {
 			final path = '/data/$eventId.pit.csv';
-			final fullUrl = '$baseUrl$path';
 
 			final response = await _dio.get(path);
 

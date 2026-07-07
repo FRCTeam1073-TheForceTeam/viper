@@ -106,6 +106,7 @@ final appStateProvider = FutureProvider<AppState>((ref) async {
 
 	// Restore the selected event from the database if it exists
 	if (config?.selectedEventId?.isNotEmpty ?? false) {
+		// ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 		ref.read(selectedEventProvider.notifier).state = config!.selectedEventId;
 	}
 
@@ -249,16 +250,16 @@ class _BotPositionNotifier extends StateNotifier<String?> {
 	final SharedPreferences? _prefs;
 
 	_BotPositionNotifier(this._prefs)
-		: super(_prefs?.getString('selected_bot_position') ?? null);
+		: super(_prefs?.getString('selected_bot_position'));
 
 	Future<void> setPosition(String? position) async {
 		if (_prefs == null) return;
 
 		state = position;
 		if (position == null) {
-			await _prefs!.remove('selected_bot_position');
+			await _prefs.remove('selected_bot_position');
 		} else {
-			await _prefs!.setString('selected_bot_position', position);
+			await _prefs.setString('selected_bot_position', position);
 		}
 	}
 }
@@ -310,7 +311,6 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 	// Import at file top: import '../seasons/season_registry.dart';
 	// Log filtering info
 	final logger = getLogger();
-	print('🎯 _filterAndSortEvents called with ${events.length} events');
 	logger.i('🎯 EVENT LIST FETCHED:');
 	logger.i('   Total events: ${events.length}');
 	logger.i('   Supported seasons: ${seasonModules.keys.join(', ')}');
@@ -320,7 +320,6 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 	for (var e in events) {
 		bySeason[e.season] = (bySeason[e.season] ?? 0) + 1;
 	}
-	print('   Events by season: $bySeason');
 	logger.i('   Events by season: $bySeason');
 
 	// Sort by start date, most recent first (don't filter by season - show all seasons in dropdown)
@@ -332,7 +331,6 @@ List<EventModel> _filterAndSortEvents(List<EventModel> events) {
 		return b.startDate!.compareTo(a.startDate!);
 	});
 
-	print('🎯 Returning ${events.length} events (all seasons included)');
 	return events;
 }
 
@@ -344,7 +342,6 @@ List<String> _extractAndSortSeasons(List<EventModel> events) {
 	}
 	final sorted = seasons.toList();
 	sorted.sort((a, b) => b.compareTo(a)); // Reverse sort for most recent first
-	print('📊 _extractAndSortSeasons: ${events.length} events -> ${sorted.length} seasons: $sorted');
 	return sorted;
 }
 
@@ -419,7 +416,6 @@ final eventListProvider = StateNotifierProvider((ref) => EventListNotifier(ref))
 final availableSeasonsProvider = Provider<List<String>>((ref) {
 	final events = ref.watch(eventListProvider); // Use eventListProvider which has all events before filtering
 	final seasons = _extractAndSortSeasons(events);
-	print('📅 [availableSeasonsProvider] Computing: ${seasons.length} seasons - $seasons');
 	getLogger().i('📅 Available seasons provider: ${seasons.length} seasons - $seasons');
 	return seasons;
 });
@@ -433,7 +429,7 @@ class _SelectedSeasonNotifier extends StateNotifier<String?> {
 	Future<void> setSelectedSeason(String season) async {
 		state = season;
 		if (_prefs != null) {
-			await _prefs!.setString('selected_season', season);
+			await _prefs.setString('selected_season', season);
 		}
 	}
 }
@@ -443,8 +439,6 @@ final selectedSeasonProvider = StateNotifierProvider<_SelectedSeasonNotifier, St
 	final prefsAsync = ref.watch(sharedPreferencesProvider);
 	final seasons = ref.watch(availableSeasonsProvider);
 
-	print('🎯 [selectedSeasonProvider] Creating notifier with ${seasons.length} available seasons: $seasons');
-
 	return prefsAsync.when(
 		data: (prefs) {
 			final savedSeason = prefs.getString('selected_season');
@@ -452,19 +446,16 @@ final selectedSeasonProvider = StateNotifierProvider<_SelectedSeasonNotifier, St
 			final initialSeason = (savedSeason != null && seasons.contains(savedSeason))
 				? savedSeason
 				: (seasons.isNotEmpty ? seasons.first : null);
-			print('🎯 [selectedSeasonProvider] data: initialSeason=$initialSeason, saved=$savedSeason');
 			getLogger().i('🎯 Selected season initialized: $initialSeason (available: $seasons)');
 			return _SelectedSeasonNotifier(prefs, initialSeason);
 		},
 		loading: () {
 			final initialSeason = seasons.isNotEmpty ? seasons.first : null;
-			print('🎯 [selectedSeasonProvider] loading: initialSeason=$initialSeason');
 			getLogger().i('🎯 Selected season initializing (loading): $initialSeason (available: $seasons)');
 			return _SelectedSeasonNotifier(null, initialSeason);
 		},
 		error: (error, stack) {
 			final initialSeason = seasons.isNotEmpty ? seasons.first : null;
-			print('🎯 [selectedSeasonProvider] error: initialSeason=$initialSeason, error=$error');
 			getLogger().i('🎯 Selected season initializing (error): $initialSeason (available: $seasons)');
 			return _SelectedSeasonNotifier(null, initialSeason);
 		},
@@ -798,7 +789,7 @@ final uploadPageStateProvider = StateNotifierProvider<UploadPageStateNotifier, U
 
 class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 	final Ref ref;
-	static const int BATCH_SIZE = 10;
+	static const int batchSize = 10;
 
 	UploadPageStateNotifier(this.ref) : super(UploadPageState());
 
@@ -826,11 +817,11 @@ class UploadPageStateNotifier extends StateNotifier<UploadPageState> {
 			final allPending = await db.getAllPendingUploadHistory();
 
 			// Split into ready (first 10) and later (rest)
-			final readyToUpload = allPending.length > BATCH_SIZE
-					? allPending.sublist(0, BATCH_SIZE)
+			final readyToUpload = allPending.length > batchSize
+					? allPending.sublist(0, batchSize)
 					: allPending;
-			final uploadLater = allPending.length > BATCH_SIZE
-					? allPending.sublist(BATCH_SIZE)
+			final uploadLater = allPending.length > batchSize
+					? allPending.sublist(batchSize)
 				: <UploadHistoryData>[];
 
 
@@ -1027,7 +1018,6 @@ final matchListProvider = FutureProvider<List<MatchModel>>((ref) async {
 
 		// Fetch fresh data from server
 		logger.i('📡 Fetching fresh match schedule from server');
-		final scheduleUrl = '/data/$selectedEvent.schedule.csv';
 		final freshCsv = await apiClient.fetchMatchScheduleCsv(selectedEvent);
 
 		if (freshCsv != null && freshCsv.isNotEmpty) {
@@ -1232,7 +1222,7 @@ final existingScoutDataProvider = FutureProvider<Map<String, dynamic>?>((ref) as
 		final db = await ref.watch(databaseProvider.future);
 		var data = await db.getMatchData(selectedEvent, selectedMatch.match!, selectedMatch.team!);
 		if (data != null) {
-			final csv = data.csvHeaders + '\n' + data.csvData;
+			final csv = '${data.csvHeaders}\n${data.csvData}';
 			final parsed = csvToArrayOfMaps(csv);
 			return parsed.isNotEmpty ? parsed.first : null;
 		}
@@ -1244,24 +1234,20 @@ final existingScoutDataProvider = FutureProvider<Map<String, dynamic>?>((ref) as
 			final cachedCsv = sharedPrefs.getString(cacheKey);
 
 			if (cachedCsv != null && cachedCsv.isNotEmpty) {
-				try {
-					final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(cachedCsv);
+				final List<Map<String, dynamic>> scoutingData = csvToArrayOfMaps(cachedCsv);
 
-					if (scoutingData.isEmpty) {
-						return null;
-					}
-
-					// Find matching entry in server CSV
-					for (final entry in scoutingData) {
-						final csvMatch = entry['match']?.toString();
-						final csvTeam = entry['team']?.toString();
-						if (csvMatch == selectedMatch.match && csvTeam == selectedMatch.team) {
-							return entry;
-						}
-					}
-				} catch (e, st) {
+				if (scoutingData.isEmpty) {
+					return null;
 				}
-			} else {
+
+				// Find matching entry in server CSV
+				for (final entry in scoutingData) {
+					final csvMatch = entry['match']?.toString();
+					final csvTeam = entry['team']?.toString();
+					if (csvMatch == selectedMatch.match && csvTeam == selectedMatch.team) {
+						return entry;
+					}
+				}
 			}
 		}
 
@@ -1271,7 +1257,7 @@ final existingScoutDataProvider = FutureProvider<Map<String, dynamic>?>((ref) as
 
 		// Parse using csvToArrayOfMaps which handles unescaping
 		// Create a mini CSV with headers + single data row
-		final csv = data.csvHeaders + '\n' + data.csvData;
+		final csv = '${data.csvHeaders}\n${data.csvData}';
 		final parsed = csvToArrayOfMaps(csv);
 
 		if (parsed.isEmpty) {

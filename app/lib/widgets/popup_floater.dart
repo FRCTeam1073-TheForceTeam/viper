@@ -21,13 +21,13 @@ class PopupFloater extends StatefulWidget {
 	final VoidCallback? onAnimationComplete;
 
 	const PopupFloater({
-		Key? key,
+		super.key,
 		required this.text,
 		required this.initialX,
 		required this.initialY,
 		this.animationDuration = const Duration(seconds: 5),
 		this.onAnimationComplete,
-	}) : super(key: key);
+	});
 
 	@override
 	State<PopupFloater> createState() => _PopupFloaterState();

@@ -1,5 +1,3 @@
-import 'dart:math';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +12,6 @@ import '../../../../utils/match_name_converter.dart';
 import '../../../../widgets/checkbox_button.dart';
 import '../../../../widgets/position_selector_area.dart';
 import '../../../../models/field_descriptor.dart';
-import '../../../../models/map_data_model.dart';
 
 class PreMatchTab extends ConsumerStatefulWidget {
 	final String eventId;
@@ -25,14 +22,14 @@ class PreMatchTab extends ConsumerStatefulWidget {
 	final VoidCallback? onProceedToAuto;
 
 	const PreMatchTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		required this.eventName,
 		this.botPosition,
 		this.onProceedToAuto,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<PreMatchTab> createState() => _PreMatchTabState();
@@ -253,11 +250,8 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
 		// Debug: Print positioning state when Pre-Match tab is shown
-		final shouldRotate = fieldSide == FieldSide.left;
-		final swapButtonSides = isBlueTeam;
 
 		// Read scouting data provider (don't watch to avoid rebuilding on updates)
-		final preMatchData = ref.read(scoutingDataProvider);
 
 		// Get baseUrl for robot photo
 		final apiClientAsync = ref.watch(apiClientProvider);
@@ -337,7 +331,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 											child: Text(
 												_translate('brief_instructions'),
 												style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-													color: AppColors.mainFgColor.withOpacity(0.7),
+													color: AppColors.mainFgColor.withValues(alpha: 0.7),
 												),
 												textAlign: TextAlign.center,
 											),

@@ -5,15 +5,14 @@ import '../../providers/app_providers.dart';
 import '../../providers/locale_provider.dart';
 import '../../services/localization.dart';
 import '../../widgets/viper_menu_button.dart';
-import 'server_config_screen.dart';
 
 class EventPickerScreen extends ConsumerStatefulWidget {
 	final Function(String)? onEventSelected;
 
 	const EventPickerScreen({
-		Key? key,
+		super.key,
 		this.onEventSelected,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<EventPickerScreen> createState() => _EventPickerScreenState();
@@ -161,21 +160,6 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 		});
 	}
 
-	void _showServerConfigModal(BuildContext context, WidgetRef ref) {
-		showModalBottomSheet(
-			context: context,
-			isScrollControlled: true,
-			builder: (context) => ServerConfigScreen(
-				onServerConfigured: (url) {
-					Navigator.pop(context);
-					// Invalidate both providers to force refresh with new credentials
-					ref.invalidate(eventListProvider);
-					ref.refresh(eventListProvider);
-				},
-			),
-		);
-	}
-
 	void _showManualEventEntryDialog(BuildContext context, WidgetRef ref) {
 		final TextEditingController eventIdController = TextEditingController();
 		final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -261,12 +245,6 @@ class _EventPickerScreenState extends ConsumerState<EventPickerScreen> {
 		final filteredEvents = ref.watch(filteredEventsBySeasonProvider);
 		final availableSeasons = ref.watch(availableSeasonsProvider);
 		final selectedSeason = ref.watch(selectedSeasonProvider);
-
-		// Debug logging
-		print('🔍 EventPickerScreen build:');
-		print('   Available seasons: $availableSeasons');
-		print('   Selected season: $selectedSeason');
-		print('   Filtered events count: ${filteredEvents.length}');
 
 		// Register season dropdown translations
 		AppLocalizations.addI18n({
@@ -358,10 +336,10 @@ class EventListTile extends StatefulWidget {
 	final Future<void> Function() onTap;
 
 	const EventListTile({
-		Key? key,
+		super.key,
 		required this.event,
 		required this.onTap,
-	}) : super(key: key);
+	});
 
 	@override
 	State<EventListTile> createState() => _EventListTileState();

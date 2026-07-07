@@ -31,11 +31,8 @@ class FieldSideNotifier extends StateNotifier<FieldSide> {
 
 	Future<void> setFieldSide(FieldSide side) async {
 		state = side;
-		try {
-			final prefs = await SharedPreferences.getInstance();
-			await prefs.setString('fieldSide', side.name);
-		} catch (e) {
-		}
+		final prefs = await SharedPreferences.getInstance();
+		await prefs.setString('fieldSide', side.name);
 	}
 
 	Future<void> toggleFieldSide() async {

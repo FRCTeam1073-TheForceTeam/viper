@@ -15,14 +15,14 @@ class DescriptorTextArea extends ConsumerWidget {
 	final int maxLines;
 
 	const DescriptorTextArea({
-		Key? key,
+		super.key,
 		required this.initialValue,
 		required this.labelTranslationKey,
 		required this.onChanged,
 		this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
 		this.minLines = 3,
 		this.maxLines = 8,
-	}) : super(key: key);
+	});
 
 	/// Create text area for a field - pass descriptor with field definition
 	static Widget forField({
@@ -78,13 +78,13 @@ class _DescriptorTextAreaDescriptor extends ConsumerStatefulWidget {
 	final int maxLines;
 
 	const _DescriptorTextAreaDescriptor({
-		Key? key,
+		super.key,
 		required this.descriptor,
 		required this.provider,
 		required this.padding,
 		required this.minLines,
 		required this.maxLines,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<_DescriptorTextAreaDescriptor> createState() => _DescriptorTextAreaDescriptorState();

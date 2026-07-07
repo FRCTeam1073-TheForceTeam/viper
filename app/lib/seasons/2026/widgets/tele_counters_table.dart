@@ -7,7 +7,7 @@ import '../../../../models/field_descriptor.dart';
 /// Widget that displays all movement counters in a collapsible table
 /// Loops through descriptors with teleValuesTableDescription to build rows
 class TeleValuesTable extends ConsumerStatefulWidget {
-	const TeleValuesTable({Key? key}) : super(key: key);
+	const TeleValuesTable({super.key});
 
 	@override
 	ConsumerState<TeleValuesTable> createState() => _TeleValuesTableState();
@@ -40,15 +40,15 @@ class _TeleValuesTableState extends ConsumerState<TeleValuesTable> {
 		return Container(
 			margin: const EdgeInsets.all(8),
 			decoration: BoxDecoration(
-				border: Border.all(color: teamColor.withOpacity(0.3)),
+				border: Border.all(color: teamColor.withValues(alpha: 0.3)),
 				borderRadius: BorderRadius.circular(8),
-				color: Colors.grey.shade900.withOpacity(0.3),
+				color: Colors.grey.shade900.withValues(alpha: 0.3),
 			),
 			child: Column(
 				children: [
 					// Header (collapsible)
 					Material(
-						color: teamColor.withOpacity(0.15),
+						color: teamColor.withValues(alpha: 0.15),
 						child: InkWell(
 							onTap: () {
 								setState(() => _expanded = !_expanded);

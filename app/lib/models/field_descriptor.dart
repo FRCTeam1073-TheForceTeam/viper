@@ -122,18 +122,18 @@ class FieldDescriptor {
 	/// Parse as bool with default
 	bool asBool() {
 		if (_value == null) return false;
-		return _value == '1' || _value!.toLowerCase() == 'true';
+		return _value == '1' || _value.toLowerCase() == 'true';
 	}
 
 	/// Parse as int with default
 	int asInt() {
 		if (_value == null) return 0;
-		return int.tryParse(_value ?? '') ?? 0;
+		return int.tryParse(_value) ?? 0;
 	}
 
 	/// Get as string with default
 	String asString() {
-		return (_value == null || _value!.isEmpty) ? '' : _value!;
+		return (_value == null || _value.isEmpty) ? '' : _value;
 	}
 
 	/// Get the UI label key, defaulting to the field name if not specified

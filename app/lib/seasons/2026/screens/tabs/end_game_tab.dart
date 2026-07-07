@@ -7,11 +7,8 @@ import '../../../../providers/pre_match_provider.dart';
 import '../../../../providers/timeline_provider.dart';
 import '../../../../providers/locale_provider.dart';
 import '../../../../providers/field_side_provider.dart';
-import '../../../../providers/timeline_provider.dart';
 import '../../../../services/localization.dart';
 import '../../../../services/csv_builder.dart';
-import '../../../../widgets/checkbox_button.dart';
-import '../../../../widgets/checkbox_button_group.dart';
 import '../../../../widgets/descriptor_checkbox_group.dart';
 import '../../../../widgets/position_selector_area.dart';
 import '../../../../widgets/radio_button_group.dart';
@@ -27,12 +24,12 @@ class EndGameTab extends ConsumerStatefulWidget {
 	final VoidCallback? onNextMatch;
 
 	const EndGameTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		this.onNextMatch,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<EndGameTab> createState() => _EndGameTabState();
@@ -796,66 +793,63 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 	}
 
 	Future<void> _saveCurrentMatch() async {
-		try {
-			final selectedEvent = ref.read(selectedEventProvider);
-			final selectedMatch = ref.read(selectedMatchProvider);
-			final db = await ref.read(databaseProvider.future);
+		final selectedEvent = ref.read(selectedEventProvider);
+		final selectedMatch = ref.read(selectedMatchProvider);
+		final db = await ref.read(databaseProvider.future);
 
-			if (selectedEvent == null || selectedMatch.match == null || selectedMatch.team == null) {
-				return;
-			}
-
-			// Read all scouting data from providers
-			final preMatch = ref.read(preMatchProvider);
-			final scoutingData = ref.read(scoutingDataProvider);
-			final timeline = ref.read(timelineProvider);
-
-			// Build scout data map by merging all provider data
-			final sessionStartTime = ref.read(scoutingSessionCreatedProvider)!;
-			final originalCreatedTime = ref.read(originalCreatedProvider);
-			final createdTime = originalCreatedTime ?? sessionStartTime;
-			final scoutDataMap = <String, dynamic>{
-				'event': selectedEvent,
-				'match': selectedMatch.match,
-				'team': selectedMatch.team,
-				'created': createdTime,
-				'modified': sessionStartTime,
-			};
-
-			// Add pre-match data
-			scoutDataMap.addAll(preMatch.toMap());
-
-			// Add unified scouting data (auto, tele, and end-game)
-			scoutDataMap.addAll(scoutingData.toMap());
-
-			// Add timeline once (shared between auto and tele)
-			scoutDataMap['timeline'] = TimelineEvent.formatTimeline(timeline);
-
-			// Build CSV
-			final csv = CsvBuilder.buildScoutCsv([scoutDataMap]);
-			final lines = csv.split('\n');
-			if (lines.length < 2) return;
-
-			final headers = lines[0];
-			final data = lines[1];
-
-			// Save to upload queue
-			await db.insertUploadHistory(
-				event: selectedEvent,
-				match: selectedMatch.match!,
-				team: selectedMatch.team!,
-				csvHeaders: headers,
-				csvData: data,
-				status: 'pending',
-			);
-
-			// Reset all scouting providers
-			ref.read(preMatchProvider.notifier).reset();
-			ref.read(scoutingDataProvider.notifier).reset();
-			ref.read(originalCreatedProvider.notifier).clear();
-			ref.read(scoutingSessionCreatedProvider.notifier).clear();
-		} catch (e) {
+		if (selectedEvent == null || selectedMatch.match == null || selectedMatch.team == null) {
+			return;
 		}
+
+		// Read all scouting data from providers
+		final preMatch = ref.read(preMatchProvider);
+		final scoutingData = ref.read(scoutingDataProvider);
+		final timeline = ref.read(timelineProvider);
+
+		// Build scout data map by merging all provider data
+		final sessionStartTime = ref.read(scoutingSessionCreatedProvider)!;
+		final originalCreatedTime = ref.read(originalCreatedProvider);
+		final createdTime = originalCreatedTime ?? sessionStartTime;
+		final scoutDataMap = <String, dynamic>{
+			'event': selectedEvent,
+			'match': selectedMatch.match,
+			'team': selectedMatch.team,
+			'created': createdTime,
+			'modified': sessionStartTime,
+		};
+
+		// Add pre-match data
+		scoutDataMap.addAll(preMatch.toMap());
+
+		// Add unified scouting data (auto, tele, and end-game)
+		scoutDataMap.addAll(scoutingData.toMap());
+
+		// Add timeline once (shared between auto and tele)
+		scoutDataMap['timeline'] = TimelineEvent.formatTimeline(timeline);
+
+		// Build CSV
+		final csv = CsvBuilder.buildScoutCsv([scoutDataMap]);
+		final lines = csv.split('\n');
+		if (lines.length < 2) return;
+
+		final headers = lines[0];
+		final data = lines[1];
+
+		// Save to upload queue
+		await db.insertUploadHistory(
+			event: selectedEvent,
+			match: selectedMatch.match!,
+			team: selectedMatch.team!,
+			csvHeaders: headers,
+			csvData: data,
+			status: 'pending',
+		);
+
+		// Reset all scouting providers
+		ref.read(preMatchProvider.notifier).reset();
+		ref.read(scoutingDataProvider.notifier).reset();
+		ref.read(originalCreatedProvider.notifier).clear();
+		ref.read(scoutingSessionCreatedProvider.notifier).clear();
 	}
 
 	Future<void> _goToNextMatch() async {
@@ -886,7 +880,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 				}
 			},
 			loading: () {},
-			error: (_, __) {},
+			error: (e, st) {},
 		);
 	}
 
@@ -926,13 +920,11 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 		final isBlueTeam = botPosition?.startsWith('B') ?? false;
 
 		// Debug: Print positioning state when End Game tab is shown
-		final shouldRotate = fieldSide == FieldSide.left;
-		final swapButtonSides = isBlueTeam;
 
 		final featuredButton = matches.when(
 			data: (m) => _getFeaturedButton(m),
 			loading: () => 'next',
-			error: (_, __) => 'next',
+			error: (e, st) => 'next',
 		);
 
 		return SingleChildScrollView(

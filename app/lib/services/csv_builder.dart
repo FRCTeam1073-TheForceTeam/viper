@@ -25,7 +25,7 @@ class CsvBuilder {
 	};
 
 	/// Build CSV string from scout data maps without quoting (matching server expectations)
-	/// Accepts Map<String, dynamic> with scouting data and metadata
+	/// Accepts `Map<String, dynamic>` with scouting data and metadata
 	static String buildScoutCsv(List<Map<String, dynamic>> scoutDataMaps) {
 		if (scoutDataMaps.isEmpty) {
 			return '';

@@ -9,10 +9,10 @@ class FieldsetLegend extends ConsumerWidget {
 	final String legendKey;
 
 	const FieldsetLegend({
-		Key? key,
+		super.key,
 		required this.child,
 		required this.legendKey,
-	}) : super(key: key);
+	});
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {

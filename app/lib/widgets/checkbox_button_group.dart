@@ -22,11 +22,11 @@ class CheckboxButtonGroup extends ConsumerWidget {
 	final ValueChanged<int> onChanged;
 
 	const CheckboxButtonGroup({
-		Key? key,
+		super.key,
 		required this.options,
 		required this.selectedValues,
 		required this.onChanged,
-	}) : super(key: key);
+	});
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {

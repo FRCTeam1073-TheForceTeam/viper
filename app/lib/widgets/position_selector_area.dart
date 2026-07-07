@@ -21,6 +21,7 @@ class PositionSelectorArea extends StatefulWidget {
 	final Function(String) onPositionChanged;
 
 	const PositionSelectorArea({
+		super.key,
 		required this.selectedPosition,
 		required this.isBlueTeam,
 		required this.fieldSide,
@@ -102,7 +103,7 @@ class _PositionSelectorAreaState extends State<PositionSelectorArea> {
 		int px = pxRaw.round().clamp(1, 99);
 		int py = pyRaw.round().clamp(1, 99);
 
-		return '${px}x${py}';
+		return '$px x$py';
 	}
 
 	@override

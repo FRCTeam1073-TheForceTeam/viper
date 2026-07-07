@@ -7,11 +7,11 @@ class InstantTabBarView extends StatefulWidget {
 	final ScrollPhysics? physics;
 
 	const InstantTabBarView({
-		Key? key,
+		super.key,
 		required this.controller,
 		required this.children,
 		this.physics,
-	}) : super(key: key);
+	});
 
 	@override
 	State<InstantTabBarView> createState() => _InstantTabBarViewState();

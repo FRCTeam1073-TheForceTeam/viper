@@ -15,12 +15,12 @@ class FuelQuickAddButtons extends StatefulWidget {
 	final String locale;
 
 	const FuelQuickAddButtons({
-		Key? key,
+		super.key,
 		required this.onFuelAdded,
 		this.fuelHubScore = 0,
 		this.fuelNeutralPass = 0,
 		this.locale = 'en',
-	}) : super(key: key);
+	});
 
 	@override
 	State<FuelQuickAddButtons> createState() => _FuelQuickAddButtonsState();
@@ -93,7 +93,7 @@ class _FuelQuickAddButtonsState extends State<FuelQuickAddButtons> {
 											borderRadius: BorderRadius.circular(8),
 											boxShadow: [
 												BoxShadow(
-													color: Colors.black.withOpacity(0.3),
+													color: Colors.black.withValues(alpha: 0.3),
 													blurRadius: 4,
 													offset: const Offset(0, 2),
 												),
@@ -201,7 +201,7 @@ class _FuelQuickAddButtonsState extends State<FuelQuickAddButtons> {
 					shape: BoxShape.circle,
 					boxShadow: [
 						BoxShadow(
-							color: Colors.black.withOpacity(0.4),
+							color: Colors.black.withValues(alpha: 0.4),
 							blurRadius: 4,
 							offset: const Offset(0, 2),
 						),
@@ -216,7 +216,7 @@ class _FuelQuickAddButtonsState extends State<FuelQuickAddButtons> {
 							height: 65,
 							decoration: BoxDecoration(
 								shape: BoxShape.circle,
-								color: Colors.white.withOpacity(0.15),
+								color: Colors.white.withValues(alpha: 0.15),
 							),
 						),
 

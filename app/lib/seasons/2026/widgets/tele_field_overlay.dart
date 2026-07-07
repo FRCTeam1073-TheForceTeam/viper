@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 import '../../../providers/field_side_provider.dart';
-import '../../../providers/floating_popup_provider.dart';
 import '../../../providers/zone_buttons_provider.dart';
 import '../../../providers/button_position_provider.dart';
 import '../../../../constants/colors.dart';
@@ -277,7 +276,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 	final Function(String targetName)? onFuelTargetTapped;
 
 	const TeleFieldOverlay({
-		Key? key,
+		super.key,
 		required this.onMovementTapped,
 		this.fieldSide = FieldSide.left,
 		this.activeZone = 'alliance',
@@ -287,7 +286,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 		this.botPosition,
 		this.activeFuelTarget = 'hub',
 		this.onFuelTargetTapped,
-	}) : super(key: key);
+	});
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
@@ -574,9 +573,9 @@ class TeleFieldOverlay extends ConsumerWidget {
 		final bottomPercent = target.bottomPercent;
 
 		final leftPx = leftPercent != null ? leftPercent * fieldWidth / 100 : null;
-		final rightPx = rightPercent != null ? rightPercent * fieldWidth / 100 : null;
+		final rightPx = rightPercent * fieldWidth / 100;
 		final swappedRightPx = leftPercent != null ? leftPercent * fieldWidth / 100 : null;
-		final swappedLeftPx = rightPercent != null ? rightPercent * fieldWidth / 100 : null;
+		final swappedLeftPx = rightPercent * fieldWidth / 100;
 		final topPx = topPercent != null ? topPercent * fieldHeight / 100 : null;
 		final bottomPx = bottomPercent != null ? bottomPercent * fieldHeight / 100 : null;
 		final swappedBottomPx = topPercent != null ? topPercent * fieldHeight / 100 : null;
@@ -596,7 +595,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 					angle: shouldRotate ? pi : 0,
 					child: Tooltip(
 						message: target.label,
-						child: Container(
+						child: SizedBox(
 							width: size,
 							height: size,
 							child: Image.asset(
@@ -765,7 +764,7 @@ class TeleFieldOverlay extends ConsumerWidget {
 			final bottomPercent = target.bottomPercent;
 
 			final leftPx = leftPercent != null ? leftPercent * fieldWidth / 100 : null;
-			final rightPx = rightPercent != null ? rightPercent * fieldWidth / 100 : null;
+			final rightPx = rightPercent * fieldWidth / 100;
 			final topPx = topPercent != null ? topPercent * fieldHeight / 100 : null;
 			final bottomPx = bottomPercent != null ? bottomPercent * fieldHeight / 100 : null;
 
@@ -774,12 +773,12 @@ class TeleFieldOverlay extends ConsumerWidget {
 
 			if (swapButtonSides) {
 				if (leftPx != null) centerX = fieldWidth - leftPx - size / 2;
-				if (rightPx != null) centerX = rightPx + size / 2;
+				centerX = rightPx + size / 2;
 				if (bottomPx != null) centerY = topPx != null ? topPx + size / 2 : fieldHeight / 2;
 				if (topPx != null) centerY = bottomPx != null ? fieldHeight - bottomPx - size / 2 : fieldHeight / 2;
 			} else {
 				if (leftPx != null) centerX = leftPx + size / 2;
-				if (rightPx != null) centerX = fieldWidth - rightPx - size / 2;
+				centerX = fieldWidth - rightPx - size / 2;
 				if (topPx != null) centerY = topPx + size / 2;
 				if (bottomPx != null) centerY = fieldHeight - bottomPx - size / 2;
 			}

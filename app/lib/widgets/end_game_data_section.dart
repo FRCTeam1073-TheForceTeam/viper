@@ -19,13 +19,13 @@ class EndGameDataSection extends ConsumerStatefulWidget {
 	final String? featuredButton; // 'next', 'upload', 'qr', or null for equal buttons
 
 	const EndGameDataSection({
-		Key? key,
+		super.key,
 		required this.scoutingDataProvider,
 		this.onNextMatch,
 		this.onUpload,
 		this.onQRCode,
 		this.featuredButton,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<EndGameDataSection> createState() => _EndGameDataSectionState();

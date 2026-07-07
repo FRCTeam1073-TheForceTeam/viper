@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'server_config_screen.dart';
 import '../widgets/viper_menu_button.dart';
 import '../widgets/instant_tab_bar_view.dart';
 import '../providers/app_providers.dart';
 import '../providers/locale_provider.dart';
 import '../providers/match_timer_provider.dart';
-import '../providers/pre_match_provider.dart';
 import '../providers/timeline_provider.dart';
 import '../seasons/season_registry.dart';
 import '../seasons/season_module.dart';
@@ -21,19 +19,17 @@ class ScoutingAppScreen extends ConsumerStatefulWidget {
 	final String? prefilledTeam;
 
 	const ScoutingAppScreen({
-		Key? key,
+		super.key,
 		required this.selectedEvent,
 		this.prefilledMatch,
 		this.prefilledTeam,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<ScoutingAppScreen> createState() => _ScoutingAppScreenState();
 }
 
 class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with TickerProviderStateMixin {
-	String? _matchNumber;
-	String? _teamNumber;
 	late TabController _tabController;
 	DateTime? _matchStartTime;
 	SeasonModule? _seasonModule;
@@ -117,10 +113,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 				'tr': 'Bu sezon için izcilik mobil uygulamada mevcut değildir',
 			},
 		});
-
-		// Use prefilled values if provided
-		_matchNumber = widget.prefilledMatch;
-		_teamNumber = widget.prefilledTeam;
 	}
 
 	@override
@@ -194,11 +186,8 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 		ref.watch(selectedLocaleProvider);
 		final syncState = ref.watch(syncStateProvider);
 		final selectedBot = ref.watch(selectedBotPositionProvider);
-		final selectedTabIndex = ref.watch(selectedTabIndexProvider);
 
 		// Load existing scout data when match changes
-		final selectedMatch = ref.watch(selectedMatchProvider);
-		final selectedEvent = ref.watch(selectedEventProvider);
 		// Use ref.listen() instead of watch() to avoid continuous rebuilds
 		ref.listen(existingScoutDataProvider, (previous, next) {
 			next.when(
@@ -250,9 +239,6 @@ class _ScoutingAppScreenState extends ConsumerState<ScoutingAppScreen> with Tick
 				},
 			);
 		});
-
-		final existingData = ref.watch(existingScoutDataProvider);
-		final currentMatchKey = '${selectedEvent}_${selectedMatch.match}_${selectedMatch.team}';
 
 		// Watch matchTimerProvider to get shared match start time
 		final matchStartTime = ref.watch(matchTimerProvider);

@@ -22,14 +22,14 @@ class AutoTab extends ConsumerStatefulWidget {
 	final VoidCallback onProceedToTele;
 
 	const AutoTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		this.matchStartTime,
 		required this.onStartMatch,
 		required this.onProceedToTele,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<AutoTab> createState() => _AutoTabState();

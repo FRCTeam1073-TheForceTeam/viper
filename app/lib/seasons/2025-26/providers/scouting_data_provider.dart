@@ -141,6 +141,7 @@ class ScoutingDataNotifier extends StateNotifier<ScoutingData> {
 final scoutingDataProvider =
 	StateNotifierProvider<ScoutingDataNotifier, ScoutingData>((ref) {
 	final notifier = ScoutingDataNotifier(ref);
+	// ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 	setGlobalScoutingData(notifier.state);
 	return notifier;
 });

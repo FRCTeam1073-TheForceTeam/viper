@@ -6,16 +6,13 @@ import '../../providers/scouting_data_provider.dart';
 import '../../../../providers/field_side_provider.dart';
 import '../../../../providers/locale_provider.dart';
 import '../../../../providers/timeline_provider.dart';
-import '../../../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
-import '../../../../providers/zone_buttons_provider.dart';
 import '../../../../providers/button_position_provider.dart';
 import '../../../../services/localization.dart';
 import '../../widgets/auto_field_overlay.dart';
 import '../../widgets/values_table.dart';
 import '../../../../widgets/timeline_table.dart';
 import '../../../../widgets/popup_floater.dart';
-import '../../../../models/field_descriptor.dart';
 import '../../../../models/field_button.dart';
 import '../../../../providers/floating_popup_provider.dart';
 
@@ -569,7 +566,7 @@ void _initAutoTabTranslations() {
 			'he': 'לחפור מוצב נייטרלי לברית באוטומט',
 			'tr': 'Otomatik Olarak Nötr Hendeği Karakolu İttifak Yap',
 		},
-		'auto_fuel_score': {
+		'action_auto_fuel_score': {
 			'en': 'Fuel Scored in Hub',
 			'es': 'Combustible Anotado en Centro',
 			'pt': 'Combustível Marcado no Hub',
@@ -606,121 +603,6 @@ void _initAutoTabTranslations() {
 			'he': 'אוסף מוצב באוטומט',
 			'tr': 'Otomatik Olarak Karakol Toplandı',
 		},
-
-		// Field name translations for values table
-		'auto_fuel_score': {
-			'en': 'Fuel scored in hub',
-			'he': 'דלק נקודות בחישוקן',
-			'tr': 'Yakıt merkez sepete puanlandı',
-			'zh_tw': '燃料在樞紐中得分',
-			'fr': 'Carburant marqué dans le hub',
-			'pt': 'Combustível marcado no hub',
-			'es': 'Combustible anotado en el hub',
-		},
-		'auto_fuel_neutral_alliance_pass': {
-			'en': 'Fuel passed or pushed to the alliance zone from the neutral zone',
-			'he': 'דלק עבר או נדחף לאזור הברית מהאזור הנייטרלי',
-			'tr': 'Yakıt nötr bölgeden ittifak bölgesine geçirildi veya itildi',
-			'zh_tw': '燃料從中立區傳遞或推送到聯盟區',
-			'fr':
-					'Carburant passé ou poussé vers la zone d\'alliance à partir de la zone neutre',
-			'pt':
-					'Combustível passado ou empurrado para a zona de aliança da zona neutra',
-			'es':
-					'Combustible pasado o empujado a la zona de alianza desde la zona neutral',
-		},
-		'auto_alliance_time': {
-			'en': 'Time spent in alliance zone during autonomous (seconds)',
-			'he': 'זמן שהייה באזור הברית במהלך אוטונומי (שניות)',
-			'tr': 'Otonom sırasında ittifak bölgesinde geçirilen süre (saniye)',
-			'zh_tw': '自主期間在聯盟區域度過的時間(秒)',
-			'fr':
-					'Temps passé dans la zone d\'alliance pendant l\'autonome (secondes)',
-			'pt': 'Tempo gasto na zona de aliança durante a autônoma (segundos)',
-			'es':
-					'Tiempo invertido en la zona de alianza durante autónomo (segundos)',
-		},
-		'auto_neutral_time': {
-			'en': 'Time spent in neutral zone during autonomous (seconds)',
-			'he': 'זמן שהייה באזור הנייטרלי במהלך אוטונומי (שניות)',
-			'tr': 'Otonom sırasında nötr bölgede geçirilen süre (saniye)',
-			'zh_tw': '自主期間在中立區域度過的時間(秒)',
-			'fr': 'Temps passé dans la zone neutre pendant l\'autonome (secondes)',
-			'pt': 'Temps passé dans la zone neutre pendant l\'autonome (secondes)',
-			'es': 'Tiempo invertido en la zona neutral durante autónomo (segundos)',
-		},
-		'auto_trench_depot_alliance_to_neutral': {
-			'en': 'Trench (depot side) alliance to neutral',
-			'he': 'תעלה (צד הרחוק) ברית לנייטרלי',
-			'tr': 'Hendek (depo tarafı) ittifaktan nötre',
-			'zh_tw': '戰壕(仓库方)聯盟到中立',
-			'fr': 'Tranchée (côté dépôt) alliance à neutre',
-			'pt': 'Trincheira (lado do depósito) aliança a neutro',
-			'es': 'Trinchera (lado del depósito) alianza a neutral',
-		},
-		'auto_bump_depot_alliance_to_neutral': {
-			'en': 'Bump (depot side) alliance to neutral',
-			'he': 'בליטה (צד הרחוק) ברית לנייטרלי',
-			'tr': 'Çarpma (depo tarafı) ittifaktan nötre',
-			'zh_tw': '碰撞(仓库方)聯盟到中立',
-			'fr': 'Bosse (côté dépôt) alliance à neutre',
-			'pt': 'Saliência (lado do depósito) aliança a neutro',
-			'es': 'Protuberancia (lado del depósito) alianza a neutral',
-		},
-		'auto_bump_outpost_alliance_to_neutral': {
-			'en': 'Bump (outpost side) alliance to neutral',
-			'he': 'בליטה (צד ה-outpost) ברית לנייטרלי',
-			'tr': 'Çarpma (ileri görev tarafı) ittifaktan nötre',
-			'zh_tw': '碰撞(前哨站側)聯盟到中立',
-			'fr': 'Bosse (côté avant-poste) alliance à neutre',
-			'pt': 'Saliência (lado do avançado) aliança a neutro',
-			'es': 'Protuberancia (lado del avanzada) alianza a neutral',
-		},
-		'auto_trench_outpost_alliance_to_neutral': {
-			'en': 'Trench (outpost side) alliance to neutral',
-			'he': 'תעלה (צד ה-outpost) ברית לנייטרלי',
-			'tr': 'Hendek (ileri görev tarafı) ittifaktan nötre',
-			'zh_tw': '戰壕(前哨站側)聯盟到中立',
-			'fr': 'Tranchée (côté avant-poste) alliance à neutre',
-			'pt': 'Trincheira (lado do avançado) aliança a neutro',
-			'es': 'Trinchera (lado del avanzada) alianza a neutral',
-		},
-		'auto_trench_depot_neutral_to_alliance': {
-			'en': 'Trench (depot side) neutral to alliance',
-			'he': 'תעלה (צד הרחוק) נייטרלי לברית',
-			'tr': 'Hendek (depo tarafı) nötrden ittifaka',
-			'zh_tw': '戰壕(仓库方)中立到聯盟',
-			'fr': 'Tranchée (côté dépôt) neutre à alliance',
-			'pt': 'Trincheira (lado do depósito) neutro a aliança',
-			'es': 'Trinchera (lado del depósito) neutral a alianza',
-		},
-		'auto_bump_depot_neutral_to_alliance': {
-			'en': 'Bump (depot side) neutral to alliance',
-			'he': 'בליטה (צד הרחוק) נייטרלי לברית',
-			'tr': 'Çarpma (depo tarafı) nötrden ittifaka',
-			'zh_tw': '碰撞(仓库方)中立到聯盟',
-			'fr': 'Bosse (côté dépôt) neutre à alliance',
-			'pt': 'Saliência (lado do depósito) neutro a aliança',
-			'es': 'Protuberancia (lado del depósito) neutral a alianza',
-		},
-		'auto_bump_outpost_neutral_to_alliance': {
-			'en': 'Bump (outpost side) neutral to alliance',
-			'he': 'בליטה (צד ה-outpost) נייטרלי לברית',
-			'tr': 'Çarpma (ileri görev tarafı) nötrden ittifaka',
-			'zh_tw': '碰撞(前哨站側)中立到聯盟',
-			'fr': 'Bosse (côté avant-poste) neutre à alliance',
-			'pt': 'Saliência (lado do avançado) neutro a aliança',
-			'es': 'Protuberancia (lado del avanzada) neutral a alianza',
-		},
-		'auto_trench_outpost_neutral_to_alliance': {
-			'en': 'Trench (outpost side) neutral to alliance',
-			'he': 'תעלה (צד ה-outpost) נייטרלי לברית',
-			'tr': 'Hendek (ileri görev tarafı) nötrden ittifaka',
-			'zh_tw': '戰壕(前哨站側)中立到聯盟',
-			'fr': 'Tranchée (côté avant-poste) neutre à alliance',
-			'pt': 'Trincheira (lado do avançado) neutro a aliança',
-			'es': 'Trinchera (lado del avanzada) neutral a alianza',
-		},
 	});
 }
 
@@ -733,14 +615,14 @@ class AutoTab extends ConsumerStatefulWidget {
 	final VoidCallback onProceedToTele;
 
 	const AutoTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		this.matchStartTime,
 		this.onStartMatch,
 		required this.onProceedToTele,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<AutoTab> createState() => _AutoTabState();
@@ -749,7 +631,6 @@ class AutoTab extends ConsumerStatefulWidget {
 class _AutoTabState extends ConsumerState<AutoTab> {
 	bool _valuesExpanded = false;
 	bool _timelineExpanded = false;
-	bool _listenerRegistered = false;
 	late FocusNode _focusNode;
 	final GlobalKey _undoButtonKey = GlobalKey();
 	final GlobalKey _fieldOverlayKey = GlobalKey();
@@ -778,13 +659,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		final screenWidth = MediaQuery.of(context).size.width;
 		if (screenWidth < 400) return baseSize * 0.85; // Mobile
 		return baseSize;
-	}
-
-	/// Get responsive padding based on screen width
-	EdgeInsets _getResponsivePadding() {
-		final screenWidth = MediaQuery.of(context).size.width;
-		if (screenWidth < 400) return const EdgeInsets.all(8);
-		return const EdgeInsets.all(12);
 	}
 
 	/// Start the match timer if not already started
@@ -843,66 +717,12 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 
 	void _onFocusChanged() {}
 
-	/// Calculate the position of the active fuel target in the field overlay
-	Offset _getActiveFuelTargetPosition(String activeFuelTarget) {
-		try {
-			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-
-			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
-			final overlaySize = overlayBox.size;
-
-			// Fuel targets are positioned on the right side of the field overlay
-			// Hub: bottom-right, Neutral Alliance Pass: middle-right
-			double targetX = overlayOffset.dx + overlaySize.width - 40; // Right side with offset
-			double targetY;
-
-			switch (activeFuelTarget) {
-				case 'hub':
-					targetY = overlayOffset.dy + overlaySize.height * 0.65; // Hub at bottom-right
-					break;
-				case 'neutralAlliancePass':
-					targetY = overlayOffset.dy + overlaySize.height * 0.35; // Neutral alliance pass at top
-					break;
-				default:
-					targetY = overlayOffset.dy + overlaySize.height / 2;
-			}
-
-			return Offset(targetX, targetY);
-		} catch (e) {
-			// Fallback to center if calculation fails
-			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-		}
-	}
-
-	/// Calculate the position for zone button popups (near center of field overlay)
-	Offset _getZoneButtonPopupPosition() {
-		try {
-			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-
-			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
-			final overlaySize = overlayBox.size;
-
-			// Position at the center-top of the field overlay for zone buttons
-			return Offset(
-				overlayOffset.dx + overlaySize.width / 2,
-				overlayOffset.dy + overlaySize.height * 0.2,
-			);
-		} catch (e) {
-			// Fallback to center if calculation fails
-			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-		}
-	}
-
 	/// Calculate the position for an undo floater by looking up the button's stored position
 	Offset? _getUndoPopupPosition(String field) {
 		try {
 			// Look up button position from the provider (stored relative to field overlay)
 			var position = ref.read(buttonPositionProvider)[field];
 			if (position == null) {
-				final scoutingData = ref.read(scoutingDataProvider);
-				final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
 				return null;
 			}
 
@@ -950,9 +770,6 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 		}
 
 		// Debug: Print positioning state when Auto tab is shown
-		final isBlueTeam = botPosition?.startsWith('B') ?? false;
-		final shouldRotate = fieldSide == FieldSide.left;
-		final swapButtonSides = isBlueTeam;
 		final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
 		// In landscape, constrain field width based on screen height to maintain aspect ratio and leave room for controls
@@ -978,17 +795,13 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						.read(scoutingDataProvider.notifier)
 						.recordAutoAction(field: field, value: 1);
 				// Show floating popup at the button that was tapped
-				try {
-					final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
-					if (stackBox != null) {
-						// Convert button's global position to stack-relative coordinates
-						final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
-						final buttonStackRelative = globalPosition - stackGlobalOffset;
+				final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+				if (stackBox != null) {
+					// Convert button's global position to stack-relative coordinates
+					final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+					final buttonStackRelative = globalPosition - stackGlobalOffset;
 
-						ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
-					} else {
-					}
-				} catch (e) {
+					ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
 				}
 			},
 			onClimbToggled: () {
@@ -1001,16 +814,12 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 								value: climbLevel + 1,
 							);
 					// Show floating popup at left side of field, offset from top
-					try {
-						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-						if (overlayBox != null) {
-							final offset = overlayBox.localToGlobal(Offset.zero);
-							final popupX = offset.dx + 40;
-							final popupY = offset.dy + 40;
-							ref.read(floatingPopupProvider.notifier).addPopup('+1', popupX, popupY);
-						} else {
-						}
-					} catch (e) {
+					final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+					if (overlayBox != null) {
+						final offset = overlayBox.localToGlobal(Offset.zero);
+						final popupX = offset.dx + 40;
+						final popupY = offset.dy + 40;
+						ref.read(floatingPopupProvider.notifier).addPopup('+1', popupX, popupY);
 					}
 				}
 			},
@@ -1249,7 +1058,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							ref.read(floatingPopupProvider.notifier).removePopup(popup.id);
 						},
 					);
-				}).toList(),
+				}),
 			],
 		);
 	}
@@ -1282,34 +1091,30 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 							.recordAutoAction(field: fuelField, value: amount);
 
 					// Show floating popup at the active fuel target position in the field overlay
-					try {
-						final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-						final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
-						if (overlayBox != null && stackBox != null) {
-							// Get overlay position and size
-							final overlayGlobalOffset = overlayBox.localToGlobal(Offset.zero);
-							final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
-							final overlayStackRelative = overlayGlobalOffset - stackGlobalOffset;
+					final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
+					final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+					if (overlayBox != null && stackBox != null) {
+						// Get overlay position and size
+						final overlayGlobalOffset = overlayBox.localToGlobal(Offset.zero);
+						final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+						final overlayStackRelative = overlayGlobalOffset - stackGlobalOffset;
 
-							// Calculate fuel target position based on active target
-							// Hub: rightPercent=26.0, topPercent=42.0
-							// AlliancePass: rightPercent=13.0, bottomPercent=7.0
-							double targetX, targetY;
-							if (activeFuelTarget == 'hub') {
-								targetX = overlayStackRelative.dx + (overlayBox.size.width * (1 - 0.26));
-								targetY = overlayStackRelative.dy + (overlayBox.size.height * 0.42);
-							} else {
-								// alliancePass
-								targetX = overlayStackRelative.dx + (overlayBox.size.width * (1 - 0.13));
-								targetY = overlayStackRelative.dy + (overlayBox.size.height * (1 - 0.07));
-							}
-
-							ref.read(floatingPopupProvider.notifier).addPopup('+$amount', targetX, targetY);
+						// Calculate fuel target position based on active target
+						// Hub: rightPercent=26.0, topPercent=42.0
+						// AlliancePass: rightPercent=13.0, bottomPercent=7.0
+						double targetX, targetY;
+						if (activeFuelTarget == 'hub') {
+							targetX = overlayStackRelative.dx + (overlayBox.size.width * (1 - 0.26));
+							targetY = overlayStackRelative.dy + (overlayBox.size.height * 0.42);
 						} else {
+							// alliancePass
+							targetX = overlayStackRelative.dx + (overlayBox.size.width * (1 - 0.13));
+							targetY = overlayStackRelative.dy + (overlayBox.size.height * (1 - 0.07));
 						}
-					} catch (e) {
+
+						ref.read(floatingPopupProvider.notifier).addPopup('+$amount', targetX, targetY);
 					}
-				},
+			},
 				style: ElevatedButton.styleFrom(
 					backgroundColor: const Color(0xFFF1CE03),
 					foregroundColor: Colors.black87,
@@ -1361,7 +1166,7 @@ class _AutoTabState extends ConsumerState<AutoTab> {
 						);
 					},
 					loading: () => const SizedBox.shrink(),
-					error: (_, __) => const SizedBox.shrink(),
+					error: (e, st) => const SizedBox.shrink(),
 				);
 	}
 }

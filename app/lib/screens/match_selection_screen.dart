@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/colors.dart';
@@ -14,10 +13,10 @@ class MatchSelectionScreen extends ConsumerStatefulWidget {
 	final String? botPosition;
 
 	const MatchSelectionScreen({
-		Key? key,
+		super.key,
 		required this.onMatchSelected,
 		this.botPosition,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<MatchSelectionScreen> createState() => _MatchSelectionScreenState();
@@ -33,7 +32,6 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 
 	// Photo preloading state
 	bool _isPreloadingPhotos = false;
-	int _preloadedCount = 0;
 
 	/// Helper to get translated text with current provider locale
 	String _translate(String key) {
@@ -303,7 +301,6 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 		if (_isPreloadingPhotos) return; // Already preloading
 
 		_isPreloadingPhotos = true;
-		_preloadedCount = 0;
 
 		// Try to get API client from ref (may still be loading)
 		final apiClientAsync = ref.read(apiClientProvider);
@@ -343,7 +340,6 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 			// Preload the photo (will cache it)
 			apiClient.preloadRobotPhoto(match.matchNumber, team).then((_) {
 				if (mounted) {
-					_preloadedCount++;
 					// Continue with next photo after a small delay to avoid overwhelming the system
 					Future.delayed(const Duration(milliseconds: 100), () {
 						if (mounted) {
@@ -442,7 +438,7 @@ class _MatchSelectionScreenState extends ConsumerState<MatchSelectionScreen> {
 							mainAxisSize: MainAxisSize.min,
 							children: [
 								DropdownButtonFormField<String>(
-									value: selectedMatchType,
+									initialValue: selectedMatchType,
 									decoration: InputDecoration(
 										labelText: _translate('match_type'),
 										border: OutlineInputBorder(

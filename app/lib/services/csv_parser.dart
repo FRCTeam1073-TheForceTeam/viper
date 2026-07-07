@@ -1,5 +1,3 @@
-/// CSV parsing utilities ported from JavaScript
-
 /// Matches the JavaScript csvToArrayOfMaps behavior
 List<Map<String, dynamic>> csvToArrayOfMaps(String csv) {
 	final List<Map<String, dynamic>> arr = [];

@@ -8,7 +8,6 @@ import '../../../../providers/locale_provider.dart';
 import '../../../../providers/timeline_provider.dart';
 import '../../../../providers/match_timer_provider.dart';
 import '../../providers/undo_coordinator.dart';
-import '../../../../providers/zone_buttons_provider.dart';
 import '../../../../providers/button_position_provider.dart';
 import '../../../../services/localization.dart';
 import '../../widgets/tele_field_overlay.dart';
@@ -651,12 +650,12 @@ class TeleopTab extends ConsumerStatefulWidget {
 	final VoidCallback onProceedToEndGame;
 
 	const TeleopTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		required this.onProceedToEndGame,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<TeleopTab> createState() => _TeleopTabState();
@@ -665,7 +664,6 @@ class TeleopTab extends ConsumerStatefulWidget {
 class _TeleopTabState extends ConsumerState<TeleopTab> {
 	bool _valuesExpanded = false;
 	bool _timelineExpanded = false;
-	bool _listenerRegistered = false;
 	late FocusNode _focusNode;
 	final GlobalKey _undoButtonKey = GlobalKey();
 	final GlobalKey _fieldOverlayKey = GlobalKey();
@@ -740,83 +738,12 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 
 	void _onFocusChanged() {}
 
-	/// Calculate the position of the active fuel target in the field overlay
-	Offset _getActiveFuelTargetPosition(String activeFuelTarget) {
-		try {
-			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-
-			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
-			final overlaySize = overlayBox.size;
-
-			double targetX, targetY;
-
-			switch (activeFuelTarget) {
-				case 'hub':
-					targetX = overlayOffset.dx + overlaySize.width * 0.26;
-					targetY = overlayOffset.dy + overlaySize.height * 0.42;
-					break;
-				case 'allianceDump':
-					targetX = overlayOffset.dx + overlaySize.width * 0.13;
-					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
-					break;
-				case 'outpost':
-					// rightPercent: 0.0 means at right edge, so adjust for widget width
-					targetX = overlayOffset.dx + overlaySize.width - (overlaySize.width * 0.05);
-					targetY = overlayOffset.dy + overlaySize.height * 0.06;
-					break;
-				case 'neutralAlliancePass':
-					targetX = overlayOffset.dx + overlaySize.width * 0.13;
-					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
-					break;
-				case 'opponentAlliancePass':
-					targetX = overlayOffset.dx + overlaySize.width * 0.13;
-					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
-					break;
-				case 'opponentNeutralPass':
-					targetX = overlayOffset.dx + overlaySize.width * 0.465;
-					targetY = overlayOffset.dy + overlaySize.height * (1 - 0.07);
-					break;
-				default:
-					targetX = overlayOffset.dx + overlaySize.width / 2;
-					targetY = overlayOffset.dy + overlaySize.height / 2;
-			}
-
-			return Offset(targetX, targetY);
-		} catch (e) {
-			// Fallback to center if calculation fails
-			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-		}
-	}
-
-	/// Calculate the position for zone button popups (near center of field overlay)
-	Offset _getZoneButtonPopupPosition() {
-		try {
-			final overlayBox = _fieldOverlayKey.currentContext?.findRenderObject() as RenderBox?;
-			if (overlayBox == null) return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-
-			final overlayOffset = overlayBox.localToGlobal(Offset.zero);
-			final overlaySize = overlayBox.size;
-
-			// Position at the center-top of the field overlay for zone buttons
-			return Offset(
-				overlayOffset.dx + overlaySize.width / 2,
-				overlayOffset.dy + overlaySize.height * 0.2,
-			);
-		} catch (e) {
-			// Fallback to center if calculation fails
-			return Offset(MediaQuery.of(context).size.width / 2, MediaQuery.of(context).size.height / 2);
-		}
-	}
-
 	/// Calculate the position for an undo floater by looking up the button's actual position
 	Offset? _getUndoPopupPosition(String field) {
 		try {
 			// Look up button position from the provider (stored relative to field overlay)
 			var position = ref.read(buttonPositionProvider)[field];
 			if (position == null) {
-				final scoutingData = ref.read(scoutingDataProvider);
-				final registeredNames = scoutingData.descriptors.map((d) => d.name).toList();
 				return null;
 			}
 
@@ -868,9 +795,6 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 		final botPosition = ref.watch(selectedBotPositionProvider);
 
 		// Debug: Print positioning state when Tele tab is shown
-		final isBlueTeam = botPosition?.startsWith('B') ?? false;
-		final shouldRotate = fieldSide == FieldSide.left;
-		final swapButtonSides = isBlueTeam;
 		final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
 
 		// In landscape, constrain field width based on screen height to maintain aspect ratio and leave room for controls
@@ -896,17 +820,13 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 						.read(scoutingDataProvider.notifier)
 						.recordTeleAction(field: field, value: 1);
 				// Show floating popup at the button that was tapped
-				try {
-					final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
-					if (stackBox != null) {
-						// Convert button's global position to stack-relative coordinates
-						final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
-						final buttonStackRelative = globalPosition - stackGlobalOffset;
+				final stackBox = _stackKey.currentContext?.findRenderObject() as RenderBox?;
+				if (stackBox != null) {
+					// Convert button's global position to stack-relative coordinates
+					final stackGlobalOffset = stackBox.localToGlobal(Offset.zero);
+					final buttonStackRelative = globalPosition - stackGlobalOffset;
 
-						ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
-					} else {
-					}
-				} catch (e) {
+					ref.read(floatingPopupProvider.notifier).addPopup('+1', buttonStackRelative.dx, buttonStackRelative.dy);
 				}
 			},
 			onClimbTapped: () {
@@ -1186,7 +1106,7 @@ class _TeleopTabState extends ConsumerState<TeleopTab> {
 							ref.read(floatingPopupProvider.notifier).removePopup(popup.id);
 						},
 					);
-				}).toList(),
+				}),
 			],
 		);
 	}

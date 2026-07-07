@@ -12,9 +12,9 @@ class ServerConfigScreen extends ConsumerStatefulWidget {
 	final Function(String) onServerConfigured;
 
 	const ServerConfigScreen({
+		super.key,
 		required this.onServerConfigured,
-		Key? key,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<ServerConfigScreen> createState() =>

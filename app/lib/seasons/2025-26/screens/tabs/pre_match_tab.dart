@@ -17,14 +17,14 @@ class PreMatchTab extends ConsumerStatefulWidget {
 	final VoidCallback? onProceedToAuto;
 
 	const PreMatchTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		required this.eventName,
 		this.botPosition,
 		this.onProceedToAuto,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<PreMatchTab> createState() => _PreMatchTabState();

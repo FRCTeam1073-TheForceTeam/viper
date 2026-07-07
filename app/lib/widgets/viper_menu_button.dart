@@ -9,10 +9,10 @@ class ViperMenuButton extends ConsumerWidget {
 	final int pendingCount;
 
 	const ViperMenuButton({
-		Key? key,
+		super.key,
 		this.isSyncing = false,
 		this.pendingCount = 0,
-	}) : super(key: key);
+	});
 
 	void _registerTranslations() {
 		AppLocalizations.addI18n({
@@ -120,7 +120,7 @@ class _MenuContent extends ConsumerWidget {
 		String t(String key) => AppLocalizations.translate(key, locale: locale);
 
 		// Get the navigation provider
-		final navigateTo = (NavigationTarget target) =>
+		void navigateTo(NavigationTarget target) =>
 			ref.read(navigationCommandProvider.notifier).navigateTo(target);
 
 		return Padding(
@@ -196,8 +196,8 @@ class _MenuContent extends ConsumerWidget {
 class _LanguageSelector extends ConsumerStatefulWidget {
 	final VoidCallback onLanguageChanged;
 
-	const _LanguageSelector({Key? key, required this.onLanguageChanged})
-		: super(key: key);
+	// ignore_for_file: unused_element_parameter
+	const _LanguageSelector({super.key, required this.onLanguageChanged});
 
 	@override
 	ConsumerState<_LanguageSelector> createState() => _LanguageSelectorState();

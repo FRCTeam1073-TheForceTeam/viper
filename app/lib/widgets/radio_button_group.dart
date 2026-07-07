@@ -27,12 +27,12 @@ class RadioButtonGroup extends ConsumerWidget {
 	final EdgeInsets padding;
 
 	const RadioButtonGroup({
-		Key? key,
+		super.key,
 		required this.options,
 		required this.selectedValue,
 		required this.onChanged,
 		this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-	}) : super(key: key);
+	});
 
 	/// Create a radio button group for a model field with automatic state binding
 	static Widget forField({

@@ -8,7 +8,6 @@ import '../../../../providers/timeline_provider.dart';
 import '../../../../providers/locale_provider.dart';
 import '../../../../services/localization.dart';
 import '../../../../services/csv_builder.dart';
-import '../../../../constants/colors.dart';
 import '../../../../widgets/checkbox_button.dart';
 import '../../../../widgets/radio_button_group.dart';
 import '../../../../widgets/end_game_data_section.dart';
@@ -21,12 +20,12 @@ class EndGameTab extends ConsumerStatefulWidget {
 	final VoidCallback? onNextMatch;
 
 	const EndGameTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		this.onNextMatch,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<EndGameTab> createState() => _EndGameTabState();

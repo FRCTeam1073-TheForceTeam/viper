@@ -1,6 +1,3 @@
-/// Match name conversion utilities
-/// Ported from www/event-url.js to match the web scouting app behavior
-
 /// Extracts the numeric portion of a match ID
 /// Example: "qm5" → "5", "sf2" → "2"
 String getMatchNumber(String matchId) {

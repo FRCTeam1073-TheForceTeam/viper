@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:drift/drift.dart' show Value;
 import 'screens/server_config_screen.dart';
 import 'screens/event_picker_screen.dart';
 import 'screens/bot_selection_screen.dart';
@@ -10,26 +9,12 @@ import 'screens/scouting_app_screen.dart';
 import 'screens/upload_data_screen.dart';
 import 'providers/app_providers.dart';
 import 'providers/locale_provider.dart';
-import 'data/api/viper_api_client.dart';
 import 'constants/colors.dart';
-import 'services/localization.dart';
-
-late SharedPreferences _sharedPrefs;
-
-/// Helper to validate server URLs
-bool _isValidServerUrl(String? url) {
-	if (url == null || url.isEmpty) return false;
-	// Reject bare protocols or just slashes
-	if (url == 'https://' || url == 'http://' || url == '/') return false;
-	// URL should have something after the protocol or hostname
-	final trimmed = url.trim();
-	if (trimmed.isEmpty) return false;
-	return true;
-}
+import 'data/api/viper_api_client.dart';
 
 void main() async {
 	WidgetsFlutterBinding.ensureInitialized();
-	_sharedPrefs = await SharedPreferences.getInstance();
+	await SharedPreferences.getInstance();
 
 	runApp(
 		const ProviderScope(
@@ -39,7 +24,7 @@ void main() async {
 }
 
 class ViperScoutApp extends ConsumerWidget {
-	const ViperScoutApp({Key? key}) : super(key: key);
+	const ViperScoutApp({super.key});
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {
@@ -57,8 +42,6 @@ class ViperScoutApp extends ConsumerWidget {
 					brightness: Brightness.dark,
 					surface: AppColors.mainBgColor,
 					onSurface: AppColors.mainFgColor,
-					background: AppColors.mainBgColor,
-					onBackground: AppColors.mainFgColor,
 				),
 				textTheme: const TextTheme(
 					bodyLarge: TextStyle(color: AppColors.mainFgColor),
@@ -90,7 +73,7 @@ class ViperScoutApp extends ConsumerWidget {
 
 /// Simple consumer widget that renders based on app state
 class _HomeRouter extends ConsumerWidget {
-	const _HomeRouter({Key? key}) : super(key: key);
+	const _HomeRouter();
 
 	@override
 	Widget build(BuildContext context, WidgetRef ref) {

@@ -63,8 +63,7 @@ class AppLocalizations {
 
 	/// Debug: Print all registered translation keys
 	static void debugPrintKeys() {
-		for (var key in _translations.keys) {
-		}
+		// TODO: Implement key debugging if needed
 	}
 }
 

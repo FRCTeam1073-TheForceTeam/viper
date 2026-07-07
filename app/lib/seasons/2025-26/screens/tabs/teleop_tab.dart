@@ -16,12 +16,12 @@ class TeleopTab extends ConsumerStatefulWidget {
 	final VoidCallback onProceedToEndGame;
 
 	const TeleopTab({
-		Key? key,
+		super.key,
 		required this.eventId,
 		required this.matchNumber,
 		required this.teamNumber,
 		required this.onProceedToEndGame,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<TeleopTab> createState() => _TeleopTabState();

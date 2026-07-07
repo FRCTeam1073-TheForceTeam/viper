@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/field_descriptor.dart';
 import '../models/map_data_model.dart';
-import '../models/serialization_helper.dart';
 
 /// Pre-match data - map-based with typed accessors
 class PreMatchData extends MapDataModel {
@@ -46,12 +45,9 @@ class PreMatchNotifier extends StateNotifier<PreMatchData> {
 	}
 
 	void loadFromData(Map<String, dynamic> data) {
-		try {
-			final newState = PreMatchData();
-			newState.loadFromMap(data);
-			state = newState;
-		} catch (e) {
-		}
+		final newState = PreMatchData();
+		newState.loadFromMap(data);
+		state = newState;
 	}
 }
 

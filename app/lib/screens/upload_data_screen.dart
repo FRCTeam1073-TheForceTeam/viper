@@ -8,7 +8,7 @@ import '../constants/colors.dart';
 import '../widgets/viper_menu_button.dart';
 
 class UploadDataScreen extends ConsumerStatefulWidget {
-	const UploadDataScreen({Key? key}) : super(key: key);
+	const UploadDataScreen({super.key});
 
 	@override
 	ConsumerState<UploadDataScreen> createState() => _UploadDataScreenState();
@@ -148,11 +148,13 @@ class _UploadDataScreenState extends ConsumerState<UploadDataScreen> {
 
 		final syncState = ref.watch(syncStateProvider);
 
-		return WillPopScope(
-			onWillPop: () async {
-				// Navigate back to scouting
-				ref.read(navigationProvider.notifier).navigateTo(NavScreen.scouting);
-				return false;
+		return PopScope(
+			canPop: false,
+			onPopInvokedWithResult: (didPop, result) {
+				if (!didPop) {
+					// Navigate back to scouting
+					ref.read(navigationProvider.notifier).navigateTo(NavScreen.scouting);
+				}
 			},
 			child: Scaffold(
 				appBar: AppBar(
@@ -448,7 +450,7 @@ class _UploadSectionState extends State<_UploadSection> {
 								locale: widget.locale,
 							),
 						);
-					}).toList(),
+					}),
 				],
 			],
 		);
@@ -568,7 +570,7 @@ class _UploadEntryCardState extends State<_UploadEntryCard> {
 											vertical: 4,
 										),
 										decoration: BoxDecoration(
-											color: statusColor.withOpacity(0.2),
+											color: statusColor.withValues(alpha: 0.2),
 											borderRadius: BorderRadius.circular(4),
 										),
 										child: Text(

@@ -14,13 +14,13 @@ class DescriptorTextField extends ConsumerWidget {
 	final int? maxLength;
 
 	const DescriptorTextField({
-		Key? key,
+		super.key,
 		required this.initialValue,
 		required this.labelTranslationKey,
 		required this.onChanged,
 		this.padding = const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
 		this.maxLength,
-	}) : super(key: key);
+	});
 
 	/// Create text field for a field - pass descriptor with field definition
 	static Widget forField({
@@ -71,12 +71,12 @@ class _DescriptorTextFieldDescriptor extends ConsumerStatefulWidget {
 	final int? maxLength;
 
 	const _DescriptorTextFieldDescriptor({
-		Key? key,
+		super.key,
 		required this.descriptor,
 		required this.provider,
 		required this.padding,
 		required this.maxLength,
-	}) : super(key: key);
+	});
 
 	@override
 	ConsumerState<_DescriptorTextFieldDescriptor> createState() => _DescriptorTextFieldDescriptorState();
