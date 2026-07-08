@@ -8,6 +8,7 @@ import '../data/database/scout_database.dart';
 import '../data/api/viper_api_client.dart';
 import '../services/csv_builder.dart';
 import '../services/csv_parser.dart';
+import '../services/local_js_service.dart';
 import '../models/match_model.dart';
 import '../seasons/season_registry.dart';
 
@@ -197,6 +198,42 @@ final apiClientProvider = FutureProvider((ref) async {
 		username: username,
 		password: password,
 	);
+});
+
+// ============================================================================
+// LOCAL.JS CONFIGURATION
+// ============================================================================
+
+final localJsServiceProvider = FutureProvider((ref) async {
+	final db = await ref.watch(databaseProvider.future);
+	final config = await db.getCurrentConfig();
+
+	// Only create service if server is configured
+	if (!_isValidServerUrl(config?.backendUrl)) {
+		throw Exception('No valid server configured');
+	}
+
+	final prefs = await ref.watch(sharedPreferencesProvider.future);
+	final apiClient = await ref.watch(apiClientProvider.future);
+	return LocalJsService(
+		prefs: prefs,
+		dio: apiClient.getDio(),
+	);
+});
+
+/// Get parsed variables from /local.js
+/// Returns cached values immediately and refreshes in background if stale
+/// Returns empty map with default values if no server is configured
+final localJsVariablesProvider = FutureProvider((ref) async {
+	try {
+		final service = await ref.watch(localJsServiceProvider.future);
+		final db = await ref.watch(databaseProvider.future);
+		final config = await db.getCurrentConfig();
+		return service.getVariables(config!.backendUrl);
+	} catch (_) {
+		// No server configured or error fetching - return defaults
+		return <String, dynamic>{};
+	}
 });
 
 // ============================================================================

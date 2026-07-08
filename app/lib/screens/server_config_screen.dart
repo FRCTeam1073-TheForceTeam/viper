@@ -392,6 +392,9 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				),
 			);
 
+			// Fetch local.js configuration in the background
+			ref.invalidate(localJsVariablesProvider);
+
 			// Call the callback
 			widget.onServerConfigured(backendUrl);
 				} else {

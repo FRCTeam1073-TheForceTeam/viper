@@ -543,6 +543,9 @@ class ViperApiClient {
 	/// Extract season from eventId using the shared static helper
 	String _extractSeasonFromEventId(String eventId) => EventModel.seasonFromEventId(eventId);
 
+	/// Get the underlying Dio instance (for advanced HTTP operations)
+	Dio getDio() => _dio;
+
 	// =========================================================================
 	// PRIVATE HELPERS
 	// =========================================================================

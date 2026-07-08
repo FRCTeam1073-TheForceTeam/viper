@@ -12,7 +12,7 @@ import '../../../../services/csv_builder.dart';
 import '../../../../widgets/descriptor_checkbox_group.dart';
 import '../../../../widgets/position_selector_area.dart';
 import '../../../../widgets/radio_button_group.dart';
-import '../../../../widgets/end_game_data_section.dart';
+import '../../../../widgets/end_game_completion_widget.dart';
 import '../../../../widgets/fieldset_legend.dart';
 import '../../../../constants/colors.dart';
 import '../../../../models/match_model.dart';
@@ -1376,7 +1376,7 @@ class _EndGameTabState extends ConsumerState<EndGameTab> {
 
 					const SizedBox(height: 16),
 
-					EndGameDataSection(
+					EndGameCompletionWidget(
 						scoutingDataProvider: scoutingDataProvider,
 						onNextMatch: _goToNextMatch,
 						onUpload: _goToUpload,
