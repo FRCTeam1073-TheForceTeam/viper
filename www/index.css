@@ -1,5 +1,11 @@
-#main ul{font-size:150%;font-weight:bold;max-width:16em;list-style-type: none;margin:0 auto;padding:0}
-#main li{margin:.5em 0;border:1px solid var(--main-border-color);padding:0.3em}
+#main ul{list-style-type: none;margin:0 auto;padding:0}
+#main li{margin:.5em 0;border:1px solid var(--main-border-color);padding:0}
+
+#main li a:link, #main li a:visited{display:block;padding:0.5em;text-decoration:none;color:var(--main-text-color)}
+
+#main li a > div:first-child{font-size:150%;font-weight:bold;display:block;margin-bottom:0.3em;color:var(--link-color)}
+#main li a:hover > div:first-child{text-decoration:underline}
+
 .index-nav{font-size:150%;font-weight:bold;max-width:16em;margin:0.3em auto}
 .index-nav .side-by-side{padding:0; margin:0 0.3em}
 .index-nav .side-by-side a {padding-top:.3em;display:block;}

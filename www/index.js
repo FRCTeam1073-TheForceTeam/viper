@@ -1,5 +1,14 @@
 "use strict"
 addI18n({
+	date_range:{
+		en:"_START_ to _END_",
+		pt:'_START_ a _END_',
+		es:'_START_ a _END_',
+		he:'_START_ אל _END_',
+		tr:'_START_ ile _END_',
+		fr:'_START_ à _END_',
+		zh_tw:'_START_ 至 _END_',
+	},
 	full_season_link:{
 		en:'_YEAR_ full season stats',
 		tr:'_YEAR_ tam sezon istatistikleri',
@@ -81,18 +90,45 @@ $(document).ready(function(){
 	function showEvents(recentSeason){
 		var list = $('#events-list')
 		list.html('');
-		var filter = location.hash.replace(/^\#/,""),
+		var filter = window.location.hash.replace(/^\#/,""),
 		eventsShown = 0
 		if (!filter) filter = recentSeason
 		for (var i=0; i<events.length; i++){
 			var season = ((events[i].match(/^[0-9]{4}(-[0-9]{2})?/))||[""])[0]
 			if (season && season == filter){
-				var [id, name] = events[i].split(/,/)
-				if (!name) name = id
-				list.append($(`<li><a href=/event.html#${id}>${unescapeField(name)}</a></li>`))
+				var parts = events[i].split(/,/)
+				var id = parts[0]
+				var name = parts[1] || id
+				var location = (parts[2] || '').trim()
+				var endDate = parts[4] || ''
+				var startDate = parts[7] || ''
+
+				var link = $('<a>').attr('href', `/event.html#${id}`)
+				link.append($('<div class="event-name">').text(unescapeField(name)))
+
+				if (location) {
+					link.append($('<div class="event-location">').text(unescapeField(location)))
+				}
+
+				var start = startDate || endDate
+				var end = endDate || startDate
+				if (start != end){
+					var displayStart = toDisplayDate(start)
+					var displayEnd = toDisplayDate(end)
+					if (displayStart && displayEnd) {
+						link.append($('<div class="event-dates" data-i18n="date_range">').attr('data-start', displayStart).attr('data-end', displayEnd))
+					}
+				} else if (start) {
+					var displayDate = toDisplayDate(start)
+					if (displayDate) {
+						link.append($('<div class="event-dates">').text(displayDate))
+					}
+				}
+				list.append($('<li>').append(link))
 				eventsShown++
 			}
 		}
+		applyTranslations() // Apply i18n to all newly added elements
 		$('#seasonStatsLink').toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1).find('a').attr('href',ssHref.replace(/YEAR/,filter))
 		var ael = $('#add-event-link')
 		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
@@ -102,7 +138,7 @@ $(document).ready(function(){
 	$('#seasons').change(function(){
 		var season = $('#seasons').val()
 		if (/^[0-9]{4}(-[0-9]{2})?$/.test(season)){
-			location.hash = `#${season}`
+			window.location.hash = `#${season}`
 		}
 		$('#seasons').val('-')
 	})
@@ -113,4 +149,17 @@ function unescapeField(s){
 		.replace(/⏎/g, "\n")
 		.replace(/״/g, "\"")
 		.replace(/،/g, ",")
+}
+
+function toDisplayDate(d){
+	if (!d) return ""
+	try {
+		var b = d.split(/\D/),
+		date = new Date(b[0], b[1]-1, b[2]),
+		locale=translate('date_locale')
+		if(!/^[a-z]{2}-[A-Z]{2}/.test(locale))locale='en-US'
+		return new Intl.DateTimeFormat(locale,{dateStyle:'full'}).format(date)
+	} catch (x){
+		return ""
+	}
 }
