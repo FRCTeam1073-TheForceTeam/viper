@@ -89,7 +89,7 @@ $(document).ready(function(){
 			if (season && season == filter){
 				var [id, name] = events[i].split(/,/)
 				if (!name) name = id
-				list.append($(`<li><a href=/event.html#${id}>${unescapeField(name)}</a></li>`))
+				list.append($(`<li><a class=card href=/event.html#${id}>${unescapeField(name)}</a></li>`))
 				eventsShown++
 			}
 		}
