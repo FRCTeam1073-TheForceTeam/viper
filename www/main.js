@@ -581,7 +581,8 @@ function closeLightBox(){
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
-	$('#lightBoxClose').css('display','flex')
+	// The hamburger main menu closes by clicking off it (or the hamburger); no X needed there
+	if ($(content).attr('id')!=='mainMenu') $('#lightBoxClose').css('display','flex')
 	applyTranslations()
 	content.show()
 	return false
