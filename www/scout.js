@@ -100,6 +100,15 @@ addI18n({
 		tr:'Alanı Döndür',
 		es:'Rotar campo',
 	},
+	flip_field_button:{
+		en:'Flip Field',
+		pt:'Virar campo',
+		fr:'Retourner le terrain',
+		zh_tw:'翻轉場地',
+		he:'הפוך שדה',
+		tr:'Sahayı Çevir',
+		es:'Voltear campo',
+	},
 	change_robot_button:{
 		en:'Change Position',
 		pt:'Mudar Posição',
@@ -612,7 +621,10 @@ function showPosList(){
 	window.scrollTo(0,0)
 	titleKey='select_pos_title'
 	h1Key='select_pos_heading'
-	$('.orientLeft,.orientRight').show()
+	// Single-field orientation: show only the current field, with a flip toggle (setupOrientFlip)
+	setupOrientFlip()
+	$('.orientLeft').toggle(orient=='left')
+	$('.orientRight').toggle(orient=='right')
 	$('#select-bot button').each(function(){
 		$(this).toggleClass("highlighted", $(this).text() == localStorage.getItem("last_pos"))
 	})
@@ -625,6 +637,23 @@ function showPosList(){
 	})
 	$('#select-bot').show()
 	applyTranslations()
+}
+
+// Collapses the old two-field "OR" layout into one field plus a flip button.
+// The two orientation tables already carry the correct button sides and field
+// rotation, so flipping just toggles which one is shown.
+function setupOrientFlip(){
+	$('#select-bot [data-i18n=choose_pos_or]').closest('div').hide()
+	if ($('#orient-flip').length || !$('.orientLeft').length || !$('.orientRight').length) return
+	$('<button id=orient-flip type=button data-i18n=flip_field_button></button>')
+		.insertAfter('#select-bot h2')
+		.click(function(){
+			orient = orient=='right' ? 'left' : 'right'
+			localStorage.setItem('last_orient', orient)
+			$('.orientLeft').toggle(orient=='left')
+			$('.orientRight').toggle(orient=='right')
+			return false
+		})
 }
 
 var nextRobotsPhotos = []
@@ -680,12 +709,13 @@ function showMatchList(){
 				if (lastDone == matchId) seenLastDone = true;
 				$('#match-list').append(
 					$('<div class=match>')
+					.append($('<span>').text(matchName))
 					.append($(`<button class="teamColorBG ${completeClass} ${storedClass}" data-team=${matchTeam} data-match=${matchId}>`).text(matchTeam).click(function(){
 						team = $(this).attr('data-team')
 						match=$(this).attr('data-match')
 						setTranslationContext()
 						showScouting()
-					})).append($('<span>').text(' ' + matchName))
+					}))
 				)
 			})
 			setTeamBG()
