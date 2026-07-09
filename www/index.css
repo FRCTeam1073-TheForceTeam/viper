@@ -1,4 +1,3 @@
-#main ul{font-size:150%;font-weight:bold;max-width:16em;list-style-type: none;margin:0 auto;padding:0}
-.index-nav{font-size:150%;font-weight:bold;max-width:16em;margin:0.3em auto}
-.index-nav .side-by-side{padding:0; margin:0 0.3em}
-.index-nav .side-by-side a {padding-top:.3em;display:block;}
+#main ul{font-size:150%;font-weight:bold;max-width:35em;list-style-type: none;margin:0 auto;padding:0}
+.event-location{font-size:80%;font-weight:normal;margin-top:.2em}
+.event-dates{font-size:80%;font-weight:normal;margin-top:.2em;font-style:italic}

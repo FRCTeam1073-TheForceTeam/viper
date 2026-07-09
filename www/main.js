@@ -464,6 +464,15 @@ $(document).ready(function(){
 		}
 	})
 
+	$('*').addClass('no-transition')
+	$('nav.left').append($('<button type=button class=nav-toggle aria-label="Toggle navigation"></button>').click(function(e){
+		e.preventDefault()
+		e.stopPropagation()
+		var nav = $(this).closest('nav.left')
+		nav.toggleClass('nav-hidden')
+	})).toggleClass('nav-hidden', window.innerWidth / window.innerHeight < 2 / 3)
+	$('*').each(function(){void this.offsetHeight}).removeClass('no-transition')
+
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
 		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')

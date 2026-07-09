@@ -1,13 +1,13 @@
 "use strict"
 addI18n({
 	full_season_link:{
-		en:'_YEAR_ full season stats',
-		tr:'_YEAR_ tam sezon istatistikleri',
-		pt:'Estatísticas completas da temporada _YEAR_',
-		fr:'Statistiques de la saison complète de _YEAR_',
-		zh_tw:'_YEAR_ 完整賽季統計數據',
-		he:'_YEAR_ נתונים סטטיסטיים של העונה המלאה',
-		es:'Estadísticas de temporada completa de _YEAR_',
+		en:'_SEASON_ full season stats',
+		tr:'_SEASON_ tam sezon istatistikleri',
+		pt:'Estatísticas completas da temporada _SEASON_',
+		fr:'Statistiques de la saison complète de _SEASON_',
+		zh_tw:'_SEASON_ 完整賽季統計數據',
+		he:'_SEASON_ נתונים סטטיסטיים של העונה המלאה',
+		es:'Estadísticas de temporada completa de _SEASON_',
 	},
 	add_event_button:{
 		en:'+ Add an event',
@@ -18,14 +18,14 @@ addI18n({
 		he:'+ הוסף אירוע',
 		es:'+ Añadir un evento',
 	},
-	choose_season_option:{
-		en:'Choose season…',
-		pt:'Escolha a temporada…',
-		es:'Elige una temporada',
-		fr:'Choisir la saison…',
-		tr:'Sezonu seç...',
-		zh_tw:'選擇季節…',
-		he:'בחר עונה…',
+	season_select_label:{
+		en:'Season:',
+		pt:'Temporada:',
+		fr:'Saison :',
+		tr:'Sezon:',
+		zh_tw:'賽季：',
+		he:'עונה:',
+		es:'Temporada:',
 	},
 	index_h1:{
 		en:'Viper — Scouting App',
@@ -35,7 +35,16 @@ addI18n({
 		tr:'Viper — İzcilik Uygulaması',
 		zh_tw:'Viper——偵察應用程式',
 		he:'צפע - אפליקציית צופים',
-	}
+	},
+	date_range:{
+		en:"_START_ to _END_",
+		pt:'_START_ a _END_',
+		es:'_START_ a _END_',
+		he:'_START_ אל _END_',
+		tr:'_START_ ile _END_',
+		fr:'_START_ à _END_',
+		zh_tw:'_START_ 至 _END_',
+	},
 })
 var ssHref
 $(document).ready(function(){
@@ -87,9 +96,30 @@ $(document).ready(function(){
 		for (var i=0; i<events.length; i++){
 			var season = ((events[i].match(/^[0-9]{4}(-[0-9]{2})?/))||[""])[0]
 			if (season && season == filter){
-				var [id, name] = events[i].split(/,/)
-				if (!name) name = id
-				list.append($(`<li><a class=card href=/event.html#${id}>${unescapeField(name)}</a></li>`))
+				var parts = events[i].split(/,/),
+				id = parts[0],
+				name = parts[1] || id,
+				place = (parts[2] || '').trim(),
+				endDate = parts[4] || '',
+				startDate = parts[7] || '',
+				link = $('<a class=card>').attr('href', `/event.html#${id}`),
+				start = startDate || endDate,
+				end = endDate || startDate
+				link.text(unescapeField(name))
+				if (place)link.append($('<div class="event-location">').text(unescapeField(place)))
+				if (start != end){
+					var displayStart = toDisplayDate(start)
+					var displayEnd = toDisplayDate(end)
+					if (displayStart && displayEnd) {
+						link.append($('<div class="event-dates" data-i18n="date_range">').attr('data-start', displayStart).attr('data-end', displayEnd))
+					}
+				} else if (start) {
+					var displayDate = toDisplayDate(start)
+					if (displayDate) {
+						link.append($('<div class="event-dates">').text(displayDate))
+					}
+				}
+				list.append($('<li>').append(link))
 				eventsShown++
 			}
 		}
@@ -97,6 +127,8 @@ $(document).ready(function(){
 		var ael = $('#add-event-link')
 		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
 		window.scrollTo(0,0)
+		translationContext.season=filter
+		applyTranslations()
 	}
 	$(window).on('hashchange', showEvents)
 	$('#seasons').change(function(){
@@ -104,7 +136,6 @@ $(document).ready(function(){
 		if (/^[0-9]{4}(-[0-9]{2})?$/.test(season)){
 			location.hash = `#${season}`
 		}
-		$('#seasons').val('-')
 	})
 })
 
@@ -113,4 +144,17 @@ function unescapeField(s){
 		.replace(/⏎/g, "\n")
 		.replace(/״/g, "\"")
 		.replace(/،/g, ",")
+}
+
+function toDisplayDate(d){
+	if (!d) return ""
+	try {
+		var b = d.split(/\D/),
+		date = new Date(b[0], b[1]-1, b[2]),
+		locale=translate('date_locale')
+		if(!/^[a-z]{2}-[A-Z]{2}/.test(locale))locale='en-US'
+		return new Intl.DateTimeFormat(locale,{dateStyle:'full'}).format(date)
+	} catch (x){
+		return ""
+	}
 }
