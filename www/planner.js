@@ -663,9 +663,11 @@ $(document).ready(function(){
 
 	var whiteboard, loadedWhiteboardKey
 
-	// Saved whiteboard drawings are keyed per event + match so reselecting a match restores its plan
+	// Saved whiteboard drawings are keyed per event + match so reselecting a match restores its plan.
+	// The key must NOT start with a 4-digit year, or the scouting-data upload scanner (upload.js)
+	// would pick it up and try to upload it as CSV.
 	function whiteboardKey(){
-		return `${eventId}_planner_wb_${matchId||'custom'}`
+		return `planner_wb_${eventId}_${matchId||'custom'}`
 	}
 
 	// Load the saved drawing whenever the selected match changes (no-op if we already loaded this match)

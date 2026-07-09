@@ -77,6 +77,7 @@ addI18n({
 
 var hasHeartbeat = true
 var isUploading = false
+var uploadFailureShown = false // suppress repeat failure popups; reset on next success
 
 // Create upload status UI
 function createUploadStatusUI() {
@@ -292,6 +293,8 @@ function processAutoUpload() {
 					showMainMenuUploads()
 				}
 
+				uploadFailureShown = false // allow the next failure to notify again
+
 				var successHtml = '<strong style="color:var(--highlight-fg-color)" data-i18n="auto_upload_success"></strong><br><span data-i18n="auto_upload_items" data-translate-count="' + itemsToUpload.length + '"></span>'
 				showUploadStatus(successHtml)
 				hideUploadStatus()
@@ -304,11 +307,15 @@ function processAutoUpload() {
 			}
 		})
 		.catch(error => {
+			// Log every time so the hamburger keeps its error outline, but only pop up once per failure streak
 			console.error('Auto-upload error:', error)
 			console.error('failed data', csv)
-			var errorHtml = '<strong style="color:var(--button-disabled-decoration-color)" data-i18n="auto_upload_failure"></strong><br>' + error.message
-			showUploadStatus(errorHtml)
-			hideUploadStatus()
+			if (!uploadFailureShown) {
+				uploadFailureShown = true
+				var errorHtml = '<strong style="color:var(--button-disabled-decoration-color)" data-i18n="auto_upload_failure"></strong><br>' + error.message
+				showUploadStatus(errorHtml)
+				hideUploadStatus()
+			}
 			isUploading = false
 		})
 	})

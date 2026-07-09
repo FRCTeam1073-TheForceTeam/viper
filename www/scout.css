@@ -40,3 +40,15 @@ img.robot-location{max-width:20em;border:1px solid var(--main-border-color)}
 .collapse::before{content:'';margin-right:.35em;display:inline-block;width:0;height:0;border-top:.35em solid transparent;border-bottom:.4em solid transparent;border-left:.7em solid var(--main-fg-color);border-right:none}
 .collapse.open::before{border-left:.35em solid transparent;border-right:.35em solid transparent;border-top:.7em solid var(--main-fg-color);border-bottom:none}
 #robot-photo{max-width:calc(100% - 2em);margin:1em}
+/* The generic button rule above stretches the lightbox close button into a giant oval;
+   drop it entirely on scouting pages — click anywhere off the menu (or the hamburger) closes it. */
+#lightBoxClose{display:none!important}
+/* In fullscreen, scouting needs every pixel: reclaim the top-bar padding and strip the bar
+   down to just the fullscreen toggle so scouts can exit fullscreen (Esc also works).
+   Outside fullscreen the bar stays visible so scouts can navigate back / re-enter fullscreen. */
+:fullscreen body.hasAppBar,:-webkit-full-screen body.hasAppBar{padding-top:0}
+:fullscreen #appBar,:-webkit-full-screen #appBar{background:none;border:none;box-shadow:none;pointer-events:none;justify-content:flex-end}
+:fullscreen #appBarBrand,:fullscreen #appBarNav,:fullscreen #hamburger,
+:-webkit-full-screen #appBarBrand,:-webkit-full-screen #appBarNav,:-webkit-full-screen #hamburger{display:none}
+:fullscreen #appBarActions,:-webkit-full-screen #appBarActions{pointer-events:auto}
+:fullscreen #appBar #fullscreen,:-webkit-full-screen #appBar #fullscreen{background:var(--surface);box-shadow:var(--shadow)}
