@@ -4,7 +4,7 @@
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<link rel=stylesheet href=/main-new.css>
+<link rel=stylesheet href=/main.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/index.css>
 <script src=/jquery.min.js></script>
@@ -17,12 +17,12 @@
 <div id=main>
 <h1 data-i18n=index_h1></h1>
 <ul id="events-list"></ul>
-<ul>
-<li id=seasonStatsLink style=display:none><a class=card href="/stats.html#event=YEARcombined" data-i18n=full_season_link></a></li>
-</ul>
-<nav class="left nav-hidden">
-	<div class=card><label><span data-i18n=season_select_label></span> <select id=seasons style=display:none></select></label></div>
-	<div><a class="button primary" id=add-event-link href=/add-event.html data-i18n=add_event_button></a></div>
-</nav>
+<div class=index-nav>
+	<select id=seasons style=display:none><option value="-" data-i18n=choose_season_option></option></select>
+	<div class=action-cards>
+		<div id=seasonStatsLink style=display:none><a class=action-card href="/stats.html#event=YEARcombined" data-i18n=full_season_link></a></div>
+		<a id=add-event-link class=action-card href=/add-event.html data-i18n=add_event_button></a>
+	</div>
+</div>
 </div>
 </body></html>

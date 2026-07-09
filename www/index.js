@@ -1,13 +1,13 @@
 "use strict"
 addI18n({
 	full_season_link:{
-		en:'_SEASON_ full season stats',
-		tr:'_SEASON_ tam sezon istatistikleri',
-		pt:'Estatísticas completas da temporada _SEASON_',
-		fr:'Statistiques de la saison complète de _SEASON_',
-		zh_tw:'_SEASON_ 完整賽季統計數據',
-		he:'_SEASON_ נתונים סטטיסטיים של העונה המלאה',
-		es:'Estadísticas de temporada completa de _SEASON_',
+		en:'_YEAR_ Full Season Stats',
+		tr:'_YEAR_ tam sezon istatistikleri',
+		pt:'Estatísticas completas da temporada _YEAR_',
+		fr:'Statistiques de la saison complète de _YEAR_',
+		zh_tw:'_YEAR_ 完整賽季統計數據',
+		he:'_YEAR_ נתונים סטטיסטיים של העונה המלאה',
+		es:'Estadísticas de temporada completa de _YEAR_',
 	},
 	add_event_button:{
 		en:'+ Add an event',
@@ -18,14 +18,14 @@ addI18n({
 		he:'+ הוסף אירוע',
 		es:'+ Añadir un evento',
 	},
-	season_select_label:{
-		en:'Season:',
-		pt:'Temporada:',
-		fr:'Saison :',
-		tr:'Sezon:',
-		zh_tw:'賽季：',
-		he:'עונה:',
-		es:'Temporada:',
+	choose_season_option:{
+		en:'Choose season…',
+		pt:'Escolha a temporada…',
+		es:'Elige una temporada',
+		fr:'Choisir la saison…',
+		tr:'Sezonu seç...',
+		zh_tw:'選擇季節…',
+		he:'בחר עונה…',
 	},
 	index_h1:{
 		en:'Viper — Scouting App',
@@ -102,22 +102,20 @@ $(document).ready(function(){
 				place = (parts[2] || '').trim(),
 				endDate = parts[4] || '',
 				startDate = parts[7] || '',
-				link = $('<a class=card>').attr('href', `/event.html#${id}`),
+				link = $('<a>').attr('href', `/event.html#${id}`),
 				start = startDate || endDate,
 				end = endDate || startDate
 				link.text(unescapeField(name))
-				if (place)link.append($('<div class="event-location">').text(unescapeField(place)))
+				if (place) link.append($('<div class="event-location">').text(unescapeField(place)))
 				if (start != end){
 					var displayStart = toDisplayDate(start)
 					var displayEnd = toDisplayDate(end)
-					if (displayStart && displayEnd) {
+					if (displayStart && displayEnd){
 						link.append($('<div class="event-dates" data-i18n="date_range">').attr('data-start', displayStart).attr('data-end', displayEnd))
 					}
-				} else if (start) {
+				} else if (start){
 					var displayDate = toDisplayDate(start)
-					if (displayDate) {
-						link.append($('<div class="event-dates">').text(displayDate))
-					}
+					if (displayDate) link.append($('<div class="event-dates">').text(displayDate))
 				}
 				list.append($('<li>').append(link))
 				eventsShown++
@@ -127,7 +125,6 @@ $(document).ready(function(){
 		var ael = $('#add-event-link')
 		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
 		window.scrollTo(0,0)
-		translationContext.season=filter
 		applyTranslations()
 	}
 	$(window).on('hashchange', showEvents)
@@ -136,6 +133,7 @@ $(document).ready(function(){
 		if (/^[0-9]{4}(-[0-9]{2})?$/.test(season)){
 			location.hash = `#${season}`
 		}
+		$('#seasons').val('-')
 	})
 })
 

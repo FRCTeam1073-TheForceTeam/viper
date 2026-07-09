@@ -31,7 +31,7 @@
 --diff-rem-bg-color:#3a1717;
 }
 *{box-sizing:border-box}
-html{font-size:2vmin;color:var(--main-fg-color);background:var(--main-bg-color) url('/background.png') fixed;background-size:33vw auto;padding-bottom:100vh}
+html{font-size:2vmin;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--main-fg-color);background:var(--main-bg-color) url('/background.png') fixed;background-size:33vw auto;padding-bottom:100vh;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 .no-transition{transition:none!important}
 a:link{color:var(--link-color);text-decoration:none}
 a:link:hover{text-decoration:underline}
@@ -70,6 +70,19 @@ a.button:hover,button:hover,input[type=submit]:hover,a.button.primary:hover,butt
 h1{padding:0 2.5em}
 #fullscreen{position:fixed;bottom:0.4em;right:0.4em;font-size:200%;cursor:pointer}
 #hamburger{position:fixed;top:0;left:92vw;font-size:300%;cursor:pointer}
+/* Top app bar (built by main.js). Overrides the standalone #fullscreen/#hamburger positions above when nested. */
+#appBar{position:fixed;top:0;left:0;right:0;height:3em;z-index:9990;display:flex;align-items:center;justify-content:space-between;padding:0 .6em;background:var(--surface);border-bottom:1px solid var(--main-border-color);box-shadow:var(--shadow)}
+body.hasAppBar{padding-top:3.25em}
+#appBarBrand,#appBarBrand:link,#appBarBrand:visited{display:flex;align-items:center;gap:.4em;font-weight:600;font-size:1.05em;color:var(--main-fg-color);text-decoration:none}
+#appBarBrand:hover{text-decoration:none}
+#appBarBrand img{height:1.6em;width:auto;display:block}
+#appBarNav{display:flex;align-items:center;gap:1em;margin-inline-start:auto;margin-inline-end:1em;min-width:0;overflow:hidden}
+.appBarLink,.appBarLink:link,.appBarLink:visited{color:var(--main-fg-color);text-decoration:none;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.appBarLink:hover{color:var(--accent);text-decoration:none}
+#appBarEvent{font-weight:600;max-width:14em}
+#appBarActions{display:flex;align-items:center;gap:.15em;flex:0 0 auto}
+#appBar #fullscreen,#appBar #hamburger{position:static;font-size:1.5em;line-height:1;cursor:pointer;padding:.1em .3em;border-radius:var(--radius)}
+#appBar #fullscreen:hover,#appBar #hamburger:hover{background:var(--lowlight-bg-color)}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
 #error-logs-link,#hamburger.error{background-color:var(--button-disabled-decoration-color)}
 #mainMenu .hasUploads,#mainMenu .hasUploads a:visited{font-weight:bold;color:var(--highlight-fg-color)}
@@ -93,4 +106,6 @@ html[dir="rtl"] [data-tooltip]:hover::before{margin-right:3em}
 @media print {
 	html{background:white;color:black}
 	#hamburger{display:none}
+	#appBar{display:none}
+	body.hasAppBar{padding-top:0}
 }

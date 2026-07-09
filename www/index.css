@@ -1,3 +1,32 @@
-#main ul{font-size:150%;font-weight:bold;max-width:35em;list-style-type: none;margin:0 auto;padding:0}
-.event-location{font-size:80%;font-weight:normal;margin-top:.2em}
-.event-dates{font-size:80%;font-weight:normal;margin-top:.2em;font-style:italic}
+/* Page title */
+#main h1{padding:0;font-size:200%;font-weight:700;margin:.6em auto .2em}
+
+/* Event list — single column of cards */
+#events-list{display:flex;flex-direction:column;gap:.6em;max-width:40em;margin:1.2em auto;list-style:none;padding:0}
+#events-list li{margin:0;padding:0}
+#events-list li a,#events-list li a:link,#events-list li a:visited{display:block;position:relative;padding:.9em 2.4em .9em 1.1em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);color:var(--link-color);font-weight:600;font-size:1.25em;text-align:start;text-decoration:none;transition:border-color .15s ease,transform .05s ease,box-shadow .15s ease}
+#events-list li a:hover{border-color:var(--accent);transform:translateY(-1px);text-decoration:none}
+#events-list li a::after{content:'\203a';position:absolute;top:50%;inset-inline-end:.9em;transform:translateY(-50%);color:var(--accent);font-size:1.3em;font-weight:700;line-height:1}
+html[dir="rtl"] #events-list li a::after{content:'\2039'}
+/* Secondary info shown under the event name — keep normal color/size, only the title is bigger & blue */
+.event-location{font-size:64%;font-weight:normal;margin-top:.3em;color:var(--main-fg-color)}
+.event-dates{font-size:64%;font-weight:normal;font-style:italic;margin-top:.2em;color:var(--main-fg-color)}
+
+/* Controls — season picker, then a column of equally-sized action cards */
+.index-nav{display:flex;flex-direction:column;align-items:center;gap:.6em;font-weight:600;max-width:34em;margin:1em auto}
+#seasons{margin:0;padding:.35em .6em}
+
+.action-cards{display:flex;flex-direction:column;align-items:stretch;gap:.6em;width:min(22em,100%)}
+#seasonStatsLink{margin:0}
+
+/* Shared size & shape for both action cards */
+.action-card,.action-card:link,.action-card:visited{display:flex;align-items:center;justify-content:center;text-align:center;width:100%;min-height:3.2em;padding:.9em 1em;border-radius:var(--radius-lg);font-weight:600;text-decoration:none;transition:border-color .15s ease,filter .15s ease,transform .05s ease}
+.action-card:hover{text-decoration:none;transform:translateY(-1px)}
+
+/* "Full season stats" — secondary (surface) card */
+#seasonStatsLink .action-card,#seasonStatsLink .action-card:link,#seasonStatsLink .action-card:visited{background:var(--surface);color:var(--main-fg-color);border:1px solid var(--main-border-color);box-shadow:var(--shadow)}
+#seasonStatsLink .action-card:hover{border-color:var(--accent)}
+
+/* "Add an event" — primary (accent) card */
+#add-event-link.action-card,#add-event-link.action-card:link,#add-event-link.action-card:visited{background:var(--accent);color:var(--accent-fg);border:1px solid var(--accent)}
+#add-event-link.action-card:hover{filter:brightness(1.08)}
