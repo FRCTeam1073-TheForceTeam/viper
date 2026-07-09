@@ -38,6 +38,19 @@ a:link:hover{text-decoration:underline}
 a:visited{color:var(--link-visited-color)}
 table,tr,td,th,button,input,select,option,input,textarea,form{font-size:inherit;color:inherit;background:inherit}
 button,input[type="submit"],select{border-radius:0.3em;background:var(--button-bg-color);border-color:var(--button-bg-color);color:var(--button-fg-color)}
+#appBar{position:absolute;top:0;left:2em;right:5em;height:3em;z-index:9990;display:flex;align-items:center;justify-content:space-between;padding:0 .6em;background:var(--surface-bg);border-bottom:1px solid var(--main-border-color)}
+body:has(nav.left.nav-hidden) #appBar{left:0}
+@media (min-aspect-ratio: 2/3){
+	#appBar{left:var(--left-nav-width)}
+	body:has(nav.left.nav-hidden) #appBar{left:2em}
+}
+#appBar img{height:1.6em;width:auto;display:inline-block}
+#appBar>div{flex:1;min-width:0;align-items:center;justify-content:flex-end}
+#appBar *{display:flex;color:var(--main-fg-color);margin:0 .2em;white-space:nowrap;align-items:center}
+#appBar .shrink{display:inline-block;overflow:hidden;text-overflow:ellipsis;min-width:3em}
+#appBarFixed{position:fixed;top:0;right:0;height:3em;z-index:9990;display:flex;align-items:center;padding:0 .6em;gap:0.2em;background:var(--surface-bg);border-bottom:1px solid var(--main-border-color)}
+#appBarFixed *{margin:0 .2em}
+#fullscreen,#hamburger{font-size:200%;cursor:pointer;color:var(--main-fg-color)}
 body{text-align:center;overscroll-behavior:contain}
 table,ul{margin:0 auto;}
 ol,ul,p{text-align:start;max-width:40em;margin:0 auto}
@@ -54,12 +67,13 @@ a.card[href]{padding-right:2em}
 a.card[href]:hover{border-color:var(--accent);background-color:var(--accent-hover-bg);text-decoration:none}
 a.card[href]::after{content:'›';color:var(--accent-text);font-size:130%;font-weight:700;position:absolute;top:50%;right:.4em;transform:translateY(-50%)}
 a.card[href]>div{color:var(--main-fg-color)}
-nav.left{position:fixed;top:0;inset-inline-start:0;bottom:0;width:var(--left-nav-width);max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:6em 1em 1em 1em;background:var(--surface-bg);border-inline-end:1px solid var(--main-border-color);z-index:9980;transition:transform .2s ease;scrollbar-width:none;-ms-overflow-style:none}
+nav.left{position:fixed;top:0;inset-inline-start:0;bottom:0;width:var(--left-nav-width);max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:6em 1em 1em 1em;background:var(--surface-bg);border-inline-end:1px solid var(--main-border-color);z-index:9991;transition:transform .2s ease;scrollbar-width:none;-ms-overflow-style:none}
 nav.left>.nav-toggle{position:absolute;top:.5em;inset-inline-end:.1em;display:flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;padding:0;background:var(--surface-bg);border:var(--border);border-radius:var(--radius);font-size:140%;font-weight:700;line-height:1;cursor:pointer;z-index:9981}
 nav.left>.nav-toggle::before{content:'‹'}
 nav.left.nav-hidden{transform:translateX(calc(-100% + 2em))}
 nav.left.nav-hidden>.nav-toggle::before{content:'›'}
-#main{transition:padding-inline-start .2s ease}
+#main{padding-top:2em}
+body:has(#appBar[style*="display:none"]) #main{padding-top:0}
 #main:has(>nav.left){padding-inline-start:2em}
 @media (min-aspect-ratio: 2/3){
 	#main:has(>nav.left:not(.nav-hidden)){padding-inline-start:var(--left-nav-width)}
@@ -68,8 +82,6 @@ a.button,button,input[type=submit]{border:var(--border);background-color:var(--b
 a.button.primary,button.primary,input[type=submit].primary{border-color:var(--accent);background-color:var(--accent);color:var(--accent-fg)}
 a.button:hover,button:hover,input[type=submit]:hover,a.button.primary:hover,button.primary:hover,input[type=submit].primary:hover{border-color:var(--accent);background-color:var(--accent-hover-bg);text-decoration:none}
 h1{padding:0 2.5em}
-#fullscreen{position:fixed;bottom:0.4em;right:0.4em;font-size:200%;cursor:pointer}
-#hamburger{position:fixed;top:0;left:92vw;font-size:300%;cursor:pointer}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
 #error-logs-link,#hamburger.error{background-color:var(--button-disabled-decoration-color)}
 #mainMenu .hasUploads,#mainMenu .hasUploads a:visited{font-weight:bold;color:var(--highlight-fg-color)}

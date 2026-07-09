@@ -474,29 +474,32 @@ $(document).ready(function(){
 	$('*').each(function(){void this.offsetHeight}).removeClass('no-transition')
 
 	if (!inIframe()){
-		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
-		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')
-		$('body').append(hamburger).append(mainMenu)
-		hamburger.click(function(){showLightBox(mainMenu)})
-
 		populateMainMenu()
 
 		function populateMainMenu(){
+			var useNewMainMenu = $('link[rel="stylesheet"]').toArray().some(link=>/(?:^|\/)main-new\.css(?:[?#].*)?$/.test(link.getAttribute('href') || ''))
 			Promise.all([
-				fetch('/main-menu.html').then(response=>response.text()).catch(()=>''),
+				fetch(useNewMainMenu?'/main-menu-new.html':'/main-menu.html').then(response=>response.text()).catch(()=>''),
 				fetch('/user.cgi').then(response=>response.text()).catch(()=>'')
 			]).then(values =>{
 				var [menuHtml, userName] = values,
 				lastEventId=localStorage.getItem('last_event_id'),
 				eId = window.eventId||lastEventId||"",
 				eName = window.eventName||(eId==lastEventId?localStorage.getItem('last_event_name'):"")||"",
-				eYear = window.eventYear||(eId==lastEventId?localStorage.getItem('last_event_year'):"")||""
-				mainMenu.html(
+				eYear = window.eventYear||(eId==lastEventId?localStorage.getItem('last_event_year'):"")||"",
+				menu = $(
 					menuHtml
 						.replace(/EVENT_NAME/g,eName)
 						.replace(/EVENT_ID/g,eId)
 						.replace(/YEAR/g,eYear)
 				)
+				var hamburger, mainMenu
+				$('#hamburger,#mainMenu').remove()
+				$('body').append(menu)
+				hamburger = $('#hamburger')
+				mainMenu = $('#mainMenu')
+				$('#fullscreen').click(toggleFullScreen)
+				hamburger.click(function(){showLightBox(mainMenu)})
 				applyTranslations(mainMenu)
 				mainMenu.find('.dependEvent').toggle(eName&&!/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eId||""))
 				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
@@ -543,7 +546,6 @@ $(document).ready(function(){
 				console.error(e)
 			})
 		}
-		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
 		$(window).on('hashchange',showMainMenuUploads)
 	}
 	$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
