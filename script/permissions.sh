@@ -13,6 +13,10 @@ then
 	# as the directory itself
 	find  www/data/ -type d -exec sudo chmod u-s,u+x,g+sx {} \;
 
+	# The web server needs to write to local.js
+	sudo chown `whoami`:www-data www/local.js
+	sudo chmod ug+rw www/local.js
+
 	dir=`pwd`
 	while [ "z$dir" != "z" ]
 	do

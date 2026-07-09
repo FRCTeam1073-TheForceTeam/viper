@@ -9,3 +9,5 @@ local.*
 *.tgz
 *.zip
 .~*
+tmp
+*.tmp

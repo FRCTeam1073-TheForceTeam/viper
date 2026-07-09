@@ -50,6 +50,15 @@ addI18n({
 		zh_tw:'關於此應用程式',
 		es:'Acerca de esta aplicación',
 	},
+	site_configuration_link:{
+		en:'Site configuration',
+		he:'תצורת אתר',
+		pt:'Configuração do site',
+		fr:'Configuration du site',
+		tr:'Site yapılandırması',
+		zh_tw:'網站配置',
+		es:'Configuración del sitio',
+	},
 	my_team_num:{
 		en:'My team #',
 		he:'הצוות שלי #',
@@ -456,6 +465,15 @@ $(document).ready(function(){
 		}
 	})
 
+	$('*').addClass('no-transition')
+	$('nav.left').append($('<button type=button class=nav-toggle aria-label="Toggle navigation"></button>').click(function(e){
+		e.preventDefault()
+		e.stopPropagation()
+		var nav = $(this).closest('nav.left')
+		nav.toggleClass('nav-hidden')
+	})).toggleClass('nav-hidden', window.innerWidth / window.innerHeight < 2 / 3)
+	$('*').each(function(){void this.offsetHeight}).removeClass('no-transition')
+
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
 		fullscreen = $('<div id=fullscreen>⛶</div>').click(toggleFullScreen),
@@ -510,6 +528,7 @@ $(document).ready(function(){
 					req.send()
 					return false
 				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
+				mainMenu.find('#site-configuration-link').closest('li').toggle(userName=='admin')
 				$('#error-logs-link').click(function(){
 					var p=$('#show-errors')
 					if(!p.length){

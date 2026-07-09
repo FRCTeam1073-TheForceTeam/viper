@@ -257,6 +257,16 @@ var statInfo={
 		tr:'İzlenen Maçlar',
 		he:'גפרורים בצופים',
 	},
+	duplicate:{
+		name:'Duplicate',
+		type:'text',
+		fr:'Dupliquer',
+		pt:'Duplicar',
+		zh_tw:'重複',
+		tr:'Çoğaltmak',
+		he:'כפול',
+		es:'Duplicado',
+	},
 	bricked:{
 		en:'Bricked',
 		type:'enum',

@@ -123,8 +123,8 @@ The project enforces several code standards via pre-commit hooks:
 **Code Requirements:**
 - Perl: `use strict` required
 - Bash: `set -e` (exit on error) required
-- JavaScript: `"use strict"` required at the top of `.js` files; omit end-of-line semicolons when possible; use whitespace sparingly to keep file sizes low
-- CSS: Keep selector and properties on a single line when possible to reduce file size
+- JavaScript: `"use strict"` required at the top of `.js` files; omit end-of-line semicolons when possible; use whitespace and comments sparingly to keep file sizes low
+- CSS: **Each individual selector and its properties must be on a single line** to minimize file size. Example: `selector{property:value;property:value}` Do not use multi-line formatting for rules. Exception: At-rules like `@media`, `@keyframes`, and `@supports` may span multiple lines as needed. See `/www/scout.css` for reference. This applies to all CSS files including new files you create.
 - Remove all `console.log()` statements before committing
 - Remove non-exceptional STDERR logging from CGI scripts (keep only genuine exceptions)
 
@@ -233,6 +233,7 @@ The project supports six languages and follows a consistent convention for manag
 4. **zh_tw** - Traditional Chinese
 5. **tr** - Turkish
 6. **he** - Hebrew
+7. **es** - Spanish
 
 ### Translation Locations
 
@@ -273,6 +274,7 @@ When adding support for a new language to the entire project:
 2. **Add language to all existing code strings**: Find all `.js` files with translations by searching for `zh_tw:` to locate all translation blocks (use `zh_tw:` rather than other language codes as it's more complex and avoids substring false positives). Then add the new language code property to each translation block across the codebase.
 3. **Update language selector**: Add a new option to the language dropdown in `/www/main-menu.html` for the new language
 4. **Create documentation translations**: For all existing `.md` files, create corresponding files with the new language suffix
+5. **Update this skill**: Add the new language to the "Supported Languages" section and update any relevant instructions for adding translations
 
 ## Related Resources
 

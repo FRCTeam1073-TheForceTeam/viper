@@ -279,9 +279,64 @@ function promiseScouting(){
 	return promiseCache.scouting
 }
 
+function markDuplicateScouting(scoutingData){
+	var groupedByMatchTeam = {}
+
+	scoutingData.forEach(entry => {
+		var key = `${entry.match}-${entry.team}`
+		if (!groupedByMatchTeam[key]) {
+			groupedByMatchTeam[key] = []
+		}
+		groupedByMatchTeam[key].push(entry)
+	})
+
+	Object.keys(groupedByMatchTeam).forEach(key => {
+		markAllButOneDuplicate(groupedByMatchTeam[key])
+	})
+}
+
+function markAllButOneDuplicate(entries) {
+	if (entries.length === 1) return entries[0]
+	const teamRegex = getLocalTeam() ? new RegExp(`\\b${getLocalTeam()}\\b`) : null
+	var best = null
+	for (let i = 0; i < entries.length; i++) {
+		let current = entries[i]
+
+		// First iteration - initialize best without marking
+		if (best === null) {
+			best = current
+			continue
+		}
+
+		// Prefer entries without review_requested flag
+		if (!!best.review_requested != !!current.review_requested) {
+			if (!!best.review_requested) [best, current]=[current, best]
+			current.duplicate = "review requested"
+			continue
+		}
+
+		// Per entries with local team in scouter field
+		if (teamRegex && teamRegex.test(best.scouter || "") !== teamRegex.test(current.scouter || "")) {
+			if (!teamRegex.test(best.scouter || "")) [best, current] = [current, best]
+			current.duplicate = "scouted by other team"
+			continue
+		}
+
+		// Prefer most recent modified date
+		if ((current.modified ?? "") !== (best.modified ?? "")) {
+			if ((current.modified ?? "") < (best.modified ?? "")) [best, current] = [current, best]
+			current.duplicate = "older"
+			continue
+		}
+
+		current.duplicate = "not first"
+	}
+	return entries
+}
+
 var statsIncludePractice=true,
 statsStartMatch="pm1"
-function promiseEventStats(startMatch, includeReviewRequested){
+function promiseEventStats(startMatch, includeReviewRequested, includeDuplicates){
 	if(!eventYear) {
 		showError('no_event_title','no_event_message')
 		return Promise.reject(new Error("Event not specified"))
@@ -294,6 +349,8 @@ function promiseEventStats(startMatch, includeReviewRequested){
 		promiseScript(`/${eventYear}/aggregate-stats.js`),
 	]).then(values => {
 		var [eventStats, eventScores, subjectiveData, pitData] = values
+		markDuplicateScouting(eventStats)
+		if (!includeDuplicates) eventStats = eventStats.filter(scout => !scout.duplicate)
 		if(typeof startMatch == "boolean"){
 			startMatch=startMatch?"pm1":"qm1"
 		}
@@ -324,8 +381,8 @@ function promiseEventStats(startMatch, includeReviewRequested){
 			}
 			var subjective =  subjectiveData[team]||{},
 			pit = pitData[team]||{},
-			mt=`${match}-${team}`
-			scout.old=eventStatsByMatchTeam[mt]
+			mt=`${match}-${team}`,
+			old = eventStatsByMatchTeam[mt]
 			if ((!scout.review_requested || includeReviewRequested) && (scheduleSortKey(startMatch)<=scheduleSortKey(match))){
 				var aggregate = eventStatsByTeam[team] || {}
 				aggregateStats(scout,aggregate,apiScore,subjective,pit,eventStatsByMatchTeam,eventStatsByTeam,match)
@@ -333,7 +390,12 @@ function promiseEventStats(startMatch, includeReviewRequested){
 			} else {
 				aggregateStats(scout,{},apiScore,subjective,pit,{},{},match)
 			}
-			eventStatsByMatchTeam[mt]=scout
+			if (old && scout.duplicate) {
+				old.old = scout
+			} else {
+				eventStatsByMatchTeam[mt]=scout
+				if (old)scout.old = old
+			}
 		})
 		return [eventStats, eventStatsByTeam, eventStatsByMatchTeam]
 	}).catch(e=>{
