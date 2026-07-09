@@ -60,7 +60,7 @@ nav.left>.nav-toggle::before{content:'‹'}
 nav.left.nav-hidden{transform:translateX(calc(-100% + 2em))}
 nav.left.nav-hidden>.nav-toggle::before{content:'›'}
 #main{transition:padding-inline-start .2s ease}
-#main:has(>nav.left.nav-hidden){padding-inline-start:2em}
+#main:has(>nav.left){padding-inline-start:2em}
 @media (min-aspect-ratio: 2/3){
 	#main:has(>nav.left:not(.nav-hidden)){padding-inline-start:var(--left-nav-width)}
 }
