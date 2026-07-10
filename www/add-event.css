@@ -1,2 +1,8 @@
-.option{border:1px solid var(--main-border-color);max-width:16em;min-height:15em;margin:0.4em;padding:0.8em}
-label{border:1px solid var(--main-border-color);max-width:20em;margin:0.4em auto;padding:0.8em;display:block}
+main{text-align:center}
+.card{max-width:16em;margin:0.4em;padding:0.8em}
+.grid .card{min-height:15em;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15em,1fr));gap:.8em;max-width:40em;margin:1.2em auto;padding:0 .5em;text-align:start}
+a.card span{color:var(--main-fg-color)}
+input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
+.file-name{opacity:.85;font-size:.9em}
+label.card{margin:0 auto}
