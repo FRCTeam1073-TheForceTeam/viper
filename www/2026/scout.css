@@ -49,7 +49,7 @@ td{text-align:left;padding:0.2em 0.5em}
 	.tabs{font-size:80%}
 	.field-actions{max-height:55vh}
 }
-.brief-instructions{max-width:15em}
+.brief-instructions{max-width:24em}
 .prematch{position:relative}
 .kebab-menu{position:absolute;top:0;right:0;z-index:100}
 .kebab-button{background:none;border:none;font-size:1.5em;padding:0.5em;cursor:pointer;color:inherit}
@@ -57,10 +57,11 @@ td{text-align:left;padding:0.2em 0.5em}
 .kebab-dropdown{display:none;position:absolute;top:100%;right:0;background:var(--section-bg-color);border:1px solid var(--main-border-color);z-index:1000;min-width:12em;padding:0.25em;border-radius:0.25em}
 .kebab-dropdown.open{display:flex;flex-direction:column;gap:0.25em}
 .kebab-dropdown button{padding:0.5em 1em;text-align:left;cursor:pointer;width:100%}
-.pre-match-layout{display:flex;gap:1em;align-items:stretch;justify-content:center;margin:0 auto}
-.pre-match-left{flex:0 0 auto;max-width:10em}
-.pre-match-left h3{margin-top:0}
-.pre-match-right{flex:0 0 auto;display:flex;flex-direction:column;justify-content:space-between}
+/* Side by side: buttons/instructions on the left (order:-1), field image on the right */
+.pre-match-layout{display:flex;flex-direction:row;align-items:flex-start;justify-content:center;gap:1.5em;margin:1em auto 0}
+.pre-match-left{flex:0 0 auto}
+.pre-match-left h3{margin:0 0 .4em}
+.pre-match-right{order:-1;flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:.6em;max-width:24em}
 .climb{padding-right:0.4em;appearance:none;text-align:right;background:var(--button-bg-color);border:1px solid var(--main-border-color);border-style:solid;color:var(--button-fg-color);outline:none}
 .climb:active{background:var(--button-bg-color);border:1px solid var(--main-border-color);border-style:solid;color:var(--button-fg-color);outline:none}
 #auto-climb-position-fieldset,#tele-climb-position-fieldset,#climb-method-fieldset{display:none}
