@@ -1,0 +1,3 @@
+#events{display:grid;grid-template-columns:repeat(auto-fill,minmax(17em,1fr));gap:.8em;max-width:62em;margin:1.2em auto;padding:0 .5em;text-align:start}
+.card{font-size:130%}
+.card div{color:var(--main-fg-color);font-size:80%}

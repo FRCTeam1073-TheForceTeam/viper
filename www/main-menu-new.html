@@ -1,0 +1,31 @@
+<header id=appBar class=show-only-when-connected>
+<a href=/><img src=/logo.png alt=""><span>Viper</span></a>
+<div>
+<a class=shrink href="/event.html#event=EVENT_ID">EVENT_NAME</a>
+</div>
+</header>
+<div id=appBarFixed>
+<div id=fullscreen>⛶</div>
+<div id=hamburger>☰</div>
+</div>
+<div id=mainMenu class=lightBoxCenterContent>
+<a class=card href=/ data-i18n=home_link></a>
+<a class="card dependUpload" href=/upload.html data-i18n=upload_data_link></a>
+<a class=card href="/about.html" data-i18n=about_link></a>
+<a class="card initHid" id=site-configuration-link href="/local-config.html" data-i18n=site_configuration_link></a>
+<a class=card style=display:none id=error-logs-link href="#">Error logs</a>
+<a class=card id=logout-link href="/logout">Logout</a>
+<div class=card><select id=locale-choose>
+	<option value=en>English</option>
+	<option value=es>Español</option>
+	<option value=fr>Français</option>
+	<option value=pt>Português</option>
+	<option value=tr>Türkçe</option>
+	<option value=he>עברית</option>
+	<option value=zh_tw>繁體中文</option>
+</select></div>
+<label class=card>
+<span data-i18n=my_team_num></span>
+<input type=text placeholder=1234 maxlength=5 size=5 class=my-team-input>
+</label>
+</div>
