@@ -20,7 +20,7 @@
 ## 文件
 
  - [可列印版說明](/printable-instructions.html)
- - [活動資料輸入說明](/event-table-instructions.html)
+ - [活動資料輸入說明](/event-data-entry-instructions.html)
  - [「活動」頁面說明](/event-instructions.html)
  - [機器人照片上傳說明](/bot-photos-instructions.html)
  - [觀賽說明 - 機器人](/scouting-select-bot-instructions.html)

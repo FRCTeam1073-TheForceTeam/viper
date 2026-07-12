@@ -235,6 +235,15 @@ addI18n({
 		he:'בחר צוות ל-Pit Scout',
 		tr:'Bir Takım Seç Pit Scout\'a',
 	},
+	pit_squads:{
+		en:'Pit scout just a fraction of the teams:',
+		es:'Haz pit scout de solo una fracción de los equipos:',
+		pt:'Faça pit scout de apenas uma fração das equipes:',
+		fr:'Limitez votre pit scout à une fraction des équipes :',
+		zh_tw:'為部分隊伍進行坑道偵察：',
+		he:'בצע pit scout לחלק מהצוותים בלבד:',
+		tr:'Takımların sadece bir bölümünü pit scout edin:',
+	},
 	subjective_scouting_select_team_title:{
 		en:'Subjective Scout at _EVENTNAME_',
 		es:'Exploración subjetiva',
@@ -467,6 +476,7 @@ team = "",
 match = "",
 orient = localStorage.getItem("last_orient")||"right",
 teamList=[],
+pitScoutSetupButtonCount=6,
 go,
 scouting,
 pitScouting,
@@ -527,14 +537,15 @@ function showSelectPitScoutTeam(){
 		promiseEventTeams(),
 		promisePitScouting()
 	]).then(values=>{
-		var [eventTeams, pitData] = values
+		var [eventTeams, pitData] = values,
+		st=$('#select-team').html("")
 		$('.screen,.init-hide').hide()
 		resetInitialValues(pitScouting)
 		setHash(null,null,null,null,teamList)
 		window.scrollTo(0,0)
 		titleKey='pit_scouting_select_team_title'
 		h1Key='pit_scouting_select_team_heading'
-		var el = $('#teamList').html(""),
+		var el = $('<div id=teamList>'),
 		withData = getTeamsWithPitData(),
 		showTeams = teamList.length?teamList:eventTeams
 		$('.location-pointer').remove()
@@ -543,7 +554,24 @@ function showSelectPitScoutTeam(){
 			if (withData.hasOwnProperty(showTeams[i])||pitData[showTeams[i]]) button.addClass('stored')
 			el.append(button)
 		}
-		$('#select-team').show()
+		st.append(el)
+		var squadsDiv = $('<div id=pitScoutSquads>').append(
+			$('<h3 data-i18n=pit_squads>'),
+			$('<div class=side-by-side>').append(
+				$('<img src=/count_up.svg>'),
+				$('<img src=/count_down.svg>')
+			),
+			$('<div id=pitScoutSetupButtons class=side-by-side>')
+		)
+		st.append(squadsDiv)
+		$('#pitScoutSquads img').click(function(){
+			pitScoutSetupButtonCount += /up/.test($(this).attr('src'))?1:-1
+			if (pitScoutSetupButtonCount<1) pitScoutSetupButtonCount=1
+			if (pitScoutSetupButtonCount>10) pitScoutSetupButtonCount=10
+			drawPitScoutSquadButtons(eventTeams)
+		})
+		drawPitScoutSquadButtons(eventTeams)
+		st.show()
 		applyTranslations()
 		for (var i=0; i<window.onShowTeamList.length; i++){
 			if(!window.onShowTeamList[i]()) return false
@@ -551,6 +579,22 @@ function showSelectPitScoutTeam(){
 	}).catch(err=>{
 		alert(err)
 	})
+}
+
+function drawPitScoutSquadButtons(eventTeams){
+	var el = $('#pitScoutSetupButtons').html("")
+	var activeSquadTeams = teamList.length ? teamList.join(",") : ""
+	for (var i=1; i<=pitScoutSetupButtonCount; i++){
+		var squad = i-1,
+		perSquad = Math.floor(eventTeams.length/pitScoutSetupButtonCount),
+		extras = eventTeams.length%pitScoutSetupButtonCount,
+		start = squad*perSquad+Math.min(squad,extras),
+		end = start+perSquad+((squad+1>extras)?0:1),
+		squadTeams = eventTeams.slice(start,end).join(","),
+		link = $('<a>').attr('href',buildHash(null,null,null,null,squadTeams)).text(i)
+		if (squadTeams === activeSquadTeams) link.addClass('active')
+		el.append(link)
+	}
 }
 
 function showSelectSubjectiveScoutTeam(){

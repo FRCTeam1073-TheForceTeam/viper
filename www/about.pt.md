@@ -19,7 +19,7 @@ Além disso, o Viper é um droide de reconhecimento no universo de Star Wars.
 ## Documentação
 
 - [Instruções para impressão](/printable-instructions.html)
-- [Instruções para entrada de dados do evento](/event-table-instructions.html)
+- [Instruções para entrada de dados do evento](/event-data-entry-instructions.html)
 - [Instruções para página do evento](/event-instructions.html)
 - [Instruções para observação de fotos de bots](/bot-photos-instructions.html)
 - [Instruções para observação — selecione um bot](/scouting-select-bot-instructions.html)

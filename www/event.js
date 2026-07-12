@@ -1,6 +1,33 @@
 "use strict"
 
 addI18n({
+	tba_format_label:{
+		en:'Scores last',
+		tr:'Skorlar en son',
+		pt:'Pontuações por último',
+		es:'Puntuaciones por último',
+		fr:'Scores derniers',
+		he:'צִיוּנִים אַחֲרוֹנִים',
+		zh_tw:'分數最後',
+	},
+	show_practice_label:{
+		en:'Show practice matches',
+		tr:'Antrenman maçlarını göster',
+		pt:'Mostrar partidas de treino',
+		es:'Mostrar partidos de práctica',
+		fr:'Afficher les matchs d\'entraînement',
+		he:'הצג משחקי אימון',
+		zh_tw:'顯示練習賽',
+	},
+	team_schedule_label:{
+		en:'Show team schedule only',
+		tr:'Yalnızca takım programını göster',
+		pt:'Mostrar apenas a agenda da equipe',
+		es:'Mostrar solo el calendario del equipo',
+		fr:'Afficher seulement le calendrier de l\'équipe',
+		he:'הצג רק את לוח הזמנים של הקבוצה',
+		zh_tw:'僅顯示球隊賽程',
+	},
 	score_label:{
 		en:'Score:',
 		tr:'Puan:',
@@ -117,15 +144,6 @@ addI18n({
 		fr:'Repérage en fosse ouverte pour toutes les équipes',
 		tr:'Tüm takımlar için açık çukur izciliği',
 		he:'',
-	},
-	pit_squads:{
-		en:'Open pit and photo scouting squads:',
-		he:'חוליות בור פתוח וצופית צילום:',
-		zh_tw:'露天礦和攝影偵察隊：',
-		pt:'Esquadrões de observação de poço aberto e de fotos:',
-		es:'Escuadrones de exploración de hoyo y fotos abiertos:',
-		fr:'Repérage en fosse ouverte et photos des équipes :',
-		tr:'Açık çukur ve fotoğraf izcilik takımları:',
 	},
 	all_subjective_link:{
 		en:'Subjective scouting',
@@ -820,11 +838,32 @@ $(document).ready(function(){
 		showLightBox(da)
 		return false
 	}
-	$('.show-more').click(function(){
-		$('.more').show()
-		$(this).hide()
-
+	function applyColumnOrder(){
+		var order = $('#tbaToggle').is(':checked')
+			? ['R1','R2','R3','B1','B2','B3','redScore','blueScore']
+			: ['R1','R2','R3','redScore','blueScore','B1','B2','B3']
+		$('#matchTable tr').each(function(){
+			var $tr = $(this)
+			order.forEach(function(cls){ $tr.append($tr.children('.'+cls)) })
+		})
+	}
+	$('#tbaToggle').prop('checked', localStorage.matchColTBA != '0').change(function(){
+		localStorage.matchColTBA = this.checked?'1':'0'
+		applyColumnOrder()
 	})
+	$('#showAdvancedToggle').prop('checked', localStorage.showAdvanced == '1').change(function(){
+		localStorage.showAdvanced = this.checked?'1':'0'
+		$('.more').toggle(this.checked)
+	})
+	function applyTeamOnly(){
+		$('.our-team-match').toggle($('#teamOnlyToggle').is(':checked') && parseInt(getLocalTeam()) > 0 && $('#matches tr.our-team-match').length > 0)
+	}
+	$('#teamOnlyToggle').prop('checked', localStorage.teamScheduleOnly == '1').change(function(){
+		localStorage.teamScheduleOnly = this.checked ? '1' : '0'
+		applyTeamOnly()
+	})
+	applyTeamOnly()
+	$('.more').toggle($('#showAdvancedToggle').is(':checked'))
 	function setName(){
 		$('title,h1').text(eventName)
 	}
@@ -891,9 +930,8 @@ $(document).ready(function(){
 		promisePitScouting(),
 		promiseTeamsInfo(),
 		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
-		promiseEventTeams(),
 	]).then(values =>{
-		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.epaByTeam, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles, pitScoutEventTeams] = values
+		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.epaByTeam, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles] = values
 		var lastDone,
 		nextToScout,
 		lastMatch,
@@ -1046,8 +1084,22 @@ $(document).ready(function(){
 			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':(!isRedScouted&&redPrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction).attr('data-epa',redEpa)
 			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':(!isBlueScouted&&bluePrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).attr('data-epa',blueEpa).addClass('tooltip-before')
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
+			row.toggleClass('practice-match', /^pm/.test(match.Match))
+			row.toggleClass('our-team-match', matchHasTeam(match, parseInt(getLocalTeam())||0))
 			row.click(showLinks)
 			$('#matches').append(row)
+			applyColumnOrder()
+			function applyShowPractice(){
+				var available = $('#matches tr').length-$('#matches tr.practice-match').length > 1
+				var on=localStorage.showPractice=='1' || !available
+				$('#showPracticeToggle').prop('checked', on).parent().toggle(available)
+				$('.practice-match').toggle(on)
+			}
+			$('#showPracticeToggle').prop('checked', localStorage.showPractice == '1').change(function(){
+				localStorage.showPractice = this.checked?'1':'0'
+				applyShowPractice()
+			})
+			applyShowPractice()
 		})
 		window.eventStats = eventStats
 		$('#extendedScoutingData')
@@ -1083,7 +1135,6 @@ $(document).ready(function(){
 			})
 		}
 		applyTranslations()
-		drawPitScoutSetupButtons()
 		$('#main').show()
 	}).catch(e=>{
 		console.error(e)
@@ -1139,27 +1190,6 @@ $(document).ready(function(){
 	}
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
-	})
-	var pitScoutSetupButtonCount=6,
-	pitScoutEventTeams=[]
-	function drawPitScoutSetupButtons(){
-		$('#pitScoutSetupButtons').html("")
-		for (var i=1; i<=pitScoutSetupButtonCount; i++){
-			var squad = i-1,
-			perSquad = Math.floor(pitScoutEventTeams.length/(pitScoutSetupButtonCount)),
-			extras = pitScoutEventTeams.length%(pitScoutSetupButtonCount),
-			start = squad*perSquad+Math.min(squad,extras),
-			end = start+perSquad+((squad+1>extras)?0:1),
-			teamList=pitScoutEventTeams.slice(start,end).join(","),
-			href=`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`
-			$('#pitScoutSetupButtons').append($(`<a href="${href}">${i}</a>`))
-		}
-	}
-	$('#pitScoutSetup img').click(function(){
-		pitScoutSetupButtonCount+=/up/.test($(this).attr('src'))?1:-1
-		if (pitScoutSetupButtonCount < 1) pitScoutSetupButtonCount = 1
-		if (pitScoutSetupButtonCount > 10) pitScoutSetupButtonCount = 10
-		drawPitScoutSetupButtons()
 	})
 })
 

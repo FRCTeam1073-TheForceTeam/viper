@@ -12,7 +12,7 @@ The demo and public data can be found on the official Viper website: [ViperScout
 ## Usage
 
 1. The lead scouter enters the match schedule for practice matches and qualification matches. Schedules can also be imported from the API or thebluealliance.com.\
-   [<img src=doc/event-table.png width=200>](doc/event-table.png)
+   [<img src=doc/event-data-entry.png width=200>](doc/event-data-entry.png)
 1. Team members can go interview other teams and collect pit scouting data.\
    [<img src=doc/pit-scout.png width=200>](doc/pit-scout.png) [<img src=doc/bot-photos.png width=200>](doc/bot-photos.png)
 1. Six team members connect wired devices (Android tablets, Android phones, or laptops) and load the scouting page. Once the app is loaded, devices can be disconnected for watching and scouting matches. Data is stored in persistent storage on the client devices as it is collected. As scouting data is needed, devices plug back into the server and upload their data.\
@@ -45,7 +45,7 @@ The demo and public data can be found on the official Viper website: [ViperScout
  - For users:
    - [About](www/about.md)
    - [Printable instructions](www/printable-instructions.md)
-   - [Event data entry instructions](www/event-table-instructions.md)
+   - [Event data entry instructions](www/event-data-entry-instructions.md)
    - [Event page instructions](www/event-instructions.md)
    - [Bot photo scouting instructions](www/bot-photos-instructions.md)
    - [Scouting instructions — select a bot](www/scouting-select-bot-instructions.md)
