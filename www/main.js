@@ -454,6 +454,12 @@ function applyTranslations(node){
 		console.error(x)
 	}
 }
+function toggleLeftNav(e){
+	e.preventDefault()
+	e.stopPropagation()
+	var nav = $(this).closest('nav.left')
+	nav.toggleClass('nav-hidden')
+}
 
 $(document).ready(function(){
 	$('link[rel="preload"]').each(function(){
@@ -465,12 +471,15 @@ $(document).ready(function(){
 	})
 
 	$('*').addClass('no-transition')
-	$('nav.left').append($('<button type=button class=nav-toggle aria-label="Toggle navigation"></button>').click(function(e){
+	$('nav.left').append(
+		$('<button type=button class=nav-toggle aria-label="Toggle navigation"></button>').click(toggleLeftNav)
+	).toggleClass('nav-hidden', window.innerWidth / window.innerHeight < 2 / 3).click(function(e){
+		if(!$('nav.left').is('.nav-hidden')) return true
 		e.preventDefault()
 		e.stopPropagation()
 		var nav = $(this).closest('nav.left')
 		nav.toggleClass('nav-hidden')
-	})).toggleClass('nav-hidden', window.innerWidth / window.innerHeight < 2 / 3)
+	})
 	$('*').each(function(){void this.offsetHeight}).removeClass('no-transition')
 
 	if (!inIframe()){
