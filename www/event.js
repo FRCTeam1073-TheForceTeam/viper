@@ -884,19 +884,19 @@ $(document).ready(function(){
 		da = $('#dataActions'),
 		file = url.replace(/.*\//,""),
 		list = da.find('ul').html(""),
-		download = $('<a data-i18n=download_link>').attr('href',url)
+		download = $('<a class=button data-i18n=download_link>').attr('href',url)
 		da.find('h2').text($(this).attr('download')?$(this).attr('download'):file)
 		if ($(this).attr('download')) download.attr('download', $(this).attr('download'))
 		list.append($('<li>').append(download))
 		if (/\.csv/.test(file)){
-			list.append($('<li>').append($('<a data-i18n=edit_link>').attr('href',`/edit.html#file=${file}`)))
-			list.append($('<li>').append($('<a data-i18n=history_link>').attr('href',`/revisions.html#file=${file}`)))
+			list.append($('<li>').append($('<a class=button data-i18n=edit_link>').attr('href',`/edit.html#file=${file}`)))
+			list.append($('<li>').append($('<a class=button data-i18n=history_link>').attr('href',`/revisions.html#file=${file}`)))
 		}
 		if (/\.json/.test(file)){
-			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).click(viewJson)))
+			list.append($('<li>').append($('<a class=button data-i18n=file_view_link>').attr('href',url).click(viewJson)))
 		}
 		if (/^blob/.test(url)){
-			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).attr('data-source',$(this).attr('data-source')).click(viewDataAsTable)))
+			list.append($('<li>').append($('<a class=button data-i18n=file_view_link>').attr('href',url).attr('data-source',$(this).attr('data-source')).click(viewDataAsTable)))
 		}
 		showLightBox(da)
 		return false
