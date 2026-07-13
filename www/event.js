@@ -1027,7 +1027,7 @@ $(document).ready(function(){
 				if (depend) dependencySatisfied(depend)
 			}
 			if(extension=='scouting.csv')haveScouting=true
-			if (extension!="jpg") $('#dataList').append($('<a class=card>').attr('href',file).click(showDataActions)).parents('.initHid').show()
+			if (extension!="jpg") $('#dataList').append($('<a class=button>').attr('href',file).click(showDataActions)).parents('.initHid').show()
 		})
 		if(!haveScouting)$('#scout-link').after($('#photo-scout-link,#pit-scout-link'))
 		seasonFiles.split(/[\r\n]+/).forEach(file=>{

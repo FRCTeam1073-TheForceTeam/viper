@@ -40,4 +40,4 @@ h3{margin:0 0 .25em 0;padding:0}
 .narrow li>ul{margin-top:0.2em;padding-left:0.5em}
 #event-menu h2 {text-align:start;font-size:110%;margin:0.5em 0}
 #main{display:none}
-nav.left .card,nav.left button{width:100%;padding-top:0.25em;padding-bottom:0.25em;text-align:start}
+nav.left .card,nav.left .button,nav.left button,label:has(>input[type="radio"])>span,label:has(>input[type="checkbox"])>span{width:100%;padding-top:0.25em;padding-bottom:0.25em;text-align:start}
