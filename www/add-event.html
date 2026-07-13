@@ -26,24 +26,26 @@
 <div class=grid>
 <a href="/event-data-entry.html#_COMP_" class="card">
 	<h3 data-i18n=add_event_data_entry_title></h3>
-	<span data-i18n=add_event_data_entry_description></span>
+	<div data-i18n=add_event_data_entry_description></div>
 </a>
 <a href="/event-upload.html#_COMP_" class="card">
 	<h3 data-i18n=add_event_upload_title></h3>
-	<span data-i18n=add_event_upload_description></span>
+	<div data-i18n=add_event_upload_description></div>
 </a>
 <a href="/api-events.html#_SEASON_" class="card">
 	<h3 data-i18n=add_event_api_title></h3>
-	<span data-i18n=add_event_api_description></span>
+	<div data-i18n=add_event_api_description></div>
 </a>
 <div class="card">
 	<h3 data-i18n=add_event_import_title></h3>
-	<span data-i18n=add_event_import_description></span>
+	<p data-i18n=add_event_import_description></p>
 	<form method=POST action=/admin/import.cgi enctype=multipart/form-data>
-		<label class=button>
-			<span data-i18n=add_event_import_choose></span><input type=file name=json accept=application/json>
-		</label>
-		<span class=file-name></span>
+		<p>
+			<label class=button>
+				<span data-i18n=add_event_import_choose></span><input type=file name=json accept=application/json>
+			</label>
+			<span class=file-name></span>
+		</p>
 		<input type=submit data-i18n-value=add_event_import_upload>
 	</form>
 </div>

@@ -1,8 +1,6 @@
 main{text-align:center}
-.card{max-width:16em;margin:0.4em;padding:0.8em}
-.grid .card{min-height:15em;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15em,1fr));gap:.8em;max-width:40em;margin:1.2em auto;padding:0 .5em;text-align:start}
-a.card span{color:var(--main-fg-color)}
+.grid>.card{margin:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(15em,1fr));grid-auto-rows:1fr;gap:1em;max-width:40em;margin:1em auto;padding:0;text-align:start;justify-items:stretch;align-items:stretch}
 input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
 .file-name{opacity:.85;font-size:.9em}
 label.card{margin:0 auto}
