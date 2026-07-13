@@ -297,7 +297,7 @@ function setComp(){
 			if (!has3){
 				$(this).find('td').each(function(){
 					if ($(this).find('input').attr('name').endsWith(2)){
-						var n =$(this).clone(),
+						var n =$(this).clone(true),
 						i = n.find('input')
 						i.attr('name', i.attr('name').replace(/2$/,3)).val('')
 						n.insertAfter($(this))
