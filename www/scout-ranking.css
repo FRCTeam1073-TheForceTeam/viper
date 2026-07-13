@@ -1,0 +1,20 @@
+#rankingTable td,#rankingTable th{border: 3px var(--main-fg-color) ridge;padding:0.3em}
+#rankingTable{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+#rankingTable th,#rankingTable td{padding:.55em 1.1em;text-align:start;border:0}
+#rankingTable th{font-weight:600;color:var(--main-fg-color);background:var(--lowlight-bg-color);border-bottom:1px solid var(--main-border-color)}
+#rankingTable th.sortable{cursor:pointer;user-select:none}
+#rankingTable th.sortable:hover{color:var(--accent)}
+#rankingTable th.sortable::after{content:"↕";opacity:.3;margin-inline-start:.4em;font-size:.85em}
+#rankingTable th.sortedAsc::after{content:"↑";opacity:1;color:var(--accent)}
+#rankingTable th.sortedDesc::after{content:"↓";opacity:1;color:var(--accent)}
+#rankingTable td{border-top:1px solid var(--main-border-color)}
+#rankingTable tbody tr:first-child td{border-top:0}
+#rankingTable tbody tr:nth-child(even){background:rgba(255,255,255,.025)}
+#rankingTable tbody tr:hover{background:var(--lowlight-bg-color)}
+#rankingTable td:not(:first-child),#rankingTable th:not(:first-child){text-align:end;font-variant-numeric:tabular-nums}
+#rankingTable th.scoreCol{position:relative}
+.rankingLayout{display:inline-block;margin:1em auto;text-align:start}
+.scoreInfo{width:100%;max-width:600px;box-sizing:border-box;padding:.8em 1.1em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+.scoreInfo h3{margin:0 0 .4em}
+.scoreInfo p{margin:0 0 .6em;max-width:none}
+.scoreInfo code{display:block;margin:.6em 0;padding:.45em .6em;text-align:center;background:var(--lowlight-bg-color);border:1px solid var(--main-border-color);border-radius:var(--radius)}

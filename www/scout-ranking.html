@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=UTF-8>
+<title data-i18n=scout_ranking_page_title></title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main-new.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/scout-ranking.css>
+<script src=/jquery.min.js></script>
+<script src=/main.js></script>
+<script src=/event-url.js></script>
+<script src=/scout-score-compare.js></script>
+<script src=/scout-ranking.js></script>
+<script src=/local.js></script>
+<link rel=icon type=image/png href=/logo.png>
+</head><body><main>
+<h1 data-i18n=scout_ranking_page_title></h1>
+<div class=rankingLayout>
+<div id=scoreInfoLightbox class=lightBoxCenterContent style=display:none>
+	<aside class=scoreInfo>
+		<h3 data-i18n=score_info_title></h3>
+		<p data-i18n=score_info_body></p>
+		<code>log₂(matches + 1) × 100 / (avgError + 5)</code>
+	</aside>
+</div>
+<div id=errorInfoLightbox class=lightBoxCenterContent style=display:none>
+	<aside class=scoreInfo>
+		<h3 data-i18n=error_info_title></h3>
+		<p data-i18n=error_info_body></p>
+	</aside>
+</div>
+<table id=rankingTable><tr>
+<th data-i18n=scout_heading></th>
+<th class=sortable data-sort=matches data-i18n=matches_heading></th>
+<th class=sortable data-sort=avgError><span data-i18n=error_heading></span><button id=errorInfoTrigger class=scoreInfoHelp>?</button></th>
+<th class="sortable scoreCol" data-sort=score><span data-i18n=score_heading></span><button id=scoreInfoTrigger class=scoreInfoHelp>?</button>
+</th></tr>
+<tbody id=rankings>
+</tbody>
+</table>
+</div>
+</main></body></html>
