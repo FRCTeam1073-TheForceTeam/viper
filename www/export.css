@@ -3,6 +3,7 @@ form,.siteInput{position:relative}
 .hostOptions li{border:1px solid var(--main-border-color);padding:0.2em;}
 .siteInput{margin:0.5em 0;border:1px solid var(--main-border-color);width:100%}
 .siteInput:focus+.hostOptions,.siteInput+.hostOptions:active{display:block}
-.side-by-side{max-width:20em;border:1px solid var(--main-fg-color);padding:0.5em}
 .loading-spinner{width:1em;animation:spin 4s linear infinite}
 @keyframes spin {100% {transform:rotate(360deg)}}
+.card{max-width:30em;margin:1em auto}
+#contents{padding-bottom:20em}
