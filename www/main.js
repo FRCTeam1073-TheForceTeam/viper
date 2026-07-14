@@ -603,16 +603,16 @@ function closeLightBox(){
 
 function showLightBox(content,e){
 	closeLightBox()
-	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
-	if(e){
-		var d=$(document),
-		vw=$(window).width()/100,
-		w=content.outerWidth()/2,
-		h=content.outerHeight()/2,
-		x=Math.max(w+vw,Math.min(e.pageX-d.scrollLeft(),$(document).width()-w-vw)),
-		y=Math.max(h+4*vw,Math.min(e.pageY-d.scrollTop(),d.height()-h-vw))
-		content.css('left',x+'px').css('top',y+'px')
-	}
+	var d=$(document),
+	wi=$(window),
+	ww=wi.width(),
+	wh=wi.height(),
+	w=content.outerWidth(),
+	h=content.outerHeight(),
+	x=Math.max(ww/100,Math.min(e.pageX-d.scrollLeft()-w/2,ww-w-ww/100)),
+	y=Math.max(wh/50,Math.min(e.pageY-d.scrollTop()-h/2,wh-h-wh/100))
+	$('#lightBoxBG').css('width',d.width()+"px").css('height',d.height()+"px").show()
+	if(e)content.css('left',x+'px').css('top',y+'px').css('transform','translate(0,0)').show()
 	applyTranslations()
 	content.show()
 	return false
