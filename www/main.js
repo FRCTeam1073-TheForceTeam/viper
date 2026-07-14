@@ -603,6 +603,7 @@ function closeLightBox(){
 
 function showLightBox(content,e){
 	closeLightBox()
+	e||={pageX:0,pageY:0}
 	var d=$(document),
 	wi=$(window),
 	ww=wi.width(),
@@ -612,7 +613,7 @@ function showLightBox(content,e){
 	x=Math.max(ww/100,Math.min(e.pageX-d.scrollLeft()-w/2,ww-w-ww/100)),
 	y=Math.max(wh/50,Math.min(e.pageY-d.scrollTop()-h/2,wh-h-wh/100))
 	$('#lightBoxBG').css('width',d.width()+"px").css('height',d.height()+"px").show()
-	if(e)content.css('left',x+'px').css('top',y+'px').css('transform','translate(0,0)').show()
+	if(e.pageX)content.css('left',x+'px').css('top',y+'px').css('transform','translate(0,0)').show()
 	applyTranslations()
 	content.show()
 	return false
