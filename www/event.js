@@ -1049,8 +1049,9 @@ $(document).ready(function(){
 		if(isFrcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFrcApi')
 		if(isFtcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFtcApi')
 		if(!(isFrcApiAvailable || isFtcApiAvailable) && noQualMatches) dependencySatisfied('dependNeedsManualSchedule')
-		if (practiceChoice) dependencySatisfied('dependPracticeChoice')
-		if (hasOurTeamMatch) dependencySatisfied('dependTeamSchedule')
+		if(practiceChoice) dependencySatisfied('dependPracticeChoice')
+		if(hasOurTeamMatch) dependencySatisfied('dependTeamSchedule')
+		if(eventMatches.find(m => /^(qm)/.test(m.Match))) dependencySatisfied('dependQuals')
 
 		$('a').each(function(){
 			$(this).attr(
