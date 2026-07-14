@@ -64,7 +64,7 @@ $(function() {
 				button.attr('data-tooltip', teamInfo)
 			}
 			if (currentTeams.includes(team)) {
-				button.addClass('picked')
+				button.addClass('primary')
 			}
 			button.click(function(){
 				teamButtonClicked.call(this)
@@ -99,9 +99,9 @@ $(function() {
 
 		// Always show management bar and set up manage teams button
 		$('#managementBar').show()
-		$('#manageTeamsBtn').off('click').click(function(){
+		$('#manageTeamsBtn').off('click').click(function(e){
 			showTeamButtons()
-			showLightBox($('#teamButtons'))
+			showLightBox($('#teamButtons'),e)
 		})
 
 		if (teams.length >= 1) {
