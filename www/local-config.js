@@ -141,12 +141,17 @@ addI18n({
 $(document).ready(function(){
 	// Check for saved notification from redirect
 	if (window.location.hash === '#saved'){
-		showSuccess(translate('local_config_saved'))
+		var msgArea = $('#message-area')
+		msgArea.html('')
+		var msg = $('<p class=success>').text(translate('local_config_saved'))
+		msgArea.append(msg)
 		setTimeout(function(){
-			$('#message-area').fadeOut(function(){
+			msg.addClass('hide')
+			setTimeout(function(){
+				msg.remove()
 				window.location.hash = ''
-			})
-		}, 1000)
+			}, 300)
+		}, 3000)
 	}
 
 	readConfiguration()
@@ -233,11 +238,21 @@ function validateForm(){
 function showSuccess(message){
 	var msgArea = $('#message-area')
 	msgArea.html('')
-		.append($('<p class=success>').text(message))
+	var msg = $('<p class=success>').text(message)
+	msgArea.append(msg)
+	setTimeout(function(){
+		msg.addClass('hide')
+		setTimeout(function(){ msg.remove() }, 300)
+	}, 3000)
 }
 
 function showError(message){
 	var msgArea = $('#message-area')
 	msgArea.html('')
-		.append($('<p class=error>').text(message))
+	var msg = $('<p class=error>').text(message)
+	msgArea.append(msg)
+	setTimeout(function(){
+		msg.addClass('hide')
+		setTimeout(function(){ msg.remove() }, 300)
+	}, 4000)
 }
