@@ -33,6 +33,7 @@
 --diff-rem-bg-color:#3a1717;
 --left-nav-width:18em;
 --left-nav-hidden-width:1em;
+--app-bar-height:3em;
 }
 *{box-sizing:border-box;scrollbar-color:var(--scrollbar-color) var(--scrollbar-thumb-color);scrollbar-width:0.2em}
 *::-webkit-scrollbar{width:0.2em}
@@ -45,7 +46,7 @@ a[href]{color:var(--link-color);text-decoration:none}
 a[href]:hover{text-decoration:underline}
 a:visited{color:var(--link-visited-color)}
 table,tr,td,th,button,input,select,option,input,textarea,form{font:inherit;color:inherit;background:inherit}
-#appBar{position:absolute;top:0;left:2em;right:5.5em;height:3em;z-index:9990;display:flex;align-items:center;justify-content:space-between;padding:0 .6em;background:var(--surface-bg);border-bottom:1px solid var(--main-border-color)}
+#appBar{position:absolute;top:0;left:2em;right:5.5em;height:var(--app-bar-height);z-index:9990;display:flex;align-items:center;justify-content:space-between;padding:0 .6em;background:var(--surface-bg);border-bottom:1px solid var(--main-border-color)}
 body:has(nav.left.nav-hidden) #appBar{left:0}
 body:not(:has(nav.left)) #appBar{left:0}
 @media (min-aspect-ratio: 2/3){
@@ -56,9 +57,8 @@ body:not(:has(nav.left)) #appBar{left:0}
 #appBar>div{flex:1;min-width:0;align-items:center;justify-content:flex-end}
 #appBar *{display:flex;color:var(--main-fg-color);margin:0 .2em;white-space:nowrap;align-items:center}
 #appBar .shrink{display:inline-block;overflow:hidden;text-overflow:ellipsis;min-width:3em}
-#appBarFixed{position:fixed;top:0;left:calc(100vw - 5.5em);width:5.5em;height:3em;z-index:9990;display:flex;align-items:center;justify-content:flex-end;padding:0 .6em;gap:0.2em;background:var(--surface-bg);border-bottom:1px solid var(--main-border-color)}
-#appBarFixed *{margin:0 .2em}
-#fullscreen,#hamburger{font-size:200%;cursor:pointer;color:var(--main-fg-color)}
+#appBarFixed{position:fixed;top:0;left:calc(100vw - 5.5em);width:5.5em;height:var(--app-bar-height);z-index:9990;display:flex;align-items:center;justify-content:flex-end;padding:0 .6em;gap:0.2em;background:var(--surface-bg);border-bottom:1px solid var(--main-border-color)}
+#appBarFixed *{margin:0 .2em;font-size:200%;cursor:pointer}
 body{text-align:center;overflow-x:hidden}
 table,ul{margin:0 auto;}
 ol,ul,p{text-align:start;max-width:40em;margin:0 auto}
@@ -81,7 +81,7 @@ nav.left>.nav-toggle::before{content:'‹'}
 nav.left.nav-hidden{overflow-y:hidden;transform:translateX(calc(-100% + var(--left-nav-hidden-width)))}
 nav.left.nav-hidden>.nav-toggle{left:unset;right:-.5em}
 nav.left.nav-hidden>.nav-toggle::before{content:'›'}
-main{padding-top:2em;overflow-x:hidden}
+main{padding-top:var(--app-bar-height);overflow-x:hidden}
 body:has(#appBar[style*="display:none"]) main{padding-top:0}
 main:has(>nav.left){padding-inline-start:var(--left-nav-hidden-width);padding-left:0}
 @media (min-aspect-ratio: 2/3){
@@ -100,12 +100,14 @@ h1{padding:0 2.5em}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
 #error-logs-link,#hamburger.error{background-color:var(--button-disabled-decoration-color)}
 #mainMenu .hasUploads,#mainMenu .hasUploads a:visited{font-weight:bold;color:var(--highlight-fg-color);background-color:var(--highlight-bg-color)}
-#mainMenu{top:3.25em;left:auto;right:.5em;transform:none;min-width:14em;max-width:min(20em,calc(100vw - 1em));max-height:calc(100vh - 4em);overflow:auto;padding:.4em}
+#mainMenu{min-width:14em;max-width:min(20em,calc(100vw - 1em));max-height:calc(100vh - 4em)}
 #mainMenu h4 {margin:.75em 0 0 0}
 #mainMenu ul {list-style:none;margin:0;padding:0}
 #mainMenu li {margin:.25em 0;padding:0;padding:0.25em;border:1px solid var(--main-border-color)}
 #lightBoxBG{z-index:9998;position:fixed;background-color:var(--translucent-hide-color);left:0;top:0;bottom:0;right:0;display:none}
-#lightBoxBG::before{content:'ⓧ';position:fixed;z-index:9999;top:.1em;left:.3em;font-size:150%}
+#lightBoxBG:has(.lightBoxFullContent)::before,
+#lightBoxBG:has(.lightBoxFullContent)::before{content:'ⓧ';position:fixed;z-index:9999;top:.1em;right:.3em;font-size:150%}
+.lightBoxCenterContent::before{content:'ⓧ';position:absolute;z-index:9999;top:-.7em;right:.5em;font-size:150%}
 .lightBoxCenterContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:50%;left:50%;transform:translate(-50%,-50%);padding:1em;display:none;text-align:start}
 .lightBoxFullContent{z-index:9999;position:fixed;background-color:var(--main-bg-color);top:2em;left:2em;width:calc(100vw - 4em);height:calc(100vh - 4em);padding:0;display:none}
 [data-tooltip]::before{position:absolute;content:attr(data-tooltip);opacity:0}

@@ -508,7 +508,7 @@ $(document).ready(function(){
 				hamburger = $('#hamburger')
 				mainMenu = $('#mainMenu')
 				$('#fullscreen').click(toggleFullScreen)
-				hamburger.click(function(){showLightBox(mainMenu)})
+				hamburger.click(function(e){showLightBox(mainMenu,e)})
 				applyTranslations(mainMenu)
 				mainMenu.find('.dependEvent').toggle(eName&&!/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eId||""))
 				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
@@ -563,6 +563,10 @@ $(document).ready(function(){
 			closeLightBox()
 		}
 	})
+	$(document).on('click','.lightBoxCenterContent',function(e){
+		if (e.target === this)closeLightBox()
+	})
+
 	applyTranslations()
 	var site = location.host.replace(/^(www|viper|webscout)\./,"")
 	if (!site || /^[0-9\.\:]*$/.test(site)){
@@ -597,9 +601,18 @@ function closeLightBox(){
 	return false
 }
 
-function showLightBox(content){
+function showLightBox(content,e){
 	closeLightBox()
 	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
+	if(e){
+		var d=$(document),
+		vw=$(window).width()/100,
+		w=content.outerWidth()/2,
+		h=content.outerHeight()/2,
+		x=Math.max(w+vw,Math.min(e.pageX-d.scrollLeft(),$(document).width()-w-vw)),
+		y=Math.max(h+4*vw,Math.min(e.pageY-d.scrollTop(),d.height()-h-vw))
+		content.css('left',x+'px').css('top',y+'px')
+	}
 	applyTranslations()
 	content.show()
 	return false
