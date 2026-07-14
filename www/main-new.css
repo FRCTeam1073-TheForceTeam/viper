@@ -49,14 +49,10 @@ a:visited{color:var(--link-visited-color)}
 table,tr,td,th,button,input,select,option,input,textarea,form{font:inherit;color:inherit;background:inherit}
 #app-bar{position:absolute;top:0;left:var(--left-nav-hidden-width);right:var(--app-bar-icons-width);height:var(--app-bar-height);z-index:9990;display:flex;align-items:center;justify-content:space-between;padding:0 .6em;background:var(--surface-bg);border-bottom:1px solid var(--main-border-color)}
 html[dir="rtl"] #app-bar{left:var(--app-bar-icons-width);right:var(--left-nav-width)}
-html[dir="ltr"] body:has(nav.left.nav-hidden) #app-bar,html[dir="rtl"] body:not(:has(nav.left)) #app-bar{right:0}
-html[dir="ltr"] body:has(nav.left.nav-hidden) #app-bar,html[dir="rtl"] body:not(:has(nav.left)) #app-bar{left:0}
-@media (min-aspect-ratio: 2/3){
-	html[dir="ltr"] #app-bar{left:var(--left-nav-width)}
-	html[dir="rtl"] #app-bar{right:var(--left-nav-width)}
-	html[dir="ltr"] body:has(nav.left.nav-hidden) #app-bar{left:var(--left-nav-hidden-width)}
-	html[dir="rtl"] body:has(nav.left.nav-hidden) #app-bar{right:var(--left-nav-hidden-width)}
-}
+html[dir="ltr"] body:has(nav.left.nav-hidden) #app-bar{left:var(--left-nav-hidden-width)}
+html[dir="rtl"] body:has(nav.left.nav-hidden) #app-bar{right:var(--left-nav-hidden-width)}
+html[dir="ltr"] body:not(:has(nav.left)) #app-bar{left:0}
+html[dir="rtl"] body:not(:has(nav.left)) #app-bar{right:0}
 #app-bar img{height:1.6em;width:auto;display:inline-block}
 #app-bar>div{flex:1;min-width:0;align-items:center;justify-content:flex-end}
 #app-bar *{display:flex;color:var(--main-fg-color);margin:0 .2em;white-space:nowrap;align-items:center}
@@ -83,7 +79,7 @@ a.card[href]::after,a.button[href]::after{content:'›';color:var(--accent-text)
 html[dir="rtl"] a.card[href]::after,html[dir="rtl"] a.button[href]::after{right:unset;left:.4em}
 a.card[href]>div,a.card[href]>p{color:var(--main-fg-color)}
 nav.left{position:fixed;top:0;inset-inline-start:0;bottom:0;width:var(--left-nav-width);max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:1em;background:var(--surface-bg);border-inline-end:1px solid var(--main-border-color);z-index:9991;transition:transform .2s ease;display:flex;flex-direction:column;gap:0.5em}
-nav.left>.nav-toggle{position:absolute;top:calc(100vh - 2em);left:unset;right:0;display:flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;padding:0;background:var(--surface-bg);border:var(--border);border-radius:var(--radius);font-size:140%;font-weight:700;line-height:1;cursor:pointer;z-index:9981}
+nav.left>.nav-toggle{position:absolute;top:calc(100vh - 2em);left:unset;right:0;display:flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;padding:0;background-color:var(--accent);color:var(--accent-fg);border:var(--border);border-radius:var(--radius);font-size:140%;font-weight:700;line-height:1;cursor:pointer;z-index:9981}
 html[dir="rtl"] nav.left>.nav-toggle{right:unset;left:0}
 nav.left>.nav-toggle::before{content:'‹'}
 nav.left.nav-hidden{overflow-y:hidden;transform:translateX(calc(-100% + var(--left-nav-hidden-width)))}
@@ -96,6 +92,11 @@ body:not(:has(#app-bar)) main,body:has(#app-bar[style*="display:none"]) main{pad
 main:has(>nav.left){padding-inline-start:var(--left-nav-hidden-width);padding-left:0}
 @media (min-aspect-ratio: 2/3){
 	main:has(>nav.left:not(.nav-hidden)){padding-inline-start:var(--left-nav-width)}
+	nav.left>button.nav-toggle{background:var(--surface-bg);color:var(--main-fg-color)}
+	html[dir="ltr"] #app-bar{left:var(--left-nav-width)}
+	html[dir="rtl"] #app-bar{right:var(--left-nav-width)}
+	html[dir="ltr"] body:has(nav.left.nav-hidden) #app-bar{left:var(--left-nav-hidden-width)}
+	html[dir="rtl"] body:has(nav.left.nav-hidden) #app-bar{right:var(--left-nav-hidden-width)}
 }
 .button,button,input,select,label:has(>input[type="radio"])>span,label:has(>input[type="checkbox"])>span{display:inline-block;border:var(--border);background-color:var(--button-bg-color);color:var(--button-fg-color);padding:.3em .5em;border-radius:var(--radius);margin:.2em;text-align:center;cursor:pointer;position:relative}
 .button:hover,a.button[href]:hover,button:hover,input[type=submit]:hover,a.card[href]:hover,label:has(>input[type="radio"])>span:hover,label:has(>input[type="checkbox"])>span:hover,select:hover{border-color:var(--accent);background-color:var(--accent-hover-bg);text-decoration:none}
