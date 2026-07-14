@@ -1262,6 +1262,7 @@ $(document).ready(function(){
 	}
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
+		return false
 	})
 })
 
