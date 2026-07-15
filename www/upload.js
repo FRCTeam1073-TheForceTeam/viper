@@ -175,6 +175,26 @@ function uploadComparator(i){
 	return m[m.length-1]
 }
 
+function appendUploadItem(section, key, content){
+	section.append(
+		$('<div class=card>')
+		.append($('<h4>').text(key))
+		.append(content)
+		.append($('<button data-i18n=delete_button>').attr("data-match",key).click(deleteMatch))
+		.append($('<button data-i18n=qr_code_button>').attr("data-match",key).click(showQrCode))
+	)
+}
+
+function appendHistoryItem(section, key, type, content){
+	section.append(
+		$('<div class=card>')
+		.append($('<h4>').attr('class',type).text(key))
+		.append(content)
+		.append($('<button data-i18n=undelete_button>').attr('data-i18n',type=='deleted'?'undelete_button':'reupload_button').attr("data-match",key).click(undeleteMatch))
+		.append($('<button data-i18n=remove_history_button>').attr("data-match",key).click(removeMatch))
+	)
+}
+
 function showUploads(){
 	var up = $('#uploads').html(""),
 	upLater = $('#uploads-later').html(""),
@@ -201,11 +221,7 @@ function showUploads(){
 			pdb.get(i,p=>{
 				img.attr('src',p)
 			})
-			section.append($('<hr>'))
-			.append($('<h4>').text(i))
-			.append(img)
-			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
-			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
+			appendUploadItem(section, i, img)
 			if (photoCount <= 4){
 				var input=$('<input type=hidden class=image>').attr('name',`${year}/${name}`)
 				pdb.get(i,p=>{
@@ -231,11 +247,7 @@ function showUploads(){
 			} else {
 				laterCount++
 			}
-			section.append($('<hr>'))
-			.append($('<h4>').text(i))
-			.append($('<pre>').text(header + localStorage[i]))
-			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
-			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
+			appendUploadItem(section, i, $('<pre>').text(header + localStorage[i]))
 		} else if (/^20[0-9]{2}(-[0-9]{2})?.*_.*_/.test(i)){
 			scoutingCount++
 			if (scoutingCount > 10) limitedUpload = true
@@ -251,11 +263,7 @@ function showUploads(){
 			} else {
 				laterCount++
 			}
-			section.append($('<hr>'))
-			.append($('<h4>').text(i))
-			.append($('<pre>').text(header + localStorage[i]))
-			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
-			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
+			appendUploadItem(section, i, $('<pre>').text(header + localStorage[i]))
 		} else if (/^20[0-9]{2}(-[0-9]{2})?[A-Za-z0-9\-]+_[0-9]+/.test(i)){
 			scoutingCount++
 			if (scoutingCount > 10) limitedUpload = true
@@ -271,11 +279,7 @@ function showUploads(){
 			} else {
 				laterCount++
 			}
-			section.append($('<hr>'))
-			.append($('<h4>').text(i))
-			.append($('<pre>').text(header + localStorage[i]))
-			.append($('<button data-i18n=delete_button>').attr("data-match",i).click(deleteMatch))
-			.append($('<button data-i18n=qr_code_button>').attr("data-match",i).click(showQrCode))
+			appendUploadItem(section, i, $('<pre>').text(header + localStorage[i]))
 		} else if (/^(deleted|uploaded)_20/.test(i)){
 			var date=localStorage[i].match(/(20\d\d-[01]\d-[0-3]\dT[0-2]\d[^,\n]*)/g)||[""]
 			date=date[date.length-1]
@@ -283,11 +287,7 @@ function showUploads(){
 			else{
 				var view=$('<div>'),
 				type=i.replace(/_.*/,'')
-				his.append($('<hr>'))
-				.append($('<h4>').attr('class',type).text(i))
-				.append(view)
-				.append($('<button data-i18n=undelete_button>').attr('data-i18n',type=='deleted'?'undelete_button':'reupload_button').attr("data-match",i).click(undeleteMatch))
-				.append($('<button data-i18n=remove_history_button>').attr("data-match",i).click(removeMatch))
+				appendHistoryItem(his, i, type, view)
 				pdb.get(i,d=>{
 					if(/^data:image/.test(d)) view.append($('<img class=photo-upload>').attr('src',d))
 					else view.append($('<pre>').text(d))
