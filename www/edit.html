@@ -4,7 +4,7 @@
 <title>Edit FILE</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/edit.css>
 <link rel=stylesheet href=/tabulator.min.css>
@@ -15,8 +15,7 @@
 <script src=/tabulator.min.js></script>
 <script src=/edit.js></script>
 <link rel=icon type=image/png href=/logo.png>
-</head>
-<body>
+</head><body><main
 <div id=main>
 <form id=saver method=POST action=/admin/edit.cgi>
 	<input id=file type=text readonly name=file pattern="^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|schedule|event|alliances)\.csv$" required placeholder=20xxEvent.type.csv>
@@ -26,4 +25,4 @@
 </form>
 <div id=editor></div>
 </div>
-</body></html>
+</main></body></html>
