@@ -395,6 +395,7 @@ function showGraphs(matchList, matchNames){
 			})
 		}
 	})
+	applyTranslations()
 }
 
 function showComments(matchList, matchNames){
