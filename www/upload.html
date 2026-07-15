@@ -15,17 +15,25 @@
 <script src=/local.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head><body><main>
-<h1 data-i18n=upload_page_title></h1>
-<form id=upload action=/scout/upload.cgi method=POST>
-	<input type=hidden id=csv name=csv>
-	<input type=hidden id=next name=next>
-	<button class="uploads primary xl" id=upload-all data-i18n=upload_all_button></button>
-</form>
-<div id=upload-description></div>
-<h2 class=uploads><span data-i18n=uploads_heading></span> <button id=show-uploads data-i18n=show_data_button></button></h2>
-<div class=uploads><div class=initHid id=uploads></div></div>
-<h2 class=uploads-later><span data-i18n=uploads_later_heading></span> <button id=show-uploads-later data-i18n=show_data_button></button></h2>
-<div class=uploads-later><div class=initHid id=uploads-later></div></div>
-<h2 class=history><span data-i18n=history_heading></span> <button id=show-history data-i18n=show_data_button></button></h2>
-<div class=history><div class=initHid id=history></div></div>
+<div class=card>
+	<h1 data-i18n=upload_page_title></h1>
+	<form id=upload action=/scout/upload.cgi method=POST>
+		<input type=hidden id=csv name=csv>
+		<input type=hidden id=next name=next>
+		<button class="uploads primary xl" id=upload-all data-i18n=upload_all_button></button>
+	</form>
+	<div id=upload-description></div>
+</div>
+<div class="card uploads">
+	<h2 class=uploads><span data-i18n=uploads_heading></span> <button id=show-uploads data-i18n=show_data_button></button></h2>
+	<div class=uploads><div class=initHid id=uploads></div></div>
+</div>
+<div class="card uploads-later">
+	<h2 class=uploads-later><span data-i18n=uploads_later_heading></span> <button id=show-uploads-later data-i18n=show_data_button></button></h2>
+	<div class=uploads-later><div class=initHid id=uploads-later></div></div>
+</div>
+<div class="card history">
+	<h2 class=history><span data-i18n=history_heading></span> <button id=show-history data-i18n=show_data_button></button></h2>
+	<div class=history><div class=initHid id=history></div></div>
+</div>
 </main></body></html>
