@@ -97,6 +97,7 @@ var statInfo = {
 		tr:'Maç',
 		fr:'Match',
 		pt:'Partida',
+		es:'Partido',
 	},
 	team:{
 		en: "Team",
@@ -106,6 +107,7 @@ var statInfo = {
 		tr:'Takım',
 		fr:'Équipe',
 		pt:'Equipe',
+		es:'Equipo',
 	},
 	comments:{
 		en: "Comments",
@@ -115,6 +117,7 @@ var statInfo = {
 		tr:'Yorumlar',
 		fr:'Commentaires',
 		pt:'Comentários',
+		es:'Comentarios',
 	},
 	created:{
 		en: "Created",
@@ -124,6 +127,7 @@ var statInfo = {
 		tr:'Oluşturuldu',
 		fr:'Créé',
 		pt:'Criado',
+		es:'Creado',
 	},
 	modified:{
 		en: "Modified",
@@ -133,6 +137,7 @@ var statInfo = {
 		tr:'Değiştirildi',
 		fr:'Modifié',
 		pt:'Modificado',
+		es:'Modificado',
 	},
 	scouter:{
 		en: "Scouter",
@@ -142,6 +147,7 @@ var statInfo = {
 		tr:'Scouter',
 		fr:'Animateur',
 		pt:'Scouter',
+		es:'Scout',
 	},
 	timeline:{
 		en: "Timeline",
@@ -151,6 +157,7 @@ var statInfo = {
 		tr:'Zaman Çizelgesi',
 		fr:'Chronologie',
 		pt:'Linha do Tempo',
+		es:'Cronología',
 	},
 	count:{
 		en: 'Count',
@@ -160,6 +167,7 @@ var statInfo = {
 		tr:'Sayı',
 		fr:'Nombre',
 		pt:'Contagem',
+		es:'Conteo',
 	},
 	artifact:{
 		en: 'Artifact',
@@ -169,6 +177,7 @@ var statInfo = {
 		tr:'Eser',
 		fr:'Artefact',
 		pt:'Artefato',
+		es:'Artefacto',
 	},
 	auto_artifact:{
 		en: 'Artifact in Auto',
@@ -178,6 +187,7 @@ var statInfo = {
 		tr:'Otomatikte Eser',
 		fr:'Artefact en mode automatique',
 		pt:'Artefacto em Automático',
+		es:'Artefacto en Automático',
 	},
 	auto_depot:{
 		en: 'Depot in Auto',
@@ -187,6 +197,7 @@ var statInfo = {
 		tr:'Otomatikte Depo',
 		fr:'Dépôt en mode automatique',
 		pt:'Depósito em Automático',
+		es:'Depósito en Automático',
 	},
 	auto_gate:{
 		en: 'Gate in Auto',
@@ -196,6 +207,7 @@ var statInfo = {
 		tr:'Otomatikte Kapı',
 		fr:'Porte en mode automatique',
 		pt:'Portão em Automático',
+		es:'Puerta en Automático',
 	},
 	auto_goal:{
 		en: 'Goal in Auto',
@@ -205,6 +217,7 @@ var statInfo = {
 		tr:'Otomatikte Gol',
 		fr:'But en mode automatique',
 		pt:'Gol em Automático',
+		es:'Gol en Automático',
 	},
 	auto_leave:{
 		en:'Left Starting Line',
@@ -214,6 +227,7 @@ var statInfo = {
 		tr:'Otomatikte Başlangıç Çizgisinden Ayrıldı',
 		fr:'A quitté la ligne de départ',
 		pt:'Saiu da linha de partida',
+		es:'Salió de la línea de inicio',
 	},
 	auto_patterns:{
 		en: 'Patterns in Auto',
@@ -223,6 +237,7 @@ var statInfo = {
 		tr:'Otomatikte Desenler',
 		fr:'Motifs en mode automatique',
 		pt:'Padrões em Automático',
+		es:'Patrones en Automático',
 		values:["","obelisk","purple"],
 		breakout:["auto_patterns_none","auto_patterns_obelisk","auto_patterns_purple"],
 	},
@@ -234,6 +249,7 @@ var statInfo = {
 		tr:'Otomatikte Desen Yok',
 		fr:'Aucun motif en mode automatique',
 		pt:'Padrões Nenhum em Automático',
+		es:'Patrones Ninguno en Automático',
 	},
 	auto_patterns_obelisk:{
 		en: 'Patterns Obelisk in Auto',
@@ -243,6 +259,7 @@ var statInfo = {
 		tr:'Otomatikte Dikilitaş Desenleri',
 		fr:'Motifs Obélisque en mode automatique',
 		pt:'Padrões Obelisco em Automático',
+		es:'Patrones Obelisco en Automático',
 	},
 	auto_patterns_purple:{
 		en: 'Patterns Purple in Auto',
@@ -252,22 +269,47 @@ var statInfo = {
 		tr:'Otomatikte Mor Desenler',
 		fr:'Motifs Violet en mode automatique',
 		pt:'Padrões Roxo em Automático',
+		es:'Patrones Púrpura en Automático',
 	},
 	auto_preset_1:{
 		en: 'Preset 1 in Auto',
-		type: '%'
+		type: '%',
+		zh_tw:'自動預設 1',
+		he:'הגדרה מראש 1 באוטו',
+		tr:'Otomatikte Ön Ayar 1',
+		fr:'Préréglage 1 en mode automatique',
+		pt:'Predefinição 1 em Automático',
+		es:'Preajuste 1 en Automático',
 	},
 	auto_preset_2:{
 		en: 'Preset 2 in Auto',
-		type: '%'
+		type: '%',
+		zh_tw:'自動預設 2',
+		he:'הגדרה מראש 2 באוטו',
+		tr:'Otomatikte Ön Ayar 2',
+		fr:'Préréglage 2 en mode automatique',
+		pt:'Predefinição 2 em Automático',
+		es:'Preajuste 2 en Automático',
 	},
 	auto_preset_3:{
 		en: 'Preset 3 in Auto',
-		type: '%'
+		type: '%',
+		zh_tw:'自動預設 3',
+		he:'הגדרה מראש 3 באוטו',
+		tr:'Otomatikte Ön Ayar 3',
+		fr:'Préréglage 3 en mode automatique',
+		pt:'Predefinição 3 em Automático',
+		es:'Preajuste 3 en Automático',
 	},
 	auto_preset_4:{
 		en: 'Preset 4 in Auto',
-		type: '%'
+		type: '%',
+		zh_tw:'自動預設 4',
+		he:'הגדרה מראש 4 באוטו',
+		tr:'Otomatikte Ön Ayar 4',
+		fr:'Préréglage 4 en mode automatique',
+		pt:'Predefinição 4 em Automático',
+		es:'Preajuste 4 en Automático',
 	},
 	auto_start:{
 		en: 'Start in Auto',
@@ -277,6 +319,7 @@ var statInfo = {
 		tr:'Otomatikte Başlangıç',
 		fr:'Début en mode automatique',
 		pt:'Início em Automático',
+		es:'Inicio en Automático',
 		values:["","goal","audience"],
 		breakout:["auto_start_unknown","auto_start_goal","auto_start_audience"],
 	},
@@ -288,6 +331,7 @@ var statInfo = {
 		tr:'Otomatikte Seyirci Başlangıcı',
 		fr:'Début Public en mode automatique',
 		pt:'Público Inicial em Automático',
+		es:'Inicio Audiencia en Automático',
 	},
 	auto_start_goal:{
 		en: 'Start Goal in Auto',
@@ -297,6 +341,7 @@ var statInfo = {
 		tr:'Otomatikte Başlangıç ​​Hedefi',
 		fr:'Début Objectif en mode automatique',
 		pt:'Golo Inicial em Automático',
+		es:'Inicio Gol en Automático',
 	},
 	auto_start_unknown:{
 		en: 'Start Unknown in Auto',
@@ -306,6 +351,7 @@ var statInfo = {
 		tr:'Otomatikte Başlangıç ​​Bilinmiyor',
 		fr:'Début Inconnu en mode automatique',
 		pt:'Início Desconhecido em Automático',
+		es:'Inicio Desconocido en Automático',
 	},
 	auto_took_turns:{
 		en: 'Took Turns in Auto',
@@ -315,6 +361,7 @@ var statInfo = {
 		tr:'Otomatikte Sırayla',
 		fr:'Tours en mode automatique',
 		pt:'Revezou-se em Automático',
+		es:'Tomó Turnos en Automático',
 	},
 	base_return:{
 		en: 'Base Return',
@@ -324,6 +371,7 @@ var statInfo = {
 		tr:'Üs Dönüşü',
 		fr:'Retour de base',
 		pt:'Regresso à Base',
+		es:'Regreso a Base',
 		values:["","partially","alone","under","above"],
 		breakout:["base_return_none","base_return_partially","base_return_alone","base_return_under","base_return_above"],
 	},
@@ -335,6 +383,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Tamamen Yukarıda',
 		fr:'Retour de base complètement au-dessus',
 		pt:'Regresso à Base Totalmente Acima',
+		es:'Regreso a Base Completamente Arriba',
 	},
 	base_return_alone:{
 		en: 'Base Return Fully Alone',
@@ -344,6 +393,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Tamamen Tek Başına',
 		fr:'Retour de base complètement seul',
 		pt:'Regresso à Base Totalmente Sozinho',
+		es:'Regreso a Base Completamente Solo',
 	},
 	base_return_both:{
 		en: 'Base Return Fully Both',
@@ -353,6 +403,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Tamamen İkisi Birlikte',
 		fr:'Retour de base complètement les deux',
 		pt:'Regresso à Base Totalmente Ambos',
+		es:'Regreso a Base Completamente Ambos',
 	},
 	base_return_fully:{
 		en: 'Base Return Fully',
@@ -362,6 +413,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Tamamen',
 		fr:'Retour de base complètement',
 		pt:'Regresso à Base Totalmente',
+		es:'Regreso a Base Completamente',
 	},
 	base_return_none:{
 		en: 'Base Return None',
@@ -371,6 +423,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Yok',
 		fr:'Retour de base aucun',
 		pt:'Regresso à Base Nenhum',
+		es:'Regreso a Base Ninguno',
 	},
 	base_return_partially:{
 		en: 'Base Return Partially',
@@ -380,6 +433,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Kısmen',
 		fr:'Retour de base partiellement',
 		pt:'Regresso à Base Parcialmente',
+		es:'Regreso a Base Parcialmente',
 	},
 	base_return_under:{
 		en: 'Base Return Fully Under',
@@ -389,6 +443,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Tamamen Altında',
 		fr:'Retour de base complètement en dessous',
 		pt:'Regresso à Base Totalmente Abaixo',
+		es:'Regreso a Base Completamente Abajo',
 	},
 	depot:{
 		en: 'Depot',
@@ -398,6 +453,7 @@ var statInfo = {
 		tr:'Depo',
 		fr:'Dépôt',
 		pt:'Depósito',
+		es:'Depósito',
 	},
 	gate:{
 		en: 'Gate',
@@ -407,6 +463,7 @@ var statInfo = {
 		tr:'Kapı',
 		fr:'Porte',
 		pt:'Portão',
+		es:'Puerta',
 	},
 	goal:{
 		en: 'Goal',
@@ -416,6 +473,7 @@ var statInfo = {
 		tr:'Gol',
 		fr:'But',
 		pt:'Gol',
+		es:'Gol',
 	},
 	event:{
 		en: 'Event',
@@ -425,6 +483,7 @@ var statInfo = {
 		tr:'Etkinlik',
 		fr:'Événement',
 		pt:'Evento',
+		es:'Evento',
 	},
 	no_show:{
 		en: 'No Show',
@@ -434,6 +493,7 @@ var statInfo = {
 		tr:'Gelmedi',
 		fr:'Absence',
 		pt:'Não Comparecimento',
+		es:'Sin Presentación',
 	},
 	tele_artifact:{
 		en: 'Artifact in Teleop',
@@ -443,6 +503,7 @@ var statInfo = {
 		tr:'Teleop\'ta Eser',
 		fr:'Artefact en mode téléop.',
 		pt:'Artefacto em Teleoperação',
+		es:'Artefacto en Teleoperación',
 	},
 	tele_depot:{
 		en: 'Depot in Teleop',
@@ -452,6 +513,7 @@ var statInfo = {
 		tr:'Teleop\'ta Depo',
 		fr:'Dépôt en mode téléop.',
 		pt:'Depósito em Teleoperação',
+		es:'Depósito en Teleoperación',
 	},
 	tele_gate:{
 		en: 'Gate in Teleop',
@@ -461,6 +523,7 @@ var statInfo = {
 		tr:'Kapıda Teleop',
 		fr:'Porte en mode téléop.',
 		pt:'Portão em Teleoperação',
+		es:'Puerta en Teleoperación',
 	},
 	tele_goal:{
 		en: 'Goal in Teleop',
@@ -470,6 +533,7 @@ var statInfo = {
 		tr:'Teleop\'ta Hedef',
 		fr:'But en Téléopération',
 		pt:'Gol em Teleop',
+		es:'Gol en Teleoperación',
 	},
 	tele_patterns:{
 		en: 'Patterns in Teleop',
@@ -479,6 +543,7 @@ var statInfo = {
 		tr:'Teleop\'ta Desenler',
 		fr:'Motifs dans Téléopération',
 		pt:'Padrões em Teleop',
+		es:'Patrones en Teleoperación',
 	},
 	auto_classified:{
 		en: 'Classified in Auto (Estimated)',
@@ -487,6 +552,7 @@ var statInfo = {
 		pt:'Classificado em Automático (Estimado)',
 		tr:'Otomatikte Sınıflandırıldı (Tahmini)',
 		zh_tw:'自動分類（估計）',
+		es:'Clasificado en Automático (Estimado)',
 		type: 'avg'
 	},
 	auto_classified_score:{
@@ -496,6 +562,7 @@ var statInfo = {
 		pt:'Pontuação Classificada em Automático (Estimado)',
 		tr:'Otomatikte Sınıflandırma Puanı (Tahmini)',
 		zh_tw:'自動分類得分（估計）',
+		es:'Puntuación Clasificada en Automático (Estimado)',
 		type: 'avg'
 	},
 	auto_depot_score:{
@@ -505,6 +572,7 @@ var statInfo = {
 		pt:'Pontuação do Depósito em Automático (Estimado)',
 		tr:'Otomatikte Depo Puanı (Tahmini)',
 		zh_tw:'自動倉庫得分（估計）',
+		es:'Puntuación del Depósito en Automático (Estimado)',
 		type: 'avg'
 	},
 	auto_leave_score:{
@@ -514,6 +582,7 @@ var statInfo = {
 		pt:'Pontuação de Saída em Automático (Estimado)',
 		tr:'Otomatikte Ayrılma Puanı (Tahmini)',
 		zh_tw:'自動離開得分（估計）',
+		es:'Puntuación de Salida en Automático (Estimado)',
 		type: 'avg'
 	},
 	auto_motif:{
@@ -523,6 +592,7 @@ var statInfo = {
 		pt:'Motivo em Automático (Estimado)',
 		tr:'Otomatikte Motif (Tahmini)',
 		zh_tw:'自動圖案（估計）',
+		es:'Motivo en Automático (Estimado)',
 		type: 'avg'
 	},
 	auto_motif_score:{
@@ -532,6 +602,7 @@ var statInfo = {
 		pt:'Pontuação do Motivo em Automático (Estimado)',
 		tr:'Otomatikte Motif Puanı (Tahmini)',
 		zh_tw:'自動圖案得分（估計）',
+		es:'Puntuación del Motivo en Automático (Estimado)',
 		type: 'avg'
 	},
 	auto_overflow:{
@@ -541,6 +612,7 @@ var statInfo = {
 		pt:'Excesso em Automático (Estimado)',
 		tr:'Otomatikte Taşma (Tahmini)',
 		zh_tw:'自動溢出（估計）',
+		es:'Desbordamiento en Automático (Estimado)',
 		type: '%'
 	},
 	auto_overflow_score:{
@@ -550,6 +622,7 @@ var statInfo = {
 		pt:'Pontuação de Excesso em Automático (Estimado)',
 		tr:'Otomatikte Taşma Puanı (Tahmini)',
 		zh_tw:'自動溢出得分（估計）',
+		es:'Puntuación de Desbordamiento en Automático (Estimado)',
 		type: 'avg'
 	},
 	auto_score:{
@@ -559,6 +632,7 @@ var statInfo = {
 		pt:'Pontuação em Automático (Estimado)',
 		tr:'Otomatikte Puan (Tahmini)',
 		zh_tw:'自動得分（估計）',
+		es:'Puntuación en Automático (Estimado)',
 		type: 'avg'
 	},
 	base_return_score:{
@@ -568,6 +642,7 @@ var statInfo = {
 		tr:'Üs Dönüşü Puanı (Tahmini)',
 		fr:'Score de retour de base (Estimé)',
 		pt:'Pontuação de Regresso à Base (Estimado)',
+		es:'Puntuación de Regreso a Base (Estimado)',
 		type: 'avg'
 	},
 	classified_score:{
@@ -577,6 +652,7 @@ var statInfo = {
 		pt:'Pontuação Classificada (Estimada)',
 		tr:'Sınıflandırma Puanı (Tahmini)',
 		zh_tw:'分類得分（估計）',
+		es:'Puntuación Clasificada (Estimada)',
 		type: 'avg'
 	},
 	depot_score:{
@@ -586,6 +662,7 @@ var statInfo = {
 		pt:'Pontuação do Depósito (Estimada)',
 		tr:'Depo Puanı (Tahmini)',
 		zh_tw:'倉庫得分（估計）',
+		es:'Puntuación del Depósito (Estimada)',
 		type: 'avg'
 	},
 	motif_score:{
@@ -595,6 +672,7 @@ var statInfo = {
 		pt:'Pontuação do Motivo (Estimada)',
 		tr:'Motif Puanı (Tahmini)',
 		zh_tw:'圖案得分（估計）',
+		es:'Puntuación del Motivo (Estimada)',
 		type: 'avg'
 	},
 	overflow_score:{
@@ -604,6 +682,7 @@ var statInfo = {
 		pt:'Pontuação de Excesso (Estimada)',
 		tr:'Taşma Puanı (Tahmini)',
 		zh_tw:'溢出得分（估計）',
+		es:'Puntuación de Desbordamiento (Estimada)',
 		type: 'avg'
 	},
 	review_requested:{
@@ -613,6 +692,7 @@ var statInfo = {
 		pt:'Revisão Solicitada (Estimada)',
 		tr:'İnceleme Talebi (Tahmini)',
 		zh_tw:'請求審查（估計）',
+		es:'Revisión Solicitada (Estimada)',
 		type: '%'
 	},
 	score:{
@@ -622,6 +702,7 @@ var statInfo = {
 		pt:'Contribuição de Pontuação (Estimada)',
 		tr:'Puan Katkısı (Tahmini)',
 		zh_tw:'得分貢獻（估計）',
+		es:'Contribución de Puntuación (Estimada)',
 		type: 'avg'
 	},
 	tele_classified:{
@@ -631,6 +712,7 @@ var statInfo = {
 		pt:'Classificado em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Sınıflandırıldı (Tahmini)',
 		zh_tw:'遠端操作分類（估計）',
+		es:'Clasificado en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 	tele_classified_score:{
@@ -640,6 +722,7 @@ var statInfo = {
 		pt:'Pontuação Classificada em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Sınıflandırma Puanı (Tahmini)',
 		zh_tw:'遠端操作分類得分（估計）',
+		es:'Puntuación Clasificada en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 	tele_depot_score:{
@@ -649,6 +732,7 @@ var statInfo = {
 		pt:'Pontuação do Depósito em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Depo Puanı (Tahmini)',
 		zh_tw:'遠端操作倉庫得分（估計）',
+		es:'Puntuación del Depósito en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 	tele_motif:{
@@ -658,6 +742,7 @@ var statInfo = {
 		pt:'Motivo em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Motif (Tahmini)',
 		zh_tw:'遠端操作圖案（估計）',
+		es:'Motivo en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 	tele_motif_score:{
@@ -667,6 +752,7 @@ var statInfo = {
 		pt:'Pontuação do Motivo em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Motif Puanı (Tahmini)',
 		zh_tw:'遠端操作圖案得分（估計）',
+		es:'Puntuación del Motivo en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 	tele_overflow:{
@@ -676,6 +762,7 @@ var statInfo = {
 		pt:'Excesso em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Taşma (Tahmini)',
 		zh_tw:'遠端操作溢出（估計）',
+		es:'Desbordamiento en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 	tele_overflow_score:{
@@ -685,6 +772,7 @@ var statInfo = {
 		pt:'Pontuação de Excesso em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Taşma Puanı (Tahmini)',
 		zh_tw:'遠端操作溢出得分（估計）',
+		es:'Puntuación de Desbordamiento en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 	tele_score:{
@@ -694,6 +782,7 @@ var statInfo = {
 		pt:'Pontuação em Teleoperação (Estimado)',
 		tr:'Teleop\'ta Puan (Tahmini)',
 		zh_tw:'遠端操作得分（估計）',
+		es:'Puntuación en Teleoperación (Estimado)',
 		type: 'avg'
 	},
 }
@@ -706,6 +795,7 @@ var teamGraphs = {
 		tr:'Puan Katkısı',
 		fr:'Contribution au score',
 		pt:'Contribuição de Pontuação',
+		es:'Contribución de Puntuación',
 		data:["auto_score","tele_score","base_return_score"]
 	},
 	"Artifacts":{
@@ -715,10 +805,17 @@ var teamGraphs = {
 		tr:'Artefaktlar',
 		fr:'Artefacts',
 		pt:'Artefatos',
+		es:'Artefactos',
 		data:["goal",'depot']
 	},
 	"Presets":{
 		graph:"stacked",
+		zh_tw:'預設',
+		he:'הגדרות מראש',
+		tr:'Ön Ayarlar',
+		fr:'Préréglages',
+		pt:'Predefinições',
+		es:'Preajustes',
 		data:["auto_preset_1","auto_preset_2","auto_preset_3","auto_preset_4"]
 	},
 	"End Game":{
@@ -728,6 +825,7 @@ var teamGraphs = {
 		tr:'Oyun Sonu',
 		fr:'Fin de partie',
 		pt:'Final de Jogo',
+		es:'Final de Juego',
 		data:["base_return_none","base_return_partially","base_return_alone","base_return_under","base_return_above"]
 	},
 }
@@ -740,6 +838,7 @@ var aggregateGraphs = {
 		tr:'Puan Katkısı',
 		fr:'Contribution au score',
 		pt:'Contribuição de Pontuação',
+		es:'Contribución de Puntuación',
 		data:["score"]
 	},
 	"Match Stages":{
@@ -748,6 +847,8 @@ var aggregateGraphs = {
 		he:'שלבי משחק',
 		tr:'Maç Aşamaları',
 		fr:'Étapes du match',
+		pt:'Fases da Partida',
+		es:'Fases de la Partida',
 		data:["auto_score","tele_score","base_return_score"]
 	},
 	"Artifacts":{
@@ -757,10 +858,17 @@ var aggregateGraphs = {
 		tr:'Artefaktlar',
 		fr:'Artefacts',
 		pt:'Artefatos',
+		es:'Artefactos',
 		data:["artifact"]
 	},
 	"Presets":{
 		graph:"bar",
+		zh_tw:'預設',
+		he:'הגדרות מראש',
+		tr:'Ön Ayarlar',
+		fr:'Préréglages',
+		pt:'Predefinições',
+		es:'Preajustes',
 		data:["auto_preset_1","auto_preset_2","auto_preset_3","auto_preset_4"]
 	},
 	"End Game":{
@@ -770,6 +878,7 @@ var aggregateGraphs = {
 		tr:'Oyun Sonu',
 		fr:'Fin de partie',
 		pt:'Final de Jogo',
+		es:'Final de Juego',
 		data:["base_return_none","base_return_partially","base_return_alone","base_return_under","base_return_above"]
 	},
 }
@@ -781,6 +890,7 @@ var matchPredictorSections = {
 		zh_tw:'全部的',
 		pt:'Total',
 		fr:'Total',
+		es:'Total',
 		data:["artifacts"],
 	},
 }

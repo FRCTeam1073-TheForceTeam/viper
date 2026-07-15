@@ -12,6 +12,12 @@ addI18n({
 	},
 	scout_heading:{
 		en:'Scout',
+		pt:'Scouter',
+		he:'צופה',
+		tr:'Gözlemci',
+		zh_tw:'偵察員',
+		fr:'Scout',
+		es:'Scout',
 	},
 	matches_heading:{
 		en:'Matches',
