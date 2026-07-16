@@ -1,3 +1,5 @@
+"use strict"
+
 // Season-specific statistics and aggregation logic
 var stats = {
 	auto: {

@@ -5,7 +5,7 @@
 
 status=0
 
-files=`git diff --cached --name-only`
+files=`git diff --cached --name-only --diff-filter=ACMRTU`
 
 ./script/console-log-check.sh $files
 let status=status+$?

@@ -46,7 +46,7 @@ cd ../..
 for server in `foreachserver --list --quiet live`
 do
 	echo $server
-    rsync local.data/viper$team/ $server:sites/viper/local.data/$team -avz --delete
+	rsync local.data/viper$team/ $server:sites/viper/local.data/$team -avz --delete
 done
 foreachserver live "cd sites/viper/local.data/$team; sudo cp .htsite /etc/apache2/sites-available/viper$team.conf; sudo a2ensite viper$team; sudo service apache2 reload"
 
