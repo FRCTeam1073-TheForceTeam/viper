@@ -186,7 +186,7 @@ addI18n({
 		pt:'Tanque',
 		tr:'Tank',
 		he:'טַנק',
-		fr:'Réservoir',
+		fr:'Chaînes',
 		zh_tw:'坦克',
 		es:'Tank',
 	},
