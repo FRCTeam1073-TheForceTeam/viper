@@ -12,7 +12,14 @@ li{margin:.5em 0;}
 #matchTable td.B1,#matchTable td.B2,#matchTable td.B3{background-color:color-mix(in srgb,var(--blue-team-color) 60%,var(--surface))}
 body.hide-practice #matchTable tr.practiceMatch{display:none}
 body.team-only #matches tr:not(.myTeamMatch){display:none}
-#matchTable{margin:1em auto;table-layout:fixed;max-width:100%}
+/* Wrapper fills the available main width; it's the sizing reference so the
+   table can scale down to fit whatever horizontal room is left after the
+   left nav and top-teams panels reserve their space. */
+#matchTableWrap{container-type:inline-size;width:100%}
+/* Scale the whole table (columns are sized in ch/em) so it always fits the
+   available width. Caps at the base 1em when there's room; shrinks otherwise.
+   ~34em is the table's intrinsic width; /38 leaves a little breathing room. */
+#matchTable{margin:1em auto;table-layout:fixed;max-width:100%;font-size:min(1em,100cqi/38)}
 #matchTable thead th:first-child{width:5em}
 #matchTable .redScore,#matchTable .blueScore{width:2.8em}
 h3{margin:0 0 .25em 0;padding:0}

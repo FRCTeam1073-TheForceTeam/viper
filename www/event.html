@@ -130,10 +130,12 @@
 		<label class=sidebar-toggle><input type=checkbox id=teamOnlyToggle> <span data-i18n=team_schedule_label></span></label>
 	</div>
 
-	<table id=matchTable class=side-by-side>
+	<div id=matchTableWrap>
+	<table id=matchTable>
 		<thead><tr><th data-i18n=match></th><th class=R1>R1</th><th class=R2>R2</th><th class="R3 noftc">R3</th><th class=redScore data-i18n=score_abbreviation></th><th class=blueScore data-i18n=score_abbreviation></th><th class=B1>B1</th><th class=B2>B2</th><th class="B3 noftc">B3</th></tr></thead>
 		<tbody id=matches></tbody>
 	</table>
+	</div>
 
 	<template id=matchRow>
 		<tr>
