@@ -29,7 +29,8 @@ class FieldDescriptor {
 		// Register with global scouting data if available (skip for static descriptors)
 		if (autoRegister) {
 			try {
-				getGlobalScoutingData().registerDescriptor(this);
+				final model = getGlobalScoutingData();
+				model?.registerDescriptor(this);
 			} catch (e) {
 				// Silently ignore if global data not yet initialized or conflicts with static
 			}
@@ -77,7 +78,8 @@ class FieldDescriptor {
 			final cached = _cache[name]!;
 			// Ensure cached descriptor registers itself (in case registration was missed before)
 			try {
-				getGlobalScoutingData().registerDescriptor(cached);
+				final model = getGlobalScoutingData();
+				model?.registerDescriptor(cached);
 			} catch (e) {
 				// Silently ignore if global data not yet initialized
 			}

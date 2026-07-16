@@ -97,7 +97,7 @@ class _DescriptorTextAreaDescriptorState extends ConsumerState<_DescriptorTextAr
 	void initState() {
 		super.initState();
 		final model = getGlobalScoutingData();
-		final storageValue = model.values[widget.descriptor.name] as String?;
+		final storageValue = model?.values[widget.descriptor.name] as String?;
 		_controller = TextEditingController(text: storageValue ?? '');
 	}
 
@@ -129,8 +129,10 @@ class _DescriptorTextAreaDescriptorState extends ConsumerState<_DescriptorTextAr
 				maxLines: widget.maxLines,
 				onChanged: (value) {
 					final model = getGlobalScoutingData();
-					final updated = model.updateField(widget.descriptor.name, value);
-					ref.read(widget.provider.notifier).update(updated);
+					if (model != null) {
+						final updated = model.updateField(widget.descriptor.name, value);
+						ref.read(widget.provider.notifier).update(updated);
+					}
 				},
 			),
 		);

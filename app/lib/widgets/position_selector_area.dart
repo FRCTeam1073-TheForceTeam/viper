@@ -50,6 +50,10 @@ class PositionSelectorArea extends StatefulWidget {
 	}) {
 		// Get current value from global model
 		final model = getGlobalScoutingData();
+		if (model == null) {
+			return SizedBox(width: width, height: height, child: const Center(child: CircularProgressIndicator()));
+		}
+
 		final selectedPosition = model.getFieldValue(descriptor.name).asString();
 
 		final positionWidget = PositionSelectorArea(

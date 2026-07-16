@@ -40,7 +40,7 @@ class _ArtifactPresetCheckboxState extends ConsumerState<ArtifactPresetCheckbox>
 	void initState() {
 		super.initState();
 		final model = getGlobalScoutingData();
-		final storageValue = model.values[widget.fieldName] as String?;
+		final storageValue = model?.values[widget.fieldName] as String?;
 		_isChecked = storageValue == '1';
 	}
 
@@ -50,8 +50,10 @@ class _ArtifactPresetCheckboxState extends ConsumerState<ArtifactPresetCheckbox>
 			_isChecked = !_isChecked;
 		});
 		final model = getGlobalScoutingData();
-		final updated = model.updateField(widget.fieldName, _isChecked ? 1 : 0);
-		ref.read(widget.provider.notifier).update(updated);
+		if (model != null) {
+			final updated = model.updateField(widget.fieldName, _isChecked ? 1 : 0);
+			ref.read(widget.provider.notifier).update(updated);
+		}
 		// Notify scouting data of auto-tab interaction if in auto phase
 		if (widget.fieldName.startsWith('auto_preset')) {
 			ref.read(scoutingDataProvider.notifier).notifyAutoTouch(widget.fieldName);

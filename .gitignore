@@ -16,14 +16,3 @@ tmp
 *.bak
 *~
 *.prompt.md
-
-/app/build/
-/app/.dart_tool/
-/app/.packages
-/app/linux/flutter/
-/app/macos/Flutter/
-/app/windows/flutter/
-/app/ios/Flutter/
-/app/android/.gradle/
-/app/android/local.properties
-*.g.dart
