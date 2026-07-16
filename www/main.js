@@ -563,7 +563,7 @@ $(document).ready(function(){
 			closeLightBox()
 		}
 	})
-	$(document).on('click','.lightBoxCenterContent',function(e){
+	$(document).on('click','.lightBoxCenterContent,.lightBoxFullContent',function(e){
 		if (e.target === this)closeLightBox()
 	})
 
@@ -603,6 +603,7 @@ function closeLightBox(){
 
 function showLightBox(content,e){
 	closeLightBox()
+	content=content.closest('.lightBoxCenterContent,.lightBoxFullContent')
 	e||={pageX:0,pageY:0}
 	var d=$(document),
 	wi=$(window),
