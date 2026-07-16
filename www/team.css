@@ -22,7 +22,5 @@
 }
 #topNav ul{display:inline-block}
 #topNav li{display:inline-block}
-#topNav li:not(:first-of-type)::before{content:" | "}
-#topNav li[style*="display: none"]::before,
-#topNav li[style*="display:none"]::before{content:""}
 .unused{text-decoration:line-through}
+.card,fieldset{margin-top:1em}

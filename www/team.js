@@ -180,32 +180,36 @@ function fillPage(){
 		showStats()
 
 		if(typeof window.showPitScouting === 'function'){
-			$('a.pitScouting').attr('href', `#event=${eventId}&team=${team}&pit-scouting`)
+			$('a.pitScouting').attr('href', `#event=${eventId}&team=${team}&pit-scouting`).click(scrollToPitScouting)
 			$('#pit-scouting').html("")
 			window.showPitScouting($('#pit-scouting'),team)
-			if (/pit-scouting/i.test(location.hash)){
-				setTimeout(function(){
-					window.scroll(0,$('#pit-scouting').position().top-100)
-				},200)
-			}
+			if (/pit-scouting/i.test(location.hash))scrollToPitScouting()
 		} else {
 			$('.pitScouting').hide()
 		}
 
 		if(typeof window.showSubjectiveScouting === 'function'){
-			$('a.subjectiveScouting').attr('href', `#event=${eventId}&team=${team}&subjective-scouting`)
+			$('a.subjectiveScouting').attr('href', `#event=${eventId}&team=${team}&subjective-scouting`).click(scrollToSubjectiveScouting)
 			$('#subjective-scouting').html("")
 			window.showSubjectiveScouting($('#subjective-scouting'),team)
-			if (/subjective-scouting/i.test(location.hash)){
-				setTimeout(function(){
-					window.scroll(0,$('#subjective-scouting').position().top-100)
-				},200)
-			}
+			if (/subjective-scouting/i.test(location.hash))scrollToSubjectiveScouting()
 		} else {
 			$('.subjectiveScouting').hide()
 		}
 	}
 	applyTranslations()
+}
+
+function scrollToPitScouting(){
+	setTimeout(function(){
+		window.scroll(0,$('#pit-scouting').position().top-100)
+	},200)
+}
+
+function scrollToSubjectiveScouting(){
+	setTimeout(function(){
+		window.scroll(0,$('#subjective-scouting').position().top-100)
+	},200)
 }
 
 function teamButtonClicked(){
@@ -306,7 +310,7 @@ function showGraphs(matchList, matchNames){
 		csv = csv.map(row=>row.map(String).join(',')).join('\n')
 		downloadBlobs[section]=new Blob([csv], {type: 'text/csv;charset=utf-8'})
 
-		var graph=$('<div class=graph>')
+		var graph=$('<div class="graph card">')
 		graphs.append(graph)
 		graph.append(
 			$('<h2>').append($('<span>').attr('data-i18n',section)).append(" ")
