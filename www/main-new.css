@@ -72,7 +72,8 @@ ol,ul,p{text-align:start;max-width:40em;margin:0 auto}
 .blueTeamDimBG{background-color:var(--blue-team-dim-color);border-color:var(--blue-team-dim-color)}
 .side-by-side{display:inline-block;vertical-align:top;margin:1em;box-sizing:content-box}
 .winner{border-left-color:var(--winner-color);border-right-color:var(--winner-color)}
-.card{display:block;margin:.5em;padding:1em;background:var(--surface-bg);border:var(--border);border-radius:var(--radius-lg);position:relative;max-width:40em;}
+.card,fieldset{display:block;margin:.5em;padding:1em;background:var(--surface-bg);border:var(--border);border-radius:var(--radius-lg);position:relative;max-width:40em;}
+fieldset legend{font-size:120%}
 a.card[href],a.button[href]{padding-right:2em}
 html[dir="rtl"] a.card[href],html[dir="rtl"] a.button[href]{padding-right:2em}
 a.card[href]::after,a.button[href]::after{content:'›';color:var(--accent-text);font-size:130%;font-weight:700;position:absolute;top:50%;right:.4em;transform:translateY(-50%)}
