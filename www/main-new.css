@@ -76,7 +76,6 @@ ol,ul,p{text-align:start;max-width:40em;margin:0 auto}
 fieldset legend{font-size:120%}
 a.card[href],a.button[href]{padding-right:2em}
 html[dir="rtl"] a.card[href],html[dir="rtl"] a.button[href]{padding-right:2em}
-a.card[href]::after,a.button[href]::after{content:'›';color:var(--accent-text);font-size:130%;font-weight:700;position:absolute;top:50%;right:.4em;transform:translateY(-50%)}
 html[dir="rtl"] a.card[href]::after,html[dir="rtl"] a.button[href]::after{right:unset;left:.4em}
 a.card[href]>div,a.card[href]>p{color:var(--main-fg-color)}
 nav.left{position:fixed;top:0;inset-inline-start:0;bottom:0;width:var(--left-nav-width);max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:1em;background:var(--surface-bg);border-inline-end:1px solid var(--main-border-color);z-index:9991;transition:transform .2s ease;display:flex;flex-direction:column;gap:0.5em}
