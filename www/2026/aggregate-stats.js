@@ -2560,12 +2560,6 @@ function showPitScouting(el,team){
 	}
 }
 
-function showSubjectiveScouting(el,team){
-	promiseSubjectiveScouting().then(subjectiveData => {
-		applyTranslations()
-	})
-}
-
 var importFunctions={
 	"195":{
 		example:"/2026/195.csv",
