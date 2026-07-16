@@ -594,16 +594,19 @@ function getLocalTeam(){
 
 function closeLightBox(){
 	$('#lightBoxBG,#lightBoxClose,.lightBoxCenterContent,.lightBoxFullContent').hide()
+	$('html').removeClass('lightbox-open')
 	return false
 }
 
 function showLightBox(content){
 	closeLightBox()
 	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
-	// The hamburger main menu closes by clicking off it (or the hamburger); no X needed there
-	if ($(content).attr('id')!=='mainMenu') $('#lightBoxClose').css('display','flex')
+	// The hamburger main menu and instruction cards close by clicking off them (or Esc); no X needed
+	if ($(content).attr('id')!=='mainMenu' && !$(content).hasClass('instructions')) $('#lightBoxClose').css('display','flex')
 	applyTranslations()
 	content.show()
+	// Lock background page scroll so only the lightbox content (and its own scrollbar) shows
+	$('html').addClass('lightbox-open')
 	return false
 }
 

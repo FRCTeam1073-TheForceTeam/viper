@@ -16,6 +16,10 @@
 #match-list .match>button{flex:0 0 auto}
 #match-list .match>span{flex:0 1 auto;min-width:0}
 img.bigimg{width:48vw}
+/* Instruction lightbox shows only the inner content card, not a full-screen panel frame */
+iframe.instructions{background:transparent;border:none;box-shadow:none}
+/* The generic button rule below stretches the round close button into an oval; keep it round */
+#lightBoxClose{min-width:0}
 img.expandable-image{width:5em;vertical-align:middle;cursor:pointer}
 img.full-image{object-fit:contain;width:100%;height:100%}
 img.count{max-width:10em;margin:0.25em 0;cursor:pointer}

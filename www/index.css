@@ -2,9 +2,9 @@
 #main h1{padding:0;font-size:200%;font-weight:700;margin:.6em auto .2em}
 
 /* Event list — single column of cards */
-#events-list{display:flex;flex-direction:column;gap:.6em;max-width:40em;margin:1.2em auto;list-style:none;padding:0}
+#events-list{display:flex;flex-direction:column;gap:.85em;max-width:46em;margin:1.2em auto;list-style:none;padding:0}
 #events-list li{margin:0;padding:0}
-#events-list li a,#events-list li a:link,#events-list li a:visited{display:block;position:relative;padding:.9em 2.4em .9em 1.1em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);color:var(--link-color);font-weight:600;font-size:1.25em;text-align:start;text-decoration:none;transition:border-color .15s ease,transform .05s ease,box-shadow .15s ease}
+#events-list li a,#events-list li a:link,#events-list li a:visited{display:block;position:relative;padding:1.25em 2.7em 1.25em 1.4em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow);color:var(--link-color);font-weight:600;font-size:1.4em;text-align:start;text-decoration:none;transition:border-color .15s ease,transform .05s ease,box-shadow .15s ease}
 #events-list li a:hover{border-color:var(--accent);transform:translateY(-1px);text-decoration:none}
 #events-list li a::after{content:'\203a';position:absolute;top:50%;inset-inline-end:.9em;transform:translateY(-50%);color:var(--accent);font-size:1.3em;font-weight:700;line-height:1}
 html[dir="rtl"] #events-list li a::after{content:'\2039'}

@@ -1,4 +1,15 @@
 "use strict"
+// When shown inside a lightbox iframe, mark the doc so the page background can drop out,
+// leaving only the #md content card visible (no surrounding panel). Clicking anywhere outside
+// the card (the transparent area of the iframe) closes the lightbox in the parent.
+if (window.self !== window.top){
+	document.documentElement.classList.add('in-frame')
+	document.addEventListener('click', function(e){
+		if (!e.target.closest('#md')){
+			try { window.parent.closeLightBox() } catch(x) {}
+		}
+	})
+}
 onApplyTranslation.push(show)
 var lastLocale='xx'
 function show(){
