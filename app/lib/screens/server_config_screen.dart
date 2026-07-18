@@ -27,6 +27,7 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 	late TextEditingController _passwordController;
 	final _formKey = GlobalKey<FormState>();
 	bool _isLoading = false;
+	bool _hasExistingConfig = false;
 
 	/// Helper to get translated text with current provider locale
 	String _translate(String key) {
@@ -232,6 +233,9 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 				if (config.password != null) {
 					_passwordController.text = config.password!;
 				}
+				setState(() {
+					_hasExistingConfig = true;
+				});
 			}
 		} catch (e) {
 			// Ignore errors during load
@@ -552,17 +556,20 @@ class _ServerConfigScreenState extends ConsumerState<ServerConfigScreen> {
 							),
 							const SizedBox(height: 12),
 							// Skip for now button
-							SizedBox(
-								width: double.infinity,
-								child: TextButton(
-									onPressed: () {
-										ref.read(navigationCommandProvider.notifier).navigateTo(NavigationTarget.event);
-									},
-									child: Text(
-										t('skip_for_now'),
-										style: const TextStyle(
-											fontSize: 16,
-											fontWeight: FontWeight.w600,
+							Visibility(
+								visible: !_hasExistingConfig,
+								child: SizedBox(
+									width: double.infinity,
+									child: TextButton(
+										onPressed: () {
+											ref.read(navigationCommandProvider.notifier).navigateTo(NavigationTarget.event);
+										},
+										child: Text(
+											t('skip_for_now'),
+											style: const TextStyle(
+												fontSize: 16,
+												fontWeight: FontWeight.w600,
+											),
 										),
 									),
 								),

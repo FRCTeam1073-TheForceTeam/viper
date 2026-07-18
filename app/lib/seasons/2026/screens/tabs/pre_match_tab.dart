@@ -148,7 +148,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		};
 
 		final fileName = languageFileMap[languageCode] ?? 'scouting-instructions.md';
-		return 'assets/$fileName';
+		return 'assets/2026/$fileName';
 	}
 
 	void _showInstructions() {
@@ -249,9 +249,8 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 		// Get the field side (left or right)
 		final fieldSide = ref.watch(selectedFieldSideProvider);
 
-		// Debug: Print positioning state when Pre-Match tab is shown
-
-		// Read scouting data provider (don't watch to avoid rebuilding on updates)
+		// Watch scouting data provider to rebuild when position changes
+		ref.watch(scoutingDataProvider);
 
 		// Get baseUrl for robot photo
 		final apiClientAsync = ref.watch(apiClientProvider);
@@ -298,7 +297,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 													style: Theme.of(context).textTheme.titleMedium,
 												),
 												const SizedBox(height: 16),
-												// Starting position interactive area (clickable/draggable)
+												// Starting position interactive area
 												Center(
 													child: PositionSelectorArea.forField(
 														descriptor: FieldDescriptor(name: 'starting_position'),
@@ -310,7 +309,7 @@ class _PreMatchTabState extends ConsumerState<PreMatchTab> {
 														redImagePath: 'assets/2026/images/start-area-red.png',
 														width: 84,
 														height: 250,
-														markerSize: 60,
+														markerSize: 30,
 													),
 												),
 											],
