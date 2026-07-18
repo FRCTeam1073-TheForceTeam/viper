@@ -20,6 +20,7 @@ iframe{width:100%;height:100%}
 .statsTable .picked{background-color:var(--lowlight-bg-color)}
 .statsTable>tr:first-child>*:not(:first-child){width:2em}
 .statsTable>tr:first-child>*:first-child{width:15em}
+#statGraphs h2{margin:0}
 @media (min-height:800px){
 	.chart canvas{max-height:50vh}
 }

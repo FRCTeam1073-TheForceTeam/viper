@@ -265,7 +265,7 @@ function showStats(){
 			graphType=graphList[section].graph,
 			source=stat.source||"",
 			dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
-			graph=$('<div class=graph>')
+			graph=$('<div class="card graph">')
 			graphs.append(graph)
 			var csv = [["team", ...teamList]]
 			for (var j=0; j<graphList[section].data.length; j++){
