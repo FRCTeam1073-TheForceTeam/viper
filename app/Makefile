@@ -33,6 +33,16 @@ run-linux: .analyze linux
 run-windows: .analyze windows
 	flutter run -d windows
 
+.PHONY: build-android
+build-android: build/app/outputs/flutter-apk/app-release.apk
+
+build/app/outputs/flutter-apk/app-release.apk: .analyze android
+	flutter build apk
+
+.PHONY: build-ios
+build-ios: .analyze ios
+	flutter build ipa
+
 .build-runner: pubspec.yaml $(shell find lib/data/database -name '*.dart' ! -name '*.g.dart')
 	dart run build_runner build
 	@touch .build-runner
