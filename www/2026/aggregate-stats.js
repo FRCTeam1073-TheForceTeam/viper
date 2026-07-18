@@ -229,6 +229,8 @@ var statInfo={
 		zh_tw:'事件',
 		tr:'Etkinlik',
 		he:'מִקרֶה',
+		es:'Evento',
+
 	},
 	match:{
 		name:"Match",
@@ -238,6 +240,8 @@ var statInfo={
 		zh_tw:'匹配',
 		tr:'Maç',
 		he:'לְהַתְאִים',
+		es:'Partido',
+
 	},
 	team:{
 		name:"Team",
@@ -247,6 +251,8 @@ var statInfo={
 		zh_tw:'團隊',
 		tr:'Takım',
 		he:'קְבוּצָה',
+		es:'Equipo',
+
 	},
 	count:{
 		name:'Matches Scouted',
@@ -256,6 +262,8 @@ var statInfo={
 		zh_tw:'已偵察的比賽',
 		tr:'İzlenen Maçlar',
 		he:'גפרורים בצופים',
+		es:'Cantidad',
+
 	},
 	duplicate:{
 		name:'Duplicate',
@@ -275,7 +283,13 @@ var statInfo={
 			'half':'bricked_half',
 			'most':'bricked_most',
 			'all':'bricked_all'
-		}
+		},
+		fr:'Gelé',
+		pt:'Congelado',
+		zh_tw:'凍結',
+		tr:'Donmuş',
+		he:'קפוא',
+		es:'Congelado',
 	},
 	climb_method:{
 		en:'Climb Method',
@@ -284,7 +298,13 @@ var statInfo={
 			'rungs':'climb_method_rungs',
 			'uprights':'climb_method_uprights',
 			'flip':'climb_method_flip'
-		}
+		},
+		fr:'Méthode d\'escalade',
+		pt:'Método de escalada',
+		zh_tw:'爬升方法',
+		tr:'Tırmanma Yöntemi',
+		he:'שיטת טיפוס',
+		es:'Método de escalada',
 	},
 	comments:{
 		en:'Comments',
@@ -294,6 +314,8 @@ var statInfo={
 		zh_tw:'評論',
 		tr:'Yorumlar',
 		he:'הערות',
+		es:'Comentarios',
+
 	},
 	created:{
 		en:'Created',
@@ -303,6 +325,8 @@ var statInfo={
 		zh_tw:'已創建',
 		tr:'Oluşturuldu',
 		he:'נוצר',
+		es:'Creado',
+
 	},
 	defended:{
 		en:'Defended',
@@ -319,6 +343,7 @@ var statInfo={
 		zh_tw:'防守',
 		tr:'Savunulan',
 		he:'הגן',
+		es:'Defendido',
 	},
 	defense:{
 		en:'Defense',
@@ -335,6 +360,7 @@ var statInfo={
 		zh_tw:'防禦',
 		tr:'Savunma',
 		he:'הגנה',
+		es:'Defensa',
 	},
 	defense_bad:{
 		en:'Bad Defense',
@@ -344,6 +370,8 @@ var statInfo={
 		zh_tw:'不好的防禦',
 		tr:'Kötü Savunma',
 		he:'הגנה גרועה',
+		es:'Defensa Mala',
+
 	},
 	defense_ineffective:{
 		en:'Ineffective Defense',
@@ -353,6 +381,8 @@ var statInfo={
 		zh_tw:'無效的防禦',
 		tr:'Etkisiz Savunma',
 		he:'הגנה לא יעילה',
+		es:'Defensa Inefectiva',
+
 	},
 	defense_good:{
 		en:'Good Defense',
@@ -362,6 +392,8 @@ var statInfo={
 		zh_tw:'好的防禦',
 		tr:'İyi Savunma',
 		he:'הגנה טובה',
+		es:'Defensa Buena',
+
 	},
 	defense_great:{
 		en:'Great Defense',
@@ -371,6 +403,8 @@ var statInfo={
 		zh_tw:'很好的防禦',
 		tr:'Harika Savunma',
 		he:'הגנה מעולה',
+		es:'Defensa Excelente',
+
 	},
 	defense_mode:{
 		en:'Most Common Defense Rating',
@@ -380,6 +414,8 @@ var statInfo={
 		zh_tw:'最常見的防禦評級',
 		tr:'En Yaygın Savunma Değerlendirmesi',
 		he:'דירוג ההגנה הנפוץ ביותר',
+		es:'Calificación de Defensa Más Común',
+
 	},
 	fuel_to_alliance:{
 		en:'Fuel To Alliance',
@@ -395,6 +431,7 @@ var statInfo={
 		zh_tw:'燃料聯盟',
 		tr:'Yakıt İttifakı',
 		he:'דלק לברית',
+		es:'Combustible a la alianza',
 	},
 	misses:{
 		en:'Misses',
@@ -411,6 +448,7 @@ var statInfo={
 		zh_tw:'錯過',
 		tr:'Kaçırmalar',
 		he:'חִסרוֹן',
+		es:'Fallos',
 	},
 	modified:{
 		en:'Modified',
@@ -420,6 +458,8 @@ var statInfo={
 		zh_tw:'已修改',
 		tr:'Değiştirilmiş',
 		he:'שונה',
+		es:'Modificado',
+
 	},
 	scouter:{
 		en:'Scout',
@@ -429,6 +469,8 @@ var statInfo={
 		zh_tw:'童子軍',
 		tr:'İzcisi',
 		he:'צופה',
+		es:'Scout',
+
 	},
 	shoot_climbing:{
 		en:'Shoot Climbing',
@@ -438,6 +480,8 @@ var statInfo={
 		zh_tw:'射擊攀爬',
 		tr:'Atış Tırmanışı',
 		he:'קליעה לטיפוס',
+		es:'Disparo Escalada',
+
 	},
 	shoot_collecting:{
 		en:'Shoot Collecting',
@@ -447,6 +491,8 @@ var statInfo={
 		zh_tw:'射擊收集',
 		tr:'Atış Toplama',
 		he:'קליעה לאיסוף',
+		es:'Disparo Recolectando',
+
 	},
 	shoot_move:{
 		en:'Shoot Move',
@@ -456,6 +502,8 @@ var statInfo={
 		zh_tw:'射擊移動',
 		tr:'Atış Hareketi',
 		he:'קליעה תנועה',
+		es:'Disparo Movimiento',
+
 	},
 	shoot_turret:{
 		en:'Shoot Turret',
@@ -465,6 +513,8 @@ var statInfo={
 		zh_tw:'射擊炮塔',
 		tr:'Atış Kule',
 		he:'קליעה צריח',
+		es:'Disparo Torreta',
+
 	},
 	timeline:{
 		en:'Timeline',
@@ -474,6 +524,8 @@ var statInfo={
 		zh_tw:'時間軸',
 		tr:'Zaman Çizelgesi',
 		he:'ציר זמן',
+		es:'Cronología',
+
 	},
 	drivetrain:{
 		en:'Drivetrain',
@@ -488,6 +540,7 @@ var statInfo={
 		zh_tw:'傳動系統',
 		tr:'Sürüş Sistemi',
 		he:'מערכת הנעה',
+		es:'Sistema de transmisión',
 	},
 	swerve:{
 		en:'Swerve Module Type',
@@ -504,6 +557,7 @@ var statInfo={
 		zh_tw:'Swerve 模塊類型',
 		tr:'Swerve Modül Türü',
 		he:'סוג מודול סרב',
+		es:'Tipo de módulo Swerve',
 	},
 	motors:{
 		en:'Motor Type',
@@ -520,6 +574,7 @@ var statInfo={
 		zh_tw:'電機類型',
 		tr:'Motor Türü',
 		he:'סוג מנוע',
+		es:'Tipo de motor',
 	},
 	wheels:{
 		en:'Wheel Type',
@@ -539,6 +594,7 @@ var statInfo={
 		zh_tw:'車輪類型',
 		tr:'Tekerlek Türü',
 		he:'סוג גלגל',
+		es:'Tipo de rueda',
 	},
 	auto_bump_depot_alliance_to_neutral:{
 		en:'Bump (Depot Side) Alliance To Neutral in Auto',
@@ -551,6 +607,7 @@ var statInfo={
 		zh_tw:'自動將聯盟倉庫撞擊為中立',
 		tr:'Otomatik Olarak İttifak Deposunu Nötr Yap',
 		he:'לדחוף את מחסן הברית לנייטרלי באוטומט',
+		es:'Empujar depósito de alianza a neutro en auto',
 	},
 	auto_bump_depot_neutral_to_alliance:{
 		en:'Bump (Depot Side) Neutral To Alliance in Auto',
@@ -563,6 +620,7 @@ var statInfo={
 		zh_tw:'自動將中立倉庫撞擊到聯盟',
 		tr:'Otomatik Olarak Nötr Depoyu İttifak Yap',
 		he:'לדחוף מחסן נייטרלי לברית באוטומט',
+		es:'Empujar depósito neutro a alianza en auto',
 	},
 	auto_bump_outpost_alliance_to_neutral:{
 		en:'Bump (Outpost Side) Alliance To Neutral in Auto',
@@ -575,6 +633,7 @@ var statInfo={
 		zh_tw:'自動將聯盟前哨撞擊為中立',
 		tr:'Otomatik Olarak İttifak Karakolunu Nötr Yap',
 		he:'לדחוף את מוצב הברית לנייטרלי באוטומט',
+		es:'Empujar puesto de alianza a neutro en auto',
 	},
 	auto_bump_outpost_neutral_to_alliance:{
 		en:'Bump (Outpost Side) Neutral To Alliance in Auto',
@@ -587,6 +646,7 @@ var statInfo={
 		zh_tw:'自動將中立前哨撞擊到聯盟',
 		tr:'Otomatik Olarak Nötr Karakolu İttifak Yap',
 		he:'לדחוף מוצב נייטרלי לברית באוטומט',
+		es:'Empujar puesto neutro a alianza en auto',
 	},
 	auto_climb_level:{
 		en:'Climb Level in Auto',
@@ -599,6 +659,8 @@ var statInfo={
 		zh_tw:'自動攀爬等級',
 		tr:'Otomatik Tırmanma Seviyesi',
 		he:'רמת טיפוס באוטומט',
+		es:'Nivel de Escalada en Auto',
+
 	},
 	auto_climb_position:{
 		en:'Climb Position in Auto',
@@ -616,6 +678,8 @@ var statInfo={
 		zh_tw:'自動攀爬位置',
 		tr:'Otomatik Tırmanma Pozisyonu',
 		he:'מיקום טיפוס באוטומט',
+		es:'Posición de Escalada en Auto',
+
 	},
 	auto_collect_depot:{
 		en:'Collected Depot in Auto',
@@ -628,6 +692,8 @@ var statInfo={
 		zh_tw:'自動收集倉庫',
 		tr:'Otomatik Olarak Depo Toplandı',
 		he:'אוסף מחסן באוטומט',
+		es:'Depósito Recolectado en Auto',
+
 	},
 	auto_collect_outpost:{
 		en:'Collected Outpost in Auto',
@@ -640,6 +706,8 @@ var statInfo={
 		zh_tw:'自動收集前哨',
 		tr:'Otomatik Olarak Karakol Toplandı',
 		he:'אוסף מוצב באוטומט',
+		es:'Puesto Recolectado en Auto',
+
 	},
 	auto_fuel_neutral_alliance_pass:{
 		en:'Fuel Neutral Alliance Pass in Auto',
@@ -656,6 +724,8 @@ var statInfo={
 		zh_tw:'自動燃料中立聯盟通行證',
 		tr:'Otomatik Nötr Yakıt İttifak Pası',
 		he:'דלק נייטרלי מעבר לברית באוטומט',
+		es:'Pase de Alianza Neutral de Combustible en Auto',
+
 	},
 	auto_fuel_score:{
 		en:'Fuel Score in Auto',
@@ -672,6 +742,8 @@ var statInfo={
 		zh_tw:'自動燃料得分',
 		tr:'Otomatik Yakıt Skoru',
 		he:'ציון דלק באוטומט',
+		es:'Puntuación de Combustible en Auto',
+
 	},
 	auto_start:{
 		name:"Location where the robot starts",
@@ -687,6 +759,8 @@ var statInfo={
 		zh_tw:'機器人啟動的位置',
 		tr:'Robotun başladığı yer',
 		he:'המיקום שבו הרובוט מתחיל',
+		es:'Inicio en Auto',
+
 	},
 	auto_trench_depot_alliance_to_neutral:{
 		en:'Trench (Depot Side) Alliance To Neutral in Auto',
@@ -699,6 +773,8 @@ var statInfo={
 		zh_tw:'自動將聯盟壕溝倉庫轉為中立',
 		tr:'Otomatik Olarak İttifak Hendeği Depoyu Nötr Yap',
 		he:'לחפור מחסן ברית לנייטרלי באוטומט',
+		es:'Trinchera (Lado Depósito) de Alianza a Neutral en Auto',
+
 	},
 	auto_trench_depot_neutral_to_alliance:{
 		en:'Trench (Depot Side) Neutral To Alliance in Auto',
@@ -711,6 +787,8 @@ var statInfo={
 		zh_tw:'自動將中立壕溝倉庫轉到聯盟',
 		tr:'Otomatik Olarak Nötr Hendeği Depoyu İttifak Yap',
 		he:'לחפור מחסן נייטרלי לברית באוטומט',
+		es:'Trinchera (Lado Depósito) de Neutral a Alianza en Auto',
+
 	},
 	auto_trench_outpost_alliance_to_neutral:{
 		en:'Trench (Outpost Side) Alliance To Neutral in Auto',
@@ -723,6 +801,8 @@ var statInfo={
 		zh_tw:'自動將聯盟壕溝前哨轉為中立',
 		tr:'Otomatik Olarak İttifak Hendeği Karakolunu Nötr Yap',
 		he:'לחפור מוצב ברית לנייטרלי באוטומט',
+		es:'Trinchera (Lado Puesto) de Alianza a Neutral en Auto',
+
 	},
 	auto_trench_outpost_neutral_to_alliance:{
 		en:'Trench (Outpost Side) Neutral To Alliance in Auto',
@@ -735,6 +815,8 @@ var statInfo={
 		zh_tw:'自動將中立壕溝前哨轉到聯盟',
 		tr:'Otomatik Olarak Nötr Hendeği Karakolu İttifak Yap',
 		he:'לחפור מוצב נייטרלי לברית באוטומט',
+		es:'Trinchera (Lado Puesto) de Neutral a Alianza en Auto',
+
 	},
 	defense_blocked:{
 		en:'Defense Blocked',
@@ -744,6 +826,8 @@ var statInfo={
 		zh_tw:'防禦封鎖',
 		tr:'Savunma Engellendi',
 		he:'הגנה חסומה',
+		es:'Defensa Bloqueada',
+
 	},
 	defense_collected:{
 		en:'Defense Collected',
@@ -753,6 +837,8 @@ var statInfo={
 		zh_tw:'防禦收集',
 		tr:'Savunma Toplandı',
 		he:'הגנה נאספה',
+		es:'Defensa Recolectada',
+
 	},
 	defense_hit:{
 		en:'Defense Hit',
@@ -762,6 +848,8 @@ var statInfo={
 		zh_tw:'防禦命中',
 		tr:'Savunma Vuruldu',
 		he:'הגנה נפגעה',
+		es:'Defensa Golpeada',
+
 	},
 	defense_pinned:{
 		en:'Defense Pinned',
@@ -770,6 +858,8 @@ var statInfo={
 		pt:'Defesa fixada',
 		zh_tw:'防禦釘住',
 		tr:'Savunma Sabitlendi',
+		he:'הגנה עצורה',
+		es:'Defensa fijada',
 	},
 	no_show:{
 		en:'No Show',
@@ -779,6 +869,8 @@ var statInfo={
 		zh_tw:'未出現',
 		tr:'Gösteri Yok',
 		he:'לא להופיע',
+		es:'Sin Presentación',
+
 	},
 	review_requested:{
 		en:'Review Requested',
@@ -788,6 +880,8 @@ var statInfo={
 		zh_tw:'請求審查',
 		tr:'İnceleme Talep Edildi',
 		he:'בקשת סקירה',
+		es:'Revisión Solicitada (Estimado)',
+
 	},
 	tele_bump_depot_alliance_to_neutral:{
 		en:'Bump (Depot Side) Alliance To Neutral in Teleop',
@@ -800,6 +894,8 @@ var statInfo={
 		zh_tw:'遙控將聯盟倉庫撞擊為中立',
 		tr:'Teleopta İttifak Deposu Nötr Yap',
 		he:'לדחוף את מחסן הברית לנייטרלי בטליאופ',
+		es:'Golpe (Lado Depósito) de Alianza a Neutral en Teleop',
+
 	},
 	tele_bump_depot_neutral_to_alliance:{
 		en:'Bump (Depot Side) Neutral To Alliance in Teleop',
@@ -812,6 +908,8 @@ var statInfo={
 		zh_tw:'遙控將中立倉庫撞擊到聯盟',
 		tr:'Teleopta Nötr Depoyu İttifak Yap',
 		he:'לדחוף את מחסן נייטרלי לברית בטליאופ',
+		es:'Golpe (Lado Depósito) de Neutral a Alianza en Teleop',
+
 	},
 	tele_bump_depot_neutral_to_opponent:{
 		en:'Bump (Depot Side) Neutral To Opponent in Teleop',
@@ -824,6 +922,8 @@ var statInfo={
 		zh_tw:'遙控將中立倉庫撞擊到對手',
 		tr:'Teleopta Nötr Depoyu Rakibe Yap',
 		he:'לדחוף את מחסן נייטרלי ליריב בטליאופ',
+		es:'Golpe (Lado Depósito) de Neutral a Oponente en Teleop',
+
 	},
 	tele_bump_depot_opponent_to_neutral:{
 		en:'Bump (Depot Side) Opponent To Neutral in Teleop',
@@ -836,6 +936,8 @@ var statInfo={
 		zh_tw:'遙控將對手倉庫撞擊為中立',
 		tr:'Teleopta Rakip Depoyu Nötr Yap',
 		he:'לדחוף את מחסן היריב לנייטרלי בטליאופ',
+		es:'Golpe (Lado Depósito) de Oponente a Neutral en Teleop',
+
 	},
 	tele_bump_outpost_alliance_to_neutral:{
 		en:'Bump (Outpost Side) Alliance To Neutral in Teleop',
@@ -848,6 +950,8 @@ var statInfo={
 		zh_tw:'遙控將聯盟前哨撞擊為中立',
 		tr:'Teleopta İttifak Karakolunu Nötr Yap',
 		he:'לדחוף את מוצב הברית לנייטרלי בטליאופ',
+		es:'Golpe (Lado Puesto) de Alianza a Neutral en Teleop',
+
 	},
 	tele_bump_outpost_neutral_to_alliance:{
 		en:'Bump (Outpost Side) Neutral To Alliance in Teleop',
@@ -860,6 +964,8 @@ var statInfo={
 		zh_tw:'遙控將中立前哨撞擊到聯盟',
 		tr:'Teleopta Nötr Karakolu İttifak Yap',
 		he:'לדחוף את מוצב נייטרלי לברית בטליאופ',
+		es:'Golpe (Lado Puesto) de Neutral a Alianza en Teleop',
+
 	},
 	tele_bump_outpost_neutral_to_opponent:{
 		en:'Bump (Outpost Side) Neutral To Opponent in Teleop',
@@ -872,6 +978,8 @@ var statInfo={
 		zh_tw:'遙控將中立前哨撞擊到對手',
 		tr:'Teleopta Nötr Karakolu Rakibe Yap',
 		he:'לדחוף את מוצב נייטרלי ליריב בטליאופ',
+		es:'Golpe (Lado Puesto) de Neutral a Oponente en Teleop',
+
 	},
 	tele_bump_outpost_opponent_to_neutral:{
 		en:'Bump (Outpost Side) Opponent To Neutral in Teleop',
@@ -884,6 +992,8 @@ var statInfo={
 		zh_tw:'遙控將對手前哨撞擊為中立',
 		tr:'Teleopta Rakip Karakolu Nötr Yap',
 		he:'לדחוף את מוצב היריב לנייטרלי בטליאופ',
+		es:'Golpe (Lado Puesto) de Oponente a Neutral en Teleop',
+
 	},
 	tele_climb_level:{
 		en:'Climb Level in Teleop',
@@ -896,6 +1006,8 @@ var statInfo={
 		zh_tw:'遙控攀爬等級',
 		tr:'Teleopta Tırmanma Seviyesi',
 		he:'רמת טיפוס בטליאופ',
+		es:'Nivel de Escalada en Teleop',
+
 	},
 	tele_climb_position:{
 		en:'Climb Position in Teleop',
@@ -913,6 +1025,8 @@ var statInfo={
 		zh_tw:'遙控攀爬位置',
 		tr:'Teleopta Tırmanma Pozisyonu',
 		he:'מיקום טיפוס בטליאופ',
+		es:'Posición de Escalada en Teleop',
+
 	},
 	tele_fuel_alliance_dump:{
 		en:'Fuel Alliance Dump in Teleop',
@@ -929,6 +1043,8 @@ var statInfo={
 		zh_tw:'遙控燃料聯盟傾倒',
 		tr:'Teleopta Yakıt İttifak Dökümü',
 		he:'דלק ברית שפיכה בטליאופ',
+		es:'Vertedero de Alianza de Combustible en Teleop',
+
 	},
 	tele_fuel_neutral_alliance_pass:{
 		en:'Fuel Neutral Alliance Pass in Teleop',
@@ -945,6 +1061,8 @@ var statInfo={
 		zh_tw:'遙控燃料中立聯盟通行證',
 		tr:'Teleopta Nötr Yakıt İttifak Pası',
 		he:'דלק נייטרלי מעבר לברית בטליאופ',
+		es:'Pase de Alianza Neutral de Combustible en Teleop',
+
 	},
 	tele_fuel_opponent_alliance_pass:{
 		en:'Fuel Opponent Alliance Pass in Teleop',
@@ -961,6 +1079,8 @@ var statInfo={
 		zh_tw:'遙控燃料對手聯盟通行證',
 		tr:'Teleopta Rakip Yakıt İttifak Pası',
 		he:'דלק יריב מעבר לברית בטליאופ',
+		es:'Pase de Alianza de Oponente de Combustible en Teleop',
+
 	},
 	tele_fuel_opponent_neutral_pass:{
 		en:'Fuel Opponent Neutral Pass in Teleop',
@@ -977,6 +1097,8 @@ var statInfo={
 		zh_tw:'遙控燃料對手中立通行證',
 		tr:'Teleopta Rakip Nötr Yakıt Pası',
 		he:'דלק יריב מעבר לנייטרלי בטליאופ',
+		es:'Pase Neutral de Oponente de Combustible en Teleop',
+
 	},
 	tele_fuel_outpost:{
 		en:'Fuel Outpost in Teleop',
@@ -986,6 +1108,8 @@ var statInfo={
 		zh_tw:'遙控燃料前哨',
 		tr:'Teleopta Yakıt Karakolu',
 		he:'דלק מוצב בטליאופ',
+		es:'Puesto de Combustible en Teleop',
+
 	},
 	tele_fuel_score:{
 		en:'Fuel Score in Teleop',
@@ -1002,6 +1126,8 @@ var statInfo={
 		zh_tw:'遙控燃料得分',
 		tr:'Teleopta Yakıt Skoru',
 		he:'ציון דלק בטליאופ',
+		es:'Puntuación de Combustible en Teleop',
+
 	},
 	tele_trench_depot_alliance_to_neutral:{
 		en:'Trench (Depot Side) Alliance To Neutral in Teleop',
@@ -1014,6 +1140,8 @@ var statInfo={
 		zh_tw:'遙控將聯盟壕溝倉庫轉為中立',
 		tr:'Teleopta İttifak Hendeği Deposu Nötr Yap',
 		he:'לחפור מחסן ברית לנייטרלי בטליאופ',
+		es:'Trinchera (Lado Depósito) de Alianza a Neutral en Teleop',
+
 	},
 	tele_trench_depot_neutral_to_alliance:{
 		en:'Trench (Depot Side) Neutral To Alliance in Teleop',
@@ -1026,6 +1154,8 @@ var statInfo={
 		zh_tw:'遙控將中立壕溝倉庫轉到聯盟',
 		tr:'Teleopta Nötr Hendeği Depoyu İttifak Yap',
 		he:'לחפור מחסן נייטרלי לברית בטליאופ',
+		es:'Trinchera (Lado Depósito) de Neutral a Alianza en Teleop',
+
 	},
 	tele_trench_depot_neutral_to_opponent:{
 		en:'Trench (Depot Side) Neutral To Opponent in Teleop',
@@ -1038,6 +1168,8 @@ var statInfo={
 		zh_tw:'遙控將中立壕溝倉庫轉到對手',
 		tr:'Teleopta Nötr Hendeği Rakibe Yap',
 		he:'לחפור מחסן נייטרלי ליריב בטליאופ',
+		es:'Trinchera (Lado Depósito) de Neutral a Oponente en Teleop',
+
 	},
 	tele_trench_depot_opponent_to_neutral:{
 		en:'Trench (Depot Side) Opponent To Neutral in Teleop',
@@ -1050,6 +1182,8 @@ var statInfo={
 		zh_tw:'遙控將對手壕溝倉庫轉為中立',
 		tr:'Teleopta Rakip Hendeği Nötr Yap',
 		he:'לחפור מחסן יריב לנייטרלי בטליאופ',
+		es:'Trinchera (Lado Depósito) de Oponente a Neutral en Teleop',
+
 	},
 	tele_trench_outpost_alliance_to_neutral:{
 		en:'Trench (Outpost Side) Alliance To Neutral in Teleop',
@@ -1062,6 +1196,8 @@ var statInfo={
 		zh_tw:'遙控將聯盟壕溝前哨轉為中立',
 		tr:'Teleopta İttifak Hendeği Karakolunu Nötr Yap',
 		he:'לחפור מוצב ברית לנייטרלי בטליאופ',
+		es:'Trinchera (Lado Puesto) de Alianza a Neutral en Teleop',
+
 	},
 	tele_trench_outpost_neutral_to_alliance:{
 		en:'Trench (Outpost Side) Neutral To Alliance in Teleop',
@@ -1074,6 +1210,8 @@ var statInfo={
 		zh_tw:'遙控將中立壕溝前哨轉到聯盟',
 		tr:'Teleopta Nötr Hendeği Karakolu İttifak Yap',
 		he:'לחפור מוצב נייטרלי לברית בטליאופ',
+		es:'Trinchera (Lado Puesto) de Neutral a Alianza en Teleop',
+
 	},
 	tele_trench_outpost_neutral_to_opponent:{
 		en:'Trench (Outpost Side) Neutral To Opponent in Teleop',
@@ -1086,6 +1224,8 @@ var statInfo={
 		zh_tw:'遙控將中立壕溝前哨轉到對手',
 		tr:'Teleopta Nötr Hendeği Rakibe Yap',
 		he:'לחפור מוצב נייטרלי ליריב בטליאופ',
+		es:'Trinchera (Lado Puesto) de Neutral a Oponente en Teleop',
+
 	},
 	tele_trench_outpost_opponent_to_neutral:{
 		en:'Trench (Outpost Side) Opponent To Neutral in Teleop',
@@ -1098,6 +1238,8 @@ var statInfo={
 		zh_tw:'遙控將對手壕溝前哨轉為中立',
 		tr:'Teleopta Rakip Hendeği Nötr Yap',
 		he:'לחפור מוצב יריב לנייטרלי בטליאופ',
+		es:'Trinchera (Lado Puesto) de Oponente a Neutral en Teleop',
+
 	},
 	auto_bump:{
 		en:'Bump in Auto',
@@ -1107,6 +1249,8 @@ var statInfo={
 		zh_tw:'自動撞擊',
 		tr:'Otomatik Vuruş',
 		he:'דחיפה באוטומט',
+		es:'Golpe en Auto',
+
 	},
 	auto_bump_alliance:{
 		en:'Bump Alliance in Auto',
@@ -1116,6 +1260,8 @@ var statInfo={
 		zh_tw:'自動撞擊聯盟',
 		tr:'Otomatik İttifak Vuruşu',
 		he:'דחיפת ברית באוטומט',
+		es:'Golpe de Alianza en Auto',
+
 	},
 	auto_bump_depot_alliance:{
 		en:'Bump (Depot Side) Alliance in Auto',
@@ -1125,6 +1271,8 @@ var statInfo={
 		zh_tw:'自動撞擊聯盟(倉庫側)',
 		tr:'Otomatik İttifak Vuruşu (Depo Tarafı)',
 		he:'דחיפת ברית דיפו באוטומט',
+		es:'Golpe (Lado Depósito) de Alianza en Auto',
+
 	},
 	auto_bump_outpost_alliance:{
 		en:'Bump (Outpost Side) Alliance in Auto',
@@ -1134,6 +1282,8 @@ var statInfo={
 		zh_tw:'自動撞擊聯盟(前哨側)',
 		tr:'Otomatik İttifak Vuruşu (Karakol Tarafı)',
 		he:'דחיפת ברית חוסן באוטומט',
+		es:'Golpe (Lado Puesto) de Alianza en Auto',
+
 	},
 	auto_score:{
 		en:'Score in Auto',
@@ -1143,6 +1293,8 @@ var statInfo={
 		zh_tw:'自動得分',
 		tr:'Otomatik Skor',
 		he:'ציון באוטומט',
+		es:'Puntuación en Auto (Estimado)',
+
 	},
 	max_auto_score:{
 		en:'Max Auto Score',
@@ -1152,6 +1304,8 @@ var statInfo={
 		zh_tw:'自動最高得分',
 		tr:'Maksimum Otomatik Skor',
 		he:'ציון מקסימלי באוטומט',
+		es:'Puntuación Máxima en Auto',
+
 	},
 	auto_to_alliance:{
 		en:'To Alliance in Auto',
@@ -1161,6 +1315,8 @@ var statInfo={
 		zh_tw:'自動進入聯盟',
 		tr:'Otomatik İttifak Hedefi',
 		he:'לברית באוטומט',
+		es:'A la Alianza en Auto',
+
 	},
 	auto_to_neutral:{
 		en:'To Neutral in Auto',
@@ -1170,6 +1326,8 @@ var statInfo={
 		zh_tw:'自動進入中立',
 		tr:'Otomatik Nötr Hedefi',
 		he:'לנייטרלי באוטומט',
+		es:'A Neutral en Auto',
+
 	},
 	auto_tower_score:{
 		en:'Tower Score in Auto',
@@ -1179,6 +1337,8 @@ var statInfo={
 		zh_tw:'自動塔樓得分',
 		tr:'Otomatik Kule Skoru',
 		he:'ציון מגדל באוטומט',
+		es:'Puntuación de Torre en Auto',
+
 	},
 	auto_trench:{
 		en:'Trench in Auto',
@@ -1188,6 +1348,8 @@ var statInfo={
 		zh_tw:'自動壕溝',
 		tr:'Otomatik Hendeği',
 		he:'תעלה באוטומט',
+		es:'Trinchera en Auto',
+
 	},
 	auto_trench_alliance:{
 		en:'Trench Alliance in Auto',
@@ -1197,6 +1359,8 @@ var statInfo={
 		zh_tw:'自動壕溝聯盟',
 		tr:'Otomatik İttifak Hendeği',
 		he:'תעלת ברית באוטומט',
+		es:'Trinchera de Alianza en Auto',
+
 	},
 	auto_trench_depot_alliance:{
 		en:'Trench (Depot Side) Alliance in Auto',
@@ -1206,6 +1370,8 @@ var statInfo={
 		zh_tw:'自動壕溝聯盟(倉庫側)',
 		tr:'Otomatik İttifak Hendeği (Depo Tarafı)',
 		he:'תעלת ברית דיפו באוטומט',
+		es:'Trinchera (Lado Depósito) de Alianza en Auto',
+
 	},
 	auto_trench_outpost_alliance:{
 		en:'Trench (Outpost Side) Alliance in Auto',
@@ -1215,6 +1381,8 @@ var statInfo={
 		zh_tw:'自動壕溝聯盟(前哨側)',
 		tr:'Otomatik İttifak Hendeği (Karakol Tarafı)',
 		he:'תעלת ברית חוסן באוטומט',
+		es:'Trinchera (Lado Puesto) de Alianza en Auto',
+
 	},
 	bump:{
 		en:'Bump',
@@ -1224,6 +1392,8 @@ var statInfo={
 		zh_tw:'撞擊',
 		tr:'Vuruş',
 		he:'דחיפה',
+		es:'Golpe',
+
 	},
 	bump_alliance:{
 		en:'Bump Alliance',
@@ -1233,6 +1403,8 @@ var statInfo={
 		zh_tw:'撞擊聯盟',
 		tr:'İttifak Vuruşu',
 		he:'דחיפת ברית',
+		es:'Golpe de Alianza',
+
 	},
 	bump_depot_alliance:{
 		en:'Bump (Depot Side) Alliance',
@@ -1242,6 +1414,8 @@ var statInfo={
 		zh_tw:'撞擊聯盟(倉庫側)',
 		tr:'İttifak Vuruşu (Depo Tarafı)',
 		he:'דחיפת ברית דיפו',
+		es:'Golpe (Lado Depósito) de Alianza',
+
 	},
 	bump_depot_alliance_to_neutral:{
 		en:'Bump (Depot Side) Alliance To Neutral',
@@ -1251,6 +1425,8 @@ var statInfo={
 		zh_tw:'撞擊聯盟至中立(倉庫側)',
 		tr:'İttifak Vuruşunu Nötr Yap (Depo Tarafı)',
 		he:'דחיפת ברית לנייטרלי דיפו',
+		es:'Golpe (Lado Depósito) de Alianza a Neutral',
+
 	},
 	bump_depot_neutral_to_alliance:{
 		en:'Bump (Depot Side) Neutral To Alliance',
@@ -1260,6 +1436,8 @@ var statInfo={
 		zh_tw:'撞擊中立至聯盟(倉庫側)',
 		tr:'Nötr Vuruşunu İttifak Yap (Depo Tarafı)',
 		he:'דחיפת נייטרלי לברית דיפו',
+		es:'Golpe (Lado Depósito) de Neutral a Alianza',
+
 	},
 	bump_outpost_alliance:{
 		en:'Bump (Outpost Side) Alliance',
@@ -1269,6 +1447,8 @@ var statInfo={
 		zh_tw:'撞擊聯盟(前哨側)',
 		tr:'İttifak Vuruşu (Karakol Tarafı)',
 		he:'דחיפת ברית חוסן',
+		es:'Golpe (Lado Puesto) de Alianza',
+
 	},
 	bump_outpost_alliance_to_neutral:{
 		en:'Bump (Outpost Side) Alliance To Neutral',
@@ -1278,6 +1458,8 @@ var statInfo={
 		zh_tw:'撞擊聯盟至中立(前哨側)',
 		tr:'İttifak Vuruşunu Nötr Yap (Karakol Tarafı)',
 		he:'דחיפת ברית לנייטרלי חוסן',
+		es:'Golpe (Lado Puesto) de Alianza a Neutral',
+
 	},
 	bump_outpost_neutral_to_alliance:{
 		en:'Bump (Outpost Side) Neutral To Alliance',
@@ -1287,6 +1469,8 @@ var statInfo={
 		zh_tw:'撞擊中立至聯盟(前哨側)',
 		tr:'Nötr Vuruşunu İttifak Yap (Karakol Tarafı)',
 		he:'דחיפת נייטרלי לברית חוסן',
+		es:'Golpe (Lado Puesto) de Neutral a Alianza',
+
 	},
 	climb_level:{
 		en:'Climb Level',
@@ -1296,6 +1480,8 @@ var statInfo={
 		zh_tw:'攀爬等級',
 		tr:'Tırmanma Seviyesi',
 		he:'רמת טיפוס',
+		es:'Nivel de Escalada',
+
 	},
 	collect_depot:{
 		en:'Collected Depot',
@@ -1305,6 +1491,8 @@ var statInfo={
 		zh_tw:'收集倉庫',
 		tr:'Depo Toplandı',
 		he:'אוסף מחסן',
+		es:'Depósito Recolectado',
+
 	},
 	collect_outpost:{
 		en:'Collected Outpost',
@@ -1314,6 +1502,8 @@ var statInfo={
 		zh_tw:'收集前哨',
 		tr:'Karakol Toplandı',
 		he:'אוסף מוצב',
+		es:'Puesto Recolectado',
+
 	},
 	fuel_neutral_alliance_pass:{
 		en:'Fuel Neutral Alliance Pass',
@@ -1330,6 +1520,8 @@ var statInfo={
 		zh_tw:'燃料中立聯盟通行證',
 		tr:'Nötr Yakıt İttifak Pası',
 		he:'דלק נייטרלי מעבר לברית',
+		es:'Pase de Alianza Neutral de Combustible',
+
 	},
 	fuel_score:{
 		en:'Fuel Score',
@@ -1339,6 +1531,8 @@ var statInfo={
 		zh_tw:'燃料得分',
 		tr:'Yakıt Skoru',
 		he:'ציון דלק',
+		es:'Puntuación de Combustible',
+
 	},
 	auto_fuel_output:{
 		en:'Fuel Output to Target in Auto',
@@ -1348,6 +1542,8 @@ var statInfo={
 		zh_tw:'自動燃料輸出',
 		tr:'Otomatik Yakıt Çıkışı',
 		he:'פלט דלק באוטומט',
+		es:'Salida de Combustible en Auto',
+
 	},
 	tele_fuel_output:{
 		en:'Fuel Output to Target in Teleop',
@@ -1357,6 +1553,8 @@ var statInfo={
 		zh_tw:'遙控燃料輸出',
 		tr:'Teleopta Yakıt Çıkışı',
 		he:'פלט דלק בטליאופ',
+		es:'Salida de Combustible en Teleop',
+
 	},
 	fuel_output:{
 		en:'Fuel Output to Target',
@@ -1366,6 +1564,8 @@ var statInfo={
 		zh_tw:'燃料輸出',
 		tr:'Yakıt Çıkışı',
 		he:'פלט דלק',
+		es:'Salida de Combustible',
+
 	},
 	max_score:{
 		en:'Max Score',
@@ -1375,6 +1575,8 @@ var statInfo={
 		zh_tw:'最大得分',
 		tr:'Maksimum Skor',
 		he:'ציון מקסימום',
+		es:'Puntuación Máxima',
+
 	},
 	min_score:{
 		en:'Min Score',
@@ -1384,6 +1586,8 @@ var statInfo={
 		zh_tw:'最小得分',
 		tr:'Minimum Skor',
 		he:'ציון מינימום',
+		es:'Puntuación Mínima',
+
 	},
 	score:{
 		en:'Score',
@@ -1393,6 +1597,8 @@ var statInfo={
 		zh_tw:'得分',
 		tr:'Skor',
 		he:'ציון',
+		es:'Contribución de Puntuación (Estimado)',
+
 	},
 	tele_bump:{
 		en:'Bump in Teleop',
@@ -1402,6 +1608,8 @@ var statInfo={
 		zh_tw:'遙控撞擊',
 		tr:'Teleopta Vuruş',
 		he:'דחיפה בטליאופ',
+		es:'Golpe en Teleop',
+
 	},
 	tele_bump_alliance:{
 		en:'Bump Alliance in Teleop',
@@ -1411,6 +1619,8 @@ var statInfo={
 		zh_tw:'遙控撞擊聯盟',
 		tr:'Teleopta İttifak Vuruşu',
 		he:'דחיפת ברית בטליאופ',
+		es:'Golpe de Alianza en Teleop',
+
 	},
 	tele_bump_depot_alliance:{
 		en:'Bump (Depot Side) Alliance in Teleop',
@@ -1420,6 +1630,8 @@ var statInfo={
 		zh_tw:'遙控撞擊聯盟(倉庫側)',
 		tr:'Teleopta İttifak Vuruşu (Depo Tarafı)',
 		he:'דחיפת ברית דיפו בטליאופ',
+		es:'Golpe (Lado Depósito) de Alianza en Teleop',
+
 	},
 	tele_bump_depot_opponent:{
 		en:'Bump (Depot Side) Opponent in Teleop',
@@ -1429,6 +1641,8 @@ var statInfo={
 		zh_tw:'遙控撞擊對手(倉庫側)',
 		tr:'Teleopta Rakip Vuruşu (Depo Tarafı)',
 		he:'דחיפת יריב דיפו בטליאופ',
+		es:'Golpe (Lado Depósito) de Oponente en Teleop',
+
 	},
 	tele_bump_opponent:{
 		en:'Bump Opponent in Teleop',
@@ -1438,6 +1652,8 @@ var statInfo={
 		zh_tw:'遙控撞擊對手',
 		tr:'Teleopta Rakip Vuruşu',
 		he:'דחיפת יריב בטליאופ',
+		es:'Golpe de Oponente en Teleop',
+
 	},
 	tele_bump_outpost_alliance:{
 		en:'Bump (Outpost Side) Alliance in Teleop',
@@ -1447,6 +1663,8 @@ var statInfo={
 		zh_tw:'遙控撞擊聯盟(前哨側)',
 		tr:'Teleopta İttifak Vuruşu (Karakol Tarafı)',
 		he:'דחיפת ברית חוסן בטליאופ',
+		es:'Golpe (Lado Puesto) de Alianza en Teleop',
+
 	},
 	tele_bump_outpost_opponent:{
 		en:'Bump (Outpost Side) Opponent in Teleop',
@@ -1456,6 +1674,8 @@ var statInfo={
 		zh_tw:'遙控撞擊對手(前哨側)',
 		tr:'Teleopta Rakip Vuruşu (Karakol Tarafı)',
 		he:'דחיפת יריב חוסן בטליאופ',
+		es:'Golpe (Lado Puesto) de Oponente en Teleop',
+
 	},
 	tele_score:{
 		en:'Score in Teleop',
@@ -1465,6 +1685,8 @@ var statInfo={
 		zh_tw:'遙控得分',
 		tr:'Teleopta Skor',
 		he:'ציון בטליאופ',
+		es:'Puntuación en Teleop (Estimado)',
+
 	},
 	tele_to_alliance:{
 		en:'To Alliance in Teleop',
@@ -1474,6 +1696,8 @@ var statInfo={
 		zh_tw:'遙控進入聯盟',
 		tr:'Teleopta İttifak Hedefi',
 		he:'לברית בטליאופ',
+		es:'A la Alianza en Teleop',
+
 	},
 	tele_to_neutral:{
 		en:'To Neutral in Teleop',
@@ -1483,6 +1707,8 @@ var statInfo={
 		zh_tw:'遙控進入中立',
 		tr:'Teleopta Nötr Hedefi',
 		he:'לנייטרלי בטליאופ',
+		es:'A Neutral en Teleop',
+
 	},
 	tele_to_opponent:{
 		en:'To Opponent in Teleop',
@@ -1492,6 +1718,8 @@ var statInfo={
 		zh_tw:'遙控進入對手',
 		tr:'Teleopta Rakip Hedefi',
 		he:'ליריב בטליאופ',
+		es:'Al Oponente en Teleop',
+
 	},
 	tele_tower_score:{
 		en:'Tower Score in Teleop',
@@ -1501,6 +1729,8 @@ var statInfo={
 		zh_tw:'遙控塔樓得分',
 		tr:'Teleopta Kule Skoru',
 		he:'ציון מגדל בטליאופ',
+		es:'Puntuación de Torre en Teleop',
+
 	},
 	tele_trench:{
 		en:'Trench in Teleop',
@@ -1510,6 +1740,8 @@ var statInfo={
 		zh_tw:'遙控壕溝',
 		tr:'Teleopta Hendeği',
 		he:'תעלה בטליאופ',
+		es:'Trinchera en Teleop',
+
 	},
 	tele_trench_alliance:{
 		en:'Trench Alliance in Teleop',
@@ -1519,6 +1751,8 @@ var statInfo={
 		zh_tw:'遙控壕溝聯盟',
 		tr:'Teleopta İttifak Hendeği',
 		he:'תעלת ברית בטליאופ',
+		es:'Trinchera de Alianza en Teleop',
+
 	},
 	tele_trench_depot_alliance:{
 		en:'Trench (Depot Side) Alliance in Teleop',
@@ -1528,6 +1762,8 @@ var statInfo={
 		zh_tw:'遙控壕溝聯盟(倉庫側)',
 		tr:'Teleopta İttifak Hendeği (Depo Tarafı)',
 		he:'תעלת ברית דיפו בטליאופ',
+		es:'Trinchera (Lado Depósito) de Alianza en Teleop',
+
 	},
 	tele_trench_depot_opponent:{
 		en:'Trench (Depot Side) Opponent in Teleop',
@@ -1537,6 +1773,8 @@ var statInfo={
 		zh_tw:'遙控壕溝對手(倉庫側)',
 		tr:'Teleopta Rakip Hendeği (Depo Tarafı)',
 		he:'תעלת יריב דיפו בטליאופ',
+		es:'Trinchera (Lado Depósito) de Oponente en Teleop',
+
 	},
 	tele_trench_opponent:{
 		en:'Trench Opponent in Teleop',
@@ -1546,6 +1784,8 @@ var statInfo={
 		zh_tw:'遙控壕溝對手',
 		tr:'Teleopta Rakip Hendeği',
 		he:'תעלת יריב בטליאופ',
+		es:'Trinchera de Oponente en Teleop',
+
 	},
 	tele_trench_outpost_alliance:{
 		en:'Trench (Outpost Side) Alliance in Teleop',
@@ -1555,6 +1795,8 @@ var statInfo={
 		zh_tw:'遙控壕溝聯盟(前哨側)',
 		tr:'Teleopta İttifak Hendeği (Karakol Tarafı)',
 		he:'תעלת ברית חוסן בטליאופ',
+		es:'Trinchera (Lado Puesto) de Alianza en Teleop',
+
 	},
 	tele_trench_outpost_opponent:{
 		en:'Trench (Outpost Side) Opponent in Teleop',
@@ -1564,6 +1806,8 @@ var statInfo={
 		zh_tw:'遙控壕溝對手(前哨側)',
 		tr:'Teleopta Rakip Hendeği (Karakol Tarafı)',
 		he:'תעלת יריב חוסן בטליאופ',
+		es:'Trinchera (Lado Puesto) de Oponente en Teleop',
+
 	},
 	to_alliance:{
 		en:'To Alliance',
@@ -1573,6 +1817,8 @@ var statInfo={
 		zh_tw:'進入聯盟',
 		tr:'İttifak Hedefi',
 		he:'לברית',
+		es:'A la Alianza',
+
 	},
 	to_neutral:{
 		en:'To Neutral',
@@ -1582,6 +1828,8 @@ var statInfo={
 		zh_tw:'進入中立',
 		tr:'Nötr Hedefi',
 		he:'לנייטרלי',
+		es:'A Neutral',
+
 	},
 	to_opponent:{
 		en:'To Opponent',
@@ -1591,6 +1839,8 @@ var statInfo={
 		zh_tw:'進入對手',
 		tr:'Rakip Hedefi',
 		he:'ליריב',
+		es:'Al Oponente',
+
 	},
 	tower_score:{
 		en:'Tower Score',
@@ -1600,6 +1850,8 @@ var statInfo={
 		zh_tw:'塔樓得分',
 		tr:'Kule Skoru',
 		he:'ציון מגדל',
+		es:'Puntuación de Torre',
+
 	},
 	trench:{
 		en:'Trench',
@@ -1609,6 +1861,8 @@ var statInfo={
 		zh_tw:'壕溝',
 		tr:'Hendeği',
 		he:'תעלה',
+		es:'Trinchera',
+
 	},
 	trench_alliance:{
 		en:'Trench Alliance',
@@ -1618,6 +1872,8 @@ var statInfo={
 		zh_tw:'壕溝聯盟',
 		tr:'İttifak Hendeği',
 		he:'תעלת ברית',
+		es:'Trinchera de Alianza',
+
 	},
 	trench_depot_alliance:{
 		en:'Trench (Depot Side) Alliance',
@@ -1627,6 +1883,8 @@ var statInfo={
 		zh_tw:'壕溝聯盟(倉庫側)',
 		tr:'İttifak Hendeği (Depo Tarafı)',
 		he:'תעלת ברית דיפו',
+		es:'Trinchera (Lado Depósito) de Alianza',
+
 	},
 	trench_depot_alliance_to_neutral:{
 		en:'Trench (Depot Side) Alliance To Neutral',
@@ -1639,6 +1897,8 @@ var statInfo={
 		zh_tw:'壕溝聯盟至中立(倉庫側)',
 		tr:'İttifak Hendeğini Nötr Yap (Depo Tarafı)',
 		he:'תעלת ברית לנייטרלי דיפו',
+		es:'Trinchera (Lado Depósito) de Alianza a Neutral',
+
 	},
 	trench_depot_neutral_to_alliance:{
 		en:'Trench (Depot Side) Neutral To Alliance',
@@ -1651,6 +1911,8 @@ var statInfo={
 		zh_tw:'壕溝中立至聯盟(倉庫側)',
 		tr:'Nötr Hendeğini İttifak Yap (Depo Tarafı)',
 		he:'תעלת נייטרלי לברית דיפו',
+		es:'Trinchera (Lado Depósito) de Neutral a Alianza',
+
 	},
 	trench_depot_opponent:{
 		en:'Trench (Depot Side) Opponent',
@@ -1660,6 +1922,8 @@ var statInfo={
 		zh_tw:'壕溝對手(倉庫側)',
 		tr:'Rakip Hendeği (Depo Tarafı)',
 		he:'תעלת יריב דיפו',
+		es:'Trinchera (Lado Depósito) de Oponente',
+
 	},
 	trench_outpost_alliance:{
 		en:'Trench (Outpost Side) Alliance',
@@ -1669,6 +1933,8 @@ var statInfo={
 		zh_tw:'壕溝聯盟(前哨側)',
 		tr:'İttifak Hendeği (Karakol Tarafı)',
 		he:'תעלת ברית חוסן',
+		es:'Trinchera (Lado Puesto) de Alianza',
+
 	},
 	trench_outpost_alliance_to_neutral:{
 		en:'Trench (Outpost Side) Alliance To Neutral',
@@ -1681,6 +1947,8 @@ var statInfo={
 		zh_tw:'壕溝聯盟至中立(前哨側)',
 		tr:'İttifak Hendeğini Nötr Yap (Karakol Tarafı)',
 		he:'תעלת ברית לנייטרלי חוסן',
+		es:'Trinchera (Lado Puesto) de Alianza a Neutral',
+
 	},
 	trench_outpost_neutral_to_alliance:{
 		en:'Trench (Outpost Side) Neutral To Alliance',
@@ -1693,6 +1961,8 @@ var statInfo={
 		zh_tw:'壕溝中立至聯盟(前哨側)',
 		tr:'Nötr Hendeğini İttifak Yap (Karakol Tarafı)',
 		he:'תעלת נייטרלי לברית חוסן',
+		es:'Trinchera (Lado Puesto) de Neutral a Alianza',
+
 	},
 	trench_outpost_opponent:{
 		en:'Trench (Outpost Side) Opponent',
@@ -1702,6 +1972,8 @@ var statInfo={
 		zh_tw:'壕溝對手(前哨側)',
 		tr:'Rakip Hendeği (Karakol Tarafı)',
 		he:'תעלת יריב חוסן',
+		es:'Trinchera (Lado Puesto) de Oponente',
+
 	},
 	zone_change:{
 		en:'Zone Change',
@@ -1711,6 +1983,8 @@ var statInfo={
 		zh_tw:'區域變化',
 		tr:'Bölge Değişimi',
 		he:'שינוי אזור',
+		es:'Cambio de Zona',
+
 	},
 	auto_alliance_time:{
 		en:'Alliance Time in Auto',
@@ -1720,6 +1994,8 @@ var statInfo={
 		zh_tw:'自動聯盟時間',
 		tr:'Otomatik İttifak Zamanı',
 		he:'זמן ברית באוטומט',
+		es:'Tiempo de Alianza en Auto',
+
 	},
 	auto_neutral_time:{
 		en:'Neutral Time in Auto',
@@ -1729,6 +2005,8 @@ var statInfo={
 		zh_tw:'自動中立時間',
 		tr:'Otomatik Nötr Zamanı',
 		he:'זמן נייטרלי באוטומט',
+		es:'Tiempo Neutral en Auto',
+
 	},
 	tele_alliance_time:{
 		en:'Alliance Time in Teleop',
@@ -1738,6 +2016,8 @@ var statInfo={
 		zh_tw:'遙控聯盟時間',
 		tr:'Teleopta İttifak Zamanı',
 		he:'זמן ברית בטליאופ',
+		es:'Tiempo de Alianza en Teleop',
+
 	},
 	tele_neutral_time:{
 		en:'Neutral Time in Teleop',
@@ -1747,6 +2027,8 @@ var statInfo={
 		zh_tw:'遙控中立時間',
 		tr:'Teleopta Nötr Zamanı',
 		he:'זמן נייטרלי בטליאופ',
+		es:'Tiempo Neutral en Teleop',
+
 	},
 	tele_opponent_time:{
 		en:'Opponent Time in Teleop',
@@ -1756,6 +2038,8 @@ var statInfo={
 		zh_tw:'遙控對手時間',
 		tr:'Teleopta Rakip Zamanı',
 		he:'זמן יריב בטליאופ',
+		es:'Tiempo de Oponente en Teleop',
+
 	},
 	alliance_time:{
 		en:'Alliance Time',
@@ -1765,6 +2049,8 @@ var statInfo={
 		zh_tw:'聯盟時間',
 		tr:'İttifak Zamanı',
 		he:'זמן ברית',
+		es:'Tiempo de Alianza',
+
 	},
 	neutral_time:{
 		en:'Neutral Time',
@@ -1774,6 +2060,8 @@ var statInfo={
 		zh_tw:'中立時間',
 		tr:'Nötr Zaman',
 		he:'זמן ניטרלי',
+		es:'Tiempo Neutral',
+
 	},
 	opponent_time:{
 		en:'Opponent Time',
@@ -1783,6 +2071,8 @@ var statInfo={
 		zh_tw:'對手時間',
 		tr:'Rakip Zamanı',
 		he:'זמן יריב',
+		es:'Tiempo de Oponente',
+
 	},
 	auto_paths:{
 		name:"Auto Paths",
@@ -1797,6 +2087,7 @@ var statInfo={
 		zh_tw:'自動路徑',
 		tr:'Otomatik Yollar',
 		he:'נתיבים אוטומטיים',
+		es:'Rutas de Auto',
 	},
 	shooting_locations:{
 		en:'Defendable Shooting Locations',
@@ -1812,6 +2103,8 @@ var statInfo={
 		zh_tw:'可防守射擊位置',
 		tr:'Savunulabilir Atış Konumları',
 		he:'מיקומי ירי שניתן להגן עליהם',
+		es:'Ubicaciones de Disparo',
+
 	},
 	bump_percent:{
 		en:'Bump Zone Crossings',
@@ -1821,6 +2114,8 @@ var statInfo={
 		zh_tw:'衝擊區域穿越',
 		tr:'Çarpma Bölgesi Geçişleri',
 		he:'חציות אזור התנגשות',
+		es:'Porcentaje de Golpe',
+
 	},
 	trench_percent:{
 		en:'Trench Zone Crossings',
@@ -1830,6 +2125,8 @@ var statInfo={
 		zh_tw:'壕溝區域穿越',
 		tr:'Hendek Bölgesi Geçişleri',
 		he:'חציות אזור התעלה',
+		es:'Porcentaje de Trinchera',
+
 	},
 	max_tele_climb_level:{
 		en:'Max Teleop Climb Level',
@@ -1839,6 +2136,8 @@ var statInfo={
 		zh_tw:'遙控最大攀爬等級',
 		tr:'Maksimum Teleop Tırmanma Seviyesi',
 		he:'רמת טיפוס מקסימלית בטליאופ',
+		es:'Nivel Máximo de Escalada en Teleop',
+
 	},
 	max_fuel_output:{
 		en:'Max Fuel Output to Target',
@@ -1848,6 +2147,8 @@ var statInfo={
 		zh_tw:'最大燃料輸出',
 		tr:'Maksimum Yakıt Çıkışı',
 		he:'מקסימום פלט דלק',
+		es:'Salida Máxima de Combustible',
+
 	},
 	'auto_zone_change_out':{
 		en:'Zone Change Away in Auto',
@@ -1929,6 +2230,7 @@ var teamGraphs={
 		fr:'Phase de jeu',
 		he:'שלב המשחק',
 		zh_tw:'遊戲舞台',
+		es:'Etapa del Juego',
 		data:["auto_score","tele_score"],
 	},
 	"Fuel to Target":{
@@ -1938,6 +2240,7 @@ var teamGraphs={
 		fr:'Carburant vers la cible',
 		he:'דלק למטרה',
 		zh_tw:'燃料到目標',
+		es:'Combustible al Objetivo',
 		data:["auto_fuel_output","tele_fuel_output"],
 	},
 	"Match Timeline":{
@@ -1947,6 +2250,7 @@ var teamGraphs={
 		fr:'Chronologie du match',
 		he:'התאם ציר זמן',
 		zh_tw:'比賽時間表',
+		es:'Cronología del Partido',
 		data:['timeline'],
 	},
 	"Fuel vs Climb":{
@@ -1957,41 +2261,96 @@ var teamGraphs={
 		fr:'Carburant vs Escalade',
 		he:'דלק לעומת טיפוס',
 		zh_tw:'燃料與攀登',
+		es:'Combustible vs Escalada',
 	},
 	"Start Location":{
 		graph:"heatmap",
+		fr:'Lieu de départ',
+		pt:'Local de Partida',
+		zh_tw:'起始位置',
+		tr:'Başlangıç Konumu',
+		he:'מיקום התחלה',
+		es:'Ubicación de inicio',
 		data:['auto_start']
 	},
 	"Collect in Auto":{
 		graph:"heatmap",
+		fr:'Collecter en auto',
+		pt:'Coletar em Auto',
+		zh_tw:'自動收集',
+		tr:'Otomatik Toplama',
+		he:'אסוף בתא אוטוטי',
+		es:'Colectar en auto',
 		data:['auto_collect_position']
 	},
 	"Zone Change Away in Auto":{
 		graph:"heatmap",
+		fr:'Changement de zone loin en auto',
+		pt:'Mudança de zona longe em auto',
+		zh_tw:'自動區域變化外',
+		tr:'Otomatik Alan Değişimi Dış',
+		he:'שינוי אזור הרחק באוטומט',
+		es:'Cambio de zona lejos en auto',
 		data:['auto_zone_change_out']
 	},
 	"Zone Change Back in Auto":{
 		graph:"heatmap",
+		fr:'Changement de zone retour en auto',
+		pt:'Mudança de zona de volta em auto',
+		zh_tw:'自動區域變化回',
+		tr:'Otomatik Alan Değişimi İç',
+		he:'שינוי אזור חזרה באוטומט',
+		es:'Cambio de zona regreso en auto',
 		data:['auto_zone_change_in']
 	},
 	"Climb Position in Auto":{
 		graph:"heatmap",
+		fr:'Position d\'escalade en auto',
+		pt:'Posição de escalada em auto',
+		zh_tw:'自動攀爬位置',
+		tr:'Otomatik Tırmanma Pozisyonu',
+		he:'מיקום טיפוס באוטומט',
+		es:'Posición de escalada en auto',
 		data:['auto_climb_position']
 	},
 	"Zone Change Away in Teleop":{
 		graph:"heatmap",
+		fr:'Changement de zone loin en Téléop',
+		pt:'Mudança de zona longe em Teleop',
+		zh_tw:'遙控區域變化外',
+		tr:'Teleop Alan Değişimi Dış',
+		he:'שינוי אזור הרחק בטליאופ',
+		es:'Cambio de zona lejos en Teleop',
 		data:['tele_zone_change_out']
 	},
 	"Zone Change Back in Teleop":{
 		graph:"heatmap",
+		fr:'Changement de zone retour en Téléop',
+		pt:'Mudança de zona de volta em Teleop',
+		zh_tw:'遙控區域變化回',
+		tr:'Teleop Alan Değişimi İç',
+		he:'שינוי אזור חזרה בטליאופ',
+		es:'Cambio de zona regreso en Teleop',
 		data:['tele_zone_change_in']
 	},
 	"Defendable Shooting Locations":{
 		graph:"heatmap",
+		fr:'Emplacements de tir défendables',
+		pt:'Locais de tiro defensáveis',
+		zh_tw:'可防守射擊位置',
+		tr:'Savunulabilir atış konumları',
+		he:'מיקומי ירי שניתן להגן עליהם',
+		es:'Ubicaciones de disparo defensables',
 		data:['shooting_locations']
 	},
 	"Climb Position in Teleop":{
 		graph:"heatmap",
+		fr:'Position d\'escalade en téléop',
+		pt:'Posição de escalada em Teleop',
+		zh_tw:'遙控攀爬位置',
+		tr:'Teleop Tırmanma Pozisyonu',
+		he:'מיקום טיפוס בטליאופ',
+		es:'Posición de escalada en Teleop',
 		data:['tele_climb_position']
 	},
 }
@@ -2004,6 +2363,7 @@ var aggregateGraphs={
 		fr:'Score du match',
 		he:'ציון התאמה',
 		zh_tw:'比賽比分',
+		es:'Puntuación del Partido',
 		data:["max_score","score","min_score"],
 	},
 	"Fuel to Target":{
@@ -2013,6 +2373,7 @@ var aggregateGraphs={
 		fr:'Carburant vers la cible',
 		he:'דלק למטרה',
 		zh_tw:'燃料到目標',
+		es:'Combustible al Objetivo',
 		data:["fuel_output"],
 	},
 	"Game Stage":{
@@ -2022,6 +2383,7 @@ var aggregateGraphs={
 		fr:'Phase de jeu',
 		he:'שלב המשחק',
 		zh_tw:'遊戲舞台',
+		es:'Etapa del juego',
 		data:["auto_score","tele_score"],
 	},
 	"Fuel vs Climb":{
@@ -2032,6 +2394,7 @@ var aggregateGraphs={
 		fr:'Carburant vs Escalade',
 		he:'דלק לעומת טיפוס',
 		zh_tw:'燃料與攀登',
+		es:'Combustible vs Escalada',
 	},
 }
 
@@ -2043,6 +2406,8 @@ var matchPredictorSections={
 		pt:'Total',
 		fr:'Total',
 		data:["score"],
+		es:'Total',
+
 	},
 	"Game Stage":{
 		tr:'Fase do Jogo',
@@ -2050,6 +2415,7 @@ var matchPredictorSections={
 		zh_tw:'遊戲舞台',
 		pt:'Fase do Jogo',
 		fr:'Phase de jeu',
+		es:'Etapa del juego',
 		data:["auto_score","tele_score"],
 	},
 	"Fuel vs Climb":{
@@ -2060,6 +2426,7 @@ var matchPredictorSections={
 		fr:'Carburant vs Escalade',
 		he:'דלק לעומת טיפוס',
 		zh_tw:'燃料與攀登',
+		es:'Combustible vs Escalada',
 	},
 }
 
@@ -2191,12 +2558,6 @@ function showPitScouting(el,team){
 	function is(s){
 		return s&&s!="0"&&!/^undefined/.test(s)
 	}
-}
-
-function showSubjectiveScouting(el,team){
-	promiseSubjectiveScouting().then(subjectiveData => {
-		applyTranslations()
-	})
 }
 
 var importFunctions={

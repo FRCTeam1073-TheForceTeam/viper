@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title data-i18n=event_table_title></title>
+<meta name=viewport content="width=device-width,initial-scale=1.0">
+<meta charset=UTF-8>
+<link rel=stylesheet href=/main-new.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/event-data-entry.css>
+<script src=/jquery.min.js></script>
+<script src=/main.js></script>
+<script src=/auto-year.js></script>
+<script src=/event-data-entry.js></script>
+<script src=/event-url.js></script>
+<script src=/local.js></script>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+<body><main>
+<h1 data-i18n=event_table_title></h1>
+<form id=tableForm method=POST action=/admin/add-event.cgi>
+	<div id=event-info>
+		<label class=card id=comp-type-section>
+			<span data-i18n=event_table_comp_type></span> <select id=comp>
+				<option value=frc>FRC</option>
+				<option value=ftc>FTC</option>
+			</select>
+		</label>
+		<label class=card>
+			<span data-i18n=event_name></span> <input id=nameInp name=name type=text data-i18n-placeholder=event_name_placeholder required=1 size=20>
+		</label>
+		<label class=card>
+			<span data-i18n=event_location></span> <input name=location type=text id=locationInp data-i18n-placeholder=event_location_placeholder>
+		</label>
+		<label class=card>
+			<span data-i18n=event_start></span> <input name=start type=date id=startInp>
+		</label>
+		<label class=card>
+			<span data-i18n=event_end></span> <input name=end type=date id=endInp>
+		</label>
+		<label class=card>
+			<span data-i18n=event_id></span> <input id=idInp type=text data-i18n-placeholder=event_id_placeholder required=1 name=event size=15>
+		</label>
+	</div>
+
+	<input type=hidden id=csvInp name=csv>
+
+	<div id=schedule>
+		<div class=card>
+			<h2 data-i18n=event_table_practice></h2>
+			<table>
+				<thead><tr><th data-i18n=match></th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+				<tbody id=pm></tbody>
+			</table>
+		</div>
+		<div class=card>
+			<h2 data-i18n=event_table_qualification></h2>
+			<table>
+				<thead><tr><th data-i18n=match></th><th>B1</th><th>B2</th><th>B3</th><th>R1</th><th>R2</th><th>R3</th></tr></thead>
+				<tbody id=qm></tbody>
+			</table>
+		</div>
+	</div>
+
+	<div id=buttons>
+		<span id=team-list></span>
+		<button class=showInstructions data-i18n=instructions></button>
+		<button id=swap-red-blue data-i18n=swap_red_blue></button>
+		<button class=clearRow data-i18n=clear_row></button>
+		<input class=primary type=submit data-i18n-value=save_event>
+	</div>
+</form>
+<div class=lightBoxFullContent><iframe id=instructions src=/event-data-entry-instructions.html></iframe></div>
+</main></body>
+</html>

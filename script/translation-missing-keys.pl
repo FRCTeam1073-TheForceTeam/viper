@@ -27,11 +27,39 @@ my $scan_dir = 'www';
 my %missing_translations;  # {filename}{key}{lang} = 1
 my %file_stats;            # {filename}{total_keys, missing_count}
 
-# Find all .js files with addI18n() or similar translation blocks
+# Find the most recent FRC season (4-digit year directories like 2026)
+# and most recent FTC season (hyphenated year directories like 2025-26)
+opendir(my $dh, $scan_dir) or die "Cannot open $scan_dir: $!";
+my @dirs = grep { /^\d+(-\d+)?$/ && -d "$scan_dir/$_" } readdir($dh);
+closedir($dh);
+
+my $most_recent_frc = '';
+my $most_recent_ftc = '';
+
+for my $dir (@dirs) {
+	if ($dir =~ /^(\d{4})$/) {
+		# FRC format: single year
+		$most_recent_frc = $dir if $dir gt $most_recent_frc;
+	} elsif ($dir =~ /^(\d{4})-(\d{2})$/) {
+		# FTC format: year range like 2025-26
+		$most_recent_ftc = $dir if $dir gt $most_recent_ftc;
+	}
+}
+
+my @current_seasons = grep { $_ } ($most_recent_frc, $most_recent_ftc);
+die "No current season directories found in $scan_dir" unless @current_seasons;
+
+# Find all .js files in current season directories
 my @js_files;
 find(sub {
 	return unless /\.js$/;
 	return if /\.min\.js$/;  # Skip minified files
+	# Only include current season directories
+	my $in_current = 0;
+	for my $season (@current_seasons) {
+		$in_current = 1 if $File::Find::name =~ m{/$season/};
+	}
+	return unless $in_current;
 	push @js_files, $File::Find::name;
 }, $scan_dir);
 
@@ -42,6 +70,8 @@ for my $file (sort @js_files) {
 	close $fh;
 
 	my $in_i18n = 0;
+	my $i18n_type = '';  # 'addI18n' or 'named_object'
+	my $depth = 0;  # 0=not in block, 1=top-level of object, 2=inside a key, 3+=nested
 	my $current_key = '';
 	my %langs_in_key;
 	my $line_num = 0;
@@ -50,49 +80,70 @@ for my $file (sort @js_files) {
 		$line_num++;
 		chomp $line;
 
-		# Check if we're entering an i18n block (only addI18n, not data structures)
+		# Check if we're entering an i18n block (addI18n or specific translation objects)
 		if (!$in_i18n) {
 			if ($line =~ /addI18n\s*\(/) {
 				$in_i18n = 1;
+				$i18n_type = 'addI18n';
+				$depth = 0;
+			} elsif ($line =~ /^var\s+(teamGraphs|aggregateGraphs|matchPredictorSections|statInfo)\s*=/) {
+				$in_i18n = 1;
+				$i18n_type = 'named_object';
+				$depth = 0;
 			}
-			next;
 		}
 
-		# Check if we're exiting the i18n block
-		if ($in_i18n && ($line =~ /(\}\)?)|(^\s*\}\s*,?\s*$)|(^\s*\}\s*$)|(^\s*\}\))/)) {
-			# Process the completed key
-			if ($current_key) {
-				check_key_translations($file, $current_key, \%langs_in_key, $line_num);
-			}
-			$current_key = '';
-			%langs_in_key = ();
-			$in_i18n = 0 if $line =~ /(\}\))|(^\s*\}\s*$)/;
-			next;
-		}
+		# Process translation keys and language entries only within i18n blocks
+		if ($in_i18n) {
+			# Count braces to track nesting depth
+			my $open_braces = ($line =~ tr/{//);
+			my $close_braces = ($line =~ tr/}//);
 
-		# Check for a new translation key
-		if ($in_i18n && $line =~ /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*\{/) {
-			# Process previous key if exists
-			if ($current_key) {
-				check_key_translations($file, $current_key, \%langs_in_key, $line_num);
+			# Only look for new top-level keys when depth == 1 (directly inside the outer object)
+			if ($depth == 1 && ($line =~ /^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*:\s*\{/ || $line =~ /^\s*"([^"]+)"\s*:\s*\{/)) {
+				# Process previous key if exists
+				if ($current_key) {
+					check_key_translations($file, $current_key, \%langs_in_key, $line_num, $i18n_type);
+				}
+				$current_key = $1;
+				%langs_in_key = ();
 			}
-			$current_key = $1;
-			%langs_in_key = ();
-			next;
-		}
 
-		# Check for language entries within a key (including 'name:' as English in statInfo)
-		if ($in_i18n && $current_key && $line =~ /^\s*([a-z0-9_]+)\s*:\s*['"]/) {
-			my $lang = $1;
-			# In statInfo objects, 'name' is used instead of 'en' for English
-			$lang = 'en' if $lang eq 'name';
-			$langs_in_key{$lang} = 1 if $REQUIRED_LANGS{$lang};
+			# Only look for language entries when depth == 2 (directly inside a key's body)
+			if ($depth == 2 && $current_key && $line =~ /^\s*([a-z0-9_]+)\s*:\s*['"]/) {
+				my $lang = $1;
+				# In statInfo objects, 'name' is used instead of 'en' for English
+				$lang = 'en' if $lang eq 'name';
+				$langs_in_key{$lang} = 1 if $REQUIRED_LANGS{$lang};
+			}
+
+			# Update depth based on braces in this line
+			$depth += $open_braces;
+			$depth -= $close_braces;
+
+			# When we exit a key (depth drops from 2 to 1), finalize it
+			if ($depth == 1 && $current_key && $open_braces < $close_braces) {
+				check_key_translations($file, $current_key, \%langs_in_key, $line_num, $i18n_type);
+				$current_key = '';
+				%langs_in_key = ();
+			}
+
+			# When we exit the entire block (depth drops to 0), close the block
+			if ($depth == 0 && $in_i18n) {
+				if ($current_key) {
+					check_key_translations($file, $current_key, \%langs_in_key, $line_num, $i18n_type);
+				}
+				$current_key = '';
+				%langs_in_key = ();
+				$in_i18n = 0;
+				$i18n_type = '';
+			}
 		}
 	}
 
 	# Process last key if file ended abruptly
 	if ($current_key) {
-		check_key_translations($file, $current_key, \%langs_in_key, $line_num);
+		check_key_translations($file, $current_key, \%langs_in_key, $line_num, $i18n_type);
 	}
 }
 
@@ -100,7 +151,7 @@ for my $file (sort @js_files) {
 print_results();
 
 sub check_key_translations {
-	my ($file, $key, $langs_found, $line_num) = @_;
+	my ($file, $key, $langs_found, $line_num, $i18n_type) = @_;
 
 	# Skip special keys that might not need all languages
 	return if $key =~ /^_(MATCH|EVENT|TEAM|START|END|EXPECTEDNUM|ACTUALNUM|COUNT|SCOUTINGNAME|UPLOADCOUNT|LATERCOUNT|HISTORYCOUNT|QRNUM|QRTOTAL|TEAMNUM|TEAMCOLOR|TEAMCOLOR|FILE).*$/i;
@@ -114,6 +165,9 @@ sub check_key_translations {
 	# Check for missing languages
 	my @missing;
 	for my $lang (@SUPPORTED_LANGS) {
+		# For named objects (not addI18n), English is the default from the key name, so skip checking 'en'
+		next if $i18n_type eq 'named_object' && $lang eq 'en';
+
 		if (!exists $langs_found->{$lang}) {
 			push @missing, $lang;
 		}
@@ -158,23 +212,12 @@ sub print_results {
 		}
 	}
 
-	print "=== Translation Completeness Report ===\n\n";
-	print "Supported Languages: " . join(', ', @SUPPORTED_LANGS) . "\n\n";
-
 	if ($total_missing_keys == 0) {
 		print "✅ All translation keys are complete!\n";
 		print "   $total_files files checked\n";
 		print "   All keys have all supported languages\n";
 		return;
 	}
-
-	print "⚠️  Missing Translations Found\n";
-	print "   Files with missing translations: $files_with_missing / $total_files\n";
-	print "   Keys with missing languages: $total_missing_keys\n";
-	print "   Total missing language entries: $total_missing_entries\n\n";
-
-	# Print detailed report
-	print "=== Detailed Report ===\n\n";
 
 	for my $file (sort keys %missing_translations) {
 		my $missing_count = $file_stats{$file}{missing_count};
@@ -205,7 +248,6 @@ sub print_results {
 	}
 
 	# Summary by language
-	print "=== Missing Translations by Language ===\n\n";
 	my %lang_missing_count;
 	for my $file (keys %missing_translations) {
 		my $missing_count = $file_stats{$file}{missing_count};

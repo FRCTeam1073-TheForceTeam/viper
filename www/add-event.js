@@ -109,6 +109,15 @@ addI18n({
 		he:'העלה',
 		es:'Cargar',
 	},
+	add_event_import_choose:{
+		en:'Choose file',
+		pt:'Escolher arquivo',
+		fr:'Choisir un fichier',
+		tr:'Dosya seç',
+		zh_tw:'選擇檔案',
+		he:'בחר קובץ',
+		es:'Elegir archivo',
+	},
 	add_event_import_file_required:{
 		en:'Please select a .json file to import',
 		pt:'Selecione um arquivo .json para importar',
@@ -133,7 +142,7 @@ function setComp(){
 	$('a').each(function(){
 		$(this).attr('href',$(this).attr('href').replace(/_COMP_|\bftc\b|\bfrc\b/gi, comp))
 		$(this).attr('href',$(this).attr('href').replace(/_SEASON_|20[0-9]{2}(-[0-9]{2})?/g, season))
-		$(this).text($(this).text().replace(/_COMP_|\bftc\b|\bfrc\b/gi, comp.toUpperCase()))
+		//$(this).text($(this).text().replace(/_COMP_|\bftc\b|\bfrc\b/gi, comp.toUpperCase()))
 	})
 }
 
@@ -150,5 +159,9 @@ $(document).ready(function(){
 			alert(translate('add_event_import_file_required'))
 			return false
 		}
+	})
+
+	$('input[name="json"]').on('change', function(){
+		$(this).closest('form').find('.file-name').text(this.files && this.files.length ? this.files[0].name : '')
 	})
 })

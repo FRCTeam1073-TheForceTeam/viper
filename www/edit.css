@@ -1,4 +1,4 @@
-.tabulator-menu-item{color:black}
+.tabulator-menu-item,.tabulator-page{color:black}
 html,body{padding:0;margin:0}
 #main{display:flex;height:100vh;background:var(--main-bg-color);flex-direction:column;align-content:stretch}
 #saver{text-align:start;padding:0.5em}

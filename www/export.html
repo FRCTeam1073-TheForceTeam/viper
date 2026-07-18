@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html><head>
 <title data-i18n=export_title></title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel=stylesheet href=/main.css>
+<meta charset=UTF-8>
+<meta name=viewport content=width=device-width,initial-scale=1.0>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/export.css>
 <script src=/jquery.min.js></script>
@@ -13,48 +12,50 @@
 <script src=/local.js></script>
 <script src=/export.js></script>
 <link rel=icon type=image/png href=/logo.png>
-</head>
-<body>
+</head><body><main>
 	<h1 data-i18n=export_title></h1>
 
-	<div id=contents>
-		<div><button id=showInstructions data-i18n=instructions></button></div>
+	<div><button id=showInstructions data-i18n=instructions></button></div>
 
-		<div class=side-by-side>
+	<div id=contents>
+
+		<label><input type=checkbox id=include-images> <span data-i18n=include_images></span></label>
+
+		<div class=card id=with-images style=display:none>
 			<h2 data-i18n=with_images_heading></h2>
 
-			<p data-i18n=with_images_download_description></p>
-			<a id=downloadImages data-i18n=with_images_download_link></a>
+			<p class=file-size><span data-i18n=file_size_label></span> <span id=with-images-file-size-value data-i18n=calculating_size></span></p>
 
-			<hr>
+			<p data-i18n=with_images_download_description></p>
+			<a class="button primary" id=downloadImages data-i18n=with_images_download_link></a>
 
 			<p data-i18n=with_images_transfer_description></p>
 			<form method=POST action=https://example.viperscout.com/admin/import.cgi>
 				<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-zA-Z0-9\-\.\:]+)(\/?)$'>
 				<ul class=hostOptions></ul>
 				<input name=json id=transferJsonImages type=hidden>
-				<button class=submit id=submitImages disabled=true><img id=loadingImages class=loading-spinner src=/loading.svg> <span data-i18n=with_images_transfer_button></span></button>
+				<button class="submit primary" id=submitImages disabled=true><img id=loadingImages class=loading-spinner src=/loading.svg> <span data-i18n=with_images_transfer_button></span></button>
 			</form>
 		</div>
 
-		<div class=side-by-side>
+		<div class=card id=without-images>
 			<h2 data-i18n=without_images_heading></h2>
 
-			<p data-i18n=without_images_download_description></p>
-			<a id=downloadData data-i18n=without_images_download_link></a>
+			<p class=file-size><span data-i18n=file_size_label></span> <span id=without-images-file-size-value data-i18n=calculating_size></span></p>
 
-			<hr>
+			<p data-i18n=without_images_download_description></p>
+			<a class="button primary" id=downloadData data-i18n=without_images_download_link></a>
 
 			<p data-i18n=without_images_transfer_description></p>
 			<form method=POST action=https://example.viperscout.com/admin/import.cgi>
 				<input class=siteInput placeholder=example.viperscout.com required=1 pattern='^((https?:\/\/)?)([a-z]+(:[^:@]+)?@)?([a-zA-Z0-9\-\.\:]+)(\/?)$'>
 				<ul class=hostOptions></ul>
 				<input name=json id=transferJsonData type=hidden>
-				<button class=submit id=submitData disabled=true><img id=loadingData class=loading-spinner src=/loading.svg> <span data-i18n=without_images_transfer_button></span></button>
+				<button class="submit primary" id=submitData disabled=true><img id=loadingData class=loading-spinner src=/loading.svg> <span data-i18n=without_images_transfer_button></span></button>
 			</form>
 		</div>
+
 	</div>
 
-	<iframe id=instructions class=lightBoxFullContent src=/import-export-instructions.html></iframe>
-</body>
-</html>
+	<div class=lightBoxFullContent><iframe id=instructions src=/import-export-instructions.html></iframe></div>
+</main></body></html>

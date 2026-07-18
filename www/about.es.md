@@ -20,7 +20,7 @@ Además, Viper es un droide explorador en el universo de Star Wars.
 ## Documentación
 
  - [Instrucciones imprimibles](/printable-instructions.html)
- - [Instrucciones de entrada de datos de evento](/event-table-instructions.html)
+ - [Instrucciones de entrada de datos de evento](/event-data-entry-instructions.html)
  - [Instrucciones de página de evento](/event-instructions.html)
  - [Instrucciones de scouting de fotos de bots](/bot-photos-instructions.html)
  - [Instrucciones de scouting — seleccionar un bot](/scouting-select-bot-instructions.html)

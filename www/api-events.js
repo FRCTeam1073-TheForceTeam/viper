@@ -172,12 +172,13 @@ function clickOnEvent(){
 function showEvents(events){
 	var div = $('#events').html("")
 	events.forEach(function(event){
-		$(div)
-		.append($('<h2>').append($(`<a href="/admin/${comp}-api-event.cgi?event=${season}${event.code}">`).click(clickOnEvent).text(event.name)))
-		.append($('<span>').text(toDisplayDate(event.dateStart))).append("<br>")
-		.append($('<span>').text(event.venue)).append("<br>")
-		.append($('<span>').text(event.address)).append("<br>")
-		.append($('<span>').text(`${event.city}, ${event.stateprov}, ${event.country}`))
+		$(div).append(
+			$(`<a class=card href="/admin/${comp}-api-event.cgi?event=${season}${event.code}">`).click(clickOnEvent).text(event.name)
+			.append($('<div>').text(toDisplayDate(event.dateStart)))
+			.append($('<div>').text(event.venue))
+			.append($('<div>').text(event.address))
+			.append($('<div>').text(`${event.city}, ${event.stateprov}, ${event.country}`))
+		)
 	})
 }
 

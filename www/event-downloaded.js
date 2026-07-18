@@ -37,9 +37,9 @@ addI18n({
 		he:'השווה נתוני צופים',
 		es:'Comparar datos de scout',
 	},
-	scouter_rankings_link:{
-		en:'See scouter rankings',
-		fr:'Consulter le classement des recruteurs',
+	scout_rankings_link:{
+		en:'See scout rankings',
+		fr:'Consulter le classement des scouts',
 		zh_tw:'查看球探排名',
 		tr:'İzci sıralamalarını gör',
 		pt:'Ver classificações de olheiros',

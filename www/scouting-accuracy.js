@@ -1,14 +1,14 @@
 "use strict"
 
 addI18n({
-	scouter_page_title:{
-		en:'_EVENT_ Scouting Stats',
-		fr:'_EVENT_ Statistiques de Repérage',
-		zh_tw:'_EVENT_ 偵察統計',
-		tr:'_EVENT_ İzcilik İstatistikleri',
-		he:'_EVENT_ סטטיסטיקות צופים',
-		pt:'_EVENT_ Estatísticas de Scouting',
-		es:'_EVENT_ Estadísticas de exploración',
+	scouting_accuracy_page_title:{
+		en:'_EVENT_ Scouting Accuracy Report',
+		tr:'_EVENT_ İzcilik Doğruluk Raporu',
+		pt:'Relatório de Precisão de Escotismo _EVENT_',
+		he:'דו"ח דיוק סקאוטינג _EVENT_',
+		zh_tw:'_EVENT_ 偵察準確性報告',
+		fr:'Rapport de précision du scouting _EVENT_',
+		es:'Informe de precisión de exploración _EVENT_',
 	},
 	difference_heading:{
 		en:'Match/Alliance Difference',

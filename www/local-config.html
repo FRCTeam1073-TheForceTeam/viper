@@ -4,7 +4,7 @@
 <title data-i18n=local_config_title></title>
 <meta name=viewport content="width=device-width,initial-scale=1.0">
 <meta charset=UTF-8>
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/local-config.css>
 <script src=/jquery.min.js></script>
@@ -12,9 +12,7 @@
 <script src=/local.js onload="window.localJsLoaded=true"></script>
 <script src=/local-config.js></script>
 <link rel=icon type=image/png href=/logo.png>
-</head>
-<body>
-<div id=main>
+</head><body><main>
 <h1 data-i18n=local_config_title></h1>
 
 <div id=loading data-i18n=local_config_loading></div>
@@ -48,8 +46,6 @@
 	<div id=message-area></div>
 
 	<input type=hidden id=transferHosts-json name=transferHosts>
-	<button type=submit data-i18n=local_config_save></button>
+	<button class=primary type=submit data-i18n=local_config_save></button>
 </form>
-</div>
-</body>
-</html>
+</main></body></html>

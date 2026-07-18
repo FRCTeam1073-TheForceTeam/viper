@@ -1,6 +1,60 @@
 "use strict"
 
 addI18n({
+	score_position_heading:{
+		en:'Scores Position',
+		tr:'Puan Konumu',
+		pt:'Posição de Pontuação',
+		es:'Posición de Puntuación',
+		fr:'Position de score',
+		he:'עמדת הניקוד',
+		zh_tw:'分數位置',
+	},
+	score_position_first:{
+		en:'First',
+		tr:'İlk',
+		pt:'Primeiro',
+		es:'Primero',
+		fr:'Premier',
+		he:'ראשון',
+		zh_tw:'第一',
+	},
+	score_position_middle:{
+		en:'Middle',
+		tr:'Orta',
+		pt:'Meio',
+		es:'Medio',
+		fr:'Milieu',
+		he:'אמצע',
+		zh_tw:'中間',
+	},
+	score_position_last:{
+		en:'Last',
+		tr:'Son',
+		pt:'Último',
+		es:'Último',
+		fr:'Dernier',
+		he:'אחרון',
+		zh_tw:'最後',
+	},
+	show_practice_label:{
+		en:'Show practice matches',
+		tr:'Antrenman maçlarını göster',
+		pt:'Mostrar partidas de treino',
+		es:'Mostrar partidos de práctica',
+		fr:'Afficher les matchs d\'entraînement',
+		he:'הצג משחקי אימון',
+		zh_tw:'顯示練習賽',
+	},
+	team_schedule_label:{
+		en:'Show team schedule only',
+		tr:'Yalnızca takım programını göster',
+		pt:'Mostrar apenas a agenda da equipe',
+		es:'Mostrar solo el calendario del equipo',
+		fr:'Afficher seulement le calendrier de l\'équipe',
+		he:'הצג רק את לוח הזמנים של הקבוצה',
+		zh_tw:'僅顯示球隊賽程',
+	},
 	score_label:{
 		en:'Score:',
 		tr:'Puan:',
@@ -73,6 +127,15 @@ addI18n({
 		fr:'_START_ à _END_',
 		zh_tw:'_START_ 至 _END_',
 	},
+	recommended_heading:{
+		en:'Recommended',
+		he:'מומלץ',
+		zh_tw:'推薦',
+		pt:'Recomendado',
+		es:'Recomendado',
+		fr:'Recommandé',
+		tr:'Önerilen',
+	},
 	scouting_heading:{
 		en:'Scouting',
 		he:'צוֹפִיוּת',
@@ -92,40 +155,31 @@ addI18n({
 		tr:'İzcilik Verilerini Yükle (Maçlar: _UPLOADCOUNT_)',
 	},
 	scout_match_link:{
-		en:'Scout a match',
-		he:'צופי גפרור',
-		zh_tw:'偵察比賽',
-		pt:'Observar uma partida',
-		es:'Explorar una partida',
-		fr:'Repérer un match',
-		tr:'Bir maçı izle',
+		en:'Match Scouting',
+		tr:'Maç İzciliği',
+		pt:'Scouting de Partida',
+		es:'Exploración de Partida',
+		fr:'Repérage de match',
+		he:'סקאוטינג משחק',
+		zh_tw:'球探比賽',
 	},
 	all_photos_link:{
-		en:'Upload bot photos for all teams',
-		he:'העלה תמונות בוט לכל הקבוצות',
-		zh_tw:'為所有隊伍上傳機器人照片',
-		pt:'Carregar fotos de bot para todos os times',
-		es:'Cargar fotos de robot para todos los equipos',
-		fr:'Télécharger les photos du robot pour toutes les équipes',
-		tr:'Tüm takımlar için bot fotoğrafları yükle',
+		en:'Photo Scouting',
+		tr:'Fotoğraf İzciliği',
+		pt:'Scouting de Foto',
+		es:'Exploración de Foto',
+		fr:'Repérage photo',
+		he:'סקאוטינג צילום',
+		zh_tw:'球探照片',
 	},
 	all_pit_link:{
-		en:'Open pit scouting for all teams',
-		zh_tw:'為所有團隊進行露天礦場勘察',
-		pt:'Observação de poço aberto para todos os times',
-		es:'Exploración de hoyo abierto para todos los equipos',
-		fr:'Repérage en fosse ouverte pour toutes les équipes',
-		tr:'Tüm takımlar için açık çukur izciliği',
-		he:'',
-	},
-	pit_squads:{
-		en:'Open pit and photo scouting squads:',
-		he:'חוליות בור פתוח וצופית צילום:',
-		zh_tw:'露天礦和攝影偵察隊：',
-		pt:'Esquadrões de observação de poço aberto e de fotos:',
-		es:'Escuadrones de exploración de hoyo y fotos abiertos:',
-		fr:'Repérage en fosse ouverte et photos des équipes :',
-		tr:'Açık çukur ve fotoğraf izcilik takımları:',
+		en:'Pit Scouting',
+		tr:'Pit İzciliği',
+		pt:'Scouting de Box',
+		es:'Exploración de Hoyo',
+		fr:'Repérage de stands',
+		he:'סקאוטינג בור',
+		zh_tw:'坑道偵察',
 	},
 	all_subjective_link:{
 		en:'Subjective scouting',
@@ -137,22 +191,22 @@ addI18n({
 		tr:'Öznel izcilik',
 	},
 	top_scouters_link:{
-		en:'Top scouters',
-		he:'צופים מובילים',
-		zh_tw:'頂級球探',
-		pt:'Melhores olheiros',
-		es:'Mejores exploradores',
-		fr:'Meilleurs recruteurs',
-		tr:'En iyi izciler',
+		en:'Scout Ranking',
+		tr:'İzci Sıralaması',
+		pt:'Ranking de Olheiro',
+		es:'Clasificación de Exploradores',
+		fr:'Classement des Scouts',
+		he:'דירוג צופים',
+		zh_tw:'球探排名',
 	},
 	compare_link:{
-		en:'Compare scouting to official scores',
-		he:'השווה את הסקאוטינג לתוצאות רשמיות',
-		zh_tw:'將球探調查結果與官方分數進行比較',
-		pt:'Comparar observação com pontuações oficiais',
-		es:'Comparar exploración con puntuaciones oficiales',
-		fr:'Comparer les résultats du repérage aux scores officiels',
-		tr:'İzciliği resmi skorlarla karşılaştır',
+		en:'Accuracy Report',
+		tr:'Doğruluk Raporu',
+		pt:'Relatório de Precisão',
+		es:'Informe de Precisión',
+		fr:'Rapport de Précision',
+		he:'דוח דיוק',
+		zh_tw:'精準度報告',
 	},
 	strategy_heading:{
 		en:'Strategy',
@@ -164,40 +218,40 @@ addI18n({
 		tr:'Strateji',
 	},
 	event_stats_link:{
-		en:'View stats for alliance selection',
-		he:'הצג נתונים סטטיסטיים עבור בחירת ברית',
-		zh_tw:'查看聯盟選擇的統計數據',
-		pt:'Ver estatísticas para seleção de alianças',
-		es:'Ver estadísticas para selección de alianza',
-		fr:'Afficher les statistiques pour la sélection d\'alliance',
-		tr:'İttifak seçimi için istatistikleri görüntüle',
+		en:'Event Stats',
+		tr:'Etkinlik İstatistikleri',
+		pt:'Estatísticas do Evento',
+		es:'Estadísticas del Evento',
+		fr:'Statistiques de l\'événement',
+		he:'סטטיסטיקות אירוע',
+		zh_tw:'活動統計',
 	},
 	all_predict_link:{
-		en:'Predict a match outcome',
-		he:'חזה את תוצאת המשחק',
-		zh_tw:'預測比賽結果',
-		pt:'Prever o resultado de uma partida',
-		es:'Predecir resultado de una partida',
-		fr:'Prédire l\'issue d\'un match',
-		tr:'Bir maç sonucunu tahmin et',
+		en:'Match Predictor',
+		tr:'Maç Tahmin Edicisi',
+		pt:'Preditor de Partida',
+		es:'Predictor de Partida',
+		fr:'Prédicteur de match',
+		he:'חזאי משחק',
+		zh_tw:'比賽預測器',
 	},
 	all_planner_link:{
-		en:'View match planner with whiteboard',
-		he:'צפה במתכנן התאמה עם לוח לבן',
-		zh_tw:'使用白板查看比賽計劃器',
-		pt:'Ver planejador de partidas com quadro branco',
-		es:'Ver planificador de partidas con pizarra blanca',
-		fr:'Afficher le planificateur de match avec le tableau blanc',
-		tr:'Beyaz tahta ile maç planlayıcısını görüntüle',
+		en:'Match Whiteboard',
+		tr:'Maç Beyaz Tahtası',
+		pt:'Quadro Branco de Partida',
+		es:'Pizarra Blanca de Partida',
+		fr:'Tableau blanc de match',
+		he:'לוח לבן למשחק',
+		zh_tw:'比賽白板',
 	},
 	all_team_stats_link:{
-		en:'View individual team stats and pit scouting data',
-		he:'הצג נתונים סטטיסטיים של צוות בודד ונתוני סקאוטינג בבור',
-		zh_tw:'查看各車隊的統計數據和維修站偵察數據',
-		pt:'Ver estatísticas de times individuais e dados de observação de poço',
-		es:'Ver estadísticas de equipos individuales y datos de exploración de hoyo',
-		fr:'Afficher les statistiques individuelles des équipes et les données de repérage en fosse',
-		tr:'Bireysel takım istatistiklerini ve çukur izcilik verilerini görüntüle',
+		en:'Team Stats',
+		tr:'Takım İstatistikleri',
+		pt:'Estatísticas da Equipe',
+		es:'Estadísticas del Equipo',
+		fr:'Statistiques de l\'équipe',
+		he:'סטטיסטיקות קבוצה',
+		zh_tw:'球隊統計',
 	},
 	data_heading:{
 		en:'Data',
@@ -209,31 +263,31 @@ addI18n({
 		tr:'Veri',
 	},
 	viper_export_link:{
-		en:'Export to another Viper',
-		he:'ייצוא לצפע אחר',
-		zh_tw:'匯出至另一個 Viper',
-		pt:'Exportar para outro Viper',
-		es:'Exportar a otro Viper',
-		fr:'Exporter vers un autre Viper',
-		tr:'Başka bir Viper\'a aktar',
+		en:'Export Full Event',
+		tr:'Tam Etkinliği Dışa Aktar',
+		pt:'Exportar Evento Completo',
+		es:'Exportar Evento Completo',
+		fr:'Exporter l\'événement complet',
+		he:'ייצוא אירוע מלא',
+		zh_tw:'匯出完整活動',
 	},
 	computed_data_link:{
-		en:'Scouting Data with Computed Scores',
-		he:'נתוני צופי עם ציונים מחושבים',
-		zh_tw:'使用計算分數來偵察數據',
-		pt:'Dados de observação com pontuações computadas',
-		es:'Datos de exploración con puntuaciones calculadas',
-		fr:'Données de repérage avec scores calculés',
-		tr:'Hesaplanmış Skorlarla İzcilik Verileri',
+		en:'Scouting + Derived CSV',
+		tr:'Scouting + Türetilen CSV',
+		pt:'Scouting + CSV Derivado',
+		es:'Scouting + CSV Derivado',
+		fr:'Scouting + CSV Dérivé',
+		he:'סקאוטינג + CSV נגזר',
+		zh_tw:'球探 + 衍生 CSV',
 	},
 	aggregated_data_link:{
-		en:'Scouting Data Aggregated by Team',
-		he:'נתוני צופי מצטברים לפי צוות',
-		zh_tw:'按球隊彙總的球探數據',
-		pt:'Dados de observação agregados por time',
-		es:'Datos de exploración agregados por equipo',
-		fr:'Données de repérage agrégées par équipe',
-		tr:'Takım Tarafından Toplanan İzcilik Verileri',
+		en:'Team Aggregation CSV *',
+		tr:'Takım Toplama CSV *',
+		pt:'Agregação de Equipe CSV *',
+		es:'Agregación de Equipo CSV *',
+		fr:'Agrégation d\'équipe CSV *',
+		he:'אגרגציה של קבוצה CSV *',
+		zh_tw:'球隊集計 CSV *',
 	},
 	edit_event_heading:{
 		en:'Edit Event',
@@ -245,40 +299,40 @@ addI18n({
 		tr:'Etkinliği Düzenle',
 	},
 	edit_event_link:{
-		en:'Change event details and match schedule',
-		he:'שנה את פרטי האירוע ולוח הזמנים של המשחק',
-		zh_tw:'更改賽事詳情和比賽行程',
-		pt:'Alterar detalhes do evento e cronograma de partidas',
-		es:'Cambiar detalles del evento y horario de partidas',
-		fr:'Modifier les détails de l\'événement et le calendrier des matchs',
-		tr:'Etkinlik ayrıntılarını ve maç programını değiştir',
+		en:'Practice/Quals Data Entry',
+		tr:'Antrenman/Yeterlilik Veri Girişi',
+		pt:'Entrada de Dados de Prática/Qualificação',
+		es:'Entrada de Datos de Práctica/Calificación',
+		fr:'Saisie des données de pratique/qualification',
+		he:'הזנת נתונים של תרגול/הסמכה',
+		zh_tw:'練習/資格賽數據輸入',
 	},
 	edit_playoffs_link:{
-		en:'Input alliance selection results and playoff type',
-		he:'הזן תוצאות בחירת ברית וסוג פלייאוף',
-		zh_tw:'輸入聯盟選擇結果和季後賽類型',
-		pt:'Inserir resultados de seleção de alianças e tipo de playoff',
-		es:'Ingresar resultados de selección de alianza y tipo de playoff',
-		fr:'Saisir les résultats de la sélection d\'alliance et le type de séries éliminatoires',
-		tr:'İttifak seçimi sonuçlarını ve playoff türünü gir',
+		en:'Playoffs Data Entry',
+		tr:'Playoff Veri Girişi',
+		pt:'Entrada de Dados de Playoff',
+		es:'Entrada de Datos de Playoff',
+		fr:'Saisie des données de séries éliminatoires',
+		he:'הזנת נתונים של פלייאוף',
+		zh_tw:'季後賽數據輸入',
 	},
 	api_link:{
-		en:'Fetch latest schedule and official scores from the FIRST API',
-		he:'קבל את לוח הזמנים העדכני ביותר וציונים רשמיים מה-FIRST API',
-		zh_tw:'從 FIRST API 取得最新賽程和官方成績',
-		pt:'Obter a programação mais recente e pontuações oficiais da API FIRST',
-		es:'Obtener horario más reciente y puntuaciones oficiales de la API FIRST',
-		fr:'Récupérer le calendrier et les scores officiels les plus récents depuis l\'API FIRST',
-		tr:'FIRST API\'den en son programı ve resmi skorları al',
+		en:'FIRST API Import',
+		tr:'FIRST API İçe Aktarma',
+		pt:'Importação de API FIRST',
+		es:'Importación de API FIRST',
+		fr:'Importation de l\'API FIRST',
+		he:'ייבוא API FIRST',
+		zh_tw:'FIRST API 導入',
 	},
 	statbotics_epa_link:{
-		en:'Fetch Statbotics EPAs for this event',
-		he:'קבל Statbotics EPAs לאירוע זה',
-		zh_tw:'為此賽事取得 Statbotics EPA',
-		pt:'Obter Statbotics EPAs para este evento',
-		es:'Obtener Statbotics EPA para este evento',
-		fr:'Récupérer les EPAs Statbotics pour cet événement',
-		tr:'Bu etkinlik için Statbotics EPA\'larını al',
+		en:'Statbotics EPAs Import',
+		tr:'Statbotics EPA İçe Aktarma',
+		pt:'Importação de EPAs Statbotics',
+		es:'Importación de EPAs Statbotics',
+		fr:'Importation des EPA Statbotics',
+		he:'ייבוא Statbotics EPA',
+		zh_tw:'Statbotics EPA 導入',
 	},
 	epa_label:{
 		en:'EPA:',
@@ -290,31 +344,58 @@ addI18n({
 		zh_tw:'EPA：',
 	},
 	import_link:{
-		en:'Import data from another app',
-		he:'ייבא נתונים מאפליקציה אחרת',
-		zh_tw:'從其他應用程式匯入數據',
-		pt:'Importar dados de outro aplicativo',
-		es:'Importar datos de otra aplicación',
-		fr:'Importer des données depuis une autre application',
-		tr:'Başka bir uygulamadan veri içe aktar',
+		en:'Other Scouting App Import',
+		tr:'Diğer Scouting Uygulaması İçe Aktarma',
+		pt:'Importação de Outro App de Scouting',
+		es:'Importación de Otra Aplicación de Exploración',
+		fr:'Importation d\'une autre application de repérage',
+		he:'ייבוא מאפליקציית סקאוטינג אחרת',
+		zh_tw:'其他球探應用導入',
 	},
-	external_links_heading:{
-		en:'External Links',
-		he:'קישורים חיצוניים',
-		zh_tw:'外部連結',
-		pt:'Links externos',
-		es:'Enlaces externos',
-		fr:'Liens externes',
-		tr:'Harici Bağlantılar',
+	blue_alliance_links_heading:{
+		en:'Blue Alliance Links',
+		he:'קישורי ברית כחולה',
+		zh_tw:'藍色聯盟連結',
+		pt:'Links da Aliança Azul',
+		es:'Enlaces de la Alianza Azul',
+		fr:'Liens de l\'Alliance Bleue',
+		tr:'Mavi İttifak Bağlantıları',
 	},
-	blue_alliance_main_link:{
-		en:'The Blue Alliance',
-		he:'הברית הכחולה',
-		zh_tw:'藍色聯盟',
-		pt:'A Aliança Azul',
-		es:'The Blue Alliance',
-		fr:'L\'Alliance Bleue',
-		tr:'The Blue Alliance',
+	orange_alliance_links_heading:{
+		en:'Orange Alliance Links',
+		tr:'Turuncu İttifak Bağlantıları',
+		pt:'Links da Aliança Laranja',
+		es:'Enlaces de la Alianza Naranja',
+		fr:'Liens de l\'Alliance Orange',
+		he:'קישורי הברית הכתומה',
+		zh_tw:'橙色聯盟連結',
+	},
+	first_inspires_links_heading:{
+		en:'First Inspires Links',
+		he:'קישורי First Inspires',
+		zh_tw:'First Inspires 連結',
+		pt:'Links do First Inspires',
+		es:'Enlaces de First Inspires',
+		fr:'Liens First Inspires',
+		tr:'First Inspires Bağlantıları',
+	},
+	preferences_heading:{
+		en:'Preferences',
+		he:'העדפות',
+		zh_tw:'偏好設定',
+		pt:'Preferências',
+		es:'Preferencias',
+		fr:'Préférences',
+		tr:'Tercihler',
+	},
+	blue_alliance_event_link:{
+		en:'Event',
+		he:'אירוע',
+		zh_tw:'賽事',
+		pt:'Evento',
+		es:'Evento',
+		fr:'Événement',
+		tr:'Etkinlik',
 	},
 	blue_alliance_results_link:{
 		en:'Results',
@@ -379,23 +460,32 @@ addI18n({
 		fr:'Médias',
 		tr:'Medya',
 	},
-	orange_alliance_main_link:{
-		en:'The Orange Alliance',
-		he:'הברית הכתומה',
-		zh_tw:'橘色聯盟',
-		pt:'A Orange Alliance',
-		es:'The Orange Alliance',
-		fr:'L\'Alliance Orange',
-		tr:'The Orange Alliance',
+	orange_alliance_event_link:{
+		en:'Event',
+		he:'אירוע',
+		zh_tw:'賽事',
+		pt:'Evento',
+		es:'Evento',
+		fr:'Événement',
+		tr:'Etkinlik',
 	},
-	first_main_link:{
-		en:'First Inspires',
-		he:'השראה ראשונה',
-		zh_tw:'首次啟發',
-		pt:'First Inspires',
-		es:'FIRST Inspires',
-		fr:'Inspirations',
-		tr:'First Inspires',
+	first_frc_event_link:{
+		en:'Event',
+		he:'אירוע',
+		zh_tw:'賽事',
+		pt:'Evento',
+		es:'Evento',
+		fr:'Événement',
+		tr:'Etkinlik',
+	},
+	first_ftc_event_link:{
+		en:'Event',
+		he:'אירוע',
+		zh_tw:'賽事',
+		pt:'Evento',
+		es:'Evento',
+		fr:'Événement',
+		tr:'Etkinlik',
 	},
 	first_practice_link:{
 		en:'Practice Matches',
@@ -441,15 +531,6 @@ addI18n({
 		es:'Premios',
 		fr:'Récompenses',
 		tr:'Ödüller',
-	},
-	show_advanced_link:{
-		en:'Show advanced options',
-		he:'הצג אפשרויות מתקדמות',
-		zh_tw:'顯示進階選項',
-		pt:'Mostrar opções avançadas',
-		es:'Mostrar opciones avanzadas',
-		fr:'Afficher les options avancées',
-		tr:'Gelişmiş seçenekleri göster',
 	},
 	score_abbreviation:{
 		en:'Scr',
@@ -803,28 +884,50 @@ $(document).ready(function(){
 		da = $('#dataActions'),
 		file = url.replace(/.*\//,""),
 		list = da.find('ul').html(""),
-		download = $('<a data-i18n=download_link>').attr('href',url)
+		download = $('<a class=button data-i18n=download_link>').attr('href',url)
 		da.find('h2').text($(this).attr('download')?$(this).attr('download'):file)
 		if ($(this).attr('download')) download.attr('download', $(this).attr('download'))
 		list.append($('<li>').append(download))
 		if (/\.csv/.test(file)){
-			list.append($('<li>').append($('<a data-i18n=edit_link>').attr('href',`/edit.html#file=${file}`)))
-			list.append($('<li>').append($('<a data-i18n=history_link>').attr('href',`/revisions.html#file=${file}`)))
+			list.append($('<li>').append($('<a class=button data-i18n=edit_link>').attr('href',`/edit.html#file=${file}`)))
+			list.append($('<li>').append($('<a class=button data-i18n=history_link>').attr('href',`/revisions.html#file=${file}`)))
 		}
 		if (/\.json/.test(file)){
-			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).click(viewJson)))
+			list.append($('<li>').append($('<a class=button data-i18n=file_view_link>').attr('href',url).click(viewJson)))
 		}
 		if (/^blob/.test(url)){
-			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).attr('data-source',$(this).attr('data-source')).click(viewDataAsTable)))
+			list.append($('<li>').append($('<a class=button data-i18n=file_view_link>').attr('href',url).attr('data-source',$(this).attr('data-source')).click(viewDataAsTable)))
 		}
 		showLightBox(da)
 		return false
 	}
-	$('.show-more').click(function(){
-		$('.more').show()
-		$(this).hide()
-
+	var columnOrders = {
+		"first": ['redScore','blueScore','R1','R2','R3','B1','B2','B3'],
+		"middle": ['R1','R2','R3','redScore','blueScore','B1','B2','B3'],
+		"last": ['R1','R2','R3','B1','B2','B3','redScore','blueScore'],
+	}
+	function applyColumnOrder(){
+		var order = columnOrders[localStorage.scoresPosition] || columnOrders['middle']
+		$('#matchTable tr').each(function(){
+			var $tr = $(this)
+			order.forEach(function(cls){ $tr.append($tr.children('.'+cls)) })
+		})
+	}
+	$('input[type=radio][name=score-position]').each(function(){
+		$(this).prop('checked', (localStorage.scoresPosition || "middle") == $(this).val())
+	}).change(function(){
+		if(this.checked) {
+			localStorage.scoresPosition = $(this).val()
+			applyColumnOrder()
+		}
 	})
+	$('#event-menu').on('click', '.nav-section>h2', function(){
+		var $section = $(this).closest('.nav-section'),
+		wasOpen = $section.hasClass('open')
+		$('#event-menu .nav-section').removeClass('open')
+		if (!wasOpen) $section.addClass('open')
+	})
+	$('#event-menu .nav-section[data-section=recommended]').addClass('open')
 	function setName(){
 		$('title,h1').text(eventName)
 	}
@@ -871,7 +974,7 @@ $(document).ready(function(){
 				if (/^depend/.test(c)) dependCount++
 			})
 			if (dependCount == 0){
-				$(this).show().removeClass('initHid').parents('.initHid').show().removeClass('initHid')
+				$(this).css('display', '').removeClass('initHid').parents('.initHid').show().removeClass('initHid')
 			}
 		})
 	}
@@ -891,15 +994,30 @@ $(document).ready(function(){
 		promisePitScouting(),
 		promiseTeamsInfo(),
 		fetch(`/season-files.cgi?season=${eventYear}`).then(response=>response.text()),
-		promiseEventTeams(),
 	]).then(values =>{
-		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.epaByTeam, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles, pitScoutEventTeams] = values
+		[window.eventMatches, [window.eventStats, window.eventStatsByTeam, window.eventStatsByMatchTeam], window.eventScores, window.fileList, window.eventInfo, window.epaByTeam, window.subjectiveData, window.pitData, window.eventTeamsInfo, window.seasonFiles] = values
 		var lastDone,
 		nextToScout,
 		lastMatch,
 		lastFullyDone,
 		ourNext,
 		haveScouting=false
+		for (var i=eventMatches.length-1; !lastFullyDone && i>=0; i--){
+			var m=eventMatches[i]
+			if(matchScoutingDataCount(eventStatsByMatchTeam,m)==6)lastFullyDone=m
+			if(!lastDone&&matchScoutingDataCount(eventStatsByMatchTeam,m))lastDone=m
+			if(!lastDone&&matchHasTeam(m,getLocalTeam()))ourNext=m
+			if(!lastDone&&!matchScoutingDataCount(eventStatsByMatchTeam,m))nextToScout=m
+			if(!lastMatch)lastMatch=m
+		}
+		var isFrcApiAvailable = "frc"==eventCompetition && /^20[0-9]{2}\/?(([A-Za-z0-9]{5,6})|ARCHIMEDES|GALILEO|JOHNSON|MILSTEIN)$/i.test(firstInspiresId),
+		isFtcApiAvailable = "ftc"==eventCompetition && /^20[0-9]{2}\/?[A-Za-z0-9]+$/.test(firstInspiresId),
+		lastPmQmMatch = [...eventMatches].reverse().find(m => /^(pm|qm)/.test(m.Match)),
+		onlyPracticeScouted = !lastDone || /^pm/.test(lastDone.Match),
+		noQualMatches = !eventMatches.some(m => /^qm/.test(m.Match)),
+		lastScoutedHasNoApiScore = lastDone && !eventScores[lastDone.Match],
+		practiceChoice = eventMatches.some(m => /^pm/.test(m.Match)) && eventMatches.some(m => !/^pm/.test(m.Match)),
+		hasOurTeamMatch = eventMatches.some(m => matchHasTeam(m,getLocalTeam()))
 		if (!fileList.length) return showError('Event Not Found')
 		if (window.importFunctions&&Object.keys(window.importFunctions).length) dependencySatisfied('dependImport')
 		fileList.forEach(file=>{
@@ -909,7 +1027,7 @@ $(document).ready(function(){
 				if (depend) dependencySatisfied(depend)
 			}
 			if(extension=='scouting.csv')haveScouting=true
-			if (extension!="jpg") $('#dataList').append($('<li>').append($('<a>').attr('href',file).click(showDataActions))).parents('.initHid').show()
+			if (extension!="jpg") $('#dataList').append($('<a class=button>').attr('href',file).click(showDataActions)).parents('.initHid').show()
 		})
 		if(!haveScouting)$('#scout-link').after($('#photo-scout-link,#pit-scout-link'))
 		seasonFiles.split(/[\r\n]+/).forEach(file=>{
@@ -924,8 +1042,17 @@ $(document).ready(function(){
 		if(!/\//.test(firstInspiresId)) firstInspiresId = firstInspiresId.replace(/^(20[0-9]{2})/,"$1/")
 		if ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]{3,6}$/.test(blueAllianceId)) dependencySatisfied('dependBlueAlliance')
 		if ("ftc"==eventCompetition && /^[0-9]{4}[A-Za-z0-9\-]+/.test(orangeAllianceId)) dependencySatisfied('dependOrangeAlliance')
-		if ("frc"==eventCompetition && /^20[0-9]{2}\/?[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFrc')
-		if ("ftc"==eventCompetition && /^20[0-9]{2}\/?[A-Za-z0-9]+/.test(firstInspiresId)) dependencySatisfied('dependFirstFtc')
+		if (isFrcApiAvailable) dependencySatisfied('dependFirstFrc')
+		if (isFtcApiAvailable) dependencySatisfied('dependFirstFtc')
+		if(lastPmQmMatch && !matchScoutingDataCount(eventStatsByMatchTeam, lastPmQmMatch)) dependencySatisfied('dependNeedsScouting')
+		if(eventMatches.length > 0 && onlyPracticeScouted) dependencySatisfied('dependNeedsPit')
+		if(isFrcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFrcApi')
+		if(isFtcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFtcApi')
+		if(!(isFrcApiAvailable || isFtcApiAvailable) && noQualMatches) dependencySatisfied('dependNeedsManualSchedule')
+		if(practiceChoice) dependencySatisfied('dependPracticeChoice')
+		if(hasOurTeamMatch) dependencySatisfied('dependTeamSchedule')
+		if(eventMatches.find(m => /^(qm)/.test(m.Match))) dependencySatisfied('dependQuals')
+
 		$('a').each(function(){
 			$(this).attr(
 				'href',$(this).attr('href')
@@ -947,27 +1074,6 @@ $(document).ready(function(){
 				start = toDisplayDate(start)
 				info.append($('<div>').text(`${start}`))
 			}
-		}
-
-		for (var i=eventMatches.length-1; !lastFullyDone && i>=0; i--){
-			var m=eventMatches[i]
-			if(matchScoutingDataCount(eventStatsByMatchTeam,m)==6)lastFullyDone=m
-			if(!lastDone&&matchScoutingDataCount(eventStatsByMatchTeam,m))lastDone=m
-			if(!lastDone&&matchHasTeam(m,getLocalTeam()))ourNext=m
-			if(!lastDone&&!matchScoutingDataCount(eventStatsByMatchTeam,m))nextToScout=m
-			if(!lastMatch)lastMatch=m
-		}
-		if((!nextToScout||!/^(pm|qm)/.test(nextToScout.Match))&&lastMatch){
-			$('#edit-event-section').prepend($('#edit-event-header'))
-			$('#edit-event-section>ul').append($('#edit-playoffs-link'))
-		}
-		if(!lastMatch||lastMatch&&/^pm/.test(lastMatch.Match)){
-			$('#edit-event-section').prepend($('#edit-event-header'))
-			$('#edit-event-section>ul').append($('#edit-match-link,.fetch-api-link'))
-		}
-		if(!Object.keys(epaByTeam).length && ("frc"==eventCompetition && /^20[0-9]{2}[a-z0-9]{3,6}$/.test(blueAllianceId)) && eventMatches.length){
-			$('#edit-event-section').prepend($('#edit-event-header'))
-			$('#edit-event-section>ul').append($('.fetch-statbotics-link'))
 		}
 		function getTeamInfo(teamNum){
 			var info=eventTeamsInfo[teamNum]
@@ -1046,9 +1152,27 @@ $(document).ready(function(){
 			row.find('.redScore').addClass(hasScores?'score':(isRedScouted?'scouted':(!isRedScouted&&redPrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints>bluePoints).text(redPoints).attr('data-tooltip',redTooltip).attr('data-score',hasScores?redScore:"").attr('data-scouted',isRedScouted?redScouting:"").attr('data-prediction',redPrediction).attr('data-epa',redEpa)
 			row.find('.blueScore').addClass(hasScores?'score':(isBlueScouted?'scouted':(!isBlueScouted&&bluePrediction===0?'epa':'prediction'))).toggleClass('winner',redPoints<bluePoints).text(bluePoints).attr('data-tooltip',blueTooltip).attr('data-score',hasScores?blueScore:"").attr('data-scouted',isBlueScouted?blueScouting:"").attr('data-prediction',bluePrediction).attr('data-epa',blueEpa).addClass('tooltip-before')
 			row.find('.match-id').text(getShortMatchName(match.Match)).attr('data-match-id',match.Match)
+			row.toggleClass('practice-match', /^pm/.test(match.Match))
+			row.toggleClass('our-team-match', matchHasTeam(match, parseInt(getLocalTeam())||0))
+			row.toggleClass('not-our-team-match', !matchHasTeam(match, parseInt(getLocalTeam())||0))
 			row.click(showLinks)
 			$('#matches').append(row)
 		})
+		applyColumnOrder()
+		function applyMatchFilter(){
+			$('#matches tr').show()
+			if(localStorage.teamScheduleOnly=='1' && hasOurTeamMatch)$('.not-our-team-match').hide()
+			if(localStorage.showPractice=='0' && practiceChoice)$('.practice-match').hide()
+		}
+		$('#showPracticeToggle').prop('checked', localStorage.showPractice != '0').change(function(){
+			localStorage.showPractice = this.checked?'1':'0'
+			applyMatchFilter()
+		})
+		$('#teamOnlyToggle').prop('checked', localStorage.teamScheduleOnly == '1').change(function(){
+			localStorage.teamScheduleOnly = this.checked ? '1' : '0'
+			applyMatchFilter()
+		})
+		applyMatchFilter()
 		window.eventStats = eventStats
 		$('#extendedScoutingData')
 			.attr('href', window.URL.createObjectURL(new Blob([excelCsv(eventStats)], {type: 'text/csv;charset=utf-8'})))
@@ -1083,7 +1207,6 @@ $(document).ready(function(){
 			})
 		}
 		applyTranslations()
-		drawPitScoutSetupButtons()
 		$('#main').show()
 	}).catch(e=>{
 		console.error(e)
@@ -1139,27 +1262,7 @@ $(document).ready(function(){
 	}
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
-	})
-	var pitScoutSetupButtonCount=6,
-	pitScoutEventTeams=[]
-	function drawPitScoutSetupButtons(){
-		$('#pitScoutSetupButtons').html("")
-		for (var i=1; i<=pitScoutSetupButtonCount; i++){
-			var squad = i-1,
-			perSquad = Math.floor(pitScoutEventTeams.length/(pitScoutSetupButtonCount)),
-			extras = pitScoutEventTeams.length%(pitScoutSetupButtonCount),
-			start = squad*perSquad+Math.min(squad,extras),
-			end = start+perSquad+((squad+1>extras)?0:1),
-			teamList=pitScoutEventTeams.slice(start,end).join(","),
-			href=`/${eventYear}/pit-scout.html#event=${eventId}&teams=${teamList}`
-			$('#pitScoutSetupButtons').append($(`<a href="${href}">${i}</a>`))
-		}
-	}
-	$('#pitScoutSetup img').click(function(){
-		pitScoutSetupButtonCount+=/up/.test($(this).attr('src'))?1:-1
-		if (pitScoutSetupButtonCount < 1) pitScoutSetupButtonCount = 1
-		if (pitScoutSetupButtonCount > 10) pitScoutSetupButtonCount = 10
-		drawPitScoutSetupButtons()
+		return false
 	})
 })
 

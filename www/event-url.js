@@ -422,7 +422,7 @@ function promiseScript(file) {
 function showError(title, detail){
 	if ($('body.error').length)return false
 	$('body').addClass('error')
-	$('#main,body').last().html('')
+	$('#main,main,body').last().html('')
 	.append($('<h2>').append($('<span>').attr('data-i18n','error_label')).append(" ").append($('<span>').attr('data-i18n',title)))
 	.append($('<p>').attr('data-i18n',detail)).show()
 	applyTranslations()

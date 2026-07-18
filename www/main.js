@@ -454,6 +454,12 @@ function applyTranslations(node){
 		console.error(x)
 	}
 }
+function toggleLeftNav(e){
+	e.preventDefault()
+	e.stopPropagation()
+	var nav = $(this).closest('nav.left')
+	nav.toggleClass('nav-hidden')
+}
 
 $(document).ready(function(){
 	$('link[rel="preload"]').each(function(){
@@ -464,30 +470,45 @@ $(document).ready(function(){
 		}
 	})
 
-	if (!inIframe()){
-		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
-		mainMenu = $('<div id=mainMenu class=lightBoxCenterContent>')
-		$('body').append(hamburger).append(mainMenu)
-		hamburger.click(function(){showLightBox(mainMenu)})
+	$('*').addClass('no-transition')
+	$('nav.left').append(
+		$('<button type=button class=nav-toggle aria-label="Toggle navigation"></button>').click(toggleLeftNav)
+	).toggleClass('nav-hidden', window.innerWidth / window.innerHeight < 2 / 3).click(function(e){
+		if(!$('nav.left').is('.nav-hidden')) return true
+		e.preventDefault()
+		e.stopPropagation()
+		var nav = $(this).closest('nav.left')
+		nav.toggleClass('nav-hidden')
+	})
+	$('*').each(function(){void this.offsetHeight}).removeClass('no-transition')
 
+	if (!inIframe()){
 		populateMainMenu()
 
 		function populateMainMenu(){
+			var useNewMainMenu = $('link[rel="stylesheet"]').toArray().some(link=>/(?:^|\/)main-new\.css(?:[?#].*)?$/.test(link.getAttribute('href') || ''))
 			Promise.all([
-				fetch('/main-menu.html').then(response=>response.text()).catch(()=>''),
+				fetch(useNewMainMenu?'/main-menu-new.html':'/main-menu.html').then(response=>response.text()).catch(()=>''),
 				fetch('/user.cgi').then(response=>response.text()).catch(()=>'')
 			]).then(values =>{
 				var [menuHtml, userName] = values,
 				lastEventId=localStorage.getItem('last_event_id'),
 				eId = window.eventId||lastEventId||"",
 				eName = window.eventName||(eId==lastEventId?localStorage.getItem('last_event_name'):"")||"",
-				eYear = window.eventYear||(eId==lastEventId?localStorage.getItem('last_event_year'):"")||""
-				mainMenu.html(
+				eYear = window.eventYear||(eId==lastEventId?localStorage.getItem('last_event_year'):"")||"",
+				menu = $(
 					menuHtml
 						.replace(/EVENT_NAME/g,eName)
 						.replace(/EVENT_ID/g,eId)
 						.replace(/YEAR/g,eYear)
 				)
+				var hamburger, mainMenu
+				$('#hamburger,#mainMenu').remove()
+				$('body').append(menu)
+				hamburger = $('#hamburger')
+				mainMenu = $('#mainMenu')
+				$('#fullscreen').click(toggleFullScreen)
+				hamburger.click(function(e){showLightBox(mainMenu,e)})
 				applyTranslations(mainMenu)
 				mainMenu.find('.dependEvent').toggle(eName&&!/^20[0-9]{2}(-[0-9]{2})?combined$/.test(eId||""))
 				mainMenu.find('.my-team-input').val(getLocalTeam()).change(function(){
@@ -508,20 +529,24 @@ $(document).ready(function(){
 					}
 					req.send()
 					return false
-				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
-				mainMenu.find('#site-configuration-link').closest('li').toggle(userName=='admin')
+				}).text(`Logout ${userName}`).toggle(userName!='-').closest('li').toggle(userName!='-')
+				mainMenu.find('#site-configuration-link').toggle(userName=='admin').closest('li').toggle(userName=='admin')
 				$('#error-logs-link').click(function(){
 					var p=$('#show-errors')
 					if(!p.length){
-						p=$('<div id=show-errors class=lightBoxFullContent style=overflow:auto>')
-						$('body').append(p)
+						p=$('<div id=show-errors style=overflow:auto>')
+						$('body').append($('<div class=lightBoxFullContent>').append(p))
 					}
 					p.text("")
 					function f(s){
 						if(s.hasOwnProperty('length')&&s.length==1)return f(s[0])
 						if(typeof s === 'string')return s
 						if(s.hasOwnProperty('message')) return s.message + '\n' + s.stack?.replace(/[\r\n].*/gm,'')
-						return JSON.stringify(s)
+						try {
+							return JSON.stringify(s)
+						} catch(e) {
+							return '[Circular or non-serializable object]'
+						}
 					}
 					console.history.error.forEach(m=>p.append($('<pre style="color:var(--button-disabled-decoration-color)">').text(f(m))))
 					console.history.warn.forEach(m=>p.append($('<pre style="color:var(--highlight2-fg-color)">').text(f(m))))
@@ -534,7 +559,6 @@ $(document).ready(function(){
 				console.error(e)
 			})
 		}
-		$('body').append($('<div id=fullscreen>⛶</div>').click(toggleFullScreen))
 		$(window).on('hashchange',showMainMenuUploads)
 	}
 	$('body').append($('<div id=lightBoxBG>').click(closeLightBox)).on('keyup',function(e){
@@ -543,6 +567,10 @@ $(document).ready(function(){
 			closeLightBox()
 		}
 	})
+	$(document).on('click','.lightBoxCenterContent,.lightBoxFullContent',function(e){
+		if (e.target === this)closeLightBox()
+	})
+
 	applyTranslations()
 	var site = location.host.replace(/^(www|viper|webscout)\./,"")
 	if (!site || /^[0-9\.\:]*$/.test(site)){
@@ -577,9 +605,20 @@ function closeLightBox(){
 	return false
 }
 
-function showLightBox(content){
+function showLightBox(content,e){
 	closeLightBox()
-	$('#lightBoxBG').css('width',$(document).width()+"px").css('height',$(document).height()+"px").show()
+	content=content.closest('.lightBoxCenterContent,.lightBoxFullContent')
+	e||={pageX:0,pageY:0}
+	var d=$(document),
+	wi=$(window),
+	ww=wi.width(),
+	wh=wi.height(),
+	w=content.outerWidth(),
+	h=content.outerHeight(),
+	x=Math.max(ww/100,Math.min(e.pageX-d.scrollLeft()-w/2,ww-w-ww/100)),
+	y=Math.max(wh/50,Math.min(e.pageY-d.scrollTop()-h/2,wh-h-wh/100))
+	$('#lightBoxBG').css('width',d.width()+"px").css('height',d.height()+"px").show()
+	if(e.pageX)content.css('left',x+'px').css('top',y+'px').css('transform','translate(0,0)').show()
 	applyTranslations()
 	content.show()
 	return false
@@ -626,7 +665,7 @@ window.console=(function(oc){
 			error: [],
 		},
 		x:function(l,a){
-			$('#error-logs-link').closest('li').show()
+			$('#error-logs-link').show().closest('li').show()
 			$('#hamburger').addClass('error').removeClass('show-only-when-connected')
 			this.history[l].push(a)
 			oc.hasOwnProperty(l)&&oc[l].apply(oc,a)

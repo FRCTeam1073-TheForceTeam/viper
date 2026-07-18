@@ -19,6 +19,15 @@ addI18n({
 		fr:'Photos du robot pour _EVENT_',
 		es:'Fotos de robot para _EVENT_',
 	},
+	choose_file_label:{
+		en:'Choose file',
+		pt:'Escolher arquivo',
+		fr:'Choisir un fichier',
+		tr:'Dosya seç',
+		zh_tw:'選擇檔案',
+		he:'בחר קובץ',
+		es:'Elegir archivo',
+	},
 	season_label:{
 		en:'Season:',
 		pt:'Temporada:',
@@ -117,6 +126,7 @@ $(document).ready(function(){
 	})
 	$('#fullPhoto').click(closeLightBox)
 	addTranslationContext({event:eventName,year:eventYear})
+	applyTranslations()
 })
 
 function photoChange(url){
@@ -180,8 +190,7 @@ function resizeAndStoreImageUpload(e){
 				canvas.getContext('2d').drawImage(image,0,0,width,height)
 				var dataUrl=canvas.toDataURL('image/jpeg')
 				pdb.put(`${eventYear}_photo_${e.target.name}`,dataUrl)
-				var parent=$(e.target).parent(),
-				img=parent.find('img')
+				var img=$(e.target).closest("td").find('img')
 				img.attr('src',dataUrl).show()
 				localStorage.last_scout_type='photos'
 				showMainMenuUploads()
@@ -202,12 +211,74 @@ function imageCell(imgName){
 		if(this.error)$(this).error()
 	})
 	pdb.get(`${season}_photo_${imgName}`,p=>img.attr('src',p?p:`/data/${season}/${imgName}.jpg`))
-	td.append($(`<div class=edit-link><a class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
+	img.on('load', function(){
+		const wrapper = $(this).parent()
+		const row = wrapper.parent().parent()[0]
+
+		clearTimeout(row.resizeTimeout)
+		row.resizeTimeout = setTimeout(()=>{
+			let maxHeight = 0
+			const wrappers = []
+
+			row.querySelectorAll('td').forEach(td=>{
+				const w = td.querySelector('div')
+				if(!w) return
+				wrappers.push(w)
+				let contentHeight = 0
+				for(let child of w.children){
+					if(child.offsetHeight > 0) contentHeight += child.offsetHeight
+				}
+				const gapCount = Math.max(0, w.children.length - 1)
+				const gapPx = parseFloat(getComputedStyle(w).gap)
+				const gapHeight = gapCount * gapPx
+				maxHeight = Math.max(maxHeight, contentHeight + gapHeight)
+			})
+
+			wrappers.forEach(w => w.style.height = maxHeight + 'px')
+		}, 100)})
+	const wrapper = $('<div></div>')
+	wrapper.append($(`<div class=edit-link><a class=button class=show-only-when-connected href=/photo-edit.html#${season}/${imgName}.jpg data-i18n=edit_link></a></div>`).click(photoEditLightBox))
 	.append(img)
-	if(hasLocalStorageCapacity())td.append($(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload))
-	else td.append($('<div data-i18n=localstorage_full>'))
+	if(hasLocalStorageCapacity())wrapper.append($('<label class=button><span data-i18n=choose_file_label></span></label>').append($(`<input type=file name=${imgName} accept="image/*">`).change(resizeAndStoreImageUpload)))
+	else wrapper.append($('<div data-i18n=localstorage_full>'))
+	td.append(wrapper)
 	return td
 }
+
+let resizeTimeout
+function resizeWrappers(){
+	clearTimeout(resizeTimeout)
+	resizeTimeout = setTimeout(()=>{
+		document.querySelectorAll('#teams tbody tr').forEach(row=>{
+			let maxHeight = 0
+			const wrappers = []
+
+			row.querySelectorAll('td').forEach(td=>{
+				const w = td.querySelector('div')
+				if(!w) return
+				wrappers.push(w)
+				let contentHeight = 0
+				for(let child of w.children){
+					if(child.offsetHeight > 0) contentHeight += child.offsetHeight
+				}
+				let visibleChildCount = 0
+				for(let child of w.children){
+					if(child.offsetHeight > 0) visibleChildCount++
+				}
+				const gapCount = Math.max(0, visibleChildCount - 1)
+				const gapPx = parseFloat(getComputedStyle(w).gap)
+				const gapHeight = gapCount * gapPx
+				const totalHeight = contentHeight + gapHeight
+				maxHeight = Math.max(maxHeight, totalHeight)
+			})
+
+			wrappers.forEach(w => w.style.height = maxHeight + 'px')
+		})
+	}, 100)
+}
+
+window.addEventListener('load', resizeWrappers)
+window.addEventListener('resize', resizeWrappers)
 
 function ifNoRoom(){
 	if(!hasLocalStorageCapacity()){

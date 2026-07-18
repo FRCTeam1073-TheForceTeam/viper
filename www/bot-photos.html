@@ -4,7 +4,7 @@
 <title data-i18n=bot_photo_title></title>
 <meta name=viewport content="width=device-width,initial-scale=1.0">
 <meta charset=UTF-8>
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/bot-photos.css>
 <script src=/jquery.min.js></script>
@@ -15,20 +15,20 @@
 <script src=/local.js></script>
 <script src=/heartbeat.js></script>
 <link rel=icon type=image/png href=/logo.png>
-</head>
-<body>
+</head><body><main>
 <h1 data-i18n=bot_photo_title></h1>
 <form method=POST action=/scout/photos.cgi enctype=multipart/form-data>
 <button id=showInstructions data-i18n=instructions></button>
 <div><span data-i18n=season_label></span> <input inputmode=numeric id=seasonInp type=text placeholder=20xx required=1 pattern="^20[0-9]{2}(-[0-9]{2})?$" name=season size=7></div>
+<div class=table-scroll>
 <table id=teams border=1>
 	<tr><th data-i18n=team_header></th><th data-i18n=side_view_header></th><th data-i18n=top_view_header></th></tr>
 </table>
+</div>
 <input inputmode=numeric id=team type=text data-i18n-placeholder=team_num_placeholder pattern="^[0-9]+$" name=add size=6>
 <button id=add data-i18n=add_team_button></button>
 </form>
-<iframe id=instructions class=lightBoxFullContent src=/bot-photos-instructions.html></iframe>
-<iframe id=photoEdit class=lightBoxFullContent src=/photo-edit.html></iframe>
+<div class=lightBoxFullContent><iframe id=instructions src=/bot-photos-instructions.html></iframe></div>
+<div class=lightBoxFullContent><iframe id=photoEdit src=/photo-edit.html></iframe></div>
 <img id=fullPhoto class=lightBoxFullContent>
-</body>
-</html>
+</main></body></html>

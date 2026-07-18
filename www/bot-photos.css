@@ -1,5 +1,16 @@
 .photoPreview {margin:1em;max-width:150px;max-height:150px;display:block}
 #fullPhoto{object-fit:contain;background:#0000;border:none}
-#teams td,#teams th{padding:0.5em;border:1px solid gray}
-#teams{margin: 1em auto}
 #showInstructions{margin-bottom:1em}
+
+.table-scroll{overflow-x:auto;margin:1em auto;width:100%;}
+#teams{border:0;border-collapse:separate;border-spacing:.4em;}
+#teams td,#teams th{padding:.6em;border:var(--border);border-radius:var(--radius-lg);text-align:center;vertical-align:middle;}
+#teams td>div{display:flex;flex-direction:column;justify-content:space-between;gap:0.5em}
+#teams td>div>*{margin-top:0;margin-bottom:0}
+#teams th{background-color:var(--surface-bg);font-weight:600}
+#teams th h2{margin:0}
+.upload-cell{width:325px;min-height:290px;vertical-align:top}
+#teams img{display:block;margin:.5em auto;}
+#teams .button{width:100%}
+
+input[type=file]{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}

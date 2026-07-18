@@ -3,7 +3,7 @@
 <head>
 <title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/event.css>
 <link rel=stylesheet href=/jquery.json-viewer.css>
@@ -14,136 +14,34 @@
 <script src=/local.js></script>
 <script src=/jquery.json-viewer.js></script>
 <link rel=icon type=image/png href=/logo.png>
-</head>
-<body><div id=main>
+</head><body><main>
 	<h1></h1>
 
-	<div class="side-by-side narrow" id=left-nav>
-		<div id=eventInfo></div>
-
-		<button id=showInstructions data-i18n=instructions></button>
-
-		<div id=event-menu>
-			<div class=initHid>
-				<h2 data-i18n=scouting_heading></h2>
-				<ul>
-					<li class=initHid><a class=dependUploads href="/upload.html" data-i18n=event_upload_link></a></li>
-					<li id=scout-link class=initHid><a class=dependSchedule href="/_YEAR_/scout.html#event=_EVENT_" data-i18n=scout_match_link></a></li>
-					<ul class=more>
-						<li id=photo-scout-link class=initHid><a class=dependSchedule href="/bot-photos.html#event=_EVENT_" data-i18n=all_photos_link></a></li>
-						<li id=pit-scout-link class=initHid><a class="dependPit dependSchedule" href="/_YEAR_/pit-scout.html#event=_EVENT_" data-i18n=all_pit_link></a></li>
-						<li class=initHid id=pitScoutSetup>
-							<div class="dependPit dependSchedule" data-i18n=pit_squads></div>
-							<div class=side-by-side>
-								<img src=/count_up.svg>
-								<img src=/count_down.svg>
-							</div>
-							<div id=pitScoutSetupButtons class=side-by-side></div>
-						</li>
-						<li class=initHid><a class="dependSchedule dependSubjective" href="/_YEAR_/subjective-scout.html#event=_EVENT_" data-i18n=all_subjective_link></a></li>
-						<li class=initHid><a class=dependScouting href="/scouter.html#event=_EVENT_" data-i18n=top_scouters_link></a></li>
-						<li class=initHid><a class=dependScores href="/scouting.html#event=_EVENT_" data-i18n=compare_link></a></li>
-					</ul>
-				</ul>
-			</div>
-
-			<div class=initHid>
-				<h2 data-i18n=strategy_heading></h2>
-				<ul>
-					<li class=initHid><a class=dependScouting href="/stats.html#event=_EVENT_" data-i18n=event_stats_link></a></li>
-					<li class=initHid><a class=dependScouting href="/predictor.html#event=_EVENT_" data-i18n=all_predict_link></a></li>
-					<li class=initHid><a class="dependScouting dependWhiteboard" href="/planner.html#event=_EVENT_" data-i18n=all_planner_link></a></li>
-					<ul class=more>
-						<li class=initHid><a class=dependScouting href="/team.html#event=_EVENT_" data-i18n=all_team_stats_link></a></li>
-					</ul>
-				</ul>
-			</div>
-
-			<div id=data>
-				<h2 data-i18n=data_heading></h2>
-				<ul>
-					<li><a href="/export.html#event=_EVENT_" data-i18n=viper_export_link></a></li>
-					<ul id=dataList class=more>
-						<li class="initHid dependScouting"><a id=extendedScoutingData href="javascript:void(0)" data-i18n=computed_data_link></a></li>
-						<li class="initHid dependScouting"><a id=aggregatedScoutingData href="javascript:void(0)" data-i18n=aggregated_data_link></a> *</a></li>
-					</ul>
-				</ul>
-			</div>
-
-			<div id=edit-event-section>
-				<ul></ul>
-				<div class=more>
-					<h2 id=edit-event-header data-i18n=edit_event_heading></h2>
-					<ul>
-						<li id=edit-match-link><a href="/event-table.html#event=_EVENT_" data-i18n=edit_event_link></a></li>
-						<li id=edit-playoffs-link class=initHid><a class=dependScouting href="/playoffs.html#event=_EVENT_" data-i18n=edit_playoffs_link></a></li>
-						<li class="initHid fetch-statbotics-link"><a class=dependBlueAlliance href="/admin/statbotics-event.cgi?event=_EVENT_&sbevent=_BAID_" data-i18n=statbotics_epa_link></a></li>
-						<li class="initHid fetch-api-link"><a class=dependFirstFrc href="/admin/frc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a></li>
-						<li class="initHid fetch-api-link"><a class=dependFirstFtc href="/admin/ftc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a></li>
-						<li class=initHid><a class=dependImport href="/import-scouting.html#event=_EVENT_" data-i18n=import_link></a></li>
-					</ul>
-				</div>
-			</div>
-
-			<div class=more>
-				<div class=initHid>
-					<h2 data-i18n=external_links_heading></h2>
-					<ul class=initHid>
-						<li class=initHid id=blueAllianceLinks><a class=dependBlueAlliance href="https://www.thebluealliance.com/event/_BAID_" data-i18n=blue_alliance_main_link></a>
-							<ul>
-								<li><a href="https://www.thebluealliance.com/event/_BAID_#results" data-i18n=blue_alliance_results_link></a></li>
-								<li><a href="https://www.thebluealliance.com/event/_BAID_#rankings" data-i18n=blue_alliance_rankings_link></a></li>
-								<li><a href="https://www.thebluealliance.com/event/_BAID_#awards" data-i18n=blue_alliance_awards_link></a></li>
-								<li><a href="https://www.thebluealliance.com/event/_BAID_#district-points" data-i18n=blue_alliance_district_link></a></li>
-								<li><a href="https://www.thebluealliance.com/event/_BAID_#teams" data-i18n=blue_alliance_teams_link></a></li>
-								<li><a href="https://www.thebluealliance.com/event/_BAID_#event-insights" data-i18n=blue_alliance_insights_link></a></li>
-								<li><a href="https://www.thebluealliance.com/event/_BAID_#media" data-i18n=blue_alliance_media_link></a></li>
-							</ul>
-						</li>
-						<li class=initHid id=orangeAllianceLinks><a class=dependOrangeAlliance href=https://theorangealliance.org/events/_OAID_ data-i18n=orange_alliance_main_link></a></li>
-						<li class=initHid id=firstInspiresFrcLinks><a class=dependFirstFrc href=https://frc-events.firstinspires.org/_FIID_ data-i18n=first_main_link></a>
-							<ul>
-								<li><a href="https://frc-events.firstinspires.org/_FIID_/practice" data-i18n=first_practice_link></a></li>
-								<li><a href="https://frc-events.firstinspires.org/_FIID_/qualifications" data-i18n=first_matches_link></a></li>
-								<li><a href="https://frc-events.firstinspires.org/_FIID_/rankings" data-i18n=first_ranking_link></a></li>
-								<li><a href="https://frc-events.firstinspires.org/_FIID_/playoffs" data-i18n=first_playoffs_link></a></li>
-								<li><a href="https://frc-events.firstinspires.org/_FIID_/awards" data-i18n=first_awards_link></a></li>
-							</ul>
-						</li>
-						<li class=initHid id=firstInspiresFtcLinks><a class=dependFirstFtc href="https://ftc-events.firstinspires.org/_FIID_" data-i18n=first_main_link></a>
-							<ul>
-								<li><a href="https://ftc-events.firstinspires.org/_FIID_/qualifications" data-i18n=first_matches_link></a></li>
-								<li><a href="https://ftc-events.firstinspires.org/_FIID_/rankings" data-i18n=first_ranking_link></a></li>
-								<li><a href="https://ftc-events.firstinspires.org/_FIID_/playoffs" data-i18n=first_playoffs_link></a></li>
-								<li><a href="https://ftc-events.firstinspires.org/_FIID_/awards" data-i18n=first_awards_link></a></li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class=more>
-				<p class="initHid dependScouting" data-include-practice=aggregation_includes_practice data-exclude-practice=aggregation_excludes_practice></p>
-			</div>
-			<div class=show-more data-i18n=show_advanced_link></div>
-		</div>
-	</div>
-
-	<table id=matchTable class=side-by-side>
-		<thead><tr><th data-i18n=match></th><th>R1</th><th>R2</th><th class= noftc>R3</th><th data-i18n=score_abbreviation></th><th data-i18n=score_abbreviation></th><th>B1</th><th>B2</th><th class= noftc>B3</th></tr></thead>
+	<table id=matchTable>
+		<thead><tr>
+			<th class=match-id data-i18n=match></th>
+			<th class=R1>R1</th><th class=R2>R2</th>
+			<th class="R3 noftc">R3</th>
+			<th class=redScore data-i18n=score_abbreviation></th>
+			<th class=blueScore data-i18n=score_abbreviation></th>
+			<th class=B1>B1</th>
+			<th class=B2>B2</th>
+			<th class="B3 noftc">B3</th>
+		</tr></thead>
 		<tbody id=matches></tbody>
 	</table>
 
 	<template id=matchRow>
 		<tr>
 			<th class=match-id></th>
-			<td class="R1 redTeamBG"></td>
-			<td class="R2 redTeamBG"></td>
-			<td class="R3 redTeamBG noftc"></td>
+			<td class="R1 redTeamDimBG"></td>
+			<td class="R2 redTeamDimBG"></td>
+			<td class="R3 redTeamDimBG noftc"></td>
 			<td class="redScore redTeamBG"></td>
 			<td class="blueScore blueTeamBG"></td>
-			<td class="B1 blueTeamBG"></td>
-			<td class="B2 blueTeamBG"></td>
-			<td class="B3 blueTeamBG noftc"></td>
+			<td class="B1 blueTeamDimBG"></td>
+			<td class="B2 blueTeamDimBG"></td>
+			<td class="B3 blueTeamDimBG noftc"></td>
 		</tr>
 	</template>
 	<div style="display:none" id=matchActionsTemplate>
@@ -151,17 +49,17 @@
 			<h3 data-i18n=team_num_header></h3>
 			<h4>_TEAMNAME_</h4>
 			<ul>
-				<li>_MATCHNAME_: <a href="/_YEAR_/scout.html#event=_EVENT_&pos=_POS_&team=_TEAMID_&match=_MATCHID_" data-i18n=scout_this_match_link></a></li>
-				<li><span data-i18n=team_stats_header></span> <a href="/team.html#event=_EVENT_&team=_TEAMID_" data-i18n=team_stats_view_link></a></li>
-				<li class="initHid dependPit"><span data-i18n=pit_scout_header></span> <a href="/team.html#event=_EVENT_&team=_TEAMID_&pit-scouting" data-i18n=pit_scout_view_link></a> | <a href="/_YEAR_/pit-scout.html#event=_EVENT_&team=_TEAMID_" data-i18n=pit_scout_collect_link></a></li>
-				<li class="initHid dependSubjective"><span data-i18n=subjective_header></span> <a href="/team.html#event=_EVENT_&team=_TEAMID_&subjective-scouting" data-i18n=subjective_view_link></a> | <a href="/_YEAR_/subjective-scout.html#event=_EVENT_&team=_TEAMID_" data-i18n=subjective_collect_link></a></li>
+				<li>_MATCHNAME_: <a class=button href="/_YEAR_/scout.html#event=_EVENT_&pos=_POS_&team=_TEAMID_&match=_MATCHID_" data-i18n=scout_this_match_link></a></li>
+				<li><span data-i18n=team_stats_header></span> <a class=button href="/team.html#event=_EVENT_&team=_TEAMID_" data-i18n=team_stats_view_link></a></li>
+				<li class="initHid dependPit"><span data-i18n=pit_scout_header></span> <a class=button href="/team.html#event=_EVENT_&team=_TEAMID_&pit-scouting" data-i18n=pit_scout_view_link></a> <a class=button href="/_YEAR_/pit-scout.html#event=_EVENT_&team=_TEAMID_" data-i18n=pit_scout_collect_link></a></li>
+				<li class="initHid dependSubjective"><span data-i18n=subjective_header></span> <a class=button href="/team.html#event=_EVENT_&team=_TEAMID_&subjective-scouting" data-i18n=subjective_view_link></a> | <a class=button href="/_YEAR_/subjective-scout.html#event=_EVENT_&team=_TEAMID_" data-i18n=subjective_collect_link></a></li>
 			</ul>
 		</div>
 
 		<h3>_MATCHNAME_</h3>
 		<ul>
-			<li><a href="/predictor.html#event=_EVENT_&match=_MATCHID_&_BOTS_" data-i18n=predict_link></a></li>
-			<li class="initHid dependWhiteboard"><a href="/planner.html#event=_EVENT_&match=_MATCHID_&_BOTS_" data-i18n=planner_link></a></li>
+			<li><a class=button href="/predictor.html#event=_EVENT_&match=_MATCHID_&_BOTS_" data-i18n=predict_link></a></li>
+			<li class="initHid dependWhiteboard"><a class=button href="/planner.html#event=_EVENT_&match=_MATCHID_&_BOTS_" data-i18n=planner_link></a></li>
 		</ul>
 
 		<table class=scoreTable>
@@ -171,9 +69,113 @@
 		<tr><th data-i18n=score_header_epa></th><th class=redTeamBG>_REDEPA_</th><th class=blueTeamBG>_BLUEEPA_</th></tr>
 		</table>
 	</div>
+
+	<nav class="left nav-hidden">
+		<div id=eventInfo></div>
+
+		<div id=event-menu>
+			<div class="initHid nav-section" data-section=recommended>
+				<h2 data-i18n=recommended_heading></h2>
+				<a class="button initHid dependUploads" href="/upload.html" data-i18n=event_upload_link></a>
+				<a class="button initHid dependNeedsPit" href="/_YEAR_/pit-scout.html#event=_EVENT_" data-i18n=all_pit_link></a>
+				<a class="button initHid dependNeedsScouting" href="/_YEAR_/scout.html#event=_EVENT_" data-i18n=scout_match_link></a>
+				<a class="button initHid dependScouting" href="/stats.html#event=_EVENT_" data-i18n=event_stats_link></a>
+				<a class="button initHid dependNeedsFrcApi fetch-api-link" href="/admin/frc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a>
+				<a class="button initHid dependNeedsFtcApi fetch-api-link" href="/admin/ftc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a>
+				<a class="button initHid dependNeedsManualSchedule" href="/event-data-entry.html#event=_EVENT_" data-i18n=edit_event_link></a>
+				<a class="button initHid dependSchedule" href="/export.html#event=_EVENT_" data-i18n=viper_export_link></a>
+				<a class=button href=/event-instructions.html id=showInstructions data-i18n=instructions></a>
+			</div>
+
+			<div class="initHid nav-section" data-section=scouting>
+				<h2 data-i18n=scouting_heading></h2>
+				<a class="button initHid dependUploads" href="/upload.html" data-i18n=event_upload_link></a>
+				<a class="button initHid dependSchedule" id=scout-link href="/_YEAR_/scout.html#event=_EVENT_" data-i18n=scout_match_link></a>
+				<a class="button initHid dependSchedule" id=photo-scout-link href="/bot-photos.html#event=_EVENT_" data-i18n=all_photos_link></a>
+				<a class="button initHid dependPit dependSchedule" id=pit-scout-link href="/_YEAR_/pit-scout.html#event=_EVENT_" data-i18n=all_pit_link></a>
+				<a class="button initHid dependSchedule dependSubjective" href="/_YEAR_/subjective-scout.html#event=_EVENT_" data-i18n=all_subjective_link></a>
+				<a class="button initHid dependScouting" href="/scout-ranking.html#event=_EVENT_" data-i18n=top_scouters_link></a>
+				<a class="button initHid dependScores" href="/scouting-accuracy.html#event=_EVENT_" data-i18n=compare_link></a>
+			</div>
+
+			<div class="initHid nav-section" data-section=strategy>
+				<h2 data-i18n=strategy_heading></h2>
+				<a class="button initHid dependScouting" href="/stats.html#event=_EVENT_" data-i18n=event_stats_link></a>
+				<a class="button initHid dependScouting" href="/predictor.html#event=_EVENT_" data-i18n=all_predict_link></a>
+				<a class="button initHid dependScouting dependWhiteboard" href="/planner.html#event=_EVENT_" data-i18n=all_planner_link></a>
+				<a class="button initHid dependScouting" href="/team.html#event=_EVENT_" data-i18n=all_team_stats_link></a>
+			</div>
+
+			<div id=data class="initHid nav-section" data-section=data>
+				<h2 data-i18n=data_heading></h2>
+				<a class=button href="/export.html#event=_EVENT_" data-i18n=viper_export_link></a>
+				<div id=dataList>
+					<a class="button initHid dependScouting" id=extendedScoutingData href="javascript:void(0)" data-i18n=computed_data_link></a>
+					<a class="button initHid dependScouting" id=aggregatedScoutingData href="javascript:void(0)" data-i18n=aggregated_data_link></a>
+				</div>
+				<p class="initHid dependScouting" data-include-practice=aggregation_includes_practice data-exclude-practice=aggregation_excludes_practice></p>
+			</div>
+
+			<div id=edit-event-section class="initHid nav-section" data-section=edit-event>
+				<h2 id=edit-event-header data-i18n=edit_event_heading></h2>
+				<div id=edit-event-list>
+					<a class=button id=edit-match-link href="/event-data-entry.html#event=_EVENT_" data-i18n=edit_event_link></a>
+					<a class="button initHid dependQuals" id=edit-playoffs-link href="/playoffs.html#event=_EVENT_" data-i18n=edit_playoffs_link></a>
+					<a class="button initHid dependBlueAlliance fetch-statbotics-link" href="/admin/statbotics-event.cgi?event=_EVENT_&sbevent=_BAID_" data-i18n=statbotics_epa_link></a>
+					<a class="button initHid dependFirstFrc fetch-api-link" href="/admin/frc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a>
+					<a class="button initHid dependFirstFtc fetch-api-link" href="/admin/ftc-api-event.cgi?event=_EVENT_&first=_FIID_" data-i18n=api_link></a>
+					<a class="button initHid dependImport" href="/import-scouting.html#event=_EVENT_" data-i18n=import_link></a>
+				</div>
+			</div>
+
+			<div class="initHid nav-section" data-section=blue-alliance-links>
+				<h2 data-i18n=blue_alliance_links_heading></h2>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_" data-i18n=blue_alliance_event_link></a>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_#results" data-i18n=blue_alliance_results_link></a>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_#rankings" data-i18n=blue_alliance_rankings_link></a>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_#awards" data-i18n=blue_alliance_awards_link></a>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_#district-points" data-i18n=blue_alliance_district_link></a>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_#teams" data-i18n=blue_alliance_teams_link></a>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_#event-insights" data-i18n=blue_alliance_insights_link></a>
+				<a class="button initHid dependBlueAlliance" href="https://www.thebluealliance.com/event/_BAID_#media" data-i18n=blue_alliance_media_link></a>
+			</div>
+
+			<div class="initHid nav-section" data-section=orange-alliance-links>
+				<h2 data-i18n=orange_alliance_links_heading></h2>
+				<a class="button initHid dependOrangeAlliance" href=https://theorangealliance.org/events/_OAID_ data-i18n=orange_alliance_event_link></a>
+			</div>
+
+			<div class="initHid nav-section" data-section=first-inspires-links>
+				<h2 data-i18n=first_inspires_links_heading></h2>
+				<a class="button initHid dependFirstFrc" href=https://frc-events.firstinspires.org/_FIID_ data-i18n=first_frc_event_link></a>
+				<a class="button initHid dependFirstFrc" href="https://frc-events.firstinspires.org/_FIID_/practice" data-i18n=first_practice_link></a>
+				<a class="button initHid dependFirstFrc" href="https://frc-events.firstinspires.org/_FIID_/qualifications" data-i18n=first_matches_link></a>
+				<a class="button initHid dependFirstFrc" href="https://frc-events.firstinspires.org/_FIID_/rankings" data-i18n=first_ranking_link></a>
+				<a class="button initHid dependFirstFrc" href="https://frc-events.firstinspires.org/_FIID_/playoffs" data-i18n=first_playoffs_link></a>
+				<a class="button initHid dependFirstFrc" href="https://frc-events.firstinspires.org/_FIID_/awards" data-i18n=first_awards_link></a>
+				<a class="button initHid dependFirstFtc" href="https://ftc-events.firstinspires.org/_FIID_" data-i18n=first_ftc_event_link></a>
+				<a class="button initHid dependFirstFtc" href="https://ftc-events.firstinspires.org/_FIID_/qualifications" data-i18n=first_matches_link></a>
+				<a class="button initHid dependFirstFtc" href="https://ftc-events.firstinspires.org/_FIID_/rankings" data-i18n=first_ranking_link></a>
+				<a class="button initHid dependFirstFtc" href="https://ftc-events.firstinspires.org/_FIID_/playoffs" data-i18n=first_playoffs_link></a>
+				<a class="button initHid dependFirstFtc" href="https://ftc-events.firstinspires.org/_FIID_/awards" data-i18n=first_awards_link></a>
+			</div>
+
+			<div class="initHid nav-section" data-section=preferences>
+				<h2 data-i18n=preferences_heading></h2>
+				<fieldset class="card initHid dependSchedule">
+					<legend data-i18n=score_position_heading></legend>
+					<label><input type=radio name=score-position value=first> <span data-i18n=score_position_first></span></label>
+					<label><input type=radio name=score-position value=middle> <span data-i18n=score_position_middle></span></label>
+					<label><input type=radio name=score-position value=last> <span data-i18n=score_position_last></span></label>
+				</fieldset>
+				<label class="initHid dependPracticeChoice"><input type=checkbox id=showPracticeToggle> <span data-i18n=show_practice_label></span></label>
+				<label class="initHid dependTeamSchedule"><input type=checkbox id=teamOnlyToggle> <span data-i18n=team_schedule_label></span></label>
+			</div>
+		</div>
+	</nav>
+
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
 	<div id=dataActions class=lightBoxCenterContent style=display:none><h2></h2><ul></ul></div>
-	<iframe id=instructions class=lightBoxFullContent src=/event-instructions.html></iframe>
+	<div class=lightBoxFullContent><iframe id=instructions src=/event-instructions.html></iframe></div>
 	<div id=jsonLightBox class=lightBoxFullContent><h2></h2><pre id=jsonViewer></pre></div>
-</div></body>
-</html>
+</main></body></html>

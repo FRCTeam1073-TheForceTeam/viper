@@ -201,7 +201,7 @@ function buildCSVData(batch) {
 }
 
 function processAutoUpload() {
-	if (isUploading) return
+	if (isUploading||!window.pdb) return
 
 	var batch = getUploadBatch()
 
@@ -263,7 +263,7 @@ function processAutoUpload() {
 		return new Promise(resolve => {
 			var year = photoKey.replace(/^(20[0-9]{2}(-[0-9]{2})?).*/,"$1")
 			var name = photoKey.replace(/.*_photo_/,'')
-			pdb.get(photoKey, photoData => {
+			window.pdb.get(photoKey, photoData => {
 				if (photoData) {
 					formData.append(`${year}/${name}`, photoData)
 				}

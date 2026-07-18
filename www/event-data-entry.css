@@ -1,0 +1,18 @@
+#schedule .card{max-width:55em;margin:1em auto}
+#schedule table{width:100%;max-width:50em}
+@media(max-width:500px){
+	#schedule th{max-width:1em;overflow:hidden}
+	#schedule .card,#schedule table,body{padding:0;margin:0}
+	table input{margin:.3em .05em;padding:.2em .1em}
+}
+#schedule td,#schedule th{padding:.5em,.3em;font-size:120%}
+#schedule input{width:100%;max-width:5em}
+#team-list{display:grid;grid-template-columns:repeat(auto-fit,4.5em);gap:.2em}
+#team-list button{width:100%}
+#schedule{overflow-x:auto;max-width:100%}
+table{margin:1em auto}
+#buttons {position:fixed;left:0;right:0;bottom:0;background:var(--main-bg-color);padding-bottom:1em}
+body{padding-bottom:100vh}
+#event-info{width:100%;max-width:60em;display:grid;grid-template-columns:repeat(auto-fill,minmax(17em,1fr));gap:.8em;max-width:62em;margin:1.2em auto;padding:0 .5em;text-align:start}
+#event-info .card *{width:100%;max-width:100%}
+label span{display:block;margin:0.5em 0}

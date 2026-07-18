@@ -164,6 +164,11 @@ function addRow(table){
 	var rowInputs = $(`#${table} tr:last-child input`)
 	rowInputs.change(teamEntered).focus(function(){
 		focusInput($(this))
+	}).keypress(function(e){
+		if (e.which == 13 || e.keyCode == 13) {
+			e.preventDefault()
+			teamEntered()
+		}
 	})
 }
 function focusInput(input){
@@ -172,6 +177,7 @@ function focusInput(input){
 	$('#schedule input').removeClass('lastFocus')
 	input.addClass('lastFocus')
 	checkTeams(input.closest('tbody').attr('id'))
+	input.focus()
 }
 function hasRowData(tr){
 	var rowHasData = false
@@ -291,7 +297,7 @@ function setComp(){
 			if (!has3){
 				$(this).find('td').each(function(){
 					if ($(this).find('input').attr('name').endsWith(2)){
-						var n =$(this).clone(),
+						var n =$(this).clone(true),
 						i = n.find('input')
 						i.attr('name', i.attr('name').replace(/2$/,3)).val('')
 						n.insertAfter($(this))

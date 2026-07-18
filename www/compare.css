@@ -6,4 +6,3 @@
 body{margin:0;padding:0}
 #teamButtons{column-width:4.5em;padding:1em;min-width:30em;display:none}
 #teamButtons button{margin:0.2em;width:4em}
-button.team.picked{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}

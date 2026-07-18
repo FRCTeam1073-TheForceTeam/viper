@@ -100,6 +100,51 @@ addI18n({
 		zh_tw:'傳輸資料',
 		fr:'Transférer les données',
 	},
+	include_images:{
+		en:'Include Images',
+		tr:'Görüntüleri Dahil Et',
+		he:'כולל תמונות',
+		pt:'Incluir imagens',
+		es:'Incluir imágenes',
+		zh_tw:'包含圖片',
+		fr:'Inclure des images',
+	},
+	no_event_id:{
+		en:'No event ID',
+		tr:'Etkinlik kimliği yok',
+		he:'אין מזהה אירוע',
+		pt:'Sem ID de evento',
+		es:'Sin ID de evento',
+		zh_tw:'沒有事件 ID',
+		fr:'Aucun identifiant d\'événement',
+	},
+	no_event_files:{
+		en:'No _EVENT_ files',
+		tr:'_EVENT_ dosyası yok',
+		he:'אין קבצי _EVENT_',
+		pt:'Sem arquivos _EVENT_',
+		es:'Sin archivos _EVENT_',
+		zh_tw:'沒有_EVENT_檔案',
+		fr:'Aucun fichier _EVENT_',
+	},
+	file_size_label:{
+		en:'File size:',
+		tr:'Dosya boyutu:',
+		he:'גודל קובץ:',
+		pt:'Tamanho do arquivo:',
+		es:'Tamaño del archivo:',
+		zh_tw:'檔案大小：',
+		fr:'Taille du fichier :',
+	},
+	calculating_size:{
+		en:'Calculating…',
+		tr:'Hesaplanıyor…',
+		he:'מחשבים…',
+		pt:'Calculando…',
+		es:'Calculando…',
+		zh_tw:'計算中…',
+		fr:'Calcul en cours…',
+	}
 })
 
 addTranslationContext({
@@ -111,25 +156,38 @@ function displayHostOption(host){
 }
 
 function hostOptionSelected(){
-	var input=$(this).closest('form').find('.siteInput')
-	input.val($(this).text())
+	$('.siteInput').val($(this).text())
 }
 
 $(document).ready(function(){
+
+	var withImages = false
+	var imagesRequested = false
+	var fileListReady = false
+	var jpgFiles = []
+
+	$('#include-images').change(function(){
+		withImages = $(this).is(':checked')
+		$('#with-images').toggle(withImages)
+		$('#without-images').toggle(!withImages)
+		if (withImages && !imagesRequested) {
+			imagesRequested = true
+			maybeLoadImages()
+		}
+	})
+
 	var dataFull = {},
 	dataText = {},
 	fullFileCount = -1,
 	textFileCount = -1
-	if (!eventId) return $('#contents').text('No event ID')
+	if (!eventId) return $('#contents').text(translate('no_event_id'))
 	promiseEventFiles().then(fileList => {
 		fullFileCount = fileList.length
-		if (!fullFileCount) return $('#contents').text(`No ${eventId} files`)
+		if (!fullFileCount) return $('#contents').text(translate('no_event_files',{event:eventName}))
 		var textFiles = 0
 		fileList.forEach(file=>{
 			if (/\.jpg$/.test(file)){
-				toDataURL(file, dataUrl => {
-					dataFull[file] = dataUrl
-				})
+				jpgFiles.push(file)
 			} else {
 				textFiles++
 				promiseEventAjax(file).then(text => {
@@ -139,7 +197,24 @@ $(document).ready(function(){
 			}
 		})
 		textFileCount = textFiles
+		fileListReady = true
+		maybeLoadImages()
 	})
+	function maybeLoadImages() {
+		if (fileListReady && imagesRequested) {
+			loadImages()
+		}
+	}
+
+	function loadImages() {
+		jpgFiles.forEach(file=>{
+			toDataURL(file, dataUrl => {
+				dataFull[file] = dataUrl
+			})
+		})
+		fullDataLoaded()
+	}
+
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
 		return false
@@ -147,35 +222,51 @@ $(document).ready(function(){
 	$('title,h1').each(function(){
 		$(this).text($(this).text().replace(/EVENT/, eventName))
 	})
+	function formatFileSize(bytes){
+		const units = ['B', 'KB', 'MB', 'GB']
+		let size = bytes
+		let unitIndex = 0
+		while (size >= 1024 && unitIndex < units.length - 1) {
+			size /= 1024
+			unitIndex++
+		}
+		return size.toFixed(1) + ' ' + units[unitIndex]
+	}
 	function fullDataLoaded(){
 		if (Object.keys(dataFull).length != fullFileCount){
 			setTimeout(fullDataLoaded,100)
 			return
 		}
 		var json = JSON.stringify(dataFull, null, "\t")
+		var blob = new Blob([json], {type: 'text/json;charset=utf-8'})
 		$('#downloadImages')
-			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
+			.attr('href', window.URL.createObjectURL(blob))
 			.attr('download',`${eventId}.full.json`)
 		$('#transferJsonImages').val(json)
+		$('#with-images-file-size-value').text(formatFileSize(blob.size)).removeAttr('data-i18n')
 		$('#loadingImages').hide()
 		$('#submitImages').removeAttr('disabled')
 	}
-	fullDataLoaded()
 	function textDataLoaded(){
 		if (Object.keys(dataText).length != textFileCount){
 			setTimeout(textDataLoaded,100)
 			return
 		}
 		var json = JSON.stringify(dataText, null, "\t")
+		var blob = new Blob([json], {type: 'text/json;charset=utf-8'})
 		$('#downloadData')
-			.attr('href', window.URL.createObjectURL(new Blob([json], {type: 'text/json;charset=utf-8'})))
+			.attr('href', window.URL.createObjectURL(blob))
 			.attr('download',`${eventId}.dat.json`)
 		$('#transferJsonData').val(json)
+		$('#without-images-file-size-value').text(formatFileSize(blob.size)).removeAttr('data-i18n')
 		$('#loadingData').hide()
 		$('#submitData').removeAttr('disabled')
 	}
 	textDataLoaded()
 	;[...new Set([...(localStorage.transferHosts||"").split(","),...(window.transferHosts||[]),...['localhost']])].toSorted((a,b)=>domainSortKey(a).localeCompare(domainSortKey(b))).forEach(displayHostOption)
+	$('.siteInput').on('input', function(){
+		$('.siteInput').val($(this).val())
+	})
 	$('form').submit(function(e){
 		if($(this).find('[disabled]').length){
 			e.preventDefault()

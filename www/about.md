@@ -20,7 +20,7 @@ Plus, Viper is a scouting droid in the Star Wars universe.
 ## Documentation
 
  - [Printable instructions](/printable-instructions.html)
- - [Event data entry instructions](/event-table-instructions.html)
+ - [Event data entry instructions](/event-data-entry-instructions.html)
  - [Event page instructions](/event-instructions.html)
  - [Bot photo scouting instructions](/bot-photos-instructions.html)
  - [Scouting instructions — select a bot](/scouting-select-bot-instructions.html)

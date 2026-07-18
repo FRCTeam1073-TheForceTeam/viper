@@ -4,7 +4,7 @@
 <title data-i18n=event_upload_title></title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/event-upload.css>
 <script src=/jquery.min.js></script>
@@ -15,14 +15,13 @@
 <script src=/local.js></script>
 <script src=/auto-year.js></script>
 <link rel=icon type=image/png href=/logo.png>
-</head>
-<body>
+</head><body><main>
 <h1 data-i18n=event_upload_title></h1>
 
 <p data-i18n=event_upload_short_instructions></p>
 
 <div><button id=showInstructions data-i18n=instructions></button></div>
-<iframe id=instructions class=lightBoxFullContent src=/event-upload-instructions.html></iframe>
+<div class=lightBoxFullContent><iframe id=instructions src=/event-upload-instructions.html></iframe></div>
 
 <form id=importData method=POST action=/admin/add-event.cgi>
 	<div class=initHid id=autoFields>
@@ -46,7 +45,6 @@
 	<textarea id=sourceInp required rows=20 pattern="\<.*\>" placeholder="1234 Some Team, 2345 Other Team...&#10;&#10;- or -&#10;&#10;&lt;!DOCTYPE html&gt;&#10;...&#10;&lt;/html&gt;"></textarea>
 
 	<textarea readonly id=csvInp name=csv class=initHid></textarea>
-	<input type="submit" data-i18n-value=next_button>
+	<input class=primary type=submit data-i18n-value=next_button>
 </form>
-</body>
-</html>
+</main></body></html>

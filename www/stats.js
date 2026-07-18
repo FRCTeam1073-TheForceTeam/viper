@@ -109,6 +109,15 @@ addI18n({
 		fr:'Début :',
 		es:'Empezando:',
 	},
+	include_under_review:{
+		en:'Include data under review',
+		he:'כלול נתונים בבדיקה',
+		pt:'Incluir dados em revisão',
+		tr:'İnceleme Altındaki Verileri Dahil Et',
+		zh_tw:'包含審查中的數據',
+		fr:'Inclure les données en cours d\'examen',
+		es:'Incluir datos en revisión',
+	},
 })
 onApplyTranslation.push(showStats)
 var teamList = [],
@@ -163,7 +172,6 @@ $(document).ready(function(){
 		teamList.forEach(x=>teamsPicked[x]=false)
 		parseHash()
 		showStats()
-		applyTranslations()
 	}).catch(e=>{
 		console.error(e)
 	})
@@ -193,6 +201,7 @@ $(document).ready(function(){
 			console.error(e)
 		})
 	})
+	applyTranslations()
 })
 
 function parseHash(){
@@ -242,8 +251,8 @@ function showStats(){
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
 	var graphs = $('#statGraphs').html(''),
-	table = $('#statsTable').html('')
-	var sections = Object.keys(graphList)
+	tables = $('#statsTables').html('')
+	sections = Object.keys(graphList)
 
 	if ($('#displayType').val() == 'graph'){
 		Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
@@ -256,7 +265,7 @@ function showStats(){
 			graphType=graphList[section].graph,
 			source=stat.source||"",
 			dataSource = source=='subjective'?subjectiveData:(source=='pit'?pitData:eventStatsByTeam),
-			graph=$('<div class=graph>')
+			graph=$('<div class="card graph">')
 			graphs.append(graph)
 			var csv = [["team", ...teamList]]
 			for (var j=0; j<graphList[section].data.length; j++){
@@ -367,13 +376,17 @@ function showStats(){
 				})
 			}
 		}
+		applyTranslations(graphs)
 	} else {
 		var sections = Object.keys(graphList)
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i]
 			if (graphType!='heatmap'){
-				table.append($('<tr><td class=blank></td></tr>'))
-				var hr = $('<tr>')
+				var em=(15 + teamList.length * 2),
+				table = $('<table class=statsTable>').css('width', em + 'em'),
+				hr = $('<tr>'),
+				card=$('<div class=card>').css('width', (em + 2) + 'em').append(table)
+				tables.append(card)
 				hr.append($('<th class=borderless>').append($('<h4>').text(section)))
 				for (var j=0; j<teamList.length; j++){
 					var t = teamList[j],
@@ -410,10 +423,7 @@ function showStats(){
 				}
 			}
 		}
-	}
-	if(locale!=lastStatsLocale){
-		lastStatsLocale=locale
-		applyTranslations()
+		applyTranslations(table)
 	}
 }
 
@@ -560,19 +570,19 @@ function darkenColor(color){
 
 function getGradientColor(ratio){
 	// ratio: 0 = worst (red), 1 = best (green)
-	// Gradient: dark red -> black -> dark green
+	// Gradient: red -> yellow -> green
 	ratio = Math.max(0, Math.min(1, ratio))
 	var red, green, blue
 	if (ratio >= 0.5) {
-		// Upper half: green to black
+		// Upper half: yellow to green
 		var t = (ratio - 0.5) * 2
-		green = Math.round(100 * t)
-		red = 0
+		red = Math.round(75 * (1 - t))
+		green = 75
 	} else {
-		// Lower half: black to red
+		// Lower half: red to yellow
 		var t = ratio * 2
-		red = Math.round(100 * (1 - t))
-		green = 0
+		red = 75
+		green = Math.round(75 * t)
 	}
 	blue = 0
 	return `rgb(${red}, ${green}, ${blue})`

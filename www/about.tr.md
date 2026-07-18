@@ -20,7 +20,7 @@ Ayrıca, Viper Star Wars evreninde bir keşif droididir.
 ## Belgeler
 
 - [Yazdırılabilir talimatlar](/printable-instructions.html)
-- [Etkinlik veri girişi talimatları](/event-table-instructions.html)
+- [Etkinlik veri girişi talimatları](/event-data-entry-instructions.html)
 - [Etkinlik sayfası talimatları](/event-instructions.html)
 - [Bot fotoğraf keşif talimatları](/bot-photos-instructions.html)
 - [Keşif talimatları — bir bot seçin](/scouting-select-bot-instructions.html)

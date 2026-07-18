@@ -20,7 +20,7 @@
 ## תיעוד
 
  - [הוראות להדפסה](/printable-instructions.html)
- - [הוראות להזנת נתוני אירועים](/event-table-instructions.html)
+ - [הוראות להזנת נתוני אירועים](/event-data-entry-instructions.html)
  - [הוראות דף אירוע](/event-instructions.html)
  - [הוראות צילום בוט](/bot-photos-instructions.html)
  - [הוראות סקאוטינג — בחר בוט](/scouting-select-bot-instructions.html)
