@@ -109,7 +109,7 @@ label input:disabled+span{text-decoration:var(--button-disabled-decoration-color
 input[type='checkbox'],input[type='radio'],.init-hide{display:none}
 h1{padding:0 2.5em}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
-#error-logs-link,#hamburger.error{background-color:var(--button-disabled-decoration-color)}
+#error-logs-link,#hamburger.error{background-color:var(--button-disabled-decoration-color);color:var(--main-fg-color)}
 #mainMenu{width:20em}
 #mainMenu>*{width:100%;display:block;margin:.5em;text-align:start;padding:.2em .5em;display:flex;justify-content:stretch;gap:.5em;align-items:center}
 #mainMenu>*>*{margin:0}

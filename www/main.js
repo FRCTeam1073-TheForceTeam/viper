@@ -529,20 +529,24 @@ $(document).ready(function(){
 					}
 					req.send()
 					return false
-				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
-				mainMenu.find('#site-configuration-link').closest('li').toggle(userName=='admin')
+				}).text(`Logout ${userName}`).toggle(userName!='-').closest('li').toggle(userName!='-')
+				mainMenu.find('#site-configuration-link').toggle(userName=='admin').closest('li').toggle(userName=='admin')
 				$('#error-logs-link').click(function(){
 					var p=$('#show-errors')
 					if(!p.length){
-						p=$('<div id=show-errors class=lightBoxFullContent style=overflow:auto>')
-						$('body').append(p)
+						p=$('<div id=show-errors style=overflow:auto>')
+						$('body').append($('<div class=lightBoxFullContent>').append(p))
 					}
 					p.text("")
 					function f(s){
 						if(s.hasOwnProperty('length')&&s.length==1)return f(s[0])
 						if(typeof s === 'string')return s
 						if(s.hasOwnProperty('message')) return s.message + '\n' + s.stack?.replace(/[\r\n].*/gm,'')
-						return JSON.stringify(s)
+						try {
+							return JSON.stringify(s)
+						} catch(e) {
+							return '[Circular or non-serializable object]'
+						}
 					}
 					console.history.error.forEach(m=>p.append($('<pre style="color:var(--button-disabled-decoration-color)">').text(f(m))))
 					console.history.warn.forEach(m=>p.append($('<pre style="color:var(--highlight2-fg-color)">').text(f(m))))
@@ -661,7 +665,7 @@ window.console=(function(oc){
 			error: [],
 		},
 		x:function(l,a){
-			$('#error-logs-link').closest('li').show()
+			$('#error-logs-link').show().closest('li').show()
 			$('#hamburger').addClass('error').removeClass('show-only-when-connected')
 			this.history[l].push(a)
 			oc.hasOwnProperty(l)&&oc[l].apply(oc,a)

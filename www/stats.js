@@ -109,6 +109,15 @@ addI18n({
 		fr:'Début :',
 		es:'Empezando:',
 	},
+	include_under_review:{
+		en:'Include data under review',
+		he:'כלול נתונים בבדיקה',
+		pt:'Incluir dados em revisão',
+		tr:'İnceleme Altındaki Verileri Dahil Et',
+		zh_tw:'包含審查中的數據',
+		fr:'Inclure les données en cours d\'examen',
+		es:'Incluir datos en revisión',
+	},
 })
 onApplyTranslation.push(showStats)
 var teamList = [],
@@ -163,7 +172,6 @@ $(document).ready(function(){
 		teamList.forEach(x=>teamsPicked[x]=false)
 		parseHash()
 		showStats()
-		applyTranslations()
 	}).catch(e=>{
 		console.error(e)
 	})
@@ -193,6 +201,7 @@ $(document).ready(function(){
 			console.error(e)
 		})
 	})
+	applyTranslations()
 })
 
 function parseHash(){
@@ -242,8 +251,8 @@ function showStats(){
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
 	var graphs = $('#statGraphs').html(''),
-	table = $('#statsTable').html('')
-	var sections = Object.keys(graphList)
+	tables = $('#statsTables').html('')
+	sections = Object.keys(graphList)
 
 	if ($('#displayType').val() == 'graph'){
 		Chart.defaults.color=window.getComputedStyle(document.body).getPropertyValue('--main-fg-color')
@@ -367,13 +376,17 @@ function showStats(){
 				})
 			}
 		}
+		applyTranslations(graphs)
 	} else {
 		var sections = Object.keys(graphList)
 		for (var i=0; i<sections.length; i++){
 			var section = sections[i]
 			if (graphType!='heatmap'){
-				table.append($('<tr><td class=blank></td></tr>'))
-				var hr = $('<tr>')
+				var em=(15 + teamList.length * 2),
+				table = $('<table class=statsTable>').css('width', em + 'em'),
+				hr = $('<tr>'),
+				card=$('<div class=card>').css('width', (em + 2) + 'em').append(table)
+				tables.append(card)
 				hr.append($('<th class=borderless>').append($('<h4>').text(section)))
 				for (var j=0; j<teamList.length; j++){
 					var t = teamList[j],
@@ -410,10 +423,7 @@ function showStats(){
 				}
 			}
 		}
-	}
-	if(locale!=lastStatsLocale){
-		lastStatsLocale=locale
-		applyTranslations()
+		applyTranslations(table)
 	}
 }
 
