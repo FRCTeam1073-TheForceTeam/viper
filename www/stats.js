@@ -570,19 +570,19 @@ function darkenColor(color){
 
 function getGradientColor(ratio){
 	// ratio: 0 = worst (red), 1 = best (green)
-	// Gradient: dark red -> black -> dark green
+	// Gradient: red -> yellow -> green
 	ratio = Math.max(0, Math.min(1, ratio))
 	var red, green, blue
 	if (ratio >= 0.5) {
-		// Upper half: green to black
+		// Upper half: yellow to green
 		var t = (ratio - 0.5) * 2
-		green = Math.round(100 * t)
-		red = 0
+		red = Math.round(75 * (1 - t))
+		green = 75
 	} else {
-		// Lower half: black to red
+		// Lower half: red to yellow
 		var t = ratio * 2
-		red = Math.round(100 * (1 - t))
-		green = 0
+		red = 75
+		green = Math.round(75 * t)
 	}
 	blue = 0
 	return `rgb(${red}, ${green}, ${blue})`
