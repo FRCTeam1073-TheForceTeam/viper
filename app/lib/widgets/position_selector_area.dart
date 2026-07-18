@@ -107,7 +107,7 @@ class _PositionSelectorAreaState extends State<PositionSelectorArea> {
 		int px = pxRaw.round().clamp(1, 99);
 		int py = pyRaw.round().clamp(1, 99);
 
-		return '${px}x${py}';
+		return '${px}x$py';
 	}
 
 	@override
