@@ -496,6 +496,15 @@ addI18n({
 		fr:'Informations',
 		tr:'Görüşler',
 	},
+	blue_alliance_detailed_insights_link:{
+		en:'Advanced Insights',
+		he:'תובנות מתקדמות',
+		zh_tw:'進階洞察',
+		pt:'Insights avançados',
+		es:'Perspectivas avanzadas',
+		fr:'Informations avancées',
+		tr:'Gelişmiş Görüşler',
+	},
 	blue_alliance_media_link:{
 		en:'Media',
 		he:'כְּלֵי תִקְשׁוֹרֶת',
