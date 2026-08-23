@@ -59,7 +59,12 @@ h3{margin:0 0 .25em 0;padding:0}
 #event-menu > div{border:1px solid var(--main-border-color);border-radius:var(--radius-lg);padding:.6em .8em}
 #event-menu > .show-more{display:block;padding:.5em .8em;border:1px solid var(--main-border-color);border-radius:var(--radius-lg);text-align:start;transition:border-color .15s ease,background .15s ease}
 #event-menu > .show-more:hover{background:var(--lowlight-bg-color);border-color:var(--accent)}
-#event-menu h2{text-align:start;font-size:110%;font-weight:600;margin:0 0 .3em 0}
+#event-menu h2{text-align:start;font-size:110%;font-weight:600;margin:0 0 .3em 0;display:flex;align-items:center;gap:.35em;cursor:pointer;user-select:none}
+/* Click a category heading to collapse/expand its section */
+#event-menu h2::before{content:'\25be';font-size:.8em;opacity:.7;transition:transform .15s ease}
+#event-menu .section-collapsed > h2{margin-bottom:0}
+#event-menu .section-collapsed > h2::before{transform:rotate(-90deg)}
+#event-menu .section-collapsed > :not(h2){display:none!important}
 
 /* Sidebar at top of nav */
 #eventInfo{margin:.5em 0}

@@ -415,6 +415,24 @@ addI18n({
 		fr:'Liens externes',
 		tr:'Harici Bağlantılar',
 	},
+	blue_alliance_links_heading:{
+		en:'Blue Alliance Links',
+		he:'קישורי הברית הכחולה',
+		zh_tw:'藍色聯盟連結',
+		pt:'Links da Aliança Azul',
+		es:'Enlaces de The Blue Alliance',
+		fr:'Liens de l\'Alliance Bleue',
+		tr:'Blue Alliance Bağlantıları',
+	},
+	first_inspires_links_heading:{
+		en:'First Inspires Links',
+		he:'קישורי השראה ראשונה',
+		zh_tw:'首次啟發連結',
+		pt:'Links do First Inspires',
+		es:'Enlaces de FIRST Inspires',
+		fr:'Liens Inspirations',
+		tr:'First Inspires Bağlantıları',
+	},
 	blue_alliance_main_link:{
 		en:'The Blue Alliance',
 		he:'הברית הכחולה',
@@ -925,6 +943,20 @@ $(document).ready(function(){
 	setNavHidden(navHiddenStored != null ? navHiddenStored == '1' : window.innerWidth < 700)
 	$('#navToggle').click(function(){ setNavHidden(!$('body').hasClass('nav-hidden')) })
 	$('#navBackdrop').click(function(){ setNavHidden(true) })
+
+		// Collapsible nav sections — click a category heading to hide its contents
+		var collapsedSections
+		try { collapsedSections = JSON.parse(localStorage.eventCollapsedSections || '[]') } catch(e){ collapsedSections = [] }
+		function sectionKey(h2){ return $(h2).attr('data-i18n') || $(h2).text() }
+		$('#event-menu h2').each(function(){
+			if (collapsedSections.includes(sectionKey(this))) $(this).parent().addClass('section-collapsed')
+		}).click(function(){
+			var key = sectionKey(this)
+			var collapsed = $(this).parent().toggleClass('section-collapsed').hasClass('section-collapsed')
+			collapsedSections = collapsedSections.filter(k=>k!=key)
+			if (collapsed) collapsedSections.push(key)
+			localStorage.eventCollapsedSections = JSON.stringify(collapsedSections)
+		})
 
 	function setTopTeamsHidden(hidden){
 		$('body').toggleClass('top-teams-hidden', hidden)
