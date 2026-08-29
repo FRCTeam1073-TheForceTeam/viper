@@ -282,7 +282,7 @@ $(document).ready(function(){
 		$('#field').css('top',margin).css('left',margin)
 		$('#stats').css('width',`${statsW}px`).css('max-width',`${statsW}px`).css('left',statsL).css('top',statsT)
 		$('h3').css('width',`${h3W}px`)
-		$('body').css('overflow-y',vert?'visible':'hidden')
+		$('body').css('overflow-y',vert?'visible':'clip')
 		if(!whiteboard) whiteboard = new Whiteboard($('#fieldDraw')[0])
 		drawOverlays()
 	}
