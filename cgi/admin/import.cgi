@@ -124,13 +124,12 @@ print <<'HTML';
 <title>Import Progress</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel="stylesheet" href="/import.css">
 <script src=/jquery.min.js></script>
 <script src=/main.js></script>
-</head>
-<body>
+</head><body><main>
 <h1>Import Progress</h1>
 HTML
 
@@ -353,4 +352,4 @@ if ($event) {
 	}
 }
 
-print "</body></html>\n";
+print "</main></body></html>\n";
