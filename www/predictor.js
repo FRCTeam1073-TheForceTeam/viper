@@ -237,10 +237,11 @@ $(document).ready(function(){
 			var bots = $(this).val().split(",")
 			BOT_POSITIONS.forEach((pos,i)=>$(`#${pos}`).val(bots[i]||""))
 			activePos = null
+			match = $(this).find('option:selected').data('match') || ""
 			setPickedTeams()
 		})
 		window.eventMatches.forEach(match=>{
-			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',BOT_POSITIONS.map(pos=>match[pos]).join(",")))
+			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',BOT_POSITIONS.map(pos=>match[pos]).join(",")).data('match', match.Match))
 		})
 		// Playoff-only stats: aggregate from the first playoff match onward (teams
 		// fall back to general/qual stats when they have no playoff data).
@@ -270,6 +271,8 @@ $(document).ready(function(){
 		setPickedTeams()
 	})
 	$('#change-teams').click(function(){
+		match = ""
+		$('#matchList').val("")
 		BOT_POSITIONS.forEach(pos=>$(`#${pos}`).val(""))
 		sideAlliance = {red:null, blue:null}
 		clearBackups()
@@ -606,7 +609,7 @@ function renderAllianceToThead(positions){
 			cell.text(team)
 			cell.on('dragstart', function(e){ setDrag(e, {team:team, from:pos}); cell.addClass('dragging') })
 			cell.on('dragend', function(){ cell.removeClass('dragging') })
-			cell.on('click', function(){ $(`#${pos}`).val(""); activePos = pos; $('#alliances-area').prop('open', true); setPickedTeams() })
+			cell.on('click', function(){ $(`#${pos}`).val(""); activePos = pos; match = ""; $('#matchList').val(""); $('#alliances-area').prop('open', true); setPickedTeams() })
 		} else {
 			cell.addClass('empty')
 			cell.removeAttr('draggable')
@@ -799,6 +802,13 @@ function loadFromLocationHash(){
 		var val = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${pos}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
 		$(`#${pos}`).val(val)
 	})
+	if (match){
+		// Find and select the match in the dropdown
+		var matchValue = BOT_POSITIONS.map(pos=>$(`#${pos}`).val()).join(",")
+		$('#matchList').val(matchValue)
+	} else {
+		$('#matchList').val("")
+	}
 	activePos = null
 	activeSide = 'red'
 	sideAlliance = {red:null, blue:null}
