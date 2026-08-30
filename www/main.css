@@ -29,6 +29,11 @@ a:link:hover{text-decoration:underline}
 a:visited{color:var(--link-visited-color)}
 table,tr,td,th,button,input,select,option,input,textarea,form{font-size:inherit;color:inherit;background:inherit}
 button,input[type="submit"],select{border-radius:0.3em;background:var(--button-bg-color);border-color:var(--button-bg-color);color:var(--button-fg-color)}
+label:has(>input[type="radio"])>span,label:has(>input[type="checkbox"])>span,button{background:var(--button-bg-color);color:var(--button-fg-color);display:inline-block;padding:.5vw;border-radius:1vw;min-width:8vw;text-align:center;margin:.5vw 0;cursor:pointer;}
+label:has(>input[type="radio"])>span,label:has(>input[type="checkbox"])>span{width:100%}
+label input:checked+span{background:var(--button-selected-bg-color)}
+label input:disabled+span{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
+input[type='checkbox'],input[type='radio'], .init-hide{display:none}
 body{text-align:center;overscroll-behavior:contain}
 table,ul{margin:0 auto;}
 ol,ul,p{text-align:start;max-width:40em;margin:0 auto}
