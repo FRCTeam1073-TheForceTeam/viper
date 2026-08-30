@@ -298,11 +298,13 @@ $(document).ready(function(){
 })
 
 function updateModeUI(){
+	var hasAlliancesWithTeams = (window.alliances || []).some(a => allianceTeams(a).length)
+	$('#modeToggle').toggle(hasAlliancesWithTeams)
 	$('#modeToggle button').each(function(){
 		$(this).toggleClass('active', $(this).data('mode') == (playoffMode?'playoff':'qual'))
 	})
 	$('.matchPick').toggle(!playoffMode)
-	$('#playoffStatsToggle').toggle(playoffMode)
+	$('#playoffStatsToggle').toggle(playoffMode && hasAlliancesWithTeams)
 	$('#usePlayoffStats').prop('checked', usePlayoffStats)
 	$('#poolLabel').attr('data-i18n', playoffMode?'alliance_pool_label':'team_pool_label')
 }
@@ -601,8 +603,10 @@ function renderAllianceToThead(positions){
 		if (team){
 			cell.removeClass('empty')
 			cell.attr('draggable', true)
+			cell.text(team)
 			cell.on('dragstart', function(e){ setDrag(e, {team:team, from:pos}); cell.addClass('dragging') })
 			cell.on('dragend', function(){ cell.removeClass('dragging') })
+			cell.on('click', function(){ $(`#${pos}`).val(""); activePos = pos; $('#alliances-area').prop('open', true); setPickedTeams() })
 		} else {
 			cell.addClass('empty')
 			cell.removeAttr('draggable')
