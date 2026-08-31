@@ -26,3 +26,4 @@ button.team{width:3em;height:1.5em;margin:0.25em}
 #field,#stats{position:absolute;left:0;top:0}
 #stats{max-height:98vh;overflow:auto}
 body{text-align:start}
+@media (min-width: 750px){html{overflow:hidden}}

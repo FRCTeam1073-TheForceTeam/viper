@@ -19,14 +19,149 @@ addI18n({
 		fr:'_MATCH_ Prédicteur de match pour _EVENT_',
 		es:'Predicción de partida',
 	},
+	alliances_heading:{
+		en:'Alliances',
+		tr:'İttifaklar',
+		he:'בריתות',
+		zh_tw:'聯盟',
+		pt:'Alianças',
+		fr:'Alliances',
+		es:'Alianzas',
+	},
+	backup_label:{
+		en:'Backup: ',
+		tr:'Yedek: ',
+		pt:'Reserva: ',
+		zh_tw:'替補：',
+		fr:'Remplaçant : ',
+		he:'מילואים: ',
+		es:'Reserva: ',
+	},
+	backup_section_label:{
+		en:'Backup robot',
+		tr:'Yedek robot',
+		pt:'Robô reserva',
+		zh_tw:'替補機器人',
+		fr:'Robot remplaçant',
+		he:'רובוט מילואים',
+		es:'Robot de reserva',
+	},
+	backup_team_label:{
+		en:'Backup team:',
+		tr:'Yedek takım:',
+		pt:'Equipa reserva:',
+		zh_tw:'替補隊伍：',
+		fr:'Équipe remplaçante :',
+		he:'קבוצת מילואים:',
+		es:'Equipo de reserva:',
+	},
+	backup_replacing_label:{
+		en:'Replacing:',
+		tr:'Yerine geçen:',
+		pt:'Substituindo:',
+		zh_tw:'替換：',
+		fr:'Remplace :',
+		he:'מחליף את:',
+		es:'Reemplazando:',
+	},
+	backup_none_option:{
+		en:'none',
+		tr:'yok',
+		pt:'nenhum',
+		zh_tw:'無',
+		fr:'aucun',
+		he:'ללא',
+		es:'ninguno',
+	},
 	change_teams_button:{
-		en:'Change Teams',
-		es:'Cambiar equipos',
-		tr:'Alterar Equipes',
-		he:'שנה צוותים',
-		zh_tw:'更換團隊',
-		pt:'Alterar Equipes',
-		fr:'Changer d\'équipe',
+		en:'Clear',
+		es:'Limpiar',
+		tr:'Temizle',
+		he:'נקה',
+		zh_tw:'清除',
+		pt:'Limpar',
+		fr:'Effacer',
+	},
+	match_label:{
+		en:'Match:',
+		es:'Partida:',
+		tr:'Maç:',
+		he:'משחק:',
+		zh_tw:'比賽：',
+		pt:'Partida:',
+		fr:'Match :',
+	},
+	team_pool_label:{
+		en:'Available Teams',
+		es:'Equipos disponibles',
+		tr:'Uygun Takımlar',
+		he:'קבוצות זמינות',
+		zh_tw:'可選隊伍',
+		pt:'Equipes disponíveis',
+		fr:'Équipes disponibles',
+	},
+	slot_hint:{
+		en:'Drop or tap a team',
+		es:'Suelta o toca un equipo',
+		tr:'Bir takım bırakın veya dokunun',
+		he:'גרור או הקש על קבוצה',
+		zh_tw:'拖放或點選隊伍',
+		pt:'Solte ou toque numa equipe',
+		fr:'Déposez ou touchez une équipe',
+	},
+	qual_mode:{
+		en:'Qualifications',
+		es:'Clasificación',
+		tr:'Sıralama',
+		he:'מוקדמות',
+		zh_tw:'資格賽',
+		pt:'Classificatórias',
+		fr:'Qualifications',
+	},
+	playoff_mode:{
+		en:'Playoffs',
+		es:'Eliminatorias',
+		tr:'Eleme',
+		he:'פלייאוף',
+		zh_tw:'季後賽',
+		pt:'Playoffs',
+		fr:'Séries',
+	},
+	alliance_pool_label:{
+		en:'Alliances',
+		es:'Alianzas',
+		tr:'İttifaklar',
+		he:'בריתות',
+		zh_tw:'聯盟',
+		pt:'Alianças',
+		fr:'Alliances',
+	},
+	drop_alliance_hint:{
+		en:'Drop or tap an alliance',
+		es:'Suelta o toca una alianza',
+		tr:'Bir ittifak bırakın veya dokunun',
+		he:'גרור או הקש על ברית',
+		zh_tw:'拖放或點選聯盟',
+		pt:'Solte ou toque numa aliança',
+		fr:'Déposez ou touchez une alliance',
+	},
+	no_alliances:{
+		en:'No alliance selection data for this event',
+		es:'No hay datos de selección de alianzas para este evento',
+		tr:'Bu etkinlik için ittifak seçim verisi yok',
+		he:'אין נתוני בחירת בריתות לאירוע זה',
+		zh_tw:'此賽事沒有聯盟選擇資料',
+		pt:'Sem dados de seleção de alianças para este evento',
+		fr:'Aucune donnée de sélection d\'alliance pour cet événement',
+	},
+	use_playoff_stats:{
+		en:'Use playoff stats',
+		es:'Usar estadísticas de eliminatorias',
+		tr:'Eleme istatistiklerini kullan',
+		he:'השתמש בנתוני פלייאוף',
+		zh_tw:'使用季後賽數據',
+		pt:'Usar estatísticas de playoffs',
+		fr:'Utiliser les stats des séries',
 	},
 })
 
@@ -37,19 +172,45 @@ onApplyTranslation.push(function(){
 	})
 })
 
-function lf(){
-	return $('#prediction .lastFocus')
-}
+var statsConfig,
+activePos = null,
+playoffMode = false,
+usePlayoffStats = localStorage.predictorUsePlayoffStats != '0',
+activeSide = 'red',
+sideAlliance = {red:null, blue:null},
+isInitialLoad = true
 
-var statsConfig
+// Backup robots subbed in. Each alliance may sub one backup for an on-field
+// position; the lineup itself is never changed. State lives in the two rows of
+// backup selects and is read on demand.
+function backupForPos(pos){
+	for (var i=0; i<2; i++){
+		if ($('#backupReplacingSelect'+i).val() === pos && $('#backupTeamSelect'+i).val())
+			return $('#backupTeamSelect'+i).val()
+	}
+	return null
+}
+function isBackupPos(pos){ return !!backupForPos(pos) }
+
+// The team effectively occupying a position (the backup if one replaces it).
+function effectiveTeam(pos){
+	return backupForPos(pos) || $(`#${pos}`).val()
+}
 
 $(document).ready(function(){
 	Promise.all([
 		promiseEventMatches(),
 		promiseEventStats(),
-		fetch(`/data/${eventYear}/predictor.json`).then(response=>{if(response.ok)return response.json()})
+		fetch(`/data/${eventYear}/predictor.json`).then(response=>{if(response.ok)return response.json()}),
+		fetch(`/data/${eventId}.alliances.json`).then(response=>response.ok?response.json():null).catch(()=>null),
+		promiseAlliances().catch(()=>[])
 	]).then(values =>{
-		[window.eventMatches, [{}, window.eventStatsByTeam, {}], window.myTeamsStats] = values
+		[window.eventMatches, [{}, window.eventStatsByTeam, {}], window.myTeamsStats, window.allianceData, window.allianceCsv] = values
+		// Prefer the playoffs-edited alliances CSV (the source of truth that
+		// playoffs.html writes); fall back to the FRC API alliances.json only when
+		// no CSV exists, so edits made in playoffs.html show up here too.
+		window.alliances = alliancesFromCsv(window.allianceCsv)
+		if (!window.alliances.length) window.alliances = (window.allianceData && window.allianceData.Alliances) || []
 		statsConfig= new StatsConfig({
 			statsConfigKey:`${eventYear}PredictorStats`,
 			getStatsConfig:function(){
@@ -71,160 +232,614 @@ $(document).ready(function(){
 			mode:"aggregate",
 			hasSections:true,
 		})
-		var teamList = Object.keys(eventStatsByTeam)
-		teamList.sort((a,b) => a-b)
-		for (var i=0; i<teamList.length; i++){
-			var team = teamList[i]
-			$('#teamButtons').append($(`<button id=team-${team} class=team>${team}</button>`).click(teamButtonClicked))
-		}
+		window.teamList = Object.keys(eventStatsByTeam).sort((a,b) => a-b)
 		$('#matchList').append($('<option selected=1>')).change(function(){
-			$(this).val().split(",").forEach((bot,i)=>{
-				$(`#${BOT_POSITIONS[i]}`).val(bot)
-			})
+			var bots = $(this).val().split(",")
+			BOT_POSITIONS.forEach((pos,i)=>$(`#${pos}`).val(bots[i]||""))
+			activePos = null
+			match = $(this).find('option:selected').data('match') || ""
 			setPickedTeams()
 		})
 		window.eventMatches.forEach(match=>{
-			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',BOT_POSITIONS.map(pos=>match[pos]).join(",")))
+			$('#matchList').append($('<option>').text(getMatchName(match.Match)).attr('value',BOT_POSITIONS.map(pos=>match[pos]).join(",")).data('match', match.Match))
 		})
-		loadFromLocationHash()
-		$(window).on('hashchange', loadFromLocationHash)
-		if (match) $('title,h1').attr('data-i18n','predictor_match_title')
-		applyTranslations()
+		// Playoff-only stats: aggregate from the first playoff match onward (teams
+		// fall back to general/qual stats when they have no playoff data).
+		var firstPlayoff = (window.eventMatches.find(m=>!/^(pm|qm)/.test(m.Match))||{}).Match
+		window.playoffStatsByTeam = {}
+		var statsReady = firstPlayoff
+			? promiseEventStats(firstPlayoff).then(v=>{ window.playoffStatsByTeam = v[1]||{} }).catch(()=>{})
+			: Promise.resolve()
+		statsReady.then(function(){
+			loadFromLocationHash()
+			$(window).on('hashchange', loadFromLocationHash)
+			if (match) $('title,h1').attr('data-i18n','predictor_match_title')
+			applyTranslations()
+		})
 	})
-	$('#prediction input').focus(focusInput).change(setPickedTeams)
 	if (eventCompetition=='ftc') $('.noftc').hide()
-	$('#change-teams').click(function(){
-		$('#prediction input').val("")
+	$('#modeToggle button').click(function(){
+		var po = $(this).data('mode') == 'playoff'
+		if (po == playoffMode) return
+		playoffMode = po
+		BOT_POSITIONS.forEach(pos=>$(`#${pos}`).val(""))   // start the new mode clean
+		sideAlliance = {red:null, blue:null}
+		clearBackups()
+		activePos = null
+		activeSide = 'red'
+		updateModeUI()
 		setPickedTeams()
 	})
+	$('#change-teams').click(function(){
+		match = ""
+		$('#matchList').val("")
+		BOT_POSITIONS.forEach(pos=>$(`#${pos}`).val(""))
+		sideAlliance = {red:null, blue:null}
+		clearBackups()
+		activePos = null
+		activeSide = 'red'
+		setPickedTeams()
+	})
+	$('#backupSection').on('change', 'select', applyBackup)
+	$('#usePlayoffStats').prop('checked', usePlayoffStats).change(function(){
+		usePlayoffStats = this.checked
+		localStorage.predictorUsePlayoffStats = usePlayoffStats ? '1' : '0'
+		setPickedTeams()
+	})
+	// Pool is a drop target for removing a team from an alliance
+	var pool = $('#teamPool')
+	pool.on('dragover', function(e){ e.preventDefault(); pool.addClass('dragover') })
+	pool.on('dragleave', function(){ pool.removeClass('dragover') })
+	pool.on('drop', function(e){
+		pool.removeClass('dragover')
+		var data = getDrag(e)
+		if (!data) return
+		if (data.alliance != null && (data.from == 'red' || data.from == 'blue')) removeSide(data.from)
+		else if (data.from != null){ $(`#${data.from}`).val(""); setPickedTeams() }
+	})
+	updateModeUI()
 })
 
-function focusInput(input){
-	if ('target' in input) input = $(input.target)
-	if (input[0]==lf()[0]) return
-	$('#prediction input').removeClass('lastFocus')
-	input.addClass('lastFocus')
-}
-
-function lf(){
-	return $('#prediction input.lastFocus')
-}
-
-function withoutValues(i,el){
-	return $(el).val() == ''
-}
-
-function focusNext(){
-	var next = $('#prediction .redTeamBG input').filter(withoutValues).first()
-	if (!next.length) next = $('#prediction .blueTeamBG input').filter(withoutValues).first()
-	if (next.length) focusInput(next)
-	return next.length > 0
-}
-
-function setPickedTeams(){
-	$('#teamButtons button').removeClass("picked")
-	var teamCount = 0
-	$('#prediction input').each(function(){
-		var val = $(this).val()
-		if (val){
-			$(`#team-${val}`).addClass("picked")
-			teamCount++
-		}
+function updateModeUI(){
+	var hasAlliancesWithTeams = (window.alliances || []).some(a => allianceTeams(a).length)
+	$('#modeToggle').toggle(hasAlliancesWithTeams)
+	$('#modeToggle button').each(function(){
+		$(this).toggleClass('active', $(this).data('mode') == (playoffMode?'playoff':'qual'))
 	})
-	if (teamCount == BOT_POSITIONS.length){
-		$('#change-teams').show()
-		$('input').removeClass('lastFocus')
-		$('.teamDataEntry').hide()
-		var table = $('#prediction tbody'),
-		stats = statsConfig.getStatsConfig(),
-		first=true
-		table.html("")
-		Object.keys(stats).forEach(function(section){
-			table.append(
-				$('<tr>').append(
-					$(`<th colspan=${BOT_POSITIONS.length+3}>`)
-					.append(
-						$('<h4>').append($('<span>').attr('data-i18n',section))
-						.append(" ").append($(' <button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig)))
-					)
-				)
-			)
-			stats[section].data.forEach(function(field){
-				statInfo[field] = statInfo[field]||{}
-				var statName = statInfo[field]['name']||field,
-				statType = statInfo[field]['type']||""
-				if (statType=='avg'){
-					var teamNumbers = [],
-					teamScores = [],
-					allianceScores = [0,0]
-					BOT_POSITIONS.forEach(function(pos, i){
-						teamNumbers[i]=parseInt($(`#${pos}`).val())
-						teamScores[i]=getTeamValue(window.eventStatsByTeam, field,teamNumbers[i])
-						allianceScores[Math.floor(i/(BOT_POSITIONS.length/2))]+=teamScores[i]
-					})
-					teamScores=teamScores.map(Math.round)
-					allianceScores=allianceScores.map(Math.round)
-					var compare=statInfo[field].good=='low'?Math.min:Math.max,
-					teamBest=compare(...teamScores),
-					allianceBest=compare(...allianceScores),
-					tr=$('<tr>').addClass(first?"first":"")
-					BOT_POSITIONS.forEach(function(pos, i){
-						tr.append($('<td>').addClass(i<(BOT_POSITIONS.length/2)?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamBest?"winner":"")))
-						if(i==(BOT_POSITIONS.length/2-1)){
-							tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceBest?("winner"):"")))
-							tr.append($('<td>').append($('<div>').attr('data-i18n',field)))
-							tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceBest?"winner":"")))
-						}
-					})
-					table.append(tr)
-					first=false
-				}
-			})
-		})
+	$('.matchPick').toggle(!playoffMode)
+	$('#playoffStatsToggle').toggle(playoffMode && hasAlliancesWithTeams)
+	$('#usePlayoffStats').prop('checked', usePlayoffStats)
+	$('#poolLabel').attr('data-i18n', playoffMode?'alliance_pool_label':'team_pool_label')
+}
+
+// ===== Render =====
+function setPickedTeams(){
+	var half = BOT_POSITIONS.length/2,
+	redPos = BOT_POSITIONS.slice(0,half),
+	bluePos = BOT_POSITIONS.slice(half)
+	if (playoffMode){
+		if (sideAlliance[activeSide]) activeSide = !sideAlliance.red?'red':(!sideAlliance.blue?'blue':activeSide)
+		renderPlayoffAllianceToThead('red')
+		renderPlayoffAllianceToThead('blue')
+		renderAlliancePool()
 	} else {
-		$('.teamDataEntry').show()
-		$('#prediction tbody').html("")
-		$('#change-teams').hide()
+		var assigned = {}
+		BOT_POSITIONS.forEach(pos=>{ var v=$(`#${pos}`).val(); if(v) assigned[v]=pos })
+		// active slot: keep the user's choice if still empty, else the first empty slot
+		if (!activePos || $(`#${activePos}`).val()) activePos = BOT_POSITIONS.find(pos=>!$(`#${pos}`).val()) || null
+		renderAllianceToThead(redPos)
+		renderAllianceToThead(bluePos)
+		renderPool(assigned)
 	}
+	renderBackupSection()
+	renderBreakdown()
 	setLocationHash()
 	applyTranslations()
 }
 
+function posSide(pos){
+	return BOT_POSITIONS.indexOf(pos) < BOT_POSITIONS.length/2 ? 'red' : 'blue'
+}
+
+// backup team -> side it may replace: a designated alliance backup ('red'/'blue')
+// can only sub into that alliance; a free agent (on no alliance) is 'any'.
+var backupTeamSide = {}
+
+// Eligible backup teams for the current alliances. A 4-team alliance contributes
+// only its designated backup (round3); a side without one (3-team) accepts any
+// team that's on no alliance.
+function computeBackupTeams(){
+	backupTeamSide = {}
+	var backupTeams = [], freeSides = []
+	;['red','blue'].forEach(function(side){
+		var backups = allianceBackupTeams(allianceByNumber(sideAlliance[side]))
+		if (backups.length){
+			backups.forEach(function(t){ t = String(t); if (!(t in backupTeamSide)){ backupTeamSide[t] = side; backupTeams.push(t) } })
+		} else freeSides.push(side)
+	})
+	if (freeSides.length){
+		var freeSide = freeSides.length === 2 ? 'any' : freeSides[0]
+		var onField = {}
+		BOT_POSITIONS.forEach(function(pos){ var v = $(`#${pos}`).val(); if (v) onField[String(v)] = true })
+		var allianceMembers = {}
+		;(window.alliances || []).forEach(function(a){
+			[a.captain, a.round1, a.round2, a.round3].forEach(function(t){ if (t != null && t !== '') allianceMembers[String(t)] = true })
+		})
+		;(window.teamList || []).forEach(function(t){
+			t = String(t)
+			if (onField[t] || allianceMembers[t] || (t in backupTeamSide)) return
+			backupTeamSide[t] = freeSide; backupTeams.push(t)
+		})
+	}
+	return backupTeams
+}
+
+// Show the backup controls (playoff mode only) and (re)build both rows. The second
+// row appears once the first backup is set, so a backup can be added on the other
+// alliance.
+function renderBackupSection(){
+	if (!playoffMode){ $('#backupSection').hide(); clearBackups(); return }
+	var backupTeams = computeBackupTeams()
+	var anyOnField = BOT_POSITIONS.some(function(pos){ return $(`#${pos}`).val() })
+	if (!backupTeams.length || !anyOnField){ $('#backupSection').hide(); clearBackups(); return }
+	buildBackupRow(0, backupTeams)
+	var row0done = $('#backupTeamSelect0').val() && $('#backupReplacingSelect0').val()
+	if (row0done && secondBackupPossible(backupTeams)){
+		buildBackupRow(1, backupTeams)
+		$('#backupRow1').removeClass('hide')
+	} else {
+		$('#backupTeamSelect1').val(''); $('#backupReplacingSelect1').val('')
+		$('#backupRow1').addClass('hide')
+	}
+	$('#backupSection').show()
+}
+
+// Whether a second backup is possible on the alliance the first didn't touch.
+function secondBackupPossible(backupTeams){
+	var usedSide = posSide($('#backupReplacingSelect0').val()),
+	usedTeam = $('#backupTeamSelect0').val()
+	return ['red','blue'].some(function(side){
+		if (side === usedSide) return false
+		var hasPos = BOT_POSITIONS.some(function(pos){ return posSide(pos) === side && $(`#${pos}`).val() })
+		var hasTeam = backupTeams.some(function(t){ return t !== usedTeam && (backupTeamSide[t] === 'any' || backupTeamSide[t] === side) })
+		return hasPos && hasTeam
+	})
+}
+
+// Build one backup row's two selects, excluding what the other row uses, and
+// preserving the current selections where still valid.
+function buildBackupRow(i, backupTeams){
+	var other = i === 0 ? 1 : 0,
+	otherTeam = $('#backupTeamSelect'+other).val(),
+	otherPos = $('#backupReplacingSelect'+other).val(),
+	otherSide = otherPos ? posSide(otherPos) : null,
+	none = translate('backup_none_option')
+	var prevTeam = $('#backupTeamSelect'+i).val()
+	var bsel = $('#backupTeamSelect'+i).html('').append($('<option>').val('').text(none))
+	backupTeams.forEach(function(t){
+		if (otherTeam && t === otherTeam) return                       // used by the other row
+		var s = backupTeamSide[t]
+		if (otherSide && s !== 'any' && s === otherSide) return        // its only side is taken
+		if (otherSide && s === 'any' && !sideHasPosOtherThan(otherSide)) return  // nowhere left for a free agent
+		bsel.append($('<option>').val(t).text(t))
+	})
+	bsel.val(prevTeam)
+	var selTeam = $('#backupTeamSelect'+i).val(), selSide = backupTeamSide[selTeam]
+	var prevPos = $('#backupReplacingSelect'+i).val()
+	var rsel = $('#backupReplacingSelect'+i).html('').append($('<option>').val('').text(none))
+	BOT_POSITIONS.forEach(function(pos){
+		var base = $(`#${pos}`).val()
+		if (!base) return
+		var ps = posSide(pos)
+		if (otherPos && pos === otherPos) return                       // taken by the other row
+		if (otherSide && ps === otherSide) return                      // other row owns this side
+		if (selTeam && selSide && selSide !== 'any' && ps !== selSide) return
+		rsel.append($('<option>').val(pos).text(pos + ' (' + base + ')'))
+	})
+	rsel.val(prevPos)
+}
+
+// Is there an on-field position on a side other than `side`?
+function sideHasPosOtherThan(side){
+	return BOT_POSITIONS.some(function(pos){ return posSide(pos) !== side && $(`#${pos}`).val() })
+}
+
+function clearBackups(){
+	$('#backupTeamSelect0,#backupReplacingSelect0,#backupTeamSelect1,#backupReplacingSelect1').val('')
+	$('#backupRow1').addClass('hide')
+}
+
+// Apply backup selections: rebuild the rows (re-filter, add/remove the 2nd) and
+// refresh the score views.
+function applyBackup(){
+	renderBackupSection()
+	var half = BOT_POSITIONS.length/2
+	renderBreakdown()
+	applyTranslations()
+}
+
+// ===== Playoffs mode =====
+// Map the playoffs alliances CSV (Alliance,Captain,First Pick,Second Pick,Backup,…)
+// onto the {number,captain,round1,round2,round3} shape the predictor expects. The
+// backup (round3) is filtered out of the 3v3 lineup by allianceTeams().
+function alliancesFromCsv(rows){
+	if (!rows || !rows.length) return []
+	return rows.map(function(r){
+		return {
+			number: r['Alliance'],
+			captain: r['Captain'],
+			round1: r['First Pick'],
+			round2: r['Second Pick'],
+			round3: r['Backup']
+		}
+	})
+}
+function allianceByNumber(num){ return (window.alliances||[]).find(a=>a.number==num) }
+// Team(s) beyond the 3 on-field robots, i.e. the backup. Shown for information
+// only; never added to a side's lineup, so it doesn't affect predictions.
+function allianceBackupTeams(a){
+	if (!a) return []
+	return [a.captain, a.round1, a.round2, a.round3]
+		.filter(t=>t!=null && t!=="")
+		.map(String)
+		.slice(BOT_POSITIONS.length/2)
+}
+function allianceTeams(a){
+	if (!a) return []
+	return [a.captain, a.round1, a.round2, a.round3]
+		.filter(t=>t!=null && t!=="")
+		.map(String)
+		.slice(0, BOT_POSITIONS.length/2)
+}
+function setSideTeams(side, teams){
+	var positions = side=='red' ? BOT_POSITIONS.slice(0,BOT_POSITIONS.length/2) : BOT_POSITIONS.slice(BOT_POSITIONS.length/2)
+	positions.forEach((pos,i)=>$(`#${pos}`).val(teams[i]||""))
+}
+function removeSide(side){
+	sideAlliance[side] = null
+	setSideTeams(side, [])
+	activeSide = side
+	setPickedTeams()
+}
+function addAlliance(num){
+	if (sideAlliance.red==num || sideAlliance.blue==num) return
+	var side = !sideAlliance[activeSide] ? activeSide : (!sideAlliance.red ? 'red' : (!sideAlliance.blue ? 'blue' : null))
+	if (!side) return   // both sides full — click does nothing
+	sideAlliance[side] = num
+	setSideTeams(side, allianceTeams(allianceByNumber(num)))
+	activeSide = !sideAlliance.red ? 'red' : (!sideAlliance.blue ? 'blue' : side)
+	setPickedTeams()
+}
+function allianceCard(a, fromSide){
+	var card = $('<div class=allianceCard>').attr('draggable',true)
+		.append($('<div class=allianceName>').text(a.name || `Alliance ${a.number}`))
+		.append($('<div class=allianceTeams>').text(allianceTeams(a).join(' · ')))
+	// Show each backup team with its predicted score contribution (the same
+	// per-team value used in the breakout), so its impact is visible even though
+	// it is excluded from the alliance's predicted score.
+	var backupTeams = allianceBackupTeams(a)
+	if (backupTeams.length){
+		var backupText = backupTeams.map(function(t){
+			return t + ' (' + Math.round(getTeamValue('score', parseInt(t))) + ')'
+		}).join(' · ')
+		card.append($('<div class=allianceBackup>').text(translate('backup_label')+backupText))
+	}
+	card.on('dragstart', function(e){ setDrag(e, {alliance:a.number, from:fromSide==null?null:fromSide}); card.addClass('dragging') })
+	card.on('dragend', function(){ card.removeClass('dragging') })
+	if (fromSide != null){
+		card.addClass('placed')
+		card.on('click', function(){ removeSide(fromSide) })
+	} else {
+		card.on('click', function(){ addAlliance(a.number) })
+	}
+	return card
+}
+function renderPlayoffSide(containerId, side){
+	var c = $(`#${containerId}`).html(""),
+	num = sideAlliance[side],
+	a = num ? allianceByNumber(num) : null,
+	target
+	if (a){
+		target = allianceCard(a, side)
+	} else {
+		target = $('<div class="alliance-slot empty">')
+		if (side == activeSide) target.addClass('active')
+		target.append($('<span class=slotHint>').attr('data-i18n','drop_alliance_hint'))
+		target.on('click', function(){ activeSide = side; setPickedTeams() })
+	}
+	// handlers live on the freshly-created element each render (no accumulation)
+	target.on('dragover', function(e){ e.preventDefault(); target.addClass('dragover') })
+	target.on('dragleave', function(){ target.removeClass('dragover') })
+	target.on('drop', function(e){
+		e.preventDefault()
+		target.removeClass('dragover')
+		var data = getDrag(e)
+		if (!data || data.alliance == null) return
+		if (data.from && data.from != side) sideAlliance[data.from] = null   // moved from the other side
+		sideAlliance[side] = data.alliance
+		setSideTeams(side, allianceTeams(allianceByNumber(data.alliance)))
+		if (data.from && data.from != side) setSideTeams(data.from, [])
+		setPickedTeams()
+	})
+	c.append(target)
+}
+function renderAlliancePool(){
+	var pool = $('#teamPool').html("")
+	if (!window.alliances || !window.alliances.length){
+		pool.append($('<div class=poolEmpty>').attr('data-i18n','no_alliances'))
+		return
+	}
+	window.alliances.forEach(a=>{
+		if (sideAlliance.red==a.number || sideAlliance.blue==a.number) return
+		pool.append(allianceCard(a, null))
+	})
+}
+
+function renderAlliance(containerId, positions){
+	var c = $(`#${containerId}`).html("")
+	positions.forEach(pos=>{
+		var team = $(`#${pos}`).val(),
+		slot = $('<div class=alliance-slot>').attr('data-pos',pos)
+		if (team){
+			slot.append(teamCard(team, pos))
+		} else {
+			slot.addClass('empty')
+			if (pos == activePos) slot.addClass('active')
+			slot.append($('<span class=slotHint>').attr('data-i18n','slot_hint'))
+			slot.on('click', function(){ activePos = pos; setPickedTeams() })
+		}
+		slot.on('dragover', function(e){ e.preventDefault(); slot.addClass('dragover') })
+		slot.on('dragleave', function(){ slot.removeClass('dragover') })
+		slot.on('drop', function(e){ slot.removeClass('dragover'); dropOnSlot(e, pos) })
+		c.append(slot)
+	})
+}
+
+function renderAllianceToThead(positions){
+	positions.forEach(pos=>{
+		var team = $(`#${pos}`).val()
+		var cell = $(`#th-${pos}`)
+		cell.attr('data-pos', pos).removeAttr('colspan').show()
+		cell.removeClass('active dragover')
+		cell.off('dragover dragleave drop click dragstart dragend')
+
+		if (team){
+			cell.removeClass('empty')
+			cell.attr('draggable', true)
+			cell.text(team)
+			cell.on('dragstart', function(e){ setDrag(e, {team:team, from:pos}); cell.addClass('dragging') })
+			cell.on('dragend', function(){ cell.removeClass('dragging') })
+			cell.on('click', function(){ $(`#${pos}`).val(""); activePos = pos; match = ""; $('#matchList').val(""); $('#alliances-area').prop('open', true); setPickedTeams() })
+		} else {
+			cell.addClass('empty')
+			cell.removeAttr('draggable')
+			if (pos == activePos) cell.addClass('active')
+			cell.html($('<span class=slotHint>').attr('data-i18n','slot_hint'))
+			cell.on('click', function(){ activePos = pos; setPickedTeams() })
+		}
+		cell.on('dragover', function(e){ e.preventDefault(); cell.addClass('dragover') })
+		cell.on('dragleave', function(){ cell.removeClass('dragover') })
+		cell.on('drop', function(e){ cell.removeClass('dragover'); dropOnSlot(e, pos) })
+	})
+}
+
+function renderPlayoffAllianceToThead(side){
+	var firstCellId = side=='red' ? 'th-R1' : 'th-B1',
+	firstPos = firstCellId.substring(3),
+	otherCells = side=='red' ? ['th-R2','th-R3'] : ['th-B2','th-B3'],
+	cell = $(`#${firstCellId}`),
+	num = sideAlliance[side],
+	a = num ? allianceByNumber(num) : null,
+	target
+	cell.html("").attr('data-alliance-side', side).attr('data-pos', firstPos).attr('colspan',3).removeClass('empty active dragover')
+	otherCells.forEach(id=>$(`#${id}`).hide())
+	if (a){
+		target = allianceCard(a, side)
+	} else {
+		target = $('<div class="alliance-slot empty">')
+		if (side == activeSide) target.addClass('active')
+		target.append($('<span class=slotHint>').attr('data-i18n','drop_alliance_hint'))
+		target.on('click', function(){ activeSide = side; setPickedTeams() })
+	}
+	target.on('dragover', function(e){ e.preventDefault(); target.addClass('dragover') })
+	target.on('dragleave', function(){ target.removeClass('dragover') })
+	target.on('drop', function(e){
+		e.preventDefault()
+		target.removeClass('dragover')
+		var data = getDrag(e)
+		if (!data || data.alliance == null) return
+		if (data.from && data.from != side) sideAlliance[data.from] = null
+		sideAlliance[side] = data.alliance
+		setSideTeams(side, allianceTeams(allianceByNumber(data.alliance)))
+		if (data.from && data.from != side) setSideTeams(data.from, [])
+		setPickedTeams()
+	})
+	cell.append(target)
+}
+
+function renderPool(assigned){
+	var pool = $('#teamPool').html("")
+	teamList.forEach(team=>{
+		if (assigned[team]) return
+		pool.append(teamCard(team, null))
+	})
+}
+
+function teamCard(team, fromPos){
+	var card = $('<div class=teamCard>').attr('draggable',true).attr('data-team',team).text(team)
+	card.on('dragstart', function(e){ setDrag(e, {team:team, from:fromPos==null?null:fromPos}); card.addClass('dragging') })
+	card.on('dragend', function(){ card.removeClass('dragging') })
+	if (fromPos != null){
+		card.addClass('placed')
+		card.on('click', function(){ $(`#${fromPos}`).val(""); activePos = fromPos; setPickedTeams() })
+	} else {
+		card.on('click', function(){ addTeam(team) })
+	}
+	return card
+}
+
+function addTeam(team){
+	if (BOT_POSITIONS.some(pos=>$(`#${pos}`).val()==team)) return   // already on an alliance
+	var pos = (activePos && !$(`#${activePos}`).val()) ? activePos : BOT_POSITIONS.find(p=>!$(`#${p}`).val())
+	if (!pos) return   // alliances full
+	$(`#${pos}`).val(team)
+	activePos = BOT_POSITIONS.find(p=>!$(`#${p}`).val()) || null
+	setPickedTeams()
+}
+
+function dropOnSlot(e, pos){
+	e.preventDefault()
+	var data = getDrag(e)
+	if (!data) return
+	var current = $(`#${pos}`).val()
+	if (data.from != null) $(`#${data.from}`).val(current||"")   // swap with the source slot
+	$(`#${pos}`).val(data.team)
+	setPickedTeams()
+}
+
+function setDrag(e, obj){ (e.originalEvent||e).dataTransfer.setData('text/plain', JSON.stringify(obj)) }
+function getDrag(e){ try { return JSON.parse((e.originalEvent||e).dataTransfer.getData('text/plain')) } catch(x){ return null } }
+
+// Per-team score contribution shown beside the alliance score box (playoffs)
+function renderBreakout(containerId, positions){
+	var c = $(`#${containerId}`)
+	// Hide unless in playoff mode and all 6 teams are filled.
+	// Keep stale rows in place so the slide-out animation has content to show.
+	var allTeamsFilled = BOT_POSITIONS.every(pos => effectiveTeam(pos))
+	if (!playoffMode || !allTeamsFilled){ c.removeClass('show'); return }
+	c.html("")
+	positions.forEach(function(pos){
+		var t = effectiveTeam(pos),
+		isBackup = isBackupPos(pos),
+		row = $('<div class=sbBreakoutRow>')
+		row.append($('<span class=sbbTeam>').text(t || "—").toggleClass('backup', isBackup))
+		row.append($('<span class=sbbScore>').text(t ? Math.round(getTeamValue('score', parseInt(t))) : "").toggleClass('backup', isBackup))
+		c.append(row)
+	})
+	c.addClass('show')
+}
+function allianceScore(positions){
+	return Math.round(positions.reduce((sum,pos)=>{
+		var t = effectiveTeam(pos)
+		return sum + (t ? getTeamValue('score', parseInt(t)) : 0)
+	}, 0))
+}
+
+// ===== Stat breakdown table (live) =====
+function renderBreakdown(){
+	var allTeamsFilled = BOT_POSITIONS.every(pos => effectiveTeam(pos))
+	$('#prediction tbody').toggle(allTeamsFilled)
+	BOT_POSITIONS.forEach((pos, i)=>{
+		// Skip alliance card cells in playoff mode
+		if (playoffMode && (i === 0 || i === BOT_POSITIONS.length/2)) return
+		$(`#th-${pos}`).text(effectiveTeam(pos)||"").toggleClass('backup', isBackupPos(pos))
+	})
+	if (!allTeamsFilled) return
+	var table = $('#prediction tbody').html(""),
+	stats = statsConfig.getStatsConfig(),
+	first = true
+	Object.keys(stats).forEach(function(section){
+		table.append(
+			$('<tr>').append(
+				$(`<th colspan=${BOT_POSITIONS.length+3}>`).append(
+					$('<h4>').append($('<span>').attr('data-i18n',section))
+					.append(" ").append($(' <button>🛠️</button>').attr('data-section',section).click(statsConfig.showConfigDialog.bind(statsConfig)))
+				)
+			)
+		)
+		stats[section].data.forEach(function(field){
+			statInfo[field] = statInfo[field]||{}
+			if ((statInfo[field]['type']||"") != 'avg') return
+			var teamScores = [],
+			allianceScores = [0,0]
+			BOT_POSITIONS.forEach(function(pos, i){
+				var team = parseInt(effectiveTeam(pos))
+				teamScores[i] = getTeamValue(field, team)
+				allianceScores[Math.floor(i/(BOT_POSITIONS.length/2))] += teamScores[i]
+			})
+			teamScores = teamScores.map(Math.round)
+			allianceScores = allianceScores.map(Math.round)
+			var compare = statInfo[field].good=='low'?Math.min:Math.max,
+			teamBest = compare(...teamScores),
+			allianceBest = compare(...allianceScores),
+			tr = $('<tr>').addClass(first?"first":"")
+			BOT_POSITIONS.forEach(function(pos, i){
+				tr.append($('<td>').addClass(i<(BOT_POSITIONS.length/2)?'redTeamBG':'blueTeamBG').append($('<div>').text(teamScores[i]).addClass(teamScores[i]==teamBest?"winner":"")))
+				if(i==(BOT_POSITIONS.length/2-1)){
+					tr.append($('<td>').addClass('redTeamBG').addClass('alliance').append($('<div>').text(allianceScores[0]).addClass(allianceScores[0]==allianceBest?("winner"):"")))
+					tr.append($('<td>').append($('<div>').attr('data-i18n',field)))
+					tr.append($('<td>').addClass('blueTeamBG').addClass('alliance').append($('<div>').text(allianceScores[1]).addClass(allianceScores[1]==allianceBest?"winner":"")))
+				}
+			})
+			table.append(tr)
+			first=false
+		})
+	})
+}
+
+// ===== URL hash sync =====
 var match = ""
 
 function setLocationHash(){
 	var hash = `event=${eventId}`
 	if (match) hash += `&match=${match}`
-	$('#prediction input').each(function(){
-		var val = $(this).val()
-		if (/^[0-9]+$/.test(val)){
-			var name = $(this).attr('id')
-			hash += `&${name}=${val}`
-		}
+	if (playoffMode){
+		hash += `&mode=playoff`
+		if (sideAlliance.red) hash += `&ra=${sideAlliance.red}`
+		if (sideAlliance.blue) hash += `&ba=${sideAlliance.blue}`
+	}
+	BOT_POSITIONS.forEach(function(pos){
+		var val = $(`#${pos}`).val()
+		if (/^[0-9]+$/.test(val)) hash += `&${pos}=${val}`
 	})
 	location.hash = hash
 }
 
 function loadFromLocationHash(){
 	match = (location.hash.match(/^\#(?:.*\&)?(?:match\=)([a-z0-9]+)(?:\&.*)?$/)||["",""])[1]
-	$('#prediction input').each(function(){
-		var name = $(this).attr('id')
-		var val = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${name}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
-		$(this).val(val)
+	playoffMode = /[#&]mode=playoff(&|$)/.test(location.hash)
+	BOT_POSITIONS.forEach(function(pos){
+		var val = (location.hash.match(new RegExp(`^\\#(?:.*\\&)?(?:${pos}\\=)([0-9]+)(?:\\&.*)?$`))||["",""])[1]
+		$(`#${pos}`).val(val)
 	})
+	if (match){
+		// Find and select the match in the dropdown
+		var matchValue = BOT_POSITIONS.map(pos=>$(`#${pos}`).val()).join(",")
+		$('#matchList').val(matchValue)
+	} else {
+		$('#matchList').val("")
+	}
+	activePos = null
+	activeSide = 'red'
+	sideAlliance = {red:null, blue:null}
+	if (playoffMode){
+		sideAlliance.red = (location.hash.match(/[#&]ra=([0-9]+)/)||[])[1] || null
+		sideAlliance.blue = (location.hash.match(/[#&]ba=([0-9]+)/)||[])[1] || null
+		if (sideAlliance.red) setSideTeams('red', allianceTeams(allianceByNumber(sideAlliance.red)))
+		if (sideAlliance.blue) setSideTeams('blue', allianceTeams(allianceByNumber(sideAlliance.blue)))
+	}
+	updateModeUI()
 	setPickedTeams()
-	focusNext()
+	// On initial load, open alliances details if selection is incomplete
+	if (isInitialLoad){
+		var selectionComplete = playoffMode ? (sideAlliance.red && sideAlliance.blue) : BOT_POSITIONS.every(pos => $(`#${pos}`).val())
+		$('#alliances-area').prop('open', !selectionComplete)
+		isInitialLoad = false
+	}
 }
 
-function getTeamValue(eventStatsByTeam, field, team){
-	if (! team in eventStatsByTeam) return 0
-	var stats = eventStatsByTeam[team]
-	if (! stats || ! field in stats ||! 'count' in stats || !stats['count']) return 0
+// In playoff mode use playoff-only stats for a team, falling back to general/qual
+// stats when that team has no playoff data scouted yet.
+function teamStats(team){
+	if (playoffMode && usePlayoffStats){
+		var p = window.playoffStatsByTeam && window.playoffStatsByTeam[team]
+		if (p && p.count) return p
+	}
+	return window.eventStatsByTeam && window.eventStatsByTeam[team]
+}
+
+function getTeamValue(field, team){
+	var stats = teamStats(team)
+	if (!stats || !stats['count']) return 0
 	return (stats[field]||0) / stats['count']
-}
-
-function teamButtonClicked(){
-	lf().val($(this).text())
-	focusNext()
-	setPickedTeams()
 }
