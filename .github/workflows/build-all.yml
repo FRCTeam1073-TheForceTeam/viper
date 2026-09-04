@@ -35,6 +35,11 @@ jobs:
           cd app
           flutter pub get
 
+      - name: Generate code (build_runner)
+        run: |
+          cd app
+          flutter pub run build_runner build --delete-conflicting-outputs
+
       - name: Run flutter analyze
         run: |
           cd app
@@ -61,6 +66,11 @@ jobs:
         run: |
           cd app
           flutter pub get
+
+      - name: Generate code (build_runner)
+        run: |
+          cd app
+          flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Run tests
         run: |
@@ -90,6 +100,11 @@ jobs:
         run: |
           cd app
           flutter pub get
+
+      - name: Generate code (build_runner)
+        run: |
+          cd app
+          flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Create Android platform
         run: |
@@ -137,6 +152,11 @@ jobs:
         run: |
           cd app
           flutter pub get
+
+      - name: Generate code (build_runner)
+        run: |
+          cd app
+          flutter pub run build_runner build --delete-conflicting-outputs
 
       - name: Create iOS platform
         run: |
