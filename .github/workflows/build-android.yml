@@ -1,0 +1,71 @@
+name: Build Android
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_name:
+        description: 'Release name (optional)'
+        required: false
+        default: ''
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.41.4'
+          channel: 'stable'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Get dependencies
+        run: |
+          cd app
+          flutter pub get
+
+      - name: Create Android platform
+        run: |
+          cd app
+          flutter create --platforms=android .
+
+      - name: Build APK
+        run: |
+          cd app
+          flutter build apk --release
+
+      - name: Build AAB (App Bundle for Play Store)
+        run: |
+          cd app
+          flutter build appbundle --release
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.apk
+          path: app/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release.aab
+          path: app/build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+      - name: Create Release
+        if: github.event.inputs.release_name != ''
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.release_name }}
+          files: |
+            app/build/app/outputs/flutter-apk/app-release.apk
+            app/build/app/outputs/bundle/release/app-release.aab

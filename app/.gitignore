@@ -16,6 +16,9 @@ app.*.map.json
 .analyze
 .build-runner
 
+# Auto-generated metadata - changes based on last built platform
+.metadata
+
 # Platform directories
 /android/
 /ios/
