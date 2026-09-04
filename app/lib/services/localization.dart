@@ -65,6 +65,13 @@ class AppLocalizations {
 	static void debugPrintKeys() {
 		// TODO: Implement key debugging if needed
 	}
+
+	/// Reset for testing - clears all state between tests
+	@visibleForTesting
+	static void resetForTesting() {
+		_translations.clear();
+		_currentLocale = null;
+	}
 }
 
 extension LocalizationExtension on BuildContext {

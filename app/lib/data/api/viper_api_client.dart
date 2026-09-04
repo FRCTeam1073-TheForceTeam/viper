@@ -50,15 +50,20 @@ class ViperApiClient {
 		required String baseUrl,
 		this.username,
 		this.password,
+		Dio? dio,
 	}) : baseUrl = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl {
-		final dioOptions = BaseOptions(
-			baseUrl: this.baseUrl,
-			connectTimeout: const Duration(seconds: 10),
-			receiveTimeout: const Duration(seconds: 10),
-			validateStatus: (status) => status != null && status < 500,
-		);
+		if (dio != null) {
+			_dio = dio;
+		} else {
+			final dioOptions = BaseOptions(
+				baseUrl: this.baseUrl,
+				connectTimeout: const Duration(seconds: 10),
+				receiveTimeout: const Duration(seconds: 10),
+				validateStatus: (status) => status != null && status < 500,
+			);
 
-		_dio = Dio(dioOptions);
+			_dio = Dio(dioOptions);
+		}
 
 		// Add basic auth if credentials provided
 		if (username != null && username!.isNotEmpty) {

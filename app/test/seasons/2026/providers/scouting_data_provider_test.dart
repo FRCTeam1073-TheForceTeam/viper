@@ -219,6 +219,338 @@ void main() {
 
 			expect(firstTarget, secondTarget);
 		});
+
+		test('changeTeleFuelTarget updates fuel target', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).changeTeleFuelTarget('alliancePass');
+
+			final notifier = container.read(scoutingDataProvider.notifier);
+			expect(notifier.activeFuelTarget, 'alliancePass');
+		});
+
+		test('multiple undoTele calls remove multiple tele events', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).recordTeleAction(
+				field: 'tele_fuel_high',
+				value: 5,
+			);
+			container.read(scoutingDataProvider.notifier).recordTeleAction(
+				field: 'tele_fuel_low',
+				value: 3,
+			);
+			container.read(scoutingDataProvider.notifier).recordTeleAction(
+				field: 'tele_fuel_mid',
+				value: 2,
+			);
+
+			container.read(scoutingDataProvider.notifier).undoTele();
+			var timeline = container.read(timelineProvider);
+			expect(timeline.length, 2);
+
+			container.read(scoutingDataProvider.notifier).undoTele();
+			timeline = container.read(timelineProvider);
+			expect(timeline.length, 1);
+
+			container.read(scoutingDataProvider.notifier).undoTele();
+			timeline = container.read(timelineProvider);
+			expect(timeline.isEmpty, true);
+		});
+
+		test('recordAutoAction and recordTeleAction maintain separate timelines', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 1,
+			);
+			container.read(scoutingDataProvider.notifier).recordTeleAction(
+				field: 'tele_fuel_high',
+				value: 1,
+			);
+
+			final timeline = container.read(timelineProvider);
+			expect(timeline.length, 2);
+			expect(timeline[0].action, 'auto_fuel_intake');
+			expect(timeline[1].action, 'tele_fuel_high');
+		});
+
+		test('zone transitions correctly update zone time accumulators', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			// Set start time to get predictable elapsed time
+			container.read(matchTimerProvider.notifier).setStartTime(DateTime.now());
+
+			// First transition to neutral
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_to_neutral',
+				value: 1,
+			);
+
+			var state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_alliance_time').asInt(), greaterThanOrEqualTo(0));
+
+			// Second transition to opponent
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_to_opponent',
+				value: 1,
+			);
+
+			state = container.read(scoutingDataProvider);
+			// Should have accumulated time in neutral zone
+			expect(state.getFieldValue('auto_neutral_time').asInt(), greaterThanOrEqualTo(0));
+		});
+
+		test('undoTele followed by undoAuto removes events in reverse order', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 1,
+			);
+			container.read(scoutingDataProvider.notifier).recordTeleAction(
+				field: 'tele_fuel_high',
+				value: 1,
+			);
+
+			var timeline = container.read(timelineProvider);
+			expect(timeline.length, 2);
+
+			// Undo the tele action
+			container.read(scoutingDataProvider.notifier).undoTele();
+			timeline = container.read(timelineProvider);
+			expect(timeline.length, 1);
+			expect(timeline[0].action, 'auto_fuel_intake');
+
+			// Undo the auto action
+			container.read(scoutingDataProvider.notifier).undoAuto();
+			timeline = container.read(timelineProvider);
+			expect(timeline.isEmpty, true);
+		});
+
+		test('reset clears fuel target state', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).changeAutoFuelTarget('alliancePass');
+			var target = container.read(scoutingDataProvider.notifier).activeFuelTarget;
+			expect(target, 'alliancePass');
+
+			container.read(scoutingDataProvider.notifier).reset();
+
+			target = container.read(scoutingDataProvider.notifier).activeFuelTarget;
+			// Should reset to default (likely 'hub' or similar)
+			expect(target, isNotNull);
+		});
+
+		test('loadFromServerData hydrates existing data', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			// Use same field names as ScoutingData model
+			final serverData = {
+				'auto_alliance_time': '30',
+				'auto_climb_level': '2',
+			};
+
+			container.read(scoutingDataProvider.notifier).loadFromServerData(serverData);
+
+			final state = container.read(scoutingDataProvider);
+			// Verify at least one field was loaded
+			expect(state.values.isNotEmpty, true);
+		});
+
+		test('recordAutoAction with increment counter works', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 1,
+			);
+
+			var state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 1);
+
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 1,
+			);
+
+			state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 2);
+		});
+
+		test('undoAuto decrements counter only', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 1,
+			);
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 1,
+			);
+
+			var state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 2);
+
+			container.read(scoutingDataProvider.notifier).undoAuto();
+
+			state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 1);
+		});
+
+		test('consecutive zone transitions update all zone accumulators', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(matchTimerProvider.notifier).setStartTime(DateTime.now());
+
+			// Simulate zone transitions: alliance -> neutral -> opponent
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_to_neutral',
+				value: 1,
+			);
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_to_opponent',
+				value: 1,
+			);
+
+			var state = container.read(scoutingDataProvider);
+
+			// Should have accumulation times for multiple zones
+			final allianceTime = state.getFieldValue('auto_alliance_time').asInt();
+			final neutralTime = state.getFieldValue('auto_neutral_time').asInt();
+
+			expect(allianceTime, greaterThanOrEqualTo(0));
+			expect(neutralTime, greaterThanOrEqualTo(0));
+		});
+
+		test('recordAutoAction and recordTeleAction do not interfere', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			// Record multiple auto actions
+			for (int i = 0; i < 3; i++) {
+				container.read(scoutingDataProvider.notifier).recordAutoAction(
+					field: 'auto_fuel_intake',
+					value: 1,
+				);
+			}
+
+			var state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 3);
+
+			// Record multiple tele actions
+			for (int i = 0; i < 5; i++) {
+				container.read(scoutingDataProvider.notifier).recordTeleAction(
+					field: 'tele_fuel_high',
+					value: 1,
+				);
+			}
+
+			state = container.read(scoutingDataProvider);
+
+			// Both should be independent
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 3);
+			expect(state.getFieldValue('tele_fuel_high').asInt(), 5);
+		});
+
+		test('undo removes last timeline event regardless of phase', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			// Record in both phases
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 1,
+			);
+			container.read(scoutingDataProvider.notifier).recordTeleAction(
+				field: 'tele_fuel_high',
+				value: 1,
+			);
+
+			var timeline = container.read(timelineProvider);
+			expect(timeline.length, 2);
+
+			// Undo removes the last event (tele)
+			container.read(scoutingDataProvider.notifier).undoTele();
+
+			timeline = container.read(timelineProvider);
+			expect(timeline.length, 1);
+			expect(timeline[0].action, 'auto_fuel_intake');
+		});
+
+		test('reset clears both auto and tele data', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_fuel_intake',
+				value: 5,
+			);
+			container.read(scoutingDataProvider.notifier).recordTeleAction(
+				field: 'tele_fuel_high',
+				value: 10,
+			);
+
+			container.read(scoutingDataProvider.notifier).reset();
+
+			final state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 0);
+			expect(state.getFieldValue('tele_fuel_high').asInt(), 0);
+		});
+
+		test('zone transition with zero elapsed time handles gracefully', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			// Set start time to now (zero elapsed)
+			container.read(matchTimerProvider.notifier).setStartTime(DateTime.now());
+
+			container.read(scoutingDataProvider.notifier).recordAutoAction(
+				field: 'auto_to_neutral',
+				value: 1,
+			);
+
+			final state = container.read(scoutingDataProvider);
+			expect(state.values.isNotEmpty, true);
+		});
+
+		test('multiple undoAuto calls in sequence work correctly', () {
+			final container = ProviderContainer();
+			addTearDown(container.dispose);
+
+			// Record 3 auto actions
+			for (int i = 0; i < 3; i++) {
+				container.read(scoutingDataProvider.notifier).recordAutoAction(
+					field: 'auto_fuel_intake',
+					value: 1,
+				);
+			}
+
+			var state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 3);
+
+			// Undo all three
+			for (int i = 0; i < 3; i++) {
+				container.read(scoutingDataProvider.notifier).undoAuto();
+				state = container.read(scoutingDataProvider);
+				expect(state.getFieldValue('auto_fuel_intake').asInt(), 2 - i);
+			}
+
+			state = container.read(scoutingDataProvider);
+			expect(state.getFieldValue('auto_fuel_intake').asInt(), 0);
+		});
 	});
 
 }

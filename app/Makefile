@@ -82,3 +82,7 @@ fresh:
 .PHONY: test
 test:
 	flutter test
+
+.PHONY: test-debug
+test-debug:
+	TEST_DEBUG=true flutter test
