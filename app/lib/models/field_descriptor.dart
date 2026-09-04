@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:viper_scout/providers/global_scouting_data.dart';
 
 /// Field metadata - stores everything as strings, typed getters parse on demand
@@ -140,4 +141,10 @@ class FieldDescriptor {
 
 	/// Get the UI label key, defaulting to the field name if not specified
 	String get uiLabel => uiLabelKey ?? name;
+
+	/// Reset the cache for testing - clears static state between tests
+	@visibleForTesting
+	static void resetCacheForTesting() {
+		_cache.clear();
+	}
 }

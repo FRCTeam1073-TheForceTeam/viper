@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/field_descriptor.dart';
 import '../../../models/map_data_model.dart';
@@ -52,6 +53,12 @@ class ScoutingData extends MapDataModel {
 		FieldDescriptor.createStatic(name: 'tele_opponent_time', teleValuesTableDescription: 'opponent_time'),
 		FieldDescriptor.createStatic(name: 'tele_climb_level'),
 	];
+
+	/// Reset registered descriptors for testing - clears static state between tests
+	@visibleForTesting
+	static void resetRegisteredDescriptorsForTesting() {
+		_registeredDescriptors.clear();
+	}
 
 }
 
