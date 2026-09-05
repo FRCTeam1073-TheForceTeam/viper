@@ -1,5 +1,14 @@
 "use strict"
 addI18n({
+	date_range:{
+		en:"_START_ to _END_",
+		pt:'_START_ a _END_',
+		es:'_START_ a _END_',
+		he:'_START_ אל _END_',
+		tr:'_START_ ile _END_',
+		fr:'_START_ à _END_',
+		zh_tw:'_START_ 至 _END_',
+	},
 	full_season_link:{
 		en:'_SEASON_ full season stats',
 		tr:'_SEASON_ tam sezon istatistikleri',
@@ -90,7 +99,7 @@ $(document).ready(function(){
 	function showEvents(recentSeason){
 		var list = $('#events-list')
 		list.html('');
-		var filter = location.hash.replace(/^\#/,""),
+		var filter = window.location.hash.replace(/^\#/,""),
 		eventsShown = 0
 		if (!filter) filter = recentSeason
 		for (var i=0; i<events.length; i++){
@@ -123,6 +132,7 @@ $(document).ready(function(){
 				eventsShown++
 			}
 		}
+		applyTranslations() // Apply i18n to all newly added elements
 		$('#seasonStatsLink').toggle(/20[0-9]{2}(-[0-9]{2})?/.test(filter) && eventsShown > 1).find('a').attr('href',ssHref.replace(/YEAR/,filter))
 		var ael = $('#add-event-link')
 		ael.attr('href', ael.attr('href').replace(/#.*/,'') + '#' + (/-/.test(filter)?"ftc":"frc"))
@@ -134,7 +144,7 @@ $(document).ready(function(){
 	$('#seasons').change(function(){
 		var season = $('#seasons').val()
 		if (/^[0-9]{4}(-[0-9]{2})?$/.test(season)){
-			location.hash = `#${season}`
+			window.location.hash = `#${season}`
 		}
 	})
 })

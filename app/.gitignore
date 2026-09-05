@@ -1,0 +1,27 @@
+**/doc/api/
+.dart_tool/
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+/coverage/
+.gradle/
+local.properties
+app.*.symbols
+app.*.map.json
+*.g.dart
+*.idea
+*.iml
+.analyze
+.build-runner
+
+# Auto-generated metadata - changes based on last built platform
+.metadata
+
+# Platform directories
+/android/
+/ios/
+/macos/
+/windows/
+/linux/

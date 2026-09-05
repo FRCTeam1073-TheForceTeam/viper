@@ -11,3 +11,8 @@ local.*
 .~*
 tmp
 *.tmp
+*.tmp.*
+*.swp
+*.bak
+*~
+*.prompt.md

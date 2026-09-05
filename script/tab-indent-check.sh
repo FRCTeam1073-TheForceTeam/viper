@@ -14,7 +14,7 @@ for file in $files
 do
 	if [ -f "$file" ]
 	then
-		if echo $file | grep -vEq '(\.(yaml|yml|svg|md|png|jpg|json)$)|jquery|\.min\.' && grep -Eq $'^\t* ' "$file"
+		if echo $file | grep -vEq '(\.(yaml|yml|svg|md|png|jpg|json|lock|metadata)$)|jquery|\.min\.' && grep -Eq $'^\t* ' "$file"
 		then
 			grep -EHn $'^\t* ' "$file"
 			status=1
