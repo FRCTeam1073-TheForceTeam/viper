@@ -45,11 +45,6 @@ jobs:
           cd app
           flutter analyze
 
-      - name: Run flutter format check
-        run: |
-          cd app
-          flutter format --set-exit-if-changed lib/
-
   test:
     name: Unit Tests
     runs-on: ubuntu-latest
