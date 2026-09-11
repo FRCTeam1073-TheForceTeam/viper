@@ -95,6 +95,38 @@ $(document).ready(function(){
 
 $(window).on('hashchange',fillPage)
 
+// Scrolling to a section has to be handled apart from fillPage, which returns
+// early when the team and locale are unchanged -- exactly the case when one of
+// the section buttons is clicked. The hrefs carry the event and team as well as
+// the section, so they are not bare element ids and the browser will not scroll
+// to them on its own either.
+// Scroll a section into view on click, rather than leaving it to the hash. The
+// hrefs carry the event and team as well as the section name, so the browser
+// will not scroll to them natively, and the hashchange route runs into
+// fillPage's early return when the team has not changed. Binding the click
+// directly takes both out of the picture.
+function bindSectionLink(linkSelector, headingSelector){
+	$(linkSelector).off('click.section').on('click.section', function(e){
+		var target = $(headingSelector).filter(':visible')[0]
+		if (!target) return
+		e.preventDefault()
+		// Keep the URL shareable, but via replaceState so no hashchange fires.
+		try { history.replaceState(null, '', $(this).attr('href')) } catch(x) {}
+		target.scrollIntoView({behavior:'smooth', block:'start'})
+	})
+}
+
+function scrollToHashSection(){
+	var found = location.hash.match(/[#&](pit-scouting|subjective-scouting)(?:[&=]|$)/i)
+	if (!found) return
+	var target = $('#' + found[1].toLowerCase())
+	if (!target.length || !target.is(':visible')) return
+	var heading = $('h2.' + (found[1].toLowerCase() == 'pit-scouting' ? 'pitScouting' : 'subjectiveScouting')).filter(':visible')[0]
+	;(heading || target[0]).scrollIntoView({block:'start'})
+}
+
+$(window).on('hashchange', scrollToHashSection)
+
 var team
 
 $(document).ready(function(){
@@ -146,66 +178,78 @@ function fillPage(){
 		})
 	} else {
 		$('title,h1').attr('data-i18n','team_page_title')
-		$('#sidePhoto').html(`<img src="/data/${eventYear}/${team}.jpg">`)
-		$('#topPhoto').html(`<img src="/data/${eventYear}/${team}-top.jpg">`)
-		$('.imagePreview img').click(function(){
-			var photo = $('#fullPhoto').attr('src',$(this).attr('src'))
-			var offset = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2
-			var scrollTop = $(window).scrollTop()
-			var w, h
-			try {
-				// Try to get parent window dimensions if in iframe
-				if (window.self !== window.top) {
-					w = Math.min(window.innerWidth || document.documentElement.clientWidth, window.top.innerWidth)
-					h = Math.min(window.innerHeight || document.documentElement.clientHeight, window.top.innerHeight)
-				} else {
-					w = window.innerWidth
-					h = window.innerHeight
-				}
-			} catch(e) {
-				// Cross-origin iframe, use iframe dimensions
-				w = window.innerWidth || document.documentElement.clientWidth
-				h = window.innerHeight || document.documentElement.clientHeight
-			}
-			photo.css({
-				top: (scrollTop + offset) + 'px',
-				left: offset + 'px',
-				width: (w - offset * 2) + 'px',
-				height: (h - offset * 2) + 'px'
-			})
-			showLightBox(photo)
-		})
+		// Most teams have no second photo, and a missing file leaves the browser's
+		// broken-image icon sitting next to the robot. Drop the image if it fails.
+		showTeamPhoto('#sidePhoto', `/data/${eventYear}/${team}.jpg`)
+		showTeamPhoto('#topPhoto', `/data/${eventYear}/${team}-top.jpg`)
 		$('#fullPhoto').click(closeLightBox)
 
 		showStats()
 
 		if(typeof window.showPitScouting === 'function'){
 			$('a.pitScouting').attr('href', `#event=${eventId}&team=${team}&pit-scouting`)
+			bindSectionLink('a.pitScouting', 'h2.pitScouting')
 			$('#pit-scouting').html("")
 			window.showPitScouting($('#pit-scouting'),team)
-			if (/pit-scouting/i.test(location.hash)){
-				setTimeout(function(){
-					window.scroll(0,$('#pit-scouting').position().top-100)
-				},200)
-			}
+			// Let the section render before measuring where it ended up.
+			setTimeout(scrollToHashSection, 200)
 		} else {
 			$('.pitScouting').hide()
 		}
 
 		if(typeof window.showSubjectiveScouting === 'function'){
 			$('a.subjectiveScouting').attr('href', `#event=${eventId}&team=${team}&subjective-scouting`)
+			bindSectionLink('a.subjectiveScouting', 'h2.subjectiveScouting')
 			$('#subjective-scouting').html("")
 			window.showSubjectiveScouting($('#subjective-scouting'),team)
-			if (/subjective-scouting/i.test(location.hash)){
-				setTimeout(function(){
-					window.scroll(0,$('#subjective-scouting').position().top-100)
-				},200)
-			}
+			setTimeout(scrollToHashSection, 200)
 		} else {
 			$('.subjectiveScouting').hide()
 		}
 	}
 	applyTranslations()
+}
+
+// Open a team photo full screen. Bound per image as each one loads, rather than
+// to a selector up front -- the images are added asynchronously now, so a single
+// up-front binding would find nothing.
+function bindPhotoZoom(img){
+	img.click(function(){
+		var photo = $('#fullPhoto').attr('src',$(this).attr('src'))
+		var offset = parseFloat(getComputedStyle(document.documentElement).fontSize) * 2
+		var scrollTop = $(window).scrollTop()
+		var w, h
+		try {
+			// Try to get parent window dimensions if in iframe
+			if (window.self !== window.top) {
+				w = Math.min(window.innerWidth || document.documentElement.clientWidth, window.top.innerWidth)
+				h = Math.min(window.innerHeight || document.documentElement.clientHeight, window.top.innerHeight)
+			} else {
+				w = window.innerWidth
+				h = window.innerHeight
+			}
+		} catch(e) {
+			// Cross-origin iframe, use iframe dimensions
+			w = window.innerWidth || document.documentElement.clientWidth
+			h = window.innerHeight || document.documentElement.clientHeight
+		}
+		photo.css({
+			top: (scrollTop + offset) + 'px',
+			left: offset + 'px',
+			width: (w - offset * 2) + 'px',
+			height: (h - offset * 2) + 'px'
+		})
+		showLightBox(photo)
+	})
+}
+
+// Put a photo on the page only once it has actually loaded.
+function showTeamPhoto(container, src){
+	var holder = $(container).html("")
+	$('<img>')
+		.on('load', function(){ holder.append(this); bindPhotoZoom($(this)) })
+		.on('error', function(){ holder.html("") })
+		.attr('src', src)
 }
 
 function teamButtonClicked(){
