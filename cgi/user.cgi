@@ -17,19 +17,31 @@ if (open(my $fh, '<', '../local.conf')){
 	}
 	close $fh;
 }
-my $guest = $conf{GUEST_USER} || "";
-my $scout = $conf{SCOUTING_USER} || "";
-my $admin = $conf{ADMIN_USER} || "";
+# Each setting holds a space-separated list, so a role can have any number of
+# accounts -- "ADMIN_USER=\"admin taylor jane\"" gives all three admin rights.
+# Apache reads the same lists: "Require user" accepts several names.
+my @guest = split(" ", $conf{GUEST_USER} || "");
+my @scout = split(" ", $conf{SCOUTING_USER} || "");
+my @admin = split(" ", $conf{ADMIN_USER} || "");
+
+sub isOneOf {
+	my ($name, @names) = @_;
+	return 0 if ($name eq "");
+	for my $candidate (@names){
+		return 1 if ($name eq $candidate);
+	}
+	return 0;
+}
 
 my $role;
-if ($guest eq "" && $scout eq "" && $admin eq ""){
+if (!@guest && !@scout && !@admin){
 	# No accounts configured at all: the site is deliberately unprotected.
 	$role = "admin";
-} elsif ($admin ne "" && $user eq $admin){
+} elsif (isOneOf($user, @admin)){
 	$role = "admin";
-} elsif ($scout ne "" && $user eq $scout){
+} elsif (isOneOf($user, @scout)){
 	$role = "scout";
-} elsif ($guest ne "" && $user eq $guest){
+} elsif (isOneOf($user, @guest)){
 	$role = "guest";
 } elsif ($user eq ""){
 	# Admitted by ALLOW_LOCAL or ALLOW_IPS rather than a password. Those rules sit
@@ -37,7 +49,7 @@ if ($guest eq "" && $scout eq "" && $admin eq ""){
 	# that rather than show a UI narrower than the access.
 	$role = "admin";
 } else {
-	# Authenticated, but not one of the three configured names.
+	# Authenticated, but not one of the configured names.
 	$role = "guest";
 }
 
