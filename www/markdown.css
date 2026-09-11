@@ -1,13 +1,33 @@
 /* Rendered Markdown documents (instructions, etc.) shown standalone or inside a lightbox iframe.
    Presented as a surface card to match the rest of the app. */
-#md{max-width:46em;margin:1.5em auto;padding:1.5em 1.75em 2em;text-align:start;line-height:1.6;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
+#md{max-width:46em;margin:1.5em auto;padding:1.5em 1.75em 1.5em;text-align:start;line-height:1.6;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow)}
 /* Inside a lightbox iframe: drop the page background so only the #md card shows (no outer panel),
    and make the card itself the only scroll container — the iframe document must not scroll, or its
    own scrollbar floats at the iframe edge. */
 html.in-frame,html.in-frame body{background:transparent;height:100%;overflow:hidden}
 html.in-frame{padding:0}
 html.in-frame body{margin:0}
-html.in-frame #md{box-sizing:border-box;max-height:calc(100vh - 3em);overflow-y:auto;margin:1.5em auto}
+html.in-frame #md{box-sizing:border-box;margin:0;max-width:none;height:auto;max-height:100%;overflow-y:auto}
+
+/* "Explain it like I'm 5" switch, added by markdown.js when a document carries
+   both an .eli5Detailed and an .eli5Simple version of a section. */
+.eli5Toggle{display:flex;align-items:center;justify-content:flex-end;gap:.5em;cursor:pointer;font-size:.9em;margin:0;padding-inline-end:3.6em;flex:none}
+/* Heading and switch share one line. The row carries the heading's underline and
+   the clearance for the close button, so neither costs a row of its own. */
+.eli5Head{display:flex;align-items:baseline;justify-content:space-between;gap:1em;margin:0 0 .5em;padding-bottom:.25em;padding-inline-end:3.4em;border-bottom:1px solid var(--main-border-color)}
+.eli5Head .eli5Toggle{padding-inline-end:0;align-self:center}
+#md .eli5Head > h1,#md .eli5Head > h2,#md .eli5Head > h3,#md .eli5Head > h4{margin:0;padding-bottom:0;border-bottom:0;min-width:0}
+/* The switch becomes the card's first child, so the heading after it no longer
+   has its top margin zeroed by #md > :first-child. Zero it here instead, or the
+   switch's own row plus that margin push everything down for nothing. */
+#md .eli5Toggle + h1,#md .eli5Toggle + h2,#md .eli5Toggle + h3,#md .eli5Toggle + h4{margin-top:0}
+.eli5Toggle .switch-label{text-transform:uppercase;letter-spacing:.02em;opacity:.85}
+/* flow-root, not block: these sit beside the floated figure, and a plain block
+   would stretch under it and hide the list bullets behind the image. */
+#md .eli5Detailed{display:flow-root}
+#md .eli5Simple{display:none}
+#md.eli5On .eli5Detailed{display:none}
+#md.eli5On .eli5Simple{display:flow-root}
 
 /* Headings */
 #md h1,#md h2,#md h3,#md h4,#md h5,#md h6{line-height:1.25;font-weight:700;margin:1.4em 0 .5em;text-align:start}
@@ -38,6 +58,13 @@ html.in-frame #md{box-sizing:border-box;max-height:calc(100vh - 3em);overflow-y:
 #md blockquote{margin:.8em 0;padding:.3em 1em;border-inline-start:.25em solid var(--accent);background:var(--lowlight-bg-color);border-radius:0 var(--radius) var(--radius) 0;color:var(--main-fg-color)}
 #md hr{border:0;border-top:1px solid var(--main-border-color);margin:1.5em 0}
 #md img{max-width:100%;height:auto;border-radius:var(--radius)}
+/* A lone illustration floats so the text runs alongside it rather than under
+   it. At narrow widths it goes back to its own row. */
+@media (min-width:38em){
+	#md p > img:only-child{float:inline-start;max-width:min(42%,18em);margin:.2em 1.25em .4em 0}
+	#md p:has(> img:only-child){margin:0}
+}
+#md::after{content:"";display:block;clear:both}
 
 /* Tables */
 #md table{border-collapse:collapse;margin:1em 0}

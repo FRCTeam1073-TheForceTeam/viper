@@ -4,14 +4,14 @@
 <title data-i18n=stats_title></title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="UTF-8">
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href="/main.css?v=menu1">
 <link rel=stylesheet href=/local.css>
-<link rel=stylesheet href=/stats.css>
+<link rel=stylesheet href="/stats.css?v=menu1">
 <script src=/jquery.min.js></script>
-<script src=/main.js></script>
-<script src=/event-url.js></script>
+<script src="/main.js?v=menu1"></script>
+<script src="/event-url.js?v=menu1"></script>
 <script src=/stats-config.js></script>
-<script src=/stats.js></script>
+<script src="/stats.js?v=menu1"></script>
 <script src=/local.js></script>
 <script src=/chart.min.js></script>
 <script src=/chartjs-boxplot.min.js></script>
@@ -24,24 +24,30 @@
 <body>
 <h1 data-i18n=stats_title></h1>
 <button class=showInstructions data-i18n=instructions></button>
-<button id=markPicked data-i18n=mark_picked_button></button>
+<button id=markPicked data-role=admin data-i18n=mark_picked_button></button>
+<button id=undoPick data-role=admin data-i18n=undo_pick_button disabled></button>
+<button id=clearPicks data-role=admin data-i18n=clear_picks_button></button>
 <button id=viewTeam data-i18n=view_team_button></button>
 <button id=sortBy><span data-i18n=sort_label></span> <span class=name data-i18n=score></span></button>
 <select id=displayType><option value=graph selected data-i18n=display_graphs></option><option value=table data-i18n=display_table></option></select>
 <nobr id=startingControls><span data-i18n=starting_match_label></span> <select id=startingMatch></select></nobr>
-<nobr id=reviewControls><label><input type=checkbox id=includeReviewRequested> Include data under review</label></nobr>
-<table id=statsTable></table>
+<div id=statsToggles>
+	<label id=reviewControls class=statToggle><span class=switch-label data-i18n=include_review_label></span> <span class=switch><input type=checkbox id=includeReviewRequested><span class=slider></span></span></label>
+	<label id=ignorePicksControl class=statToggle data-role=admin><span class=switch-label data-i18n=ignore_picks_label></span> <span class=switch><input type=checkbox id=ignorePicks><span class=slider></span></span></label>
+</div>
+<div id=statsTableWrap><table id=statsTable></table></div>
 <div id=statGraphs></div>
 <p data-include-practice=stats_include_practice data-exclude-practice=stats_exclude_practice></p>
-<div id=teamStats class=lightBoxFullContent style=display:none><iframe></iframe></div>
-<div id=teamPicker class=lightBoxCenterContent style=display:none></div>
-<div id=sortChooser class=lightBoxFullContent style=display:none></div>
-<div id=clickActions class=lightBoxCenterContent style=display:none></div>
-<iframe id=instructions class=lightBoxFullContent src=/stats-instructions.html></iframe>
+<p id=pickListError class=pickListError data-i18n=pick_list_save_failed style=display:none></p>
 <div id=teamlists>
 	<h4 data-i18n=pick_list_heading></h4>
 	<ol class="picklist-body sortable-list" id=picklist></ol>
 	<h4 class=picklist-body data-i18n=no_pick_heading></h4>
 	<ol class="picklist-body sortable-list" id=donotpicklist></ol>
 </div>
+<div id=teamStats class=lightBoxFullContent style=display:none><iframe></iframe></div>
+<div id=teamPicker class=lightBoxCenterContent style=display:none></div>
+<div id=sortChooser class=lightBoxFullContent style=display:none></div>
+<div id=clickActions class=lightBoxCenterContent style=display:none></div>
+<iframe id=instructions class="lightBoxFullContent lightBoxFrame" src=/stats-instructions.html></iframe>
 </body></html>

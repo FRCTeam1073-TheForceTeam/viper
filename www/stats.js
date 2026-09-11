@@ -2,13 +2,13 @@
 
 addI18n({
 	mark_picked_header:{
-		en:'Change Whether Team Has Been Picked',
-		fr:'Modifier si l\'équipe a été sélectionnée',
-		zh_tw:'更改是否已選定球隊',
-		pt:'Alterar se a equipe foi escolhida',
-		he:'שנה אם צוות נבחר',
-		tr:'Takımın Seçilip Seçilmediğini Değiştir',
-		es:'Cambiar si el equipo ha sido elegido',
+		en:'Mark team as picked',
+		he:'סמן את הצוות כנבחר',
+		pt:'Marcar time como escolhido',
+		tr:'Takımı seçilmiş olarak işaretle',
+		zh_tw:'將團隊標記為已選',
+		fr:'Marquer l\'équipe comme sélectionnée',
+		es:'Marcar equipo como seleccionado',
 	},
 	view_team_header:{
 		en:'Show Team Stats',
@@ -36,6 +36,60 @@ addI18n({
 		he:'אין בחירה',
 		tr:'Seçim Yok',
 		es:'Sin selección',
+	},
+	include_review_label:{
+		en:'Include data under review',
+		tr:'Incelemedeki verileri dahil et',
+		pt:'Incluir dados em revisao',
+		zh_tw:'包含待審核資料',
+		fr:'Inclure les donnees en cours de revision',
+		he:'כלול נתונים בבדיקה',
+		es:'Incluir datos en revision',
+	},
+	ignore_picks_label:{
+		en:'Ignore picks',
+		tr:'Secimleri yoksay',
+		pt:'Ignorar escolhas',
+		zh_tw:'忽略已選隊伍',
+		fr:'Ignorer les choix',
+		he:'התעלם מהבחירות',
+		es:'Ignorar selecciones',
+	},
+	undo_pick_button:{
+		en:'Undo',
+		tr:'Geri al',
+		pt:'Anular',
+		zh_tw:'復原',
+		fr:'Annuler',
+		he:'בטל',
+		es:'Deshacer',
+	},
+	clear_picks_button:{
+		en:'Clear pick list',
+		tr:'Secim listesini temizle',
+		pt:'Limpar a lista de escolhas',
+		zh_tw:'清除選隊名單',
+		fr:'Effacer la liste de choix',
+		he:'נקה את רשימת הבחירות',
+		es:'Borrar la lista de selecciones',
+	},
+	clear_picks_confirm:{
+		en:'Clear the saved pick list for this event? This cannot be undone.',
+		tr:'Bu etkinlik icin kaydedilen secim listesi temizlensin mi? Bu islem geri alinamaz.',
+		pt:'Limpar a lista de escolhas guardada para este evento? Isto nao pode ser anulado.',
+		zh_tw:'要清除此賽事已儲存的選隊名單嗎？此操作無法復原。',
+		fr:'Effacer la liste de choix enregistree pour cet evenement ? Cette action est irreversible.',
+		he:'לנקות את רשימת הבחירות השמורה לאירוע זה? לא ניתן לבטל פעולה זו.',
+		es:'Borrar la lista de selecciones guardada para este evento? Esto no se puede deshacer.',
+	},
+	pick_list_save_failed:{
+		en:'The pick list could not be saved. Your change is shown here but is not stored yet.',
+		tr:'Secim listesi kaydedilemedi. Degisikliginiz burada gorunuyor ancak henuz saklanmadi.',
+		pt:'Nao foi possivel guardar a lista de escolhas. A sua alteracao aparece aqui mas ainda nao foi guardada.',
+		zh_tw:'無法儲存選隊名單。您的變更顯示於此，但尚未儲存。',
+		fr:'La liste de choix n’a pas pu etre enregistree. Votre modification s’affiche ici mais n’est pas encore stockee.',
+		he:'לא ניתן היה לשמור את רשימת הבחירות. השינוי מוצג כאן אך טרם נשמר.',
+		es:'No se pudo guardar la lista de selecciones. Tu cambio se muestra aqui pero aun no esta guardado.',
 	},
 	mark_picked_label:{
 		en:'Mark picked:',
@@ -188,9 +242,11 @@ $(document).ready(function(){
 		})
 		teamList = Object.keys(eventStatsByTeam)
 		teamList.forEach(x=>teamsPicked[x]=false)
-		parseHash()
-		showStats()
-		applyTranslations()
+		promisePickList().then(saved => {
+			applyPickList(saved)
+			showStats()
+			applyTranslations()
+		})
 	}).catch(e=>{
 		console.error(e)
 	})
@@ -203,12 +259,24 @@ $(document).ready(function(){
 		showLightBox($('#instructions'))
 		return false
 	})
-	sortable('#picklist', {
-		acceptFrom: '#picklist, #donotpicklist'
-	})[0].addEventListener('sortupdate', pickListReordered)
-	sortable('#donotpicklist', {
-		acceptFrom: '#picklist, #donotpicklist'
-	})[0].addEventListener('sortupdate', pickListReordered)
+	// Reordering writes to the saved list, so only an admin gets drag handles.
+	promiseUser().then(function(){
+		if (!isAdmin()) return
+		;['#picklist','#donotpicklist'].forEach(function(list){
+			var el = sortable(list, {acceptFrom: '#picklist, #donotpicklist'})[0]
+			// Snapshot before the drag, since by sortupdate the order has changed.
+			el.addEventListener('sortstart', pushPickHistory)
+			el.addEventListener('sortupdate', pickListReordered)
+		})
+	})
+	$('#ignorePicks').prop('checked', ignoringPicks()).change(function(){
+		setIgnoringPicks(this.checked)
+		updateTeamListsVisibility()
+		showStats()
+	})
+	$('#clearPicks').click(clearPickList)
+	$('#undoPick').click(undoPick)
+	updateUndoPickButton()
 	$('#teamlists h4').click(function(){
 		$('.picklist-body').toggle()
 	})
@@ -222,29 +290,128 @@ $(document).ready(function(){
 	})
 })
 
-function parseHash(){
-	var pl=(location.hash.match(/^\#(?:.*\&)?pl\=([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1].split(',').map(x=>parseInt(x)),
-	dnp=(location.hash.match(/^\#(?:.*\&)?dnp\=([0-9]+(?:,[0-9]+)*)(?:\&.*)?$/)||["",""])[1].split(',').map(x=>parseInt(x))
+// The pick list is stored per event on the server rather than in the URL, so it
+// survives a reload, a duplicated tab, and a different computer. The server copy
+// is the only source: pl= / dnp= in a link are ignored.
+function applyPickList(saved){
 	Object.keys(teamsPicked).forEach(x=>teamsPicked[x]=false)
 	$('#teamlists li').remove()
-	pl.forEach(x=>setTeamPicked(0,x))
-	dnp.forEach(x=>setTeamPicked(0,x,1))
+	;((saved&&saved.pl)||[]).forEach(x=>setTeamPicked(0,parseInt(x)))
+	;((saved&&saved.dnp)||[]).forEach(x=>setTeamPicked(0,parseInt(x),1))
+	// Applying an empty list makes no setTeamPicked calls, so the panel would
+	// otherwise stay on screen showing nothing after a clear or an undo.
+	updateTeamListsVisibility()
+}
+
+// The floating pick-list panel is only worth screen space when it has teams in
+// it and picks are not being ignored.
+function updateTeamListsVisibility(){
+	$('#teamlists').toggle(!ignoringPicks() && Object.values(teamsPicked).filter(t=>t).length>0)
+}
+
+function promisePickList(){
+	return fetch(`/data/${eventId}.picklist.json`)
+		.then(response => response.ok ? response.json() : null)
+		.catch(() => null)
+}
+
+// "Ignore picks" hides the pick styling and the pick-first sort without touching
+// the saved list, so the stats read normally once alliance selection is over.
+// It is a per-viewer view setting, not shared state, so it lives in localStorage.
+var ignorePicksKey = 'stats_ignore_picks'
+
+function ignoringPicks(){
+	try { return localStorage.getItem(ignorePicksKey) == '1' } catch(e) { return false }
+}
+
+function setIgnoringPicks(on){
+	try { localStorage.setItem(ignorePicksKey, on ? '1' : '0') } catch(e) { /* private window */ }
+}
+
+// True only when a team is picked AND we are not ignoring picks -- every place
+// that styles or sorts by pick status goes through this.
+function showAsPicked(team){
+	return !ignoringPicks() && !!teamsPicked[team]
+}
+
+// Undo keeps whole snapshots of the list rather than individual actions, so one
+// mechanism covers marking a team, dragging the order about, and clearing the
+// lot -- and undoing a clear brings everything back, not just the last team.
+var pickHistory = []
+var MAX_PICK_HISTORY = 50
+
+function pushPickHistory(){
+	pickHistory.push(currentPickList())
+	if (pickHistory.length > MAX_PICK_HISTORY) pickHistory.shift()
+	updateUndoPickButton()
+}
+
+function samePickList(a, b){
+	return a && b && a.pl.join(',') == b.pl.join(',') && a.dnp.join(',') == b.dnp.join(',')
+}
+
+function updateUndoPickButton(){
+	$('#undoPick').prop('disabled', !pickHistory.length)
+}
+
+function undoPick(){
+	if (!isAdmin()) return
+	var previous = pickHistory.pop()
+	if (!previous) return
+	applyPickList(previous)
+	savePickList()
+	updateUndoPickButton()
+	showStats()
+}
+
+// A drag that ends where it started is not worth an undo step.
+function dropRedundantHistory(){
+	if (pickHistory.length && samePickList(pickHistory[pickHistory.length-1], currentPickList())){
+		pickHistory.pop()
+		updateUndoPickButton()
+	}
+}
+
+function clearPickList(){
+	if (!isAdmin()) return
+	if (!confirm(translate('clear_picks_confirm'))) return
+	pushPickHistory()
+	applyPickList(null)
+	savePickList()
+	showStats()
+}
+
+function currentPickList(){
+	return {
+		pl: $.map($('#picklist li'), x=>parseInt($(x).text())),
+		dnp: $.map($('#donotpicklist li'), x=>parseInt($(x).text()))
+	}
 }
 
 var lastHash = ""
 
+// Writing goes through /admin/, which Apache refuses to anyone but an
+// administrator, so a scout's browser simply never gets here.
+function savePickList(){
+	if (!isAdmin()) return
+	var body = new URLSearchParams()
+	body.set('event', eventId)
+	body.set('picklist', JSON.stringify(currentPickList()))
+	fetch('/admin/picklist.cgi', {method:'POST', body:body})
+		.then(response => {
+			if (!response.ok) throw new Error(response.status)
+			$('#pickListError').hide()
+		})
+		.catch(() => $('#pickListError').show())
+}
+
 function setHash(){
-	var pl = $.map($('#picklist li'),x=>$(x).text()).join(","),
-	dnp = $.map($('#donotpicklist li'),x=>$(x).text()).join(",")
-	if (pl) pl = `&pl=${pl}`
-	if (dnp) dnp = `&dnp=${dnp}`
-	lastHash=`#event=${eventId}${pl}${dnp}`
+	lastHash=`#event=${eventId}`
 	location.hash = lastHash
 }
 
 $(window).on('hashchange', function(){
 	if(location.hash != lastHash){
-		parseHash()
 		showStats()
 		lastHash=location.hash
 	}
@@ -264,7 +431,7 @@ function showStats(){
 		teamsPicked[t] = teamsPicked[t]||false
 	}
 	teamList.sort((a,b)=>{
-		if (teamsPicked[a] != teamsPicked[b]) return teamsPicked[b]?-1:1
+		if (showAsPicked(a) != showAsPicked(b)) return showAsPicked(b)?-1:1
 		if (statInfo[sortStat]?.good??'' == 'low') return getTeamValue(sortStat,a)-getTeamValue(sortStat,b)
 		return getTeamValue(sortStat,b)-getTeamValue(sortStat,a)
 	})
@@ -404,7 +571,7 @@ function showStats(){
 				hr.append($('<th class=borderless>').append($('<h4>').text(section)))
 				for (var j=0; j<teamList.length; j++){
 					var t = teamList[j],
-					picked = teamsPicked[t]
+					picked = showAsPicked(t)
 					hr.append($('<th class=team>').text(t).attr('data-tooltip',getTeamInfo(t)).click(showStatClickMenu).toggleClass('picked',picked))
 				}
 				table.append(hr)
@@ -418,14 +585,14 @@ function showStats(){
 					worst = (highGood?1:-1)*99999999
 					for (var k=0; k<teamList.length; k++){
 						var t = teamList[k],
-						picked = teamsPicked[t],
+						picked = showAsPicked(t),
 						value = getTeamValue(field, t)
 						if (!picked && ((highGood && value > best) || (!highGood && value < best))) best = value
 						if (!picked && ((highGood && value < worst) || (!highGood && value > worst))) worst = value
 					}
 					for (var k=0; k<teamList.length; k++){
 						var t = teamList[k]
-						picked = teamsPicked[t],
+						picked = showAsPicked(t),
 						value = getTeamValue(field, t)
 						var td = $('<td>').toggleClass('picked',picked).attr('data-team',t).attr('data-tooltip',t+" "+getTeamInfo(t)).click(showStatClickMenu).text(Math.round(value))
 						if (!picked && best != worst){
@@ -462,21 +629,34 @@ function showStatClickMenu(e, team, fields){
 		fields = th.attr('data-field')
 	}
 	if (!team && !fields)return
-	var ca = $('#clickActions').html("")
+	var ca = $('#clickActions').html(""),
+	actions = $('<div class=clickActionList>')
 	if (team){
+		// Team number as the heading, the way the other lightboxes lead with one.
+		ca.append($('<h2>').text(team))
 		var info = getTeamInfo(team)
-		if(info)ca.append($('<p>').text(info))
-		ca.append($('<p>').append("<span data-i18n=mark_picked_label></span> ").append($('<button>').text(team).click(setTeamPicked)))
-		ca.append($('<p>').append("<span data-i18n=view_team_label></span> ").append($('<button>').text(team).click(showTeamStats)))
+		if (info) ca.append($('<p class=clickActionInfo>').text(info))
+		if (isAdmin()) actions.append(clickActionRow('mark_picked_label', team, setTeamPicked))
+		actions.append(clickActionRow('view_team_label', team, showTeamStats))
 	}
 	if (fields){
 		if (typeof fields === 'string') fields = [fields]
 		fields.forEach(field=>{
-			ca.append($('<p>').append("<span data-i18n=sort_by_label></span> ").append($('<button>').text(translate(field)).attr('data-field',field).click(reSort)))
+			actions.append(clickActionRow('sort_by_label', translate(field), reSort, field))
 		})
 	}
+	ca.append(actions)
 	applyTranslations(ca)
 	showLightBox(ca)
+}
+
+// One label-and-button row of the click menu, so every row lines up the same way.
+function clickActionRow(labelKey, text, handler, field){
+	var button = $('<button>').text(text).click(handler)
+	if (field) button.attr('data-field', field)
+	return $('<div class=clickActionRow>')
+		.append($('<span>').attr('data-i18n', labelKey))
+		.append(button)
 }
 
 var hiddenSortStatsKey=`${eventYear}HiddenSortStats`
@@ -547,7 +727,7 @@ function showTeamPicker(callback, heading){
 	teamList.sort((a,b)=>{return a-b})
 	for (var i=0; i<teamList.length; i++){
 		var team = teamList[i]
-		picker.append($('<button class=team>').text(team).addClass(teamsPicked[team]?"picked":"not-picked").click(callback))
+		picker.append($('<button class=team>').text(team).addClass(showAsPicked(team)?"picked":"not-picked").click(callback))
 	}
 	applyTranslations(picker)
 	showLightBox(picker)
@@ -557,6 +737,9 @@ function setTeamPicked(e, team, dnp){
 	var y = window.scrollY
 	if (!team) team = parseInt($(this).text())
 	if (!teamsPicked.hasOwnProperty(team)) return
+	// Only a real user action is undoable; e is absent when the list is being
+	// rebuilt from saved data or from an undo.
+	if (e) pushPickHistory()
 	teamsPicked[team] = !teamsPicked[team]
 	if(teamsPicked[team]){
 		var list = (dnp || getLocalTeam() == team)?'#donotpicklist':'#picklist'
@@ -566,9 +749,9 @@ function setTeamPicked(e, team, dnp){
 		$(`#pl${team}`).remove()
 	}
 	setDnpStartNumber()
-	$('#teamlists').toggle(Object.values(teamsPicked).filter(t=>t).length>0)
+	updateTeamListsVisibility()
 	if (e){
-		setHash()
+		savePickList()
 		closeLightBox()
 		showStats()
 		setTimeout(function(){
@@ -578,8 +761,9 @@ function setTeamPicked(e, team, dnp){
 }
 
 function pickListReordered(){
-	setHash()
 	setDnpStartNumber()
+	dropRedundantHistory()
+	savePickList()
 }
 
 function setDnpStartNumber(){
@@ -596,7 +780,7 @@ function bgArr(color){
 	var arr = [],
 	picked = 0
 	for (var i=0; i<teamList.length; i++){
-		if (teamsPicked[teamList[i]]) picked++
+		if (showAsPicked(teamList[i])) picked++
 	}
 	for (var i=0; i<teamList.length; i++){
 		arr.push(i<teamList.length-picked?color:darkenColor(color))

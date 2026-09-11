@@ -681,7 +681,10 @@ function getLocalTeam(){
 	return localStorage.getItem('my-team') || window.ourTeam || 0
 }
 
+var openLightBoxContent = null
+
 function closeLightBox(){
+	openLightBoxContent = null
 	$('#lightBoxBG,#lightBoxClose,.lightBoxCenterContent,.lightBoxFullContent').hide()
 	$('html').removeClass('lightbox-open')
 	return false
@@ -694,10 +697,34 @@ function showLightBox(content){
 	if ($(content).attr('id')!=='mainMenu' && !$(content).hasClass('instructions')) $('#lightBoxClose').css('display','flex')
 	applyTranslations()
 	content.show()
+	openLightBoxContent = content
+	positionLightBoxClose()
 	// Lock background page scroll so only the lightbox content (and its own scrollbar) shows
 	$('html').addClass('lightbox-open')
 	return false
 }
+
+// Sit the close button on the top-right corner of the panel that is open, rather
+// than in the corner of the window. Panels differ in size -- a centred picker, a
+// narrower instruction card -- so the corner is measured, not assumed.
+function positionLightBoxClose(){
+	var close = $('#lightBoxClose')
+	if (!openLightBoxContent || !close.is(':visible')) return
+	var el = openLightBoxContent[0]
+	if (!el) return
+	var box = el.getBoundingClientRect()
+	if (!box.width && !box.height) return
+	// One inset for both edges, in em of the root so it tracks the app's 2vmin
+	// sizing rather than drifting on a bigger screen.
+	var inset = parseFloat(window.getComputedStyle(document.documentElement).fontSize) * 0.4
+	close.css({
+		top: (box.top + inset) + 'px',
+		left: (box.right - close.outerWidth() - inset) + 'px',
+		right: 'auto'
+	})
+}
+
+$(window).on('resize', positionLightBoxClose)
 
 function toggleFullScreen() {
 	if (!document.fullscreenElement) document.documentElement.requestFullscreen()

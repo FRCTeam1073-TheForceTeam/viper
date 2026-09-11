@@ -71,12 +71,29 @@ sub notfound {
 	exit 0;
 }
 
+# Is the `src` revision tool on PATH? Walks PATH in pure Perl rather than
+# shelling out: on Windows every backtick spawns a console window, which flashed
+# up on each data write even though the answer is usually no. On a Linux host
+# there is no window, but this still avoids a subprocess per save.
+sub haveSrc {
+	my $windows = ($^O =~ /MSWin32|cygwin|msys/i);
+	my $sep = $windows ? ';' : ':';
+	my @exts = $windows ? ('.exe', '.bat', '.cmd', '') : ('');
+	for my $dir (split /\Q$sep\E/, ($ENV{PATH} || '')){
+		next if ($dir eq '');
+		for my $ext (@exts){
+			return 1 if (-f "$dir/src$ext");
+		}
+	}
+	return 0;
+}
+
 sub commitDataFile {
 	my ($self, $file, $message) = @_;
 	$file =~ /((?:.*\/)?data\/)([^\/]+)/ or die "No data directory found in $file";
 	my $datadir = $1;
 	$file = $2;
-	return if (!`sh -c 'command -v src'`);
+	return if (!haveSrc());
 	my $cwd = getcwd();
 	chdir "data/" if (-d "data/");
 	chdir "../data/" if (-d "../data/");
