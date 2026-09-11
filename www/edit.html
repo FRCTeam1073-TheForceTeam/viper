@@ -16,7 +16,7 @@
 <script src=/edit.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
-<body>
+<body data-require-role=admin>
 <div id=main>
 <form id=saver method=POST action=/admin/edit.cgi>
 	<input id=file type=text readonly name=file pattern="^20[0-9]{2}[a-zA-Z0-9\-]+\.(scouting|schedule|event|alliances)\.csv$" required placeholder=20xxEvent.type.csv>

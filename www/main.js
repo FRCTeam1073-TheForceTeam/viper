@@ -5,6 +5,33 @@ onApplyTranslation=[],
 translationContext={}
 
 addI18n({
+	role_required_heading:{
+		en:'Administrators only',
+		tr:'Yalnizca yoneticiler',
+		pt:'Apenas administradores',
+		zh_tw:'僅限管理員',
+		fr:'Administrateurs uniquement',
+		he:'למנהלים בלבד',
+		es:'Solo administradores',
+	},
+	role_required_message:{
+		en:'This page changes event data, so it needs an administrator account. You are signed in as _USERNAME_.',
+		tr:'Bu sayfa etkinlik verilerini degistirir, bu nedenle bir yonetici hesabi gerekir. _USERNAME_ olarak oturum actiniz.',
+		pt:'Esta pagina altera dados do evento, portanto requer uma conta de administrador. Voce esta conectado como _USERNAME_.',
+		zh_tw:'此頁面會變更賽事資料，需要管理員帳號。您目前的登入身分是 _USERNAME_。',
+		fr:'Cette page modifie les donnees de l’evenement et requiert donc un compte administrateur. Vous etes connecte en tant que _USERNAME_.',
+		he:'דף זה משנה נתוני אירוע ולכן נדרש חשבון מנהל. אתה מחובר כ-_USERNAME_.',
+		es:'Esta pagina modifica datos del evento, por lo que requiere una cuenta de administrador. Has iniciado sesion como _USERNAME_.',
+	},
+	role_required_home:{
+		en:'Go to the home page',
+		tr:'Ana sayfaya git',
+		pt:'Ir para a pagina inicial',
+		zh_tw:'前往首頁',
+		fr:'Aller a la page d’accueil',
+		he:'עבור לדף הבית',
+		es:'Ir a la pagina de inicio',
+	},
 	text_direction:{
 		en:'ltr',
 		he:'rtl',
@@ -474,6 +501,10 @@ $(document).ready(function(){
 	})).toggleClass('nav-hidden', window.innerWidth / window.innerHeight < 2 / 3)
 	$('*').each(function(){void this.offsetHeight}).removeClass('no-transition')
 
+	promiseUser().then(function(){
+		if (applyPageRoleGuard()) applyRoleGates()
+	})
+
 	if (!inIframe()){
 		var hamburger = $('<div id=hamburger class=show-only-when-connected>☰</div>'),
 		fullscreen = $('<div id=fullscreen>⛶</div>').click(toggleFullScreen),
@@ -492,9 +523,10 @@ $(document).ready(function(){
 		function populateMainMenu(){
 			Promise.all([
 				fetch('/main-menu.html').then(response=>response.text()).catch(()=>''),
-				fetch('/user.cgi').then(response=>response.text()).catch(()=>'')
+				promiseUser()
 			]).then(values =>{
-				var [menuHtml, userName] = values,
+				var [menuHtml, user] = values,
+				userName = user.user,
 				lastEventId=localStorage.getItem('last_event_id'),
 				eId = window.eventId||lastEventId||"",
 				eName = window.eventName||(eId==lastEventId?localStorage.getItem('last_event_name'):"")||"",
@@ -528,7 +560,8 @@ $(document).ready(function(){
 					req.send()
 					return false
 				}).text(`Logout ${userName}`).closest('li').toggle(userName!='-')
-				mainMenu.find('#site-configuration-link').closest('li').toggle(userName=='admin')
+				mainMenu.find('#site-configuration-link').closest('li').toggle(isAdmin())
+				applyRoleGates(mainMenu)
 				$('#error-logs-link').click(function(){
 					var p=$('#show-errors')
 					if(!p.length){
@@ -582,6 +615,62 @@ $(document).ready(function(){
 	if (site) t += ` ${site}`
 	document.title = t
 })
+
+// ===== Signed-in user and role =====
+// /user.cgi reports the REMOTE_USER Apache authenticated and which of the three
+// configured roles it maps to (admin / scout / guest). Apache is the enforcement
+// point -- these helpers only let the UI agree with it instead of offering
+// buttons the server will refuse.
+var promiseUserCache
+function promiseUser(){
+	if (!promiseUserCache) promiseUserCache = fetch('/user.cgi')
+		.then(response => response.json())
+		.catch(() => ({user:'-', role:'guest'}))
+		.then(u => {
+			window.currentUser = u.user || '-'
+			window.currentRole = u.role || 'guest'
+			return u
+		})
+	return promiseUserCache
+}
+
+function isAdmin(){ return window.currentRole == 'admin' }
+function isScouter(){ return window.currentRole == 'admin' || window.currentRole == 'scout' }
+
+// Declarative gating: data-role="admin" hides the element from everyone but an
+// admin, data-role="scout" from everyone below a scouter. main.css hides
+// [data-role] outright, so markup starts hidden and there is no flash of links
+// the viewer may not use. Clearing the attribute is what reveals an element --
+// rather than forcing a display value, which would fight the initHid/depend*
+// toggles these same elements already carry. An element that stays gated keeps
+// its attribute, and the !important rule outlives any later .show() on it.
+// Re-run after rendering anything that adds gated markup.
+function applyRoleGates(node){
+	$(node||document).find('[data-role]').each(function(){
+		var need = this.getAttribute('data-role')
+		if (need == 'admin' ? isAdmin() : isScouter()) this.removeAttribute('data-role')
+	})
+}
+
+// A page whose <body> carries data-require-role is only usable by that role.
+// The writes behind these pages all go through /admin/ CGI, which Apache refuses
+// anyway -- this is so a scouter who follows or types the URL gets a clear
+// message instead of filling in a form that dies with a raw 401 on save.
+function applyPageRoleGuard(){
+	var need = document.body.getAttribute('data-require-role')
+	if (!need) return true
+	if (need == 'admin' ? isAdmin() : isScouter()) return true
+	var denied = $('<div id=roleDenied>')
+		.append($('<h1>').attr('data-i18n','role_required_heading'))
+		.append($('<p>').attr('data-i18n','role_required_message'))
+		.append($('<p>').append($('<a href=/>').attr('data-i18n','role_required_home')))
+	$('body').children().not('#appBar,#mainMenu').remove()
+	$('body').append(denied)
+	addTranslationContext({username:window.currentUser=='-'?'?':window.currentUser})
+	applyTranslations()
+	document.title = translate('role_required_heading')
+	return false
+}
 
 function showMainMenuUploads(){
 	$('#hamburger').toggleClass("hasUploads", hasUploads())

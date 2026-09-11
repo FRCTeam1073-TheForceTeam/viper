@@ -109,6 +109,15 @@ addI18n({
 		he:'נְבוּאָה:',
 		es:'Predicción:',
 	},
+	official_score_label:{
+		en:'Official score',
+		tr:'Resmi skor',
+		pt:'Pontuação oficial',
+		zh_tw:'官方分數',
+		fr:'Score officiel',
+		he:'ניקוד רשמי',
+		es:'Puntuación oficial',
+	},
 	upper_bracket_label:{
 		en:'Upper Bracket',
 		tr:'Üst Grup',
@@ -133,12 +142,22 @@ var fourTeam = false
 var dataLevel = ""
 var bracketMatchNumMap = {}
 var bracketSlotInfoMap = {}
+var bracketMatchupMap = {}
+var officialScoreMap = {}
+// Upper bound when walking a series, so a malformed schedule can't spin.
+var MAX_SERIES_MATCHES = 16
+// How far a roster may shrink before it is allowed to clip instead.
+var MIN_ROSTER_SCALE = 0.6
 
-function allianceDisplay(num, oppNum, showButton, column, teamColor, placeholder){
+function allianceDisplay(num, oppNum, showButton, column, teamColor, placeholder, mid){
 	if (num == 0) return `<div class="${teamColor}TeamBG matchup placeholder">${placeholder||'?'}</div>`
 	var a = eventAlliances[num-1],
 	decided = /^[01]$/.test(a[column]),
-	winClass = a[column]?"winner":"",
+	// Official scores settle the cell when they can. The recorded column is the
+	// fallback, and "0" there means this alliance lost — a truthy string, so
+	// compare it rather than testing truthiness.
+	cellWinner = officialCellWinner(mid),
+	winClass = (cellWinner ? cellWinner==num : a[column]=="1")?"winner":"",
 	c = a['Captain'],
 	p1 = a['First Pick'],
 	p2 = a['Second Pick'],
@@ -146,11 +165,134 @@ function allianceDisplay(num, oppNum, showButton, column, teamColor, placeholder
 	roster = b ? `${c}, ${p1}, ${p2}, ${b}` : `${c}, ${p1}, ${p2}`,
 	predictorLink = getPredictorLink(num,oppNum,teamColor),
 	score = getPrediction(num),
-	predBox = decided ? "" : (predictorLink
-		? `<a class=predBox href="${predictorLink}">${score}</a>`
-		: `<span class=predBox>${score}</span>`)
+	official = officialScores(mid, num),
+	predBox = official.length
+		? `<span class="predBox officialScore${official.length>1?' series':''}" title="${translate('official_score_label')}">${official.map(function(s){
+			return `<span class="seriesScore${s.won?' seriesWin':''}">${s.points}</span>`
+		}).join('<span class=seriesSep>/</span>')}</span>`
+		: (decided ? "" : (predictorLink
+			? `<a class=predBox href="${predictorLink}">${score}</a>`
+			: `<span class=predBox>${score}</span>`))
 	// View-only: never add clickable class or data attributes
 	return `<div class="${teamColor}TeamBG matchup ${winClass}" data-alliance-badge="A${num}"><div class=matchupMain><span class=roster>${roster}</span></div>${predBox}</div>`
+}
+
+// Official scores posted by the FIRST API for one alliance in one bracket cell,
+// as {points, won} per match played so far. A series cell (finals) returns one
+// entry per match, however many were needed to settle it.
+function officialScores(mid, num){
+	return (officialScoreMap[mid]||{})[num] || []
+}
+
+// Who won a bracket cell according to the official scores, or 0 while it is
+// undecided. A series needs a majority, so an in-progress finals doesn't crown
+// whoever happens to be ahead.
+function officialCellWinner(mid){
+	var cell = bracketMatchupMap[mid],
+	scores = officialScoreMap[mid]
+	if (!cell || !scores) return 0
+	var wins = cell.pair.map(function(num){
+		return (scores[num]||[]).filter(function(s){ return s.won }).length
+	})
+	if (wins[0] == wins[1]) return 0
+	var top = wins[0] > wins[1] ? 0 : 1
+	return wins[top] >= cell.winsNeeded ? cell.pair[top] : 0
+}
+
+function allianceTeams(num){
+	var a = eventAlliances[num-1]
+	if (!a) return []
+	return ['Captain','First Pick','Second Pick','Backup'].map(function(k){ return a[k] })
+		.filter(function(t){ return t !== undefined && t !== null && t !== "" })
+		.map(function(t){ return ""+t })
+}
+
+// Which alliance fielded these three teams? Two of three is enough so a match
+// played with a backup robot still resolves.
+function allianceForTeams(teams){
+	var best = 0, bestOverlap = 0
+	for (var i=1; i<=eventAlliances.length; i++){
+		var roster = allianceTeams(i),
+		overlap = teams.filter(function(t){ return roster.indexOf(t) >= 0 }).length
+		if (overlap > bestOverlap){ bestOverlap = overlap; best = i }
+	}
+	return bestOverlap >= 2 ? best : 0
+}
+
+function matchTotalPoints(score){
+	var totals = {}
+	;(score.alliances||[]).forEach(function(alliance){
+		totals[(alliance.alliance||"").toLowerCase()] = alliance.totalPoints
+	})
+	return totals
+}
+
+// Map each bracket cell onto the played matches that filled it, so the cards can
+// show real FIRST API scores instead of predictions. Playoff matches are named
+// <round abbreviation><ordinal>, numbered exactly the way showRoundSchedule
+// numbers them, so the cell -> match mapping is positional, not guesswork.
+function computeOfficialScores(){
+	officialScoreMap = {}
+	if (!window.eventMatches || !window.eventScores || !eventAlliances || !eventAlliances.length) return
+	var matchesById = {}
+	eventMatches.forEach(function(match){ matchesById[match.Match] = match })
+	Object.keys(bracketMatchupMap).forEach(function(mid){
+		var cell = bracketMatchupMap[mid],
+		scores = {}
+		var sides = null
+		seriesMatchIds(cell, matchesById).forEach(function(id){
+			var match = matchesById[id],
+			score = eventScores[id]
+			if (!score || !score.alliances) return
+			var totals = matchTotalPoints(score)
+			if (typeof totals.red != 'number' || typeof totals.blue != 'number') return
+			// The schedule decides which alliance is red in a given match, so
+			// resolve the sides by roster rather than by bracket order. Sides
+			// hold for a whole series, so an unscheduled extra match reuses the
+			// assignment we already worked out.
+			if (match) sides = {
+				red: allianceForTeams(['R1','R2','R3'].map(function(p){ return ""+match[p] })) || cell.pair[0],
+				blue: allianceForTeams(['B1','B2','B3'].map(function(p){ return ""+match[p] })) || cell.pair[1]
+			}
+			if (!sides) return
+			var red = sides.red, blue = sides.blue
+			if (red == blue) return
+			if (cell.pair.indexOf(red) < 0 || cell.pair.indexOf(blue) < 0) return
+			;(scores[red] = scores[red]||[]).push({points:totals.red, won:totals.red > totals.blue})
+			;(scores[blue] = scores[blue]||[]).push({points:totals.blue, won:totals.blue > totals.red})
+		})
+		extraSeriesScores(cell, matchesById).forEach(function(score){
+			var totals = matchTotalPoints(score)
+			if (!sides || typeof totals.red != 'number' || typeof totals.blue != 'number') return
+			;(scores[sides.red] = scores[sides.red]||[]).push({points:totals.red, won:totals.red > totals.blue})
+			;(scores[sides.blue] = scores[sides.blue]||[]).push({points:totals.blue, won:totals.blue > totals.red})
+		})
+		if (Object.keys(scores).length) officialScoreMap[mid] = scores
+	})
+}
+
+// Every scheduled match id for this cell: its position in the round, then one
+// id per repeat, a full round apart (f1/f2/f3, or qf1..qf4 then qf5..qf8).
+function seriesMatchIds(cell, matchesById){
+	var ids = []
+	for (var j=0; j<MAX_SERIES_MATCHES; j++){
+		var id = cell.abbreviation + (j*cell.perRep + cell.position)
+		if (!matchesById[id]) break
+		ids.push(id)
+	}
+	return ids
+}
+
+// Scores with no schedule row of their own. They continue the last scheduled
+// playoff match, so they belong to the last cell of the bracket — a finals that
+// ran long. When the schedule simply hasn't caught up (rounds still unposted)
+// that match isn't the final one, and the leftovers aren't ours to place.
+function extraSeriesScores(cell, matchesById){
+	var extras = eventScores.extraPlayoffScores
+	if (!extras || !extras.length || !cell.isLast) return []
+	var scheduled = seriesMatchIds(cell, matchesById)
+	if (scheduled.indexOf(eventScores.lastScheduledPlayoff) < 0) return []
+	return extras
 }
 
 function getPredictorLink(num, oppNum, teamColor){
@@ -177,20 +319,44 @@ function getScore(team){
 }
 
 function bracketMatchNumbers(rounds){
-	var map = {}, num = 0
+	var map = {}, num = 0, roundNum = {}
+	bracketMatchupMap = {}
 	rounds.forEach(function(round,r){
 		var brackets = round.orderBrackets || ['upper','lower','matches']
+		roundNum[r] = 0
 		brackets.forEach(function(b){
 			var matches = round[b] || [],
 			order = matches.map(function(_,m){ return m })
 			if (round.orderMatches == -1) order.reverse()
 			order.forEach(function(m){
 				if (!matches[m] || !matches[m].length) return
-				map[r+'_'+b+'_'+m] = ++num
+				var mid = r+'_'+b+'_'+m
+				map[mid] = ++num
+				if (matches[m][0] && matches[m][1])
+					bracketMatchupMap[mid] = {
+						pair:[matches[m][0],matches[m][1]],
+						abbreviation:round.abbreviation,
+						perRep:roundCellCount(round),
+						position:++roundNum[r],
+						winsNeeded:Math.floor((round.rounds||1)/2)+1,
+						isLast:r == rounds.length-1
+					}
 			})
 		})
 	})
 	return map
+}
+
+// How many cells a round has. Repeat matches of a series are numbered a full
+// round apart (f1/f2/f3, or qf1..qf4 then qf5..qf8), the way showRoundSchedule
+// numbers them, so this is the stride between one cell's matches.
+function roundCellCount(round){
+	var brackets = round.orderBrackets || ['upper','lower','matches'],
+	n = 0
+	brackets.forEach(function(b){
+		(round[b]||[]).forEach(function(matchup){ if (matchup && matchup.length) n++ })
+	})
+	return n
 }
 
 function showBracket(rounds){
@@ -211,6 +377,7 @@ function showBracket(rounds){
 	if (maxUpper+maxLower>maxMatches) maxMatches=maxUpper+maxLower
 	bracketMatchNumMap = bracketMatchNumbers(rounds)
 	bracketSlotInfoMap = bracketSlotInfo()
+	computeOfficialScores()
 	tr = $('<tr>')
 	if (maxLower>0) tr.append($('<th>').addClass('bracketSideHead'))
 	for (var i=0; i<rounds.length; i++){
@@ -263,8 +430,28 @@ function showBracket(rounds){
 	applyTranslations()
 	$('#bracketWrap').show()
 	table.show()
+	fitRosterText()
 	setTimeout(drawBracketLines, 0)
 	if (wasHidden) setTimeout(animateBracketReveal, 0)
+}
+
+// Scale a roster down until it fits its tile on one line. Wrapping would make
+// that tile taller than every other one, so the text gives way instead.
+function fitRosterText(){
+	document.querySelectorAll('#bracketWrap .roster').forEach(function(el){
+		el.style.fontSize = ''
+		var base = parseFloat(window.getComputedStyle(el).fontSize)
+		if (!base || !el.clientWidth) return
+		var size = base
+		for (var i=0; i<10 && el.scrollWidth > el.clientWidth; i++){
+			size = size * el.clientWidth / el.scrollWidth * 0.99
+			if (size <= base*MIN_ROSTER_SCALE){
+				el.style.fontSize = (base*MIN_ROSTER_SCALE)+'px'
+				break
+			}
+			el.style.fontSize = size+'px'
+		}
+	})
 }
 
 function animateBracketReveal(){
@@ -292,10 +479,13 @@ function bracketTd(rs, matchup, isData, column, mid){
 	td.addClass('matchCell').attr('data-mid', mid)
 	var n = bracketMatchNumMap[mid],
 	info = bracketSlotInfoMap[mid] || [null,null],
-	red = allianceDisplay(matchup[0], matchup[1], false, column, 'red', slotLabel(info[0])),
-	blue = allianceDisplay(matchup[1], matchup[0], false, column, 'blue', slotLabel(info[1])),
-	bar = '<div class=matchBar>'+(n ? 'Match '+n+' (M'+n+')' : '')+'</div>'
-	td.html('<div class=matchupPair>'+red+bar+blue+'</div>')
+	red = allianceDisplay(matchup[0], matchup[1], false, column, 'red', slotLabel(info[0]), mid),
+	blue = allianceDisplay(matchup[1], matchup[0], false, column, 'blue', slotLabel(info[1]), mid),
+	bar = '<div class=matchBar>'+(n ? 'Match '+n+' (M'+n+')' : '')+'</div>',
+	// A series shows one score per match, so give the card room for the extras
+	// rather than taking it out of the rosters.
+	extra = Math.max(0, Math.max(officialScores(mid,matchup[0]).length, officialScores(mid,matchup[1]).length) - 1)
+	td.html('<div class=matchupPair style="--extraScores:'+extra+'">'+red+bar+blue+'</div>')
 	return td
 }
 
@@ -387,7 +577,8 @@ function roundPlayed(round){
 		var a1 = arr[i][0], a2 = arr[i][1]
 		if (a1 == 0) return false
 		if (a2 == 0) return false
-		if (!eventAlliances[a1-1][roundToColumn(round.title)] && !eventAlliances[a2-1][roundToColumn(round.title)]) return false
+		var col = roundToColumn(round.title)
+		if (!/^[01]$/.test(eventAlliances[a1-1][col]) && !/^[01]$/.test(eventAlliances[a2-1][col])) return false
 	}
 	return true
 }
@@ -401,7 +592,7 @@ function winnerOf(rounds,roundNum,bracket,matchNum){
 	title = round['title']
 	for (var i=0; i<=1; i++){
 		var alliance = round[bracket][matchNum][i]
-		if (eventAlliances && alliance>0 && eventAlliances.length > alliance-1 && eventAlliances[alliance-1][roundToColumn(title)]) return alliance
+		if (eventAlliances && alliance>0 && eventAlliances.length > alliance-1 && eventAlliances[alliance-1][roundToColumn(title)]=="1") return alliance
 	}
 	return 0
 }
@@ -519,14 +710,23 @@ $(document).ready(function(){
 			$('#no-bracket-msg').show()
 			return
 		}
-		promiseEventStats(true).then(values => {
-			[window.eventStats, window.eventStatsByTeam] = values
-			syncFourTeam()
-			showBracket(getBrackets())
+		// Official scores are optional: the bracket still renders (with
+		// predictions) if either the schedule or the score feed is missing.
+		var officialData = Promise.all([
+			promiseEventMatches().catch(()=>[]),
+			promiseEventScores().catch(()=>({}))
+		]).then(values => {
+			[window.eventMatches, window.eventScores] = values
 		}).catch(function(){
-			// Show bracket without predictions if stats fail
-			window.eventStats = []
-			window.eventStatsByTeam = {}
+			window.eventMatches = []
+			window.eventScores = {}
+		})
+		promiseEventStats(true).catch(function(){
+			return [[], {}]
+		}).then(values => {
+			[window.eventStats, window.eventStatsByTeam] = values
+			return officialData
+		}).then(function(){
 			syncFourTeam()
 			showBracket(getBrackets())
 		})
@@ -534,5 +734,5 @@ $(document).ready(function(){
 		$('#no-bracket-msg').show()
 	})
 	applyTranslations()
-	$(window).on('resize', drawBracketLines)
+	$(window).on('resize', function(){ fitRosterText(); drawBracketLines() })
 })

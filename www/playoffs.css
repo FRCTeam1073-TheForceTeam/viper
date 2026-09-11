@@ -71,16 +71,22 @@ table td,table th{padding:.25em}
 #playoff-bracket td{vertical-align:middle}
 
 /* ===== Matchup cards (manual-style layout, our theming) ===== */
-.matchupPair{display:flex;flex-direction:column;min-width:15em;font-size:.8em;border:1px solid var(--main-border-color);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--surface)}
+/* Fixed width, so a long roster shrinks its text instead of stretching the
+   card. Series cards earn extra width for each additional score they show. */
+.matchupPair{display:flex;flex-direction:column;width:calc(15em + var(--extraScores,0) * 2.7em);font-size:.8em;border:1px solid var(--main-border-color);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);background:var(--surface)}
 .matchupPair:hover{border-color:var(--accent)}
 
 /* Alliance rows keep the themed red/blue team colors */
-.matchup{position:relative;display:flex;align-items:stretch;border:0;border-radius:0;text-align:start;min-width:0;font-weight:600;line-height:1.2}
+/* min-height keeps every alliance tile the same height, rosters and
+   placeholders alike, however long the text is */
+.matchup{position:relative;display:flex;align-items:stretch;border:0;border-radius:0;text-align:start;min-width:0;min-height:2.5em;font-weight:600;line-height:1.2}
 .matchup.clickable{cursor:pointer}
 /* Teams fill the card height */
 .matchupMain{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:.45em .5em .45em 2.4em}
-.roster{font-variant-numeric:tabular-nums;font-size:1.1em;font-weight:700}
-.matchup.placeholder{font-style:italic;opacity:.85;padding:.2em .5em .2em 2.4em}
+/* Never wrap: a two-line roster makes its tile taller than all the others.
+   fitRosterText() scales the text down until it fits on one line. */
+.roster{font-variant-numeric:tabular-nums;font-size:1.1em;font-weight:700;white-space:nowrap;overflow:hidden}
+.matchup.placeholder{display:flex;align-items:center;font-style:italic;opacity:.85;padding:.2em .5em .2em 2.4em;white-space:nowrap;overflow:hidden}
 
 /* A# alliance badge on the left of each row */
 .matchup::before{position:absolute;left:0;top:0;bottom:0;width:2em;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85em;color:#fff;background:rgba(0,0,0,.28);content:attr(data-alliance-badge)}
@@ -92,8 +98,31 @@ a.predBox:hover{filter:brightness(1.3)}
 /* Match-number bar between the two alliances */
 .matchBar{background:var(--lowlight-bg-color);color:var(--main-fg-color);font-style:italic;font-weight:700;font-size:.72em;text-align:center;padding:.08em .5em;letter-spacing:.02em;border-top:1px solid var(--main-border-color);border-bottom:1px solid var(--main-border-color)}
 
-/* Winner highlight */
-.matchup.winner{box-shadow:0 0 0 2px var(--winner-color) inset}
+/* Official FIRST API score replaces the prediction once a match is scored */
+.predBox.officialScore{background:rgba(0,0,0,.45);box-shadow:0 0 0 1px rgba(255,255,255,.18) inset;white-space:nowrap}
+/* A series lists one score per match played, so give the numbers more room */
+.predBox.officialScore.series{font-size:.92em;padding-inline:.4em;gap:.25em}
+.predBox.officialScore.series .seriesScore{padding:0 .2em;border-radius:.2em}
+/* Each match of a series gets the same winner highlight the card border uses.
+   A single-match cell needs none: its card border already says who won. */
+.predBox.officialScore.series .seriesWin{color:var(--winner-color);box-shadow:0 0 0 1.5px var(--winner-color) inset}
+.seriesSep{opacity:.45;font-weight:400}
+
+/* Round the outer corners of each row to match the card, so nothing is clipped
+   square by the pair's overflow:hidden rounding. */
+.matchupPair>.matchup:first-child{border-top-left-radius:calc(var(--radius) - 1px);border-top-right-radius:calc(var(--radius) - 1px)}
+.matchupPair>.matchup:last-child{border-bottom-left-radius:calc(var(--radius) - 1px);border-bottom-right-radius:calc(var(--radius) - 1px)}
+/* The badge and score boxes sit flush in the corners, so curve them to match */
+.matchupPair>.matchup:first-child::before{border-top-left-radius:calc(var(--radius) - 1px)}
+.matchupPair>.matchup:last-child::before{border-bottom-left-radius:calc(var(--radius) - 1px)}
+.matchupPair>.matchup:first-child>.predBox{border-top-right-radius:calc(var(--radius) - 1px)}
+.matchupPair>.matchup:last-child>.predBox{border-bottom-right-radius:calc(var(--radius) - 1px)}
+
+/* Winner highlight. Drawn as an overlay rather than an inset box-shadow so it
+   paints on top of the alliance badge and score box instead of behind them. */
+.matchup.winner::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border:2px solid var(--winner-color);border-radius:inherit}
+.matchupPair>.matchup:first-child.winner::after{border-top-left-radius:calc(var(--radius) - 1px);border-top-right-radius:calc(var(--radius) - 1px);border-bottom-left-radius:0;border-bottom-right-radius:0}
+.matchupPair>.matchup:last-child.winner::after{border-top-left-radius:0;border-top-right-radius:0;border-bottom-left-radius:calc(var(--radius) - 1px);border-bottom-right-radius:calc(var(--radius) - 1px)}
 
 /* ===== Reveal animation (applied inline from animateBracketReveal) ===== */
 @keyframes bracketCardReveal{from{opacity:0;transform:translateY(12px) scale(.94)}to{opacity:1;transform:none}}

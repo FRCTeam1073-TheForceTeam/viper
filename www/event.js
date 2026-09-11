@@ -1020,8 +1020,10 @@ $(document).ready(function(){
 		if ($(this).attr('download')) download.attr('download', $(this).attr('download'))
 		list.append($('<li>').append(download))
 		if (/\.csv/.test(file)){
-			list.append($('<li>').append($('<a data-i18n=edit_link>').attr('href',`/edit.html#file=${file}`)))
-			list.append($('<li>').append($('<a data-i18n=history_link>').attr('href',`/revisions.html#file=${file}`)))
+			// Editing a file and reverting it from history both write through
+			// /admin/ CGI, so only offer them to an admin.
+			list.append($('<li data-role=admin>').append($('<a data-i18n=edit_link>').attr('href',`/edit.html#file=${file}`)))
+			list.append($('<li data-role=admin>').append($('<a data-i18n=history_link>').attr('href',`/revisions.html#file=${file}`)))
 		}
 		if (/\.json/.test(file)){
 			list.append($('<li>').append($('<a data-i18n=file_view_link>').attr('href',url).click(viewJson)))
@@ -1031,6 +1033,7 @@ $(document).ready(function(){
 		}
 		// Show the practice-aggregation note only for the by-team aggregated export.
 		$('#aggregationNote').toggle($(this).attr('data-source')=='eventStatsByTeam')
+		applyRoleGates(da)
 		showLightBox(da)
 		return false
 	}

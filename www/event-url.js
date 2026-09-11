@@ -234,9 +234,11 @@ function promiseEventScores(){
 		quals.MatchScores = quals.MatchScores||quals.matchScores||[]
 		playoffs.MatchScores = playoffs.MatchScores||playoffs.matchScores||[]
 		quals.MatchScores.forEach(score => scores[`qm${score.matchNumber}`] = score)
+		var lastPlayoff = null
 		matches.forEach(match => {
 			if (!/^pm|qm/.test(match.Match)){
 				scores[match.Match] = playoffs.MatchScores.shift()
+				lastPlayoff = match.Match
 			}
 			var m = scores[match.Match]
 			if (m){
@@ -251,6 +253,14 @@ function promiseEventScores(){
 				})
 			}
 		})
+		// More scores than rows means matches were played that the published
+		// schedule doesn't list yet — either a series that ran long, or rounds
+		// not posted yet. Which one can't be told from here, so hand the
+		// leftovers on unnamed and let the caller decide.
+		if (playoffs.MatchScores.length){
+			scores.extraPlayoffScores = playoffs.MatchScores.slice()
+			scores.lastScheduledPlayoff = lastPlayoff
+		}
 		return scores
 	}).catch(e=>{
 		console.error(e)
