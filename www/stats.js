@@ -268,16 +268,6 @@ $(document).ready(function(){
 		showLightBox($('#instructions'))
 		return false
 	})
-	// Reordering writes to the saved list, so only an admin gets drag handles.
-	promiseUser().then(function(){
-		if (!isAdmin()) return
-		;['#picklist','#donotpicklist'].forEach(function(list){
-			var el = sortable(list, {acceptFrom: '#picklist, #donotpicklist'})[0]
-			// Snapshot before the drag, since by sortupdate the order has changed.
-			el.addEventListener('sortstart', pushPickHistory)
-			el.addEventListener('sortupdate', pickListReordered)
-		})
-	})
 	$('#ignorePicks').prop('checked', ignoringPicks()).change(function(){
 		setIgnoringPicks(this.checked)
 		updateTeamListsVisibility()
@@ -318,10 +308,20 @@ function updateTeamListsVisibility(){
 	$('#teamlists').toggle(!ignoringPicks() && Object.values(teamsPicked).filter(t=>t).length>0)
 }
 
+// Stored as CSV like the rest of the event data -- rows of list,team -- so it
+// works on the field laptops (no MySQL), gets revision history, and imports into
+// a database install through the generic CSV path. It records which teams are no
+// longer available, so it is a set rather than a ranking.
 function promisePickList(){
-	return fetch(`/data/${eventId}.picklist.json`)
-		.then(response => response.ok ? response.json() : null)
-		.catch(() => null)
+	return promiseEventAjax(`/data/${eventId}.picklist.csv`).then(text => {
+		if (!text) return null
+		var saved = {pl:[], dnp:[]}
+		csvToArrayOfMaps(text).forEach(row => {
+			var list = saved[row.list]
+			if (list) list.push(parseInt(row.team))
+		})
+		return saved
+	}).catch(() => null)
 }
 
 // "Ignore picks" hides the pick styling and the pick-first sort without touching
@@ -355,10 +355,6 @@ function pushPickHistory(){
 	updateUndoPickButton()
 }
 
-function samePickList(a, b){
-	return a && b && a.pl.join(',') == b.pl.join(',') && a.dnp.join(',') == b.dnp.join(',')
-}
-
 function updateUndoPickButton(){
 	$('#undoPick').prop('disabled', !pickHistory.length)
 }
@@ -373,14 +369,6 @@ function undoPick(){
 	showStats()
 }
 
-// A drag that ends where it started is not worth an undo step.
-function dropRedundantHistory(){
-	if (pickHistory.length && samePickList(pickHistory[pickHistory.length-1], currentPickList())){
-		pickHistory.pop()
-		updateUndoPickButton()
-	}
-}
-
 function clearPickList(){
 	if (!isAdmin()) return
 	if (!confirm(translate('clear_picks_confirm'))) return
@@ -391,9 +379,10 @@ function clearPickList(){
 }
 
 function currentPickList(){
+	var byTeam = (a,b) => a-b
 	return {
-		pl: $.map($('#picklist li'), x=>parseInt($(x).text())),
-		dnp: $.map($('#donotpicklist li'), x=>parseInt($(x).text()))
+		pl: $.map($('#picklist li'), x=>parseInt($(x).text())).sort(byTeam),
+		dnp: $.map($('#donotpicklist li'), x=>parseInt($(x).text())).sort(byTeam)
 	}
 }
 
@@ -766,9 +755,13 @@ function setTeamPicked(e, team, dnp){
 	if (e) pushPickHistory()
 	teamsPicked[team] = !teamsPicked[team]
 	if(teamsPicked[team]){
-		var list = (dnp || getLocalTeam() == team)?'#donotpicklist':'#picklist'
-		$(list).append($('<li>').attr('id',`pl${team}`).text(team).click(showStatClickMenu).attr('data-tooltip',getTeamInfo(team)||null).addClass('tooltip-before'))
-		sortable(list)
+		var list = (dnp || getLocalTeam() == team)?'#donotpicklist':'#picklist',
+		entry = $('<li>').attr('id',`pl${team}`).text(team).click(showStatClickMenu).attr('data-tooltip',getTeamInfo(team)||null).addClass('tooltip-before'),
+		// Team order, so the list reads the same however the teams were marked
+		// and matches the order it is stored and reloaded in.
+		after = $(list).children('li').filter(function(){ return parseInt($(this).text()) > team }).first()
+		if (after.length) entry.insertBefore(after)
+		else $(list).append(entry)
 	} else {
 		$(`#pl${team}`).remove()
 	}
@@ -782,12 +775,6 @@ function setTeamPicked(e, team, dnp){
 			window.scrollTo(0,y)
 		},200)
 	}
-}
-
-function pickListReordered(){
-	setDnpStartNumber()
-	dropRedundantHistory()
-	savePickList()
 }
 
 function setDnpStartNumber(){

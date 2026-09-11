@@ -87,7 +87,7 @@ for my $event (@$events){
 	&queryToCsv("event", "event", $site, $event, "'event'");
 	&queryToCsv("schedule", "schedule", $site, $event, "'Match'");
 	&queryToCsv("alliances", "alliances", $site, $event, "'alliance'");
-	&queryToCsv("picklist", "picklist", $site, $event, "`list`, `rank`");
+	&queryToCsv("picklist", "picklist", $site, $event, "`list`, `team` + 0");
 	&queryToCsv("${season}scouting", "scouting", $site, $event, "'match', 'team' + 0");
 	&queryToCsv("${season}pit", "pit", $site, $event, "'team' + 0");
 	&queryToCsv("${season}subjective", "subjective", $site, $event, "'team' + 0");

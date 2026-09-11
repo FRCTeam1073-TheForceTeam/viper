@@ -5,7 +5,6 @@ use warnings;
 use File::Slurp;
 use Data::Dumper;
 use CGI qw(-utf8);;
-use JSON qw(encode_json);
 use lib '../pm';
 use webutil;
 use db;
@@ -30,8 +29,6 @@ if ($file =~ /local\.js$/){
 } elsif ($file =~ /\.json$/){
 	if ($file =~ /^20[0-9]{2}(-[0-9]{2})?\//){
 		&siteConfJson($file);
-	} elsif ($file =~ /\.picklist\.json$/){
-		&pickListJson($file);
 	} else {
 		&apiJson($file);
 	}
@@ -125,25 +122,6 @@ sub apiJson(){
 	print $data->[0]->[0];
 }
 
-# The pick list lives as ordered rows rather than a stored document, so it is
-# assembled here into the same JSON the file-backed install serves.
-sub pickListJson(){
-	my ($file) = @_;
-	$webutil->error("Unexpected pick list file name", $file) if ($file !~ /^(20[0-9]{2}[a-zA-Z0-9\-]*)\.picklist\.json$/);
-	my ($event) = $file =~ /^(20[0-9]{2}[a-zA-Z0-9\-]*)/;
-	my $dbh = $db->dbConnection();
-	my $sth = $dbh->prepare("SELECT `list`,`team` FROM `picklist` WHERE `site`=? AND `event`=? ORDER BY `list`,`rank`");
-	$sth->execute(db::getSite(), $event);
-	my %lists = ('pl' => [], 'dnp' => []);
-	while (my $row = $sth->fetchrow_arrayref()){
-		push @{$lists{$row->[0]}}, $row->[1] + 0 if (exists $lists{$row->[0]});
-	}
-
-	binmode(STDOUT, ":utf8");
-	print "Content-type: text/json; charset=UTF-8\n\n";
-	print encode_json({pl => $lists{'pl'}, dnp => $lists{'dnp'}});
-}
-
 sub image(){
 	my ($file) = @_;
 	$webutil->error("Unexpected image file name", $file) if ($file !~ /^20[0-9]{2}(?:-[0-9]{2})?\/[0-9]+(?:\-[a-z]+)?\.jpg$/);
@@ -162,7 +140,7 @@ sub image(){
 
 sub csv(){
 	my ($file) = @_;
-	$webutil->error("Unexpected csv file name", $file) if ($file !~ /^(20[0-9]{2}(?:-[0-9]{2})?)[a-zA-Z0-9\-]+\.(scouting|pit|subjective|event|schedule|alliances)\.csv$/);
+	$webutil->error("Unexpected csv file name", $file) if ($file !~ /^(20[0-9]{2}(?:-[0-9]{2})?)[a-zA-Z0-9\-]+\.(scouting|pit|subjective|event|schedule|alliances|picklist)\.csv$/);
 
 	my ($season, $event, $table) = $file =~ /^(20[0-9]{2}(?:-[0-9]{2})?)([^\.]+)\.([^\.]+)\.csv$/;
 	my $tableSeason = $season;
@@ -173,10 +151,13 @@ sub csv(){
 
 	my $dbh = $db->dbConnection();
 	my $sth;
+	# Team order for the pick list, so the file a database install serves matches
+	# the one a file install writes rather than whatever order rows come back in.
+	my $order = ($table eq 'picklist') ? " ORDER BY `list`,`team` + 0" : "";
 	if ($combined){
-		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event` LIKE '$season%'");
+		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event` LIKE '$season%'$order");
 	} else {
-		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event`='$event'");
+		$sth = $dbh->prepare("SELECT * FROM `$table` WHERE `site`=? AND `event`='$event'$order");
 	}
 	$sth->execute($db->getSite());
 	$webutil->notfound() unless $db->printCsv($sth);

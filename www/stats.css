@@ -51,7 +51,6 @@ iframe{width:100%;height:100%}
 #teamlists h4:first-child{margin-top:0}
 #teamlists ol{margin:0;padding-inline-start:2.2em}
 #teamlists li{padding:.1em 0}
-.sortable-list{min-width:4em;min-height:1em;}
 
 /* Toggle row, sitting on its own line under the buttons. Uses the shared
    .switch slider from main.css so it matches the predictor's toggle. */

@@ -48,17 +48,14 @@ for my $team (@{$parsed->{'dnp'}}){
 my $dbh = $db->dbConnection();
 
 if ($dbh){
-	# One row per team per position: the ordering is the whole point of a pick
-	# list, so it is stored as rows like every other event dataset rather than as
-	# a blob. Replaced wholesale, since a save is always the complete list.
+	# One row per taken team, like every other event dataset. Replaced wholesale,
+	# since a save always carries the complete set.
 	$db->deletePickList($event);
 	for my $list ('pl', 'dnp'){
-		my $rank = 0;
 		for my $team (@{$parsed->{$list}}){
 			$db->upsert('picklist', {
 				'event' => $event,
 				'list'  => $list,
-				'rank'  => ++$rank,
 				'team'  => $team,
 			});
 		}
@@ -69,21 +66,27 @@ if ($dbh){
 	exit 0;
 }
 
-my $fileName = "../data/${event}.picklist.json";
+# Stored as CSV, like every other event dataset: the field laptops have no
+# MySQL, so this file is the real store there, and CSV is what the revision
+# history, the import/export scripts and the database sync all understand.
+my $fileName = "../data/${event}.picklist.csv";
 my $lockFile = "$fileName.lock";
 open(my $lock, '>', $lockFile) or $webutil->error("Cannot open $lockFile", "$!\n");
 flock($lock, LOCK_EX) or $webutil->error("Cannot lock $lockFile", "$!\n");
 $webutil->error("Error opening $fileName for writing", "$!") if (!open my $fh, ">", $fileName);
-# Normalise last: the checks above stringify these scalars as a side effect, and
-# a scalar that has been used as a string encodes as "254" rather than 254.
-print $fh encode_json({
-	pl  => [map { $_ + 0 } @{$parsed->{'pl'}}],
-	dnp => [map { $_ + 0 } @{$parsed->{'dnp'}}],
-});
+# A set of teams that are no longer available, not a ranking -- so there is no
+# rank column, and the rows are written in team order. Column names match the
+# picklist table so the generic CSV importer maps them straight across.
+print $fh "list,team\n";
+for my $list ('pl', 'dnp'){
+	for my $team (sort { $a <=> $b } @{$parsed->{$list}}){
+		printf $fh "%s,%d\n", $list, $team;
+	}
+}
 close $fh;
 # Deliberately not tracked in revision history: this is saved on every click
-# during alliance selection, which would bury the history of the real event data
-# under hundreds of commits. Undo on the stats page covers a misclick instead.
+# during alliance selection, which would bury the history of the real event
+# data under hundreds of commits. Undo on the stats page covers a misclick.
 close $lock;
 unlink($lockFile);
 

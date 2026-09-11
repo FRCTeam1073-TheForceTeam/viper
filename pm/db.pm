@@ -367,10 +367,9 @@ sub schema {
 				`site` VARCHAR(16) NOT NULL,
 				`event` VARCHAR(32) NOT NULL,
 				`list` VARCHAR(3) NOT NULL,
-				`rank` INT NOT NULL,
 				`team` VARCHAR(8) NOT NULL,
 				INDEX(`site`,`event`),
-				UNIQUE(`site`,`event`,`list`,`rank`)
+				UNIQUE(`site`,`event`,`list`,`team`)
 			)  $tableOptions
 		"
 	);
