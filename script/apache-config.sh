@@ -34,6 +34,17 @@ fi
 if [ "z$APACHE_DIR" == "z" ]
 then
 	echo "Apache conf directory not found."
+	echo "  checked /etc/apache2            (Linux/Apache2)"
+	echo "  checked /c/xampp/apache/conf    (Windows/XAMPP via Git Bash)"
+	echo "  shell: $(uname -s), bash ${BASH_VERSION:-none}"
+	if [ -e /mnt/c/xampp/apache/conf ]
+	then
+		echo ""
+		echo "XAMPP was found at /mnt/c/xampp, so this is running under WSL."
+		echo "This script needs Windows-style paths and the XAMPP .exe helpers."
+		echo "Run it from Git Bash instead:"
+		echo "  \"C:\Program Files\Git\bin\bash.exe\" script/apache-config.sh"
+	fi
 	exit 1
 fi
 
@@ -127,8 +138,12 @@ then
 fi
 echo '	</VirtualHost>' >> $TMPCONF
 
+# Only elevate when the Apache config directory actually needs it. Windows 11
+# ships its own sudo.exe in System32, which "which" happily finds; it launches a
+# separate elevated console and returns success immediately, so every copy below
+# would silently do nothing while the script reported success.
 SUDO=""
-if which sudo &> /dev/null
+if [ ! -w "$APACHE_DIR" ] && which sudo &> /dev/null
 then
 	SUDO=sudo
 fi

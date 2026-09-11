@@ -343,6 +343,15 @@ addI18n({
 		fr:'Modifier les détails de l\'événement et le calendrier des matchs',
 		tr:'Etkinlik ayrıntılarını ve maç programını değiştir',
 	},
+	edit_bracket_link:{
+		en:'Edit playoff bracket',
+		tr:'Playoff grubunu duzenle',
+		pt:'Editar a chave dos playoffs',
+		zh_tw:'編輯季後賽對戰表',
+		fr:'Modifier le tableau des playoffs',
+		he:'ערוך את סוגר הפלייאוף',
+		es:'Editar el cuadro de playoff',
+	},
 	edit_playoffs_link:{
 		en:'Input alliance selection results and playoff type',
 		he:'הזן תוצאות בחירת ברית וסוג פלייאוף',
@@ -1186,11 +1195,12 @@ $(document).ready(function(){
 			if(!lastDone&&!matchScoutingDataCount(eventStatsByMatchTeam,m))nextToScout=m
 			if(!lastMatch)lastMatch=m
 		}
-		// Always offer the playoffs / alliance-selection link, regardless of how
-		// much (if any) scouting data exists for the event. The reset link rides
-		// along but stays hidden (dependAlliances) until a bracket actually exists.
+		// Always offer the alliance-selection link, regardless of how much (if any)
+		// scouting data exists for the event. The bracket-editing and reset links
+		// ride along but stay hidden (dependAlliances) until a bracket exists.
 		$('#edit-event-section').prepend($('#edit-event-header'))
 		$('#edit-event-section>ul').append($('#edit-playoffs-link'))
+		$('#edit-event-section>ul').append($('#edit-bracket-link'))
 		$('#edit-event-section>ul').append($('#reset-playoffs-link'))
 		$('#reset-playoffs-link a').click(function(e){
 			if (!confirm(translate('reset_playoffs_confirm'))) e.preventDefault()

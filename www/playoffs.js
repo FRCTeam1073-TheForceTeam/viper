@@ -163,6 +163,15 @@ addI18n({
 		he:'בריתות של 4 קבוצות (רובוט מילואים)',
 		es:'Alianzas de 4 equipos (robot de reserva)',
 	},
+	regenerate_confirm:{
+		en:'This rebuilds the playoff schedule from these alliances and clears every result already recorded. Continue?',
+		tr:'Bu islem playoff programini bu ittifaklardan yeniden olusturur ve kaydedilmis tum sonuclari siler. Devam edilsin mi?',
+		pt:'Isto reconstroi a tabela dos playoffs a partir destas aliancas e apaga todos os resultados ja registados. Continuar?',
+		zh_tw:'這會依據這些聯盟重建季後賽賽程，並清除所有已記錄的結果。要繼續嗎？',
+		fr:'Cela reconstruit le calendrier des playoffs a partir de ces alliances et efface tous les resultats deja enregistres. Continuer ?',
+		he:'פעולה זו תבנה מחדש את לוח הפלייאוף מהבריתות הללו ותמחק את כל התוצאות שנרשמו. להמשיך?',
+		es:'Esto reconstruye el calendario de playoffs a partir de estas alianzas y borra todos los resultados ya registrados. Continuar?',
+	},
 	fill_backups_message:{
 		en:'Please enter a backup team for every alliance, or turn off 4-team alliances.',
 		tr:'Lütfen her ittifak için bir yedek takım girin veya 4 takımlı ittifakları kapatın.',
@@ -955,9 +964,12 @@ function savePlayoffs(){
 		alert(translate('fill_backups_message'))
 		return false
 	}
+	var regenerating = $('#alliances').is(':visible')
+	// Saving from the entry screen rebuilds the schedule from scratch and drops
+	// every recorded result, so say so before throwing away a played bracket.
+	if (regenerating && bracketHasResults() && !confirm(translate('regenerate_confirm'))) return false
 	$('#eventInput').val(eventId)
 	addAlliancesHiddenFields()
-	var regenerating = $('#alliances').is(':visible')
 	$('#alliancesCsvInput').val(regenerating?tableToCsv($('#alliances').closest('table')):eventAlliancesToCsv())
 	if ($('#scheduleTable').is(':visible')){
 		$('#scheduleCsvInput').val(tableToCsv($('#scheduleTable')))
@@ -1031,12 +1043,56 @@ function syncFourTeam(){
 	$('.allianceTable').toggleClass('fourTeam', fourTeam)
 }
 
+// Which screen to open on. The page does two different jobs -- setting up the
+// alliances and playoff type, then advancing the bracket -- and until now it
+// chose for you, so a saved selection could never be reopened. The event page
+// links to each job explicitly; with no mode in the hash the old behaviour
+// stands: the entry form when nothing is saved, the bracket once it is.
+function requestedMode(){
+	if (/[#&]mode=alliances(&|$)/.test(location.hash)) return 'alliances'
+	if (/[#&]mode=bracket(&|$)/.test(location.hash)) return 'bracket'
+	return ''
+}
+
 function showContent(ea){
 	syncFourTeam()
-	if (!eventAlliances.length) showAllianceSelection()
-	else promiseEventStats(true).then(values => {
+	var mode = requestedMode()
+	if (mode == 'alliances' || !eventAlliances.length){
+		fillAllianceInputs()
+		showAllianceSelection()
+		return
+	}
+	promiseEventStats(true).then(values => {
 		[window.eventStats, window.eventStatsByTeam] = values
 		showBracket(getBrackets())
+	})
+}
+
+// Put the saved selection back into the entry form. Without this the form opens
+// blank over a saved bracket, and saving would write an empty selection over a
+// good one.
+function fillAllianceInputs(){
+	if (!eventAlliances || !eventAlliances.length) return
+	fourTeam = eventAlliances.some(function(a){ return a['Backup'] })
+	$('#fourTeamToggle').prop('checked', fourTeam)
+	$('.allianceTable').toggleClass('fourTeam', fourTeam)
+	eventAlliances.forEach(function(a){
+		var n = parseInt(a['Alliance'])
+		if (!n) return
+		$('#A'+n+'_captain').val(a['Captain']||'')
+		$('#A'+n+'_pick_1').val(a['First Pick']||'')
+		$('#A'+n+'_pick_2').val(a['Second Pick']||'')
+		$('#A'+n+'_pick_3').val(fourTeam ? (a['Backup']||'') : '')
+	})
+	$('#bracket-type').val(eventAlliances[0].hasOwnProperty('Won Quarter-Finals') ? 'single' : 'double')
+	refreshPickedTeams()
+	if (!focusNext()) computeStartingSchedule()
+}
+
+// True once any round result has been recorded against the saved alliances.
+function bracketHasResults(){
+	return (eventAlliances||[]).some(function(a){
+		return Object.keys(a).some(function(k){ return /^Won /.test(k) && /^[01]$/.test(a[k]) })
 	})
 }
 

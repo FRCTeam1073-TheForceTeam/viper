@@ -1,0 +1,7 @@
+# Scripts must keep LF line endings regardless of core.autocrlf.
+# bash fails outright on a \r ("$'\r': command not found", "syntax error near
+# unexpected token"), and a CRLF shebang breaks the interpreter lookup on Linux.
+*.sh text eol=lf
+*.pl text eol=lf
+*.pm text eol=lf
+*.cgi text eol=lf
