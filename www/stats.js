@@ -276,6 +276,7 @@ $(document).ready(function(){
 	$('#clearPicks').click(clearPickList)
 	$('#undoPick').click(undoPick)
 	updateUndoPickButton()
+	setInterval(refreshPickList, PICK_LIST_POLL_MS)
 	$('#teamlists h4').click(function(){
 		$('.picklist-body').toggle()
 	})
@@ -395,6 +396,7 @@ function savePickList(){
 	var body = new URLSearchParams()
 	body.set('event', eventId)
 	body.set('picklist', JSON.stringify(currentPickList()))
+	pickListSaving++
 	fetch('/admin/picklist.cgi', {method:'POST', body:body})
 		.then(response => {
 			if (response.ok){
@@ -409,6 +411,39 @@ function savePickList(){
 			})
 		})
 		.catch(() => showPickListError(translate('pick_list_offline')))
+		.then(() => {
+			pickListSaving--
+			lastPickListSave = Date.now()
+		})
+}
+
+// Marking a team writes to the server, but every other screen already showing
+// the page has no idea. Poll for it so the list a scout is looking at catches up
+// without a reload -- during alliance selection that is the whole point of it
+// being shared.
+var PICK_LIST_POLL_MS = 10000
+var pickListSaving = 0
+var lastPickListSave = 0
+
+function pickListSignature(list){
+	return ((list&&list.pl)||[]).join(',') + '|' + ((list&&list.dnp)||[]).join(',')
+}
+
+function refreshPickList(){
+	// A poll that overtakes our own save would read the old list and undo the
+	// change we just made, so stand off while one is in flight or just landed.
+	if (pickListSaving || Date.now()-lastPickListSave < PICK_LIST_POLL_MS) return
+	if (document.hidden) return
+	promisePickList().then(saved => {
+		if (!saved || pickListSaving) return
+		if (pickListSignature(saved) == pickListSignature(currentPickList())) return
+		applyPickList(saved)
+		// The history describes a list that is no longer what anyone else has;
+		// undoing onto it would silently overwrite their change.
+		pickHistory = []
+		updateUndoPickButton()
+		showStats()
+	})
 }
 
 function showPickListError(reason){
