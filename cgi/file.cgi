@@ -5,6 +5,7 @@ use warnings;
 use File::Slurp;
 use Data::Dumper;
 use CGI qw(-utf8);;
+use JSON qw(encode_json);
 use lib '../pm';
 use webutil;
 use db;
@@ -29,6 +30,8 @@ if ($file =~ /local\.js$/){
 } elsif ($file =~ /\.json$/){
 	if ($file =~ /^20[0-9]{2}(-[0-9]{2})?\//){
 		&siteConfJson($file);
+	} elsif ($file =~ /\.picklist\.json$/){
+		&pickListJson($file);
 	} else {
 		&apiJson($file);
 	}
@@ -120,6 +123,25 @@ sub apiJson(){
 	binmode(STDOUT, ":utf8");
 	print "Content-type: text/json; charset=UTF-8\nContent-Disposition: attachment\n\n";
 	print $data->[0]->[0];
+}
+
+# The pick list lives as ordered rows rather than a stored document, so it is
+# assembled here into the same JSON the file-backed install serves.
+sub pickListJson(){
+	my ($file) = @_;
+	$webutil->error("Unexpected pick list file name", $file) if ($file !~ /^(20[0-9]{2}[a-zA-Z0-9\-]*)\.picklist\.json$/);
+	my ($event) = $file =~ /^(20[0-9]{2}[a-zA-Z0-9\-]*)/;
+	my $dbh = $db->dbConnection();
+	my $sth = $dbh->prepare("SELECT `list`,`team` FROM `picklist` WHERE `site`=? AND `event`=? ORDER BY `list`,`rank`");
+	$sth->execute(db::getSite(), $event);
+	my %lists = ('pl' => [], 'dnp' => []);
+	while (my $row = $sth->fetchrow_arrayref()){
+		push @{$lists{$row->[0]}}, $row->[1] + 0 if (exists $lists{$row->[0]});
+	}
+
+	binmode(STDOUT, ":utf8");
+	print "Content-type: text/json; charset=UTF-8\n\n";
+	print encode_json({pl => $lists{'pl'}, dnp => $lists{'dnp'}});
 }
 
 sub image(){

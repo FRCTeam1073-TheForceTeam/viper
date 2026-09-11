@@ -46,15 +46,27 @@ for my $team (@{$parsed->{'dnp'}}){
 }
 
 my $dbh = $db->dbConnection();
+
 if ($dbh){
-	# The pick list has no table of its own yet, and the data directory is not
-	# served on a database-backed install, so saving here would look like it
-	# worked and then vanish. Say so instead.
-	$webutil->error(
-		"Pick list saving needs the file data store",
-		"This site keeps its event data in MySQL, and the pick list does not have a table yet.\n".
-		"Clear the MYSQL_* settings in local.conf to use the file store, or ask for the table to be added."
-	);
+	# One row per team per position: the ordering is the whole point of a pick
+	# list, so it is stored as rows like every other event dataset rather than as
+	# a blob. Replaced wholesale, since a save is always the complete list.
+	$db->deletePickList($event);
+	for my $list ('pl', 'dnp'){
+		my $rank = 0;
+		for my $team (@{$parsed->{$list}}){
+			$db->upsert('picklist', {
+				'event' => $event,
+				'list'  => $list,
+				'rank'  => ++$rank,
+				'team'  => $team,
+			});
+		}
+	}
+	$db->commit();
+	print "Content-type: text/plain;charset=UTF-8\n\n";
+	print "OK";
+	exit 0;
 }
 
 my $fileName = "../data/${event}.picklist.json";

@@ -82,6 +82,15 @@ addI18n({
 		he:'לנקות את רשימת הבחירות השמורה לאירוע זה? לא ניתן לבטל פעולה זו.',
 		es:'Borrar la lista de selecciones guardada para este evento? Esto no se puede deshacer.',
 	},
+	pick_list_offline:{
+		en:'no connection to the server',
+		tr:'sunucuya baglanti yok',
+		pt:'sem ligacao ao servidor',
+		zh_tw:'無法連線到伺服器',
+		fr:'pas de connexion au serveur',
+		he:'אין חיבור לשרת',
+		es:'sin conexion al servidor',
+	},
 	pick_list_save_failed:{
 		en:'The pick list could not be saved. Your change is shown here but is not stored yet.',
 		tr:'Secim listesi kaydedilemedi. Degisikliginiz burada gorunuyor ancak henuz saklanmadi.',
@@ -399,10 +408,25 @@ function savePickList(){
 	body.set('picklist', JSON.stringify(currentPickList()))
 	fetch('/admin/picklist.cgi', {method:'POST', body:body})
 		.then(response => {
-			if (!response.ok) throw new Error(response.status)
-			$('#pickListError').hide()
+			if (response.ok){
+				$('#pickListError').hide()
+				return
+			}
+			// The server explains itself on the error page it returns; show that
+			// rather than a generic failure nobody can act on.
+			return response.text().catch(()=>"").then(text => {
+				var reason = (String(text).match(/<h1[^>]*>([^<]+)<\/h1>/)||[])[1]
+				showPickListError(reason || ('HTTP ' + response.status))
+			})
 		})
-		.catch(() => $('#pickListError').show())
+		.catch(() => showPickListError(translate('pick_list_offline')))
+}
+
+function showPickListError(reason){
+	$('#pickListError')
+		.text(translate('pick_list_save_failed') + (reason ? ' (' + reason + ')' : ''))
+		.removeAttr('data-i18n')
+		.show()
 }
 
 function setHash(){

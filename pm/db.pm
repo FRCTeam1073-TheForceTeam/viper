@@ -203,6 +203,18 @@ sub deleteAlliances {
 	")->execute(getSite(), $event);
 }
 
+# The pick list is replaced wholesale on every save: the order is the point of
+# it, so there is no sensible per-row update.
+sub deletePickList {
+	my ($self, $event) = @_;
+	my $conn = $self->dbConnection();
+	return if (!$conn);
+	$conn->prepare_cached("
+		DELETE FROM `picklist`
+		WHERE `site`=? AND `event`=?
+	")->execute(getSite(), $event);
+}
+
 sub getInputName(){
 	my ($input) = @_;
 	my ($name) = $input =~ /name\s*=\s*[\'\"]?([A-Za-z0-9\-_]+)[\'\"]?\b/i;
@@ -341,6 +353,24 @@ sub schema {
 				`file` VARCHAR(32) NOT NULL,
 				`json` MEDIUMTEXT NOT NULL,
 				UNIQUE(`site`,`event`,`file`)
+			)  $tableOptions
+		"
+	);
+	$dbh->commit();
+
+	print("Creating table `picklist`\n");
+	$dbh->do(
+		"
+			CREATE TABLE IF NOT EXISTS
+				`picklist`
+			(
+				`site` VARCHAR(16) NOT NULL,
+				`event` VARCHAR(32) NOT NULL,
+				`list` VARCHAR(3) NOT NULL,
+				`rank` INT NOT NULL,
+				`team` VARCHAR(8) NOT NULL,
+				INDEX(`site`,`event`),
+				UNIQUE(`site`,`event`,`list`,`rank`)
 			)  $tableOptions
 		"
 	);
