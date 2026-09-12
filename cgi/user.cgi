@@ -3,6 +3,11 @@
 use strict;
 use warnings;
 
+use lib '../pm';
+use webutil;
+
+my $webutil = webutil->new;
+
 # Reports who is signed in and which of the three configured roles they hold, so
 # the UI can hide abilities the server would refuse anyway. Role names are not
 # fixed: they come from GUEST_USER / SCOUTING_USER / ADMIN_USER in local.conf.
@@ -19,10 +24,25 @@ if (open(my $fh, '<', '../local.conf')){
 }
 # Each setting holds a space-separated list, so a role can have any number of
 # accounts -- "ADMIN_USER=\"admin taylor jane\"" gives all three admin rights.
-# Apache reads the same lists: "Require user" accepts several names.
+#
+# But local.conf is only the input to apache-config.sh. Until that has been run,
+# Apache still enforces the previous list, and reporting a role it will not
+# honour sends the user into admin pages that answer with a login prompt they
+# can never satisfy. So the vhost wins where it can be read, and local.conf is
+# the fallback for installs where it cannot.
 my @guest = split(" ", $conf{GUEST_USER} || "");
 my @scout = split(" ", $conf{SCOUTING_USER} || "");
 my @admin = split(" ", $conf{ADMIN_USER} || "");
+
+my $liveAdmin = $webutil->apacheRoleUsers("admin");
+my $liveScout = $webutil->apacheRoleUsers("scout");
+@admin = @$liveAdmin if (defined $liveAdmin);
+# The scout directory lists admins too; keep them out of the scout bucket so the
+# precedence below still reports them as admins.
+if (defined $liveScout){
+	my %isAdmin = map { $_ => 1 } @admin;
+	@scout = grep { !$isAdmin{$_} } @$liveScout;
+}
 
 sub isOneOf {
 	my ($name, @names) = @_;

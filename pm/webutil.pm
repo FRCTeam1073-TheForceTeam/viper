@@ -88,6 +88,51 @@ sub haveSrc {
 	return 0;
 }
 
+# Which accounts the running web server actually admits to a protected
+# directory. local.conf is only the *input* to apache-config.sh: until that has
+# been run, the vhost still holds the previous list, and a name added to
+# local.conf alone gets challenged rather than let in. Reading the vhost tells
+# us what Apache will really do, so the interface can agree with it.
+# Returns undef when the vhost cannot be found, meaning "cannot tell".
+sub apacheRoleUsers {
+	my ($self, $dir) = @_;
+
+	my $conf = '';
+	for my $path ('../../local.conf', '../local.conf'){
+		open(my $fh, '<', $path) or next;
+		local $/;
+		$conf = <$fh>;
+		close $fh;
+		last;
+	}
+	my ($site) = $conf =~ /^\s*APACHE_SITE_NAME\s*=\s*"?([^"\r\n]*?)"?\s*$/m;
+	$site = 'webscout' if (!$site);
+
+	my $vhost;
+	for my $base ('/etc/apache2', 'C:/xampp/apache/conf', '/c/xampp/apache/conf'){
+		my $candidate = "$base/sites-available/$site.conf";
+		if (-r $candidate){ $vhost = $candidate; last; }
+	}
+	return undef if (!$vhost);
+
+	my $text = '';
+	if (open(my $fh, '<', $vhost)){
+		local $/;
+		$text = <$fh>;
+		close $fh;
+	}
+
+	# The block for this directory only, so /admin/ rules are not read as /scout/.
+	my @users;
+	if ($text =~ /<Directory[^>]*\/\Q$dir\E\/?>(.*?)<\/Directory>/s){
+		my $block = $1;
+		while ($block =~ /^\s*Require\s+user\s+(.+?)\s*$/mg){
+			push @users, split(' ', $1);
+		}
+	}
+	return \@users;
+}
+
 sub commitDataFile {
 	my ($self, $file, $message) = @_;
 	$file =~ /((?:.*\/)?data\/)([^\/]+)/ or die "No data directory found in $file";

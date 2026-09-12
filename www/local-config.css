@@ -31,3 +31,5 @@ textarea{height:15em}
 #accountsHowTo li{margin:.6em 0;line-height:1.5}
 #accountsHowTo code{display:inline-block;margin-top:.35em;padding:.35em .6em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius);font-size:.92em;white-space:pre-wrap;word-break:break-all}
 .accountsNote{margin-top:1.2em;opacity:.85;line-height:1.5}
+.roleTag.role-pending{background:var(--focus-bg-color);color:var(--alert-fg-color);border-color:var(--alert-fg-color)}
+.pendingNote{color:var(--alert-fg-color)}

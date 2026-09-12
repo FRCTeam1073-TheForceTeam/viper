@@ -30,6 +30,12 @@ if (open(my $fh, '<', '../../local.conf')){
 my $root = getcwd();
 $root =~ s/[\/\\]www[\/\\]admin$//;
 
+# What Apache is actually enforcing right now, which lags local.conf until
+# apache-config.sh has been run. The page flags the difference rather than
+# letting someone wonder why a name they added does nothing.
+my $liveAdmin = $webutil->apacheRoleUsers('admin');
+my $liveScout = $webutil->apacheRoleUsers('scout');
+
 print "Content-type: application/json;charset=UTF-8\n\n";
 print encode_json({
 	admin => [split(" ", $conf{ADMIN_USER} || "")],
@@ -37,4 +43,6 @@ print encode_json({
 	guest => [split(" ", $conf{GUEST_USER} || "")],
 	root  => $root,
 	you   => ($ENV{REMOTE_USER} || ""),
+	liveAdmin => $liveAdmin,
+	liveScout => $liveScout,
 });

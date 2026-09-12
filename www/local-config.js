@@ -185,13 +185,13 @@ addI18n({
 		es:'Puede',
 	},
 	accounts_can_admin:{
-		en:'Everything: create events, edit data, manage playoffs',
-		tr:'Her sey: etkinlik olusturma, veri duzenleme, playoff yonetimi',
-		pt:'Tudo: criar eventos, editar dados, gerir playoffs',
-		zh_tw:'全部權限：建立賽事、編輯資料、管理季後賽',
-		fr:'Tout : creer des evenements, modifier les donnees, gerer les playoffs',
-		he:'הכול: יצירת אירועים, עריכת נתונים, ניהול פלייאוף',
-		es:'Todo: crear eventos, editar datos, gestionar playoffs',
+		en:'Everything a scouter can, plus create events, edit data and manage playoffs',
+		tr:'Bir gozlemcinin yapabildigi her sey, ayrica etkinlik olusturma, veri duzenleme ve playoff yonetimi',
+		pt:'Tudo o que um scouter pode, mais criar eventos, editar dados e gerir playoffs',
+		zh_tw:'偵察員的所有權限，另可建立賽事、編輯資料與管理季後賽',
+		fr:'Tout ce que peut un scouter, plus creer des evenements, modifier les donnees et gerer les playoffs',
+		he:'כל מה שסקאוטר יכול, ובנוסף יצירת אירועים, עריכת נתונים וניהול פלייאוף',
+		es:'Todo lo que puede un scouter, ademas de crear eventos, editar datos y gestionar playoffs',
 	},
 	accounts_can_scout:{
 		en:'Upload scouting data and photos',
@@ -210,6 +210,15 @@ addI18n({
 		fr:'Consulter les donnees uniquement',
 		he:'צפייה בנתונים בלבד',
 		es:'Solo ver datos',
+	},
+	accounts_pending:{
+		en:'Not in force yet — run the command below to apply it',
+		tr:'Henuz gecerli degil — uygulamak icin asagidaki komutu calistirin',
+		pt:'Ainda nao esta em vigor — execute o comando abaixo para aplicar',
+		zh_tw:'尚未生效 — 請執行下方指令以套用',
+		fr:'Pas encore actif — executez la commande ci-dessous pour l’appliquer',
+		he:'עדיין לא בתוקף — הרץ את הפקודה שלהלן כדי להחיל',
+		es:'Aun no esta en vigor — ejecuta el comando de abajo para aplicarlo',
 	},
 	accounts_you:{
 		en:'you',
@@ -302,13 +311,27 @@ function showAccounts(){
 				['scout', 'accounts_can_scout'],
 				['guest', 'accounts_can_guest']
 			]
+			// A name in local.conf is not in force until apache-config.sh has been
+			// run. Say so, rather than showing a role the server will not honour.
+			var live = {
+				admin: accounts.liveAdmin,
+				scout: accounts.liveScout
+			}
 			roles.forEach(function(role){
 				(accounts[role[0]]||[]).forEach(function(name){
-					var who = name + (name == accounts.you ? ' (' + translate('accounts_you') + ')' : '')
+					var active = live[role[0]],
+					pending = active && active.indexOf(name) < 0,
+					who = name + (name == accounts.you ? ' (' + translate('accounts_you') + ')' : ''),
+					tag = $('<span class=roleTag>').addClass('role-'+role[0]).text(role[0]),
+					can = $('<td>').attr('data-i18n', role[1])
+					if (pending){
+						tag.addClass('role-pending')
+						can = $('<td class=pendingNote>').attr('data-i18n','accounts_pending')
+					}
 					body.append($('<tr>')
 						.append($('<td class=accountName>').text(who))
-						.append($('<td>').append($('<span class=roleTag>').addClass('role-'+role[0]).text(role[0])))
-						.append($('<td>').attr('data-i18n', role[1])))
+						.append($('<td>').append(tag))
+						.append(can))
 				})
 			})
 			// Show the line as it would look with a new name on the end, and the
