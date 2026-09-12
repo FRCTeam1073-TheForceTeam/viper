@@ -103,6 +103,11 @@ echo '	</Directory>' >> $TMPCONF
 if [ "z$SCOUTING_USER" != "z" ]
 then
 	echo "	<Directory $DOCUMENT_ROOT/scout/>" >> $TMPCONF
+	# Answer an authorised-but-not-permitted request with 403 rather than a fresh
+	# 401 challenge. Without this a scout who follows an admin link -- or whose
+	# browser requests anything under here -- gets a password prompt they cannot
+	# satisfy, over and over.
+	echo '		AuthzSendForbiddenOnFailure On' >> $TMPCONF
 	echo '		<RequireAny>' >> $TMPCONF
 	echo "			Require user $SCOUTING_USER" >> $TMPCONF
 	if [ "z$ADMIN_USER" != "z" ]
@@ -123,6 +128,11 @@ fi
 if [ "z$ADMIN_USER" != "z" ]
 then
 	echo "	<Directory $DOCUMENT_ROOT/admin/>" >> $TMPCONF
+	# Answer an authorised-but-not-permitted request with 403 rather than a fresh
+	# 401 challenge. Without this a scout who follows an admin link -- or whose
+	# browser requests anything under here -- gets a password prompt they cannot
+	# satisfy, over and over.
+	echo '		AuthzSendForbiddenOnFailure On' >> $TMPCONF
 	echo '		<RequireAny>' >> $TMPCONF
 	echo "			Require user $ADMIN_USER" >> $TMPCONF
 	if [ "$ALLOW_LOCAL" == "1" ]
