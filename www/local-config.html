@@ -6,11 +6,11 @@
 <meta charset=UTF-8>
 <link rel=stylesheet href="/main.css?v=menu1">
 <link rel=stylesheet href=/local.css>
-<link rel=stylesheet href="/local-config.css?v=accounts1">
+<link rel=stylesheet href=/local-config.css>
 <script src=/jquery.min.js></script>
 <script src="/main.js?v=probe1"></script>
 <script src=/local.js onload="window.localJsLoaded=true"></script>
-<script src="/local-config.js?v=accounts1"></script>
+<script src=/local-config.js></script>
 <link rel=icon type=image/png href=/logo.png>
 </head>
 <body data-require-role=admin>
@@ -50,22 +50,6 @@
 	<input type=hidden id=transferHosts-json name=transferHosts>
 	<button type=submit data-i18n=local_config_save></button>
 </form>
-
-<section id=accounts style=display:none>
-	<h2 data-i18n=accounts_heading></h2>
-	<p class=accountsIntro data-i18n=accounts_intro></p>
-	<table id=accountsTable>
-		<thead><tr><th data-i18n=accounts_col_account></th><th data-i18n=accounts_col_role></th><th data-i18n=accounts_col_can></th></tr></thead>
-		<tbody></tbody>
-	</table>
-	<h3 data-i18n=accounts_howto_heading></h3>
-	<ol id=accountsHowTo>
-		<li><span data-i18n=accounts_step_edit></span><br><code id=accountsConfLine></code></li>
-		<li><span data-i18n=accounts_step_run></span><br><code id=accountsCommand></code></li>
-		<li data-i18n=accounts_step_password></li>
-	</ol>
-	<p class=accountsNote data-i18n=accounts_note></p>
-</section>
 </div>
 </body>
 </html>

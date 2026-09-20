@@ -14,20 +14,3 @@ button[type=submit]{padding:0.5em 1.5em;font-size:1em;background-color:var(--but
 #message-area p.success{background-color:var(--diff-add-bg-color);color:var(--highlight-fg-color);border:1px solid var(--highlight-bg-color)}
 #message-area p.error{background-color:var(--diff-rem-bg-color);color:var(--button-disabled-decoration-color);border:1px solid var(--button-disabled-decoration-color)}
 textarea{height:15em}
-
-/* Accounts section: who holds which role, and how to change it. */
-#accounts{margin-top:2.5em;text-align:start;max-width:44em;margin-inline:auto}
-#accounts h2{margin-bottom:.2em}
-.accountsIntro{margin:0 0 1em;opacity:.85}
-#accountsTable{border-collapse:collapse;width:100%;margin-bottom:1.5em}
-#accountsTable th,#accountsTable td{border:1px solid var(--main-border-color);padding:.4em .7em;text-align:start;vertical-align:top}
-#accountsTable th{font-size:.85em;text-transform:uppercase;letter-spacing:.04em;opacity:.8}
-#accountsTable .accountName{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
-.roleTag{display:inline-block;padding:.1em .55em;border-radius:1em;font-size:.82em;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border:1px solid var(--main-border-color)}
-.roleTag.role-admin{background:var(--highlight-bg-color);color:var(--highlight-fg-color);border-color:var(--highlight-fg-color)}
-.roleTag.role-scout{background:var(--lowlight-bg-color)}
-.roleTag.role-guest{background:transparent;opacity:.8}
-#accountsHowTo{max-width:none;padding-inline-start:1.4em}
-#accountsHowTo li{margin:.6em 0;line-height:1.5}
-#accountsHowTo code{display:inline-block;margin-top:.35em;padding:.35em .6em;background:var(--surface);border:1px solid var(--main-border-color);border-radius:var(--radius);font-size:.92em;white-space:pre-wrap;word-break:break-all}
-.accountsNote{margin-top:1.2em;opacity:.85;line-height:1.5}
