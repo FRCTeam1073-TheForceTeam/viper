@@ -622,15 +622,6 @@ $(document).ready(function(){
 // point -- these helpers only let the UI agree with it instead of offering
 // buttons the server will refuse.
 var promiseUserCache
-
-// The role comes from /user.cgi, which reads the same local.conf that
-// apache-config.sh generates the vhost from -- so the list the UI uses and the
-// list Apache enforces cannot drift apart.
-//
-// Probing /admin/ directly would be more direct, but Apache answers an
-// unauthorised request with 401 and a WWW-Authenticate header, and the browser
-// turns that into a password prompt on every page load for anyone who is not an
-// admin. It is only safe once the server answers 403 instead of 401 there.
 function promiseUser(){
 	if (!promiseUserCache) promiseUserCache = fetch('/user.cgi')
 		.then(response => response.json())
