@@ -79,7 +79,7 @@ html[dir="rtl"] a.card[href],html[dir="rtl"] a.button[href]{padding-right:2em}
 html[dir="rtl"] a.card[href]::after,html[dir="rtl"] a.button[href]::after{right:unset;left:.4em}
 a.card[href]>div,a.card[href]>p{color:var(--main-fg-color)}
 nav.left{position:fixed;top:0;inset-inline-start:0;bottom:0;width:var(--left-nav-width);max-width:85vw;box-sizing:border-box;overflow-y:auto;text-align:start;margin:0;padding:1em;background:var(--surface-bg);border-inline-end:1px solid var(--main-border-color);z-index:9991;transition:transform .2s ease;display:flex;flex-direction:column;gap:0.5em}
-nav.left>.nav-toggle{position:absolute;top:calc(100vh - 2em);left:unset;right:0;display:flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;padding:0;background-color:var(--accent);color:var(--accent-fg);border:var(--border);border-radius:var(--radius);font-size:140%;font-weight:700;line-height:1;cursor:pointer;z-index:9981}
+nav.left>.nav-toggle{position:absolute;top:calc(100vh - 4em);bottom:auto;left:unset;right:0;display:flex;align-items:center;justify-content:center;width:1.4em;height:1.4em;padding:0;background-color:var(--accent);color:var(--accent-fg);border:var(--border);border-radius:var(--radius);font-size:140%;font-weight:700;line-height:1;cursor:pointer;z-index:9981}
 html[dir="rtl"] nav.left>.nav-toggle{right:unset;left:0}
 nav.left>.nav-toggle::before{content:'‹'}
 nav.left.nav-hidden{overflow-y:hidden;transform:translateX(calc(-100% + var(--left-nav-hidden-width)))}
@@ -126,8 +126,13 @@ html[dir="rtl"] .tooltip-before[data-tooltip]:hover::before{margin-right:-11em}
 html[dir="ltr"] .tooltip-before[data-tooltip]:hover::before{margin-left:-11em}
 html[dir="rtl"] [data-tooltip]:hover::before{margin-right:3em}
 [data-tooltip]:not([data-tooltip-persistent])::before{pointer-events:none}
-@media only screen and ((max-width:600px) or (max-height:600px)){
+@media (max-aspect-ratio: 2/3){
 	html{font-size:12px;}
+	#app-bar{left:0 !important;right:var(--app-bar-icons-width) !important}
+	nav.left{position:static;width:100%;max-width:38em;transform:none !important;overflow-y:visible;margin:1em auto;padding:1em;border-inline-end:none;border-bottom:none}
+	nav.left.nav-hidden{transform:none}
+	nav.left>.nav-toggle{display:none}
+	main:has(>nav.left){padding-inline-start:0;padding-left:0}
 }
 @media print {
 	html{background:white;color:black}
