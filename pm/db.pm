@@ -113,11 +113,15 @@ sub writeCsv(){
 
 sub upsert {
 	my($self, $table, $data) = @_;
+	die "Invalid table name: $table" if ($table !~ /^[A-Za-z0-9_]+$/);
 	delete($data->{""});
 	my $conn = $self->dbConnection();
 	$data->{'site'} = getSite();
 	$data->{'site'} = "" if ($table eq 'apijson');
 	my @allFields = keys(%$data);
+	for my $field (@allFields) {
+		die "Invalid field name: $field" if ($field !~ /^[A-Za-z0-9_]+$/);
+	}
 	my $fields = join("`,`", @allFields);
 	my $placeholders = join(",", map {"?"} @allFields);
 
