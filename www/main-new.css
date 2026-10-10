@@ -106,7 +106,7 @@ input:focus,.lastFocus{outline:2px solid var(--accent);outline-offset:2px}
 .primary,a.primary{border-color:var(--accent);background-color:var(--accent);color:var(--accent-fg)}
 label input:checked+span,label input:checked+span:hover{background:var(--button-selected-bg-color)}
 label input:disabled+span{text-decoration:var(--button-disabled-decoration-color) wavy line-through;text-decoration-thickness:.2em}
-input[type='checkbox'],input[type='radio'],.init-hide{display:none}
+label:has(>input[type='checkbox']+span) input[type='checkbox'],label:has(>input[type='radio']+span) input[type='radio'],.init-hide{display:none}
 h1{padding:0 2.5em}
 #hamburger.hasUploads{background-color:var(--highlight-bg-color)}
 #error-logs-link,#hamburger.error{background-color:var(--button-disabled-decoration-color);color:var(--main-fg-color)}
