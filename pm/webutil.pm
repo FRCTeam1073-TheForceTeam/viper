@@ -3,7 +3,7 @@
 use strict;
 package webutil;
 use Cwd;
-
+use JSON::PP;
 use HTML::Entities;
 
 sub new {
@@ -13,21 +13,38 @@ sub new {
 	return $self;
 }
 
-sub error {
+sub badRequest {
 	my ($self, $title, $help) = @_;
-	print "Status: 500 Internal Server Error\n";
-	print "Content-type: text/html; charset=UTF-8\n\n";
-	print "<!DOCTYPE html>\n";
-	print "<html>\n";
-	print "<head>\n";
-	print "<meta charset=UTF-8>\n";
-	print "<title>".encode_entities($title)."</title>\n";
-	print "</head>\n";
-	print "<body>\n";
-	print "<h1 style=color:red>".encode_entities($title)."</h1>\n";
-	print "<pre>".encode_entities($help||"")."</pre>\n";
-	print "</body>\n";
-	print "</html>\n";
+	$self->error($title, $help, "400 Bad Request");
+}
+
+sub error {
+	my ($self, $title, $help, $status) = @_;
+	$status ||= "500 Internal Server Error";
+	print "Status: $status\n";
+
+	my $acceptHeader = $ENV{'HTTP_ACCEPT'} || '';
+	if ($acceptHeader =~ /application\/json/) {
+		print "Content-type: application/json; charset=UTF-8\n\n";
+		my $json = JSON::PP->new->canonical->encode({
+			error => $title,
+			details => $help||""
+		});
+		print $json."\n";
+	} else {
+		print "Content-type: text/html; charset=UTF-8\n\n";
+		print "<!DOCTYPE html>\n";
+		print "<html>\n";
+		print "<head>\n";
+		print "<meta charset=UTF-8>\n";
+		print "<title>".encode_entities($title)."</title>\n";
+		print "</head>\n";
+		print "<body>\n";
+		print "<h1 style=color:red>".encode_entities($title)."</h1>\n";
+		print "<pre>".encode_entities($help||"")."</pre>\n";
+		print "</body>\n";
+		print "</html>\n";
+	}
 	exit 0;
 }
 

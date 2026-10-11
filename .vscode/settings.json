@@ -19,4 +19,5 @@
 	"[markdown]": {
 		"editor.insertSpaces": true
 	},
+	"java.configuration.updateBuildConfiguration": "automatic",
 }
