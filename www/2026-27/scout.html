@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Scout EVENT</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/local.css>
+<link rel=stylesheet href=/scout.css>
+<link rel=stylesheet href=scout.css>
+<script src=/jquery.min.js></script>
+<script src=/main.js></script>
+<script src=/event-url.js></script>
+<script src=/qrcode.min.js></script>
+<script src=/scout.js></script>
+<script src=scout.js></script>
+<script src=/photo-db.js></script>
+<script src=/heartbeat.js></script>
+<script src=/local.js></script>
+<link rel=icon type=image/png href=/logo.png>
+</head>
+
+<body>
+<h1></h1>
+<div id=select-bot class=screen style=display:none>
+	<h2 data-i18n=choose_pos_heading></h2>
+	<div class=blueTeamBG>
+		<button>B1</button>
+		<button>B2</button>
+	</div>
+	<div class=redTeamBG>
+		<button>R1</button>
+		<button>R2</button>
+	</div>
+	<button class=showInstructions data-i18n=instructions></button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
+</div>
+
+<div id=select-match class=screen style=display:none>
+	<h1></h1>
+	<button class=showInstructions data-i18n=instructions></button>
+	<button class=robotBtn data-i18n=change_robot_button></button>
+	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
+	<div id=match-list></div>
+</div>
+
+<div id=change-team class=screen style=display:none>
+	<input type=text id=teamChange inputmode=numeric size=4 placeholder=Team#>
+	<button id=teamChangeBtn>Change</button>
+	<button id=teamCancelBtn data-i18n=cancel_button></button>
+</div>
+
+<form id=scouting class=screen style=display:none>
+	<div>
+		<button class=showInstructions data-i18n=instructions></button>
+		<button id=teamBtn data-i18n=team_correction_button></button>
+		<button id=matchBtn data-i18n=choose_match_button></button>
+		<button class=robotBtn data-i18n=change_robot_button></button>
+		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+	</div>
+	<input type=hidden name=event>
+	<input type=hidden name=match>
+	<input type=hidden name=team>
+	<input type=hidden name=timeline id=timeline>
+
+	<div class=tabs>
+		<div class="tab default-tab" data-content=pre data-i18n=pre_match_tab></div>
+		<div class="tab" data-content=auto data-i18n=auto_tab></div>
+		<div class=tab data-content=teleop data-i18n=tele_tab></div>
+		<div class=tab data-content=end data-i18n=end_game_tab></div>
+	</div>
+
+	<div class="pre tab-content">
+		<table><tr><td class=subheader colspan=4 id=no-show-area>
+			<label><input type=checkbox name=no_show value=1><span data-i18n=no_show></span></label>
+		</td></tr><tr><td colspan=4>
+			<label><input type=checkbox name=preload_check value=1><span data-i18n=preload_check></span></label>
+		</td></tr><tr><td class=subheader colspan=4>
+			<button id=to-auto-button class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
+		</td></tr></table>
+	</div>
+
+	<div class="auto tab-content">
+		<table><tr><td class=subheader colspan=3>
+			<button class=undo data-i18n=undo_button></button>
+		</td></tr><tr><td colspan=3 class=held-count>
+			<span data-i18n=held></span> <span class=held-value>4</span>
+		</td></tr><tr><td colspan=3>
+			<label><input type=checkbox name=auto_leave value=1><span data-i18n=auto_leave></span></label><br>
+			<label><input type=checkbox name=auto_park value=1><span data-i18n=auto_park></span></label>
+		</td></tr><tr><td colspan=3>
+			<span data-i18n=hive_tip></span>
+			<button class=count data-input=auto_hive_tip><span>+1</span></button>
+			<input type=text class=num value=0 name=auto_hive_tip size=1 disabled>
+		</td></tr><tr>
+			<td><span data-i18n=collected></span></td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=auto_collect_pollen><span>+1</span></button> <input type=text class=num value=0 name=auto_collect_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=auto_collect_nectar><span>+1</span></button> <input type=text class=num value=0 name=auto_collect_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=cell></span></td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=auto_cell_pollen><span>+1</span></button> <input type=text class=num value=0 name=auto_cell_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=auto_cell_nectar><span>+1</span></button> <input type=text class=num value=0 name=auto_cell_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=garden></span></td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=auto_garden_pollen><span>+1</span></button> <input type=text class=num value=0 name=auto_garden_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=auto_garden_nectar><span>+1</span></button> <input type=text class=num value=0 name=auto_garden_nectar size=1 disabled></td>
+		</tr><tr><td class=subheader colspan=3>
+			<button id=to-tele-button class=tab-button data-content=teleop data-i18n=proceed_tele_button></button>
+		</td></tr></table>
+	</div>
+
+	<div class="teleop tab-content">
+		<table><tr><td class=subheader colspan=3>
+			<button class=undo data-i18n=undo_button></button>
+		</td></tr><tr><td colspan=3 class=held-count>
+			<span data-i18n=held></span> <span class=held-value>4</span>
+		</td></tr><tr>
+			<td><span data-i18n=collected></span></td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=tele_collect_pollen><span>+1</span></button> <input type=text class=num value=0 name=tele_collect_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=tele_collect_nectar><span>+1</span></button> <input type=text class=num value=0 name=tele_collect_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=cell></span></td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=tele_cell_pollen><span>+1</span></button> <input type=text class=num value=0 name=tele_cell_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=tele_cell_nectar><span>+1</span></button> <input type=text class=num value=0 name=tele_cell_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=flower></span> 1</td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower1_pollen><span>+1</span></button> <input type=text class=num value=0 name=tele_flower1_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower1_nectar><span>+1</span></button> <input type=text class=num value=0 name=tele_flower1_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=flower></span> 2</td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower2_pollen><span>+1</span></button> <input type=text class=num value=0 name=tele_flower2_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower2_nectar><span>+1</span></button> <input type=text class=num value=0 name=tele_flower2_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=flower></span> 3</td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower3_pollen><span>+1</span></button> <input type=text class=num value=0 name=tele_flower3_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower3_nectar><span>+1</span></button> <input type=text class=num value=0 name=tele_flower3_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=flower></span> 4</td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower4_pollen><span>+1</span></button> <input type=text class=num value=0 name=tele_flower4_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower4_nectar><span>+1</span></button> <input type=text class=num value=0 name=tele_flower4_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><span data-i18n=garden></span></td>
+			<td><span data-i18n=pollen></span> <button class=count data-input=tele_garden_pollen><span>+1</span></button> <input type=text class=num value=0 name=tele_garden_pollen size=1 disabled></td>
+			<td><span data-i18n=nectar></span> <button class=count data-input=tele_garden_nectar><span>+1</span></button> <input type=text class=num value=0 name=tele_garden_nectar size=1 disabled></td>
+		</tr><tr>
+			<td colspan=3>
+				<span data-i18n=hive_tip></span>
+				<button class=count data-input=tele_hive_tip><span>+1</span></button>
+				<input type=text class=num value=0 name=tele_hive_tip size=1 disabled>
+			</td>
+		</tr><tr><td class=subheader colspan=3>
+			<button id=to-end-button class=tab-button data-content=end data-i18n=proceed_end_button></button>
+		</td></tr></table>
+	</div>
+
+	<div class="end tab-content">
+		<table><tr><td>
+			<label><input type=checkbox name=end_park value=1><span data-i18n=end_park></span></label><br>
+			<label><input type=checkbox name=robot_disabled value=1><span data-i18n=robot_disabled></span></label>
+		</td></tr><tr><td>
+			<fieldset class="left full" id=review-request>
+				<legend data-i18n=review_requested_legend></legend>
+				<div><label><input type=checkbox name=review_requested value=1><span data-i18n=review_requested_button></span></label></div>
+			</fieldset>
+			<fieldset class="left full">
+				<legend data-i18n=scouter_name_question></legend>
+				<input class=full type=text size=50 name=scouter maxlength=32 data-i18n-placeholder=scouter_name_placeholder>
+			</fieldset>
+			<fieldset class="left full" id=scouting-comments>
+				<legend data-i18n=comments_question></legend>
+				<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
+			</fieldset>
+			<input type=hidden name=created value="">
+			<input type=hidden name=modified value="">
+			<fieldset class=full id=nextButtons>
+				<legend data-i18n=save_data_question></legend>
+				<div id=doneButtons></div>
+			</fieldset>
+		</td></tr></table>
+	</div>
+</form>
+
+</body>
+</html>
