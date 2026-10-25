@@ -81,28 +81,32 @@
 	<div class="auto tab-content">
 		<table><tr><td class=subheader colspan=3>
 			<button class=undo data-i18n=undo_button></button>
-		</td></tr><tr><td colspan=3 class=held-count>
-			<span data-i18n=held></span> <span data-i18n=pollen></span> <span class=held-pollen>4</span> <span data-i18n=nectar></span> <span class=held-nectar>0</span>
 		</td></tr><tr><td colspan=3>
-			<label><input type=checkbox name=auto_leave value=1><span data-i18n=auto_leave></span></label><br>
-			<label><input type=checkbox name=auto_park value=1><span data-i18n=auto_park></span></label>
-		</td></tr><tr>
-			<td><span data-i18n=collected></span></td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=auto_collect_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=auto_collect_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=auto_collect_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=auto_collect_nectar size=1 disabled></td>
+			<label><input type=checkbox name=auto_leave value=1><span data-i18n=auto_leave></span></label>
+		</td></tr><tr class=column-head><td><span data-i18n=pollen></span></td><td></td><td><span data-i18n=nectar></span></td></tr>
+		<tr>
+			<td class=held-count><span class=held-pollen>4</span></td>
+			<td class=held-count><span data-i18n=held></span></td>
+			<td class=held-count><span class=held-nectar>0</span></td>
 		</tr><tr>
+			<td><button class=count data-input=auto_collect_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=auto_collect_pollen size=1 disabled></td>
+			<td><span data-i18n=collected></span></td>
+			<td><button class=count data-input=auto_collect_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=auto_collect_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><button class=count data-input=auto_cell_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=auto_cell_pollen size=1 disabled></td>
 			<td><span data-i18n=cell></span></td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=auto_cell_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=auto_cell_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=auto_cell_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=auto_cell_nectar size=1 disabled></td>
+			<td><button class=count data-input=auto_cell_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=auto_cell_nectar size=1 disabled></td>
 		</tr><tr><td colspan=3>
 			<span data-i18n=hive_tip></span>
 			<button class=count data-input=auto_hive_tip><span>+1</span></button>
 			<input type=text class=num value=0 name=auto_hive_tip size=1 disabled>
 		</td></tr><tr>
+			<td><button class=count data-input=auto_garden_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=auto_garden_pollen size=1 disabled></td>
 			<td><span data-i18n=garden></span></td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=auto_garden_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=auto_garden_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=auto_garden_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=auto_garden_nectar size=1 disabled></td>
-		</tr><tr><td class=subheader colspan=3>
+			<td><button class=count data-input=auto_garden_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=auto_garden_nectar size=1 disabled></td>
+		</tr><tr><td colspan=3>
+			<label><input type=checkbox name=auto_park value=1><span data-i18n=auto_park></span></label>
+		</td></tr><tr><td class=subheader colspan=3>
 			<button id=to-tele-button class=tab-button data-content=teleop data-i18n=proceed_tele_button></button>
 		</td></tr></table>
 	</div>
@@ -110,40 +114,43 @@
 	<div class="teleop tab-content">
 		<table><tr><td class=subheader colspan=3>
 			<button class=undo data-i18n=undo_button></button>
-		</td></tr><tr><td colspan=3 class=held-count>
-			<span data-i18n=held></span> <span data-i18n=pollen></span> <span class=held-pollen>4</span> <span data-i18n=nectar></span> <span class=held-nectar>0</span>
-		</td></tr><tr>
-			<td><span data-i18n=collected></span></td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=tele_collect_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=tele_collect_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=tele_collect_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=tele_collect_nectar size=1 disabled></td>
+		</td></tr><tr class=column-head><td><span data-i18n=pollen></span></td><td></td><td><span data-i18n=nectar></span></td></tr>
+		<tr>
+			<td class=held-count><span class=held-pollen>4</span></td>
+			<td class=held-count><span data-i18n=held></span></td>
+			<td class=held-count><span class=held-nectar>0</span></td>
 		</tr><tr>
+			<td><button class=count data-input=tele_collect_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=tele_collect_pollen size=1 disabled></td>
+			<td><span data-i18n=collected></span></td>
+			<td><button class=count data-input=tele_collect_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=tele_collect_nectar size=1 disabled></td>
+		</tr><tr>
+			<td><button class=count data-input=tele_cell_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=tele_cell_pollen size=1 disabled></td>
 			<td><span data-i18n=cell></span></td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=tele_cell_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=tele_cell_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=tele_cell_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=tele_cell_nectar size=1 disabled></td>
+			<td><button class=count data-input=tele_cell_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=tele_cell_nectar size=1 disabled></td>
 		</tr><tr><td colspan=3>
 				<span data-i18n=hive_tip></span>
 				<button class=count data-input=tele_hive_tip><span>+1</span></button>
 				<input type=text class=num value=0 name=tele_hive_tip size=1 disabled>
 		</td></tr><tr>
+			<td><button class=count data-input=tele_flower1_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=tele_flower1_pollen size=1 disabled></td>
 			<td><span data-i18n=flower></span> 1</td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower1_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=tele_flower1_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower1_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=tele_flower1_nectar size=1 disabled></td>
+			<td><button class=count data-input=tele_flower1_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=tele_flower1_nectar size=1 disabled></td>
 		</tr><tr>
+			<td><button class=count data-input=tele_flower2_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=tele_flower2_pollen size=1 disabled></td>
 			<td><span data-i18n=flower></span> 2</td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower2_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=tele_flower2_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower2_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=tele_flower2_nectar size=1 disabled></td>
+			<td><button class=count data-input=tele_flower2_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=tele_flower2_nectar size=1 disabled></td>
 		</tr><tr>
+			<td><button class=count data-input=tele_flower3_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=tele_flower3_pollen size=1 disabled></td>
 			<td><span data-i18n=flower></span> 3</td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower3_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=tele_flower3_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower3_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=tele_flower3_nectar size=1 disabled></td>
+			<td><button class=count data-input=tele_flower3_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=tele_flower3_nectar size=1 disabled></td>
 		</tr><tr>
+			<td><button class=count data-input=tele_flower4_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=tele_flower4_pollen size=1 disabled></td>
 			<td><span data-i18n=flower></span> 4</td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=tele_flower4_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=tele_flower4_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=tele_flower4_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=tele_flower4_nectar size=1 disabled></td>
+			<td><button class=count data-input=tele_flower4_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=tele_flower4_nectar size=1 disabled></td>
 		</tr><tr>
+			<td><button class=count data-input=tele_garden_pollen><img src=pollen.png alt=Pollen></button> <input type=text class=num value=0 name=tele_garden_pollen size=1 disabled></td>
 			<td><span data-i18n=garden></span></td>
-			<td><span data-i18n=pollen></span> <button class=count data-input=tele_garden_pollen><img src=pollen.png alt=POLLEN></button> <input type=text class=num value=0 name=tele_garden_pollen size=1 disabled></td>
-			<td><span data-i18n=nectar></span> <button class=count data-input=tele_garden_nectar><img class=nectar-img src=nectar-red.png alt=NECTAR></button> <input type=text class=num value=0 name=tele_garden_nectar size=1 disabled></td>
+			<td><button class=count data-input=tele_garden_nectar><img class=nectar-img src=nectar-red.png alt=Nectar></button> <input type=text class=num value=0 name=tele_garden_nectar size=1 disabled></td>
 		</tr><tr><td class=subheader colspan=3>
 			<button id=to-end-button class=tab-button data-content=end data-i18n=proceed_end_button></button>
 		</td></tr></table>
