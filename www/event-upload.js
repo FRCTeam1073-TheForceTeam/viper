@@ -103,11 +103,15 @@ addI18n({
 })
 
 $(document).ready(function(){
+	var csvReviewed = false
 	$('#importData').submit(processInput)
 	$('input[type=submit]').click(processInput)
 
 	function processInput(){
-		var src=$('#sourceInp').val(),csv=(
+		var src=$('#sourceInp').val()
+		// Schedule already reviewed, or event pre-filled from the hash with nothing pasted: submit as-is
+		if (csvReviewed || (!src && eventId && $('#csvInp').val())) return true
+		var csv=(
 			getBlueAllianceMatchSchedule(src)||
 			getOrangeAllianceMatchSchedule(src)||
 			getFirstInspiresMatchSchedule(src)||
@@ -134,15 +138,25 @@ $(document).ready(function(){
 		}
 		if (newEventId != eventId){
 			eventId=newEventId
-			$('#idInp').val(eventId)
+			promiseCache = {}
+			$('#idInp').val(eventId).removeAttr('data-existing')
 			promiseEventInfo().then(eventInfo => {
-				if (srcToField(src, eventInfo)){
-					$('#importData').submit()
-				}
+				srcToField(src, eventInfo)
+				showReview()
 			})
 			return false
 		}
 		srcToField(src)
+		showReview()
+		return false
+	}
+
+	function showReview(){
+		// Show the generated schedule and fields for review; the next press submits them as shown
+		csvReviewed = true
+		$('#autoFields').show()
+		$('#csvInp').show()
+		$('#sourceInp').removeAttr('required').hide()
 	}
 
 	function srcToField(src, eventInfo){
@@ -171,20 +185,10 @@ $(document).ready(function(){
 			["",eventInfo.location||
 			$('#locationInp').val()]
 		)[1].replace(/\<[^\>]*\>/g,""))
-		var empty = false
-		$('#autoFields input:empty').each(function(){
-			if (!$(this).val()) empty = true
-		})
-		if(empty){
-			$('#autoFields').show()
-			$('#csvInp').show()
-			$('#sourceInp').hide()
-			return false
-		}
-		return true
 	}
 
 	function venueNameToId(){
+		if ($('#idInp').attr('data-existing')=='true') return
 		$('#idInp').val(new Date($('#startInp').val()).getFullYear()+$('#nameInp').val().replace(/20[0-9]{2}/g,"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^0-9a-z\-]/g,""))
 	}
 
@@ -271,6 +275,22 @@ $(document).ready(function(){
 			return ""
 		}
 		return schedule.map(function(d){return d.join(',')}).join('\n') + "\n"
+	}
+
+	if (eventId){
+		$('#autoFields').show()
+		$('#idInp').val(eventId).attr('data-existing', 'true')
+		promiseEventInfo().then(eventInfo => {
+			$('#nameInp').val(eventInfo.name)
+			$('#locationInp').val(eventInfo.location)
+			$('#startInp').val(eventInfo.start)
+			$('#endInp').val(eventInfo.end)
+		})
+		promiseEventAjax(`/data/${eventId}.schedule.csv`).then(text => {
+			if (!text) return
+			$('#csvInp').val(text)
+			$('#sourceInp').removeAttr('required')
+		})
 	}
 
 	$('#showInstructions').click(function(){

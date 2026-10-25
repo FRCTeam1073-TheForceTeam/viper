@@ -154,6 +154,15 @@ addI18n({
 		fr:'Télécharger les données de repérage (Matchs : _UPLOADCOUNT_)',
 		tr:'İzcilik Verilerini Yükle (Maçlar: _UPLOADCOUNT_)',
 	},
+	upload_schedule_link:{
+		en:'Paste Schedule or Teams',
+		tr:'Maç Programını Yapıştır',
+		pt:'Colar Cronograma de Partidas',
+		es:'Pegar Horario de Partidos',
+		fr:'Coller le calendrier des matchs',
+		he:'הדבק לוח זמנים של משחקים',
+		zh_tw:'貼上比賽時間表',
+	},
 	scout_match_link:{
 		en:'Match Scouting',
 		tr:'Maç İzciliği',
@@ -1015,6 +1024,7 @@ $(document).ready(function(){
 		lastPmQmMatch = [...eventMatches].reverse().find(m => /^(pm|qm)/.test(m.Match)),
 		onlyPracticeScouted = !lastDone || /^pm/.test(lastDone.Match),
 		noQualMatches = !eventMatches.some(m => /^qm/.test(m.Match)),
+		noMatches = !eventMatches.length,
 		lastScoutedHasNoApiScore = lastDone && !eventScores[lastDone.Match],
 		practiceChoice = eventMatches.some(m => /^pm/.test(m.Match)) && eventMatches.some(m => !/^pm/.test(m.Match)),
 		hasOurTeamMatch = eventMatches.some(m => matchHasTeam(m,getLocalTeam()))
@@ -1048,7 +1058,7 @@ $(document).ready(function(){
 		if(eventMatches.length > 0 && onlyPracticeScouted) dependencySatisfied('dependNeedsPit')
 		if(isFrcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFrcApi')
 		if(isFtcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFtcApi')
-		if(!(isFrcApiAvailable || isFtcApiAvailable) && noQualMatches) dependencySatisfied('dependNeedsManualSchedule')
+		if(noMatches || (!(isFrcApiAvailable || isFtcApiAvailable) && noQualMatches)) dependencySatisfied('dependNeedsManualSchedule')
 		if(practiceChoice) dependencySatisfied('dependPracticeChoice')
 		if(hasOurTeamMatch) dependencySatisfied('dependTeamSchedule')
 		if(eventMatches.find(m => /^(qm)/.test(m.Match))) dependencySatisfied('dependQuals')
