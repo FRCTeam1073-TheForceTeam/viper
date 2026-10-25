@@ -6,6 +6,7 @@ html{padding:0}
 	.tab{font-size:70%}
 }
 .num{text-align:center!important}
+.disabledOverlay{position:absolute;display:inline-block;width:100%;height:100%;background:#000A;top:0;left:0;z-index:1}
 .held-count{font-weight:bold}
 .held-count.over{color:red}
 table{background:var(--main-bg-color);width:80%}

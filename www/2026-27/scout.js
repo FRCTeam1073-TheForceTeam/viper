@@ -131,7 +131,9 @@ addI18n({
 
 // Robots start with 4 pre-loaded POLLEN (Section 10.3.4); the pre-match check enforces this
 const PRELOAD_COUNT=4,
-HELD_MAX=4
+HELD_MAX=4,
+COLLECT_FIELDS='#scouting [name^=auto_collect_],#scouting [name^=tele_collect_]',
+PLACE_FIELDS='#scouting [name^=auto_cell_],#scouting [name^=auto_garden_],#scouting [name^=tele_cell_],#scouting [name^=tele_flower],#scouting [name^=tele_garden_]'
 
 function sumCounters(selector){
 	var total=0
@@ -140,12 +142,15 @@ function sumCounters(selector){
 }
 
 // Pieces currently controlled = preload + collected - placed (G407 caps this at 4)
+// At the cap, collection counters are disabled. With nothing held, placement counters are disabled.
 function updateHeldCount(){
 	var held = PRELOAD_COUNT
-		+ sumCounters('#scouting [name^=auto_collect_],#scouting [name^=tele_collect_]')
-		- sumCounters('#scouting [name^=auto_cell_],#scouting [name^=auto_garden_],#scouting [name^=tele_cell_],#scouting [name^=tele_flower],#scouting [name^=tele_garden_]')
+		+ sumCounters(COLLECT_FIELDS)
+		- sumCounters(PLACE_FIELDS)
 	$('.held-value').text(held)
 	$('.held-count').toggleClass('over', held>HELD_MAX || held<0)
+	$(COLLECT_FIELDS).closest('td').find('.disabledOverlay').toggle(held>=HELD_MAX)
+	$(PLACE_FIELDS).closest('td').find('.disabledOverlay').toggle(held<=0)
 }
 
 $(document).ready(function(){
@@ -153,6 +158,15 @@ $(document).ready(function(){
 
 	var matchStartTime = 0,
 	wentToTeleAuto = false
+
+	// Overlays block taps on a counter (same mechanism as earlier seasons). The click
+	// is stopped here so it never reaches the cell's counter handler.
+	$(COLLECT_FIELDS+','+PLACE_FIELDS).closest('td').prepend(
+		$('<div class=disabledOverlay style=display:none>').click(function(e){
+			e.stopPropagation()
+			return false
+		})
+	)
 
 	window.onShowScouting = window.onShowScouting || []
 	window.onShowScouting.push(function(){
