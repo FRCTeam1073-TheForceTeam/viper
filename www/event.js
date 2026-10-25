@@ -316,6 +316,51 @@ addI18n({
 		he:'הזנת נתונים של תרגול/הסמכה',
 		zh_tw:'練習/資格賽數據輸入',
 	},
+	delete_event_link:{
+		en:'Delete Event',
+		tr:'Etkinliği Sil',
+		he:'מחק אירוע',
+		zh_tw:'刪除活動',
+		fr:'Supprimer l\'événement',
+		pt:'Excluir evento',
+		es:'Eliminar evento',
+	},
+	delete_event_heading:{
+		en:'Delete Event',
+		tr:'Etkinliği Sil',
+		he:'מחק אירוע',
+		zh_tw:'刪除活動',
+		fr:'Supprimer l\'événement',
+		pt:'Excluir evento',
+		es:'Eliminar evento',
+	},
+	delete_event_warning:{
+		en:'This permanently deletes all of the CSV data for this event.',
+		tr:'Bu, bu etkinliğin tüm CSV verilerini kalıcı olarak siler.',
+		he:'פעולה זו תמחק לצמיתות את כל נתוני ה-CSV של אירוע זה.',
+		zh_tw:'此操作將永久刪除此活動的所有 CSV 資料。',
+		fr:'Cette action supprime définitivement toutes les données CSV de cet événement.',
+		pt:'Isso exclui permanentemente todos os dados CSV deste evento.',
+		es:'Esto elimina permanentemente todos los datos CSV de este evento.',
+	},
+	delete_event_confirm_label:{
+		en:'Type _EVENT_ to confirm:',
+		tr:'Onaylamak için _EVENT_ yazın:',
+		he:'הקלד _EVENT_ לאישור:',
+		zh_tw:'輸入 _EVENT_ 以確認：',
+		fr:'Saisissez _EVENT_ pour confirmer :',
+		pt:'Digite _EVENT_ para confirmar:',
+		es:'Escribe _EVENT_ para confirmar:',
+	},
+	delete_event_button:{
+		en:'Delete Event',
+		tr:'Etkinliği Sil',
+		he:'מחק אירוע',
+		zh_tw:'刪除活動',
+		fr:'Supprimer l\'événement',
+		pt:'Excluir evento',
+		es:'Eliminar evento',
+	},
 	edit_playoffs_link:{
 		en:'Playoffs Data Entry',
 		tr:'Playoff Veri Girişi',
@@ -1272,6 +1317,11 @@ $(document).ready(function(){
 	}
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
+		return false
+	})
+	$('#delete-event-link').click(function(){
+		$('#delete-event-form [name=event]').val(eventId)
+		showLightBox($('#deleteEventLightBox'))
 		return false
 	})
 })

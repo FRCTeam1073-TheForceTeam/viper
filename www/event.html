@@ -64,7 +64,7 @@
 				<p class="initHid dependScouting" data-include-practice=aggregation_includes_practice data-exclude-practice=aggregation_excludes_practice></p>
 			</div>
 
-			<div id=edit-event-section class="initHid nav-section" data-section=edit-event>
+			<div id=edit-event-section class="nav-section" data-section=edit-event>
 				<h2 id=edit-event-header data-i18n=edit_event_heading></h2>
 				<div id=edit-event-list>
 					<a class="button initHid dependBlueAlliance fetch-statbotics-link" href="/admin/statbotics-event.cgi?event=_EVENT_&sbevent=_BAID_" data-i18n=statbotics_epa_link></a>
@@ -74,6 +74,7 @@
 					<a class=button id=edit-match-link href="/event-data-entry.html#event=_EVENT_" data-i18n=edit_event_link></a>
 					<a class=button id=upload-schedule-link href="/event-upload.html#event=_EVENT_" data-i18n=upload_schedule_link></a>
 					<a class="button initHid dependImport" href="/import-scouting.html#event=_EVENT_" data-i18n=import_link></a>
+					<a class=button id=delete-event-link href="javascript:void(0)" data-i18n=delete_event_link></a>
 				</div>
 			</div>
 
@@ -176,6 +177,20 @@
 		</table>
 	</div>
 
+	<div id=deleteEventLightBox class=lightBoxCenterContent style=display:none>
+		<h2 data-i18n=delete_event_heading></h2>
+		<p data-i18n=delete_event_warning></p>
+		<form id=delete-event-form method=POST action=/admin/delete-event.cgi>
+			<input type=hidden name=event>
+			<div class=form-group>
+				<label>
+					<span data-i18n=delete_event_confirm_label></span>
+					<input name=confirm autocomplete=off>
+				</label>
+			</div>
+			<input type=submit class=button data-i18n-value=delete_event_button>
+		</form>
+	</div>
 	<div id=matchActions class=lightBoxCenterContent style=display:none></div>
 	<div id=dataActions class=lightBoxCenterContent style=display:none><h2></h2><ul></ul></div>
 	<div class=lightBoxFullContent><iframe id=instructions src=/event-instructions.html></iframe></div>

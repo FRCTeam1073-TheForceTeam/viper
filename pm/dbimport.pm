@@ -35,7 +35,7 @@ sub getEventAndTable(){
 sub deleteCsvFile(){
 	my($self, $file, $commit) = @_;
 	my ($event, $table) = $self->getEventAndTable($file);
-	$dbimport::db->dbConnection()->prepare("DELETE FROM `$table` WHERE `site`=? AND `event`=?")->execute($dbimport::db->getSite(), $event);
+	$dbimport::db->deleteEventRows($event, $table);
 	$dbimport::db->commit() if ($commit);
 }
 
