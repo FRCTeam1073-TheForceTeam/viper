@@ -175,9 +175,9 @@ $(document).ready(function(){
 	}).catch(e=>{
 		console.error(e)
 	})
-	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
+	$('#teamStats').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
-		$('#teamStats iframe').attr('src',`/team.html#event=${eventId}`)
+		$('#teamStats').attr('src',`/team.html#event=${eventId}`)
 	})
 	$('#displayType').change(showStats)
 	$('.showInstructions').click(function(){
@@ -527,7 +527,7 @@ function setDnpStartNumber(){
 function showTeamStats(){
 	var team = parseInt($(this).attr('data-team')||$(this).text())
 	$('#teamPicker').hide()
-	$('#teamStats iframe').attr('src',`/team.html#event=${eventId}&team=${team}`)
+	$('#teamStats').attr('src',`/team.html#event=${eventId}&team=${team}`)
 	window.scrollTo(0,0)
 	showLightBox($('#teamStats'))
 }

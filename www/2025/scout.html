@@ -69,14 +69,14 @@
 		</tr></table>
 	</div>
 	<button class=showInstructions data-i18n=instructions></button>
-	<div class=lightBoxFullContent><iframe class=instructions src=/scouting-select-bot-instructions.html></iframe></div>
+	<iframe class="lightBoxFullContent instructions" src=/scouting-select-bot-instructions.html></iframe>
 </div>
 
 <div id=select-match class=screen style=display:none>
 	<h1></h1>
 	<button class=showInstructions data-i18n=instructions></button>
 	<button class=robotBtn data-i18n=change_robot_button></button>
-	<div class=lightBoxFullContent><iframe class=instructions src=/scouting-select-match-instructions.html></iframe></div>
+	<iframe class="lightBoxFullContent instructions" src=/scouting-select-match-instructions.html></iframe>
 	<div id=match-list></div>
 </div>
 
@@ -105,7 +105,7 @@
 				<button id=matchBtn data-i18n=choose_match_button></button>
 				<button class=robotBtn data-i18n=change_robot_button></button>
 				<button class=fieldRotateBtn data-i18n=rotate_field_button></button>
-				<div class=lightBoxFullContent><iframe class=instructions src=scouting-instructions.html></iframe></div>
+				<iframe class="lightBoxFullContent instructions" src=scouting-instructions.html></iframe>
 			</div>
 			<input type=hidden name=event>
 			<input type=hidden name=match>
@@ -385,24 +385,7 @@
 			</fieldset>
 		</td></tr><tr><td class=subheader data-i18n=scouter_header>
 		</td></tr><tr><td>
-			<fieldset class="left full" id=review-request>
-				<legend data-i18n=review_requested_legend></legend>
-				<div><label><input type=checkbox name=review_requested value=1><span data-i18n=review_requested_button></span></label></div>
-			</fieldset>
-			<fieldset class="left full">
-				<legend data-i18n=scouter_name_question></legend>
-			<input class=full type=text size=50 name=scouter maxlength=32 data-i18n-placeholder=scouter_name_placeholder>
-			</fieldset>
-			<fieldset class="left full" id=scouting-comments>
-				<legend data-i18n=comments_question></legend>
-				<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
-			</fieldset>
-			<input type=hidden name=created value="">
-			<input type=hidden name=modified value="">
-			<fieldset class=full id=nextButtons>
-				<legend data-i18n=save_data_question></legend>
-				<div id=doneButtons></div>
-			</fieldset>
+			<div id=scouterSection></div>
 		</td></tr></table>
 	</div>
 </form>

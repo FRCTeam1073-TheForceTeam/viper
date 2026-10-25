@@ -509,7 +509,7 @@ $(document).ready(function(){
 		var t = $(this).attr('data-team')
 		if (t) t = parseInt(t)
 		if (!t) return
-		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}&team=${t}`)
+		$('#statsLightBox').attr('src',`/team.html#event=${eventId}&team=${t}`)
 		window.scrollTo(0,0)
 		showLightBox($('#statsLightBox'))
 	}
@@ -519,9 +519,9 @@ $(document).ready(function(){
 	}
 	$('#fullPhoto').click(closeLightBox)
 	$('title').text($('title').text().replace("EVENT", eventName))
-	$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
+	$('#statsLightBox').attr('src',`/team.html#event=${eventId}`)
 	$('#lightBoxBG').click(function(){
-		$('#statsLightBox iframe').attr('src',`/team.html#event=${eventId}`)
+		$('#statsLightBox').attr('src',`/team.html#event=${eventId}`)
 	})
 
 

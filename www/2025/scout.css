@@ -33,7 +33,6 @@
 .timeline-table td:nth-child(1){max-width:4em}
 
 html{padding:0}
-#nextButtons{margin-bottom:50vh}
 #select-bot button{font-size:100%}
 
 .algae{background:#99ddd5;font-size:80%}

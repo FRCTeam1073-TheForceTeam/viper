@@ -4,7 +4,7 @@
 <title>Scout EVENT</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel=stylesheet href=/main.css>
+<link rel=stylesheet href=/main-new.css>
 <link rel=stylesheet href=/local.css>
 <link rel=stylesheet href=/scout.css>
 <link rel=stylesheet href=scout.css>
@@ -20,7 +20,7 @@
 <link rel=icon type=image/png href=/logo.png>
 </head>
 
-<body>
+<body><main>
 <h1></h1>
 <div id=select-bot class=screen style=display:none>
 	<h2 data-i18n=choose_pos_heading></h2>
@@ -33,14 +33,14 @@
 		<button>R2</button>
 	</div>
 	<button class=showInstructions data-i18n=instructions></button>
-	<iframe class="instructions lightBoxFullContent" src=/scouting-select-bot-instructions.html></iframe>
-</div>
+	<div class=lightBoxFullContent><iframe class=instructions src=/scouting-select-bot-instructions.html></iframe></div>
+	</div>
 
 <div id=select-match class=screen style=display:none>
 	<h1></h1>
 	<button class=showInstructions data-i18n=instructions></button>
 	<button class=robotBtn data-i18n=change_robot_button></button>
-	<iframe class="instructions lightBoxFullContent" src=/scouting-select-match-instructions.html></iframe>
+	<div class=lightBoxFullContent><iframe class="instructions" src=/scouting-select-match-instructions.html></iframe></div>
 	<div id=match-list></div>
 </div>
 
@@ -56,7 +56,7 @@
 		<button id=teamBtn data-i18n=team_correction_button></button>
 		<button id=matchBtn data-i18n=choose_match_button></button>
 		<button class=robotBtn data-i18n=change_robot_button></button>
-		<iframe class="instructions lightBoxFullContent" src=scouting-instructions.html></iframe>
+		<div class=lightBoxFullContent><iframe class="instructions" src=scouting-instructions.html></iframe></div>
 	</div>
 	<input type=hidden name=event>
 	<input type=hidden name=match>
@@ -161,27 +161,9 @@
 			<label><input type=checkbox name=end_park value=1><span data-i18n=end_park></span></label><br>
 			<label><input type=checkbox name=robot_disabled value=1><span data-i18n=robot_disabled></span></label>
 		</td></tr><tr><td>
-			<fieldset class="left full" id=review-request>
-				<legend data-i18n=review_requested_legend></legend>
-				<div><label><input type=checkbox name=review_requested value=1><span data-i18n=review_requested_button></span></label></div>
-			</fieldset>
-			<fieldset class="left full">
-				<legend data-i18n=scouter_name_question></legend>
-				<input class=full type=text size=50 name=scouter maxlength=32 data-i18n-placeholder=scouter_name_placeholder>
-			</fieldset>
-			<fieldset class="left full" id=scouting-comments>
-				<legend data-i18n=comments_question></legend>
-				<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
-			</fieldset>
-			<input type=hidden name=created value="">
-			<input type=hidden name=modified value="">
-			<fieldset class=full id=nextButtons>
-				<legend data-i18n=save_data_question></legend>
-				<div id=doneButtons></div>
-			</fieldset>
+			<div id=scouterSection></div>
 		</td></tr></table>
 	</div>
 </form>
 
-</body>
-</html>
+</main></body></html>

@@ -200,7 +200,7 @@ $(document).ready(function(){
 	window.onStore.push(function(){
 		if ($('#scouting [name=no_show]').is(':checked')) return true
 		var missing = []
-		if (!$('#scouting [name=scouter]').val().trim()) missing.push(translate('scouter_name_question'))
+		if (!$('#scouting [name=scouter]').val().trim()) missing.push(translate('scout_name_question'))
 		if (missing.length){
 			alert(translate('required_missing') + "\n" + missing.join("\n"))
 			return false

@@ -370,22 +370,49 @@ addI18n({
 		he:'בקשת סקירה של נתונים אלה',
 		tr:'Bu verilerin incelenmesini isteyin',
 	},
-	scouter_name_question:{
-		en:'Name:',
-		pt:'Nome:',
-		fr:'Nom :',
-		zh_tw:'姓名：',
-		he:'שֵׁם:',
-		tr:'Ad:',
-		es:'¿Cuál es tu nombre?',
+	scout_name_question:{
+		en:'Who scouted this match?',
+		pt:'Quem scoutou esta partida:',
+		fr:'Qui a scouté ce match :',
+		zh_tw:'誰偵查了這場比賽：',
+		he:'מי סקר את המשחק הזה:',
+		tr:'Bu maçı kim izledi:',
+		es:'¿Quién exploró este partido?',
 	},
-	scouter_name_placeholder:{
-		en:'Scouter Team, First name, Last initial, Eg. 1234 Pat Q',
-		pt:'Equipe do Scouter, Primeiro nome, Inicial do último, Ex.: 1234 Pat Q',
-		fr:'Équipe du recruteur, Prénom, Initiale du nom, ex.: 1234 Pat Q',
-		zh_tw:'童子軍隊伍，名字，姓氏首字母，例如。 1234 還',
-		he:'צוות צופים, שם פרטי, ראשי תיבות אחרון, למשל. 1234 Pat Q',
-		tr:'Scouter Takımı, Adı, Soyadı, Örn. 1234 Pat Q',
+	scout_name_label:{
+		en:'First name and last initial:',
+		pt:'Primeiro nome, inicial do último:',
+		fr:'Prénom, initiale du nom :',
+		zh_tw:'名字，姓氏首字母：',
+		he:'שם פרטי, ראשי תיבות אחרון:',
+		tr:'Ad, Soyadı Baş Harfi:',
+		es:'Nombre, inicial del apellido:',
+	},
+	scout_team_question:{
+		en:'Team #:',
+		pt:'Equipe:',
+		fr:'Équipe :',
+		zh_tw:'隊伍：',
+		he:'צוות:',
+		tr:'Takım:',
+		es:'Equipo:',
+	},
+	scout_team_placeholder:{
+		en:'Team #',
+		pt:'Equipe',
+		fr:'Équipe',
+		zh_tw:'隊伍',
+		he:'צוות',
+		tr:'Takım',
+		es:'Equipo',
+	},
+	scout_name_placeholder:{
+		en:'First name, Last initial, Eg. Pat Q',
+		pt:'Primeiro nome, Inicial do último, Ex.: Pat Q',
+		fr:'Prénom, Initiale du nom, ex.: Pat Q',
+		zh_tw:'名字，姓氏首字母，例如 Pat Q',
+		he:'שם פרטי, ראשי תיבות אחרון, למשל. Pat Q',
+		tr:'Adı, Soyadı, Örn. Pat Q',
 		es:'Tu nombre...',
 	},
 	comments_question:{
@@ -813,6 +840,7 @@ function fillPreviousFormData(form,data){
 			}
 		}
 	})
+	syncScoutVisible()
 }
 
 function getValueAttrOrChecked(input){
@@ -856,6 +884,7 @@ function resetInitialValues(form){
 			}
 		}
 	})
+	syncScoutVisible()
 }
 
 function showPitScoutingForm(t){
@@ -1038,6 +1067,7 @@ function fillDefaultFormFields(){
 		var lastScouter = (localStorage.getItem("last_scouter")||"").replace(/^(null|undefined)$/,"")
 		scouterInput.val(lastScouter).attr('data-at-scout-start',lastScouter)
 	}
+	syncScoutVisible()
 }
 
 function setTeamBG(){
@@ -1060,6 +1090,7 @@ function toCSV(form){
 	form.find("input,textarea").each(function(){
 		var el=$(this),name=el.attr('name'),val=el.val(),type=el.attr('type'),
 		off=(type=='checkbox'||type=='radio')&&!el.prop('checked')
+		if (!name) return
 		if (!values.hasOwnProperty(name)){
 			keys.push(name)
 			values[name] = "0"
@@ -1104,7 +1135,7 @@ function formHasChanges(f){
 		var el=$(this),
 		val=getValOrChecked(el),
 		start=el.attr('data-at-scout-start')
-		if (start !== undefined && val!==start)	changes=true
+		if (el.attr('name') && start !== undefined && val!==start)	changes=true
 	})
 	return changes
 }
@@ -1487,6 +1518,71 @@ function labelClicked(e){
 	toggleChecked(check)
 }
 
+function scoutNameHtml(){
+	return `<fieldset class="left full">
+		<legend data-i18n=scout_name_question></legend>
+		<div class=scout-fields>
+			<label class=scout-field><div data-i18n=scout_team_question></div>
+				<input class=scout-team type=text inputmode=numeric size=6 maxlength=6 data-i18n-placeholder=scout_team_placeholder></label>
+			<label class=scout-field><div data-i18n=scout_name_label></div>
+				<input class=scout-name type=text size=40 maxlength=32 data-i18n-placeholder=scout_name_placeholder></label>
+		</div>
+		<input type=hidden name=scouter>
+	</fieldset>`
+}
+
+// Splits "1234 Pat Q" or "Pat Q 1234" into team number and name.
+// Anything without a numeric part goes entirely into the name.
+function parseScout(value){
+	value = (value||"").trim()
+	var m = value.match(/^(\d+)(?:\s+(.*))?$/)
+	if (m) return {team:m[1], name:(m[2]||"").trim()}
+	m = value.match(/^(.*?)\s+(\d+)$/)
+	if (m) return {team:m[2], name:m[1].trim()}
+	return {team:"", name:value}
+}
+
+function combineScout(team, name){
+	return [(team||"").trim(), (name||"").trim()].filter(Boolean).join(" ")
+}
+
+// Fills the visible team/name inputs from the hidden scouter field
+function syncScoutVisible(){
+	$('.scout-fields').each(function(){
+		var fields = $(this),
+		parsed = parseScout(fields.parent().find('input[name="scouter"]').val())
+		fields.find('.scout-team').val(parsed.team)
+		fields.find('.scout-name').val(parsed.name)
+	})
+}
+
+// Keeps the hidden scouter field in step while the visible fields are typed in
+$(document).on('input', '.scout-fields input', function(){
+	var fields = $(this).closest('.scout-fields')
+	fields.parent().find('input[name="scouter"]').val(combineScout(fields.find('.scout-team').val(), fields.find('.scout-name').val()))
+})
+
+function setupScouterSections(){
+	$('#scouterSection').html(`
+		<fieldset class="left full" id=review-request>
+			<legend data-i18n=review_requested_legend></legend>
+			<div><label><input type=checkbox name=review_requested value=1><span data-i18n=review_requested_button></span></label></div>
+		</fieldset>
+		${scoutNameHtml()}
+		<fieldset class="left full" id=scouting-comments>
+			<legend data-i18n=comments_question></legend>
+			<textarea class=full name=comments rows=5 data-i18n-placeholder=comments_placeholder></textarea>
+		</fieldset>
+		<input type=hidden name=created value="">
+		<input type=hidden name=modified value="">
+		<fieldset class=full id=nextButtons>
+			<legend data-i18n=save_data_question></legend>
+			<div id=doneButtons></div>
+		</fieldset>`)
+	$('.scouterName').html(scoutNameHtml())
+	applyTranslations()
+}
+
 $(document).ready(function(){
 	if (!eventYear || !eventVenue){
 		showError('event_not_found')
@@ -1498,6 +1594,7 @@ $(document).ready(function(){
 	pitScouting = $('#pit-scouting')
 	subjectiveScouting = $('#subjective-scouting')
 
+	setupScouterSections()
 	storeInitialValues(scouting,"")
 	storeInitialValues(pitScouting,"pit")
 	storeInitialValues(subjectiveScouting,"subjective")

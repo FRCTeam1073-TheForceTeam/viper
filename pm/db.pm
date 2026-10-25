@@ -415,6 +415,10 @@ sub schema {
 					`match` VARCHAR(8) NOT NULL,
 					`team` VARCHAR(8) NOT NULL,
 					`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+					`comments` TEXT,
+					`review_requested` VARCHAR(32),
+					`created` TIMESTAMP,
+					`modified` TIMESTAMP,
 					INDEX(`site`,`event`),
 					UNIQUE(`site`,`event`,`match`,`team`,`scouter`)
 				)  $tableOptions
