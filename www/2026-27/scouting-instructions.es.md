@@ -8,7 +8,6 @@ Observa a tu robot durante todo el partido y registra lo que hace. Toca un conta
 ### Antes del partido
 
 - Marca **No se presentó** si el robot del equipo no juega.
-- Marca **Empezó con 4 POLEN precargados**. Los robots empiezan el partido sujetando 4 bolas amarillas de POLEN. La aplicación no guarda hasta que esta casilla esté marcada, salvo que el equipo no se haya presentado.
 
 ### Autónomo (primeros 30 segundos)
 
@@ -32,7 +31,7 @@ Cuando el cronómetro de 30 segundos termine, el botón **Teleop** empezará a p
 
 No cuentes las piezas que el robot coloque en la CELDA o el JARDÍN de la otra alianza.
 
-El número **En posesión** arriba muestra cuántas piezas lleva el robot: las 4 precargadas, más todo lo recogido, menos todo lo colocado. Un robot puede llevar como máximo 4. Si el número se pone rojo, revisa tus contadores. Un número mayor que 4 significa que el robot podría haber incumplido la regla de capacidad, y un número negativo significa que se introdujo mal un contador.
+La línea **En posesión** arriba muestra cuántos POLEN y NÉCTAR lleva el robot ahora mismo. Empieza con 4 POLEN, porque todo robot empieza con 4 precargados. Recoger suma al contador y colocar resta. Un robot puede llevar como máximo 4 piezas en total. Cuando lleva 4, los botones de recoger quedan desactivados. Los botones de colocar de un color se desactivan cuando el robot no lleva ninguna pieza de ese color. Si algún número se pone rojo, revisa tus contadores: un total mayor que 4 significa que el robot podría haber incumplido la regla de capacidad, y un número negativo significa que se introdujo mal un contador.
 
 ### Final del partido
 

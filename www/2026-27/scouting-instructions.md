@@ -8,7 +8,6 @@ Watch your robot for the whole match and record what it does. Tap a counter to a
 ### Before the match
 
 - Mark **No Show** if the team's robot doesn't play.
-- Check **Started with 4 POLLEN Pre-loaded**. Robots start the match holding 4 yellow POLLEN balls. The app won't save until this box is checked, unless the team is a no-show.
 
 ### Autonomous (first 30 seconds)
 
@@ -32,7 +31,7 @@ When the 30-second timer ends, the **Teleop** button starts flashing. Press it t
 
 Don't count pieces the robot puts into the other alliance's CELL or GARDEN.
 
-The **Held** number at the top shows how many pieces the robot is carrying: the 4 pre-loaded pieces, plus everything collected, minus everything placed. A robot can hold at most 4. If the number turns red, check your counts. A number above 4 means the robot may have broken the holding rule, and a negative number means a count was entered wrong.
+The **Held** line at the top shows how many POLLEN and NECTAR the robot is carrying right now. It starts at 4 POLLEN, since every robot starts with 4 pre-loaded. Collecting adds to a count, and placing subtracts from it. A robot can hold at most 4 pieces in total. Once it holds 4, the collection buttons are disabled. A color's placement buttons are disabled when the robot holds none of that color. If a number turns red, check your counts: a total above 4 means the robot may have broken the holding rule, and a negative number means a count was entered wrong.
 
 ### End of match
 

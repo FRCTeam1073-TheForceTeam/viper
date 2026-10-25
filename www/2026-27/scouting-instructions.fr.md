@@ -8,7 +8,6 @@ Observez votre robot pendant tout le match et enregistrez ce qu'il fait. Touchez
 ### Avant le match
 
 - Cochez **Absence** si le robot de l'équipe ne joue pas.
-- Cochez **Démarré avec 4 POLLEN préchargés**. Les robots commencent le match en tenant 4 balles POLLEN jaunes. L'application n'enregistre pas tant que cette case n'est pas cochée, sauf en cas d'absence.
 
 ### Autonome (30 premières secondes)
 
@@ -32,7 +31,7 @@ Quand le minuteur de 30 secondes se termine, le bouton **Téléop** se met à cl
 
 Ne comptez pas les pièces que le robot place dans la CELLULE ou le JARDIN de l'autre alliance.
 
-Le nombre **Tenus** en haut indique combien de pièces le robot transporte : les 4 pièces préchargées, plus tout ce qui est collecté, moins tout ce qui est placé. Un robot peut en tenir au maximum 4. Si le nombre devient rouge, vérifiez vos compteurs. Un nombre supérieur à 4 signifie que le robot a peut-être enfreint la règle de capacité, et un nombre négatif signifie qu'un compteur a été mal saisi.
+La ligne **Tenus** en haut indique combien de POLLEN et de NECTAR le robot transporte en ce moment. Elle commence à 4 POLLEN, car chaque robot commence avec 4 pièces préchargées. La collecte ajoute au compteur, et la mise en place le retire. Un robot peut tenir au maximum 4 pièces au total. Une fois qu'il en tient 4, les boutons de collecte sont désactivés. Les boutons de mise en place d'une couleur sont désactivés quand le robot n'en tient aucune de cette couleur. Si un nombre devient rouge, vérifiez vos compteurs : un total supérieur à 4 signifie que le robot a peut-être enfreint la règle de capacité, et un nombre négatif signifie qu'un compteur a été mal saisi.
 
 ### Fin du match
 

@@ -167,17 +167,6 @@ var statInfo = {
 		he:'אי הופעה',
 		es:'Sin presentación',
 	},
-	preload_check:{
-		name: 'Started with 4 POLLEN Pre-loaded',
-		en: 'Started with 4 POLLEN Pre-loaded',
-		type: '%',
-		fr:'Démarré avec 4 POLLEN préchargés',
-		pt:'Começou com 4 POLLEN pré-carregados',
-		zh_tw:'開始時已預載 4 個花粉',
-		tr:'4 önceden yüklenmiş POLEN ile başladı',
-		he:'התחיל עם 4 אבקות שנטענו מראש',
-		es:'Empezó con 4 POLEN precargados',
-	},
 	auto_leave:{
 		name: 'Left Wall in Auto',
 		en: 'Left Wall in Auto',

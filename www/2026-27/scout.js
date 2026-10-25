@@ -1,15 +1,6 @@
 "use strict"
 
 addI18n({
-	preload_check:{
-		en:'Robot started with 4 pre-loaded POLLEN',
-		fr:'Le robot a commencé avec 4 POLLEN préchargés',
-		pt:'O robô começou com 4 POLLEN pré-carregados',
-		zh_tw:'機器人開始時已預載 4 個花粉',
-		tr:'Robot 4 önceden yüklenmiş POLEN ile başladı',
-		he:'הרובוט התחיל עם 4 אבקות שנטענו מראש',
-		es:'El robot empezó con 4 POLEN precargados',
-	},
 	auto_leave:{
 		en:'Left the perimeter wall during auto',
 		fr:'A quitté le mur du périmètre pendant l\'auto',
@@ -129,11 +120,23 @@ addI18n({
 	},
 })
 
-// Robots start with 4 pre-loaded POLLEN (Section 10.3.4); the pre-match check enforces this
-const PRELOAD_COUNT=4,
+// Every robot starts with 4 pre-loaded POLLEN (Section 10.3.4)
+// Every robot starts with 4 pre-loaded POLLEN (Section 10.3.4)
+const PRELOAD_POLLEN=4,
 HELD_MAX=4,
-COLLECT_FIELDS='#scouting [name^=auto_collect_],#scouting [name^=tele_collect_]',
-PLACE_FIELDS='#scouting [name^=auto_cell_],#scouting [name^=auto_garden_],#scouting [name^=tele_cell_],#scouting [name^=tele_flower],#scouting [name^=tele_garden_]'
+COLLECT_GROUPS=['auto_collect_','tele_collect_'],
+PLACE_GROUPS=['auto_cell_','auto_garden_','tele_cell_','tele_flower','tele_garden_'],
+POLLEN_COLLECT=countersFor(COLLECT_GROUPS,'pollen'),
+NECTAR_COLLECT=countersFor(COLLECT_GROUPS,'nectar'),
+POLLEN_PLACE=countersFor(PLACE_GROUPS,'pollen'),
+NECTAR_PLACE=countersFor(PLACE_GROUPS,'nectar'),
+COLLECT_FIELDS=POLLEN_COLLECT+','+NECTAR_COLLECT,
+PLACE_FIELDS=POLLEN_PLACE+','+NECTAR_PLACE,
+TIP_FIELDS='#scouting [name=auto_hive_tip],#scouting [name=tele_hive_tip]'
+
+function countersFor(groups, color){
+	return groups.map(g=>`#scouting [name^=${g}][name$=_${color}]`).join(',')
+}
 
 function sumCounters(selector){
 	var total=0
@@ -141,16 +144,31 @@ function sumCounters(selector){
 	return total
 }
 
-// Pieces currently controlled = preload + collected - placed (G407 caps this at 4)
-// At the cap, collection counters are disabled. With nothing held, placement counters are disabled.
+// Pieces controlled, per color. POLLEN starts at the 4 pre-loaded, and the combined total is
+// capped at 4 (G407). Collection is blocked at the cap, and each color's placement is blocked at 0.
 function updateHeldCount(){
-	var held = PRELOAD_COUNT
-		+ sumCounters(COLLECT_FIELDS)
-		- sumCounters(PLACE_FIELDS)
-	$('.held-value').text(held)
-	$('.held-count').toggleClass('over', held>HELD_MAX || held<0)
-	$(COLLECT_FIELDS).closest('td').find('.disabledOverlay').toggle(held>=HELD_MAX)
-	$(PLACE_FIELDS).closest('td').find('.disabledOverlay').toggle(held<=0)
+	var pollen = PRELOAD_POLLEN + sumCounters(POLLEN_COLLECT) - sumCounters(POLLEN_PLACE),
+	nectar = sumCounters(NECTAR_COLLECT) - sumCounters(NECTAR_PLACE),
+	total = pollen+nectar
+	$('.held-pollen').text(pollen)
+	$('.held-nectar').text(nectar)
+	$('.held-count').toggleClass('over', total>HELD_MAX || pollen<0 || nectar<0)
+	$(COLLECT_FIELDS).closest('td').find('.disabledOverlay').toggle(total>=HELD_MAX)
+	$(POLLEN_PLACE).closest('td').find('.disabledOverlay').toggle(pollen<=0)
+	$(NECTAR_PLACE).closest('td').find('.disabledOverlay').toggle(nectar<=0)
+}
+
+// HIVE TIP only counts right after a POLLEN or NECTAR goes into a CELL, since only a launch
+// into the upward-facing CELL can tip the HIVE (G417). Read the last action from the timeline.
+function updateHiveTipGate(){
+	var lastField = (($('#timeline').val()||"").trim().split(' ').pop()||"").split(':')[1]||"",
+	enabled = /^(auto|tele)_cell_(pollen|nectar)$/.test(lastField)
+	$(TIP_FIELDS).closest('td').find('.disabledOverlay').toggle(!enabled)
+}
+
+function updateCounters(){
+	updateHeldCount()
+	updateHiveTipGate()
 }
 
 $(document).ready(function(){
@@ -161,7 +179,7 @@ $(document).ready(function(){
 
 	// Overlays block taps on a counter (same mechanism as earlier seasons). The click
 	// is stopped here so it never reaches the cell's counter handler.
-	$(COLLECT_FIELDS+','+PLACE_FIELDS).closest('td').prepend(
+	$(COLLECT_FIELDS+','+PLACE_FIELDS+','+TIP_FIELDS).closest('td').prepend(
 		$('<div class=disabledOverlay style=display:none>').click(function(e){
 			e.stopPropagation()
 			return false
@@ -172,7 +190,9 @@ $(document).ready(function(){
 	window.onShowScouting.push(function(){
 		matchStartTime = 0
 		wentToTeleAuto = false
-		updateHeldCount()
+		// Only one alliance is scouted at a time, so the NECTAR buttons use that alliance's color
+		$('.nectar-img').attr('src',pos.startsWith('R')?'nectar-red.png':'nectar-blue.png')
+		updateCounters()
 		return true
 	})
 
@@ -180,7 +200,6 @@ $(document).ready(function(){
 	window.onStore.push(function(){
 		if ($('#scouting [name=no_show]').is(':checked')) return true
 		var missing = []
-		if (!$('#scouting [name=preload_check]').is(':checked')) missing.push(translate('preload_check'))
 		if (!$('#scouting [name=scouter]').val().trim()) missing.push(translate('scouter_name_question'))
 		if (missing.length){
 			alert(translate('required_missing') + "\n" + missing.join("\n"))
@@ -193,24 +212,24 @@ $(document).ready(function(){
 	// so the global Undo button can reverse exactly the last action.
 	window.onInputChanged = window.onInputChanged || []
 	window.onInputChanged.push(function(input, change){
-		updateHeldCount()
-		if(!input.closest('.auto,.teleop,#no-show-area').length) return
+		if(input.closest('.auto,.teleop,#no-show-area').length){
+			if (input.closest('.auto').length) setTimeout(proceedToTeleBlink, AUTO_MS)
 
-		if (input.closest('.auto').length) setTimeout(proceedToTeleBlink, AUTO_MS)
-
-		var order = $('#timeline'),
-		text = order.val(),
-		name = input.attr('name')
-		if (matchStartTime==0) matchStartTime = new Date().getTime()
-		if (input.is('.num') || input.is(':checked')){
-			if (text) text += " "
-			var seconds = Math.round((new Date().getTime() - matchStartTime)/1000)
-			text += `${seconds}:${name}`
-			if (change > 1) text += `:${change}`
-		} else {
-			text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${name}(\:[0-9]+)?( |$)`),"$1").trim()
+			var order = $('#timeline'),
+			text = order.val(),
+			name = input.attr('name')
+			if (matchStartTime==0) matchStartTime = new Date().getTime()
+			if (input.is('.num') || input.is(':checked')){
+				if (text) text += " "
+				var seconds = Math.round((new Date().getTime() - matchStartTime)/1000)
+				text += `${seconds}:${name}`
+				if (change > 1) text += `:${change}`
+			} else {
+				text = text.replace(new RegExp(`(.*(?: |^))[0-9]+\:${name}(\:[0-9]+)?( |$)`),"$1").trim()
+			}
+			order.val(text)
 		}
-		order.val(text)
+		updateCounters()
 	})
 
 	$('.undo').click(function(){
@@ -226,12 +245,12 @@ $(document).ready(function(){
 			animateChangeFloater(-change, input)
 		}
 		if (input.is(':checked')) input.prop('checked',false)
-		updateHeldCount()
 		if (!text) {
 			matchStartTime = 0
 			proceedToTeleBlink()
 		}
 		order.val(text)
+		updateCounters()
 		return false
 	})
 

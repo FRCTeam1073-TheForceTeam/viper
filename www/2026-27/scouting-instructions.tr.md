@@ -8,7 +8,6 @@ Robotunuzu maç boyunca izleyin ve yaptıklarını kaydedin. Bir sayacı artırm
 ### Maçtan önce
 
 - Takımın robotu oynamayacaksa **Gelmedi** kutusunu işaretleyin.
-- **4 önceden yüklenmiş POLEN ile başladı** kutusunu işaretleyin. Robotlar maça 4 sarı POLEN topu tutarak başlar. Takım gelmediyse hariç, bu kutu işaretlenmeden uygulama kaydetmez.
 
 ### Otonom (ilk 30 saniye)
 
@@ -32,7 +31,7 @@ Robot sürücü girişi olmadan kendi başına çalışır.
 
 Robotun diğer ittifakın HÜCRE'sine veya BAHÇE'sine koyduğu parçaları saymayın.
 
-Üstteki **Tutulan** sayısı robotun taşıdığı parça sayısını gösterir: önceden yüklenmiş 4 parça, artı toplanan her parça, eksi yerleştirilen her parça. Bir robot en fazla 4 parça tutabilir. Sayı kırmızıya dönerse sayaçlarınızı kontrol edin. 4'ten büyük bir sayı, robotun tutma kuralını çiğnemiş olabileceği anlamına gelir; negatif bir sayı ise bir sayacın yanlış girildiği anlamına gelir.
+Üstteki **Tutulan** satırı, robotun şu anda taşıdığı POLEN ve NEKTAR sayısını gösterir. 4 POLEN ile başlar, çünkü her robot 4 önceden yüklenmiş parça ile başlar. Toplamak sayıyı artırır, yerleştirmek azaltır. Bir robot toplamda en fazla 4 parça tutabilir. 4 parça tuttuğunda toplama düğmeleri devre dışı kalır. Bir rengin yerleştirme düğmeleri, robot o renkten hiç tutmuyorsa devre dışı kalır. Bir sayı kırmızıya dönerse sayaçlarınızı kontrol edin: toplam 4'ten büyükse robot tutma kuralını çiğnemiş olabilir, negatif bir sayı ise bir sayacın yanlış girildiğini gösterir.
 
 ### Maç sonu
 

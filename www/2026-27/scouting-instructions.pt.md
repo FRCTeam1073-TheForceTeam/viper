@@ -8,7 +8,6 @@ Observe seu robô durante toda a partida e registre o que ele faz. Toque em um c
 ### Antes da partida
 
 - Marque **Sem presença** se o robô da equipe não jogar.
-- Marque **Começou com 4 POLLEN pré-carregados**. Os robôs começam a partida segurando 4 bolas amarelas de POLLEN. O aplicativo não salva até que esta caixa esteja marcada, exceto em caso de falta da equipe.
 
 ### Autônomo (primeiros 30 segundos)
 
@@ -32,7 +31,7 @@ Quando o cronômetro de 30 segundos terminar, o botão **Teleop** começa a pisc
 
 Não conte as peças que o robô colocar na CÉLULA ou no JARDIM da outra aliança.
 
-O número **Segurando** no topo mostra quantas peças o robô está carregando: as 4 pré-carregadas, mais tudo o que foi coletado, menos tudo o que foi colocado. Um robô pode segurar no máximo 4. Se o número ficar vermelho, confira seus contadores. Um número acima de 4 significa que o robô pode ter quebrado a regra de capacidade, e um número negativo significa que um contador foi preenchido incorretamente.
+A linha **Segurando** no topo mostra quantos POLLEN e NECTAR o robô está carregando agora. Ela começa com 4 POLLEN, pois todo robô começa com 4 pré-carregados. A coleta soma ao contador, e a colocação subtrai. Um robô pode segurar no máximo 4 peças no total. Quando ele segura 4, os botões de coleta são desativados. Os botões de colocação de uma cor são desativados quando o robô não segura nenhuma peça dessa cor. Se algum número ficar vermelho, confira seus contadores: um total acima de 4 significa que o robô pode ter quebrado a regra de capacidade, e um número negativo significa que um contador foi preenchido incorretamente.
 
 ### Fim da partida
 
