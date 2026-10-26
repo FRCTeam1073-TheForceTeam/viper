@@ -326,12 +326,14 @@ setInterval(function(){
 		success: function(){
 			hasHeartbeat = true
 			$('.show-only-when-connected').show()
+			$('.keep-space-when-offline').css('visibility', '')
 			// Trigger auto-upload on successful heartbeat
 			processAutoUpload()
 		},
 		error: function(){
 			hasHeartbeat = false
 			$('.show-only-when-connected').hide()
+				$('.keep-space-when-offline').css('visibility', 'hidden')
 		}
 	})
 }, 6*1000) // 6 seconds
