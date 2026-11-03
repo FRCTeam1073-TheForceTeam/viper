@@ -229,7 +229,7 @@ final localJsVariablesProvider = FutureProvider((ref) async {
 		final service = await ref.watch(localJsServiceProvider.future);
 		final db = await ref.watch(databaseProvider.future);
 		final config = await db.getCurrentConfig();
-		return service.getVariables(config!.backendUrl);
+		return await service.getVariables(config!.backendUrl);
 	} catch (_) {
 		// No server configured or error fetching - return defaults
 		return <String, dynamic>{};

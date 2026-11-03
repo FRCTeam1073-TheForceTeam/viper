@@ -1,6 +1,7 @@
 import 'season_module.dart';
 import '2026/module.dart';
 import '2025-26/module.dart';
+import '2026-27/module.dart';
 
 /// Registry of all implemented season modules, keyed by season string.
 /// For FRC events, the key is a 4-digit year like '2026'.
@@ -8,6 +9,7 @@ import '2025-26/module.dart';
 final Map<String, SeasonModule> seasonModules = {
 	'2026': Season2026Module(),
 	'2025-26': SeasonFtc202526Module(),
+	'2026-27': SeasonFtc202627Module(),
 };
 
 /// Get the SeasonModule for a given season string, or null if not implemented.
