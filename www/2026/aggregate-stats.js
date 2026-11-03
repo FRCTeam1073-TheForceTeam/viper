@@ -2512,7 +2512,7 @@ function showPitScouting(el,team){
 
 		if(dat.scouter||dat.notes){
 			section=$('<fieldset>').append($('<legend>').attr('data-i18n','scouter_header'))
-			dlText(section,'scouter_name_question',dat.scouter)
+			dlText(section,'scout_name_question',dat.scouter)
 			if(dat.notes)section.append($("<dl>").append($('<dt>').attr('data-i18n','pit_scout_notes_placeholder')).append($('<dd>').append($('<div style=white-space:pre-wrap>').text(dat.notes))))
 			el.append(section)
 		}

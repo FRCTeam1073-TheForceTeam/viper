@@ -154,6 +154,15 @@ addI18n({
 		fr:'Télécharger les données de repérage (Matchs : _UPLOADCOUNT_)',
 		tr:'İzcilik Verilerini Yükle (Maçlar: _UPLOADCOUNT_)',
 	},
+	upload_schedule_link:{
+		en:'Paste Schedule or Teams',
+		tr:'Maç Programını Yapıştır',
+		pt:'Colar Cronograma de Partidas',
+		es:'Pegar Horario de Partidos',
+		fr:'Coller le calendrier des matchs',
+		he:'הדבק לוח זמנים של משחקים',
+		zh_tw:'貼上比賽時間表',
+	},
 	scout_match_link:{
 		en:'Match Scouting',
 		tr:'Maç İzciliği',
@@ -306,6 +315,51 @@ addI18n({
 		fr:'Saisie des données de pratique/qualification',
 		he:'הזנת נתונים של תרגול/הסמכה',
 		zh_tw:'練習/資格賽數據輸入',
+	},
+	delete_event_link:{
+		en:'Delete Event',
+		tr:'Etkinliği Sil',
+		he:'מחק אירוע',
+		zh_tw:'刪除活動',
+		fr:'Supprimer l\'événement',
+		pt:'Excluir evento',
+		es:'Eliminar evento',
+	},
+	delete_event_heading:{
+		en:'Delete Event',
+		tr:'Etkinliği Sil',
+		he:'מחק אירוע',
+		zh_tw:'刪除活動',
+		fr:'Supprimer l\'événement',
+		pt:'Excluir evento',
+		es:'Eliminar evento',
+	},
+	delete_event_warning:{
+		en:'This permanently deletes all of the CSV data for this event.',
+		tr:'Bu, bu etkinliğin tüm CSV verilerini kalıcı olarak siler.',
+		he:'פעולה זו תמחק לצמיתות את כל נתוני ה-CSV של אירוע זה.',
+		zh_tw:'此操作將永久刪除此活動的所有 CSV 資料。',
+		fr:'Cette action supprime définitivement toutes les données CSV de cet événement.',
+		pt:'Isso exclui permanentemente todos os dados CSV deste evento.',
+		es:'Esto elimina permanentemente todos los datos CSV de este evento.',
+	},
+	delete_event_confirm_label:{
+		en:'Type _EVENT_ to confirm:',
+		tr:'Onaylamak için _EVENT_ yazın:',
+		he:'הקלד _EVENT_ לאישור:',
+		zh_tw:'輸入 _EVENT_ 以確認：',
+		fr:'Saisissez _EVENT_ pour confirmer :',
+		pt:'Digite _EVENT_ para confirmar:',
+		es:'Escribe _EVENT_ para confirmar:',
+	},
+	delete_event_button:{
+		en:'Delete Event',
+		tr:'Etkinliği Sil',
+		he:'מחק אירוע',
+		zh_tw:'刪除活動',
+		fr:'Supprimer l\'événement',
+		pt:'Excluir evento',
+		es:'Eliminar evento',
 	},
 	edit_playoffs_link:{
 		en:'Playoffs Data Entry',
@@ -1015,6 +1069,7 @@ $(document).ready(function(){
 		lastPmQmMatch = [...eventMatches].reverse().find(m => /^(pm|qm)/.test(m.Match)),
 		onlyPracticeScouted = !lastDone || /^pm/.test(lastDone.Match),
 		noQualMatches = !eventMatches.some(m => /^qm/.test(m.Match)),
+		noMatches = !eventMatches.length,
 		lastScoutedHasNoApiScore = lastDone && !eventScores[lastDone.Match],
 		practiceChoice = eventMatches.some(m => /^pm/.test(m.Match)) && eventMatches.some(m => !/^pm/.test(m.Match)),
 		hasOurTeamMatch = eventMatches.some(m => matchHasTeam(m,getLocalTeam()))
@@ -1048,7 +1103,7 @@ $(document).ready(function(){
 		if(eventMatches.length > 0 && onlyPracticeScouted) dependencySatisfied('dependNeedsPit')
 		if(isFrcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFrcApi')
 		if(isFtcApiAvailable && (noQualMatches || lastScoutedHasNoApiScore)) dependencySatisfied('dependNeedsFtcApi')
-		if(!(isFrcApiAvailable || isFtcApiAvailable) && noQualMatches) dependencySatisfied('dependNeedsManualSchedule')
+		if(noMatches || (!(isFrcApiAvailable || isFtcApiAvailable) && noQualMatches)) dependencySatisfied('dependNeedsManualSchedule')
 		if(practiceChoice) dependencySatisfied('dependPracticeChoice')
 		if(hasOurTeamMatch) dependencySatisfied('dependTeamSchedule')
 		if(eventMatches.find(m => /^(qm)/.test(m.Match))) dependencySatisfied('dependQuals')
@@ -1262,6 +1317,11 @@ $(document).ready(function(){
 	}
 	$('#showInstructions').click(function(){
 		showLightBox($('#instructions'))
+		return false
+	})
+	$('#delete-event-link').click(function(){
+		$('#delete-event-form [name=event]').val(eventId)
+		showLightBox($('#deleteEventLightBox'))
 		return false
 	})
 })

@@ -173,6 +173,15 @@ sub upsert {
 	}
 }
 
+sub deleteEventRows(){
+	my($self, $event, $table) = @_;
+	my $conn = $self->dbConnection();
+	# season tables only exist for seasons that have been set up
+	my ($exists) = $conn->selectrow_array("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name=?", undef, $table);
+	return if (!$exists);
+	$conn->prepare("DELETE FROM `$table` WHERE `site`=? AND `event`=?")->execute(getSite(), $event);
+}
+
 sub commit(){
 	my $dbh = &dbConnection();
 	return if (!$dbh);
@@ -406,6 +415,10 @@ sub schema {
 					`match` VARCHAR(8) NOT NULL,
 					`team` VARCHAR(8) NOT NULL,
 					`scouter` VARCHAR(32) NOT NULL DEFAULT '',
+					`comments` TEXT,
+					`review_requested` VARCHAR(32),
+					`created` TIMESTAMP,
+					`modified` TIMESTAMP,
 					INDEX(`site`,`event`),
 					UNIQUE(`site`,`event`,`match`,`team`,`scouter`)
 				)  $tableOptions

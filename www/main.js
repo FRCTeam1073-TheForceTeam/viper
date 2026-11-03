@@ -666,7 +666,7 @@ window.console=(function(oc){
 		},
 		x:function(l,a){
 			$('#error-logs-link').show().closest('li').show()
-			$('#hamburger').addClass('error').removeClass('show-only-when-connected')
+			$('#hamburger').addClass('error').removeClass('keep-space-when-offline')
 			this.history[l].push(a)
 			oc.hasOwnProperty(l)&&oc[l].apply(oc,a)
 		},
