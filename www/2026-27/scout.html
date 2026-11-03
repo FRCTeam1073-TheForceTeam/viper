@@ -51,13 +51,7 @@
 </div>
 
 <form id=scouting class=screen style=display:none>
-	<div>
-		<button class=showInstructions data-i18n=instructions></button>
-		<button id=teamBtn data-i18n=team_correction_button></button>
-		<button id=matchBtn data-i18n=choose_match_button></button>
-		<button class=robotBtn data-i18n=change_robot_button></button>
-		<div class=lightBoxFullContent><iframe class="instructions" src=scouting-instructions.html></iframe></div>
-	</div>
+
 	<input type=hidden name=event>
 	<input type=hidden name=match>
 	<input type=hidden name=team>
@@ -71,10 +65,16 @@
 	</div>
 
 	<div class="pre tab-content">
-		<table><tr><td class=subheader colspan=4 id=no-show-area>
+		<table><tr><td class=subheader id=no-show-area style=text-align:left>
 			<label><input type=checkbox name=no_show value=1><span data-i18n=no_show></span></label>
-		</td></tr><tr><td class=subheader colspan=4>
+		</td><td class=subheader>
 			<button id=to-auto-button class=tab-button data-content=auto data-i18n=proceed_auto_button></button>
+		</td></tr><tr><td colspan=4>
+			<button class=showInstructions data-i18n=instructions></button>
+			<button id=teamBtn data-i18n=team_correction_button></button>
+			<button id=matchBtn data-i18n=choose_match_button></button>
+			<button class=robotBtn data-i18n=change_robot_button></button>
+			<div class=lightBoxFullContent><iframe class="instructions" src=scouting-instructions.html></iframe></div>
 		</td></tr></table>
 	</div>
 
@@ -157,10 +157,12 @@
 	</div>
 
 	<div class="end tab-content">
-		<table><tr><td>
-			<label><input type=checkbox name=end_park value=1><span data-i18n=end_park></span></label><br>
-			<label><input type=checkbox name=robot_disabled value=1><span data-i18n=robot_disabled></span></label>
-		</td></tr><tr><td>
+		<table><tr><td class=subheader colspan=3>
+		</td></tr><tr><td colspan=3>
+			<fieldset class="left full">
+				<label><input type=checkbox name=end_park value=1><span data-i18n=end_park></span></label><br>
+				<label><input type=checkbox name=robot_disabled value=1><span data-i18n=robot_disabled></span></label>
+			</fieldset>
 			<div id=scouterSection></div>
 		</td></tr></table>
 	</div>
