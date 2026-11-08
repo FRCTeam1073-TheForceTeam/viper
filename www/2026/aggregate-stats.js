@@ -2465,7 +2465,7 @@ var whiteboardStats=[
 var fmsMapping=[
 	[["hubScore.autoPoints"],["auto_fuel_score"]],
 	[["autoTowerPoints"],["auto_tower_score"]],
-	[["hubScore.transitionPoints","hubScore.shift1Points","hubScore.shift2Points","hubScore.shift3Points","hubScore.endgamePoints"],["tele_fuel_score"]],
+	[["hubScore.transitionPoints","hubScore.shift1Points","hubScore.shift2Points","hubScore.shift3Points","hubScore.shift4Points","hubScore.endgamePoints"],["tele_fuel_score"]],
 	[["teleTowerPoints"],["tele_tower_score"]],
 ]
 
