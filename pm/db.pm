@@ -16,6 +16,10 @@ our $viper_site;
 our $dbh;
 our $config;
 
+# Field names are interpolated into SQL identifiers, so restrict them.
+# Spaces are allowed for the alliances table ("First Pick", "Won Finals", ...).
+my $fieldNamePattern = qr/^[A-Za-z0-9_\-](?:[A-Za-z0-9_ \-]{0,62}[A-Za-z0-9_\-])?\z/;
+
 sub new {
 	my ($class) = @_;
 	my $self = {};
@@ -114,6 +118,9 @@ sub writeCsv(){
 sub upsert {
 	my($self, $table, $data) = @_;
 	delete($data->{""});
+	for my $field (keys %$data){
+		die "Invalid field name '$field' for table $table" if ($field !~ $fieldNamePattern);
+	}
 	my $conn = $self->dbConnection();
 	$data->{'site'} = getSite();
 	$data->{'site'} = "" if ($table eq 'apijson');
@@ -159,6 +166,7 @@ sub upsert {
 			my $error = $@;
 			if ($table =~ /^20[0-9]{2}(_[0-9]{2})?(pit|scouting|subjective)$/ and $error =~ /Unknown column '([^']+)'/i){
 				my $column = $1;
+				die "Refusing to add column '$column' to $table" if ($column !~ $fieldNamePattern);
 				my $type = "VARCHAR(256)";
 				$dbh->do("
 					ALTER TABLE
